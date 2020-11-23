@@ -1,0 +1,35 @@
+
+
+
+Decision should make:
+    
+    -- Elect a representative
+        -- operate the meeting
+        -- Make an appointment with Felix/Micheal or other sub-group
+        -- Git Master or representative may be same or different person
+        -- One of us should write meeting summary
+    
+    -- Meeting Agenda
+        -- Every team member should be informed about the meeting discussion point, that we can prepare
+           ourselves
+        -- Inform about task status
+
+    -- Sprint meeting planning (*****)
+        -- Since we will meet Felix after two weeks, then we can plan our sprint for two weeks timeline.
+        -- Break down the tasks
+        -- Distribute the task accordingly
+        -- Can be set complexity lebel of a task.
+
+    -- Project structure
+        -- Directory structure : http://appcropolis.com/blog/web-technology/organize-html-css-javascript-files/
+        -- Coding convention
+        -- comment format 
+        -- Unit Testing 
+
+    Tools & Others:
+    -- Task Mangement Tools (GitLab issue)
+    -- Git branch format (pen-feature-asu-)
+    -- Commit format     
+
+Challenge:
+    -- data structure of board & pieces
