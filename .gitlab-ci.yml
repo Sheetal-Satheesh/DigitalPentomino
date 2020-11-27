@@ -4,19 +4,16 @@ stages:
 
 build:
     stage: build
-    tags: ci
     script:
         - echo "Building application."
 
 test-job1:
     stage: test
-    tags: ci
     script:
         - echo "This job tests something."
 
 test-job2:
     stage: test
-    tags: ci
     script:
         - echo "Hello, $GITLAB_USER_LOGIN!"
         - echo "This job tests some other thing."
