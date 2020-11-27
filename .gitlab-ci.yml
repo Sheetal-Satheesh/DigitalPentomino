@@ -1,8 +1,19 @@
+stages:
+    - build
+    - test
+
+build:
+    stage: build
+    script:
+        - echo "Building application."
+
 test-job1:
+    stage: test
     script:
         - echo "This job tests something."
 
 test-job2:
+    stage: test
     script:
         - echo "Hello, $GITLAB_USER_LOGIN!"
         - echo "This job tests some other thing."
