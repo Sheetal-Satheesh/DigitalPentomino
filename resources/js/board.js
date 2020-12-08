@@ -9,13 +9,28 @@ class Board {
      *       color: default color;
      *       shape: square, rectangle, christmas tree
      */
-    constructor(size, color, shape) {
+    constructor(size) {
         this.size = size;
-        this.color = color;
-        this.shape = shape;
+
+        this.array = [];
+        for (let i = 0; i < this.size[0]; i++) {
+            let col = [];
+            for (let j = 0; j < this.size[1]; j++) {
+                col.push('X');
+            }
+
+            this.array.push(col);
+        }
     }
 
     display() {
-        document.write("Board: X X X X X");
+        document.write("Board:<br>");
+        for (let i = 0; i < this.size[0]; i++) {
+            document.write("|");
+            for (let j = 0; j < this.size[1]; j++) {
+                document.write(this.array[i][j]);
+            }
+            document.write("|<br>");
+        }
     }
 }
