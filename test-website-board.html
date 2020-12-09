@@ -1,7 +1,14 @@
 <!DOCTYPE html>
 <meta charset="UTF-8">
 <html>
+    <head>
+
+    </head>
+    <body>
+
     <script src="resources/js/board.js"></script>
+    <script src="resources/js/game.js"></script>
+    <script src="resources/js/pentomino.js"></script>
     <script>
         let pentomino = {
             name: 'X',
@@ -15,5 +22,18 @@
 
         board.placePentomino(0, 0, pentomino);
         board.display();
+
+        let newGame = new Game();
+        document.write(newGame.start());
+        document.write(newGame.getScore());
+        document.write(newGame.getTime());
+        
+        let pentominoPiece = new Pentomino([5,5],"black","L","",[17,20]);
+        pentominoPiece.display();
+
+
     </script>
+
+    </body>
+
 </html>
