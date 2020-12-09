@@ -1,119 +1,118 @@
-class Pentomino {
-    constructor(sPentominoType) {
-        this.iRows = 0;
-        this.iCols = 0;
-        this.sRepr = '';
-        switch (sPentominoType) {
-            case 'F':
-                this._createF();
-                break;
-            case 'L':
-                this._createL();
-                break;
-            case 'N':
-                this._createN();
-                break;
-            case 'P':
-                this._createP();
-                break;
-            case 'Y':
-                this._createY();
-                break;
-            case 'T':
-                this._createT();
-                break;
-            case 'U':
-                this._createU();
-                break;
-            case 'V':
-                this._createV();
-                break;    
-            case 'W':
-                this._createW();
-                break;
-            case 'Z':
-                this._createZ();
-                break;
-            case 'I':
-                this._createI();
-                break;
-            case 'X':
-                this._createX();
-                break;
-            default:
-                throw 'Unexpected Pentomino Type';
-        }
+Pentomino = function(sPentominoType) {
+    this.iRows = 0;
+    this.iCols = 0;
+    this.sRepr = '';
+    let oContext = this;
+    switch (sPentominoType) {
+        case 'F':
+            _createF(oContext);
+            break;
+        case 'L':
+            _createL(oContext);
+            break;
+        case 'N':
+            _createN(oContext);
+            break;
+        case 'P':
+            _createP(oContext);
+            break;
+        case 'Y':
+            _createY(oContext);
+            break;
+        case 'T':
+            _createT(oContext);
+            break;
+        case 'U':
+            _createU(oContext);
+            break;
+        case 'V':
+            _createV(oContext);
+            break;    
+        case 'W':
+            _createW(oContext);
+            break;
+        case 'Z':
+            _createZ(oContext);
+            break;
+        case 'I':
+            _createI(oContext);
+            break;
+        case 'X':
+            _createX(oContext);
+            break;
+        default:
+            throw 'Unexpected Pentomino Type';
+    }
+    
+    function _createF(oContext) {
+        oContext.iRows = 3;
+        oContext.iCols = 3;
+        oContext.sRepr = '011110010';        
     }
 
-    _createF() {
-        this.iRows = 3;
-        this.iCols = 3;
-        this.sRepr = '011110010';        
+    function _createL(oContext) {
+        oContext.iRows = 4;
+        oContext.iCols = 2;
+        oContext.sRepr = '10101011';        
     }
 
-    _createL() {
-        this.iRows = 4;
-        this.iCols = 2;
-        this.sRepr = '10101011';        
+    function _createN(oContext) {
+        oContext.iRows = 4;
+        oContext.iCols = 2;
+        oContext.sRepr = '01011110';       
     }
 
-    _createN() {
-        this.iRows = 4;
-        this.iCols = 2;
-        this.sRepr = '01011110';       
+    function _createP(oContext) {
+        oContext.iRows = 3;
+        oContext.iCols = 2;
+        oContext.sRepr = '11111110';        
     }
 
-    _createP() {
-        this.iRows = 3;
-        this.iCols = 2;
-        this.sRepr = '11111110';        
+    function _createY(oContext) {
+        oContext.iRows = 2;
+        oContext.iCols = 4;
+        oContext.sRepr = '00101111';        
     }
 
-    _createY() {
-        this.iRows = 2;
-        this.iCols = 4;
-        this.sRepr = '00101111';        
+    function _createT(oContext) {
+        oContext.iRows = 3;
+        oContext.iCols = 3;
+        oContext.sRepr = '111010010';        
     }
 
-    _createT() {
-        this.iRows = 3;
-        this.iCols = 3;
-        this.sRepr = '111010010';        
+    function _createU(oContext) {
+        oContext.iRows = 3;
+        oContext.iCols = 2;
+        oContext.sRepr = '101111';        
     }
 
-    _createU() {
-        this.iRows = 3;
-        this.iCols = 2;
-        this.sRepr = '101111';        
+    function _createV(oContext) {
+        oContext.iRows = 3;
+        oContext.iCols = 3;
+        oContext.sRepr = '100100111';        
     }
 
-    _createV() {
-        this.iRows = 3;
-        this.iCols = 3;
-        this.sRepr = '100100111';        
+    function _createW(oContext) {
+        oContext.iRows = 3;
+        oContext.iCols = 3;
+        oContext.sRepr = '100110011';        
     }
 
-    _createW() {
-        this.iRows = 3;
-        this.iCols = 3;
-        this.sRepr = '100110011';        
+    function _createZ(oContext) {
+        oContext.iRows = 3;
+        oContext.iCols = 3;
+        oContext.sRepr = '110010011';        
     }
 
-    _createZ() {
-        this.iRows = 3;
-        this.iCols = 3;
-        this.sRepr = '110010011';        
+    function _createI(oContext) {
+        oContext.iRows = 1;
+        oContext.iCols = 5;
+        oContext.sRepr = '11111';        
     }
 
-    _createI() {
-        this.iRows = 1;
-        this.iCols = 5;
-        this.sRepr = '11111';        
+    function _createX(oContext) {
+        oContext.iRows = 3;
+        oContext.iCols = 3;
+        oContext.sRepr = '010111010';        
     }
-
-    _createX() {
-        this.iRows = 3;
-        this.iCols = 3;
-        this.sRepr = '010111010';        
-    }
-}
+};
