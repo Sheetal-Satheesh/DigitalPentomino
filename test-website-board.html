@@ -3,7 +3,17 @@
 <html>
     <script src="resources/js/board.js"></script>
     <script>
-        let board = new Board([5, 5]);
+        let pentomino = {
+            name: 'X',
+            width: 2,
+            height: 4,
+            occupied_cells: "01010111",
+        };
+
+        let board = new Board([5, 7]);
+        board.display();
+
+        board.placePentomino(0, 0, pentomino);
         board.display();
     </script>
 </html>
