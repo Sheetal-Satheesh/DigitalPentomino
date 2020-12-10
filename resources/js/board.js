@@ -27,7 +27,7 @@ function Board(size) {
 /**
  * Prints board on html document for debugging purposes.
  */
-Board.prototype.display = function() {
+Board.prototype.writeToDocument = function() {
     document.write("Board:<br>");
     for (let y = 0; y < this.size[1]; y++) {
         document.write("|");
@@ -39,14 +39,28 @@ Board.prototype.display = function() {
 }
 
 /**
+ * Prints board to console for debugging purposes.
+ */
+Board.prototype.display = function() {
+    for (let y = 0; y < this.size[1]; y++) {
+        let row = "| ";
+        for (let x = 0; x < this.size[0]; x++) {
+            row = row + this.array[x][y] + ' ';
+        }
+        row = row + "|\n";
+        console.log(row);
+    }
+}
+
+/**
  * Places a new or already existing pentomino piece on the board
+ * @param pentomino the piece that should be placed
  * @param x new x position
  * @param y new y position
- * @param pentomino the piece that should be placed
  * @returns {string|null} returns null if collision occurred or else a string of the occupied cells
  */
-Board.prototype.placePentomino = function(x, y, pentomino) {
-    if (this.isCollides(x, y, pentomino)) {
+Board.prototype.placePentomino = function(pentomino, x, y) {
+    if (this.isCollides(pentomino, x, y)) {
         return null;
     }
 
@@ -66,7 +80,7 @@ Board.prototype.placePentomino = function(x, y, pentomino) {
     return pentomino.occupied_cells;// TODO - return as two dimensional array or maybe in GameController?
 }
 
-Board.prototype.isCollides = function (x, y, pentomino) {
+Board.prototype.isCollides = function (pentomino, x, y) {
     // TODO - return true or false
 
     return false;
@@ -80,7 +94,7 @@ Board.prototype.contains = function (name) {
     return false;
 }
 
-Board.prototype.removePentomino = function(x, y, pentomino) {
+Board.prototype.removePentomino = function(pentomino, x, y) {
     // TODO
 }
 

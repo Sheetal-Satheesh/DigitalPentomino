@@ -16,10 +16,10 @@
         };
 
         let board = new Board([5, 7]);
-        board.display();
+        board.writeToDocument();
 
-        let occupiedCells = board.placePentomino(2, 1, pentomino);
-        board.display();
+        let occupiedCells = board.placePentomino(pentomino, 2, 1);
+        board.writeToDocument();
 
         document.write("Occupied cells " + occupiedCells);
     </script>
