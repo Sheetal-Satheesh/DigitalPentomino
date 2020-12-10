@@ -11,6 +11,9 @@
 function Board(size) {
     this.size = size;
 
+    this.pentominos = [];
+    this.pentominoPositions = {};
+
     this.array = [];
     let width = size[0];
     let height = size[1];
@@ -36,15 +39,48 @@ Board.prototype.display = function() {
 }
 
 Board.prototype.placePentomino = function(x, y, pentomino) {
-    // TODO - save pentomino in list
+    if (this.isCollides(x, y, pentomino)) {
+        return null;
+    }
 
-    for (i = 0; i < pentomino.height; i++) {
-        for (j = 0; j < pentomino.width; j++) {
+    if (!this.contains(pentomino.name)) {
+        this.pentominos.push(pentomino);
+    }
+    this.pentominoPositions[pentomino.name] = [x, y];
+
+    for (let i = 0; i < pentomino.height; i++) {
+        for (let j = 0; j < pentomino.width; j++) {
             if (pentomino.occupied_cells.charAt(i * pentomino.width + j) === '1') {
-                this.array[j][i] = pentomino.name;
+                this.array[x + j][y + i] = pentomino.name;
             }
         }
     }
 
-    // TODO - return true or false whether occupied or not
+    return pentomino.occupied_cells;// TODO - return as two dimensional array or maybe in GameController?
+}
+
+Board.prototype.isCollides = function (x, y, pentomino) {
+    // TODO - return true or false
+
+    return false;
+}
+
+Board.prototype.contains = function (name) {
+    for (let i = 0; i < this.pentominos.length; i++) {
+        let pentomino = this.pentominos[i];
+        if (pentomino.name === name) return true;
+    }
+    return false;
+}
+
+Board.prototype.removePentomino = function(x, y, pentomino) {
+    // TODO
+}
+
+Board.prototype.getPosition = function(pentomino) {
+    if (!this.pentominoPositions.hasOwnProperty(pentomino.name)) {
+        throw "No pentomino: " + pentomino.name + " placed on the board";
+    } else {
+        return this.pentominoPositions[pentomino.name];
+    }
 }

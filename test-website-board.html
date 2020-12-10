@@ -7,8 +7,6 @@
     <body>
 
     <script src="resources/js/board.js"></script>
-    <script src="resources/js/game.js"></script>
-    <script src="resources/js/pentomino.js"></script>
     <script>
         let pentomino = {
             name: 'X',
@@ -20,18 +18,10 @@
         let board = new Board([5, 7]);
         board.display();
 
-        board.placePentomino(0, 0, pentomino);
+        let occupiedCells = board.placePentomino(2, 1, pentomino);
         board.display();
 
-        let newGame = new Game();
-        document.write(newGame.start());
-        document.write(newGame.getScore());
-        document.write(newGame.getTime());
-        
-        let pentominoPiece = new Pentomino([5,5],"black","L","",[17,20]);
-        pentominoPiece.display();
-
-
+        document.write("Occupied cells " + occupiedCells);
     </script>
 
     </body>
