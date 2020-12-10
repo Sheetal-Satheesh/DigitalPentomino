@@ -66,18 +66,33 @@ Board.prototype.placePentomino = function(pentomino, x, y) {
 
     if (!this.contains(pentomino.name)) {
         this.pentominos.push(pentomino);
+    } else {
+        // remove from array
+        this.drawPentomino(pentomino, EMPTY_CELL);
     }
-    this.pentominoPositions[pentomino.name] = [x, y];
 
+    this.pentominoPositions[pentomino.name] = [x, y];
+    this.drawPentomino(pentomino, pentomino.name);
+
+    return pentomino.occupied_cells;// TODO - return as two dimensional array or maybe in GameController?
+}
+
+/**
+ * Draws a char on every occupied cell of the pentomino
+ * @param pentomino
+ * @param charToDraw
+ */
+Board.prototype.drawPentomino = function (pentomino, charToDraw) {
+    let position = this.getPosition(pentomino);
+    let x = position[0];
+    let y = position[1];
     for (let i = 0; i < pentomino.height; i++) {
         for (let j = 0; j < pentomino.width; j++) {
             if (pentomino.occupied_cells.charAt(i * pentomino.width + j) === '1') {
-                this.array[x + j][y + i] = pentomino.name;
+                this.array[x + j][y + i] = charToDraw;
             }
         }
     }
-
-    return pentomino.occupied_cells;// TODO - return as two dimensional array or maybe in GameController?
 }
 
 Board.prototype.isCollides = function (pentomino, x, y) {
