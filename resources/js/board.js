@@ -64,11 +64,11 @@ Board.prototype.placePentomino = function(pentomino, x, y) {
         return null;
     }
 
-    if (!this.contains(pentomino.name)) {
-        this._pentominos.push(pentomino);
-    } else {
+    if (this.isPlacedOnBoard(pentomino)) {
         // remove from array
         this._drawPentomino(pentomino, EMPTY_CELL);
+    } else {
+        this._pentominos.push(pentomino);
     }
 
     this._pentominoPositions[pentomino.name] = [x, y];
@@ -100,16 +100,18 @@ Board.prototype.isCollides = function (pentomino, x, y) {
     return false;
 }
 
-Board.prototype.contains = function (name) {
-    for (let i = 0; i < this._pentominos.length; i++) {
-        let pentomino = this._pentominos[i];
-        if (pentomino.name === name) return true;
-    }
-    return false;
+Board.prototype.isPlacedOnBoard = function (pentomino) {
+    return this._pentominoPositions.hasOwnProperty(pentomino.name);
 }
 
-Board.prototype.removePentomino = function(pentomino, x, y) {
-    // TODO
+Board.prototype.removePentomino = function(pentomino) {
+    if (!this.isPlacedOnBoard(pentomino)) {
+        throw new Error("Pentomino with name '" + pentomino.name + "' is not placed on the board.");
+    }
+
+    this._drawPentomino(pentomino, EMPTY_CELL);
+    delete this._pentominoPositions[pentomino.name];
+    delete this._pentominos[pentomino.name];
 }
 
 /**
@@ -119,7 +121,7 @@ Board.prototype.removePentomino = function(pentomino, x, y) {
  * @returns {Array} [x,y]
  */
 Board.prototype.getPosition = function(pentomino) {
-    if (!this._pentominoPositions.hasOwnProperty(pentomino.name)) {
+    if (!this.isPlacedOnBoard(pentomino)) {
         throw new Error("No pentomino: " + pentomino.name + " placed on the board");
     } else {
         return this._pentominoPositions[pentomino.name];
