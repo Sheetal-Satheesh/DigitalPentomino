@@ -96,7 +96,15 @@ Board.prototype._drawPentomino = function (pentomino, charToDraw) {
 }
 
 Board.prototype.isCollides = function (pentomino, x, y) {
-    // TODO - return true or false
+    for (let i = 0; i < pentomino.height; i++) {
+        for (let j = 0; j < pentomino.width; j++) {
+            if (pentomino.occupied_cells.charAt(i * pentomino.width + j) === '1'
+                    && !(this._array[x + j][y + i] === EMPTY_CELL)) {
+                return true;
+            }
+        }
+    }
+
     return false;
 }
 
