@@ -53,15 +53,15 @@ Board.prototype.display = function() {
 }
 
 /**
- * Places a new or already existing pentomino piece on the board
+ * Places a new or already existing pentomino piece on the board if there is no collision
  * @param pentomino the piece that should be placed
  * @param x new x position
  * @param y new y position
- * @returns {string|null} returns null if collision occurred or else a string of the occupied cells
+ * @returns {boolean} returns false if a collision occurred else true
  */
 Board.prototype.placePentomino = function(pentomino, x, y) {
     if (this.isCollides(pentomino, x, y)) {
-        return null;
+        return false;
     }
 
     if (this.isPlacedOnBoard(pentomino)) {
@@ -74,7 +74,7 @@ Board.prototype.placePentomino = function(pentomino, x, y) {
     this._pentominoPositions[pentomino.name] = [x, y];
     this._drawPentomino(pentomino, pentomino.name);
 
-    return pentomino.occupied_cells;// TODO - return as two dimensional array or maybe in GameController?
+    return true;
 }
 
 /**
@@ -95,11 +95,19 @@ Board.prototype._drawPentomino = function (pentomino, charToDraw) {
     }
 }
 
+/**
+ * Returns whether the pentomino collides with another pentomino at the specified position
+ * @param pentomino
+ * @param x new x position
+ * @param y new y position
+ * @returns {boolean}
+ */
 Board.prototype.isCollides = function (pentomino, x, y) {
     for (let i = 0; i < pentomino.height; i++) {
         for (let j = 0; j < pentomino.width; j++) {
             if (pentomino.occupied_cells.charAt(i * pentomino.width + j) === '1'
-                    && !(this._array[x + j][y + i] === EMPTY_CELL)) {
+                    && !(this._array[x + j][y + i] === EMPTY_CELL)
+                    && !(this._array[x + j][y + i] === pentomino.name)) {
                 return true;
             }
         }
