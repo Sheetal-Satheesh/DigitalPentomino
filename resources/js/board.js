@@ -57,9 +57,14 @@ Board.prototype.display = function() {
  * @param pentomino the piece that should be placed
  * @param x new x position
  * @param y new y position
+ * @throws Error if new position is outside the board
  * @returns {boolean} returns false if a collision occurred else true
  */
 Board.prototype.placePentomino = function(pentomino, x, y) {
+    if (!this.positionIsValid(x, y)) {
+        throw new Error("Position (" + x + "," + y + ") is outside the board");
+    }
+
     if (this.isCollides(pentomino, x, y)) {
         return false;
     }
@@ -100,9 +105,14 @@ Board.prototype._drawPentomino = function (pentomino, charToDraw) {
  * @param pentomino
  * @param x new x position
  * @param y new y position
+ * @throws {Error} if new position is outside the board
  * @returns {boolean}
  */
 Board.prototype.isCollides = function (pentomino, x, y) {
+    if (!this.positionIsValid(x, y)) {
+        throw new Error("Position (" + x + "," + y + ") is outside the board");
+    }
+
     for (let i = 0; i < pentomino.height; i++) {
         for (let j = 0; j < pentomino.width; j++) {
             if (pentomino.occupied_cells.charAt(i * pentomino.width + j) === '1'
@@ -116,10 +126,20 @@ Board.prototype.isCollides = function (pentomino, x, y) {
     return false;
 }
 
+/**
+ * Returns whether the pentomino piece is placed on the board
+ * @param pentomino
+ * @returns {boolean}
+ */
 Board.prototype.isPlacedOnBoard = function (pentomino) {
     return this._pentominoPositions.hasOwnProperty(pentomino.name);
 }
 
+/**
+ * Removes a pentomino piece from the board
+ * @param pentomino the piece that should be removed
+ * @throws {Error} if the pentomino is not placed on the board
+ */
 Board.prototype.removePentomino = function(pentomino) {
     if (!this.isPlacedOnBoard(pentomino)) {
         throw new Error("Pentomino with name '" + pentomino.name + "' is not placed on the board.");
@@ -164,14 +184,31 @@ Board.prototype.getPentominoByName = function (name) {
  * Get pentomino at the specified position
  * @param x
  * @param y
- * @throws {Error} if there is no pentomino at this position of the board
+ * @throws {Error} if the position is outside the board or if there is no pentomino at this position of the board
  * @returns {pentomino}
  */
 Board.prototype.getPentominoAtPosition = function(x, y) {
+    if (!this.positionIsValid(x, y)) {
+        throw new Error("Position (" + x + "," + y + ") is outside the board");
+    }
+
     if (this._array[x][y] === EMPTY_CELL) {
         throw new Error("No pentomino at position (" + x + ", " + y + ")");
     } else {
         let name = this._array[x][y];
         return this.getPentominoByName(name);
     }
+}
+
+/**
+ * Returns whether the position is inside the board
+ * @param x
+ * @param y
+ * @returns {boolean}
+ */
+Board.prototype.positionIsValid = function(x, y) {
+    return !(x < 0
+        || x >= this.size[0]
+        || y < 0
+        || y >= this.size[1]);
 }
