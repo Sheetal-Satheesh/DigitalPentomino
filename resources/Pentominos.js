@@ -1,4 +1,7 @@
-Pentomino = function(sPentominoType) {
+"use strict";
+
+
+let Pentominos = function (sPentominoType) {
     this.iRows = 0;
     this.iCols = 0;
     this.sRepr = '';
@@ -44,6 +47,62 @@ Pentomino = function(sPentominoType) {
             throw 'Unexpected Pentomino Type';
     }
     
+    this.rotateAntiClkWise = () => {
+        let iCols = this.iCols;
+        let iRows = this.iRows;
+        let aNewRepr = [];
+        
+        for(let i = 1; i <= iCols; ++i) {
+            for(let j = 1; j <= iRows; ++j) {
+                aNewRepr.push(this.sRepr[iCols*j-i]);
+            }
+        }
+
+        this.sRepr = aNewRepr.join("");
+        this.iRows = iCols;
+        this.iCols = iRows;
+    }
+
+    this.rotateClkWise = () => {
+        let iCols = this.iCols;
+        let iRows = this.iRows;
+        let aNewRepr = [];
+        
+        for(let i = iCols; i > 0; --i) {
+            for(let j = iRows; j > 0; --j) {
+                aNewRepr.push(this.sRepr[iCols*j-i]);
+            }
+        }
+
+        this.sRepr = aNewRepr.join("");
+        this.iRows = iCols;
+        this.iCols = iRows;
+    }
+
+    this.mirrorH = () => {
+        let aNewRepr = [];
+        
+        for(let i = this.iRows-1; i >= 0 ; --i) {
+            for(let j = 0; j < this.iCols; ++j) {
+                aNewRepr.push(this.sRepr[this.iCols*i+j]);
+            }
+        }
+
+        this.sRepr = aNewRepr.join("");
+    }
+
+    this.mirrorV = () => {
+        let aNewRepr = [];
+        
+        for(let i = 1; i <= this.iRows; ++i) {
+            for(let j = 1; j <= this.iCols; ++j) {
+                aNewRepr.push(this.sRepr[this.iCols*i-j]);
+            }
+        }
+
+        this.sRepr = aNewRepr.join("");
+    }
+
     function _createF() {
         oContext.iRows = 3;
         oContext.iCols = 3;
@@ -65,7 +124,7 @@ Pentomino = function(sPentominoType) {
     function _createP() {
         oContext.iRows = 3;
         oContext.iCols = 2;
-        oContext.sRepr = '11111110';        
+        oContext.sRepr = '111110';        
     }
 
     function _createY() {
