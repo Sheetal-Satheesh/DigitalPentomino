@@ -2,6 +2,13 @@ const EMPTY_CELL = 'O';
 
 /**
  * It will create a default board of the defined size.
+ *
+ * The board class follows the following assumptions:
+ *
+ * - Multiple instances of the same piece inside the same board are not allowed
+ * - Collisions inside the board are not allowed
+ * - Only pieces can be placed, which fit exactly onto the board. That means that only those pieces are counted for collisions. All other pieces are saved in the game-object and are ignored on collisions. That means that they may overlap on the board on the frontend, but are treated as non-existing in the Board class.
+ *
  * @constructor
  * @param size {Array} [width,height]
  */
@@ -33,8 +40,12 @@ function Board(size) {
  * @returns {boolean} returns false if a collision occurred else true
  */
 Board.prototype.placePentomino = function(pentomino, x, y) {
-    if (!this.positionIsValid(x, y)) {
-        throw new Error("Position (" + x + "," + y + ") is outside the board");
+    if (!this.pentominoPositionIsValid(pentomino, x, y)) {
+        if (!this.positionIsValid(x, y)) {
+            throw new Error("Position (" + x + "," + y + ") is outside the board");
+        } else {
+            throw new Error("Pentomino" + pentomino.name + "doesn not fit at position (" + x + "," + y + ") on the board");
+        }
     }
 
     if (this.isCollides(pentomino, x, y)) {
@@ -78,8 +89,12 @@ Board.prototype.removePentomino = function(pentomino) {
  * @returns {boolean}
  */
 Board.prototype.isCollides = function (pentomino, x, y) {
-    if (!this.positionIsValid(x, y)) {
-        throw new Error("Position (" + x + "," + y + ") is outside the board");
+    if (!this.pentominoPositionIsValid(pentomino, x, y)) {
+        if (!this.positionIsValid(x, y)) {
+            throw new Error("Position (" + x + "," + y + ") is outside the board");
+        } else {
+            throw new Error("Pentomino" + pentomino.name + "doesn not fit at position (" + x + "," + y + ") on the board");
+        }
     }
 
     for (let i = 0; i < pentomino.height; i++) {
@@ -158,7 +173,7 @@ Board.prototype.getPentominoByName = function (name) {
  * @param x
  * @param y
  * @throws {Error} if the position is outside the board or if there is no pentomino at this position of the board
- * @returns {pentomino}
+ * @returns {Pentomino}
  */
 Board.prototype.getPentominoAtPosition = function(x, y) {
     if (!this.positionIsValid(x, y)) {
@@ -186,6 +201,24 @@ Board.prototype.positionIsValid = function(x, y) {
         || y >= this.size[1]);
 }
 
+/** Returns whether the pentomino will fit onto the board at the specified position
+ *
+ * @param pentomino
+ * @param x position to check
+ * @param y position to check
+ * @returns {boolean}
+ */
+Board.prototype.pentominoPositionIsValid = function(pentomino, x, y) {
+    return !(x < 0
+        || x + pentomino.width - 1 >= this.size[0]
+        || y < 0
+        || y + pentomino.height - 1 >= this.size[1]);
+}
+
+/**
+ * Returns all pentomino objects that are currently placed on the board
+ * @returns {Array}
+ */
 Board.prototype.getPentominos = function() {
     return this._pentominos;
 }
