@@ -25,34 +25,6 @@ function Board(size) {
 }
 
 /**
- * Prints board on html document for debugging purposes.
- */
-Board.prototype.writeToDocument = function() {
-    document.write("Board:<br>");
-    for (let y = 0; y < this.size[1]; y++) {
-        document.write("|");
-        for (let x = 0; x < this.size[0]; x++) {
-            document.write(this._array[x][y]);
-        }
-        document.write("|<br>");
-    }
-}
-
-/**
- * Prints board to console for debugging purposes.
- */
-Board.prototype.display = function() {
-    for (let y = 0; y < this.size[1]; y++) {
-        let row = "| ";
-        for (let x = 0; x < this.size[0]; x++) {
-            row = row + this._array[x][y] + ' ';
-        }
-        row = row + "|\n";
-        console.log(row);
-    }
-}
-
-/**
  * Places a new or already existing pentomino piece on the board if there is no collision
  * @param pentomino the piece that should be placed
  * @param x new x position
@@ -83,21 +55,18 @@ Board.prototype.placePentomino = function(pentomino, x, y) {
 }
 
 /**
- * Draws a char on every occupied cell of the pentomino
- * @param pentomino
- * @param charToDraw
+ * Removes a pentomino piece from the board
+ * @param pentomino the piece that should be removed
+ * @throws {Error} if the pentomino is not placed on the board
  */
-Board.prototype._drawPentomino = function (pentomino, charToDraw) {
-    let position = this.getPosition(pentomino);
-    let x = position[0];
-    let y = position[1];
-    for (let i = 0; i < pentomino.height; i++) {
-        for (let j = 0; j < pentomino.width; j++) {
-            if (pentomino.occupied_cells.charAt(i * pentomino.width + j) === '1') {
-                this._array[x + j][y + i] = charToDraw;
-            }
-        }
+Board.prototype.removePentomino = function(pentomino) {
+    if (!this.isPlacedOnBoard(pentomino)) {
+        throw new Error("Pentomino with name '" + pentomino.name + "' is not placed on the board.");
     }
+
+    this._drawPentomino(pentomino, EMPTY_CELL);
+    delete this._pentominoPositions[pentomino.name];
+    delete this._pentominos[pentomino.name];
 }
 
 /**
@@ -116,8 +85,8 @@ Board.prototype.isCollides = function (pentomino, x, y) {
     for (let i = 0; i < pentomino.height; i++) {
         for (let j = 0; j < pentomino.width; j++) {
             if (pentomino.occupied_cells.charAt(i * pentomino.width + j) === '1'
-                    && !(this._array[x + j][y + i] === EMPTY_CELL)
-                    && !(this._array[x + j][y + i] === pentomino.name)) {
+                && !(this._array[x + j][y + i] === EMPTY_CELL)
+                && !(this._array[x + j][y + i] === pentomino.name)) {
                 return true;
             }
         }
@@ -127,27 +96,31 @@ Board.prototype.isCollides = function (pentomino, x, y) {
 }
 
 /**
+ * Draws a char on every occupied cell of the pentomino
+ * @param pentomino
+ * @param charToDraw
+ */
+Board.prototype._drawPentomino = function (pentomino, charToDraw) {
+    let position = this.getPosition(pentomino);
+    let x = position[0];
+    let y = position[1];
+    for (let i = 0; i < pentomino.height; i++) {
+        for (let j = 0; j < pentomino.width; j++) {
+            if (pentomino.occupied_cells.charAt(i * pentomino.width + j) === '1') {
+                this._array[x + j][y + i] = charToDraw;
+            }
+        }
+    }
+}
+
+// --- --- --- Getter And Helper --- --- ---
+/**
  * Returns whether the pentomino piece is placed on the board
  * @param pentomino
  * @returns {boolean}
  */
 Board.prototype.isPlacedOnBoard = function (pentomino) {
     return this._pentominoPositions.hasOwnProperty(pentomino.name);
-}
-
-/**
- * Removes a pentomino piece from the board
- * @param pentomino the piece that should be removed
- * @throws {Error} if the pentomino is not placed on the board
- */
-Board.prototype.removePentomino = function(pentomino) {
-    if (!this.isPlacedOnBoard(pentomino)) {
-        throw new Error("Pentomino with name '" + pentomino.name + "' is not placed on the board.");
-    }
-
-    this._drawPentomino(pentomino, EMPTY_CELL);
-    delete this._pentominoPositions[pentomino.name];
-    delete this._pentominos[pentomino.name];
 }
 
 /**
@@ -211,4 +184,37 @@ Board.prototype.positionIsValid = function(x, y) {
         || x >= this.size[0]
         || y < 0
         || y >= this.size[1]);
+}
+
+Board.prototype.getPentominos = function() {
+    return this._pentominos;
+}
+
+// --- --- -- Debugging --- --- ---
+/**
+ * Prints board on html document for debugging purposes.
+ */
+Board.prototype.writeToDocument = function() {
+    document.write("Board:<br>");
+    for (let y = 0; y < this.size[1]; y++) {
+        document.write("|");
+        for (let x = 0; x < this.size[0]; x++) {
+            document.write(this._array[x][y]);
+        }
+        document.write("|<br>");
+    }
+}
+
+/**
+ * Prints board to console for debugging purposes.
+ */
+Board.prototype.display = function() {
+    for (let y = 0; y < this.size[1]; y++) {
+        let row = "| ";
+        for (let x = 0; x < this.size[0]; x++) {
+            row = row + this._array[x][y] + ' ';
+        }
+        row = row + "|\n";
+        console.log(row);
+    }
 }
