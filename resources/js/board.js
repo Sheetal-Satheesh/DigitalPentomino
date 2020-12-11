@@ -97,7 +97,6 @@ Board.prototype.drawPentomino = function (pentomino, charToDraw) {
 
 Board.prototype.isCollides = function (pentomino, x, y) {
     // TODO - return true or false
-
     return false;
 }
 
