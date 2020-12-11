@@ -8,10 +8,10 @@ const EMPTY_CELL = 'O';
 function Board(size) {
     this.size = size;
 
-    this.pentominos = [];
-    this.pentominoPositions = {};
+    this._pentominos = [];
+    this._pentominoPositions = {};
 
-    this.array = [];
+    this._array = [];
     let width = size[0];
     let height = size[1];
     for (let i = 0; i < width; i++) {
@@ -20,7 +20,7 @@ function Board(size) {
             col.push(EMPTY_CELL);
         }
 
-        this.array.push(col);
+        this._array.push(col);
     }
 }
 
@@ -32,7 +32,7 @@ Board.prototype.writeToDocument = function() {
     for (let y = 0; y < this.size[1]; y++) {
         document.write("|");
         for (let x = 0; x < this.size[0]; x++) {
-            document.write(this.array[x][y]);
+            document.write(this._array[x][y]);
         }
         document.write("|<br>");
     }
@@ -45,7 +45,7 @@ Board.prototype.display = function() {
     for (let y = 0; y < this.size[1]; y++) {
         let row = "| ";
         for (let x = 0; x < this.size[0]; x++) {
-            row = row + this.array[x][y] + ' ';
+            row = row + this._array[x][y] + ' ';
         }
         row = row + "|\n";
         console.log(row);
@@ -65,14 +65,14 @@ Board.prototype.placePentomino = function(pentomino, x, y) {
     }
 
     if (!this.contains(pentomino.name)) {
-        this.pentominos.push(pentomino);
+        this._pentominos.push(pentomino);
     } else {
         // remove from array
-        this.drawPentomino(pentomino, EMPTY_CELL);
+        this._drawPentomino(pentomino, EMPTY_CELL);
     }
 
-    this.pentominoPositions[pentomino.name] = [x, y];
-    this.drawPentomino(pentomino, pentomino.name);
+    this._pentominoPositions[pentomino.name] = [x, y];
+    this._drawPentomino(pentomino, pentomino.name);
 
     return pentomino.occupied_cells;// TODO - return as two dimensional array or maybe in GameController?
 }
@@ -82,14 +82,14 @@ Board.prototype.placePentomino = function(pentomino, x, y) {
  * @param pentomino
  * @param charToDraw
  */
-Board.prototype.drawPentomino = function (pentomino, charToDraw) {
+Board.prototype._drawPentomino = function (pentomino, charToDraw) {
     let position = this.getPosition(pentomino);
     let x = position[0];
     let y = position[1];
     for (let i = 0; i < pentomino.height; i++) {
         for (let j = 0; j < pentomino.width; j++) {
             if (pentomino.occupied_cells.charAt(i * pentomino.width + j) === '1') {
-                this.array[x + j][y + i] = charToDraw;
+                this._array[x + j][y + i] = charToDraw;
             }
         }
     }
@@ -101,8 +101,8 @@ Board.prototype.isCollides = function (pentomino, x, y) {
 }
 
 Board.prototype.contains = function (name) {
-    for (let i = 0; i < this.pentominos.length; i++) {
-        let pentomino = this.pentominos[i];
+    for (let i = 0; i < this._pentominos.length; i++) {
+        let pentomino = this._pentominos[i];
         if (pentomino.name === name) return true;
     }
     return false;
@@ -119,10 +119,10 @@ Board.prototype.removePentomino = function(pentomino, x, y) {
  * @returns {Array} [x,y]
  */
 Board.prototype.getPosition = function(pentomino) {
-    if (!this.pentominoPositions.hasOwnProperty(pentomino.name)) {
+    if (!this._pentominoPositions.hasOwnProperty(pentomino.name)) {
         throw new Error("No pentomino: " + pentomino.name + " placed on the board");
     } else {
-        return this.pentominoPositions[pentomino.name];
+        return this._pentominoPositions[pentomino.name];
     }
 }
 
@@ -133,8 +133,8 @@ Board.prototype.getPosition = function(pentomino) {
  * @returns pentomino
  */
 Board.prototype.getPentominoByName = function (name) {
-    for (let i = 0; i < this.pentominos.length; i++) {
-        let pentomino = this.pentominos[i];
+    for (let i = 0; i < this._pentominos.length; i++) {
+        let pentomino = this._pentominos[i];
         if (pentomino.name === name) {
             return pentomino;
         }
@@ -150,10 +150,10 @@ Board.prototype.getPentominoByName = function (name) {
  * @returns {pentomino}
  */
 Board.prototype.getPentominoAtPosition = function(x, y) {
-    if (this.array[x][y] === EMPTY_CELL) {
+    if (this._array[x][y] === EMPTY_CELL) {
         throw new Error("No pentomino at position (" + x + ", " + y + ")");
     } else {
-        let name = this.array[x][y];
+        let name = this._array[x][y];
         return this.getPentominoByName(name);
     }
 }
