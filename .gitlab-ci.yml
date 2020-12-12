@@ -23,3 +23,10 @@ test-job2:
     script:
         - echo "Hello, $GITLAB_USER_LOGIN!"
         - echo "This job tests some other thing."
+
+test-board:
+    tags:
+        - ci
+    stage: test
+    script:
+        - echo "Board test running"
