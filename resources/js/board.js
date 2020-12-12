@@ -44,7 +44,7 @@ Board.prototype.placePentomino = function(pentomino, x, y) {
         if (!this.positionIsValid(x, y)) {
             throw new Error("Position (" + x + "," + y + ") is outside the board");
         } else {
-            throw new Error("Pentomino" + pentomino.name + "doesn not fit at position (" + x + "," + y + ") on the board");
+            throw new Error("Pentomino" + pentomino.name + "does not fit at position (" + x + "," + y + ") on the board");
         }
     }
 
@@ -93,7 +93,7 @@ Board.prototype.isCollides = function (pentomino, x, y) {
         if (!this.positionIsValid(x, y)) {
             throw new Error("Position (" + x + "," + y + ") is outside the board");
         } else {
-            throw new Error("Pentomino" + pentomino.name + "doesn not fit at position (" + x + "," + y + ") on the board");
+            throw new Error("Pentomino" + pentomino.name + "does not fit at position (" + x + "," + y + ") on the board");
         }
     }
 
