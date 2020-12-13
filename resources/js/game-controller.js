@@ -5,13 +5,9 @@ function GameController() {
 // --- --- --- Operations --- --- ---
 
 
-// --- --- --- Edit Game --- --- ---
-GameController.prototype._placePiece = function () {
-
+// --- --- --- Set Game --- --- ---
+GameController.prototype.setGame = function (board) {
+    this._board = board;
 }
 
-GameController.prototype._removePiece = function () {
-
-}
-
-// --- --- --- Get Information about the Game
+// --- --- --- Get Information about the Game --- --- ---

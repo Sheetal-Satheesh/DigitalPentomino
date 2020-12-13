@@ -9,7 +9,8 @@
     <script src="../js/game-loader.js"></script>
     <script src="../js/game-controller.js"></script>
     <script>
-        let gameController = GameLoader.prototype.loadByName("Level 1");
+        let gameController = new GameController();
+        gameController.setGame(GameLoader.prototype.loadByName("Level 1"));
         // Frontend uses gameController object to create board with pieces on them
         // User clicks on cell (1, 1)
         let clickedPentomino = gameController.getPentominoAtPosition(1, 1);
