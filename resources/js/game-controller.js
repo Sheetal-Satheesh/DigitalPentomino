@@ -2,7 +2,24 @@ function GameController() {
     this._board = null;
 }
 
-// --- --- --- Operations --- --- ---
+// --- --- --- Operations on the pentamino ( Rotating and Mirroring)--- --- ---
+
+
+GameController.prototype.rotateAntiClkWise = function (pentamino) {
+     pentomino.rotateAntiClkWise();
+}
+
+GameController.prototype.rotateClkWise = function (pentamino) {
+     pentomino.rotateClkWise();
+}
+
+GameController.prototype.mirrorH = function (pentamino) {
+     pentomino.mirrorH();
+}
+
+GameController.prototype.mirrorV = function (pentamino) {
+     pentomino.mirrorV();
+}
 
 
 // --- --- --- Set Game --- --- ---
