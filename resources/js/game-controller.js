@@ -4,55 +4,24 @@ function GameController() {
 
 // --- --- --- Pentomino Operations --- --- ---
 GameController.prototype.placePentomino = function (pentomino, x, y) {
-    let success = this._board.placePentomino(pentomino, x, y);
-    if (success) {
-        // Maybe as matrix? -> introduce pentomino method, which generates matrix from occupied cells
-        return pentomino.occupied_cells;
-    } else {
-        return null;
-    }
+    return this._board.placePentomino(pentomino, x, y);
 }
 
 GameController.prototype.rotatePentominoAntiClkWise = function (pentomino) {
-    let success = this._board.rotatePentominoAntiClkWise(pentomino);
-    if (success) {
-        // Maybe as matrix? -> introduce pentomino method, which generates matrix from occupied cells
-        return pentomino.occupied_cells;
-    } else {
-        return null;
-    }
+    return this._board.rotatePentominoAntiClkWise(pentomino);
 }
 
 GameController.prototype.rotatePentominoClkWise = function (pentomino) {
-    let success = this._board.rotatePentominoClkWise(pentomino);
-    if (success) {
-        // Maybe as matrix? -> introduce pentomino method, which generates matrix from occupied cells
-        return pentomino.occupied_cells;
-    } else {
-        return null;
-    }
+    return this._board.rotatePentominoClkWise(pentomino);
 }
 
 GameController.prototype.mirrorPentominoH = function (pentomino) {
-    let success = this._board.mirrorPentominoH(pentomino);
-    if (success) {
-        // Maybe as matrix? -> introduce pentomino method, which generates matrix from occupied cells
-        return pentomino.occupied_cells;
-    } else {
-        return null;
-    }
+    return this._board.mirrorPentominoH(pentomino);
 }
 
 GameController.prototype.mirrorPentominoV = function (pentomino) {
-    let success = this._board.mirrorPentominoV(pentomino);
-    if (success) {
-        // Maybe as matrix? -> introduce pentomino method, which generates matrix from occupied cells
-        return pentomino.occupied_cells;
-    } else {
-        return null;
-    }
+    return this._board.mirrorPentominoV(pentomino);
 }
-
 
 // --- --- --- Set Game --- --- ---
 GameController.prototype.setGame = function (board) {
