@@ -65,6 +65,54 @@ Board.prototype.placePentomino = function(pentomino, x, y) {
     return true;
 }
 
+Board.prototype.rotatePentominoAntiClkWise = function (pentomino) {
+    pentomino.rotateAntiClkWise();
+
+    let position = this.getPosition(pentomino);
+    if (this.isCollides(pentomino, position[0], position[1])) {
+        pentomino.rotateClkWise();
+        return false;
+    }
+
+    return true;
+}
+
+Board.prototype.rotatePentominoClkWise = function (pentomino) {
+    pentomino.rotateClkWise();
+
+    let position = this.getPosition(pentomino);
+    if (this.isCollides(pentomino, position[0], position[1])) {
+        pentomino.rotateAntiClkWise();
+        return false;
+    }
+
+    return true;
+}
+
+Board.prototype.mirrorPentominoH = function (pentomino) {
+    pentomino.mirrorH();
+
+    let position = this.getPosition(pentomino);
+    if (this.isCollides(pentomino, position[0], position[1])) {
+        pentomino.mirrorH();
+        return false;
+    }
+
+    return true;
+}
+
+Board.prototype.mirrorPentominoV = function (pentomino) {
+    pentomino.mirrorV();
+
+    let position = this.getPosition(pentomino);
+    if (this.isCollides(pentomino, position[0], position[1])) {
+        pentomino.mirrorV();
+        return false;
+    }
+
+    return true;
+}
+
 /**
  * Removes a pentomino piece from the board
  * @param pentomino the piece that should be removed
