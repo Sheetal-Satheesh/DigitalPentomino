@@ -2,22 +2,30 @@ function GameController() {
     this._board = null;
 }
 
-// --- --- --- Operations on the pentamino ( Rotating and Mirroring)--- --- ---
+// --- --- --- Operations on the pentomino ( Rotating and Mirroring) --- --- ---
+GameController.prototype.setPentomino = function (pentomino, x, y) {
+    let success = this._board.placePentomino(pentomino, x, y);
+    if (success) {
+        // Maybe as matrix? -> introduce pentomino method, which generates matrix from occupied cells
+        return pentomino.occupied_cells;
+    } else {
+        return null;
+    }
+}
 
-
-GameController.prototype.rotateAntiClkWise = function (pentamino) {
+GameController.prototype.rotateAntiClkWise = function (pentomino) {
      pentomino.rotateAntiClkWise();
 }
 
-GameController.prototype.rotateClkWise = function (pentamino) {
+GameController.prototype.rotateClkWise = function (pentomino) {
      pentomino.rotateClkWise();
 }
 
-GameController.prototype.mirrorH = function (pentamino) {
+GameController.prototype.mirrorH = function (pentomino) {
      pentomino.mirrorH();
 }
 
-GameController.prototype.mirrorV = function (pentamino) {
+GameController.prototype.mirrorV = function (pentomino) {
      pentomino.mirrorV();
 }
 
