@@ -46,62 +46,6 @@ let Pentomino = function (sPentominoType) {
         default:
             throw 'Unexpected Pentomino Type';
     }
-    
-    this.rotateAntiClkWise = () => {
-        let iCols = this.iCols;
-        let iRows = this.iRows;
-        let aNewRepr = [];
-        
-        for(let i = 1; i <= iCols; ++i) {
-            for(let j = 1; j <= iRows; ++j) {
-                aNewRepr.push(this.sRepr[iCols*j-i]);
-            }
-        }
-
-        this.sRepr = aNewRepr.join("");
-        this.iRows = iCols;
-        this.iCols = iRows;
-    }
-
-    this.rotateClkWise = () => {
-        let iCols = this.iCols;
-        let iRows = this.iRows;
-        let aNewRepr = [];
-        
-        for(let i = iCols; i > 0; --i) {
-            for(let j = iRows; j > 0; --j) {
-                aNewRepr.push(this.sRepr[iCols*j-i]);
-            }
-        }
-
-        this.sRepr = aNewRepr.join("");
-        this.iRows = iCols;
-        this.iCols = iRows;
-    }
-
-    this.mirrorH = () => {
-        let aNewRepr = [];
-        
-        for(let i = this.iRows-1; i >= 0 ; --i) {
-            for(let j = 0; j < this.iCols; ++j) {
-                aNewRepr.push(this.sRepr[this.iCols*i+j]);
-            }
-        }
-
-        this.sRepr = aNewRepr.join("");
-    }
-
-    this.mirrorV = () => {
-        let aNewRepr = [];
-        
-        for(let i = 1; i <= this.iRows; ++i) {
-            for(let j = 1; j <= this.iCols; ++j) {
-                aNewRepr.push(this.sRepr[this.iCols*i-j]);
-            }
-        }
-
-        this.sRepr = aNewRepr.join("");
-    }
 
     function _createF() {
         oContext.iRows = 3;
@@ -175,5 +119,3 @@ let Pentomino = function (sPentominoType) {
         oContext.sRepr = '010111010';        
     }
 };
-
-// module.exports.Pentomino = Pentomino;
