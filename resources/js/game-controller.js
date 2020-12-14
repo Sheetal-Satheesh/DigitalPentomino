@@ -3,7 +3,7 @@ function GameController() {
 }
 
 // --- --- --- Pentomino Operations --- --- ---
-GameController.prototype.placePentomino = function (pentomino, x, y) {
+GameController.prototype.movePentominoToPosition = function (pentomino, x, y) {
     return this._board.placePentomino(pentomino, x, y);
 }
 
