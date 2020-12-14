@@ -70,8 +70,8 @@ PentominoUtility.prototype.mirrorV = function (pentomino) {
 
 PentominoUtility.prototype.getMatrixRepresentaion = function (pentomino) {
     let aPentomino = Array(5).fill(0).map(() => new Array(5).fill(0));
-    for (i = 0; i < pentomino.iRows; ++i) {
-        for (j = 0; j < pentomino.iCols; ++j) {
+    for (let i = 0; i < pentomino.iRows; ++i) {
+        for (let j = 0; j < pentomino.iCols; ++j) {
             aPentomino[i][j] = parseInt(pentomino.sRepr[i * pentomino.iCols + j]);
         }
     }
