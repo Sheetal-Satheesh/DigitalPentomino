@@ -65,6 +65,54 @@ Board.prototype.placePentomino = function(pentomino, x, y) {
     return true;
 }
 
+Board.prototype.rotatePentominoAntiClkWise = function (pentomino) {
+    PentominoUtility.prototype.rotateAntiClkWise(pentomino);
+
+    let position = this.getPosition(pentomino);
+    if (this.isCollides(pentomino, position[0], position[1])) {
+        pentomino.rotateClkWise();
+        return false;
+    }
+
+    return true;
+}
+
+Board.prototype.rotatePentominoClkWise = function (pentomino) {
+    PentominoUtility.prototype.rotateClkWise(pentomino);
+
+    let position = this.getPosition(pentomino);
+    if (this.isCollides(pentomino, position[0], position[1])) {
+        pentomino.rotateAntiClkWise();
+        return false;
+    }
+
+    return true;
+}
+
+Board.prototype.mirrorPentominoH = function (pentomino) {
+    PentominoUtility.prototype.mirrorH(pentomino);
+
+    let position = this.getPosition(pentomino);
+    if (this.isCollides(pentomino, position[0], position[1])) {
+        pentomino.mirrorH();
+        return false;
+    }
+
+    return true;
+}
+
+Board.prototype.mirrorPentominoV = function (pentomino) {
+    PentominoUtility.prototype.mirrorV(pentomino);
+
+    let position = this.getPosition(pentomino);
+    if (this.isCollides(pentomino, position[0], position[1])) {
+        pentomino.mirrorV();
+        return false;
+    }
+
+    return true;
+}
+
 /**
  * Removes a pentomino piece from the board
  * @param pentomino the piece that should be removed
@@ -97,9 +145,9 @@ Board.prototype.isCollides = function (pentomino, x, y) {
         }
     }
 
-    for (let i = 0; i < pentomino.height; i++) {
-        for (let j = 0; j < pentomino.width; j++) {
-            if (pentomino.occupied_cells.charAt(i * pentomino.width + j) === '1'
+    for (let i = 0; i < pentomino.iRows; i++) {
+        for (let j = 0; j < pentomino.iCols; j++) {
+            if (pentomino.sRepr.charAt(i * pentomino.iCols + j) === '1'
                 && !(this._array[x + j][y + i] === EMPTY_CELL)
                 && !(this._array[x + j][y + i] === pentomino.name)) {
                 return true;
@@ -119,9 +167,9 @@ Board.prototype._drawPentomino = function (pentomino, charToDraw) {
     let position = this.getPosition(pentomino);
     let x = position[0];
     let y = position[1];
-    for (let i = 0; i < pentomino.height; i++) {
-        for (let j = 0; j < pentomino.width; j++) {
-            if (pentomino.occupied_cells.charAt(i * pentomino.width + j) === '1') {
+    for (let i = 0; i < pentomino.iRows; i++) {
+        for (let j = 0; j < pentomino.iCols; j++) {
+            if (pentomino.sRepr.charAt(i * pentomino.iCols + j) === '1') {
                 this._array[x + j][y + i] = charToDraw;
             }
         }
@@ -210,9 +258,9 @@ Board.prototype.positionIsValid = function(x, y) {
  */
 Board.prototype.pentominoPositionIsValid = function(pentomino, x, y) {
     return !(x < 0
-        || x + pentomino.width - 1 >= this.size[0]
+        || x + pentomino.iCols - 1 >= this.size[0]
         || y < 0
-        || y + pentomino.height - 1 >= this.size[1]);
+        || y + pentomino.iRows - 1 >= this.size[1]);
 }
 
 /**

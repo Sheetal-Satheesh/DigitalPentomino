@@ -6,28 +6,13 @@
 </head>
 <body>
 
-<script src="resources/js/board.js"></script>
+<script src="../js/board.js"></script>
+<script src="../js/pentomino-utility.js"></script>
+<script src="../js/pentomino.js"></script>
 <script>
-        let penX = {
-            name: 'X',
-            width: 3,
-            height: 3,
-            occupied_cells: "010111010",
-        };
-
-        let penT = {
-            name: 'T',
-            width: 3,
-            height: 3,
-            occupied_cells: "111010010",
-        };
-
-         let penL = {
-            name: 'L',
-            width: 4,
-            height: 2,
-            occupied_cells: "11111000",
-        };
+        let penX = new Pentomino('X');
+        let penT = new Pentomino('T');
+        let penL = new Pentomino('L');
 
 <!-- Creates new board -->
 
