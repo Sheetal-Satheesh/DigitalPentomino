@@ -2,6 +2,7 @@
 
 
 let Pentomino = function (sPentominoType) {
+    this.name = sPentominoType;
     this.iRows = 0;
     this.iCols = 0;
     this.sRepr = '';
