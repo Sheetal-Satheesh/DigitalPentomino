@@ -85,8 +85,8 @@ let Pentomino = function (sPentominoType) {
     }
 
     function _createU() {
-        oContext.iRows = 3;
-        oContext.iCols = 2;
+        oContext.iRows = 2;
+        oContext.iCols = 3;
         oContext.sRepr = '101111';        
     }
 
