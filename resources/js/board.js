@@ -66,49 +66,69 @@ Board.prototype.placePentomino = function(pentomino, x, y) {
 }
 
 Board.prototype.rotatePentominoAntiClkWise = function (pentomino) {
-    PentominoUtility.prototype.rotateAntiClkWise(pentomino);
+    let tempPentomino = new Pentomino(pentomino.name);
+    Object.assign(tempPentomino, pentomino);
+    PentominoUtility.prototype.rotateAntiClkWise(tempPentomino);
 
-    let position = this.getPosition(pentomino);
-    if (this.isCollides(pentomino, position[0], position[1])) {
-        pentomino.rotateClkWise();
+    let position = this.getPosition(tempPentomino);
+    if (this.isCollides(tempPentomino, position[0], position[1])) {
         return false;
     }
+
+    this._drawPentomino(pentomino, EMPTY_CELL);
+    Object.assign(pentomino, tempPentomino);
+    this._drawPentomino(pentomino, pentomino.name);
 
     return true;
 }
 
 Board.prototype.rotatePentominoClkWise = function (pentomino) {
-    PentominoUtility.prototype.rotateClkWise(pentomino);
+    let tempPentomino = new Pentomino(pentomino.name);
+    Object.assign(tempPentomino, pentomino);
+    PentominoUtility.prototype.rotateClkWise(tempPentomino);
 
-    let position = this.getPosition(pentomino);
-    if (this.isCollides(pentomino, position[0], position[1])) {
-        pentomino.rotateAntiClkWise();
+    let position = this.getPosition(tempPentomino);
+    if (this.isCollides(tempPentomino, position[0], position[1])) {
         return false;
     }
+
+    this._drawPentomino(pentomino, EMPTY_CELL);
+    Object.assign(pentomino, tempPentomino);
+    this._drawPentomino(pentomino, pentomino.name);
 
     return true;
 }
 
 Board.prototype.mirrorPentominoH = function (pentomino) {
-    PentominoUtility.prototype.mirrorH(pentomino);
+    let tempPentomino = new Pentomino(pentomino.name);
+    Object.assign(tempPentomino, pentomino);
+    PentominoUtility.prototype.mirrorH(tempPentomino);
 
-    let position = this.getPosition(pentomino);
-    if (this.isCollides(pentomino, position[0], position[1])) {
-        pentomino.mirrorH();
+    let position = this.getPosition(tempPentomino);
+    if (this.isCollides(tempPentomino, position[0], position[1])) {
         return false;
     }
+
+    this._drawPentomino(pentomino, EMPTY_CELL);
+    Object.assign(pentomino, tempPentomino);
+    this._drawPentomino(pentomino, pentomino.name);
 
     return true;
 }
 
 Board.prototype.mirrorPentominoV = function (pentomino) {
-    PentominoUtility.prototype.mirrorV(pentomino);
+    let tempPentomino = new Pentomino(pentomino.name);
+    Object.assign(tempPentomino, pentomino);
+    PentominoUtility.prototype.mirrorV(tempPentomino);
 
-    let position = this.getPosition(pentomino);
-    if (this.isCollides(pentomino, position[0], position[1])) {
-        pentomino.mirrorV();
+    let position = this.getPosition(tempPentomino);
+    if (this.isCollides(tempPentomino, position[0], position[1])) {
         return false;
     }
+
+    this._drawPentomino(pentomino, EMPTY_CELL);
+    Object.assign(pentomino, tempPentomino);
+    this._drawPentomino(pentomino, pentomino.name);
 
     return true;
 }
