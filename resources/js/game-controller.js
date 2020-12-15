@@ -28,6 +28,15 @@ GameController.prototype.setGame = function (board) {
     this._board = board;
 }
 
+// --- --- --- Debugging --- --- ---
+GameController.prototype.display = function () {
+    this._board.display();
+}
+
+GameController.prototype.writeToDocument = function () {
+    this._board.writeToDocument();
+}
+
 // --- --- --- Get Information About The Game For Loading --- --- ---
 GameController.prototype.getBoardSize = function () {
     if (this._board === null) throw new Error("Game is not set");
