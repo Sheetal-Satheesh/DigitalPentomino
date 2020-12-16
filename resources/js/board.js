@@ -1,4 +1,4 @@
-const EMPTY_CELL = 'O';
+const EMPTY_CELL = ' ';
 
 /**
  * It will create a default board of the defined size.
