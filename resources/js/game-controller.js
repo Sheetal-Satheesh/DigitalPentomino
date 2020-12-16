@@ -1,26 +1,57 @@
 class GameController {
     constructor() {
         this._board = null;
+        this._tempPentomino = new Pentomino('T');
     }
 
     // --- --- --- Pentomino Operations --- --- ---
     movePentominoToPosition(pentomino, x, y) {
+        if (this._board === null) throw new Error("Game is not set");
+
+        if (pentomino === null || pentomino === undefined) throw new Error("Type Error: Pentomino is null or undefined");
+        if(!(Object.getPrototypeOf(pentomino) === Object.getPrototypeOf(this._tempPentomino)))
+            throw new Error("Type Error: Pentomino isn't an instance of the Pentomino class.");
+
         return this._board.placePentomino(pentomino, x, y);
     }
 
     rotatePentominoAntiClkWise(pentomino) {
+        if (this._board === null) throw new Error("Game is not set");
+
+        if (pentomino === null || pentomino === undefined) throw new Error("Type Error: Pentomino is null or undefined");
+        if(!(Object.getPrototypeOf(pentomino) === Object.getPrototypeOf(this._tempPentomino)))
+            throw new Error("Type Error: Pentomino isn't an instance of the Pentomino class.");
+
         return this._board.rotatePentominoAntiClkWise(pentomino);
     }
 
     rotatePentominoClkWise(pentomino) {
+        if (this._board === null) throw new Error("Game is not set");
+
+        if (pentomino === null || pentomino === undefined) throw new Error("Type Error: Pentomino is null or undefined");
+        if(!(Object.getPrototypeOf(pentomino) === Object.getPrototypeOf(this._tempPentomino)))
+            throw new Error("Type Error: Pentomino isn't an instance of the Pentomino class.");
+
         return this._board.rotatePentominoClkWise(pentomino);
     }
 
     mirrorPentominoH(pentomino) {
+        if (this._board === null) throw new Error("Game is not set");
+
+        if (pentomino === null || pentomino === undefined) throw new Error("Type Error: Pentomino is null or undefined");
+        if(!(Object.getPrototypeOf(pentomino) === Object.getPrototypeOf(this._tempPentomino)))
+            throw new Error("Type Error: Pentomino isn't an instance of the Pentomino class.");
+
         return this._board.mirrorPentominoH(pentomino);
     }
 
     mirrorPentominoV(pentomino) {
+        if (this._board === null) throw new Error("Game is not set");
+
+        if (pentomino === null || pentomino === undefined) throw new Error("Type Error: Pentomino is null or undefined");
+        if(!(Object.getPrototypeOf(pentomino) === Object.getPrototypeOf(this._tempPentomino)))
+            throw new Error("Type Error: Pentomino isn't an instance of the Pentomino class.");
+
         return this._board.mirrorPentominoV(pentomino);
     }
 
@@ -31,10 +62,14 @@ class GameController {
 
     // --- --- --- Debugging --- --- ---
     display() {
+        if (this._board === null) throw new Error("Game is not set");
+
         this._board.display();
     }
 
     writeToDocument() {
+        if (this._board === null) throw new Error("Game is not set");
+
         this._board.writeToDocument();
     }
 
@@ -51,6 +86,11 @@ class GameController {
 
     getPositionOfPentomino(pentomino) {
         if (this._board === null) throw new Error("Game is not set");
+
+        if (pentomino === null || pentomino === undefined) throw new Error("Type Error: Pentomino is null or undefined");
+        if(!(Object.getPrototypeOf(pentomino) === Object.getPrototypeOf(this._tempPentomino)))
+            throw new Error("Type Error: Pentomino isn't an instance of the Pentomino class.");
+
         return this._board.getPosition(pentomino);
     }
 
