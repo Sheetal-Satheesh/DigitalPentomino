@@ -12,62 +12,86 @@ class Pentomino {
         switch (sPentominoType) {
             case 'F':
                 this.iRows = 3;
-                this.iCols = 3; 
+                this.iCols = 3;
+                this.sX = 1;
+                this.sY = 1;
                 this.sRepr = '0000000110011000010000000';
                 break;
             case 'L':
                 this.iRows = 4;
                 this.iCols = 2;
+                this.sX = 0;
+                this.sY = 2;
                 this.sRepr = '0010000100001000011000000';
                 break;
             case 'N':
                 this.iRows = 4;
                 this,iCols = 2;
+                this.sX = 0;
+                this.sY = 1;
                 this.sRepr = '0010000100011000100000000';
                 break;
             case 'P':
                 this.iRows = 3;
                 this.iCols = 2;
+                this.sX = 1;
+                this.sY = 1;
                 this.sRepr = '0000001100011000100000000';
                 break;
             case 'Y':
                 this.iRows = 2;
                 this.iCols = 4;
+                this.sX = 2;
+                this.sY = 0;
                 this.sRepr = '0000000000001001111000000';
                 break;
             case 'T':
                 this.iRows = 3;
                 this.iCols = 3;
+                this.sX = 1;
+                this.sY = 1;
                 this.sRepr = '0000001110001000010000000';
                 break;
             case 'U':
                 this.iRows = 2;
                 this.iCols = 3;
+                this.sX = 2;
+                this.sY = 1;
                 this.sRepr = '0000000000010100111000000';
                 break;
             case 'V':
                 this.iRows = 3;
                 this.iCols = 3;
+                this.sX = 1;
+                this.sY = 1;
                 this.sRepr = '0000001000010000111000000';
                 break;
             case 'W':
                 this.iRows = 3;
                 this.iCols = 3;
+                this.sX = 1;
+                this.sY = 1;
                 this.sRepr = '0000001000011000011000000';
                 break;
             case 'Z':
                 this.iRows = 3;
                 this.iCols = 3;
+                this.sX = 1;
+                this.sY = 1;
                 this.sRepr = '0000001100001000011000000';
                 break;
             case 'I':
                 this.iRows = 5;
                 this.iCols = 1;
+                this.sX = 0;
+                this.sY = 2;
                 this.sRepr = '0010000100001000010000100';
                 break;
             case 'X':
                 this.iRows = 3;
                 this.iCols = 3;
+                this.sX = 1;
+                this.sY = 1;
                 this.sRepr = '0000000100011100010000000';
                 break;
             default:

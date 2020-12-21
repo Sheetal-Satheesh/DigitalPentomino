@@ -185,10 +185,10 @@ class Board {
         console.log(position);
         let x = position[0];
         let y = position[1];
-        for (let i = 0; i < pentomino.iRows; i++) {
-            for (let j = 0; j < pentomino.iCols; j++) {
-                if (pentomino.sRepr.charAt(i * pentomino.iCols + j) === '1') {
-                    this._array[x + i][y + j] = charToDraw;
+        for (let i = 0; i < I_ROWS; i++) {
+            for (let j = 0; j < I_COLS; j++) {
+                if (pentomino.sRepr.charAt(i * I_COLS + j) === '1') {
+                    this._array[x + i-pentomino.sX][y + j-pentomino.sY] = charToDraw;
                 }
             }
         }
