@@ -69,8 +69,7 @@ class Board {
     rotatePentominoAntiClkWise(pentomino) {
         let tempPentomino = new Pentomino(pentomino.name);
         Object.assign(tempPentomino, pentomino);
-        PentominoUtility.prototype.rotateAntiClkWise(tempPentomino);
-
+        tempPentomino.rotateAntiClkWise();
         let position = this.getPosition(tempPentomino);
         if (this.isCollides(tempPentomino, position[0], position[1])) {
             return false;
@@ -86,8 +85,7 @@ class Board {
     rotatePentominoClkWise(pentomino) {
         let tempPentomino = new Pentomino(pentomino.name);
         Object.assign(tempPentomino, pentomino);
-        PentominoUtility.prototype.rotateClkWise(tempPentomino);
-
+        tempPentomino.rotateClkWise();        
         let position = this.getPosition(tempPentomino);
         if (this.isCollides(tempPentomino, position[0], position[1])) {
             return false;
@@ -103,8 +101,7 @@ class Board {
     mirrorPentominoH(pentomino) {
         let tempPentomino = new Pentomino(pentomino.name);
         Object.assign(tempPentomino, pentomino);
-        PentominoUtility.prototype.mirrorH(tempPentomino);
-
+        tempPentomino.mirrorH();
         let position = this.getPosition(tempPentomino);
         if (this.isCollides(tempPentomino, position[0], position[1])) {
             return false;
@@ -120,8 +117,7 @@ class Board {
     mirrorPentominoV(pentomino) {
         let tempPentomino = new Pentomino(pentomino.name);
         Object.assign(tempPentomino, pentomino);
-        PentominoUtility.prototype.mirrorV(tempPentomino);
-
+        tempPentomino.mirrorV();
         let position = this.getPosition(tempPentomino);
         if (this.isCollides(tempPentomino, position[0], position[1])) {
             return false;
