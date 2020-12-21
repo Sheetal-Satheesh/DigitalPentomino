@@ -182,7 +182,6 @@ class Board {
      */
     _drawPentomino(pentomino, charToDraw) {
         let position = this.getPosition(pentomino);
-        console.log(position);
         let x = position[0];
         let y = position[1];
         for (let i = 0; i < I_ROWS; i++) {
@@ -254,8 +253,10 @@ class Board {
            }
         },this);
 
-        if (name    != undefined){
+        if (name != undefined){
             return this.getPentominoByName(name);
+        }else{
+            throw new Error("No Pentomino at Position X,Y:"+x+',:'+y+" ");
         }
     }
 
