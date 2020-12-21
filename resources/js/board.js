@@ -256,7 +256,7 @@ class Board {
         if (name != undefined){
             return this.getPentominoByName(name);
         }else{
-            throw new Error("No Pentomino at Position X,Y:"+x+',:'+y+" ");
+            throw new Error("No Pentomino at Position X,Y: ("+x+','+y+")");
         }
     }
 
