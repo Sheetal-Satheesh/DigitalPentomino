@@ -69,8 +69,7 @@ class Board {
     rotatePentominoAntiClkWise(pentomino) {
         let tempPentomino = new Pentomino(pentomino.name);
         Object.assign(tempPentomino, pentomino);
-        PentominoUtility.prototype.rotateAntiClkWise(tempPentomino);
-
+        tempPentomino.rotateAntiClkWise();
         let position = this.getPosition(tempPentomino);
         if (this.isCollides(tempPentomino, position[0], position[1])) {
             return false;
@@ -86,8 +85,7 @@ class Board {
     rotatePentominoClkWise(pentomino) {
         let tempPentomino = new Pentomino(pentomino.name);
         Object.assign(tempPentomino, pentomino);
-        PentominoUtility.prototype.rotateClkWise(tempPentomino);
-
+        tempPentomino.rotateClkWise();        
         let position = this.getPosition(tempPentomino);
         if (this.isCollides(tempPentomino, position[0], position[1])) {
             return false;
@@ -103,8 +101,7 @@ class Board {
     mirrorPentominoH(pentomino) {
         let tempPentomino = new Pentomino(pentomino.name);
         Object.assign(tempPentomino, pentomino);
-        PentominoUtility.prototype.mirrorH(tempPentomino);
-
+        tempPentomino.mirrorH();
         let position = this.getPosition(tempPentomino);
         if (this.isCollides(tempPentomino, position[0], position[1])) {
             return false;
@@ -120,8 +117,7 @@ class Board {
     mirrorPentominoV(pentomino) {
         let tempPentomino = new Pentomino(pentomino.name);
         Object.assign(tempPentomino, pentomino);
-        PentominoUtility.prototype.mirrorV(tempPentomino);
-
+        tempPentomino.mirrorV();
         let position = this.getPosition(tempPentomino);
         if (this.isCollides(tempPentomino, position[0], position[1])) {
             return false;
@@ -188,10 +184,10 @@ class Board {
         let position = this.getPosition(pentomino);
         let x = position[0];
         let y = position[1];
-        for (let i = 0; i < pentomino.iRows; i++) {
-            for (let j = 0; j < pentomino.iCols; j++) {
-                if (pentomino.sRepr.charAt(i * pentomino.iCols + j) === '1') {
-                    this._array[x + j][y + i] = charToDraw;
+        for (let i = 0; i < I_ROWS; i++) {
+            for (let j = 0; j < I_COLS; j++) {
+                if (pentomino.sRepr.charAt(i * I_COLS + j) === '1') {
+                    this._array[x + i-pentomino.sX][y + j-pentomino.sY] = charToDraw;
                 }
             }
         }
@@ -249,11 +245,18 @@ class Board {
             throw new Error("Position (" + x + "," + y + ") is outside the board");
         }
 
-        if (this._array[x][y] === EMPTY_CELL) {
-            throw new Error("No pentomino at position (" + x + ", " + y + ")");
-        } else {
-            let name = this._array[x][y];
+        var name = undefined;
+        Object.keys(this._pentominoPositions).forEach(function(key,poistion) {
+            if(this._pentominoPositions[key][0] == x &&
+                this._pentominoPositions[key][1] == y){
+                name = key;
+           }
+        },this);
+
+        if (name != undefined){
             return this.getPentominoByName(name);
+        }else{
+            throw new Error("No Pentomino at Position X,Y: ("+x+','+y+")");
         }
     }
 
@@ -311,9 +314,14 @@ class Board {
      * Prints board to console for debugging purposes.
      */
     display() {
+        var columnHead = '   ';
         for (let y = 0; y < this.size[1]; y++) {
-            let row = "| ";
-            for (let x = 0; x < this.size[0]; x++) {
+            columnHead = columnHead+ y+ ' ';
+        }
+        console.log(columnHead);
+        for (let x = 0; x < this.size[0]; x++) {
+            let row = x+ "| ";
+            for (let y = 0; y < this.size[1]; y++) {
                 row = row + this._array[x][y] + ' ';
             }
             row = row + "|\n";
