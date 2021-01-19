@@ -1,0 +1,155 @@
+"use strict";
+
+const I_COLS = 5;
+const I_ROWS = 5;
+const COL_ANCHOR = 2;
+const ROW_ANCHOR = 2;
+
+class Pentomino {
+    constructor(sPentominoType) {
+        this.name = sPentominoType;
+        this.iRows = I_ROWS;
+        this.iCols = I_COLS;
+        this.colAnchor = COL_ANCHOR;
+        this.rowAnchor = ROW_ANCHOR;
+        this.sRepr = '';
+        switch (sPentominoType) {
+            case 'F':
+                this.sRepr = '0000000110011000010000000';
+                break;
+            case 'L':
+                this.sRepr = '0010000100001000011000000';
+                break;
+            case 'N':
+                this.sRepr = '0010000100011000100000000';
+                break;
+            case 'P':
+                this.sRepr = '0000001100011000100000000';
+                break;
+            case 'Y':
+                this.sRepr = '0000000000001001111000000';
+                break;
+            case 'T':
+                this.sRepr = '0000001110001000010000000';
+                break;
+            case 'U':
+                this.sRepr = '0000001010011100000000000';
+                break;
+            case 'V':
+                this.sRepr = '0000001000010000111000000';
+                break;
+            case 'W':
+                this.sRepr = '0000001000011000011000000';
+                break;
+            case 'Z':
+                this.sRepr = '0000001100001000011000000';
+                break;
+            case 'I':
+                this.sRepr = '0010000100001000010000100';
+                break;
+            case 'X':
+                this.sRepr = '0000000100011100010000000';
+                break;
+            default:
+                throw 'Unexpected Pentomino Type: \'' + sPentominoType + '\'';
+        }
+    }
+
+    getMatrixPosition([anchorX, anchorY], [x, y]) {
+        return [
+            x - anchorX + this.colAnchor,
+            y - anchorY + this.rowAnchor
+        ];
+    }
+
+    getCoordinatePosition([anchorX, anchorY], [relX, relY]) {
+        return [
+            relX + anchorX - this.colAnchor,
+            relY + anchorY - this.rowAnchor
+        ];
+    }
+
+    matrixPositionIsValid(x, y) {
+        return !(x < 0
+            || x >= this.iCols
+            || y < 0
+            || y >= this.iRows);
+    }
+
+    getCharAtMatrixPosition(relX, relY) {
+        return this.sRepr.charAt(relY * this.iCols + relX);
+    }
+
+    rotateClkWise() {
+        let aNewRepr = [];
+
+        for (let i = this.iCols; i > 0; --i) {
+            for (let j = this.iRows; j > 0; --j) {
+                aNewRepr.push(this.sRepr[this.iCols * j - i]);
+            }
+        }
+
+        this.sRepr = aNewRepr.join("");
+    }
+
+    rotateAntiClkWise() {
+        let aNewRepr = [];
+
+        for (let i = 1; i <= this.iCols; ++i) {
+            for (let j = 1; j <= this.iRows; ++j) {
+                aNewRepr.push(this.sRepr[this.iCols * j - i]);
+            }
+        }
+
+        this.sRepr = aNewRepr.join("");
+    }
+
+    mirrorH() {
+        let aNewRepr = [];
+
+        for (let i = this.iRows - 1; i >= 0; --i) {
+            for (let j = 0; j < this.iCols; ++j) {
+                aNewRepr.push(this.sRepr[this.iCols * i + j]);
+            }
+        }
+
+        this.sRepr = aNewRepr.join("");
+    }
+
+    mirrorV() {
+        let aNewRepr = [];
+
+        for (let i = 1; i <= this.iRows; ++i) {
+            for (let j = 1; j <= this.iRows; ++j) {
+                aNewRepr.push(this.sRepr[this.iRows * i - j]);
+            }
+        }
+
+        this.sRepr = aNewRepr.join("");
+    }
+
+    getMatrixRepresentation() {
+        let aPentomino = Array(5).fill(0).map(() => new Array(5).fill(0));
+        for (let i = 0; i < this.iRows; ++i) {
+            for (let j = 0; j < this.iCols; ++j) {
+                aPentomino[i][j] = parseInt(this.sRepr[i * this.iCols + j]);
+            }
+        }
+
+        return aPentomino;
+    }
+
+    display() {
+        let aTemp = '';
+        for(let i = 0; i < this.iRows; ++i){
+            aTemp = '|';
+            for(let j = 0; j < this.iCols; ++j)
+                aTemp = aTemp.concat(   this.sRepr[i*this.iCols+j]);
+            console.log(aTemp.concat('|'));
+        }
+    }
+}
+
+if(typeof module != 'undefined') {
+    module.exports = Pentomino;
+}
