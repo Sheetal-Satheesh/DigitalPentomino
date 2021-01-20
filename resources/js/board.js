@@ -193,16 +193,15 @@ class Board {
         return verdict;
     }
 
-    doPentominoOverlap(x1,y1,pentominoA, pentominoB){
+    doPentominoOverlap(row, col, pentominoA, pentominoB) {
 
-        let x2 = x1 + pentominoA.iRows-1;
-        let y2 = y1 + pentominoA.iCols-1;
+        let aPosition = this.getPosition(pentominoA);
+        let aIsSet = pentominoA.getCharAtMatrixPosition(pentominoA.getMatrixPosition(aPosition, [row, col]));
 
-        let [p1, q1] = this.getPosition(pentominoB);
-        let p2 = p1 + pentominoB.iRows-1;
-        let q2 = q1 + pentominoB.iCols-1;
+        let bPosition = this.getPosition(pentominoB);
+        let bIsSet = pentominoB.getCharAtMatrixPosition(pentominoB.getMatrixPosition(bPosition, [row, col]));
 
-        return   (Math.max( x1, p1 ) <= Math.min( x2, p2 ) && Math.max( y1,q1) <= Math.min( y2,q2));
+        return aIsSet && bIsSet;
     }
 
     getOverlapCells(x1,y1,pentominoA, pentominoB){
@@ -211,7 +210,7 @@ class Board {
         let x2 = x1 + pentominoA.iRows-1;
         let y2 = y1 + pentominoA.iCols-1;
 
-        let [p1, q1] = this.getPosition(pentominoB  );
+        let [p1, q1] = this.getPosition(pentominoB);
         let p2 = p1 + pentominoB.iRows-1;
         let q2 = q1 + pentominoB.iCols-1;
 
@@ -225,7 +224,7 @@ class Board {
                 cells.push({
                     'x':i,
                     'y':j
-                })
+                });
             }
         }
 
