@@ -13,8 +13,6 @@ let I = new Pentomino('I');
 
 board.placePentomino(T, 1, 3);
 board.placePentomino(X, 5, 1);
-
-board.display();
 board.placePentomino(I, 4, 2);
 
 describe('Board.getPentominoesAtPosition(pentomino, x, y)', function() {

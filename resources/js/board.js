@@ -55,7 +55,7 @@ class Board {
      * @returns {boolean} returns false if a collision occurred else true
      */
     movePentominoToPosition(pentomino, row, col) {
-        if (!this.pentominoIsValidAtPosition(pentomino, x, y)) {
+        if (!this.pentominoIsValidAtPosition(pentomino, row, col)) {
             if (!this.positionIsValid(row, col)) {
                 throw new Error("Position [" + row + "," + col + "] is outside the board");
             } else {
