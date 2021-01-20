@@ -25,7 +25,7 @@ describe('GameController', function() {
     describe('#redo()', function() {
         it('should redo a specific command', function() {
             let redoCommands = gameController.getPossibleRedoCommands();
-            let redoCommand = redoCommands.find(c => c._x === -1 && c._y === 50);
+            let redoCommand = redoCommands.find(c => c._row === -1 && c._col === 50);
             assert.ok(!(redoCommand === undefined));
             gameController.redo(redoCommand);
             assert.deepEqual(gameController.getPositionOfPentomino(T), [-1, 50]);
