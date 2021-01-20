@@ -7,6 +7,7 @@ if(typeof require != 'undefined') {
     MirrorHCommand = require('./command-history/mirror-h-command.js');
     MirrorVCommand = require('./command-history/mirror-v-command.js');
     RemoveCommand = require('./command-history/remove-command.js');
+    Pentomino = require('./pentomino');
 }
 
 class Game {
