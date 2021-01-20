@@ -3,13 +3,13 @@ if(typeof require != 'undefined') {
 }
 
 class RemoveCommand extends Command {
-    constructor(game, pentomino, x, y) {
+    constructor(game, pentomino, row, col) {
         super();
         this._game = game;
         this._pentomino = pentomino;
         let position = game.getPositionOfPentomino(pentomino);
-        this._oldXPos = position[0];
-        this._oldYPos = position[1];
+        this._oldRowPos = position[0];
+        this._oldColPos = position[1];
     }
 
     execute() {
@@ -17,7 +17,7 @@ class RemoveCommand extends Command {
     }
 
     undo() {
-        this._game.placePentomino(this._pentomino, this._oldXPos, this._oldYPos);
+        this._game.placePentomino(this._pentomino, this._oldRowPos, this._oldColPos);
     }
 }
 

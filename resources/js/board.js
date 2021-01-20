@@ -11,24 +11,24 @@ class Board {
      * - Only pieces can be placed, which fit exactly onto the board. That means that only those pieces are counted for collisions. All other pieces are saved in the game-object and are ignored on collisions. That means that they may overlap on the board on the frontend, but are treated as non-existing in the Board class.
      *
      * @constructor
-     * @param boardX;
-     * @param boardY; 
+     * @param boardRows;
+     * @param boardCols;
      * @param shape; shape of the block
      */
-    constructor(boardCols,boardRows,shape='Block') {
-        this._boardCols = boardCols;
+    constructor(boardRows,boardCols,shape='Block') {
         this._boardRows = boardRows;
+        this._boardCols = boardCols;
 
         this._pentominoes = [];
         this._pentominoPositions = [];
     }
 
-    placePentomino(pentomino, x, y) {
-        if (!this.pentominoIsValidAtPosition(pentomino, x, y)) {
-            if (!this.positionIsValid(x, y)) {
-                throw new Error("Position (" + x + "," + y + ") is outside the board");
+    placePentomino(pentomino, row, col) {
+        if (!this.pentominoIsValidAtPosition(pentomino, row, col)) {
+            if (!this.positionIsValid(row, col)) {
+                throw new Error("Position [" + row + "," + col + "] is outside the board");
             } else {
-                throw new Error("Pentomino" + pentomino.name + "does not fit at position (" + x + "," + y + ") on the board");
+                throw new Error("Pentomino" + pentomino.name + " does not fit at position [" + row + "," + col + "] on the board");
             }
         }
 
@@ -40,7 +40,7 @@ class Board {
 
         this._pentominoPositions.push({
             name:pentomino.name,
-            boardPosition:[x,y]
+            boardPosition:[row,col]
         });
 
         // TODO - collisions
@@ -49,17 +49,17 @@ class Board {
     /**
      * Places a new or already existing pentomino piece on the board if there is no collision
      * @param pentomino the piece that should be placed
-     * @param x new x position
-     * @param y new y position
+     * @param row new row position
+     * @param col new col position
      * @throws Error if new position is outside the board
      * @returns {boolean} returns false if a collision occurred else true
      */
-    movePentominoToPosition(pentomino, x, y) {
-        if (!this.pentominoIsValidAtPosition(pentomino, x, y)) {
-            if (!this.positionIsValid(x, y)) {
-                throw new Error("Position (" + x + "," + y + ") is outside the board");
+    movePentominoToPosition(pentomino, row, col) {
+        if (!this.pentominoIsValidAtPosition(pentomino, row, col)) {
+            if (!this.positionIsValid(row, col)) {
+                throw new Error("Position [" + row + "," + col + "] is outside the board");
             } else {
-                throw new Error("Pentomino" + pentomino.name + "does not fit at position (" + x + "," + y + ") on the board");
+                throw new Error("Pentomino" + pentomino.name + " does not fit at position [" + row + "," + col + "] on the board");
             }
         }
 
@@ -72,7 +72,7 @@ class Board {
 
         this._pentominoPositions.push({
             name:pentomino.name,
-            boardPosition:[x,y]
+            boardPosition:[row,col]
         });
 
         // TODO - collisions
@@ -107,7 +107,7 @@ class Board {
         let position = this.getPosition(pentomino);
 
         if (!this.pentominoIsValid(tempPentomino)) {
-            throw new Error("Pentomino" + pentomino.name + "does not fit at position (" + position[0] + "," + position[1] + ") " +
+            throw new Error("Pentomino" + pentomino.name + "does not fit at position [" + position[0] + "," + position[1] + "] " +
                 "after operation" + operationName);
         }
         Object.assign(pentomino, tempPentomino);
@@ -134,17 +134,17 @@ class Board {
     /**
     _arraynother pentomino at the specified position
      * @param pentomino
-     * @param x new x position
-     * @param y new y position
+     * @param row new row position
+     * @param col new col position
      * @throws {Error} if new position is outside the board
      * @returns {boolean}
      */
-    isCollides(pentomino, x, y) {
-        if (!this.pentominoIsValidAtPosition(pentomino, x, y)) {
-            if (!this.positionIsValid(x, y)) {
-                throw new Error("Position (" + x + "," + y + ") is outside the board");
+    isCollides(pentomino, row, col) {
+        if (!this.pentominoIsValidAtPosition(pentomino, row, col)) {
+            if (!this.positionIsValid(row, col)) {
+                throw new Error("Position [" + row + "," + col + "] is outside the board");
             } else {
-                throw new Error("Pentomino" + pentomino.name + "does not fit at position (" + x + "," + y + ") on the board");
+                throw new Error("Pentomino" + pentomino.name + "does not fit at position [" + row + "," + col + "] on the board");
             }
         }
 
@@ -217,25 +217,25 @@ class Board {
 
     /**
      * Get pentomino at the specified position
-     * @param x
-     * @param y
+     * @param row
+     * @param col
      * @throws {Error} if the position is outside the board or if there is no pentomino at this position of the board
      * @returns {Pentomino}
      */
-    getPentominoesWithPosition(x, y) {
+    getPentominoesWithPosition(row, col) {
         // FIXME - return list of all pentominoes with this position
-        if (!this.positionIsValid(x, y)) {
-            throw new Error("Position (" + x + "," + y + ") is outside the board");
+        if (!this.positionIsValid(row, col)) {
+            throw new Error("Position [" + row + "," + col + "] is outside the board");
         }
 
         let pentomino=undefined;
         this._pentominoPositions.forEach(function(item){    
-            if(item.boardPosition[0] === x && item.boardPosition[1] === y){
+            if(item.boardPosition[0] === row && item.boardPosition[1] === col){
                 pentomino=this.getPentominoByName(item.name);
             }
         },this);
         if(pentomino === undefined){
-            throw new Error("No pentomino at position (" + x + ", " + y + ")");
+            throw new Error("No pentomino at position [" + row + ", " + col + "]");
         }else{
             return pentomino;
         }
@@ -243,13 +243,13 @@ class Board {
 
     /**
      * Returns an array of all pentomino pieces occupying this cell
-     * @param x
-     * @param y
+     * @param row
+     * @param col
      * @returns {Array}
      */
-    getPentominoesAtPosition(x, y) {
-        if (!this.positionIsValid(x, y)) {
-            throw new Error("Position (" + x + "," + y + ") is outside the board");
+    getPentominoesAtPosition(row, col) {
+        if (!this.positionIsValid(row, col)) {
+            throw new Error("Position [" + row + "," + col + "] is outside the board");
         }
 
         let result = [];
@@ -257,7 +257,7 @@ class Board {
             let pentomino = this._pentominoes[i];
             let position = this.getPosition(pentomino);
 
-            let matrixPosition = pentomino.getMatrixPosition(position, [x, y]);
+            let matrixPosition = pentomino.getMatrixPosition(position, [row, col]);
 
             if (pentomino.matrixPositionIsValid(matrixPosition[0], matrixPosition[1])
                 && pentomino.getCharAtMatrixPosition(matrixPosition[0], matrixPosition[1]) === '1') {
@@ -269,31 +269,31 @@ class Board {
 
     /**
      * Returns whether the position is inside the board
-     * @param x
-     * @param y
+     * @param row
+     * @param col
      * @returns {boolean}
      */
-    positionIsValid(x, y) {
-        x=parseInt(x);
-        y=parseInt(y);
-        return !(x < 0
-            || x >= this._boardCols
-            || y < 0
-            || y >= this._boardRows);
+    positionIsValid(row, col) {
+        row=parseInt(row);
+        col=parseInt(col);
+        return !(row < 0
+            || row >= this._boardRows
+            || col < 0
+            || col >= this._boardCols);
     }
 
     /** Returns whether the pentomino will fit onto the board at the specified position
      *
      * @param pentomino
-     * @param anchorX position to check
-     * @param anchorY position to check
+     * @param anchorRow position to check
+     * @param anchorCol position to check
      * @returns {boolean}
      */
-    pentominoIsValidAtPosition(pentomino, anchorX, anchorY) {
-        for (let y = 0; y < pentomino.iRows; y++) {
-            for (let x = 0; x < pentomino.iCols; x++) {
-                if (pentomino.getCharAtMatrixPosition(x, y) === '1') {
-                    let coordinatePosition = pentomino.getCoordinatePosition([anchorX, anchorY], [x, y]);
+    pentominoIsValidAtPosition(pentomino, anchorRow, anchorCol) {
+        for (let row = 0; row < pentomino.iRows; row++) {
+            for (let col = 0; col < pentomino.iCols; col++) {
+                if (pentomino.getCharAtMatrixPosition(row, col) === '1') {
+                    let coordinatePosition = pentomino.getCoordinatePosition([anchorRow, anchorCol], [row, col]);
                     if (!this.positionIsValid(coordinatePosition[0], coordinatePosition[1])) {
                         return false;
                     }
@@ -413,15 +413,15 @@ class Board {
 
     display() {
         let board = [];
-        for (let i=0; i<this._boardCols; ++i) {
-            board.push(Array(this._boardRows).fill('-'));
+        for (let i=0; i<this._boardRows; ++i) {
+            board.push(Array(this._boardCols).fill('-'));
         }
         this._pentominoes.forEach(function(pentomino) {
-            let [anchorX,anchorY] = this.getPosition(pentomino);
-            for (let relY = 0; relY < pentomino.iRows; ++relY) {
-                for (let relX = 0; relX < pentomino.iCols; ++relX) {
-                    if (pentomino.getCharAtMatrixPosition(relX, relY) === '1') {
-                        let coordinatePosition = pentomino.getCoordinatePosition([anchorX, anchorY], [relX, relY]);
+            let [anchorRow,anchorCol] = this.getPosition(pentomino);
+            for (let relRow = 0; relRow < pentomino.iRows; ++relRow) {
+                for (let relCol = 0; relCol < pentomino.iCols; ++relCol) {
+                    if (pentomino.getCharAtMatrixPosition(relRow, relCol) === '1') {
+                        let coordinatePosition = pentomino.getCoordinatePosition([anchorRow, anchorCol], [relRow, relCol]);
                         if (board[coordinatePosition[0]][coordinatePosition[1]] === '-') {
                             board[coordinatePosition[0]][coordinatePosition[1]] = pentomino.name;
                         } else {
@@ -438,11 +438,11 @@ class Board {
             string = string + i + ' ';
         }
         console.log(string);
-        for (let y = 0; y < this._boardRows; ++y) {
-            string = y + '|';
-            for (let x = 0; x < this._boardCols; ++x) {
+        for (let row = 0; row < this._boardRows; ++row) {
+            string = row + '|';
+            for (let col = 0; col < this._boardCols; ++col) {
                 string = string + ' ';
-                string = string + board[x][y];
+                string = string + board[row][col];
             }
             string = string + ' |';
             console.log(string);

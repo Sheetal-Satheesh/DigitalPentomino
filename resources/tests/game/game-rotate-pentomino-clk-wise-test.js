@@ -15,17 +15,15 @@ let board = new Board(6, 6);
 let game = new Game(board);
 
 game.placePentomino(I, 3, 3);
-game.rotatePentominoClkWise(I);
 game.placePentomino(T, 18, -99);
-game.rotatePentominoClkWise(T);
-game.placePentomino(L, 0, 3);
-game.rotatePentominoClkWise(L);
-game.placePentomino(U, 0, 3);
-game.rotatePentominoClkWise(U);
+game.placePentomino(L, 3, 0);
+game.placePentomino(U, 4, 0);
 
-describe('Game.rotatePentominoClkWise(pentomino, x, y)', function() {
+describe('Game.rotatePentominoClkWise(pentomino)', function() {
 
     it('should rotate pieces inside the board', function () {
+        assert.ok(game.isPlacedOnBoard(I));
+        game.rotatePentominoClkWise(I);
         assert.deepEqual(I.getMatrixRepresentation(), [
             [0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0],
@@ -37,6 +35,8 @@ describe('Game.rotatePentominoClkWise(pentomino, x, y)', function() {
     });
 
     it('should rotate pieces outside the board', function() {
+        assert.ok(game.isPlacedOutsideBoard(T));
+        game.rotatePentominoClkWise(T);
         assert.deepEqual(T.getMatrixRepresentation(), [
             [0, 0, 0, 0, 0],
             [0, 0, 0, 1, 0],
@@ -48,6 +48,8 @@ describe('Game.rotatePentominoClkWise(pentomino, x, y)', function() {
     });
 
     it('should handle pieces that are outside the board after rotation', function () {
+        assert.ok(game.isPlacedOnBoard(L));
+        game.rotatePentominoClkWise(L);
         assert.deepEqual(L.getMatrixRepresentation(), [
             [0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0],
@@ -59,6 +61,8 @@ describe('Game.rotatePentominoClkWise(pentomino, x, y)', function() {
     });
 
     it('should handle pieces that are on the board after rotation', function () {
+        assert.ok(game.isPlacedOutsideBoard(U));
+        game.rotatePentominoClkWise(U);
         assert.deepEqual(U.getMatrixRepresentation(), [
             [0, 0, 0, 0, 0],
             [0, 0, 1, 1, 0],

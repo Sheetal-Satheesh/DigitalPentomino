@@ -14,7 +14,7 @@ game.placePentomino(T, 1, 3);
 game.placePentomino(X, -1, -1);
 game.placePentomino(L, 3, -1);
 
-describe('Game.placePentomino(pentomino, x, y)', function() {
+describe('Game.placePentomino(pentomino, row, col)', function() {
 
     it('should save piece on the board', function() {
         assert.ok(game.isPlacedOnBoard(T));
