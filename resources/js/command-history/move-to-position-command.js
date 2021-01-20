@@ -3,23 +3,23 @@ if(typeof require != 'undefined') {
 }
 
 class MoveToPositionCommand extends Command {
-    constructor(game, pentomino, x, y) {
+    constructor(game, pentomino, row, col) {
         super();
         this._game = game;
         this._pentomino = pentomino;
-        this._x = x;
-        this._y = y;
+        this._row = row;
+        this._col = col;
         let oldPosition = this._game.getPosition(this._pentomino);
-        this._oldXPos = oldPosition[0];
-        this._oldYPos = oldPosition[1];
+        this._oldRowPos = oldPosition[0];
+        this._oldColPos = oldPosition[1];
     }
 
     execute() {
-        this._game.movePentominoToPosition(this._pentomino, this._x, this._y);
+        this._game.movePentominoToPosition(this._pentomino, this._row, this._col);
     }
 
     undo() {
-        this._game.movePentominoToPosition(this._pentomino, this._oldXPos, this._oldYPos);
+        this._game.movePentominoToPosition(this._pentomino, this._oldRowPos, this._oldColPos);
     }
 }
 

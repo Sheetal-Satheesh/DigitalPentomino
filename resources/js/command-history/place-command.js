@@ -3,16 +3,16 @@ if(typeof require != 'undefined') {
 }
 
 class PlaceCommand extends Command {
-    constructor(game, pentomino, x, y) {
+    constructor(game, pentomino, row, col) {
         super();
         this._game = game;
         this._pentomino = pentomino;
-        this._x = x;
-        this._y = y;
+        this._row = row;
+        this._col = col;
     }
 
     execute() {
-        this._game.placePentomino(this._pentomino, this._x, this._y);
+        this._game.placePentomino(this._pentomino, this._row, this._col);
     }
 
     undo() {

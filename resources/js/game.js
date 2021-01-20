@@ -32,45 +32,45 @@ class Game {
     /**
      * Adds new pentomino to game
      * @param pentomino
-     * @param x
-     * @param y
+     * @param row
+     * @param col
      */
-    placePentomino(pentomino, x, y) {
-        let newPentominoPositionIsOnBoard = this._board.pentominoIsValidAtPosition(pentomino, x, y);
+    placePentomino(pentomino, row, col) {
+        let newPentominoPositionIsOnBoard = this._board.pentominoIsValidAtPosition(pentomino, row, col);
         if (newPentominoPositionIsOnBoard) {
-            this._board.placePentomino(pentomino, x, y);
+            this._board.placePentomino(pentomino, row, col);
         } else {
-            this._placePentominoOutsideBoard(pentomino, x, y);
+            this._placePentominoOutsideBoard(pentomino, row, col);
         }
     }
 
     /**
      * Assumes that the pentomino already exists
      * @param pentomino
-     * @param x
-     * @param y
+     * @param row
+     * @param col
      */
-    movePentominoToPosition(pentomino, x, y) {
+    movePentominoToPosition(pentomino, row, col) {
         if (!this.isPlacedInGame(pentomino)) {
             throw new Error("Pentomino \'" + pentomino.name + "\' is not placed in the game");
         }
 
         let oldPentominoPositionIsOnBoard = this._board.isPlacedOnBoard(pentomino);
-        let newPentominoPositionIsOnBoard = this._board.pentominoIsValidAtPosition(pentomino, x, y);
+        let newPentominoPositionIsOnBoard = this._board.pentominoIsValidAtPosition(pentomino, row, col);
 
         if (oldPentominoPositionIsOnBoard) {
             if (newPentominoPositionIsOnBoard) {
-                this._board.movePentominoToPosition(pentomino, x, y);
+                this._board.movePentominoToPosition(pentomino, row, col);
             } else {
                 this._board.removePentomino(pentomino);
-                this._placePentominoOutsideBoard(pentomino, x, y);
+                this._placePentominoOutsideBoard(pentomino, row, col);
             }
         } else {
             if (newPentominoPositionIsOnBoard) {
                 this._removePentominoOutsideTheBoard(pentomino);
-                this._board.placePentomino(pentomino, x, y);
+                this._board.placePentomino(pentomino, row, col);
             } else {
-                this._movePentominoOutsideBoardToPosition(pentomino, x, y);
+                this._movePentominoOutsideBoardToPosition(pentomino, row, col);
             }
         }
     }
@@ -135,7 +135,7 @@ class Game {
         this._pentominoOutsidePositions = this._pentominoOutsidePositions.filter(item => !(item.name === pentomino.name));
     }
 
-    _placePentominoOutsideBoard(pentomino, x, y) {
+    _placePentominoOutsideBoard(pentomino, row, col) {
         if (this.isPlacedOnBoard(pentomino)) {
             throw new Error('Pentomino \'' + pentomino.name + "\' is already in the game");
         }
@@ -143,14 +143,14 @@ class Game {
         this._pentominosOutside.push(pentomino);
         this._pentominoOutsidePositions.push({
             name: pentomino.name,
-            position: [x, y]
+            position: [row, col]
         });
     }
 
-    _movePentominoOutsideBoardToPosition(pentomino, x, y) {
+    _movePentominoOutsideBoardToPosition(pentomino, row, col) {
         this._pentominoOutsidePositions.forEach(pentominoPosition => {
             if (pentominoPosition.name === pentomino.name) {
-                pentominoPosition.position = [x, y];
+                pentominoPosition.position = [row, col];
             }
         });
     }
@@ -199,19 +199,19 @@ class Game {
         return outsidePosition;
     }
 
-    getPentominoesAtPosition(x, y) {
-        if (this._board.positionIsValid(x, y)) {
-            return this._board.getPentominoesAtPosition(x, y);
+    getPentominoesAtPosition(row, col) {
+        if (this._board.positionIsValid(row, col)) {
+            return this._board.getPentominoesAtPosition(row, col);
         } else {
-            return this._getPentominoesOutsideAtPosition(x, y);
+            return this._getPentominoesOutsideAtPosition(row, col);
         }
     }
 
-    _getPentominoesOutsideAtPosition(x, y) {
+    _getPentominoesOutsideAtPosition(row, col) {
         let result = [];
         for (let i = 0; i < this._pentominosOutside.length; i++) {
             let pentominoOutside = this._pentominosOutside[i];
-            if (this._isPentominoOutsideAtPosition(pentominoOutside, x, y)) {
+            if (this._isPentominoOutsideAtPosition(pentominoOutside, row, col)) {
                 result.push(pentominoOutside);
             }
         }
@@ -221,24 +221,24 @@ class Game {
     /**
      * Checks whether the pentomino outside the board is located at the specified position
      * @param pentomino
-     * @param x
-     * @param y
+     * @param row
+     * @param col
      * @returns {boolean}
      * @private
      */
-    _isPentominoOutsideAtPosition(pentomino, x, y) {
+    _isPentominoOutsideAtPosition(pentomino, row, col) {
         let pentominoPosition = this._getPentominoOutsideByName(pentomino.name);
-        if (x < pentominoPosition[0]
-            || x >= pentominoPosition[0] + pentomino.iCols
-            || y < pentominoPosition[1]
-            || y >= pentominoPosition[1] + pentomino.iRows) {
+        if (row < pentominoPosition[0]
+            || row >= pentominoPosition[0] + pentomino.iRows
+            || col < pentominoPosition[1]
+            || col >= pentominoPosition[1] + pentomino.iCols) {
             return false;
         }
 
-        let relXToCheck = x - pentominoPosition[0];
-        let relYToCheck = y - pentominoPosition[1];
+        let relRowToCheck = row - pentominoPosition[0];
+        let relColToCheck = col - pentominoPosition[1];
 
-        return pentomino.sRepr.charAt(relYToCheck * pentomino.iCols + relXToCheck) === '1';
+        return pentomino.sRepr.charAt(relRowToCheck * pentomino.iCols + relColToCheck) === '1';
     }
 
     isPlacedOutsideBoard(pentomino) {
@@ -264,7 +264,7 @@ class Game {
     }
 
     getBoardSize() {
-        return [this._board._boardCols][this._board._boardRows];
+        return [this._board._boardRows][this._board._boardCols];
     }
 
     // --- --- --- Debugging --- --- ---
@@ -276,7 +276,7 @@ class Game {
             console.log(string);
             this._pentominosOutside.forEach(p => {
                 let position = this._getOutsidePosition(p);
-                console.log(p.name + " (" + position[0] + "," + position[1] + ")");
+                console.log(p.name + " [" + position[0] + "," + position[1] + "]");
             });
         } else {
             string = string + " -";

@@ -3,9 +3,9 @@ let assert = require('chai').assert;
 let Pentomino = require('../../js/pentomino.js');
 let Board = require('../../js/board.js');
 
-let cols = 7;
-let rows = 5;
-let board = new Board(cols, rows);
+let rows = 7;
+let cols = 5;
+let board = new Board(rows, cols);
 
 let X = new Pentomino('X');
 let T = new Pentomino('T');

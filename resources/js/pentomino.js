@@ -55,29 +55,29 @@ class Pentomino {
         }
     }
 
-    getMatrixPosition([anchorX, anchorY], [x, y]) {
+    getMatrixPosition([anchorRow, anchorCol], [row, col]) {
         return [
-            x - anchorX + this.colAnchor,
-            y - anchorY + this.rowAnchor
+            row - anchorRow + this.rowAnchor,
+            col - anchorCol + this.colAnchor
         ];
     }
 
-    getCoordinatePosition([anchorX, anchorY], [relX, relY]) {
+    getCoordinatePosition([anchorRow, anchorCol], [relRow, relCol]) {
         return [
-            relX + anchorX - this.colAnchor,
-            relY + anchorY - this.rowAnchor
+            relRow + anchorRow - this.rowAnchor,
+            relCol + anchorCol - this.colAnchor
         ];
     }
 
-    matrixPositionIsValid(x, y) {
-        return !(x < 0
-            || x >= this.iCols
-            || y < 0
-            || y >= this.iRows);
+    matrixPositionIsValid(row, col) {
+        return !(row < 0
+            || row >= this.iRows
+            || col < 0
+            || col >= this.iCols);
     }
 
-    getCharAtMatrixPosition(relX, relY) {
-        return this.sRepr.charAt(relY * this.iCols + relX);
+    getCharAtMatrixPosition(relRow, relCol) {
+        return this.sRepr.charAt(relRow * this.iCols + relCol);
     }
 
     rotateClkWise() {

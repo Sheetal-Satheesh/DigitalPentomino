@@ -9,20 +9,20 @@ class GameController {
     }
 
     // --- --- --- Pentomino Operations --- --- ---
-    placePentomino(pentomino,x,y) {
+    placePentomino(pentomino,row,col) {
         if (this._game === null) throw new Error("Game is not set");
         if (pentomino === null || pentomino === undefined) throw new Error("Type Error: Pentomino is null or undefined");
         if(!this._isOfTypePentomino(pentomino)) throw new Error("Type Error: Pentomino isn't an instance of the Pentomino class.");
 
-        return this._game.doCommandAndAddToHistory(new PlaceCommand(this._game, pentomino, x, y));
+        return this._game.doCommandAndAddToHistory(new PlaceCommand(this._game, pentomino, row, col));
     }
 
-    movePentominoToPosition(pentomino, x, y) {
+    movePentominoToPosition(pentomino, row, col) {
         if (this._game === null) throw new Error("Game is not set");
         if (pentomino === null || pentomino === undefined) throw new Error("Type Error: Pentomino is null or undefined");
         if(!this._isOfTypePentomino(pentomino)) throw new Error("Type Error: Pentomino isn't an instance of the Pentomino class.");
 
-        return this._game.doCommandAndAddToHistory(new MoveToPositionCommand(this._game, pentomino, x, y));
+        return this._game.doCommandAndAddToHistory(new MoveToPositionCommand(this._game, pentomino, row, col));
     }
 
     rotatePentominoAntiClkWise(pentomino) {
@@ -149,9 +149,9 @@ class GameController {
     }
 
     // --- --- --- Get Information About The Game For User Interaction --- --- ---
-    getPentominoesAtPosition(x, y) {
+    getPentominoesAtPosition(row, col) {
         if (this._game === null) throw new Error("Game is not set");
-        return this._game.getPentominoesAtPosition(x, y);
+        return this._game.getPentominoesAtPosition(row, col);
     }
 
     // --- --- --- Helper --- --- ---
