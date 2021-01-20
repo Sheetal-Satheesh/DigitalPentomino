@@ -19,7 +19,7 @@ game.placePentomino(T, 18, -99);
 game.placePentomino(L, 3, 0);
 game.placePentomino(U, 4, 0);
 
-describe('Game.rotatePentominoClkWise(pentomino, x, y)', function() {
+describe('Game.rotatePentominoClkWise(pentomino)', function() {
 
     it('should rotate pieces inside the board', function () {
         assert.ok(game.isPlacedOnBoard(I));

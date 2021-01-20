@@ -21,7 +21,7 @@ gameController.placePentomino(L, 2, 2);
 gameController.placePentomino(X, 18, -99);
 
 describe('GameController', function () {
-    describe('#placePentomino(pentomino, x, y)', function () {
+    describe('#placePentomino(pentomino, row, col)', function () {
 
         it('should save piece that are placed on the board', function () {
             assert.deepEqual(gameController.getPositionOfPentomino(L), [2, 2]);

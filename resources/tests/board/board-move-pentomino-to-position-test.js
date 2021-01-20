@@ -18,7 +18,7 @@ board.placePentomino(I, 2, 6);
 
 board.movePentominoToPosition(X, 4, 1);
 
-describe('Board.movePentominoToPosition(pentomino, x, y)', function() {
+describe('Board.movePentominoToPosition(pentomino, row, col)', function() {
 
     it('should save piece at new position', function() {
         assert.deepEqual(board.getPosition(X), [4, 1]);
