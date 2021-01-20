@@ -21,6 +21,7 @@ class Board {
 
         this._pentominoes = [];
         this._pentominoPositions = [];
+        this._collisions = [];
     }
 
     placePentomino(pentomino, row, col) {
@@ -43,7 +44,11 @@ class Board {
             boardPosition:[row,col]
         });
 
-        // TODO - collisions
+        let collisonCells=[];
+        if (this.isCollides(pentomino, row, col,collisonCells)) {
+            this.setCollisionCells(collisonCells);
+            //return false; //TODO: this feature contradict with collisions cell, need to fix
+        }
     }
 
     /**
@@ -131,6 +136,8 @@ class Board {
                                             item =>item.name !== pentomino.name);
 
     }
+
+    // --- --- --- Collisions --- --- ---
     /**
     _arraynother pentomino at the specified position
      * @param pentomino
@@ -139,33 +146,116 @@ class Board {
      * @throws {Error} if new position is outside the board
      * @returns {boolean}
      */
-    isCollides(pentomino, row, col) {
+    isCollides(pentomino, row, col, collisionsCell=[]) {
+        let verdict = false;
+
         if (!this.pentominoIsValidAtPosition(pentomino, row, col)) {
             if (!this.positionIsValid(row, col)) {
-                throw new Error("Position [" + row + "," + col + "] is outside the board");
+                throw new Error("Position (" + row + "," + col + ") is outside the board");
             } else {
-                throw new Error("Pentomino" + pentomino.name + "does not fit at position [" + row + "," + col + "] on the board");
+                throw new Error("Pentomino" + pentomino.name + "does not fit at position (" + row + "," + col + ") on the board");
             }
         }
 
-        /**
-         * we have new strategy for collision and internal structure changed,
-         * also removed harding binding with array.
-         * TODO: Merge with pen-collision-asu branch
-         */
-         
-         /*for (let i = 0; i < pentomino.iRows; i++) {
-            for (let j = 0; j < pentomino.iCols; j++) {
-                if (pentomino.sRepr.charAt(i * pentomino.iCols + j) === '1'
-                    && !(this._array[x + i][y + j] === EMPTY_CELL)
-                    && !(this._array[x + i][y + j] === pentomino.name)) {
-                    return true;
+        this._pentominoes.forEach(function(entry){
+            if(pentomino.name === entry.name){/** if same pentomino placed again */
+                return verdict;
+            }
+            if(this.doPentominoOverlap(row,col, pentomino, entry)){
+                let [p,q] = this.getPosition(entry);
+                let overlapCells = this.getOverlapCells(row,col,pentomino,entry);
+
+                for (let i=0; i < overlapCells.length;++i) {
+                    let pValue = pentomino.sRepr.charAt(
+                        (overlapCells[i].x - row)* pentomino.iCols +(overlapCells[i].y -col));
+                    let eValue = entry.sRepr.charAt(
+                        (overlapCells[i].x - p)* entry.iCols +(overlapCells[i].y -q));
+
+                    if(eValue=== '1' && pValue === eValue){
+                        //console.log(pentomino.name+'x'+entry.name+" : "+ overlapCells[i].x+","+overlapCells[i].y);
+
+                        verdict=true;
+                        var index = collisionsCell.findIndex(item => item.cell[0] === overlapCells[i].x &&
+                            item.cell[1] === overlapCells[i].y);
+                        if (index === -1) {
+                            collisionsCell.push({
+                                'cell':[overlapCells[i].x,overlapCells[i].y],
+                                'pentominos':[pentomino.name,entry.name]
+                            });
+                        }else {
+                            collisionsCell[index].pentominos.push(pentomino.name);
+                        }
+                    }
                 }
             }
-        }
-        */
+        },this);
 
-        return false;
+        return verdict;
+    }
+
+    doPentominoOverlap(x1,y1,pentominoA, pentominoB){
+
+        let x2 = x1 + pentominoA.iRows-1;
+        let y2 = y1 + pentominoA.iCols-1;
+
+        let [p1, q1] = this.getPosition(pentominoB);
+        let p2 = p1 + pentominoB.iRows-1;
+        let q2 = q1 + pentominoB.iCols-1;
+
+        return   (Math.max( x1, p1 ) <= Math.min( x2, p2 ) && Math.max( y1,q1) <= Math.min( y2,q2));
+    }
+
+    getOverlapCells(x1,y1,pentominoA, pentominoB){
+
+        let cells=[];
+        let x2 = x1 + pentominoA.iRows-1;
+        let y2 = y1 + pentominoA.iCols-1;
+
+        let [p1, q1] = this.getPosition(pentominoB  );
+        let p2 = p1 + pentominoB.iRows-1;
+        let q2 = q1 + pentominoB.iCols-1;
+
+        let leftX   = Math.max( x1, p1 );
+        let rightX  = Math.min( x2, p2 );
+        let topY    = Math.max( y1,q1);
+        let bottomY = Math.min( y2,q2);
+
+        for(let i=leftX; i <= rightX; ++i){
+            for(let j=topY; j<= bottomY; ++j){
+                cells.push({
+                    'x':i,
+                    'y':j
+                })
+            }
+        }
+
+        return cells;
+    }
+
+    setCollisionCells(collisionCells){
+        if(this._collisions.length === 0){
+            this._collisions.push(...collisionCells);
+        }else{
+            collisionCells.forEach(function(element){
+                let index = this._collisions.findIndex(item => item.cell[0] === element.cell[0] &&
+                    item.cell[1] === element.cell[1]);
+                if (index === -1) {
+                    this._collisions.push({
+                        'cell':element.cell,
+                        'pentominos':element.pentominos
+                    });
+                }else {
+                    this._collisions[index].pentominos = [...new Set([...this._collisions[index].pentominos,
+                        ...element.pentominos])];
+                }
+            },this);
+        }
+
+        console.log(this._collisions);
+    }
+
+    getCollisionCells(){
+        return this._collisions;
     }
 
     // --- --- --- Getter And Helper --- --- ---
