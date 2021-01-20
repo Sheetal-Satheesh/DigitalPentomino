@@ -10,7 +10,7 @@ let I = new Pentomino('I');
 let X = new Pentomino('X');
 let F = new Pentomino('F');
 
-board.placePentomino(T, 1, 3);
+board.placePentomino(T, 2, 3);
 board.placePentomino(I, 3, 1);
 board.placePentomino(F, 4, 2);
 
@@ -19,15 +19,15 @@ board.display();
 describe('Board.getCollisionCells()', function() {
 
     it('should return a list of all colliding cells', function() {
-        assert.strictEqual(board.getCollisionCells().length, 1);
-        assert.strictEqual(board.getCollisionCells(), [
+        assert.strictEqual(board.getCollisionCells().length, 2);
+        assert.deepEqual(board.getCollisionCells(), [
             {
-                "cell": [1, 1],
-                "pentominos": ['X', 'Y', 'T']
+                "cell": [3, 3],
+                "pentominos": ['F', 'T']
             },
             {
-                "cell": [2, 2],
-                "pentominos": ['T', 'F']
+                "cell": [4, 1],
+                "pentominos": ['F', 'I']
             }
         ]);
     });
