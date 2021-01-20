@@ -201,7 +201,7 @@ class Board {
         let bPosition = this.getPosition(pentominoB);
         let bIsSet = pentominoB.getCharAtMatrixPosition(pentominoB.getMatrixPosition(bPosition, [row, col]));
 
-        return aIsSet && bIsSet;
+        return aIsSet === '1' && bIsSet === '1';
     }
 
     getOverlapCells(x1,y1,pentominoA, pentominoB){
