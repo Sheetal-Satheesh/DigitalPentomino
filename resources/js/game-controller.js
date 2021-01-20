@@ -119,11 +119,16 @@ class GameController {
         return this._game.getCollisionCells();
     }
 
-    isCollides(pentomino) {
+    getCollisionPentominoes() {
+        if (this._game === null) throw new Error("Game is not set");
+        return this._game.getCollisionPentominoes();
+    }
+
+    getCollisionPentominoesOfPentomino(pentomino) {
         if (this._game === null) throw new Error("Game is not set");
         if (pentomino === null || pentomino === undefined) throw new Error("Type Error: Pentomino is null or undefined");
         if(!this._isOfTypePentomino(pentomino)) throw new Error("Type Error: Pentomino isn't an instance of the Pentomino class.");
-        return this._game.isCollides(pentomino);
+        return this._game.getCollisionPentominoesOfPentomino(pentomino);
     }
 
     // --- --- --- Set Game --- --- ---
