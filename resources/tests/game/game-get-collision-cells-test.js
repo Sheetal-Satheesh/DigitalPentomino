@@ -18,13 +18,22 @@ game.placePentomino(F, 4, 2);
 
 game.display();
 
-describe('Game.isCollides(pentomino)', function() {
+describe('Game.getCollisionCells()', function() {
 
-    it('should return whether or not the pentomino is part of a collision', function() {
-        // TODO
+    it('should return a list of all colliding cells', function() {
+        assert.strictEqual(game.getCollisionCells(), [
+            {
+                "cell": [1, 1],
+                "pentominos": ['X', 'Y', 'T']
+            },
+            {
+                "cell": [2, 2],
+                "pentominos": ['T', 'F']
+            }
+        ]);
     });
 
-    it('should throw error if pentomino is outside the board (no collision detection supported)', function () {
+    it('should return an empty list if no collision occured', function() {
         // TODO
     });
 });
