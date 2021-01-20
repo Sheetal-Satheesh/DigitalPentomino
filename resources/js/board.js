@@ -151,9 +151,9 @@ class Board {
 
         if (!this.pentominoIsValidAtPosition(pentomino, row, col)) {
             if (!this.positionIsValid(row, col)) {
-                throw new Error("Position (" + row + "," + col + ") is outside the board");
+                throw new Error("Position [" + row + "," + col + "] is outside the board");
             } else {
-                throw new Error("Pentomino" + pentomino.name + "does not fit at position (" + row + "," + col + ") on the board");
+                throw new Error("Pentomino \'" + pentomino.name + "\' does not fit at position [" + row + "," + col + "] on the board");
             }
         }
 
