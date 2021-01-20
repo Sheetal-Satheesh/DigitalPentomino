@@ -21,8 +21,7 @@ game.display();
 describe('Game.isCollides(pentomino)', function() {
 
     it('should return whether or not the pentomino is part of a collision', function() {
-        assert.ok(game.isCollides(I));
-        assert.ok(game.isCollides(F));
+        // TODO
     });
 
     it('should throw error if pentomino is outside the board (no collision detection supported)', function () {
