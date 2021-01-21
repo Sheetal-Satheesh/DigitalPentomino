@@ -169,8 +169,8 @@ class Visual {
         } else {
 
             let [positionY, positionX] = this.gameController.getPositionOfPentomino(piece);
-            var left = 10 + width * (this.boardY + positionY - 2);
-            var top = 7 + width * (this.boardX + positionX - 2);
+            var left = 10 + width * (this.boardY + positionX - 2);
+            var top = 7 + width * (this.boardX + positionY - 2);
 
             htmlElement.style.left = left + 'vw';
             htmlElement.style.top = top + 'vw';
