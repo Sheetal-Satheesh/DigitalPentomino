@@ -1,14 +1,14 @@
-// if(typeof require != 'undefined') {
-//     CommandManager = require('./command-history/command-manager.js');
-//     PlaceCommand = require('./command-history/place-command.js');
-//     MoveToPositionCommand = require('./command-history/move-to-position-command.js');
-//     RotateAntiClkWiseCommand = require('./command-history/rotate-anti-clk-wise-command.js');
-//     RotateClkWiseCommand = require('./command-history/rotate-clk-wise-command.js');
-//     MirrorHCommand = require('./command-history/mirror-h-command.js');
-//     MirrorVCommand = require('./command-history/mirror-v-command.js');
-//     RemoveCommand = require('./command-history/remove-command.js');
-//     Pentomino = require('./pentomino');
-// }
+if(typeof require != 'undefined') {
+    CommandManager = require('./command-history/command-manager.js');
+    PlaceCommand = require('./command-history/place-command.js');
+    MoveToPositionCommand = require('./command-history/move-to-position-command.js');
+    RotateAntiClkWiseCommand = require('./command-history/rotate-anti-clk-wise-command.js');
+    RotateClkWiseCommand = require('./command-history/rotate-clk-wise-command.js');
+    MirrorHCommand = require('./command-history/mirror-h-command.js');
+    MirrorVCommand = require('./command-history/mirror-v-command.js');
+    RemoveCommand = require('./command-history/remove-command.js');
+    Pentomino = require('./pentomino');
+}
 
 class Game {
     constructor(board) {

@@ -1,6 +1,6 @@
-// if(typeof require != 'undefined') {
-//     CommandHistoryTree = require('./command-history-tree.js');
-// }
+if(typeof require != 'undefined') {
+    CommandHistoryTree = require('./command-history-tree.js');
+}
 
 class CommandManager {
     constructor() {

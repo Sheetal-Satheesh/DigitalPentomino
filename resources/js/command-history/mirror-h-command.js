@@ -1,6 +1,6 @@
-// if(typeof require != 'undefined') {
-//     Command = require('./command.js');
-// }
+if(typeof require != 'undefined') {
+    Command = require('./command.js');
+}
 
 class MirrorHCommand extends Command {
     constructor(game, pentomino) {
