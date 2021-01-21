@@ -161,7 +161,7 @@ class Board {
             if(pentomino.name === entry.name){/** if same pentomino placed again */
                 return verdict;
             }
-            if(this.doPentominoOverlap(row,col, pentomino, entry)){
+            if(this.doPentominoMatricesOverlapAtPosition(row,col, pentomino, entry)){
                 let [p,q] = this.getPosition(entry);
                 let overlapCells = this.getOverlapCells(row,col,pentomino,entry);
 
@@ -194,23 +194,28 @@ class Board {
     }
 
     /**
-     * Returns whether matrices of the specified pentominoes overlap
+     * Returns whether matrices of the specified pentominoes overlap at the specified position
      * @param row
      * @param col
      * @param pentominoA
      * @param pentominoB
      * @returns {boolean}
      */
-    doPentominoOverlap(row, col, pentominoA, pentominoB) {
+    doPentominoMatricesOverlapAtPosition(row, col, pentominoA, pentominoB) {
 
-        let x2 = row + pentominoA.iRows-1;
-        let y2 = col + pentominoA.iCols-1;
+        let aLowestRow = row - pentominoA.rowAnchor;
+        let aHighestCol = col + pentominoA.colAnchor;
+        let aHighestRow = row + pentominoA.rowAnchor;
+        let aLowestCol = col - pentominoA.colAnchor;
 
         let [p1, q1] = this.getPosition(pentominoB);
-        let p2 = p1 + pentominoB.iRows-1;
-        let q2 = q1 + pentominoB.iCols-1;
+        let bLowestRow = p1 - pentominoB.rowAnchor;
+        let bHighestRow = p1 + pentominoB.rowAnchor;
+        let bLowestCol = p1 - pentominoB.rowAnchor;
+        let bHighestCol = q1 + pentominoA.colAnchor;
 
-        return (Math.max(row, p1 ) <= Math.min(x2, p2 ) && Math.max(col, q1) <= Math.min(y2, q2));
+        return (Math.max(aLowestRow, bLowestRow) <= Math.min(aHighestRow, bHighestRow)
+            && Math.max(aLowestCol, bLowestCol) <= Math.min(aHighestCol, bHighestCol));
     }
 
     getOverlapCells(x1,y1,pentominoA, pentominoB){
