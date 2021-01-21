@@ -1,0 +1,66 @@
+#functions {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: darkgray;
+    bottom: 0;
+    width: 10vw
+}
+
+#game {
+    position: fixed;
+    top: 0;
+    left: 10vw;
+    background: green;
+    bottom: 0;
+    width: 90vw
+}
+
+#tray {
+    position: fixed;
+    top: 0;
+    left: 10vw;
+    background: lightgray;
+    height: 7vw;
+    width: 90vw;
+}
+
+#field {
+    position: fixed;
+    top: 7vw;
+    bottom: 0;
+    background: white;
+    width: 90vw;
+}
+
+#piecearea {
+    user-select: none;
+}
+
+#operations {
+    display: block
+}
+
+.gamearea {
+    display: block;
+    float: left;
+    user-select: none;
+    text-align: center;
+    outline: 1px solid #eee;
+    color: #ddd
+}
+
+.boardarea {
+    background: gray;
+}
+
+.piece {
+    position: fixed;
+    top: 0;
+    width: 9vw;
+    height: 9vw
+}
+
+.bmAround {
+    pointer-events: none
+}

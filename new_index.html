@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#009578">
+    <title>Digital Pentomino v5</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="resources/images/icons/dp_192.png">
+    <link rel="stylesheet" href="resources/css/style.css">
+    <script src="resources/index.js"></script>
+    <script src="resources/js/board.js"></script>
+    <script src="resources/js/pentomino.js"></script>
+    <script src="resources/js/game-controller.js"></script>
+    <script src="resources/js/game-loader.js"></script>
+    <script src="resources/js/game.js"></script>
+    <script src="resources/js/command-history/command.js"></script>
+    <script src="resources/js/command-history/command-manager.js"></script>
+    <script src="resources/js/command-history/place-command.js"></script>
+    <script src="resources/js/command-history/move-to-position-command.js"></script>
+    <script src="resources/js/command-history/rotate-anti-clk-wise-command.js"></script>
+    <script src="resources/js/command-history/rotate-clk-wise-command.js"></script>
+    <script src="resources/js/command-history/mirror-h-command.js"></script>
+    <script src="resources/js/command-history/mirror-v-command.js"></script>
+    <script src="resources/js/command-history/remove-command.js"></script>
+    <script src="resources/js/command-history/command-path.js"></script>
+    <script src="resources/js/command-history/command-history-tree.js"></script>
+    <script src="resources/js/pd.js"></script>
+    <script src="resources/js/visual.js"></script>
+</head>
+
+<body onload="initialize();">
+    <div id="functions">
+        <div id="operations">
+            <button onclick="pd.ui.rotateRight();">Rotate right</button>
+            <button onclick="pd.ui.rotateLeft();">Rotate left</button>
+            <button onclick="pd.ui.flipH();">Flip Horizontally</button>
+            <button onclick="pd.ui.flipV();">Flip Vertically</button>
+            <button style="display:none" onclick="pd.ui.save()">Save</button>
+            <button style="display:none" onclick="pd.ui.load()">Load</button>
+            <button onclick="pd.ui.export()">Export</button>
+            <input type="file" id="file-input" />
+            <button onclick="pd.ui.import()">Import</button>
+            <button onclick="pd.ui.reset()">Reset</button>
+        </div>
+    </div>
+    <div id="game">
+        <div id="tray">
+        </div>
+        <div id="field">
+        </div>
+    </div>
+    <div id="piecearea">
+        <script type="text/javascript">
+            function initialize() {
+                let pd = new PD();
+                
+            }
+        </script>
+    </div>
+</body>
+
+</html>
