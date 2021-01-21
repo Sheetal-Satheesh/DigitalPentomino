@@ -14,6 +14,7 @@ class Pentomino {
         this.rowAnchor = ROW_ANCHOR;
         this.sRepr = '';
         this.trayPosition = -1;
+        this.inTray = 1;
         switch (sPentominoType) {
             case 'F':
                 this.trayPosition = 0;

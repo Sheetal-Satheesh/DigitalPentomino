@@ -17,7 +17,7 @@ class Visual {
 
         //Create interaction listeners
 
-        // this.initalizeListeners();
+        this.initalizeListeners();
     }
 
     //Create the field on which pieces can be put
@@ -155,7 +155,7 @@ class Visual {
         var width = 90 / this.pd.gameWidth;
         var htmlElement = document.getElementById('piece_' + piece.name);
 
-        if (false) {  //TODO: piece.inTray needs to be added
+        if (piece.inTray) {  //TODO: piece.inTray needs to be added
             var trayPosition = piece.trayPosition;
 
             var widthVW = 10 + (piece.trayPosition) * 7; //7 is trayHeight
@@ -248,7 +248,7 @@ class Visual {
                 if (!piece) return;
 
                 var container = elements[i * 1 + 1];       //For some strange reason, i is a String, using *1 to convert it
-                var piece = that.PD.game.get(piece);
+                var piece = that.pieces.find(p => {return p.name === piece;});
 
                 window.currentlyMoving = [container, piece];
             }
@@ -271,7 +271,7 @@ class Visual {
                 //resize object to full size while moving and attach their center to the
                 //pointer
 
-                var width = 90 / that.PD.game.width;
+                var width = 90 / that.pd.gameWidth;
 
                 container.style.left = 'calc(' + x + 'px - ' + (width * 2.5) + 'vw)';
                 container.style.top = 'calc(' + y + 'px - ' + (width * 2.5) + 'vw)';
@@ -310,11 +310,11 @@ class Visual {
 
                         var coords = (id.split('_')[1].split(','));
 
-                        data[1].place(coords[0], coords[1]);
+                        that.gameController.placePentomino(data[1], coords[1]-that.boardX, coords[0]-that.boardY);
 
                         // make this the selected element which activates manipulation GUI
 
-                        data[1].select();
+                        // data[1].select(); TODO: Make buttons disappear/appear if nothing/something is selected
 
                         //	<!-- var obj = JSON.parse(localStorage.getItem('SAVEGAME')); -->
 
@@ -328,7 +328,7 @@ class Visual {
                         //	<!-- localStorage.setItem('SAVEGAME',JSON.stringify(obj)); -->
                         //	<!-- console.log("after",localStorage.getItem('SAVEGAME')); -->
 
-                        that.PD.ui.save();
+                        // that.PD.ui.save(); // TODO: Save UI state
 
                         return;
 
