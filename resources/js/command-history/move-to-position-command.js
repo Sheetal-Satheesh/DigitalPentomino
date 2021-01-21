@@ -1,6 +1,6 @@
-if(typeof require != 'undefined') {
-    Command = require('./command.js');
-}
+// if(typeof require != 'undefined') {
+//     Command = require('./command.js');
+// }
 
 class MoveToPositionCommand extends Command {
     constructor(game, pentomino, row, col) {

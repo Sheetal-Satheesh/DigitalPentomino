@@ -1,7 +1,7 @@
-if(typeof require != 'undefined') {
-    Command = require('./command.js');
-    CommandPath = require('./command-path.js');
-}
+// if(typeof require != 'undefined') {
+//     Command = require('./command.js');
+//     CommandPath = require('./command-path.js');
+// }
 
 class CommandHistoryTree {
     constructor() {

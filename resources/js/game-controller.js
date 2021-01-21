@@ -1,7 +1,7 @@
-if(typeof require != 'undefined') {
-    Pentomino = require('./pentomino.js');
-    CommandPath = require('./command-history/command-path.js');
-}
+// if(typeof require != 'undefined') {
+//     Pentomino = require('./pentomino.js');
+//     CommandPath = require('./command-history/command-path.js');
+// }
 
 class GameController {
     constructor() {
