@@ -14,8 +14,6 @@ board.placePentomino(T, 2, 3);
 board.placePentomino(I, 3, 1);
 board.placePentomino(F, 4, 2);
 
-board.display();
-
 describe('Board.getCollisionCells()', function() {
 
     it('should return a list of all colliding cells', function() {

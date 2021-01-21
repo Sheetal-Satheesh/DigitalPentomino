@@ -162,27 +162,33 @@ class Board {
                 return verdict;
             }
             if(this.doPentominoMatricesOverlapAtPosition(row,col, pentomino, entry)){
-                let [p,q] = this.getPosition(entry);
+                let entryPosition = this.getPosition(entry);
+                let pentominoPosition = [row, col];
                 let overlapCells = this.getOverlappingCells(row,col,pentomino,entry);
 
                 for (let i=0; i < overlapCells.length;++i) {
-                    let pValue = pentomino.sRepr.charAt(
+                    let cell = overlapCells[i];
+                    let pOverlapCellMatrixPos = pentomino.getMatrixPosition(pentominoPosition, [cell.x, cell.y]);
+                    let pValue = pentomino.getCharAtMatrixPosition(pOverlapCellMatrixPos[0], pOverlapCellMatrixPos[1]);
+                    let eOverlapCellMatrixPos = entry.getMatrixPosition(entryPosition, [cell.x, cell.y]);
+                    let eValue = entry.getCharAtMatrixPosition(eOverlapCellMatrixPos[0], eOverlapCellMatrixPos[1]);
+                    /*let pValue = pentomino.sRepr.charAt(
                         (overlapCells[i].x - row)* pentomino.iCols +(overlapCells[i].y -col));
                     let eValue = entry.sRepr.charAt(
-                        (overlapCells[i].x - p)* entry.iCols +(overlapCells[i].y -q));
+                        (overlapCells[i].x - p)* entry.iCols +(overlapCells[i].y -q));*/
 
-                    if(eValue=== '1' && pValue === eValue){
+                    if(eValue === '1' && pValue === eValue) {
                         //console.log(pentomino.name+'x'+entry.name+" : "+ overlapCells[i].x+","+overlapCells[i].y);
 
                         verdict=true;
-                        var index = collisionsCell.findIndex(item => item.cell[0] === overlapCells[i].x &&
-                            item.cell[1] === overlapCells[i].y);
+                        let index = collisionsCell.findIndex(item => item.cell[0] === cell.x &&
+                            item.cell[1] === cell.y);
                         if (index === -1) {
                             collisionsCell.push({
-                                'cell':[overlapCells[i].x,overlapCells[i].y],
+                                'cell':[cell.x,cell.y],
                                 'pentominos':[pentomino.name,entry.name]
                             });
-                        }else {
+                        } else {
                             collisionsCell[index].pentominos.push(pentomino.name);
                         }
                     }
@@ -268,7 +274,7 @@ class Board {
             },this);
         }
 
-        console.log(this._collisions);
+        // console.log(this._collisions);
     }
 
     getCollisionCells(){
