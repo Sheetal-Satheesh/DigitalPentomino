@@ -163,7 +163,7 @@ class Board {
             }
             if(this.doPentominoMatricesOverlapAtPosition(row,col, pentomino, entry)){
                 let [p,q] = this.getPosition(entry);
-                let overlapCells = this.getOverlapCells(row,col,pentomino,entry);
+                let overlapCells = this.getOverlappingCells(row,col,pentomino,entry);
 
                 for (let i=0; i < overlapCells.length;++i) {
                     let pValue = pentomino.sRepr.charAt(
@@ -211,30 +211,34 @@ class Board {
         let [p1, q1] = this.getPosition(pentominoB);
         let bLowestRow = p1 - pentominoB.rowAnchor;
         let bHighestRow = p1 + pentominoB.rowAnchor;
-        let bLowestCol = p1 - pentominoB.rowAnchor;
-        let bHighestCol = q1 + pentominoA.colAnchor;
+        let bLowestCol = q1 - pentominoB.rowAnchor;
+        let bHighestCol = q1 + pentominoB.colAnchor;
 
         return (Math.max(aLowestRow, bLowestRow) <= Math.min(aHighestRow, bHighestRow)
             && Math.max(aLowestCol, bLowestCol) <= Math.min(aHighestCol, bHighestCol));
     }
 
-    getOverlapCells(x1,y1,pentominoA, pentominoB){
+    getOverlappingCells(row, col, pentominoA, pentominoB){
+        let cells = [];
 
-        let cells=[];
-        let x2 = x1 + pentominoA.iRows-1;
-        let y2 = y1 + pentominoA.iCols-1;
+        let aLowestRow = row - pentominoA.rowAnchor;
+        let aHighestCol = col + pentominoA.colAnchor;
+        let aHighestRow = row + pentominoA.rowAnchor;
+        let aLowestCol = col - pentominoA.colAnchor;
 
         let [p1, q1] = this.getPosition(pentominoB);
-        let p2 = p1 + pentominoB.iRows-1;
-        let q2 = q1 + pentominoB.iCols-1;
+        let bLowestRow = p1 - pentominoB.rowAnchor;
+        let bHighestRow = p1 + pentominoB.rowAnchor;
+        let bLowestCol = q1 - pentominoB.colAnchor;
+        let bHighestCol = q1 + pentominoB.colAnchor;
 
-        let leftX   = Math.max( x1, p1 );
-        let rightX  = Math.min( x2, p2 );
-        let topY    = Math.max( y1,q1);
-        let bottomY = Math.min( y2,q2);
+        let bottomRow   = Math.max(aLowestRow, bLowestRow);
+        let topRow      = Math.min(aHighestRow, bHighestRow);
+        let leftCol     = Math.max(aLowestCol, bLowestCol);
+        let rightCol    = Math.min(aHighestCol, bHighestCol);
 
-        for(let i=leftX; i <= rightX; ++i){
-            for(let j=topY; j<= bottomY; ++j){
+        for(let i=bottomRow; i <= topRow; ++i){
+            for(let j=leftCol; j <= rightCol; ++j){
                 cells.push({
                     'x':i,
                     'y':j
