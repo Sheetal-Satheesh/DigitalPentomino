@@ -6,17 +6,17 @@ class Visual {
 
         this.pd = pd;
         this.gameController = pd.gameController;
-        this.boardX = Math.floor((this.pd.gameWidth-this.gameController.getBoardSize()[0])/2);
-        this.boardX = Math.floor((this.pd.gameWidth-this.gameController.getBoardSize()[1])/2);
+        this.boardX = Math.floor((this.pd.gameHeight-this.gameController.getBoardSize()[0])/2);
+        this.boardY = Math.floor((this.pd.gameWidth-this.gameController.getBoardSize()[1])/2);
 
         //Create all visual structures of the game
 
         this.renderBoard();
-        this.renderPieces();
+        // this.renderPieces();
 
         //Create interaction listeners
 
-        this.initalizeListeners();
+        // this.initalizeListeners();
     }
 
     //Create the field on which pieces can be put
@@ -43,10 +43,10 @@ class Visual {
 
                 //TODO: Implement blocked elements
 
-                if (col < this.boardX) isBoard = false;
-                if (col >= this.boardX + this.gameController.getBoardSize()[0]) isBoard = false;
-                if (row < this.boardY) isBoard = false;
-                if (row >= this.boardY + this.gameController.getBoardSize()[1]) isBoard = false;
+                if (col < this.boardY) isBoard = false;
+                if (col >= this.boardY + this.gameController.getBoardSize()[1]) isBoard = false;
+                if (row < this.boardX) isBoard = false;
+                if (row >= this.boardX + this.gameController.getBoardSize()[0]) isBoard = false;
 
                 //TODO: This is ugly!
 

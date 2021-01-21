@@ -265,7 +265,7 @@ class Game {
     }
 
     getBoardSize() {
-        return [this._board._boardRows][this._board._boardCols];
+        return [this._board._boardRows,this._board._boardCols];
     }
 
     // --- --- --- Debugging --- --- ---

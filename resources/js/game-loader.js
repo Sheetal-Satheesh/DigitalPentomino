@@ -46,10 +46,10 @@ class GameLoader {
                 // Create a board
                 game = new Game(new Board(6, 10));
                 // add pieces to board
-                // game.placePentomino(penT, 1, 1);
-                // game.placePentomino(penX, 1, 0);
-                // game.placePentomino(penU, 0, 0);
-                // game.placePentomino(penP, 0, 0);
+                game.placePentomino(penT, 1, 1);
+                game.placePentomino(penX, 1, 0);
+                game.placePentomino(penU, 0, 0);
+                game.placePentomino(penP, 0, 0);
 //                document.write("Starting level 4.."+ "<br>");
                 break;
 
