@@ -10,11 +10,11 @@ class RotateClkWiseCommand extends Command {
     }
 
     execute() {
-        this._game.rotateClkWise(this._pentomino);
+        this._game.rotatePentominoClkWise(this._pentomino);
     }
 
     undo() {
-        this._game.rotateAntiClkWise(this._pentomino);
+        this._game.rotatePentominoAntiClkWise(this._pentomino);
     }
 }
 
