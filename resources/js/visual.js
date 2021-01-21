@@ -6,13 +6,14 @@ class Visual {
 
         this.pd = pd;
         this.gameController = pd.gameController;
-        this.boardX = Math.floor((this.pd.gameHeight-this.gameController.getBoardSize()[0])/2);
-        this.boardY = Math.floor((this.pd.gameWidth-this.gameController.getBoardSize()[1])/2);
+        this.boardX = Math.floor((this.pd.gameHeight - this.gameController.getBoardSize()[0]) / 2);
+        this.boardY = Math.floor((this.pd.gameWidth - this.gameController.getBoardSize()[1]) / 2);
+        this.pieces = this.gameController.getPentominoes();
 
         //Create all visual structures of the game
 
         this.renderBoard();
-        // this.renderPieces();
+        this.renderPieces();
 
         //Create interaction listeners
 
@@ -73,12 +74,12 @@ class Visual {
 
         let out = '';
 
-        var width = 90 / this.game.width;
+        var width = 90 / this.gameWidth;
 
         //create the pieces
 
-        for (var p in this.game.pieces) {
-            var piece = this.game.pieces[p];
+        this.pieces.forEach(piece => {
+            let bitMap = piece.getMatrixRepresentation();
 
             //this are the bouding boxes into which the piece itself is "painted"
             //setting to display:none avoids the appearing for a split second before positioning
@@ -86,10 +87,10 @@ class Visual {
             out += '<div class="piece" id="piece_' + piece.name + '" style="width:' + (5 * width) + 'vw;height:' + (5 * width) + 'vw;display:none">';
 
             //this "paints" the bitmap of the pice into the bounding box
-            for (var i in piece.bitMap) {
-                var row = piece.bitMap[i];
+            for (var i in bitMap) {
+                var row = bitMap[i];
                 for (var j in row) {
-                    var set = piece.bitMap[i][j];
+                    var set = bitMap[i][j];
                     if (piece.name == "F")//For different color for different piece
                     {
                         out += '<div style="display:block;float:left;width:' + width + 'vw;height:' + width + 'vw;' + ((set) ? 'background:blue' : '') + '" class="' + ((set) ? 'bmPoint' : 'bmAround') + '"></div>';
@@ -143,7 +144,7 @@ class Visual {
             }, 0, this, piece);
 
 
-        }
+        });
 
         pieceArea.innerHTML = out;
 
@@ -151,10 +152,10 @@ class Visual {
 
     positionPiece(piece) {
 
-        var width = 90 / this.game.width;
+        var width = 90 / this.pd.gameWidth;
         var htmlElement = document.getElementById('piece_' + piece.name);
 
-        if (piece.inTray) {
+        if (false) {  //TODO: piece.inTray needs to be added
             var trayPosition = piece.trayPosition;
 
             var widthVW = 10 + (piece.trayPosition) * 7; //7 is trayHeight
@@ -167,8 +168,9 @@ class Visual {
 
         } else {
 
-            var left = 10 + width * (piece.position[0] - 2);
-            var top = 7 + width * (piece.position[1] - 2);
+            let [positionY, positionX] = this.gameController.getPositionOfPentomino(piece);
+            var left = this.boardY + 10 + width * (positionY - 2);
+            var top = this.boardX + 7 + width * (positionX - 2);
 
             htmlElement.style.left = left + 'vw';
             htmlElement.style.top = top + 'vw';
