@@ -74,7 +74,7 @@ class Visual {
 
         let out = '';
 
-        var width = 90 / this.gameWidth;
+        var width = 90 / this.pd.gameWidth;
 
         //create the pieces
 
@@ -169,8 +169,8 @@ class Visual {
         } else {
 
             let [positionY, positionX] = this.gameController.getPositionOfPentomino(piece);
-            var left = this.boardY + 10 + width * (positionY - 2);
-            var top = this.boardX + 7 + width * (positionX - 2);
+            var left = 10 + width * (this.boardY + positionY - 2);
+            var top = 7 + width * (this.boardX + positionX - 2);
 
             htmlElement.style.left = left + 'vw';
             htmlElement.style.top = top + 'vw';
