@@ -45,7 +45,7 @@ class Board {
         });
 
         let collisonCells=[];
-        if (this.isCollides(pentomino, row, col,collisonCells)) {
+        if (this.isCollidesAtPosition(pentomino, row, col,collisonCells)) {
             this.setCollisionCells(collisonCells);
             //return false; //TODO: this feature contradict with collisions cell, need to fix
         }
@@ -146,7 +146,7 @@ class Board {
      * @throws {Error} if new position is outside the board
      * @returns {boolean}
      */
-    isCollides(pentomino, row, col, collisionsCell=[]) {
+    isCollidesAtPosition(pentomino, row, col, collisionsCell=[]) {
         let verdict = false;
 
         if (!this.pentominoIsValidAtPosition(pentomino, row, col)) {
@@ -193,15 +193,24 @@ class Board {
         return verdict;
     }
 
+    /**
+     * Returns whether matrices of the specified pentominoes overlap
+     * @param row
+     * @param col
+     * @param pentominoA
+     * @param pentominoB
+     * @returns {boolean}
+     */
     doPentominoOverlap(row, col, pentominoA, pentominoB) {
 
-        let aPosition = this.getPosition(pentominoA);
-        let aIsSet = pentominoA.getCharAtMatrixPosition(pentominoA.getMatrixPosition(aPosition, [row, col]));
+        let x2 = row + pentominoA.iRows-1;
+        let y2 = col + pentominoA.iCols-1;
 
-        let bPosition = this.getPosition(pentominoB);
-        let bIsSet = pentominoB.getCharAtMatrixPosition(pentominoB.getMatrixPosition(bPosition, [row, col]));
+        let [p1, q1] = this.getPosition(pentominoB);
+        let p2 = p1 + pentominoB.iRows-1;
+        let q2 = q1 + pentominoB.iCols-1;
 
-        return aIsSet === '1' && bIsSet === '1';
+        return (Math.max(row, p1 ) <= Math.min(x2, p2 ) && Math.max(col, q1) <= Math.min(y2, q2));
     }
 
     getOverlapCells(x1,y1,pentominoA, pentominoB){
