@@ -281,6 +281,23 @@ class Board {
         return this._collisions;
     }
 
+    getCollisionCellsOfPentomino(pentomino) {
+        return this._collisions.filter(collision => {
+            let p1 = collision.pentominos[0];
+            let p2 = collision.pentominos[1];
+            return p1.name === pentomino.name || p2.name === pentomino.name;
+        });
+    }
+
+    getCollisionPentominoesOfPentomino(pentomino) {
+        let allCollisions = this.getCollisionCellsOfPentomino(pentomino);
+        return allCollisions.map(collision => {
+            let p1 = collision.pentominos[0];
+            let p2 = collision.pentominos[1];
+            return p1.name === pentomino.name ? p2 : p1;
+        });
+    }
+
     // --- --- --- Getter And Helper --- --- ---
     /**
      * Returns whether the pentomino piece is placed on the board
