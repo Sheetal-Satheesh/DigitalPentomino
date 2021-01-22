@@ -8,7 +8,14 @@ class GameLoader {
         let penT = new Pentomino('T');
         let penL = new Pentomino('L');
         let penU = new Pentomino('U');
+        let penN = new Pentomino('N');
+        let penF = new Pentomino('F');
+        let penI = new Pentomino('I');
         let penP = new Pentomino('P');
+        let penZ = new Pentomino('Z');
+        let penV = new Pentomino('V');
+        let penW = new Pentomino('W');
+        let penY = new Pentomino('Y');
 
         switch (name) {
             case "Level 1":
@@ -28,6 +35,14 @@ class GameLoader {
                 game.placePentomino(penX, 4, 0);
                 game.placePentomino(penU, 0, 4);
                 game.placePentomino(penL, 3, 3);
+                game.placePentomino(penF, 10, 3);
+                game.placePentomino(penP, 5, 8);
+                game.placePentomino(penZ, 5, -3);
+                game.placePentomino(penN, 12, -6);
+                game.placePentomino(penY, 19, 7);
+                game.placePentomino(penI, 25, 9);
+                game.placePentomino(penW, 17, 3);
+                game.placePentomino(penV, 13, 3);
      //           document.write("Starting level 2.."+ "<br>");
                 break;
 
