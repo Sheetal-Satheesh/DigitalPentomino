@@ -152,21 +152,35 @@ class GameController {
     }
 
     // --- --- --- Get Information About Collisions --- --- ---
-    getCollisionCells(){
-        if (this._game === null) throw new Error("Game is not set");
-        return this._game.getCollisionCells();
-    }
-
-    getCollisionCellsOfPentomino(pentomino) {
-        if (this._game === null) throw new Error("Game is not set");
-        return this._game.getCollisionCellsOfPentomino(pentomino);
-    }
-
+    /**
+     * Returns an array of the colliding pentominoes of a specified pentomino
+     * @param pentomino
+     * @returns {*}
+     */
     getCollisionPentominoesOfPentomino(pentomino) {
         if (this._game === null) throw new Error("Game is not set");
         if (pentomino === null || pentomino === undefined) throw new Error("Type Error: Pentomino is null or undefined");
         if(!this._isOfTypePentomino(pentomino)) throw new Error("Type Error: Pentomino isn't an instance of the Pentomino class.");
         return this._game.getCollisionPentominoesOfPentomino(pentomino);
+    }
+
+    /**
+     * Returns the colliding cells of a specific pentomino piece
+     * @param pentomino
+     * @returns {*}
+     */
+    getCollisionCellsOfPentomino(pentomino) {
+        if (this._game === null) throw new Error("Game is not set");
+        return this._game.getCollisionCellsOfPentomino(pentomino);
+    }
+
+    /**
+     * Returns an array list of all colliding cells on the board
+     * @returns {*}
+     */
+    getCollisionCells(){
+        if (this._game === null) throw new Error("Game is not set");
+        return this._game.getCollisionCells();
     }
 
     // --- --- --- Get Information About The Game For Loading --- --- ---
