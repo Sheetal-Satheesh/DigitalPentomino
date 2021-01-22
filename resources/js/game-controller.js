@@ -113,24 +113,6 @@ class GameController {
         return this._game.getPossibleRedoCommands();
     }
 
-    // --- --- --- Collision --- --- ---
-    getCollisionCells() {
-        if (this._game === null) throw new Error("Game is not set");
-        return this._game.getCollisionCells();
-    }
-
-    getCollisionPentominoes() {
-        if (this._game === null) throw new Error("Game is not set");
-        return this._game.getCollisionPentominoes();
-    }
-
-    getCollisionPentominoesOfPentomino(pentomino) {
-        if (this._game === null) throw new Error("Game is not set");
-        if (pentomino === null || pentomino === undefined) throw new Error("Type Error: Pentomino is null or undefined");
-        if(!this._isOfTypePentomino(pentomino)) throw new Error("Type Error: Pentomino isn't an instance of the Pentomino class.");
-        return this._game.getCollisionPentominoesOfPentomino(pentomino);
-    }
-
     // --- --- --- Set Game --- --- ---
     setGame(game) {
         this._game = game;
@@ -167,6 +149,24 @@ class GameController {
         if (pentomino === null || pentomino === undefined) throw new Error("Type Error: Pentomino is null or undefined");
         if(!this._isOfTypePentomino(pentomino)) throw new Error("Type Error: Pentomino isn't an instance of the Pentomino class.");
         return this._game.isPlacedInGame(pentomino);
+    }
+
+    // --- --- --- Get Information About Collisions --- --- ---
+    getCollisionCells(){
+        if (this._game === null) throw new Error("Game is not set");
+        return this._game.getCollisionCells();
+    }
+
+    getCollisionCellsOfPentomino(pentomino) {
+        if (this._game === null) throw new Error("Game is not set");
+        return this._game.getCollisionCellsOfPentomino(pentomino);
+    }
+
+    getCollisionPentominoesOfPentomino(pentomino) {
+        if (this._game === null) throw new Error("Game is not set");
+        if (pentomino === null || pentomino === undefined) throw new Error("Type Error: Pentomino is null or undefined");
+        if(!this._isOfTypePentomino(pentomino)) throw new Error("Type Error: Pentomino isn't an instance of the Pentomino class.");
+        return this._game.getCollisionPentominoesOfPentomino(pentomino);
     }
 
     // --- --- --- Get Information About The Game For Loading --- --- ---
