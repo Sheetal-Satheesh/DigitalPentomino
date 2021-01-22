@@ -47,7 +47,6 @@ class Board {
         let collisonCells=[];
         if (this.isCollidesAtPosition(pentomino, row, col,collisonCells)) {
             this.setCollisionCells(collisonCells);
-            //return false; //TODO: this feature contradict with collisions cell, need to fix
         }
     }
 
@@ -80,7 +79,10 @@ class Board {
             boardPosition:[row,col]
         });
 
-        // TODO - collisions
+        let collisonCells=[];
+        if (this.isCollidesAtPosition(pentomino, row, col,collisonCells)) {
+            this.setCollisionCells(collisonCells);
+        }
     }
 
     rotatePentominoAntiClkWise(pentomino) {
@@ -117,7 +119,10 @@ class Board {
         }
         Object.assign(pentomino, tempPentomino);
 
-        // TODO - collisions
+        let collisonCells=[];
+        if (this.isCollidesAtPosition(pentomino, position[0], position[1],collisonCells)) {
+            this.setCollisionCells(collisonCells);
+        }
     }
 
     /**
