@@ -281,6 +281,31 @@ class Board {
         return this._collisions;
     }
 
+    getCollisionCellsOfPentomino(pentomino) {
+        if (!this.isPlacedOnBoard(pentomino)) {
+            throw new Error("Pentomino with name '" + pentomino.name + "' is not placed on the board." +
+                "Collisions are only detected for pentominoes on the board.");
+        }
+        return this._collisions.filter(collision => {
+            let p1Name = collision.pentominos[0];
+            let p2Name = collision.pentominos[1];
+            return p1Name === pentomino.name || p2Name === pentomino.name;
+        });
+    }
+
+    getCollisionPentominoesOfPentomino(pentomino) {
+        if (!this.isPlacedOnBoard(pentomino)) {
+            throw new Error("Pentomino with name '" + pentomino.name + "' is not placed on the board." +
+                "Collisions are only detected for pentominoes on the board.");
+        }
+        let allCollisions = this.getCollisionCellsOfPentomino(pentomino);
+        return allCollisions.map(collision => {
+            let p1Name = collision.pentominos[0];
+            let p2Name = collision.pentominos[1];
+            return p1Name === pentomino.name ? this.getPentominoByName(p2Name) : this.getPentominoByName(p1Name);
+        });
+    }
+
     // --- --- --- Getter And Helper --- --- ---
     /**
      * Returns whether the pentomino piece is placed on the board

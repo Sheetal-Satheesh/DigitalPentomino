@@ -174,22 +174,17 @@ class Game {
     }
 
     // --- --- --- Collision --- --- ---
-    getCollisionCells() {
+    getCollisionCells(){
         return this._board.getCollisionCells();
     }
 
-    getCollisionPentominoes() {
-        return this._board.getCollisionPentominoes();
+    getCollisionCellsOfPentomino(pentomino) {
+        return this._board.getCollisionCellsOfPentomino(pentomino);
     }
 
     getCollisionPentominoesOfPentomino(pentomino) {
-        if (this.isPlacedOutsideBoard(pentomino)) {
-            throw new Error("Game class does not calculate collisions for pentominoes outside the board");
-        }
-
         return this._board.getCollisionPentominoesOfPentomino(pentomino);
     }
-
     // --- --- --- Getter and Helper --- --- ---
 
     getPentominoes() {
