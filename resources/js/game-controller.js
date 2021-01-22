@@ -113,6 +113,24 @@ class GameController {
         return this._game.getPossibleRedoCommands();
     }
 
+    // --- --- --- Collision --- --- ---
+    getCollisionCells() {
+        if (this._game === null) throw new Error("Game is not set");
+        return this._game.getCollisionCells();
+    }
+
+    getCollisionPentominoes() {
+        if (this._game === null) throw new Error("Game is not set");
+        return this._game.getCollisionPentominoes();
+    }
+
+    getCollisionPentominoesOfPentomino(pentomino) {
+        if (this._game === null) throw new Error("Game is not set");
+        if (pentomino === null || pentomino === undefined) throw new Error("Type Error: Pentomino is null or undefined");
+        if(!this._isOfTypePentomino(pentomino)) throw new Error("Type Error: Pentomino isn't an instance of the Pentomino class.");
+        return this._game.getCollisionPentominoesOfPentomino(pentomino);
+    }
+
     // --- --- --- Set Game --- --- ---
     setGame(game) {
         this._game = game;
@@ -127,6 +145,28 @@ class GameController {
     writeToDocument() {
         if (this._game === null) throw new Error("Game is not set");
         this._game.writeToDocument();
+    }
+
+    // --- --- --- Get Information About Whether Piece Outside/Inside Board --- --- ---
+    isPlacedOutsideBoard(pentomino) {
+        if (this._game === null) throw new Error("Game is not set");
+        if (pentomino === null || pentomino === undefined) throw new Error("Type Error: Pentomino is null or undefined");
+        if(!this._isOfTypePentomino(pentomino)) throw new Error("Type Error: Pentomino isn't an instance of the Pentomino class.");
+        return this._game.isPlacedOutsideBoard(pentomino);
+    }
+
+    isPlacedOnBoard(pentomino) {
+        if (this._game === null) throw new Error("Game is not set");
+        if (pentomino === null || pentomino === undefined) throw new Error("Type Error: Pentomino is null or undefined");
+        if(!this._isOfTypePentomino(pentomino)) throw new Error("Type Error: Pentomino isn't an instance of the Pentomino class.");
+        return this._game.isPlacedOnBoard(pentomino);
+    }
+
+    isPlacedInGame(pentomino) {
+        if (this._game === null) throw new Error("Game is not set");
+        if (pentomino === null || pentomino === undefined) throw new Error("Type Error: Pentomino is null or undefined");
+        if(!this._isOfTypePentomino(pentomino)) throw new Error("Type Error: Pentomino isn't an instance of the Pentomino class.");
+        return this._game.isPlacedInGame(pentomino);
     }
 
     // --- --- --- Get Information About The Game For Loading --- --- ---
