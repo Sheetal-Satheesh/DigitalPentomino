@@ -9,9 +9,7 @@ class Visual {
         this.boardX = Math.floor((this.pd.gameHeight - this.gameController.getBoardSize()[0]) / 2);
         this.boardY = Math.floor((this.pd.gameWidth - this.gameController.getBoardSize()[1]) / 2);
         this.pieces = this.gameController.getPentominoes();
-        console.log("this.pieces")
-        console.log(this.pieces)
-        this.selectedPiece = false
+        this.selected = false
 
         //Create all visual structures of the game
 
@@ -54,7 +52,7 @@ class Visual {
 
                 //TODO: This is ugly!
 
-                out += '<div class="gamearea ' + ((isBoard) ? 'boardarea' : '') + '" id="field_' + col + ',' + row + '" title="' + col + ',' + row + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';   //'+col+','+row+'
+                out += '<div class="gamearea ' + ((isBoard) ? 'boardarea' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';   //'+col+','+row+'
             }
         }
 
@@ -94,48 +92,8 @@ class Visual {
                 var row = bitMap[i];
                 for (var j in row) {
                     var set = bitMap[i][j];
-                    if (piece.name == "F")//For different color for different piece
-                    {
-                        out += '<div style="display:block;float:left;width:' + width + 'vw;height:' + width + 'vw;' + ((set) ? 'background:blue' : '') + '" class="' + ((set) ? 'bmPoint' : 'bmAround') + '"></div>';
-                    }
-                    else if (piece.name == "I") {
-                        out += '<div style="display:block;float:left;width:' + width + 'vw;height:' + width + 'vw;' + ((set) ? 'background:red' : '') + '" class="' + ((set) ? 'bmPoint' : 'bmAround') + '"></div>';
-                    }
-                    else if (piece.name == "L") {
-                        out += '<div style="display:block;float:left;width:' + width + 'vw;height:' + width + 'vw;' + ((set) ? 'background:yellow' : '') + '" class="' + ((set) ? 'bmPoint' : 'bmAround') + '"></div>';
-                    }
-                    else if (piece.name == "N") {
-                        out += '<div style="display:block;float:left;width:' + width + 'vw;height:' + width + 'vw;' + ((set) ? 'background:green' : '') + '" class="' + ((set) ? 'bmPoint' : 'bmAround') + '"></div>';
-                    }
-                    else if (piece.name == "P") {
-                        out += '<div style="display:block;float:left;width:' + width + 'vw;height:' + width + 'vw;' + ((set) ? 'background:purple' : '') + '" class="' + ((set) ? 'bmPoint' : 'bmAround') + '"></div>';
-                    }
-                    else if (piece.name == "T") {
-                        out += '<div style="display:block;float:left;width:' + width + 'vw;height:' + width + 'vw;' + ((set) ? 'background:coral' : '') + '" class="' + ((set) ? 'bmPoint' : 'bmAround') + '"></div>';
-                    }
-                    else if (piece.name == "U") {
-                        out += '<div style="display:block;float:left;width:' + width + 'vw;height:' + width + 'vw;' + ((set) ? 'background:lime' : '') + '" class="' + ((set) ? 'bmPoint' : 'bmAround') + '"></div>';
-                    }
-                    else if (piece.name == "V") {
-                        out += '<div style="display:block;float:left;width:' + width + 'vw;height:' + width + 'vw;' + ((set) ? 'background:chocolate' : '') + '" class="' + ((set) ? 'bmPoint' : 'bmAround') + '"></div>';
-                    }
-                    else if (piece.name == "W") {
-                        out += '<div style="display:block;float:left;width:' + width + 'vw;height:' + width + 'vw;' + ((set) ? 'background:maroon' : '') + '" class="' + ((set) ? 'bmPoint' : 'bmAround') + '"></div>';
-                    }
-                    else if (piece.name == "X") {
-                        out += '<div style="display:block;float:left;width:' + width + 'vw;height:' + width + 'vw;' + ((set) ? 'background:peru' : '') + '" class="' + ((set) ? 'bmPoint' : 'bmAround') + '"></div>';
-                    }
-                    else if (piece.name == "Y") {
-                        out += '<div style="display:block;float:left;width:' + width + 'vw;height:' + width + 'vw;' + ((set) ? 'background:brown' : '') + '" class="' + ((set) ? 'bmPoint' : 'bmAround') + '"></div>';
-                    }
-                    else if (piece.name == "Z") {
-                        out += '<div style="display:block;float:left;width:' + width + 'vw;height:' + width + 'vw;' + ((set) ? 'background:indigo' : '') + '" class="' + ((set) ? 'bmPoint' : 'bmAround') + '"></div>';
-                    }
-                    else {
-                        out += '<div style="display:block;float:left;width:' + width + 'vw;height:' + width + 'vw;' + ((set) ? 'background:black' : '') + '" class="' + ((set) ? 'bmPoint' : 'bmAround') + '"></div>';
-                    }
+                    out += '<div style="display:block;float:left;width:' + width + 'vw;height:' + width + 'vw;' + ((set) ? 'background:' + piece.color : '') + '" class="' + ((set) ? 'bmPoint' : 'bmAround') + '"></div>';
                 }
-
             }
             out += '</div>';
 
@@ -166,7 +124,7 @@ class Visual {
             var magnification = 6 / (5 * width);
 
             htmlElement.style.left = widthVW + 'vw';
-            htmlElement.style.transform = 'scale(' + magnification + ')';
+            htmlElement.style.setProperty("--magnification", magnification);
             htmlElement.style.transformOrigin = '0 5%';
 
         } else {
@@ -177,10 +135,15 @@ class Visual {
 
             htmlElement.style.left = left + 'vw';
             htmlElement.style.top = top + 'vw';
-            htmlElement.style.transform = 'scale(1)';
+
+            htmlElement.style.setProperty("--magnification", 1);
             htmlElement.style.transformOrigin = '50% 50%';
 
         }
+        htmlElement.style.setProperty("--rotationX", "0deg");
+        htmlElement.style.setProperty("--rotationY", "0deg");
+        htmlElement.style.setProperty("--rotationZ", "0deg");
+
 
         //making the element visible (see remark in renderPieces)
         htmlElement.style.display = 'block';
@@ -189,18 +152,18 @@ class Visual {
 
     select(piece) {
 
-          this.selected = piece;
-          this.showManipulations();
+        this.selected = piece;
+        this.showManipulations();
 
     }
 
     deleteSelection() {
 
-      if (!this.selected) return;
+        if (!this.selected) return;
 
-      this.selected = false;
+        this.selected = false;
 
-      this.pd.visual.hideManipulations();
+        this.pd.visual.hideManipulations();
     }
 
     //show or hide the manipulation buttons
@@ -267,7 +230,7 @@ class Visual {
                 if (!piece) return;
 
                 var container = elements[i * 1 + 1];       //For some strange reason, i is a String, using *1 to convert it
-                var piece = that.pieces.find(p => {return p.name === piece;});
+                var piece = that.pieces.find(p => { return p.name === piece; });
 
                 window.currentlyMoving = [container, piece];
             }
@@ -294,7 +257,7 @@ class Visual {
 
                 container.style.left = 'calc(' + x + 'px - ' + (width * 2.5) + 'vw)';
                 container.style.top = 'calc(' + y + 'px - ' + (width * 2.5) + 'vw)';
-                container.style.transform = 'scale(1)';
+                container.style.setProperty("--magnification", 1);
                 container.style.transformOrigin = '50% 50%';
 
             }
@@ -329,7 +292,7 @@ class Visual {
 
                         var coords = (id.split('_')[1].split(','));
 
-                        that.gameController.placePentomino(data[1], coords[1]-that.boardX, coords[0]-that.boardY);
+                        that.gameController.placePentomino(data[1], coords[1] - that.boardX, coords[0] - that.boardY);
 
                         // make this the selected element which activates manipulation GUI
 
@@ -368,9 +331,57 @@ class Visual {
 
                 that.deleteSelection();
 
+
             }
         }
 
     }
 
+    rotateClkWise() {
+        let piece = this.selected;
+        if (piece) {
+            let pieceDiv = document.getElementById("piece_" + piece.name);
+            let currentRot = pieceDiv.style.getPropertyValue("--rotationZ").split(/(-?\d+)/)[1] * 1; //converts string value to int
+            let newRot = currentRot + 90;
+            // Update the backend
+            this.gameController.rotatePentominoClkWise(piece);
+            pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
+        }
+    }
+
+    rotateAntiClkWise() {
+        let piece = this.selected;
+        if (piece) {
+            let pieceDiv = document.getElementById("piece_" + piece.name);
+            let currentRot = pieceDiv.style.getPropertyValue("--rotationZ").split(/(-?\d+)/)[1] * 1; //converts string value to int
+            let newRot = currentRot - 90;
+            // Update the backend
+            this.gameController.rotatePentominoAntiClkWise(piece);
+            pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
+        }
+    }
+
+    flipH() {
+        let piece = this.selected;
+        if (piece) {
+            let pieceDiv = document.getElementById("piece_" + piece.name);
+            let currentRot = pieceDiv.style.getPropertyValue("--rotationX").split(/(-?\d+)/)[1] * 1; //converts string value to int
+            let newRot = currentRot + 180;
+            // Update the backend
+            this.gameController.mirrorPentominoH(piece);
+            pieceDiv.style.setProperty("--rotationX", newRot.toString() + "deg");
+        }
+    }
+
+    flipV() {
+        let piece = this.selected;
+        if (piece) {
+            let pieceDiv = document.getElementById("piece_" + piece.name);
+            let currentRot = pieceDiv.style.getPropertyValue("--rotationY").split(/(-?\d+)/)[1] * 1; //converts string value to int
+            let newRot = currentRot + 180;
+            // Update the backend
+            this.gameController.mirrorPentominoV(piece);
+            pieceDiv.style.setProperty("--rotationY", newRot.toString() + "deg");
+        }
+    }
 }

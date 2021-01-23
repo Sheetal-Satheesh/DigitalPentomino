@@ -33,10 +33,10 @@
 <body onload="initialize();">
     <div id="functions">
         <div id="operations">
-            <button onclick="pd.ui.rotateRight();">Rotate right</button>
-            <button onclick="pd.ui.rotateLeft();">Rotate left</button>
-            <button onclick="pd.ui.flipH();">Flip Horizontally</button>
-            <button onclick="pd.ui.flipV();">Flip Vertically</button>
+            <button id="btnRotateRight">Rotate right</button>
+            <button id="btnRotateLeft">Rotate left</button>
+            <button id="btnFlipH">Flip Horizontally</button>
+            <button id="btnFlipV">Flip Vertically</button>
             <button style="display:none" onclick="pd.ui.save()">Save</button>
             <button style="display:none" onclick="pd.ui.load()">Load</button>
             <button onclick="pd.ui.export()">Export</button>
@@ -50,7 +50,10 @@
         </div>
         <div id="field">
         </div>
+        <div id="piecearea">
+        </div>
     </div>
+
     <div id="piecearea">
         <script type="text/javascript">
             function initialize() {
@@ -58,6 +61,7 @@
             }
         </script>
     </div>
+
 </body>
 
 </html>
