@@ -85,7 +85,7 @@ class Visual {
             //this are the bouding boxes into which the piece itself is "painted"
             //setting to display:none avoids the appearing for a split second before positioning
 
-            out += '<div class="piece draggable" id="piece_' + piece.name + '" style="width:' + (5 * width) + 'vw;height:' + (5 * width) + 'vw;display:none">';
+            out += '<div class="piece" id="piece_' + piece.name + '" style="width:' + (5 * width) + 'vw;height:' + (5 * width) + 'vw;display:none">';
 
             //this "paints" the bitmap of the pice into the bounding box
             for (var i in bitMap) {
@@ -254,6 +254,7 @@ class Visual {
                 console.log("y: " + y);
 
                 var container = window.currentlyMoving[0];
+                console.log(container.clientWidth);
 
                 //resize object to full size while moving and attach their center to the
                 //pointer
@@ -264,7 +265,6 @@ class Visual {
                 var functionsWidth = document.getElementById("functions").clientWidth;
                 var gameWidth = document.getElementById("game").clientWidth;
                 var gameHeight = document.getElementById("game").clientHeight;
-                var pieceWidth = container.clientWidth;
                 console.log("FW: " + functionsWidth + " " + "GW: " + gameHeight);
 
                 if ((x > functionsWidth) && (x < gameWidth+functionsWidth)){
