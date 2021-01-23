@@ -250,18 +250,31 @@ class Visual {
                 var x = event.clientX;
                 var y = event.clientY;
 
+                console.log("x: " + x);
+                console.log("y: " + y);
+
                 var container = window.currentlyMoving[0];
+                console.log(container.clientWidth);
 
                 //resize object to full size while moving and attach their center to the
                 //pointer
 
                 var width = 90 / that.pd.gameWidth;
 
-                container.style.left = 'calc(' + x + 'px - ' + (width * 2.5) + 'vw)';
-                container.style.top = 'calc(' + y + 'px - ' + (width * 2.5) + 'vw)';
-                container.style.setProperty("--magnification", 1);
-                container.style.transformOrigin = '50% 50%';
+                //set new style for left and top value of element, BUT do not cross borders
+                var functionsWidth = document.getElementById("functions").clientWidth;
+                var gameWidth = document.getElementById("game").clientWidth;
+                var gameHeight = document.getElementById("game").clientHeight;
+                console.log("FW: " + functionsWidth + " " + "GW: " + gameHeight);
 
+                if ((x > functionsWidth) && (x < gameWidth+functionsWidth)){
+                    if ((y > 0) && (y < gameHeight)){
+                        container.style.left = 'calc(' + x + 'px - ' + (width * 2.5) + 'vw)';
+                        container.style.top = 'calc(' + y + 'px - ' + (width * 2.5) + 'vw)';
+                        container.style.setProperty("--magnification", 1);
+                        container.style.transformOrigin = '50% 50%';
+                    }
+                }  
             }
         }
 
