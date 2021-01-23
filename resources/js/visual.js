@@ -125,7 +125,7 @@ class Visual {
 
             htmlElement.style.left = widthVW + 'vw';
             //Ashwini
-			htmlElement.style.top = '0';
+            htmlElement.style.top = '0';
             htmlElement.style.setProperty("--magnification", magnification);
             htmlElement.style.transformOrigin = '0 5%';
 
@@ -286,15 +286,15 @@ class Visual {
                     var element = elements[i];
                     var id = element.id;
 
-                     
-					//Ashwini: when piece is moved back to tray reset Pentomio inTray variable to 1 and place the piece in Tray
+
+                    //Ashwini: when piece is moved back to tray reset Pentomio inTray variable to 1 and place the piece in Tray
                     if (id == 'tray') {
 
-						let piece = data[1].toTray()
-                        
-						that.positionPiece(piece)
-					// that.renderPieces();
-                      // return data[1].toTray();
+                        let piece = data[1].toTray()
+
+                        that.positionPiece(piece)
+                        // that.renderPieces();
+                        // return data[1].toTray();
                     }
 
                     //determine the position the piece ended on
@@ -310,7 +310,7 @@ class Visual {
                         // make this the selected element which activates manipulation GUI
 
                         // data[1].select(); // TODO: Make buttons disappear/appear if nothing/something is selected
-                        that.select(data[1])
+                        that.select(data[1]);
                         //	<!-- var obj = JSON.parse(localStorage.getItem('SAVEGAME')); -->
 
 
@@ -354,8 +354,9 @@ class Visual {
         let piece = this.selected;
         if (piece) {
             let pieceDiv = document.getElementById("piece_" + piece.name);
+            let flipped = pieceDiv.getAttribute("flipped") * 1;
             let currentRot = pieceDiv.style.getPropertyValue("--rotationZ").split(/(-?\d+)/)[1] * 1; //converts string value to int
-            let newRot = currentRot + 90;
+            let newRot = flipped ? currentRot - 90 : currentRot + 90;
             // Update the backend
             this.gameController.rotatePentominoClkWise(piece);
             pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
@@ -366,8 +367,9 @@ class Visual {
         let piece = this.selected;
         if (piece) {
             let pieceDiv = document.getElementById("piece_" + piece.name);
+            let flipped = pieceDiv.getAttribute("flipped") * 1;
             let currentRot = pieceDiv.style.getPropertyValue("--rotationZ").split(/(-?\d+)/)[1] * 1; //converts string value to int
-            let newRot = currentRot - 90;
+            let newRot = flipped ? currentRot + 90 : currentRot - 90;
             // Update the backend
             this.gameController.rotatePentominoAntiClkWise(piece);
             pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
@@ -378,11 +380,13 @@ class Visual {
         let piece = this.selected;
         if (piece) {
             let pieceDiv = document.getElementById("piece_" + piece.name);
+            let flipped = pieceDiv.getAttribute("flipped") * 1;
             let currentRot = pieceDiv.style.getPropertyValue("--rotationX").split(/(-?\d+)/)[1] * 1; //converts string value to int
             let newRot = currentRot + 180;
             // Update the backend
             this.gameController.mirrorPentominoH(piece);
             pieceDiv.style.setProperty("--rotationX", newRot.toString() + "deg");
+            pieceDiv.setAttribute("flipped", 1 - flipped);
         }
     }
 
@@ -390,11 +394,13 @@ class Visual {
         let piece = this.selected;
         if (piece) {
             let pieceDiv = document.getElementById("piece_" + piece.name);
+            let flipped = pieceDiv.getAttribute("flipped") * 1;
             let currentRot = pieceDiv.style.getPropertyValue("--rotationY").split(/(-?\d+)/)[1] * 1; //converts string value to int
             let newRot = currentRot + 180;
             // Update the backend
             this.gameController.mirrorPentominoV(piece);
             pieceDiv.style.setProperty("--rotationY", newRot.toString() + "deg");
+            pieceDiv.setAttribute("flipped", 1 - flipped);
         }
     }
 }
