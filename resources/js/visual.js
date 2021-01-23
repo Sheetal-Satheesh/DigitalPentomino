@@ -124,6 +124,8 @@ class Visual {
             var magnification = 6 / (5 * width);
 
             htmlElement.style.left = widthVW + 'vw';
+            //Ashwini
+			htmlElement.style.top = '0';
             htmlElement.style.setProperty("--magnification", magnification);
             htmlElement.style.transformOrigin = '0 5%';
 
@@ -283,6 +285,17 @@ class Visual {
                 for (var i in elements) {
                     var element = elements[i];
                     var id = element.id;
+
+                     
+					//Ashwini: when piece is moved back to tray reset Pentomio inTray variable to 1 and place the piece in Tray
+                    if (id == 'tray') {
+
+						let piece = data[1].toTray()
+                        
+						that.positionPiece(piece)
+					// that.renderPieces();
+                      // return data[1].toTray();
+                    }
 
                     //determine the position the piece ended on
 

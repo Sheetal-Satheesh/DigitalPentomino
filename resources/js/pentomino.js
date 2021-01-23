@@ -174,7 +174,17 @@ class Pentomino {
             console.log(aTemp.concat('|'));
         }
     }
+
+    //Ashwini: remove pieces from the game grid and put it back into the tray
+    toTray(){
+        this.inTray=1;
+  	    // this.position=false;
+
+        return this;
+    }
 }
+
+
 
 if(typeof module != 'undefined') {
     module.exports = Pentomino;
