@@ -9,6 +9,9 @@ class Visual {
         this.boardX = Math.floor((this.pd.gameHeight - this.gameController.getBoardSize()[0]) / 2);
         this.boardY = Math.floor((this.pd.gameWidth - this.gameController.getBoardSize()[1]) / 2);
         this.pieces = this.gameController.getPentominoes();
+        console.log("this.pieces")
+        console.log(this.pieces)
+        this.selectedPiece = false
 
         //Create all visual structures of the game
 
@@ -137,7 +140,7 @@ class Visual {
             out += '</div>';
 
             //positioning the pieces has to happen after the elements are created
-            //TODO: this is a disadvantage of chosing the innerHTML approach. 
+            //TODO: this is a disadvantage of chosing the innerHTML approach.
 
             setTimeout(function (that, piece) {
                 that.positionPiece(piece);
@@ -184,11 +187,27 @@ class Visual {
 
     }
 
+    select(piece) {
+
+          this.selected = piece;
+          this.showManipulations();
+
+    }
+
+    deleteSelection() {
+
+      if (!this.selected) return;
+
+      this.selected = false;
+
+      this.pd.visual.hideManipulations();
+    }
+
     //show or hide the manipulation buttons
     //TODO: Dirty! The UI needs to sensibly handle those things!!
 
-    showManipulations(piece) {
-        // console.log("Show Manipulation::",piece)		
+    showManipulations() {
+        // console.log("Show Manipulation::",piece)
         document.getElementById('operations').style.display = 'block';
     }
 
@@ -238,7 +257,7 @@ class Visual {
                 var check = elements[i].className;
                 if (check !== 'bmPoint') continue;
 
-                //as soon as we have a bmPoint(an element of a piece), 
+                //as soon as we have a bmPoint(an element of a piece),
                 //we determine the bounding box and the piece object itself
                 //and save those into a global variable "currentlyMoving"
                 //which we access during movement and at the end of movement.
@@ -314,8 +333,8 @@ class Visual {
 
                         // make this the selected element which activates manipulation GUI
 
-                        // data[1].select(); TODO: Make buttons disappear/appear if nothing/something is selected
-
+                        // data[1].select(); // TODO: Make buttons disappear/appear if nothing/something is selected
+                        that.select(data[1])
                         //	<!-- var obj = JSON.parse(localStorage.getItem('SAVEGAME')); -->
 
 
@@ -347,7 +366,7 @@ class Visual {
                     if (element.id == 'functions') return; //do not unselect if operations have been applied to the functions panel
                 }
 
-                that.game.deleteSelection();
+                that.deleteSelection();
 
             }
         }
