@@ -1,3 +1,10 @@
+:root {
+    --rotationX: 0;
+    --rotationY: 0;
+    --rotationZ: 0;
+    --magnification:1;
+}
+
 #functions {
     position: fixed;
     top: 0;
@@ -58,7 +65,9 @@
     position: fixed;
     top: 0;
     width: 9vw;
-    height: 9vw
+    height: 9vw;
+    transform: scale(var(--magnification)) rotateX(var(--rotationX)) rotateY(var(--rotationY)) rotateZ(var(--rotationZ));
+    transition: transform .2s;
 }
 
 .bmAround {
