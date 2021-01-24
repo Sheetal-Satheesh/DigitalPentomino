@@ -8,6 +8,7 @@ class Visual {
         this.gameController = pd.gameController;
         this.boardX = Math.floor((this.pd.gameHeight - this.gameController.getBoardSize()[0]) / 2);
         this.boardY = Math.floor((this.pd.gameWidth - this.gameController.getBoardSize()[1]) / 2);
+        this.gameController.setBoardStartPostion(this.boardX,this.boardY);
         this.pieces = this.gameController.getPentominoes();
         this.selected = false
 
@@ -19,6 +20,11 @@ class Visual {
         //Create interaction listeners
 
         this.initalizeListeners();
+    }
+
+    placePentomino(name, posX, posY){ // rename the name
+        console.log("name: "+ name + "posX: "+ posX+ "posY: "+posY);
+        this.gameController.placePentomino(name, posX, posY);
     }
 
     //Create the field on which pieces can be put
@@ -318,8 +324,8 @@ class Visual {
 
                         var coords = (id.split('_')[1].split(','));
 
-                        that.gameController.placePentomino(data[1], coords[1] - that.boardX, coords[0] - that.boardY);
-
+                        //that.gameController.placePentomino(data[1], coords[1] - that.boardX, coords[0] - that.boardY);
+                        that.placePentomino(data[1], coords[0],coords[1] );    
                         // make this the selected element which activates manipulation GUI
 
                         // data[1].select(); // TODO: Make buttons disappear/appear if nothing/something is selected

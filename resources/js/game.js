@@ -14,7 +14,7 @@ class Game {
     constructor(board) {
         this._board = board;
         this._commandManager = new CommandManager();
-
+        this._tray=[];
         this._pentominosOutside = [];
         this._pentominoOutsidePositions = [];
     }
@@ -141,11 +141,27 @@ class Game {
             throw new Error('Pentomino \'' + pentomino.name + "\' is already in the game");
         }
 
-        this._pentominosOutside.push(pentomino);
-        this._pentominoOutsidePositions.push({
-            name: pentomino.name,
-            position: [row, col]
-        });
+        var pentominoExist=false;
+        this._pentominosOutside.find((item, index) => {
+            if (item.name === pentomino.name) {
+                pentominoExist = true;
+                let penPosition= { 
+                                name: pentomino.name,
+                                position: [row, col]
+                               };
+                this._pentominosOutside[index]=item;
+                this._pentominoOutsidePositions[index] = penPosition;   
+            }
+        },this);
+
+        if(!pentominoExist){
+            this._pentominosOutside.push(pentomino);
+            this._pentominoOutsidePositions.push({
+                    name: pentomino.name,
+                    position: [row, col]
+                });
+        }
+        
     }
 
     _movePentominoOutsideBoardToPosition(pentomino, row, col) {
@@ -156,6 +172,16 @@ class Game {
         });
     }
 
+    _fillUpTray(){
+        var allPentominos=[
+                    'F','I','L','N','P','T',
+                    'U','V','W','X','Y','Z'];
+        allPentominos.forEach(function(pentominoType){
+            let pentomino = new Pentomino(pentominoType); 
+            this._tray.push(pentomino);
+        },this);
+
+    }
     // --- --- --- History --- --- ---
     undo() {
         return this._commandManager.undo();
@@ -188,8 +214,9 @@ class Game {
     // --- --- --- Getter and Helper --- --- ---
 
     getPentominoes() {
-        return this._board.getPentominoes().concat(this._pentominosOutside);
+        return this._board.getPentominoes().concat(this._pentominosOutside).concat(this._tray);
     }
+
 
     getPosition(pentomino) {
         if (this._board.isPlacedOnBoard(pentomino)) {

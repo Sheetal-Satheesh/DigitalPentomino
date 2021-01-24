@@ -5,7 +5,7 @@ class PD {
         this.gameWidth = 25;
         this.gameHeight = 12;
         this.gameController = new GameController();
-        this.gameController.setGame(GameLoader.loadByName("Level 2"));
+        this.gameController.createGame(config.boardSize[0],config.boardSize[1],config.boardShape);
         this.visual = new Visual(this);
         
         // Attach event handlers and provide correct "this" reference inside

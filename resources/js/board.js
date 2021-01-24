@@ -18,12 +18,17 @@ class Board {
     constructor(boardRows,boardCols,shape='Block') {
         this._boardRows = boardRows;
         this._boardCols = boardCols;
+        this._boardStartX = undefined;
+        this._boardStartY = undefined;
 
         this._pentominoes = [];
         this._pentominoPositions = [];
         this._collisions = [];
     }
 
+    setStartPosition(posX, posY){
+        this._boardS
+    }
     placePentomino(pentomino, row, col) {
         if (!this.pentominoIsValidAtPosition(pentomino, row, col)) {
             if (!this.positionIsValid(row, col)) {
