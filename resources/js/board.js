@@ -156,12 +156,15 @@ class Board {
      * Removes a pentomino piece from the board
      * @param pentomino the piece that should be removed
      * @throws {Error} if the pentomino is not placed on the board
+     * 
+     * TODO: remove collision cell also
      */
     removePentomino(pentomino) {
         if (!this.isPlacedOnBoard(pentomino)) {
             throw new Error("Pentomino with name '" + pentomino.name + "' is not placed on the board.");
         }
 
+        this.removeCollisionByPentomino(pentomino);
         this._pentominoPositions = this._pentominoPositions.filter(
                                             item =>item.name !== pentomino.name);
         this._pentominoes = this._pentominoes.filter(
@@ -307,6 +310,45 @@ class Board {
         }
 
         // console.log(this._collisions);
+    }
+
+    removeCollisionByCells(cells){
+        this._collisions.map((cItem, index)=>{
+
+            if(cItem.cell[0] == cells[0] && cItem.cell[1] == cells[1]){
+                this._collisions = this._collisions.filter(
+                    item => (item.cell[0] != cItem.cell[0]) && 
+                            (item.cell[0] != cItem.cell[1]) 
+                             );
+            }else{
+                return cItem;
+            }           
+            
+        },this);
+
+
+    }
+
+    removeCollisionByPentomino(pentomino){
+        var removeList=[];
+        this._collisions.map((cItem, index)=>{
+
+            cItem.pentominos =  cItem.pentominos.filter(
+                                        item =>item !== pentomino.name);
+            if(cItem.pentominos.length == 1){
+                this._collisions = this._collisions.filter(
+                        item => (item.cell[0] != cItem.cell[0]) && 
+                                (item.cell[0] != cItem.cell[1]) 
+                                 );
+
+            }else{
+                    return cItem;
+            }
+            
+        },this);
+
+       //TODO: remove 
+        
     }
 
     getCollisionCells(){
