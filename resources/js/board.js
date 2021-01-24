@@ -15,21 +15,25 @@ class Board {
      * @param boardCols;
      * @param shape; shape of the block
      */
-    constructor(boardRows,boardCols,shape='Block') {
-        this._boardRows = boardRows;
-        this._boardCols = boardCols;
-        this._boardStartX = undefined;
-        this._boardStartY = undefined;
+    constructor(boardStartXY, boardSizeXY,boardShape='Block') {
+        this._boardSRows = boardStartXY[0];
+        this._boardSCols = boardStartXY[1];
+
+        this._boardRows = boardSizeXY[0];
+        this._boardCols = boardSizeXY[1];
+      
 
         this._pentominoes = [];
         this._pentominoPositions = [];
         this._collisions = [];
     }
 
-    setStartPosition(posX, posY){
-        this._boardS
-    }
     placePentomino(pentomino, row, col) {
+
+        /**
+         * Do we need that checking really? Is it not duplcate operation? Game class
+         * already not decided this pentomino should placed on the board?
+         */
         if (!this.pentominoIsValidAtPosition(pentomino, row, col)) {
             if (!this.positionIsValid(row, col)) {
                 throw new Error("Position [" + row + "," + col + "] is outside the board");
@@ -39,20 +43,31 @@ class Board {
         }
 
         if (this.isPlacedOnBoard(pentomino)) {
-            throw new Error('Pentomino \'' + pentomino.name + "\' is already on the board");
+         /*TODO: remove
+               throw new Error('Pentomino \'' + pentomino.name + "\' is already on the board");
+           */
+               /**
+             * TODO: This function will be called after checking that this pentomino is a valid
+             *       candidate for placing on board, if this piece already placed, then move 
+             *       operation should be called.             * 
+             * return from here
+             */
+            this.movePentominoToPosition(pentomino, row, col);
+        }else{
+
+            this._pentominoes.push(pentomino);
+            this._pentominoPositions.push({
+                name:pentomino.name,
+                boardPosition:[row,col]
+            });
+    
+            let collisonCells=[];
+            if (this.isCollidesAtPosition(pentomino, row, col,collisonCells)) {
+                this.setCollisionCells(collisonCells);
+            }
+    
         }
 
-        this._pentominoes.push(pentomino);
-
-        this._pentominoPositions.push({
-            name:pentomino.name,
-            boardPosition:[row,col]
-        });
-
-        let collisonCells=[];
-        if (this.isCollidesAtPosition(pentomino, row, col,collisonCells)) {
-            this.setCollisionCells(collisonCells);
-        }
     }
 
     /**
@@ -72,6 +87,13 @@ class Board {
             }
         }
 
+        /**
+         * movePentomino always triggered by placePentomino() function, when placePentomino()
+         * find that a piece already placed on the board, then it will call this function. 
+         * 
+         * Do we need that checking?
+         * 
+         */
         if (!this.isPlacedOnBoard(pentomino)) {
             throw new Error("Pentomino \'" + pentomino.name + "\' does not exist on the board");
         }
@@ -424,10 +446,10 @@ class Board {
     positionIsValid(row, col) {
         row=parseInt(row);
         col=parseInt(col);
-        return !(row < 0
-            || row >= this._boardRows
-            || col < 0
-            || col >= this._boardCols);
+        return !(row < this._boardSRows
+            || row >= (this._boardRows+ this._boardSRows)
+            || col < this._boardCols)
+            || col >= (this._boardSCols + this._boardCols);
     }
 
     /** Returns whether the pentomino will fit onto the board at the specified position

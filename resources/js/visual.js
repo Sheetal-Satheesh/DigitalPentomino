@@ -1,14 +1,10 @@
 class Visual {
 
     constructor(pd) {
-
-        //convenience
-
         this.pd = pd;
         this.gameController = pd.gameController;
-        this.boardX = Math.floor((this.pd.gameHeight - this.gameController.getBoardSize()[0]) / 2);
-        this.boardY = Math.floor((this.pd.gameWidth - this.gameController.getBoardSize()[1]) / 2);
-        this.gameController.setBoardStartPostion(this.boardX,this.boardY);
+        this.boardX = pd.boardStartX;
+        this.boardY = pd.boardStartY;
         this.pieces = this.gameController.getPentominoes();
         this.selected = false
 

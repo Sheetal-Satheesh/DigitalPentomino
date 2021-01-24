@@ -9,6 +9,14 @@ class GameController {
     }
 
     // --- --- --- Pentomino Operations --- --- ---
+    /**
+     * TODO:   this._game.placePentomino(pentomino,row,col); called twice, 
+     *          Additional from this._game.doCommandAndAddToHistory
+     *   back-trace: 
+     *              execute()
+     *              executeNewCommand(command)
+     *              doCommandAndAddToHistory(command) 
+     */
     placePentomino(pentomino,row,col) {
         row=parseInt(row);
         col=parseInt(col);
@@ -17,7 +25,7 @@ class GameController {
         if (pentomino === null || pentomino === undefined) throw new Error("Type Error: Pentomino is null or undefined");
         if(!this._isOfTypePentomino(pentomino)) throw new Error("Type Error: Pentomino isn't an instance of the Pentomino class.");
         this._game.placePentomino(pentomino,row,col);
-        return this._game.doCommandAndAddToHistory(new PlaceCommand(this._game, pentomino, row, col));
+      //  return this._game.doCommandAndAddToHistory(new PlaceCommand(this._game, pentomino, row, col));
     }
 
     movePentominoToPosition(pentomino, row, col) {
@@ -121,16 +129,17 @@ class GameController {
         this._game = game;
     };
 
-    createGame(boardX, boardY, shape) {
-        boardX=parseInt(boardX);
-        boardY=parseInt(boardY);
-        this.setGame(new Game(new Board(boardX,boardY,shape)));
+    createGame(boardStartXY, boardSizeXY, Boardshape) {
+        boardStartXY[0] = parseInt(boardStartXY[0]);
+        boardStartXY[1] = parseInt(boardStartXY[1]);
+        
+        boardSizeXY[0]=parseInt(boardSizeXY[0]);
+        boardSizeXY[1]=parseInt(boardSizeXY[1]);
+
+        this.setGame(new Game(new Board(boardStartXY,boardSizeXY,Boardshape)));
         this._game._fillUpTray();
     }
 
-    setBoardStartPostion(posX, posY){
-        this._game._board.setStartPosition(posX, posY);
-    }
     // --- --- --- Debugging --- --- ---
     display() {
         if (this._game === null) throw new Error("Game is not set");

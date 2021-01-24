@@ -37,12 +37,18 @@ class Game {
      * @param col
      */
     placePentomino(pentomino, row, col) {
+       
         let newPentominoPositionIsOnBoard = this._board.pentominoIsValidAtPosition(pentomino, row, col);
         if (newPentominoPositionIsOnBoard) {
             this._board.placePentomino(pentomino, row, col);
+                /**
+                 * TODO: return collision information, if this piece placement make collisions
+                 * with other pentomino
+                */
         } else {
             this._placePentominoOutsideBoard(pentomino, row, col);
-        }
+            }    
+        
     }
 
     /**
@@ -51,6 +57,11 @@ class Game {
      * @param row
      * @param col
      */
+
+     /**
+      * TODO: need to check that?
+      * 
+      */
     movePentominoToPosition(pentomino, row, col) {
         if (!this.isPlacedInGame(pentomino)) {
             throw new Error("Pentomino \'" + pentomino.name + "\' is not placed in the game");
