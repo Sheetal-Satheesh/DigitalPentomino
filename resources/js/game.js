@@ -37,17 +37,47 @@ class Game {
      * @param col
      */
     placePentomino(pentomino, row, col) {
-       
-        let newPentominoPositionIsOnBoard = this._board.pentominoIsValidAtPosition(pentomino, row, col);
-        if (newPentominoPositionIsOnBoard) {
-            this._board.placePentomino(pentomino, row, col);
-                /**
-                 * TODO: return collision information, if this piece placement make collisions
-                 * with other pentomino
-                */
-        } else {
-            this._placePentominoOutsideBoard(pentomino, row, col);
-            }    
+       /**
+        * Find if pentomino already placed in the board or out of the board. 
+        * If it is placed already in the board, and target position is not valid, 
+        * then remove pentomino from the board, place out of the board
+        * 
+        * If it is placed already in the outside of the board, if target position
+        * is valide, remove the pentomino from the outside area and place it in the
+        * board
+        * 
+        * 
+        */
+
+       let targetPosOnBoard = this._board.pentominoIsValidAtPosition(pentomino, row, col);
+       console.log("Target position: "+ targetPosOnBoard);
+        if(this.isPlacedOnBoard(pentomino) ){
+            if(targetPosOnBoard == true){
+                this._board.placePentomino(pentomino, row, col);    
+            }else{
+                this.movePentominoToPosition(pentomino, row, col);
+            }
+        }else if(this.isPlacedOutsideBoard(pentomino)){
+            if(targetPosOnBoard == false){
+                this._placePentominoOutsideBoard(pentomino, row, col);
+            }else{
+                this.movePentominoToPosition(pentomino, row, col);
+            }
+        } else{
+            if (targetPosOnBoard) {
+                this._board.placePentomino(pentomino, row, col);
+                    /**
+                     * TODO: return collision information, if this piece placement make collisions
+                     * with other pentomino
+                    */
+            } else {
+                this._placePentominoOutsideBoard(pentomino, row, col);
+                }   
+        }
+
+
+
+    
         
     }
 

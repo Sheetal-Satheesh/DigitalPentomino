@@ -444,12 +444,16 @@ class Board {
      * @returns {boolean}
      */
     positionIsValid(row, col) {
+
         row=parseInt(row);
         col=parseInt(col);
-        return !(row < this._boardSRows
-            || row >= (this._boardRows+ this._boardSRows)
-            || col < this._boardCols)
-            || col >= (this._boardSCols + this._boardCols);
+
+        return  !(
+            (row < this._boardSRows)
+            || (row >= (this._boardRows+ this._boardSRows))
+            || (col < this._boardSCols)
+            || (col >= (this._boardCols+this._boardSCols))
+            );
     }
 
     /** Returns whether the pentomino will fit onto the board at the specified position
