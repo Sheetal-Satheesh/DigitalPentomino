@@ -119,15 +119,17 @@ class Visual {
         if (piece.inTray) {  //TODO: piece.inTray needs to be added
             var trayPosition = piece.trayPosition;
 
-            var widthVW = 10 + (piece.trayPosition) * 7; //7 is trayHeight
+            var widthVW = 7 + (piece.trayPosition) * 7; //7 is trayHeight
 
             var magnification = 6 / (5 * width);
 
             htmlElement.style.left = widthVW + 'vw';
             //Ashwini
+            let trayWidth = document.getElementById("tray");
             htmlElement.style.top = '0';
+            htmlElement.style.marginTop = "-5.5%";
             htmlElement.style.setProperty("--magnification", magnification);
-            htmlElement.style.transformOrigin = '0 5%';
+            htmlElement.style.transformOrigin = 'center';
 
         } else {
 
@@ -142,10 +144,11 @@ class Visual {
             htmlElement.style.transformOrigin = '50% 50%';
 
         }
-        htmlElement.style.setProperty("--rotationX", "0deg");
-        htmlElement.style.setProperty("--rotationY", "0deg");
-        htmlElement.style.setProperty("--rotationZ", "0deg");
-
+        if (htmlElement.style.getPropertyValue("--rotationX") === "") {
+            htmlElement.style.setProperty("--rotationX", "0deg");
+            htmlElement.style.setProperty("--rotationY", "0deg");
+            htmlElement.style.setProperty("--rotationZ", "0deg");
+        }
 
         //making the element visible (see remark in renderPieces)
         htmlElement.style.display = 'block';
@@ -267,14 +270,14 @@ class Visual {
                 var gameHeight = document.getElementById("game").clientHeight;
                 console.log("FW: " + functionsWidth + " " + "GW: " + gameHeight);
 
-                if ((x > functionsWidth) && (x < gameWidth+functionsWidth)){
-                    if ((y > 0) && (y < gameHeight)){
+                if ((x > functionsWidth) && (x < gameWidth + functionsWidth)) {
+                    if ((y > 0) && (y < gameHeight)) {
                         container.style.left = 'calc(' + x + 'px - ' + (width * 2.5) + 'vw)';
                         container.style.top = 'calc(' + y + 'px - ' + (width * 2.5) + 'vw)';
                         container.style.setProperty("--magnification", 1);
                         container.style.transformOrigin = '50% 50%';
                     }
-                }  
+                }
             }
         }
 
