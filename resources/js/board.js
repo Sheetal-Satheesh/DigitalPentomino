@@ -350,11 +350,12 @@ class Board {
                 "Collisions are only detected for pentominoes on the board.");
         }
         let allCollisions = this.getCollisionCellsOfPentomino(pentomino);
-        return allCollisions.map(collision => {
+        let resultWithDuplicates = allCollisions.map(collision => {
             let p1Name = collision.pentominos[0];
             let p2Name = collision.pentominos[1];
             return p1Name === pentomino.name ? this.getPentominoByName(p2Name) : this.getPentominoByName(p1Name);
         });
+        return [...new Set(resultWithDuplicates)];
     }
 
     // --- --- --- Getter And Helper --- --- ---
