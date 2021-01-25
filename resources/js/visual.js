@@ -1,13 +1,10 @@
 class Visual {
 
     constructor(pd) {
-
-        //convenience
-
         this.pd = pd;
         this.gameController = pd.gameController;
-        this.boardX = Math.floor((this.pd.gameHeight - this.gameController.getBoardSize()[0]) / 2);
-        this.boardY = Math.floor((this.pd.gameWidth - this.gameController.getBoardSize()[1]) / 2);
+        this.boardX = pd.boardStartX;
+        this.boardY = pd.boardStartY;
         this.pieces = this.gameController.getPentominoes();
         this.selected = false
 
@@ -19,6 +16,10 @@ class Visual {
         //Create interaction listeners
 
         this.initalizeListeners();
+    }
+
+    placePentomino(pentomino, posX, posY){ // rename the name
+        this.gameController.placePentomino(pentomino, posX, posY);
     }
 
     //Create the field on which pieces can be put
@@ -265,7 +266,7 @@ class Visual {
                 var functionsWidth = document.getElementById("functions").clientWidth;
                 var gameWidth = document.getElementById("game").clientWidth;
                 var gameHeight = document.getElementById("game").clientHeight;
-                console.log("FW: " + functionsWidth + " " + "GW: " + gameHeight);
+              //  console.log("FW: " + functionsWidth + " " + "GW: " + gameHeight);
 
                 if ((x > functionsWidth) && (x < gameWidth+functionsWidth)){
                     if ((y > 0) && (y < gameHeight)){
@@ -317,9 +318,7 @@ class Visual {
                     if (id.split('_')[0] == 'field') {
 
                         var coords = (id.split('_')[1].split(','));
-
-                        that.gameController.placePentomino(data[1], coords[1] - that.boardX, coords[0] - that.boardY);
-
+                        that.placePentomino(data[1], coords[0],coords[1] );    
                         // make this the selected element which activates manipulation GUI
 
                         // data[1].select(); // TODO: Make buttons disappear/appear if nothing/something is selected
