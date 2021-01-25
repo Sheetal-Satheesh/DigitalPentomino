@@ -240,11 +240,19 @@ class Game {
     }
 
     getCollisionCellsOfPentomino(pentomino) {
-        return this._board.getCollisionCellsOfPentomino(pentomino);
+        if (this.isPlacedOnBoard(pentomino)) {
+            return this._board.getCollisionCellsOfPentomino(pentomino);
+        } else {
+            return [];
+        }
     }
 
     getCollisionPentominoesOfPentomino(pentomino) {
-        return this._board.getCollisionPentominoesOfPentomino(pentomino);
+        if (this.isPlacedOnBoard(pentomino)) {
+            return this._board.getCollisionPentominoesOfPentomino(pentomino);
+        } else {
+            return [];
+        }
     }
     // --- --- --- Getter and Helper --- --- ---
 
