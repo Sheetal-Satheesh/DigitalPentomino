@@ -15,9 +15,12 @@ class Board {
      * @param boardCols;
      * @param shape; shape of the block
      */
-    constructor(boardRows,boardCols,shape='Block') {
-        this._boardRows = boardRows;
-        this._boardCols = boardCols;
+    constructor(boardStartXY, boardSizeXY,boardShape='Block') {
+        this._boardSRows = boardStartXY[0]??0;
+        this._boardSCols = boardStartXY[1]??0;
+
+        this._boardRows = boardSizeXY[0];
+        this._boardCols = boardSizeXY[1];
 
         this._pentominoes = [];
         this._pentominoPositions = [];
@@ -25,6 +28,11 @@ class Board {
     }
 
     placePentomino(pentomino, row, col) {
+
+        /**
+         * Do we need that checking really? Is it not duplcate operation? Game class
+         * already not decided this pentomino should placed on the board?
+         */
         if (!this.pentominoIsValidAtPosition(pentomino, row, col)) {
             if (!this.positionIsValid(row, col)) {
                 throw new Error("Position [" + row + "," + col + "] is outside the board");
@@ -34,20 +42,28 @@ class Board {
         }
 
         if (this.isPlacedOnBoard(pentomino)) {
-            throw new Error('Pentomino \'' + pentomino.name + "\' is already on the board");
+            /**
+             * This function will be called after checking that this pentomino is a valid
+             * candidate for placing on board, if this piece already placed, then move
+             * operation should be called.
+             *
+             * return from here
+             */
+            this.movePentominoToPosition(pentomino, row, col);
+        }else{
+
+            this._pentominoes.push(pentomino);
+            this._pentominoPositions.push({
+                name:pentomino.name,
+                boardPosition:[row,col]
+            });
+
+            let collisonCells=[];
+            if (this.isCollidesAtPosition(pentomino, row, col,collisonCells)) {
+                this.setCollisionCells(collisonCells);
+            }
         }
 
-        this._pentominoes.push(pentomino);
-
-        this._pentominoPositions.push({
-            name:pentomino.name,
-            boardPosition:[row,col]
-        });
-
-        let collisonCells=[];
-        if (this.isCollidesAtPosition(pentomino, row, col,collisonCells)) {
-            this.setCollisionCells(collisonCells);
-        }
     }
 
     /**
@@ -67,6 +83,13 @@ class Board {
             }
         }
 
+        /**
+         * movePentomino always triggered by placePentomino() function, when placePentomino()
+         * find that a piece already placed on the board, then it will call this function. 
+         * 
+         * Do we need that checking?
+         * 
+         */
         if (!this.isPlacedOnBoard(pentomino)) {
             throw new Error("Pentomino \'" + pentomino.name + "\' does not exist on the board");
         }
@@ -129,12 +152,14 @@ class Board {
      * Removes a pentomino piece from the board
      * @param pentomino the piece that should be removed
      * @throws {Error} if the pentomino is not placed on the board
+     * 
      */
     removePentomino(pentomino) {
         if (!this.isPlacedOnBoard(pentomino)) {
             throw new Error("Pentomino with name '" + pentomino.name + "' is not placed on the board.");
         }
 
+        this.removeCollisionByPentomino(pentomino);
         this._pentominoPositions = this._pentominoPositions.filter(
                                             item =>item.name !== pentomino.name);
         this._pentominoes = this._pentominoes.filter(
@@ -177,14 +202,7 @@ class Board {
                     let pValue = pentomino.getCharAtMatrixPosition(pOverlapCellMatrixPos[0], pOverlapCellMatrixPos[1]);
                     let eOverlapCellMatrixPos = entry.getMatrixPosition(entryPosition, [cell.x, cell.y]);
                     let eValue = entry.getCharAtMatrixPosition(eOverlapCellMatrixPos[0], eOverlapCellMatrixPos[1]);
-                    /*let pValue = pentomino.sRepr.charAt(
-                        (overlapCells[i].x - row)* pentomino.iCols +(overlapCells[i].y -col));
-                    let eValue = entry.sRepr.charAt(
-                        (overlapCells[i].x - p)* entry.iCols +(overlapCells[i].y -q));*/
-
                     if(eValue === '1' && pValue === eValue) {
-                        //console.log(pentomino.name+'x'+entry.name+" : "+ overlapCells[i].x+","+overlapCells[i].y);
-
                         verdict=true;
                         let index = collisionsCell.findIndex(item => item.cell[0] === cell.x &&
                             item.cell[1] === cell.y);
@@ -278,8 +296,36 @@ class Board {
                 }
             },this);
         }
+    }
 
-        // console.log(this._collisions);
+    removeCollisionByCells(cells){
+        this._collisions.map((cItem, index)=>{
+            if(cItem.cell[0] == cells[0] && cItem.cell[1] == cells[1]){
+                this._collisions = this._collisions.filter(
+                    item => (item.cell[0] != cItem.cell[0]) && 
+                            (item.cell[0] != cItem.cell[1]) 
+                             );
+            }else{
+                return cItem;
+            }
+        },this);
+
+    }
+
+    removeCollisionByPentomino(pentomino){
+        this._collisions.map((cItem, index)=>{
+            cItem.pentominos =  cItem.pentominos.filter(
+                                        item =>item !== pentomino.name);
+            if(cItem.pentominos.length == 1){
+                this._collisions = this._collisions.filter(
+                        item => (item.cell[0] != cItem.cell[0]) && 
+                                (item.cell[0] != cItem.cell[1])
+                                 );
+            }else{
+                    return cItem;
+            }
+        },this);
+
     }
 
     getCollisionCells(){
@@ -417,12 +463,16 @@ class Board {
      * @returns {boolean}
      */
     positionIsValid(row, col) {
+
         row=parseInt(row);
         col=parseInt(col);
-        return !(row < 0
-            || row >= this._boardRows
-            || col < 0
-            || col >= this._boardCols);
+
+        return  !(
+            (row < this._boardSRows)
+            || (row >= (this._boardRows+ this._boardSRows))
+            || (col < this._boardSCols)
+            || (col >= (this._boardCols+this._boardSCols))
+            );
     }
 
     /** Returns whether the pentomino will fit onto the board at the specified position

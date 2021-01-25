@@ -14,7 +14,13 @@ class Game {
     constructor(board) {
         this._board = board;
         this._commandManager = new CommandManager();
+        /**
+            TODO: reconsider this tray, do we really need to store tray information.
 
+            It is added to create and save all the pentomino when, game is loaded for
+            the first time.
+        */
+        this._tray=[]; 
         this._pentominosOutside = [];
         this._pentominoOutsidePositions = [];
     }
@@ -37,11 +43,40 @@ class Game {
      * @param col
      */
     placePentomino(pentomino, row, col) {
-        let newPentominoPositionIsOnBoard = this._board.pentominoIsValidAtPosition(pentomino, row, col);
-        if (newPentominoPositionIsOnBoard) {
-            this._board.placePentomino(pentomino, row, col);
-        } else {
-            this._placePentominoOutsideBoard(pentomino, row, col);
+       /**
+        * Find if pentomino already placed in the board or out of the board.
+        * If it is placed already in the board, and target position is not valid, 
+        * then remove pentomino from the board, place out of the board
+        * 
+        * If it is placed already in the outside of the board, if target position
+        * is valide, remove the pentomino from the outside area and place it in the
+        * board
+        *
+        */
+
+       let targetPosOnBoard = this._board.pentominoIsValidAtPosition(pentomino, row, col);
+       if(this.isPlacedOnBoard(pentomino) ){
+            if(targetPosOnBoard == true){
+                this._board.placePentomino(pentomino, row, col);    
+            }else{
+                this.movePentominoToPosition(pentomino, row, col);
+            }
+        }else if(this.isPlacedOutsideBoard(pentomino)){
+            if(targetPosOnBoard == false){
+                this._placePentominoOutsideBoard(pentomino, row, col);
+            }else{
+                this.movePentominoToPosition(pentomino, row, col);
+            }
+        } else{
+            if (targetPosOnBoard) {
+                this._board.placePentomino(pentomino, row, col);
+                    /**
+                     * TODO: return collision information, if this piece placement make collisions
+                     * with other pentomino
+                    */
+            } else {
+                this._placePentominoOutsideBoard(pentomino, row, col);
+            }
         }
     }
 
@@ -51,6 +86,7 @@ class Game {
      * @param row
      * @param col
      */
+
     movePentominoToPosition(pentomino, row, col) {
         if (!this.isPlacedInGame(pentomino)) {
             throw new Error("Pentomino \'" + pentomino.name + "\' is not placed in the game");
@@ -141,11 +177,26 @@ class Game {
             throw new Error('Pentomino \'' + pentomino.name + "\' is already in the game");
         }
 
-        this._pentominosOutside.push(pentomino);
-        this._pentominoOutsidePositions.push({
-            name: pentomino.name,
-            position: [row, col]
-        });
+        var pentominoExist=false;
+        this._pentominosOutside.find((item, index) => {
+            if (item.name === pentomino.name) {
+                pentominoExist = true;
+                let penPosition= {
+                                name: pentomino.name,
+                                position: [row, col]
+                               };
+                this._pentominosOutside[index]=item;
+                this._pentominoOutsidePositions[index] = penPosition;
+            }
+        },this);
+
+        if(!pentominoExist){
+            this._pentominosOutside.push(pentomino);
+            this._pentominoOutsidePositions.push({
+                    name: pentomino.name,
+                    position: [row, col]
+                });
+        }
     }
 
     _movePentominoOutsideBoardToPosition(pentomino, row, col) {
@@ -156,6 +207,16 @@ class Game {
         });
     }
 
+    _fillUpTray(){
+        var allPentominos=[
+                    'F','I','L','N','P','T',
+                    'U','V','W','X','Y','Z'];
+        allPentominos.forEach(function(pentominoType){
+            let pentomino = new Pentomino(pentominoType); 
+            this._tray.push(pentomino);
+        },this);
+
+    }
     // --- --- --- History --- --- ---
     undo() {
         return this._commandManager.undo();
@@ -188,8 +249,9 @@ class Game {
     // --- --- --- Getter and Helper --- --- ---
 
     getPentominoes() {
-        return this._board.getPentominoes().concat(this._pentominosOutside);
+        return this._board.getPentominoes().concat(this._pentominosOutside).concat(this._tray);
     }
+
 
     getPosition(pentomino) {
         if (this._board.isPlacedOnBoard(pentomino)) {

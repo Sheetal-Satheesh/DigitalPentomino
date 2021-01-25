@@ -8,60 +8,51 @@ class GameController {
         this._game = null;
     }
 
-    // --- --- --- Pentomino Operations --- --- ---
-    placePentomino(pentomino,row,col) {
-        if (this._game === null) throw new Error("Game is not set");
-        if (pentomino === null || pentomino === undefined) throw new Error("Type Error: Pentomino is null or undefined");
-        if(!this._isOfTypePentomino(pentomino)) throw new Error("Type Error: Pentomino isn't an instance of the Pentomino class.");
+    exceptionHandler(pentomino){
+        if (this._game === null) 
+            throw new Error("Game is not set");
+        if (pentomino === null || pentomino === undefined) 
+            throw new Error("Type Error: Pentomino is null or undefined");
+        if(!this._isOfTypePentomino(pentomino)) 
+            throw new Error("Type Error: Pentomino isn't an instance of the Pentomino class.");
+    }
 
+    placePentomino(pentomino,row,col) {
+        row=parseInt(row);
+        col=parseInt(col);
+        this.exceptionHandler(pentomino);        
         return this._game.doCommandAndAddToHistory(new PlaceCommand(this._game, pentomino, row, col));
     }
 
     movePentominoToPosition(pentomino, row, col) {
-        if (this._game === null) throw new Error("Game is not set");
-        if (pentomino === null || pentomino === undefined) throw new Error("Type Error: Pentomino is null or undefined");
-        if(!this._isOfTypePentomino(pentomino)) throw new Error("Type Error: Pentomino isn't an instance of the Pentomino class.");
-
+        row=parseInt(row);
+        col=parseInt(col);
+        this.exceptionHandler(pentomino); // TODO: Exception need to be handled properly       
         return this._game.doCommandAndAddToHistory(new MoveToPositionCommand(this._game, pentomino, row, col));
     }
 
     rotatePentominoAntiClkWise(pentomino) {
-        if (this._game === null) throw new Error("Game is not set");
-        if (pentomino === null || pentomino === undefined) throw new Error("Type Error: Pentomino is null or undefined");
-        if(!this._isOfTypePentomino(pentomino)) throw new Error("Type Error: Pentomino isn't an instance of the Pentomino class.");
-
+        this.exceptionHandler(pentomino);
         return this._game.doCommandAndAddToHistory(new RotateAntiClkWiseCommand(this._game, pentomino));
     }
 
     rotatePentominoClkWise(pentomino) {
-        if (this._game === null) throw new Error("Game is not set");
-        if (pentomino === null || pentomino === undefined) throw new Error("Type Error: Pentomino is null or undefined");
-        if(!this._isOfTypePentomino(pentomino)) throw new Error("Type Error: Pentomino isn't an instance of the Pentomino class.");
-
+        this.exceptionHandler(pentomino);
         return this._game.doCommandAndAddToHistory(new RotateClkWiseCommand(this._game, pentomino));
     }
 
     mirrorPentominoH(pentomino) {
-        if (this._game === null) throw new Error("Game is not set");
-        if (pentomino === null || pentomino === undefined) throw new Error("Type Error: Pentomino is null or undefined");
-        if(!this._isOfTypePentomino(pentomino)) throw new Error("Type Error: Pentomino isn't an instance of the Pentomino class.");
-
+        this.exceptionHandler(pentomino);
         return this._game.doCommandAndAddToHistory(new MirrorHCommand(this._game, pentomino));
     }
 
     mirrorPentominoV(pentomino) {
-        if (this._game === null) throw new Error("Game is not set");
-        if (pentomino === null || pentomino === undefined) throw new Error("Type Error: Pentomino is null or undefined");
-        if(!this._isOfTypePentomino(pentomino)) throw new Error("Type Error: Pentomino isn't an instance of the Pentomino class.");
-
+        this.exceptionHandler(pentomino);
         return this._game.doCommandAndAddToHistory(new MirrorVCommand(this._game, pentomino));
     }
 
     removePentomino(pentomino) {
-        if (this._game === null) throw new Error("Game is not set");
-        if (pentomino === null || pentomino === undefined) throw new Error("Type Error: Pentomino is null or undefined");
-        if(!this._isOfTypePentomino(pentomino)) throw new Error("Type Error: Pentomino isn't an instance of the Pentomino class.");
-
+        this.exceptionHandler(pentomino);
         return this._game.doCommandAndAddToHistory(new RemoveCommand(this._game, pentomino));
     }
 
@@ -116,6 +107,17 @@ class GameController {
     // --- --- --- Set Game --- --- ---
     setGame(game) {
         this._game = game;
+    };
+
+    createGame(boardStartXY, boardSizeXY, Boardshape) {
+        boardStartXY[0] = parseInt(boardStartXY[0]);
+        boardStartXY[1] = parseInt(boardStartXY[1]);
+
+        boardSizeXY[0]=parseInt(boardSizeXY[0]);
+        boardSizeXY[1]=parseInt(boardSizeXY[1]);
+
+        this.setGame(new Game(new Board(boardStartXY,boardSizeXY,Boardshape)));
+        this._game._fillUpTray();
     }
 
     // --- --- --- Debugging --- --- ---
@@ -131,23 +133,17 @@ class GameController {
 
     // --- --- --- Get Information About Whether Piece Outside/Inside Board --- --- ---
     isPlacedOutsideBoard(pentomino) {
-        if (this._game === null) throw new Error("Game is not set");
-        if (pentomino === null || pentomino === undefined) throw new Error("Type Error: Pentomino is null or undefined");
-        if(!this._isOfTypePentomino(pentomino)) throw new Error("Type Error: Pentomino isn't an instance of the Pentomino class.");
+        this.exceptionHandler(pentomino);
         return this._game.isPlacedOutsideBoard(pentomino);
     }
 
     isPlacedOnBoard(pentomino) {
-        if (this._game === null) throw new Error("Game is not set");
-        if (pentomino === null || pentomino === undefined) throw new Error("Type Error: Pentomino is null or undefined");
-        if(!this._isOfTypePentomino(pentomino)) throw new Error("Type Error: Pentomino isn't an instance of the Pentomino class.");
+        this.exceptionHandler(pentomino);
         return this._game.isPlacedOnBoard(pentomino);
     }
 
     isPlacedInGame(pentomino) {
-        if (this._game === null) throw new Error("Game is not set");
-        if (pentomino === null || pentomino === undefined) throw new Error("Type Error: Pentomino is null or undefined");
-        if(!this._isOfTypePentomino(pentomino)) throw new Error("Type Error: Pentomino isn't an instance of the Pentomino class.");
+        this.exceptionHandler(pentomino);
         return this._game.isPlacedInGame(pentomino);
     }
 
@@ -158,9 +154,7 @@ class GameController {
      * @returns {*}
      */
     getCollisionPentominoesOfPentomino(pentomino) {
-        if (this._game === null) throw new Error("Game is not set");
-        if (pentomino === null || pentomino === undefined) throw new Error("Type Error: Pentomino is null or undefined");
-        if(!this._isOfTypePentomino(pentomino)) throw new Error("Type Error: Pentomino isn't an instance of the Pentomino class.");
+        this.exceptionHandler(pentomino);
         return this._game.getCollisionPentominoesOfPentomino(pentomino);
     }
 
@@ -195,10 +189,7 @@ class GameController {
     }
 
     getPositionOfPentomino(pentomino) {
-        if (this._game === null) throw new Error("Game is not set");
-        if (pentomino === null || pentomino === undefined) throw new Error("Type Error: Pentomino is null or undefined");
-        if(!this._isOfTypePentomino(pentomino)) throw new Error("Type Error: Pentomino isn't an instance of the Pentomino class.");
-
+        this.exceptionHandler(pentomino);
         return this._game.getPosition(pentomino);
     }
 
