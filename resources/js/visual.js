@@ -252,11 +252,19 @@ class Visual {
                 var x = event.clientX;
                 var y = event.clientY;
 
+<<<<<<< HEAD
             //    console.log("x: " + x);
             //    console.log("y: " + y);
 
                 var container = window.currentlyMoving[0];
             //    console.log(container.clientWidth);
+=======
+                //console.log("x: " + x);
+                //console.log("y: " + y);
+
+                var container = window.currentlyMoving[0];
+                //console.log(container.clientWidth);
+>>>>>>> 9a603120cf79c610095307b33c9d0f152b31a15d
 
                 //resize object to full size while moving and attach their center to the
                 //pointer
