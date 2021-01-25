@@ -319,7 +319,7 @@ class Board {
             if(cItem.pentominos.length == 1){
                 this._collisions = this._collisions.filter(
                         item => (item.cell[0] != cItem.cell[0]) && 
-                                (item.cell[0] != cItem.cell[1])
+                                (item.cell[1] != cItem.cell[1])
                                  );
             }else{
                     return cItem;
