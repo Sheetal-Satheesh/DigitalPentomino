@@ -18,9 +18,8 @@ class Visual {
         this.initalizeListeners();
     }
 
-    placePentomino(name, posX, posY){ // rename the name
-        console.log("name: "+ name + "posX: "+ posX+ "posY: "+posY);
-        this.gameController.placePentomino(name, posX, posY);
+    placePentomino(pentomino, posX, posY){ // rename the name
+        this.gameController.placePentomino(pentomino, posX, posY);
     }
 
     //Create the field on which pieces can be put
@@ -252,9 +251,8 @@ class Visual {
                 var x = event.clientX;
                 var y = event.clientY;
 
-
-            //    console.log("x: " + x);
-            //    console.log("y: " + y);
+                //console.log("x: " + x);
+                //console.log("y: " + y);
 
                 var container = window.currentlyMoving[0];
                 //console.log(container.clientWidth);

@@ -55,8 +55,7 @@ class Game {
         */
 
        let targetPosOnBoard = this._board.pentominoIsValidAtPosition(pentomino, row, col);
-       console.log("Target position: "+ targetPosOnBoard);
-        if(this.isPlacedOnBoard(pentomino) ){
+       if(this.isPlacedOnBoard(pentomino) ){
             if(targetPosOnBoard == true){
                 this._board.placePentomino(pentomino, row, col);    
             }else{
