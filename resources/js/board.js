@@ -299,7 +299,7 @@ class Board {
     }
 
     removeCollisionByCells(cells){
-        this._collisions.map((cItem, index)=>{
+        this._collisions = this._collisions.map((cItem, index)=>{
             if(cItem.cell[0] == cells[0] && cItem.cell[1] == cells[1]){
                 this._collisions = this._collisions.filter(
                     item => (item.cell[0] != cItem.cell[0]) && 
@@ -313,7 +313,7 @@ class Board {
     }
 
     removeCollisionByPentomino(pentomino){
-        this._collisions.map((cItem, index)=>{
+        this._collisions = this._collisions.map((cItem, index)=>{
             cItem.pentominos =  cItem.pentominos.filter(
                                         item =>item !== pentomino.name);
             if(cItem.pentominos.length == 1){

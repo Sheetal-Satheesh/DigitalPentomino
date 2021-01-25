@@ -18,8 +18,12 @@ class Visual {
         this.initalizeListeners();
     }
 
-    placePentomino(pentomino, posX, posY){ // rename the name
+    placePentomino(pentomino, posX, posY){
         this.gameController.placePentomino(pentomino, posX, posY);
+    }
+
+    movePentominoToTray(pentomino){
+        this.gameController.removePentomino(pentomino);
     }
 
     //Create the field on which pieces can be put
@@ -303,17 +307,12 @@ class Visual {
 
                     //Ashwini: when piece is moved back to tray reset Pentomio inTray variable to 1 and place the piece in Tray
                     if (id == 'tray') {
-
                         let piece = data[1].toTray()
-
                         that.positionPiece(piece)
+                        that.movePentominoToTray(piece);
                         // that.renderPieces();
                         // return data[1].toTray();
                     }
-
-                    //determine the position the piece ended on
-
-                    if (id == 'tray') return data[1].toTray();
 
                     if (id.split('_')[0] == 'field') {
 
