@@ -16,8 +16,8 @@ class Board {
      * @param shape; shape of the block
      */
     constructor(boardStartXY, boardSizeXY,boardShape='Block') {
-        this._boardSRows = boardStartXY[0];
-        this._boardSCols = boardStartXY[1];
+        this._boardSRows = boardStartXY[0]??0;
+        this._boardSCols = boardStartXY[1]??0;
 
         this._boardRows = boardSizeXY[0];
         this._boardCols = boardSizeXY[1];
