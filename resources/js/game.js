@@ -44,15 +44,14 @@ class Game {
      */
     placePentomino(pentomino, row, col) {
        /**
-        * Find if pentomino already placed in the board or out of the board. 
+        * Find if pentomino already placed in the board or out of the board.
         * If it is placed already in the board, and target position is not valid, 
         * then remove pentomino from the board, place out of the board
         * 
         * If it is placed already in the outside of the board, if target position
         * is valide, remove the pentomino from the outside area and place it in the
         * board
-        * 
-        * 
+        *
         */
 
        let targetPosOnBoard = this._board.pentominoIsValidAtPosition(pentomino, row, col);
@@ -78,7 +77,7 @@ class Game {
                     */
             } else {
                 this._placePentominoOutsideBoard(pentomino, row, col);
-            }   
+            }
         }
     }
 
@@ -183,12 +182,12 @@ class Game {
         this._pentominosOutside.find((item, index) => {
             if (item.name === pentomino.name) {
                 pentominoExist = true;
-                let penPosition= { 
+                let penPosition= {
                                 name: pentomino.name,
                                 position: [row, col]
                                };
                 this._pentominosOutside[index]=item;
-                this._pentominoOutsidePositions[index] = penPosition;   
+                this._pentominoOutsidePositions[index] = penPosition;
             }
         },this);
 
@@ -199,7 +198,6 @@ class Game {
                     position: [row, col]
                 });
         }
-        
     }
 
     _movePentominoOutsideBoardToPosition(pentomino, row, col) {

@@ -112,7 +112,7 @@ class GameController {
     createGame(boardStartXY, boardSizeXY, Boardshape) {
         boardStartXY[0] = parseInt(boardStartXY[0]);
         boardStartXY[1] = parseInt(boardStartXY[1]);
-        
+
         boardSizeXY[0]=parseInt(boardSizeXY[0]);
         boardSizeXY[1]=parseInt(boardSizeXY[1]);
 

@@ -21,7 +21,6 @@ class Board {
 
         this._boardRows = boardSizeXY[0];
         this._boardCols = boardSizeXY[1];
-      
 
         this._pentominoes = [];
         this._pentominoPositions = [];
@@ -43,13 +42,11 @@ class Board {
         }
 
         if (this.isPlacedOnBoard(pentomino)) {
-         /*TODO: remove
-               throw new Error('Pentomino \'' + pentomino.name + "\' is already on the board");
-           */
-               /**
-             * TODO: This function will be called after checking that this pentomino is a valid
-             *       candidate for placing on board, if this piece already placed, then move 
-             *       operation should be called.             * 
+            /**
+             * This function will be called after checking that this pentomino is a valid
+             * candidate for placing on board, if this piece already placed, then move
+             * operation should be called.
+             *
              * return from here
              */
             this.movePentominoToPosition(pentomino, row, col);
@@ -60,12 +57,11 @@ class Board {
                 name:pentomino.name,
                 boardPosition:[row,col]
             });
-    
+
             let collisonCells=[];
             if (this.isCollidesAtPosition(pentomino, row, col,collisonCells)) {
                 this.setCollisionCells(collisonCells);
             }
-    
         }
 
     }
@@ -311,9 +307,9 @@ class Board {
                              );
             }else{
                 return cItem;
-            }           
-            
+            }
         },this);
+
     }
 
     removeCollisionByPentomino(pentomino){
@@ -323,13 +319,13 @@ class Board {
             if(cItem.pentominos.length == 1){
                 this._collisions = this._collisions.filter(
                         item => (item.cell[0] != cItem.cell[0]) && 
-                                (item.cell[0] != cItem.cell[1]) 
+                                (item.cell[0] != cItem.cell[1])
                                  );
             }else{
                     return cItem;
             }
-            
         },this);
+
     }
 
     getCollisionCells(){

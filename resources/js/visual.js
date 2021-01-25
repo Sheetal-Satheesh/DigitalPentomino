@@ -319,8 +319,6 @@ class Visual {
                     if (id.split('_')[0] == 'field') {
 
                         var coords = (id.split('_')[1].split(','));
-
-                        //that.gameController.placePentomino(data[1], coords[1] - that.boardX, coords[0] - that.boardY);
                         that.placePentomino(data[1], coords[0],coords[1] );    
                         // make this the selected element which activates manipulation GUI
 
