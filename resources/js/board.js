@@ -157,7 +157,6 @@ class Board {
      * @param pentomino the piece that should be removed
      * @throws {Error} if the pentomino is not placed on the board
      * 
-     * TODO: remove collision cell also
      */
     removePentomino(pentomino) {
         if (!this.isPlacedOnBoard(pentomino)) {
@@ -207,14 +206,7 @@ class Board {
                     let pValue = pentomino.getCharAtMatrixPosition(pOverlapCellMatrixPos[0], pOverlapCellMatrixPos[1]);
                     let eOverlapCellMatrixPos = entry.getMatrixPosition(entryPosition, [cell.x, cell.y]);
                     let eValue = entry.getCharAtMatrixPosition(eOverlapCellMatrixPos[0], eOverlapCellMatrixPos[1]);
-                    /*let pValue = pentomino.sRepr.charAt(
-                        (overlapCells[i].x - row)* pentomino.iCols +(overlapCells[i].y -col));
-                    let eValue = entry.sRepr.charAt(
-                        (overlapCells[i].x - p)* entry.iCols +(overlapCells[i].y -q));*/
-
                     if(eValue === '1' && pValue === eValue) {
-                        //console.log(pentomino.name+'x'+entry.name+" : "+ overlapCells[i].x+","+overlapCells[i].y);
-
                         verdict=true;
                         let index = collisionsCell.findIndex(item => item.cell[0] === cell.x &&
                             item.cell[1] === cell.y);
@@ -308,13 +300,10 @@ class Board {
                 }
             },this);
         }
-
-        // console.log(this._collisions);
     }
 
     removeCollisionByCells(cells){
         this._collisions.map((cItem, index)=>{
-
             if(cItem.cell[0] == cells[0] && cItem.cell[1] == cells[1]){
                 this._collisions = this._collisions.filter(
                     item => (item.cell[0] != cItem.cell[0]) && 
@@ -325,14 +314,10 @@ class Board {
             }           
             
         },this);
-
-
     }
 
     removeCollisionByPentomino(pentomino){
-        var removeList=[];
         this._collisions.map((cItem, index)=>{
-
             cItem.pentominos =  cItem.pentominos.filter(
                                         item =>item !== pentomino.name);
             if(cItem.pentominos.length == 1){
@@ -340,15 +325,11 @@ class Board {
                         item => (item.cell[0] != cItem.cell[0]) && 
                                 (item.cell[0] != cItem.cell[1]) 
                                  );
-
             }else{
                     return cItem;
             }
             
         },this);
-
-       //TODO: remove 
-        
     }
 
     getCollisionCells(){

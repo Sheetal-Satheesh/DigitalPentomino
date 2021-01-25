@@ -14,7 +14,13 @@ class Game {
     constructor(board) {
         this._board = board;
         this._commandManager = new CommandManager();
-        this._tray=[];
+        /**
+            TODO: reconsider this tray, do we really need to store tray information.
+
+            It is added to create and save all the pentomino when, game is loaded for
+            the first time.
+        */
+        this._tray=[]; 
         this._pentominosOutside = [];
         this._pentominoOutsidePositions = [];
     }
@@ -72,13 +78,8 @@ class Game {
                     */
             } else {
                 this._placePentominoOutsideBoard(pentomino, row, col);
-                }   
+            }   
         }
-
-
-
-    
-        
     }
 
     /**
@@ -88,10 +89,6 @@ class Game {
      * @param col
      */
 
-     /**
-      * TODO: need to check that?
-      * 
-      */
     movePentominoToPosition(pentomino, row, col) {
         if (!this.isPlacedInGame(pentomino)) {
             throw new Error("Pentomino \'" + pentomino.name + "\' is not placed in the game");
