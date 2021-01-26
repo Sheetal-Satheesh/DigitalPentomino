@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,11 +8,7 @@
     <title>Digital Pentomino v5</title>
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="resources/images/icons/dp_192.png">
-</head>
-<body>
-
-    <p>DP Board and functionality here.</p>
-
+    <link rel="stylesheet" href="resources/css/style.css">
     <script src="resources/index.js"></script>
     <script src="resources/js/board.js"></script>
     <script src="resources/js/pentomino.js"></script>
@@ -29,5 +26,44 @@
     <script src="resources/js/command-history/remove-command.js"></script>
     <script src="resources/js/command-history/command-path.js"></script>
     <script src="resources/js/command-history/command-history-tree.js"></script>
+    <script src="resources/js/config.js"></script>
+    <script src="resources/js/pd.js"></script>
+    <script src="resources/js/visual.js"></script>
+
+</head>
+
+<body onload="initialize();">
+    <div id="functions">
+        <div id="operations">
+            <button id="btnRotateRight">Rotate right</button>
+            <button id="btnRotateLeft">Rotate left</button>
+            <button id="btnFlipH">Flip Horizontally</button>
+            <button id="btnFlipV">Flip Vertically</button>
+            <button style="display:none" onclick="pd.ui.save()">Save</button>
+            <button style="display:none" onclick="pd.ui.load()">Load</button>
+            <button onclick="pd.ui.export()">Export</button>
+            <input type="file" id="file-input" />
+            <button onclick="pd.ui.import()">Import</button>
+            <button onclick="pd.ui.reset()">Reset</button>
+        </div>
+    </div>
+    <div id="game">
+        <div id="tray">
+        </div>
+        <div id="field">
+        </div>
+        <div id="piecearea">
+        </div>
+    </div>
+
+    <div id="piecearea">
+        <script type="text/javascript">
+            function initialize() {
+                let pd = new PD();
+            }
+        </script>
+    </div>
+
 </body>
+
 </html>
