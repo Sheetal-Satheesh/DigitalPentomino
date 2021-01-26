@@ -7,7 +7,7 @@ class RemoveCommand extends Command {
         super();
         this._game = game;
         this._pentomino = pentomino;
-        let position = game.getPositionOfPentomino(pentomino);
+        let position = game.getPosition(pentomino);
         this._oldRowPos = position[0];
         this._oldColPos = position[1];
     }
