@@ -1,3 +1,5 @@
+let Game = require('./game.js');
+
 if(typeof require != 'undefined') {
     Pentomino = require('./pentomino.js');
     Board = require('./board.js');
@@ -87,6 +89,76 @@ class HintAI {
         solutions.push(game2);
         return solutions;
     }
+
+    /*TODO: Move to gameLoader class */
+    getGamesFromSolutionsFile(filename){
+        //let gameArray = [];
+
+        //return gameArray;
+    }
+
+    /*TODO: Move to gameLoarder class */
+    getGameFromBoardFile(filename){
+        //Read in file
+        
+        //this.getGameFromString(gameString);
+        //PassString
+        //return game;
+    }
+
+    /*TODO: Move to gameLoader class */
+    getGameFromString(gameString) {
+            
+        let rows = gameString.split(" ");
+        let height = rows.length;
+        let width = rows[0].length;
+        console.log("Initialize game with height: " + height + " and width: " + width);
+        let game = new Game(new Board([0, 0], [height, width]));
+
+        //prepare pentominos for the board
+        let X = new Pentomino('X');
+        let T = new Pentomino('T');
+        let L = new Pentomino('L');
+        let U = new Pentomino('U');
+        let N = new Pentomino('N');
+        let F = new Pentomino('F');
+        let I = new Pentomino('I');
+        let P = new Pentomino('P');
+        let Z = new Pentomino('Z');
+        let V = new Pentomino('V');
+        let W = new Pentomino('W');
+        let Y = new Pentomino('Y');
+
+        //now fill the board with the pentominos according to the file
+
+        //get board representation for an element (e.g. X)
+        let stringRep = rows.join('');
+
+        let stringRepX = this.transform(stringRep, 'X')
+
+        console.log(stringRepX);
+        console.log(X.sRepr);
+        
+
+        return game;
+    }
+
+    transform(someString, element){
+        //e.g. take "FFIIIIILFFPPUULFXPPPULXXXYUULLXYYYY" and "X" as input
+        let resultString='';
+        
+        for (var i = 0; i < someString.length; i++) {
+            let stringElement = someString[i];
+            if (stringElement == element){
+                resultString += '1'
+            } else {
+                resultString += '0'
+            }
+        }
+        
+        return resultString;
+    }
+
 
     /**
      *  Priority:
