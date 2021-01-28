@@ -88,9 +88,80 @@ class HintAI {
         return solutions;
     }
 
+    /**
+     *  Priority:
+     *  - Perfect pentominoes on the board (Correct position, correct angle, correct mirroring)
+     *  - Pentominoes that need one operation to be perfect
+     *  - Pentominoes that need two operations to be perfect
+     *  - etc.
+     * @param game
+     * @param solutions
+     * @returns {*}
+     */
+    getClosesSolution(game, solutions) {
+        // FIXME
+        return solutions[0];
+    }
+
+    /**
+     * Assumes that pentomino is placed on the board
+     * @param game
+     * @param solution
+     * @param gamePentomino
+     * @param solutionPentomino
+     */
+    isPerfectPentomino(game, solution, gamePentomino, solutionPentomino) {
+        if (!game.isPlacedOnBoard(gamePentomino))
+            return !solution.isPlacedOnBoard(solutionPentomino);
+        else if (solution.isPlacedOnBoard(solutionPentomino)) {
+            let gamePentominoPosition = game.getPositionOfPentomino(gamePentomino);
+            let solutionPentominoPosition = solution.getPositionOfPentomino(solutionPentomino);
+            return gamePentominoPosition[0] === solutionPentominoPosition[0]
+                && gamePentominoPosition[1] === solutionPentominoPosition[1]
+                && gamePentomino.sRepr.localeCompare(solutionPentomino.sRepr) === 0;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Returns a command of a specific pentomino, that brings the game closer to the solution
+     * @param game
+     * @param solution
+     * @param gamePentomino
+     * @param solutionPentomino
+     */
+    getNextCommandOfPentominoToSolution(game, solution, gamePentomino, solutionPentomino) {
+        // TODO
+    }
+
+    /**
+     * Returns the next command that, when executed, brings the game closer to the solution.
+     * @param game
+     * @param solution
+     * @returns {null}
+     */
+    getNextCommandToSolution(game, solution) {
+        let command = null;
+
+        if (game.getPentominoes().length === 0) {
+            throw new Error("game is empty");
+        }
+
+        game.getPentominoes().some(pentomino =>  {
+            if (!this.isPerfectPentomino(game, solution, pentomino, solution.getPentominoByName(pentomino.name))) {
+                command = this.getNextCommandOfPentominoToSolution(game, solution, pentomino);
+                return true;
+            }
+            return false;
+        });
+        return command;
+    }
+
     getHint(game) {
-        // TODO - implement
-        return null;
+        let solutions = this.getMockSolutions();
+        let closestSolution = this.getClosesSolution(game, solutions);
+        return this.getNextCommandToSolution(game, closestSolution);
     }
 }
 
