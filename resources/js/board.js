@@ -58,12 +58,11 @@ class Board {
                 boardPosition:[row,col]
             });
 
-            let collisonCells=[];
-            if (this.isCollidesAtPosition(pentomino, row, col,collisonCells)) {
+            let collisonCells= this.isCollidesAtPosition(pentomino, row, col);
+            if(collisonCells.length != 0){
                 this.setCollisionCells(collisonCells);
             }
         }
-
     }
 
     /**
@@ -102,8 +101,9 @@ class Board {
             boardPosition:[row,col]
         });
 
-        let collisonCells=[];
-        if (this.isCollidesAtPosition(pentomino, row, col,collisonCells)) {
+        this.removeCollisionByPentomino(pentomino);
+        let collisonCells= this.isCollidesAtPosition(pentomino, row, col);
+        if(collisonCells.length != 0){
             this.setCollisionCells(collisonCells);
         }
     }
@@ -176,20 +176,13 @@ class Board {
      * @throws {Error} if new position is outside the board
      * @returns {boolean}
      */
-    isCollidesAtPosition(pentomino, row, col, collisionsCell=[]) {
-        let verdict = false;
+    isCollidesAtPosition(pentomino, row, col) {
 
-        if (!this.pentominoIsValidAtPosition(pentomino, row, col)) {
-            if (!this.positionIsValid(row, col)) {
-                throw new Error("Position [" + row + "," + col + "] is outside the board");
-            } else {
-                throw new Error("Pentomino \'" + pentomino.name + "\' does not fit at position [" + row + "," + col + "] on the board");
-            }
-        }
+        var collisionsCell=[];
 
         this._pentominoes.forEach(function(entry){
             if(pentomino.name === entry.name){/** if same pentomino placed again */
-                return verdict;
+                return this.getCollisionCellsOfPentomino(pentomino);
             }
             if(this.doPentominoMatricesOverlapAtPosition(row,col, pentomino, entry)){
                 let entryPosition = this.getPosition(entry);
@@ -203,7 +196,6 @@ class Board {
                     let eOverlapCellMatrixPos = entry.getMatrixPosition(entryPosition, [cell.x, cell.y]);
                     let eValue = entry.getCharAtMatrixPosition(eOverlapCellMatrixPos[0], eOverlapCellMatrixPos[1]);
                     if(eValue === '1' && pValue === eValue) {
-                        verdict=true;
                         let index = collisionsCell.findIndex(item => item.cell[0] === cell.x &&
                             item.cell[1] === cell.y);
                         if (index === -1) {
@@ -219,7 +211,7 @@ class Board {
             }
         },this);
 
-        return verdict;
+        return collisionsCell;
     }
 
     /**
@@ -299,33 +291,21 @@ class Board {
     }
 
     removeCollisionByCells(cells){
-        this._collisions = this._collisions.map((cItem, index)=>{
-            if(cItem.cell[0] == cells[0] && cItem.cell[1] == cells[1]){
-                this._collisions = this._collisions.filter(
-                    item => (item.cell[0] != cItem.cell[0]) && 
-                            (item.cell[0] != cItem.cell[1]) 
+        this._collisions = this._collisions.filter(
+                    item => (item.cell[0] != cells[0]) &&
+                            (item.cell[1] != cells[1])
                              );
-            }else{
-                return cItem;
-            }
-        },this);
-
     }
 
     removeCollisionByPentomino(pentomino){
         this._collisions = this._collisions.map((cItem, index)=>{
             cItem.pentominos =  cItem.pentominos.filter(
                                         item =>item !== pentomino.name);
-            if(cItem.pentominos.length == 1){
-                this._collisions = this._collisions.filter(
-                        item => (item.cell[0] != cItem.cell[0]) && 
-                                (item.cell[1] != cItem.cell[1])
-                                 );
-            }else{
-                    return cItem;
-            }
+            return cItem;
         },this);
 
+        this._collisions = this._collisions.filter(
+            item => (item.pentominos.length != 1));
     }
 
     getCollisionCells(){
