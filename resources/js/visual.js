@@ -116,7 +116,8 @@ class Visual {
 
     }
 
-    positionPiece(piece) {
+
+   positionPiece(piece) {
 
         var width = 90 / this.pd.gameWidth;
         var htmlElement = document.getElementById('piece_' + piece.name);
@@ -137,10 +138,12 @@ class Visual {
             htmlElement.style.transformOrigin = 'center';
 
         } else {
-
             let [positionY, positionX] = this.gameController.getPositionOfPentomino(piece);
-            var left = 10 + width * (this.boardY + positionX - 2);
-            var top = 7 + width * (this.boardX + positionY - 2);
+
+
+            var left = 10 + width * (positionX - 2);
+
+            var top = 12.5 + width * (positionY - 2);
 
             htmlElement.style.left = left + 'vw';
             htmlElement.style.top = top + 'vw';
@@ -304,23 +307,26 @@ class Visual {
                 var elements = document.elementsFromPoint(event.clientX, event.clientY);
 
                 for (var i in elements) {
-                    var element = elements[i];
-                    var id = element.id;
 
+                    var element = elements[i];
+
+                    var id = element.id;
 
                     //Ashwini: when piece is moved back to tray reset Pentomio inTray variable to 1 and place the piece in Tray
                     if (id == 'tray') {
-                        let piece = data[1].toTray()
-                        that.positionPiece(piece)
+                        let piece = data[1].toTray();
+                        that.positionPiece(piece);
                         that.movePentominoToTray(piece);
-                        // that.renderPieces();
+                        //that.renderPieces();
                         // return data[1].toTray();
                     }
 
                     if (id.split('_')[0] == 'field') {
-
                         var coords = (id.split('_')[1].split(','));
-                        that.placePentomino(data[1], coords[0],coords[1] );    
+                        that.placePentomino(data[1], coords[0],coords[1] );
+                        let piece = data[1].removeFromTray();
+                        that.positionPiece(piece);
+
                         // make this the selected element which activates manipulation GUI
 
                         // data[1].select(); // TODO: Make buttons disappear/appear if nothing/something is selected
