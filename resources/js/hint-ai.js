@@ -87,6 +87,11 @@ class HintAI {
         solutions.push(game2);
         return solutions;
     }
+
+    getHint(game) {
+        // TODO - implement
+        return null;
+    }
 }
 
 if(typeof module != 'undefined') {
