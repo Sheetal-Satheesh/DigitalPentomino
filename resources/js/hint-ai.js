@@ -132,6 +132,23 @@ class HintAI {
      * @param solutionPentomino
      */
     getNextCommandOfPentominoToSolution(game, solution, gamePentomino, solutionPentomino) {
+        if (game.isPlacedOnBoard(gamePentomino)) {
+            if (solution.isPlacedOnBoard(solutionPentomino)) {
+                // problem lies inside board
+                return this.getNextCommandOfPentominoOnBoardToSolution(game, solution, gamePentomino, solutionPentomino);
+            } else {
+                // place should be outside board
+            }
+        } else {
+            if (solution.isPlacedOnBoard(solutionPentomino)) {
+                // pentomino should be on board
+            } else {
+                // perfect pentomino
+            }
+        }
+    }
+
+    getNextCommandOfPentominoOnBoardToSolution(game, solution, gamePentomino, solutionPentomino) {
         // TODO
     }
 
