@@ -129,19 +129,93 @@ class HintAI {
         let W = new Pentomino('W');
         let Y = new Pentomino('Y');
 
-        //now fill the board with the pentominos according to the file
+        let pentos = [X,T,L,U,N,F,I,P,Z,V,W,Y];
 
-        //get board representation for an element (e.g. X)
-        let stringRep = rows.join('');
+        pentos.forEach(pento => {
 
-        let stringRepX = this.transform(stringRep, 'X')
+            //getMatrixRep for current element
+            let matrixRep = pento.getMatrixRepresentation();
+            //console.log(matrixRep);
 
-        console.log(stringRepX);
-        console.log(X.sRepr);
+            let boardRep = this.normalizeBoard(gameString, pento.name);
+            //console.log(boardRep);
+
+            let position = this.findInParent(matrixRep, boardRep);
+            if (position != [0,0]){
+                //TODO: Place pentomino on Board
+                console.log("Center of piece " + pento.name + " found: " + position);
+                console.log("Placing element" + pento.name + " on board...");
+                game.placePentomino(pento, position[0], position[1]);
+            }
+
+        });
+
+        //get matrix Repr. of X on board (if existent)
+        /*let nBoardX = this.normalizeBoard(gameString, 'X');
+        console.log(nBoardX);
+
+        //now find position of matrixX on board X (if existent)
+        //TODO: Check for all possible rotation formats of all pieces
+        let position = this.findInParent(matrixX, nBoardX);
+        if (position != [0,0]){
+            //TODO: Place pentomino on Board
+            console.log("Center of piece X found: " + position);
+        }*/
         
 
         return game;
     }
+
+
+    findInParent(smallMatrix, bigMatrix){
+        let centerPosition = [0,0];
+
+        let a = bigMatrix;
+        let b = smallMatrix;
+
+        //iterate over bigger matrix
+        for (let i = 0; i < a.length - b.length + 1; i++) {
+            for (let j = 0; j < a[0].length - b[0].length + 1; j++) {
+                if (a[i][j] == b[0][0]) {
+                    let flag = true;
+                    for (let k = 0; k < b.length; k++) {
+                        for (let l = 0; l < b[0].length; l++) {
+                            if (a[i + k][j + l] != b[k][l]) {
+                                flag = false;
+                                break;
+                            }
+                        }
+                    }
+                    if (flag) {
+                        centerPosition = [i+1, j+1];
+                        return centerPosition;
+                    }
+                }
+            }
+        }
+        return centerPosition;
+    }
+
+
+    normalizeBoard(gameString, element){
+        let rows = gameString.split(" ");
+        let height = rows.length;
+        let width = rows[0].length;
+
+        // IMPORTANT: normalized board will have +2 height and +2 width to include borders for check
+        let nBoard = Array(height+2).fill(0).map(() => new Array(width+2).fill(0));
+        for (let i = 0; i < height; i++) {
+            for (let j = 0; j < width; j++) {
+                let stringElement = rows[i][j];
+                if (stringElement == element){
+                    nBoard[i+1][j+1] = 1;
+                }   
+            }
+        }    
+
+        return nBoard;
+    }
+
 
     transform(someString, element){
         //e.g. take "FFIIIIILFFPPUULFXPPPULXXXYUULLXYYYY" and "X" as input

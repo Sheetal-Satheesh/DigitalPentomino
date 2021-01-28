@@ -7,3 +7,24 @@ let Board = require('../../js/board.js');
 let hintAI = new HintAI();
 let newGame = hintAI.getGameFromString('FFIIIII LFFPPUU LFXPPPU LXXXYUU LLXYYYY');
 newGame.display();
+
+
+/*
+
+FFIIIII
+LFFPPUU
+LFXPPPU
+LXXXYUU
+LLXYYYY
+
+
+    0, 0, 0, 0, 0, 0, 0, 0, 0
+    0, 0, 0, 0, 0, 0, 0, 0, 0
+    0, 0, 0, 0, 0, 0, 0, 0, 0
+    0, 0, 0, 1, 0, 0, 0, 0, 0
+    0, 0, 1, 1, 1, 0, 0, 0, 0
+    0, 0, 0, 1, 0, 0, 0, 0, 0
+    0, 0, 0, 0, 0, 0, 0, 0, 0
+
+*/
+
