@@ -33,11 +33,14 @@ game.placePentomino(Y, 3, -1);
 
 let hintAI = new HintAI();
 let hint = hintAI.getHint(game);
+
+game.display();
+
 console.log("Next command: " + hint.getCommand().getName());
 
-describe('HintAI.getHint(game)', function() {
+/*describe('HintAI.getHint(game)', function() {
 
     it('should TODO', function() {
         // TODO
     });
-});
+});*/

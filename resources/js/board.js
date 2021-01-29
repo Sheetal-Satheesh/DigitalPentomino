@@ -402,7 +402,7 @@ class Board {
                 return pentomino;
             }
         }
-        throw new Error("No pentomino with name: " + name + " on the board");
+        return null;
     }
 
     /**

@@ -1,5 +1,3 @@
-let Game = require('./game.js');
-
 if(typeof require != 'undefined') {
     Pentomino = require('./pentomino.js');
     Board = require('./board.js');
@@ -46,7 +44,7 @@ class HintAI {
         }
 
         game.getPentominoes().some(pentomino =>  {
-            if (!this._isPerfectPentomino(game, solution, pentomino, solution.getPentominoByName(pentomino.name))) {
+            if (!this._isPerfectPentomino(game, solution, pentomino)) {
                 command = this._getNextCommandOfPentominoToSolution(game, solution, pentomino);
                 return true;
             }
@@ -65,23 +63,33 @@ class HintAI {
      * @param game
      * @param solution
      * @param gamePentomino
-     * @param solutionPentomino
      */
-    _getNextCommandOfPentominoToSolution(game, solution, gamePentomino, solutionPentomino) {
+    _getNextCommandOfPentominoToSolution(game, solution, gamePentomino) {
+        let solutionPentomino = solution.getPentominoByName(gamePentomino.name);
+
+        if (solutionPentomino === null) {
+            if (game.isPlacedOnBoard(gamePentomino)) {
+                let gamePentominoPos = game.getPosition(gamePentomino);
+                return new RemoveCommand(game, gamePentomino, gamePentominoPos[0], gamePentominoPos[1]);
+            } else {
+                throw Error("Pentomino " + gamePentomino.name + " is already placed correct.");
+            }
+        }
+
         if (game.isPlacedOnBoard(gamePentomino)) {
             if (solution.isPlacedOnBoard(solutionPentomino)) {
                 // problem lies inside board
                 return this._getNextCommandOfPentominoOnBoardToSolution(game, solution, gamePentomino, solutionPentomino);
             } else {
                 // place should be outside board
-                let gamePentominoPos = game.getPositionOfPentomino(gamePentomino);
+                let gamePentominoPos = game.getPosition(gamePentomino);
                 // FIXME - add to tray
                 return new RemoveCommand(game, gamePentomino, gamePentominoPos[0], gamePentominoPos[1]);
             }
         } else {
             if (solution.isPlacedOnBoard(solutionPentomino)) {
                 // pentomino should be on board
-                let solutionPentominoPosition = solutionPentomino.getPositionOfPentomino(solutionPentomino);
+                let solutionPentominoPosition = solution.getPosition(solutionPentomino);
                 return new PlaceCommand(game, gamePentomino, solutionPentominoPosition[0], solutionPentominoPosition[1]);
             } else {
                 // perfect pentomino
@@ -168,14 +176,19 @@ class HintAI {
      * @param game
      * @param solution
      * @param gamePentomino
-     * @param solutionPentomino
      */
-    _isPerfectPentomino(game, solution, gamePentomino, solutionPentomino) {
+    _isPerfectPentomino(game, solution, gamePentomino) {
+        let solutionPentomino = solution.getPentominoByName(gamePentomino.name);
+
+        if (solutionPentomino === null) {
+            return !game.isPlacedOnBoard(gamePentomino);
+        }
+
         if (!game.isPlacedOnBoard(gamePentomino))
             return !solution.isPlacedOnBoard(solutionPentomino);
         else if (solution.isPlacedOnBoard(solutionPentomino)) {
-            let gamePentominoPosition = game.getPositionOfPentomino(gamePentomino);
-            let solutionPentominoPosition = solution.getPositionOfPentomino(solutionPentomino);
+            let gamePentominoPosition = game.getPosition(gamePentomino);
+            let solutionPentominoPosition = solution.getPosition(solutionPentomino);
             return gamePentominoPosition[0] === solutionPentominoPosition[0]
                 && gamePentominoPosition[1] === solutionPentominoPosition[1]
                 && gamePentomino.sRepr.localeCompare(solutionPentomino.sRepr) === 0;

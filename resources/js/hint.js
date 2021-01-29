@@ -12,3 +12,7 @@ class Hint {
         return this.command;
     }
 }
+
+if(typeof module != 'undefined') {
+    module.exports = Hint;
+}
