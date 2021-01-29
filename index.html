@@ -29,10 +29,9 @@
     <script src="resources/js/config.js"></script>
     <script src="resources/js/pd.js"></script>
     <script src="resources/js/visual.js"></script>
-
 </head>
 
-<body onload="initialize();">
+<body onload="initialize();" style="border-color: red; border-width: 40px">
     <div id="functions">
         <div id="operations">
             <button id="btnRotateRight">Rotate right</button>
@@ -46,14 +45,35 @@
             <button onclick="pd.ui.import()">Import</button>
             <button onclick="pd.ui.reset()">Reset</button>
         </div>
+
+                <!-- The error -->
+                <div id="myError" class="error">
+                  <!-- Modal content -->
+                  <div class="error-content">
+                    <div class="error-header">
+                      <span class="close">&times;</span>
+                      <h2>Collision</h2>
+                    </div>
+                    <div class="error-body">
+                      <p>collision happening</p>
+                      <p>please adjust without colliding</p>
+                    </div>
+                    <div class="error-footer">
+                      <h3>Careful</h3>
+                    </div>
+                  </div>
     </div>
+
+
     <div id="game">
         <div id="tray">
         </div>
         <div id="field">
+            
         </div>
         <div id="piecearea">
         </div>
+        
     </div>
 
     <div id="piecearea">
@@ -65,5 +85,23 @@
     </div>
 
 </body>
+<script>
+    function errorMessage(){
+        var error = document.getElementById("myError");
+            var btn = document.getElementById("myBtn");
+            var span = document.getElementsByClassName("close")[0];
+            span.onclick = function() {
+              error.style.display = "none";
+            }
+            window.onclick = function(event) {
+              if (event.target == error) {
+                error.style.display = "none";
+              }
+            
+            }    
 
+        }
+        errorMessage();
+    
+</script>
 </html>

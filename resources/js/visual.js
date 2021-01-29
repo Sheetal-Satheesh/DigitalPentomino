@@ -18,8 +18,34 @@ class Visual {
         this.initalizeListeners();
     }
 
+     handleCollision(pentomino) {
+    console.log("careful colliding, collided pentomino ==>  ", pentomino);
+    console.log("arrayyyy of pentominos colliding==>",pentomino.pentominos);
+    console.log("cells of pentominos colliding==>",pentomino.cell);
+    // TODO: offset pentomino
+    var error = document.getElementById("myError").style.display="block";
+    
+}
+
+    
+
     placePentomino(pentomino, posX, posY){
+        console.log("placed pentomino==>", pentomino, posX,posY);
         this.gameController.placePentomino(pentomino, posX, posY);
+        console.log("Placed pentomino at pos [" + posX + "," + posY + "]");
+        let collisionPentominoes = this.gameController.getCollisionCellsOfPentomino(pentomino);
+        if (collisionPentominoes.length > 0){
+            // collision happened
+            console.log("Collision happened");
+            collisionPentominoes.forEach(pentomino => {
+            this.handleCollision(pentomino);
+            console.log(pentomino);
+        });
+
+        }else{
+             // no collision happened
+            console.log("No Collision happened");
+        }
     }
 
     movePentominoToTray(pentomino){
