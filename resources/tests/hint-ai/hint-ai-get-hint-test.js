@@ -23,7 +23,7 @@ game.placePentomino(T, 4, 5);
 game.placePentomino(L, 3, -1);
 game.placePentomino(U, 3, -1);
 game.placePentomino(N, 3, -1);
-game.placePentomino(F, 3, -1);
+game.placePentomino(F, 1, 1);
 game.placePentomino(I, 3, -1);
 game.placePentomino(P, 3, -1);
 game.placePentomino(Z, 3, -1);

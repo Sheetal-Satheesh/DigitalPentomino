@@ -136,6 +136,10 @@ class HintAI {
             return executedOperations;
         }
 
+        if (executedOperations.length >= 3) {
+            return null;
+        }
+
         executedOperations.push({
             "name": "rotateClkWise",
             "operation": pentomino => pentomino.rotateClkWise()
