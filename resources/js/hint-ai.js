@@ -140,39 +140,43 @@ class HintAI {
             return null;
         }
 
-        executedOperations.push({
-            "name": "rotateClkWise",
-            "operation": pentomino => pentomino.rotateClkWise()
-        });
-        if (!(this._searchForCorrectPentominoState(game, solution, gamePentomino, solutionPentomino, executedOperations) === null))
+        let gamePentominoRotateClkWiseCopy = this._executePentominoOperationOnCopy(
+            pentomino => pentomino.rotateClkWise(), "rotateClkWise", gamePentomino, executedOperations);
+        if (!(this._searchForCorrectPentominoState(game, solution, gamePentominoRotateClkWiseCopy, solutionPentomino, executedOperations) === null))
             return executedOperations;
         executedOperations.pop();
 
-        executedOperations.push({
-            "name": "rotateAntiClkWise",
-            "operation": pentomino => pentomino.rotateAntiClkWise()
-        });
-        if (!(this._searchForCorrectPentominoState(game, solution, gamePentomino, solutionPentomino, executedOperations) === null))
+        let gamePentominoRotateAntiClkWiseCopy = this._executePentominoOperationOnCopy(
+            pentomino => pentomino.rotateAntiClkWise(), "rotateAntiClkWise", gamePentomino, executedOperations);
+        if (!(this._searchForCorrectPentominoState(game, solution, gamePentominoRotateAntiClkWiseCopy, solutionPentomino, executedOperations) === null))
             return executedOperations;
         executedOperations.pop();
 
-        executedOperations.push({
-            "name": "mirrorV",
-            "operation": pentomino => pentomino.mirrorV()
-        });
-        if (!(this._searchForCorrectPentominoState(game, solution, gamePentomino, solutionPentomino, executedOperations) === null))
+        let gamePentominoCopyMirrorHCopy = this._executePentominoOperationOnCopy(
+            pentomino => pentomino.mirrorH(), "mirrorH", gamePentomino, executedOperations);
+        if (!(this._searchForCorrectPentominoState(game, solution, gamePentominoCopyMirrorHCopy, solutionPentomino, executedOperations) === null))
             return executedOperations;
         executedOperations.pop();
 
-        executedOperations.push({
-            "name": "mirrorH",
-            "operation": pentomino => pentomino.mirrorH()
-        });
-        if (!(this._searchForCorrectPentominoState(game, solution, gamePentomino, solutionPentomino, executedOperations) === null))
+        let gamePentominoMirrorVCopy = this._executePentominoOperationOnCopy(
+            pentomino => pentomino.mirrorV(), "mirrorV", gamePentomino, executedOperations);
+        if (!(this._searchForCorrectPentominoState(game, solution, gamePentominoMirrorVCopy, solutionPentomino, executedOperations) === null))
             return executedOperations;
         executedOperations.pop();
 
         return null;
+    }
+
+    _executePentominoOperationOnCopy(operation, operationName, gamePentomino, executedOperations) {
+        executedOperations.push({
+            "name": operationName,
+            "operation": operation
+        });
+        let gamePentominoCopy = new Pentomino(gamePentomino.name);
+        Object.assign(gamePentominoCopy, gamePentomino);
+        executedOperations[executedOperations.length - 1].operation(gamePentominoCopy);
+
+        return gamePentominoCopy;
     }
 
     /**
