@@ -4,6 +4,7 @@ if(typeof require != 'undefined') {
     Pentomino = require('./pentomino.js');
     Board = require('./board.js');
     Game = require('./game.js');
+    Hint = require('./hint.js');
 }
 
 class HintAI {
@@ -51,7 +52,12 @@ class HintAI {
             }
             return false;
         });
-        return command;
+
+        if (command === null) {
+            throw new Error("No next command found");
+        }
+
+        return new Hint("TODO: Insert hint text that makes more sense", command);
     }
 
     /**
