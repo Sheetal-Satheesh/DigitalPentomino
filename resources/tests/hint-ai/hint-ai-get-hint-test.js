@@ -36,7 +36,7 @@ let hint = hintAI.getHint(game);
 
 game.display();
 
-console.log("Next command: " + hint.getCommand().getName());
+console.log("Next command: " + hint.getCommand().getName() + " on pentomino '" + hint.getCommand()._pentomino.name + "'");
 
 /*describe('HintAI.getHint(game)', function() {
 

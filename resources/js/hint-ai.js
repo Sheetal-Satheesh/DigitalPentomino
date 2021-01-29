@@ -106,10 +106,12 @@ class HintAI {
         if (gamePentominoPosition[0] === solutionPentominoPosition[0]
                 && gamePentominoPosition[1] === solutionPentominoPosition[1]) {
             // Correct position
-            let operations = this._searchForCorrectPentominoState(game, solution, gamePentomino, solutionPentomino, []);
+            let operations = this._searchShortestWayForCorrectPentominoState(game, solution, gamePentomino, solutionPentomino, [], []);
 
             if (operations === null || operations === undefined) {
                 throw new Error("State error: no operation sequence found to reach desired pentomino state");
+            } else if (operations.length === 0) {
+                throw new Error("Illegal State exception");
             } else {
                 switch (operations[0].name) {
                     case "rotateClkWise":
@@ -131,40 +133,45 @@ class HintAI {
         }
     }
 
-    _searchForCorrectPentominoState(game, solution, gamePentomino, solutionPentomino, executedOperations) {
+    _searchShortestWayForCorrectPentominoState(game, solution, gamePentomino, solutionPentomino, executedOperations, currentBestOperationPath) {
         if (gamePentomino.sRepr.localeCompare(solutionPentomino.sRepr) === 0) {
-            return executedOperations;
+            currentBestOperationPath.length = 0;
+            executedOperations.forEach(operation => currentBestOperationPath.push(operation));
+            return currentBestOperationPath;
         }
 
-        if (executedOperations.length >= 3) {
+        if (executedOperations.length >= 3 || (currentBestOperationPath.length > 0 && executedOperations.length >= currentBestOperationPath.length)) {
             return null;
         }
 
+        // No finish -> search goes on
+        let result = null;
+
         let gamePentominoRotateClkWiseCopy = this._executePentominoOperationOnCopy(
             pentomino => pentomino.rotateClkWise(), "rotateClkWise", gamePentomino, executedOperations);
-        if (!(this._searchForCorrectPentominoState(game, solution, gamePentominoRotateClkWiseCopy, solutionPentomino, executedOperations) === null))
-            return executedOperations;
+        let rotateClkWiseResult = this._searchShortestWayForCorrectPentominoState(game, solution, gamePentominoRotateClkWiseCopy, solutionPentomino, executedOperations, currentBestOperationPath);
+        if (!(rotateClkWiseResult === null)) result = rotateClkWiseResult;
         executedOperations.pop();
 
         let gamePentominoRotateAntiClkWiseCopy = this._executePentominoOperationOnCopy(
             pentomino => pentomino.rotateAntiClkWise(), "rotateAntiClkWise", gamePentomino, executedOperations);
-        if (!(this._searchForCorrectPentominoState(game, solution, gamePentominoRotateAntiClkWiseCopy, solutionPentomino, executedOperations) === null))
-            return executedOperations;
+        let rotateAntiClkWiseResult = this._searchShortestWayForCorrectPentominoState(game, solution, gamePentominoRotateAntiClkWiseCopy, solutionPentomino, executedOperations, currentBestOperationPath);
+        if (!(rotateAntiClkWiseResult === null)) result = rotateAntiClkWiseResult;
         executedOperations.pop();
 
         let gamePentominoCopyMirrorHCopy = this._executePentominoOperationOnCopy(
             pentomino => pentomino.mirrorH(), "mirrorH", gamePentomino, executedOperations);
-        if (!(this._searchForCorrectPentominoState(game, solution, gamePentominoCopyMirrorHCopy, solutionPentomino, executedOperations) === null))
-            return executedOperations;
+        let mirrorHResult = this._searchShortestWayForCorrectPentominoState(game, solution, gamePentominoCopyMirrorHCopy, solutionPentomino, executedOperations, currentBestOperationPath);
+        if (!(mirrorHResult === null)) result = mirrorHResult;
         executedOperations.pop();
 
         let gamePentominoMirrorVCopy = this._executePentominoOperationOnCopy(
             pentomino => pentomino.mirrorV(), "mirrorV", gamePentomino, executedOperations);
-        if (!(this._searchForCorrectPentominoState(game, solution, gamePentominoMirrorVCopy, solutionPentomino, executedOperations) === null))
-            return executedOperations;
+        let mirrorVResult = this._searchShortestWayForCorrectPentominoState(game, solution, gamePentominoMirrorVCopy, solutionPentomino, executedOperations, currentBestOperationPath);
+        if (!(mirrorVResult === null)) result = mirrorVResult;
         executedOperations.pop();
 
-        return null;
+        return result;
     }
 
     _executePentominoOperationOnCopy(operation, operationName, gamePentomino, executedOperations) {
