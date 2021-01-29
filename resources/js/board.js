@@ -141,11 +141,7 @@ class Board {
                 "after operation" + operationName);
         }
         Object.assign(pentomino, tempPentomino);
-
-        let collisonCells=[];
-        if (this.isCollidesAtPosition(pentomino, position[0], position[1],collisonCells)) {
-            this.setCollisionCells(collisonCells);
-        }
+        this.placePentomino(pentomino, position[0], position[1]);
     }
 
     /**
