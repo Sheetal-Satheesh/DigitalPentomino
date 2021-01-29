@@ -309,15 +309,31 @@ class Board {
     }
 
     getCollisionCellsOfPentomino(pentomino) {
+        /**
+         * This kind of defensive programming may cause efficiency issue. Can we use
+         * logging mechanism instead? Is there anything javascript?
+         *
+         * https://console.spec.whatwg.org/#log
+        */
         if (!this.isPlacedOnBoard(pentomino)) {
             throw new Error("Pentomino with name '" + pentomino.name + "' is not placed on the board." +
                 "Collisions are only detected for pentominoes on the board.");
         }
-        return this._collisions.filter(collision => {
-            let p1Name = collision.pentominos[0];
-            let p2Name = collision.pentominos[1];
-            return p1Name === pentomino.name || p2Name === pentomino.name;
-        });
+
+        var collisionCells=[];
+        this._collisions.forEach(function(element){
+            element.pentominos.forEach(item => {
+                if(item === pentomino.name){
+                    let collidePentominos = element.pentominos.filter(item => (item != pentomino.name));
+                    collisionCells.push({
+                        'cell':element.cell,
+                        'pentominos':collidePentominos
+                        });
+                    }
+                },this);
+        },this);
+
+        return collisionCells;
     }
 
     getCollisionPentominoesOfPentomino(pentomino) {
@@ -326,12 +342,15 @@ class Board {
                 "Collisions are only detected for pentominoes on the board.");
         }
         let allCollisions = this.getCollisionCellsOfPentomino(pentomino);
-        let resultWithDuplicates = allCollisions.map(collision => {
-            let p1Name = collision.pentominos[0];
-            let p2Name = collision.pentominos[1];
-            return p1Name === pentomino.name ? this.getPentominoByName(p2Name) : this.getPentominoByName(p1Name);
-        });
-        return [...new Set(resultWithDuplicates)];
+        var pentominos = [];
+
+        allCollisions.forEach(element=> {
+            element.pentominos.forEach(item => {
+                pentominos.push(item);
+            },this);
+        },this);
+
+        return [...new Set(pentominos)];
     }
 
     // --- --- --- Getter And Helper --- --- ---
