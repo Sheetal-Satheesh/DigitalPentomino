@@ -296,20 +296,14 @@ class HintAI {
         return solutions;
     }
 
-    /*TODO: Move to gameLoader class */
     getGamesFromSolutionsFile(filename){
-        //let gameArray = [];
+        let gameArray = [];
 
-        //return gameArray;
-    }
+        //TODO: somehow obtain the txt file from fetch/FS/...
 
-    /*TODO: Move to gameLoarder class */
-    getGameFromBoardFile(filename){
-        //Read in file
+        //TODO: run getGameFromString for every line of the file
         
-        //this.getGameFromString(gameString);
-        //PassString
-        //return game;
+        return gameArray;
     }
 
     /*TODO: Move to gameLoader class */
@@ -339,37 +333,94 @@ class HintAI {
 
         pentos.forEach(pento => {
 
-            //getMatrixRep for current element
-            let matrixRep = pento.getMatrixRepresentation();
-            //console.log(matrixRep);
+            let hasNextOp = true;
+            let opsAmount = 0;
 
-            let boardRep = this.normalizeBoard(gameString, pento.name);
-            //console.log(boardRep);
+            while (hasNextOp){
+                //getMatrixRep for current element
+                let matrixRep = pento.getMatrixRepresentation();
+                //console.log(matrixRep);
 
-            let position = this.findInParent(matrixRep, boardRep);
-            if (position != [0,0]){
-                //TODO: Place pentomino on Board
-                console.log("Center of piece " + pento.name + " found: " + position);
-                console.log("Placing element" + pento.name + " on board...");
-                game.placePentomino(pento, position[0], position[1]);
+                let boardRep = this.normalizeBoard(gameString, pento.name);
+                //console.log(boardRep);
+
+                let position = this.findInParent(matrixRep, boardRep);
+                if (position != null){
+                    //TODO: Place pentomino on Board
+                    console.log("Center of piece " + pento.name + " found: " + position);
+                    console.log("Placing element" + pento.name + " on board...");
+                    game.placePentomino(pento, position[0], position[1]);
+                    hasNextOp = false;
+                } else {
+                    //try with different rotate/flip of same pento until all 10 possibilites are reached
+                    hasNextOp = this.doNextOperationOnPento(pento, opsAmount);
+                    opsAmount = opsAmount+1;
+                }
             }
-
+            
         });
 
-        //get matrix Repr. of X on board (if existent)
-        /*let nBoardX = this.normalizeBoard(gameString, 'X');
-        console.log(nBoardX);
-
-        //now find position of matrixX on board X (if existent)
-        //TODO: Check for all possible rotation formats of all pieces
-        let position = this.findInParent(matrixX, nBoardX);
-        if (position != [0,0]){
-            //TODO: Place pentomino on Board
-            console.log("Center of piece X found: " + position);
-        }*/
-        
-
         return game;
+    }
+
+
+    doNextOperationOnPento(pentomino, x){
+        
+        switch (x) {
+            case 0:
+                pentomino.rotateClkWise();
+                return true;
+                break;
+            case 1:
+                pentomino.mirrorV();
+                return true;
+                break;
+            case 2:
+                pentomino.mirrorV();
+                return true;
+                break;
+            case 3:
+                pentomino.rotateClkWise();
+                return true;
+                break;
+            case 4:
+                pentomino.mirrorV();
+                return true;
+                break;
+            case 5:
+                pentomino.mirrorV();
+                return true;
+                break;
+            case 6:
+                pentomino.rotateClkWise();
+                return true;
+                break;
+            case 7:
+                pentomino.mirrorV();
+                return true;
+                break;
+            case 8:
+                pentomino.mirrorV();
+                return true;
+                break;
+            case 9:
+                pentomino.rotateClkWise();
+                return true;
+                break;
+            case 10:
+                pentomino.mirrorV();
+                return true;
+                break;
+            case 11:
+                pentomino.mirrorV();
+                return false;
+                break;
+            default:
+                console.log("Strange behavior in findingNextOp...");
+                return false;
+                break;
+        }
+
     }
 
 
@@ -393,13 +444,13 @@ class HintAI {
                         }
                     }
                     if (flag) {
-                        centerPosition = [i+1, j+1];
+                        centerPosition = [i, j];
                         return centerPosition;
                     }
                 }
             }
         }
-        return centerPosition;
+        return null;
     }
 
 
@@ -409,12 +460,12 @@ class HintAI {
         let width = rows[0].length;
 
         // IMPORTANT: normalized board will have +2 height and +2 width to include borders for check
-        let nBoard = Array(height+2).fill(0).map(() => new Array(width+2).fill(0));
+        let nBoard = Array(height+4).fill(0).map(() => new Array(width+4).fill(0));
         for (let i = 0; i < height; i++) {
             for (let j = 0; j < width; j++) {
                 let stringElement = rows[i][j];
                 if (stringElement == element){
-                    nBoard[i+1][j+1] = 1;
+                    nBoard[i+2][j+2] = 1;
                 }   
             }
         }    
