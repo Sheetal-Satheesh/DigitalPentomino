@@ -53,14 +53,7 @@ class Visual {
                 if (row >= this.boardX + this.gameController.getBoardSize()[0]) isBoard = false;
 
                 //TODO: This is ugly!
-                out += '<div class="gamearea ' + ((isBoard) ? 'boardarea' : '')
-                            + '" id="field_'
-                            + row + ','
-                            + col + '" title="'
-                            + row + ','
-                            + col + '" style="width:'
-                            + width + 'vw;height:'
-                            + width + 'vw;"></div>';
+                out += '<div class="gamearea ' + ((isBoard) ? 'boardarea' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';
             }
         }
 
@@ -96,18 +89,14 @@ class Visual {
              *
             */
 
-            out += '<div class="piece" id="piece_' + piece.name
-                                + '" style="width:' + (5 * width) + 'vw;height:' + (5 * width) + 'vw;display:none">';
+           out += '<div class="piece" id="piece_' + piece.name + '" style="width:' + (5 * width) + 'vw;height:' + (5 * width) + 'vw;display:none">';
 
             //this "paints" the bitmap of the pice into the bounding box
             for (var i in bitMap) {
                 var row = bitMap[i];
                 for (var j in row) {
                     var set = bitMap[i][j];
-                    out += '<div style="display:block;float:left;width:'
-                            + width + 'vw;height:'+ width + 'vw;'
-                            + ((set) ? 'background:' + piece.color : '')
-                            + '" class="' + ((set) ? 'bmPoint' : 'bmAround') + '"></div>';
+                    out += '<div style="display:block;float:left;width:' + width + 'vw;height:' + width + 'vw;' + ((set) ? 'background:' + piece.color : '') + '" class="' + ((set) ? 'bmPoint' : 'bmAround') + '"></div>';
                 }
             }
             out += '</div>';
