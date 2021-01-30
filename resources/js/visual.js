@@ -18,8 +18,19 @@ class Visual {
         this.initalizeListeners();
     }
 
+    handleCollision(pentomino){
+        let collisionPentominoes = this.gameController.getCollisionPentominoesOfPentomino(pentomino);
+        if (collisionPentominoes.length != 0){
+            this.positionPiece(pentomino,true);
+        }else{
+            this.positionPiece(pentomino);
+        }
+
+    }
+
     placePentomino(pentomino, posX, posY){
         this.gameController.placePentomino(pentomino, posX, posY);
+        this.handleCollision(pentomino);
     }
 
     movePentominoToTray(pentomino){
@@ -117,7 +128,7 @@ class Visual {
     }
 
 
-   positionPiece(piece) {
+   positionPiece(piece, overlapp=false) {
 
         var width = 90 / this.pd.gameWidth;
         var htmlElement = document.getElementById('piece_' + piece.name);
@@ -140,6 +151,11 @@ class Visual {
         } else {
             let [positionY, positionX] = this.gameController.getPositionOfPentomino(piece);
 
+            if(overlapp){
+                /**
+                 * Here you can configure the stuff related to collide pieces
+                 */
+            }
 
             var left = 10 + width * (positionX - 2);
 
@@ -323,10 +339,8 @@ class Visual {
 
                     if (id.split('_')[0] == 'field') {
                         var coords = (id.split('_')[1].split(','));
+                        data[1].removeFromTray();
                         that.placePentomino(data[1], coords[0],coords[1] );
-                        let piece = data[1].removeFromTray();
-                        that.positionPiece(piece);
-
                         // make this the selected element which activates manipulation GUI
 
                         // data[1].select(); // TODO: Make buttons disappear/appear if nothing/something is selected
@@ -379,6 +393,7 @@ class Visual {
             let newRot = flipped ? currentRot - 90 : currentRot + 90;
             // Update the backend
             this.gameController.rotatePentominoClkWise(piece);
+            this.handleCollision(piece);
             pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
         }
     }
@@ -392,6 +407,7 @@ class Visual {
             let newRot = flipped ? currentRot + 90 : currentRot - 90;
             // Update the backend
             this.gameController.rotatePentominoAntiClkWise(piece);
+            this.handleCollision(piece);
             pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
         }
     }
@@ -405,6 +421,7 @@ class Visual {
             let newRot = currentRot + 180;
             // Update the backend
             this.gameController.mirrorPentominoH(piece);
+            this.handleCollision(piece);
             pieceDiv.style.setProperty("--rotationX", newRot.toString() + "deg");
             pieceDiv.setAttribute("flipped", 1 - flipped);
         }
@@ -419,6 +436,7 @@ class Visual {
             let newRot = currentRot + 180;
             // Update the backend
             this.gameController.mirrorPentominoV(piece);
+            this.handleCollision(piece);
             pieceDiv.style.setProperty("--rotationY", newRot.toString() + "deg");
             pieceDiv.setAttribute("flipped", 1 - flipped);
         }
