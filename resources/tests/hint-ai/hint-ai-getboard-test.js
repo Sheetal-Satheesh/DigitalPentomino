@@ -7,9 +7,9 @@ let Board = require('../../js/board.js');
 let hintAI = new HintAI();
 //let newGame = hintAI.getGameFromString('FFIIIII LFFPPUU LFXPPPU LXXXYUU LLXYYYY');
 //let newGame = hintAI.getGameFromString('LLN LNN LNV LNV VVV');
-let newGame = hintAI.getGameFromString('UUUWLLLL.FTTTXIIIIIZV UYUWWNNLFF.TXXXPPZZZV YYYYWWNNNFFT.XPPPZVVV');
-//let solGames = hintAI.getGamesFromSolutionsFile("http://localhost:5500/solutionFiles/3x21b");
-newGame.display();
+//let newGame = hintAI.getGamesFromSolutionsConfig('UUUWLLLL.FTTTXIIIIIZV UYUWWNNLFF.TXXXPPZZZV YYYYWWNNNFFT.XPPPZVVV');
+let solGames = hintAI.getGamesFromSolutionsConfig();
+//newGame.display();
 
 
 /*

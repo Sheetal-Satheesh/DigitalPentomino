@@ -7,6 +7,12 @@ if(typeof require != 'undefined') {
 
 class HintAI {
 
+    solutionsString = "1, FFIIIII LFFNNNY LFNNUUY LPPPUYY LLPPUUY \n\ 2, FFIIIII LFFPPUU LFXPPPU LXXXYUU LLXYYYY \n\ 3, FFIIIII LFFUUUY LFXUTUY LXXXTYY LLXTTTY \n\ 4, FFIIIII LFFWPPP LFWWPPT LWWYTTT LLYYYYT";
+
+    setSolutionsString(solString){
+        this.solutionsString = solString;
+    }
+
     getHint(game) {
         let solutions = this._getMockSolutions();
         let closestSolution = this._getClosesSolution(game, solutions);
@@ -296,13 +302,22 @@ class HintAI {
         return solutions;
     }
 
-    getGamesFromSolutionsFile(filename){
+    getGamesFromSolutionsConfig(){
         let gameArray = [];
+        console.log("Calling getGamesFromSolutionsConfig");
 
         //TODO: somehow obtain the txt file from fetch/FS/...
+        let fileString = this.solutionsString;
+        let fileLines = fileString.split("\n");
+        for (let i = 0; i < fileLines.length; i++) {
+            let line = fileLines[i];
+            line = line.split(",")[1];
+            line = line.trim();
+            
+            let game = this.getGameFromString(line);
+            gameArray.push(game);
+        }
 
-        //TODO: run getGameFromString for every line of the file
-        
         return gameArray;
     }
 

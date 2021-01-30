@@ -30,6 +30,9 @@
     <script src="resources/js/pd.js"></script>
     <script src="resources/js/visual.js"></script>
 
+    <script src="resources/js/hint.js"></script>
+    <script src="resources/js/hint-ai.js"></script>
+
 </head>
 
 <body onload="initialize();">
@@ -45,6 +48,7 @@
             <input type="file" id="file-input" />
             <button onclick="pd.ui.import()">Import</button>
             <button onclick="pd.ui.reset()">Reset</button>
+            <button id="getHintSolutions">GetHintSolutions</button>
         </div>
     </div>
     <div id="game">
@@ -60,6 +64,14 @@
         <script type="text/javascript">
             function initialize() {
                 let pd = new PD();
+            }
+
+            document.getElementById ("getHintSolutions").addEventListener ("click", callHintAI, false);
+
+            function callHintAI() {
+                alert("Calling HintAI");
+                let hintAI = new HintAI();
+                hintAI.getGamesFromSolutionsConfig();
             }
         </script>
     </div>
