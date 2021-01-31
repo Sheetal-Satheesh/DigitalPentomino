@@ -147,14 +147,16 @@ class Visual {
             htmlElement.style.transformOrigin='0 5%';
         } else {
             let [positionY, positionX] = this.gameController.getPositionOfPentomino(piece);
+            let left = undefined;
+            let top = undefined;
             if(overlapp){
-                /**
-                 * Here you can configure the stuff related to collide pieces
-                 */
-            }
+                left = UIProperty.FunctionWidth + width * (positionX - 2)+ (width/2);
+                top = UIProperty.TrayHeight + width * (positionY - 2)-(width/2);
 
-            var left = UIProperty.FunctionWidth + width * (positionX - 2);
-            var top = UIProperty.TrayHeight + width * (positionY - 2);
+            }else{
+                left = UIProperty.FunctionWidth + width * (positionX - 2);
+                top = UIProperty.TrayHeight + width * (positionY - 2);
+            }
 
             htmlElement.style.left = left + 'vw';
             htmlElement.style.top = top + 'vw';
