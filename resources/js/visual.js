@@ -222,6 +222,8 @@ class Visual {
     initalizeListeners() {
 
         var that = this;
+        let onpointerdownX = "";
+        let onpointerdownY = "";
 
         /**
          * pointer events generalize mouse and touch events the events are registered on
@@ -233,10 +235,13 @@ class Visual {
          */
 
         document.onpointerdown = function (event) {//clicking or moving begins
-            var elements = document.elementsFromPoint(event.clientX, event.clientY);
-            for (var i in elements) {
-                var check = elements[i].className;
-                if (check !== 'bmPoint') continue;
+        var elements = document.elementsFromPoint(event.clientX, event.clientY);
+        onpointerdownX = event.clientX;
+        onpointerdownY = event.clientY;
+
+        for (var i in elements) {
+            var check = elements[i].className;
+            if (check !== 'bmPoint') continue;
 
             /**
              * As soon as we have a bmPoint(an element of a piece),we determine the bounding box
@@ -287,6 +292,21 @@ class Visual {
          * this is called when mouse key is released or fingers are removed from the screen
          */
         document.onpointerup = function (event) {
+
+        /**
+         * this is called when mouse key is released or fingers are removed from the screen
+         * in case of just a click operation (not move operation) piece should not move
+         */
+            if( onpointerdownX == event.clientX &&
+                onpointerdownY == event.clientY &&
+                window.currentlyMoving) {
+                    let data_ = window.currentlyMoving;
+                    window.currentlyMoving = false;
+                    that.positionPiece(data_[1]);
+                    that.select(data_[1]);
+                    return;
+            }
+
             if (window.currentlyMoving) {
 
                 /*  In case an object was in the process of being moved, this changes the movement.
