@@ -1,4 +1,4 @@
-class GameLoader {
+ class GameLoader {
 
     static loadByName(name) {
         let game;
