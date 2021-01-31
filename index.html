@@ -57,7 +57,7 @@
                   </tr>
 
                   <tr>
-                    <td><button type="button" id='reset' class = "cActionBtn" onclick="pd.ui.reset()"><img src="resources/images/icons/tidy_up.png"></button></td>
+                    <td><button type="button" id='reset' class = "cActionBtn" onclick="resetGame()"><img src="resources/images/icons/tidy_up.png"></button></td>
                     <td><button type="button" id='Hints' class = "cActionBtn" onclick="callHintAI()" ><img src="resources/images/icons/help.png"></button></td>
                   </tr>
             </thead>
@@ -78,6 +78,9 @@
         pd = new PD();
       }
 
+      function resetGame(){
+        pd.reset();
+      }
       function callHintAI() {
         let hint = document.getElementById("Hints");
         hint.classList.toggle("show");

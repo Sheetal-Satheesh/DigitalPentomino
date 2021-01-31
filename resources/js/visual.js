@@ -43,6 +43,14 @@ class Visual {
         this.gameController.removePentomino(pentomino);
     }
 
+    clear(){
+        this.gameController.resetGame();
+        this.pieces = this.gameController.getPentominoes();
+        this.renderPieces();
+        
+
+    }
+
     renderBoard() {
         //TODO: Check whether in the innerHTML approach is good here!
 

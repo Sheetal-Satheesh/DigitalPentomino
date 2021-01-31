@@ -118,6 +118,11 @@ class GameController {
         this._game = game;
     };
 
+    resetGame(){
+        this._game.reset();
+        return this._game;
+    }
+
     createGame(boardStartXY, boardSizeXY, Boardshape) {
         boardStartXY[0] = parseInt(boardStartXY[0]);
         boardStartXY[1] = parseInt(boardStartXY[1]);
