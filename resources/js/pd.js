@@ -2,10 +2,14 @@ class PD {
 
     constructor() {
         // this.ui = new UI(this);
-        this.gameWidth = config.gameWidth;
-        this.gameHeight = config.gameHeight;
-        this.boardStartX = Math.floor((config.gameHeight - config.boardSize[0]) / 2);
-        this.boardStartY = Math.floor((config.gameWidth - config.boardSize[1]) / 2);
+        this.gameWidth	= baseConfig[selectedConfig.configName].gameWidth;
+        this.gameHeight = baseConfig[selectedConfig.configName].gameHeight;
+		this.boardSize	= baseConfig[selectedConfig.configName].boardSize;
+		this.boardShape = baseConfig[selectedConfig.configName].boardShape;
+
+        this.boardStartX = Math.floor((this.gameHeight - this.boardSize[0]) / 2);
+        this.boardStartY = Math.floor((this.gameWidth - this.boardSize[1]) / 2);
+
 
         /**
          * This board start position can be changed after resizing the browser window?
@@ -24,8 +28,8 @@ class PD {
         this.gameController = new GameController();
         this.gameController.createGame(
                                     [this.boardStartX, this.boardStartY],
-                                    config.boardSize,
-                                    config.boardShape);
+                                   this.boardSize,
+                                    this.boardShape);
        
         this.visual = new Visual(this);
 
