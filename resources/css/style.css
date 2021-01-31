@@ -49,6 +49,19 @@
     display: block;
 }
 
+#operations  img{
+    width:3.5vw;
+    height:3.5vw;
+    
+}
+
+
+#operations button{
+  margin:14px;
+  margin-top: 2px;
+}
+
+
 .gamearea {
     display: block;
     float: left;
@@ -73,4 +86,66 @@
 
 .bmAround {
     pointer-events: none
+}
+
+/* hint container - can be anything you want */
+.hintPopup {
+    position: relative;
+    margin: 20px;
+    background-color: #fff;
+    padding: 10px;
+    border:red 40px;
+    display: inline-block;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    margin-right:30px !important
+}
+
+/* The actual hint */
+.hintPopup .hintPopupText {
+    visibility: hidden;
+    width: 100px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left:-40px;
+}
+
+/* hint arrow */
+.hintPopup .hintPopupText::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+/* Toggle this class - hide and show the hint */
+.hintPopup .show {
+    visibility: visible;
+    -webkit-animation: fadeIn 1s;
+    animation: fadeIn 1s;
+}
+
+/* Add animation (fade in the hint) */
+@-webkit-keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity:1 ;}
 }

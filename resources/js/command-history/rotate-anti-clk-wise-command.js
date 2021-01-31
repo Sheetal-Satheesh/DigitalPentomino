@@ -4,7 +4,7 @@ if(typeof require != 'undefined') {
 
 class RotateAntiClkWiseCommand extends Command {
     constructor(game, pentomino) {
-        super();
+        super("rotateAntiClkWise");
         this._game = game;
         this._pentomino = pentomino;
     }

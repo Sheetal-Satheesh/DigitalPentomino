@@ -4,7 +4,7 @@ if(typeof require != 'undefined') {
 
 class MirrorHCommand extends Command {
     constructor(game, pentomino) {
-        super();
+        super("mirrorH");
         this._game = game;
         this._pentomino = pentomino;
     }
