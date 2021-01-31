@@ -156,10 +156,7 @@ class Visual {
             //offset piece on collision
             if(overlapp){
                 left = UIProperty.FunctionWidth + width * (positionX - 2)+ (width/2);
-                
                 top = UIProperty.TrayHeight + width * (positionY - 2)-(width/2);
-            
-
             }else{
                 left = UIProperty.FunctionWidth + width * (positionX - 2);
                 top = UIProperty.TrayHeight + width * (positionY - 2);

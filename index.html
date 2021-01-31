@@ -36,46 +36,55 @@
 </head>
 
 <body onload="initialize();">
+
+  <div class = "cGame">
     <div id="functions">
         <div id="operations">
-            <button id="btnRotateRight"><img src="resources/images/UI_images/ro_right.png"></button>
-            <button id="btnRotateLeft"><img src="resources/images/UI_images/ro_left.png"></button>
-            <button id="btnFlipH"><img src="resources/images/UI_images/flip_hor.png"></button>
-            <button id="btnFlipV"><img src="resources/images/UI_images/flip_ver.png"></button>
-            <button style="display:none" onclick="pd.ui.save()">Save</button>
-            <button style="display:none" onclick="pd.ui.load()">Load</button>
-            <button onclick="pd.ui.export()"><img src="resources/images/UI_images/exporting.png"></button>
-            <input type="file" id="file-input" />
-            <button onclick="pd.ui.import()"><img src="resources/images/UI_images/import.png"></button>
-            <button onclick="pd.ui.reset()"><img src="resources/images/UI_images/reset_game.png"></button>
-            <div class="hintPopup" onclick="callHintAI()"><img src="resources/images/UI_images/hint.png">
-                <span class="hintPopupText" id="myHint">Hint :  do ABC</span>
-            </div>
+          <table id="actionTB" class="CActionTB">
+            <thead>
+                  <tr>
+                    <td><button type="button" id='btnRotateRight' class = "cActionBtn"> <img src="resources/images/action_buttons/ro_right.png"> </button></td>
+                    <td><button type="button" id='btnRotateLeft' class = "cActionBtn" ><img src="resources/images/action_buttons/ro_left.png"></button></td>
+                   </tr>
+                  <tr>
+                    <td><button type="button" id='btnFlipH' class = "cActionBtn"><img src="resources/images/action_buttons/flip_hor.png"></button></td>
+                    <td><button type="button" id='btnFlipV' class = "cActionBtn" ><img src="resources/images/action_buttons/flip_ver.png"></button></td>
+                  </tr>
+
+                  <tr>
+                    <td><button type="button" id='import' class = "cActionBtn" onclick="pd.ui.import()"><img src="resources/images/action_buttons/import.png"></button></td>
+                    <td><button type="button" id='export' class = "cActionBtn" onclick="pd.ui.export()" ><img src="resources/images/action_buttons/exporting.png"></button></td>
+                  </tr>
+
+                  <tr>
+                    <td><button type="button" id='reset' class = "cActionBtn" onclick="pd.ui.reset()"><img src="resources/images/action_buttons/reset_game.png"></button></td>
+                    <td><button type="button" id='Hints' class = "cActionBtn" onclick="callHintAI()" ><img src="resources/images/action_buttons/hint.png"></button></td>
+                  </tr>
+            </thead>
+          </table>
         </div>
-    </div>
+      </div>
 
     <div id="game">
         <div id="tray"></div>
         <div id="field"></div>
         <div id="piecearea"></div>
     </div>
+  </div>
 
-    <div id="piecearea">
-        <script type="text/javascript">
-            let pd;
-            function initialize() {
-                pd = new PD();
-            }
+    <script type="text/javascript">
+      let pd;
+      function initialize() {
+        pd = new PD();
+      }
 
-            function callHintAI() {
-                let hint = document.getElementById("myHint");
-                hint.classList.toggle("show");
-                let popupText = document.getElementById("myHint");
-                popupText.textContent = pd.gameController.getHint().getText();
-            }
-        </script>
-    </div>
-
+      function callHintAI() {
+        let hint = document.getElementById("myHint");
+        hint.classList.toggle("show");
+        let popupText = document.getElementById("myHint");
+        popupText.textContent = pd.gameController.getHint().getText();
+      }
+    </script>
 
 </body>
 </html>

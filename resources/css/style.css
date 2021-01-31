@@ -10,9 +10,9 @@
     z-index: 1;
     top: 0;
     left: 0;
-    background: darkgray;
+    background: rgb(136, 155, 150);
     bottom: 0;
-    width: 10vw
+    width: 10vw;
 }
 
 #game {
@@ -21,14 +21,14 @@
     left: 10vw;
     background: green;
     bottom: 0;
-    width: 90vw
+    width: 90vw;
 }
 
 #tray {
     position: fixed;
     top: 0;
     left: 10vw;
-    background: lightgray;
+    background: rgb(201, 212, 208);
     height: 7vw;
     width: 90vw;
 }
@@ -46,20 +46,19 @@
 }
 
 #operations {
-    display: none
+    display: inline-block;
 }
 
-#operations  img{
+/* #operations  img{
     width:3.5vw;
     height:3.5vw;
     
 }
 
-
 #operations button{
   margin:14px;
   margin-top: 2px;
-}
+} */
 
 
 .gamearea {
@@ -72,7 +71,7 @@
 }
 
 .boardarea {
-    background: gray;
+    background: rgb(136, 155, 150);
 }
 
 .piece {
@@ -89,7 +88,7 @@
 }
 
 /* hint container - can be anything you want */
-.hintPopup {
+.cHints {
     position: relative;
     margin: 20px;
     background-color: #fff;
@@ -105,7 +104,7 @@
 }
 
 /* The actual hint */
-.hintPopup .hintPopupText {
+.cHints .cTextPopup {
     visibility: hidden;
     width: 100px;
     background-color: #555;
@@ -121,7 +120,7 @@
 }
 
 /* hint arrow */
-.hintPopup .hintPopupText::after {
+.cHints .cTextPopup::after {
     content: "";
     position: absolute;
     top: 100%;
@@ -133,7 +132,7 @@
 }
 
 /* Toggle this class - hide and show the hint */
-.hintPopup .show {
+.cHints .show {
     visibility: visible;
     -webkit-animation: fadeIn 1s;
     animation: fadeIn 1s;
@@ -148,4 +147,45 @@
 @keyframes fadeIn {
     from {opacity: 0;}
     to {opacity:1 ;}
+}
+
+.CActionTB {
+  margin-top: 100%;
+}
+/* 
+.CActionTB tr td {
+  table-layout:fixed;
+  table-layout:fixed;
+  border: 1px solid black;
+  width: 100%;
+  overflow: hidden;
+} */
+
+.CActionTB td:nth-child(odd) {
+  background-color: #484b61;
+}
+.CActionTB td:nth-child(even) {
+  background-color: #385461;
+}
+
+img {
+float: left;
+width:  3vw;
+height: 3vw;
+object-fit: cover;
+}
+
+img:hover {
+  box-shadow: 1px 1px 10px 10px rgba(55, 89, 107, 0.5);
+}
+
+
+.cGame {
+    border: 2px solid green;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: auto;
 }
