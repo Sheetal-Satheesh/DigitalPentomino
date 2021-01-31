@@ -38,17 +38,17 @@
 <body onload="initialize();">
     <div id="functions">
         <div id="operations">
-            <button id="btnRotateRight">Rotate right</button>
-            <button id="btnRotateLeft">Rotate left</button>
-            <button id="btnFlipH">Flip Horizontally</button>
-            <button id="btnFlipV">Flip Vertically</button>
+            <button id="btnRotateRight"><img src="resources/images/UI_images/ro_right.png"></button>
+            <button id="btnRotateLeft"><img src="resources/images/UI_images/ro_left.png"></button>
+            <button id="btnFlipH"><img src="resources/images/UI_images/flip_hor.png"></button>
+            <button id="btnFlipV"><img src="resources/images/UI_images/flip_ver.png"></button>
             <button style="display:none" onclick="pd.ui.save()">Save</button>
             <button style="display:none" onclick="pd.ui.load()">Load</button>
-            <button onclick="pd.ui.export()">Export</button>
+            <button onclick="pd.ui.export()"><img src="resources/images/UI_images/exporting.png"></button>
             <input type="file" id="file-input" />
-            <button onclick="pd.ui.import()">Import</button>
-            <button onclick="pd.ui.reset()">Reset</button>
-            <div class="hintPopup" onclick="callHintAI()">Hint !
+            <button onclick="pd.ui.import()"><img src="resources/images/UI_images/import.png"></button>
+            <button onclick="pd.ui.reset()"><img src="resources/images/UI_images/reset_game.png"></button>
+            <div class="hintPopup" onclick="callHintAI()"><img src="resources/images/UI_images/hint.png">
                 <span class="hintPopupText" id="myHint">Hint :  do ABC</span>
             </div>
         </div>

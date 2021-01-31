@@ -49,6 +49,19 @@
     display: none
 }
 
+#operations  img{
+    width:3.5vw;
+    height:3.5vw;
+    
+}
+
+
+#operations button{
+  margin:14px;
+  margin-top: 2px;
+}
+
+
 .gamearea {
     display: block;
     float: left;
