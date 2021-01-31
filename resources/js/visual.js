@@ -1,3 +1,14 @@
+
+const UIProperty = {
+    "TrayCSSLeft":12,
+    "TrayHeight":7,
+    "WindowWidth":90,
+    "PentominoX": 5,
+    "PentominoY": 5,
+    "FunctionWidth": 10
+}
+Object.freeze(UIProperty)
+
 class Visual {
 
     constructor(pd) {
@@ -37,7 +48,7 @@ class Visual {
 
         var fieldHTML = document.getElementById('field');
         var out = '';
-        var width = 90 / this.pd.gameWidth;
+        var width = UIProperty.WindowWidth / this.pd.gameWidth;
 
         /*The field consists of divs. Each div saves in its id field its resepective coorinates*/
 
@@ -79,7 +90,7 @@ class Visual {
 
         var pieceArea = document.getElementById('piecearea');
         let out = '';
-        var width = 90 / this.pd.gameWidth;
+        var width = UIProperty.WindowWidth / this.pd.gameWidth;
         this.pieces.forEach(piece => {
             let bitMap = piece.getMatrixRepresentation();
 
@@ -118,21 +129,22 @@ class Visual {
 
    positionPiece(piece, overlapp=false) {
 
-        var width = 90 / this.pd.gameWidth;
+        var width = UIProperty.WindowWidth / this.pd.gameWidth;
         var htmlElement = document.getElementById('piece_' + piece.name);
 
         if (piece.inTray) {  //TODO: piece.inTray needs to be added
             var trayPosition = piece.trayPosition;
-            var widthVW = 7 + (piece.trayPosition) * 7; //7 is trayHeight
+            /**
+             * 7 is trayHeight
+             */
+            var widthVW = UIProperty.TrayCSSLeft + (piece.trayPosition) * UIProperty.TrayHeight;
             var magnification = 6 / (5 * width);
             htmlElement.style.left = widthVW + 'vw';
             //Ashwini
             let trayWidth = document.getElementById("tray");
             htmlElement.style.top = '0';
-            htmlElement.style.marginTop = "-5.5%";
             htmlElement.style.setProperty("--magnification", magnification);
-            htmlElement.style.transformOrigin = 'center';
-
+            htmlElement.style.transformOrigin='0 5%';
         } else {
             let [positionY, positionX] = this.gameController.getPositionOfPentomino(piece);
             if(overlapp){
@@ -141,8 +153,8 @@ class Visual {
                  */
             }
 
-            var left = 10 + width * (positionX - 2);
-            var top = 12.5 + width * (positionY - 2);
+            var left = UIProperty.FunctionWidth + width * (positionX - 2);
+            var top = UIProperty.TrayHeight + width * (positionY - 2);
 
             htmlElement.style.left = left + 'vw';
             htmlElement.style.top = top + 'vw';
@@ -244,7 +256,7 @@ class Visual {
                 var container = window.currentlyMoving[0];
 
                 //resize object to full size while moving and attach their center to the pointer
-                var width = 90 / that.pd.gameWidth;
+                var width = UIProperty.WindowWidth / that.pd.gameWidth;
                 //set new style for left and top value of element, BUT do not cross borders
                 var functionsWidth = document.getElementById("functions").clientWidth;
                 var gameWidth = document.getElementById("game").clientWidth;
@@ -320,7 +332,7 @@ class Visual {
             let pieceDiv = document.getElementById("piece_" + piece.name);
             let flipped = pieceDiv.getAttribute("flipped") * 1;
             let currentRot = pieceDiv.style.getPropertyValue("--rotationZ").split(/(-?\d+)/)[1] * 1; //converts string value to int
-            let newRot = flipped ? currentRot - 90 : currentRot + 90;
+            let newRot = flipped ? currentRot - UIProperty.WindowWidth : currentRot + UIProperty.WindowWidth;
             // Update the backend
             this.gameController.rotatePentominoClkWise(piece);
             this.handleCollision(piece);
@@ -334,7 +346,7 @@ class Visual {
             let pieceDiv = document.getElementById("piece_" + piece.name);
             let flipped = pieceDiv.getAttribute("flipped") * 1;
             let currentRot = pieceDiv.style.getPropertyValue("--rotationZ").split(/(-?\d+)/)[1] * 1; //converts string value to int
-            let newRot = flipped ? currentRot + 90 : currentRot - 90;
+            let newRot = flipped ? currentRot + UIProperty.WindowWidth : currentRot - UIProperty.WindowWidth;
             // Update the backend
             this.gameController.rotatePentominoAntiClkWise(piece);
             this.handleCollision(piece);
