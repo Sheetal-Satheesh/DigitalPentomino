@@ -135,7 +135,7 @@ class Visual {
         var width = UIProperty.WindowWidth / this.pd.gameWidth;
         var htmlElement = document.getElementById('piece_' + piece.name);
 
-        if (piece.inTray) {  
+        if (piece.inTray) {
             var trayPosition = piece.trayPosition;
             /**
              * 7 is trayHeight
@@ -143,7 +143,7 @@ class Visual {
             var widthVW = UIProperty.TrayCSSLeft + (piece.trayPosition) * UIProperty.TrayHeight;
             var magnification = 6 / (5 * width);
             htmlElement.style.left = widthVW + 'vw';
-            
+
             let trayWidth = document.getElementById("tray");
             htmlElement.style.top = '0';
             htmlElement.style.setProperty("--magnification", magnification);
@@ -156,9 +156,9 @@ class Visual {
             //offset piece on collision
             if(overlapp){
                 left = UIProperty.FunctionWidth + width * (positionX - 2)+ (width/2);
-                
+
                 top = UIProperty.TrayHeight + width * (positionY - 2)-(width/2);
-            
+
 
             }else{
                 left = UIProperty.FunctionWidth + width * (positionX - 2);
@@ -192,19 +192,27 @@ class Visual {
     deleteSelection() {
         if (!this.selected) return;
         this.selected = false;
-        this.pd.visual.hideManipulations();
+
+        this.pd.visual.disableManipulations();
     }
 
-    //show or hide the manipulation buttons
-    //TODO: Dirty! The UI needs to sensibly handle those things!!
+    //Enable or Disable manipulation buttons
 
     showManipulations() {
-        // console.log("Show Manipulation::",piece)
-        document.getElementById('operations').style.display = 'block';
+
+        document.getElementById("btnRotateRight").disabled = false;
+        document.getElementById("btnRotateLeft").disabled = false;
+        document.getElementById("btnFlipH").disabled = false;
+        document.getElementById("btnFlipV").disabled = false;
     }
 
-    hideManipulations() {
-        document.getElementById('operations').style.display = 'none';
+    disableManipulations() {
+
+        document.getElementById("btnRotateRight").disabled =true;
+        document.getElementById("btnRotateLeft").disabled =true;
+        document.getElementById("btnFlipH").disabled =true;
+        document.getElementById("btnFlipV").disabled =true;
+
     }
     // 	save(piece) {
     // 		console.log("insave::",piece)

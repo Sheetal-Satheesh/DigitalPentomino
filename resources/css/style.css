@@ -46,7 +46,7 @@
 }
 
 #operations {
-    display: none
+    display: block;
 }
 
 #operations  img{
