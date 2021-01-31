@@ -1,7 +1,8 @@
 let idCounter = 0;
 
 class Command {
-    constructor(id=-1) {
+    constructor(name, id=-1) {
+        this._name = name;
         this._parent = null;
         this._children = [];
         if (!(id === -1)) {
@@ -24,6 +25,10 @@ class Command {
 
     setParent(parent) {
         this._parent = parent;
+    }
+
+    getName() {
+        return this._name;
     }
 
     getId() {

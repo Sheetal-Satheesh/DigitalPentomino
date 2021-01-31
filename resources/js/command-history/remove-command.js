@@ -4,7 +4,7 @@ if(typeof require != 'undefined') {
 
 class RemoveCommand extends Command {
     constructor(game, pentomino, row, col) {
-        super();
+        super("remove");
         this._game = game;
         this._pentomino = pentomino;
         let position = game.getPosition(pentomino);

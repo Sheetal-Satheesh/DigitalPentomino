@@ -132,7 +132,7 @@ class Visual {
         var width = UIProperty.WindowWidth / this.pd.gameWidth;
         var htmlElement = document.getElementById('piece_' + piece.name);
 
-        if (piece.inTray) {  //TODO: piece.inTray needs to be added
+        if (piece.inTray) {  
             var trayPosition = piece.trayPosition;
             /**
              * 7 is trayHeight
@@ -140,12 +140,13 @@ class Visual {
             var widthVW = UIProperty.TrayCSSLeft + (piece.trayPosition) * UIProperty.TrayHeight;
             var magnification = 6 / (5 * width);
             htmlElement.style.left = widthVW + 'vw';
-            //Ashwini
+            
             let trayWidth = document.getElementById("tray");
             htmlElement.style.top = '0';
             htmlElement.style.setProperty("--magnification", magnification);
             htmlElement.style.transformOrigin='0 5%';
             htmlElement.style.zIndex == 1000;
+
         } else {
             let [positionY, positionX] = this.gameController.getPositionOfPentomino(piece);
             let left = undefined;
@@ -224,6 +225,8 @@ class Visual {
     initalizeListeners() {
 
         var that = this;
+        let onpointerdownX = "";
+        let onpointerdownY = "";
 
         /**
          * pointer events generalize mouse and touch events the events are registered on
@@ -235,10 +238,13 @@ class Visual {
          */
 
         document.onpointerdown = function (event) {//clicking or moving begins
-            var elements = document.elementsFromPoint(event.clientX, event.clientY);
-            for (var i in elements) {
-                var check = elements[i].className;
-                if (check !== 'bmPoint') continue;
+        var elements = document.elementsFromPoint(event.clientX, event.clientY);
+        onpointerdownX = event.clientX;
+        onpointerdownY = event.clientY;
+
+        for (var i in elements) {
+            var check = elements[i].className;
+            if (check !== 'bmPoint') continue;
 
             /**
              * As soon as we have a bmPoint(an element of a piece),we determine the bounding box
@@ -274,7 +280,6 @@ class Visual {
                 var gameWidth = document.getElementById("game").clientWidth;
                 var gameHeight = document.getElementById("game").clientHeight;
 
-
                 if ((x > functionsWidth) && (x < (gameWidth + functionsWidth))) {
                     if ((y > 0) && (y < gameHeight)) {
                         container.style.left = 'calc(' + x + 'px - ' + (width * 2.5) + 'vw)';
@@ -291,6 +296,20 @@ class Visual {
          * this is called when mouse key is released or fingers are removed from the screen
          */
         document.onpointerup = function (event) {
+        /**
+         * this is called when mouse key is released or fingers are removed from the screen
+         * in case of just a click operation (not move operation) piece should not move
+         */
+            if( onpointerdownX == event.clientX &&
+                onpointerdownY == event.clientY &&
+                window.currentlyMoving) {
+                    let data_ = window.currentlyMoving;
+                    window.currentlyMoving = false;
+                    that.positionPiece(data_[1]);
+                    that.select(data_[1]);
+                    return;
+            }
+
             if (window.currentlyMoving) {
 
                 /*  In case an object was in the process of being moved, this changes the movement.

@@ -4,7 +4,7 @@ if(typeof require != 'undefined') {
 
 class PlaceCommand extends Command {
     constructor(game, pentomino, row, col) {
-        super();
+        super("place");
         this._game = game;
         this._pentomino = pentomino;
         this._row = row;

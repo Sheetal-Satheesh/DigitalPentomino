@@ -4,7 +4,7 @@ if(typeof require != 'undefined') {
 
 class MoveToPositionCommand extends Command {
     constructor(game, pentomino, row, col) {
-        super();
+        super("moveToPosition");
         this._game = game;
         this._pentomino = pentomino;
         this._row = row;

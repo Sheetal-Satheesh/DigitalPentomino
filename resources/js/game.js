@@ -260,6 +260,13 @@ class Game {
         return this._board.getPentominoes().concat(this._pentominosOutside).concat(this._tray);
     }
 
+    getPentominoByName(name) {
+        let pentominoOnBoard = this._board.getPentominoByName(name);
+        if (pentominoOnBoard === null)
+            return this._getPentominoOutsideByName(name);
+        else
+            return pentominoOnBoard;
+    }
 
     getPosition(pentomino) {
         if (this._board.isPlacedOnBoard(pentomino)) {
@@ -311,6 +318,10 @@ class Game {
      */
     _isPentominoOutsideAtPosition(pentomino, row, col) {
         let pentominoPosition = this._getPentominoOutsideByName(pentomino.name);
+        if (pentominoPosition === null) {
+            throw new Error("No pentomino with name '" + pentomino.name + "' found outside the board");
+        }
+
         if (row < pentominoPosition[0]
             || row >= pentominoPosition[0] + pentomino.iRows
             || col < pentominoPosition[1]
@@ -343,7 +354,7 @@ class Game {
                 return pentomino;
             }
         }
-        throw new Error("No pentomino with name: " + name + " outside the board");
+        return null;
     }
 
     getBoardSize() {
