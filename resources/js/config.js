@@ -11,4 +11,5 @@ config = {
     gameHeight: 12,
     boardSize : [6,10],
     boardShape : "Block"
+
 };
