@@ -238,7 +238,7 @@ class Visual {
         var elements = document.elementsFromPoint(event.clientX, event.clientY);
         onpointerdownX = event.clientX;
         onpointerdownY = event.clientY;
-        
+
         for (var i in elements) {
             var check = elements[i].className;
             if (check !== 'bmPoint') continue;
@@ -264,9 +264,6 @@ class Visual {
          */
 
         document.onpointermove = function (event) {
-
-            //console.log("in onpointermove outside if event.clientX: " + event.clientX);
-            //console.log("in onpointermove outside if event.clientY: " + event.clientY);
 
             if (window.currentlyMoving) {
                 var x = event.clientX;
@@ -299,9 +296,9 @@ class Visual {
         /**
          * this is called when mouse key is released or fingers are removed from the screen
          * in case of just a click operation (not move operation) piece should not move
-         */        
-        if( onpointerdownX == event.clientX && 
-            onpointerdownY == event.clientY && 
+         */
+        if( onpointerdownX == event.clientX &&
+            onpointerdownY == event.clientY &&
             window.currentlyMoving) {
                 let data_ = window.currentlyMoving;
                 window.currentlyMoving = false;
