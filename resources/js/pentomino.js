@@ -182,6 +182,14 @@ class Pentomino {
 
         return this;
     }
+
+    //Anurag: added following method so that else condition could work of positionPiece method in visual.js
+    removeFromTray(){
+            this.inTray=0;
+      	    return this;
+        }
+
+
 }
 
 
