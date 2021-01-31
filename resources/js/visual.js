@@ -206,6 +206,8 @@ class Visual {
     initalizeListeners() {
 
         var that = this;
+        let onpointerdownX = "";
+        let onpointerdownY = "";
 
         //pointer events generalize mouse and touch events
         //the events are registered on the document object
@@ -228,6 +230,9 @@ class Visual {
             //clicked onto. But we need that one.
 
             var elements = document.elementsFromPoint(event.clientX, event.clientY);
+
+            onpointerdownX = event.clientX;
+            onpointerdownY = event.clientY;
 
             for (var i in elements) {
                 var check = elements[i].className;
@@ -256,13 +261,13 @@ class Visual {
 
             //move an object in case a drag operation stared on a piece (see above)
 
+            //console.log("in onpointermove outside if event.clientX: " + event.clientX);
+            //console.log("in onpointermove outside if event.clientY: " + event.clientY);
+
             if (window.currentlyMoving) {
 
                 var x = event.clientX;
                 var y = event.clientY;
-
-                //console.log("x: " + x);
-                //console.log("y: " + y);
 
                 var container = window.currentlyMoving[0];
                 //console.log(container.clientWidth);
@@ -292,6 +297,16 @@ class Visual {
         document.onpointerup = function (event) {
 
             //this is called when mouse key is released or fingers are removed from the screen
+
+            // in case of just a click operation (not move operation) piece should not move
+            if(onpointerdownX == event.clientX && onpointerdownY == event.clientY && window.currentlyMoving){
+
+                                    var data_ = window.currentlyMoving;
+                                    window.currentlyMoving = false;
+                                    that.positionPiece(data_[1]);
+                                    that.select(data_[1]);
+                                    return;
+            }
 
             if (window.currentlyMoving) {
 
