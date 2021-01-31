@@ -145,17 +145,27 @@ class Visual {
             htmlElement.style.top = '0';
             htmlElement.style.setProperty("--magnification", magnification);
             htmlElement.style.transformOrigin='0 5%';
+            htmlElement.style.zIndex == 1000;
         } else {
             let [positionY, positionX] = this.gameController.getPositionOfPentomino(piece);
             let left = undefined;
             let top = undefined;
             if(overlapp){
                 left = UIProperty.FunctionWidth + width * (positionX - 2)+ (width/2);
-                top = UIProperty.TrayHeight + width * (positionY - 2)-(width/2);
-
+                top = UIProperty.   TrayHeight + width * (positionY - 2)-(width/2);
+                if(htmlElement.style.zIndex > 500){
+                    htmlElement.style.zIndex--;
+                }else{
+                    htmlElement.style.zIndex++;               
+                }
             }else{
                 left = UIProperty.FunctionWidth + width * (positionX - 2);
                 top = UIProperty.TrayHeight + width * (positionY - 2);
+                if(htmlElement.style.zIndex == 1000){
+                    htmlElement.style.zIndex = 0;
+                }else{
+                    htmlElement.style.zIndex++;
+                }
             }
 
             htmlElement.style.left = left + 'vw';
@@ -264,12 +274,14 @@ class Visual {
                 var gameWidth = document.getElementById("game").clientWidth;
                 var gameHeight = document.getElementById("game").clientHeight;
 
+
                 if ((x > functionsWidth) && (x < (gameWidth + functionsWidth))) {
                     if ((y > 0) && (y < gameHeight)) {
                         container.style.left = 'calc(' + x + 'px - ' + (width * 2.5) + 'vw)';
                         container.style.top = 'calc(' + y + 'px - ' + (width * 2.5) + 'vw)';
                         container.style.setProperty("--magnification", 1);
                         container.style.transformOrigin = '50% 50%';
+                        container.style.zIndex = 1000;
                     }
                 }
             }
