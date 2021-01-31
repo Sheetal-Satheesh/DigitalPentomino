@@ -48,7 +48,9 @@
             <input type="file" id="file-input" />
             <button onclick="pd.ui.import()">Import</button>
             <button onclick="pd.ui.reset()">Reset</button>
-            <button id="getHintSolutions">GetHintSolutions</button>
+            <div class="hintPopup" onclick="callHintAI()">Hint !
+                <span class="hintPopupText" id="myHint">Hint :  do ABC</span>
+            </div>
         </div>
     </div>
     <div id="game">
@@ -62,16 +64,16 @@
 
     <div id="piecearea">
         <script type="text/javascript">
+            let pd;
             function initialize() {
-                let pd = new PD();
+                pd = new PD();
             }
 
-            document.getElementById ("getHintSolutions").addEventListener ("click", callHintAI, false);
-
             function callHintAI() {
-                alert("Calling HintAI");
-                let hintAI = new HintAI();
-                hintAI.getGamesFromSolutionsConfig();
+                let hint = document.getElementById("myHint");
+                hint.classList.toggle("show");
+                let popupText = document.getElementById("myHint");
+                popupText.textContent = pd.gameController.getHint().getText();
             }
         </script>
     </div>
