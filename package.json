@@ -9,6 +9,7 @@
     "mocha": "^8.2.1"
   },
   "dependencies": {
-    "chai": "^4.2.0"
+    "chai": "^4.2.0",
+    "package.json": "^2.0.1"
   }
 }
