@@ -10,7 +10,7 @@
     z-index: 1;
     top: 0;
     left: 0;
-    background: rgb(173, 192, 185);
+    background: rgb(197, 207, 203);
     bottom: 0;
     width: 10vw;
 }
@@ -28,7 +28,7 @@
     position: fixed;
     top: 0;
     left: 10vw;
-    background:rgb(166, 180, 182);
+    background:rgb(188, 196, 197);
     height: 7vw;
     width: 90vw;
 }
