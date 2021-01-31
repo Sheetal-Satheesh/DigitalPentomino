@@ -1,3 +1,14 @@
+
+const UIProperty = {
+    "TrayCSSLeft":12,
+    "TrayHeight":7,
+    "WindowWidth":90,
+    "PentominoX": 5,
+    "PentominoY": 5,
+    "FunctionWidth": 10
+}
+Object.freeze(UIProperty)
+
 class Visual {
 
     constructor(pd) {
@@ -8,89 +19,91 @@ class Visual {
         this.pieces = this.gameController.getPentominoes();
         this.selected = false
 
-        //Create all visual structures of the game
-
         this.renderBoard();
         this.renderPieces();
-
-        //Create interaction listeners
 
         this.initalizeListeners();
     }
 
+    handleCollision(pentomino){
+        let collisionPentominoes = this.gameController.getCollisionPentominoesOfPentomino(pentomino);
+
+        if (collisionPentominoes.length != 0){
+            //offset the pieces when colliding.
+            this.positionPiece(pentomino,true);
+        }else{
+            this.positionPiece(pentomino);
+        }
+    }
+
     placePentomino(pentomino, posX, posY){
         this.gameController.placePentomino(pentomino, posX, posY);
+        //offset on collision
+        this.handleCollision(pentomino);
     }
 
     movePentominoToTray(pentomino){
         this.gameController.removePentomino(pentomino);
     }
 
-    //Create the field on which pieces can be put
     renderBoard() {
-
         //TODO: Check whether in the innerHTML approach is good here!
 
         var fieldHTML = document.getElementById('field');
-
-
         var out = '';
+        var width = UIProperty.WindowWidth / this.pd.gameWidth;
 
-        var width = 90 / this.pd.gameWidth;
-
-        //The field consists of divs. Each div saves in its id field its resepective
-        //coorinates
+        /*The field consists of divs. Each div saves in its id field its resepective coorinates*/
 
         for (var row = 0; row < this.pd.gameHeight; row++) {
             for (var col = 0; col < this.pd.gameWidth; col++) {
 
-                var isBoard = true;
-
-                //indicate where on the field the board is
+                var isBoard = true;   //indicate where on the field the board is
 
                 //TODO: Implement blocked elements
-
                 if (col < this.boardY) isBoard = false;
                 if (col >= this.boardY + this.gameController.getBoardSize()[1]) isBoard = false;
                 if (row < this.boardX) isBoard = false;
                 if (row >= this.boardX + this.gameController.getBoardSize()[0]) isBoard = false;
 
                 //TODO: This is ugly!
-
-                out += '<div class="gamearea ' + ((isBoard) ? 'boardarea' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';   //'+col+','+row+'
+                out += '<div class="gamearea ' + ((isBoard) ? 'boardarea' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';
             }
         }
 
         fieldHTML.innerHTML = out;
     }
 
-    //Create the visual representations of the pieces
+    /**
+     * Create the visual representations of the pieces
+     * */
+
     renderPieces() {
 
         //TODO: Check whether in the innerHTML approach is good here!
-        //
-        //Thoughts: It is okay if renderPieces is only called at the start
-        //of a game and pice updates are handeled differently.
-        //
-        //If this function should also handle updates, it should rather check
-        //whether elements already exist and update their respective properties
-        //instead of creating the pieces again and again.
+
+        /**
+         * Thoughts: It is okay if renderPieces is only called at the start of a game and pice
+         * updates are handeled differently.
+         *
+         * If this function should also handle updates, it should rather check whether elements
+         * already exist and update their respective properties instead of creating the pieces
+         * again and again.
+        */
 
         var pieceArea = document.getElementById('piecearea');
-
         let out = '';
-
-        var width = 90 / this.pd.gameWidth;
-
-        //create the pieces
-
+        var width = UIProperty.WindowWidth / this.pd.gameWidth;
         this.pieces.forEach(piece => {
             let bitMap = piece.getMatrixRepresentation();
 
-            //this are the bouding boxes into which the piece itself is "painted"
-            //setting to display:none avoids the appearing for a split second before positioning
+            /**
+             * this are the bouding boxes into which the piece itself is "painted" setting
+             * to display:none avoids the appearing for a split second before positioning
+             *
+            */
 
-            out += '<div class="piece" id="piece_' + piece.name + '" style="width:' + (5 * width) + 'vw;height:' + (5 * width) + 'vw;display:none">';
+           out += '<div class="piece" id="piece_' + piece.name + '" style="width:' + (5 * width) + 'vw;height:' + (5 * width) + 'vw;display:none">';
 
             //this "paints" the bitmap of the pice into the bounding box
             for (var i in bitMap) {
@@ -117,37 +130,44 @@ class Visual {
     }
 
 
-   positionPiece(piece) {
+   positionPiece(piece, overlapp=false) {
 
-        var width = 90 / this.pd.gameWidth;
+        var width = UIProperty.WindowWidth / this.pd.gameWidth;
         var htmlElement = document.getElementById('piece_' + piece.name);
 
-        if (piece.inTray) {  //TODO: piece.inTray needs to be added
+        if (piece.inTray) {  
             var trayPosition = piece.trayPosition;
-
-            var widthVW = 7 + (piece.trayPosition) * 7; //7 is trayHeight
-
+            /**
+             * 7 is trayHeight
+             */
+            var widthVW = UIProperty.TrayCSSLeft + (piece.trayPosition) * UIProperty.TrayHeight;
             var magnification = 6 / (5 * width);
-
             htmlElement.style.left = widthVW + 'vw';
-            //Ashwini
+            
             let trayWidth = document.getElementById("tray");
             htmlElement.style.top = '0';
-            htmlElement.style.marginTop = "-5.5%";
             htmlElement.style.setProperty("--magnification", magnification);
-            htmlElement.style.transformOrigin = 'center';
-
+            htmlElement.style.transformOrigin='0 5%';
         } else {
             let [positionY, positionX] = this.gameController.getPositionOfPentomino(piece);
+            let left = undefined;
+            let top = undefined;
 
+            //offset piece on collision
+            if(overlapp){
+                left = UIProperty.FunctionWidth + width * (positionX - 2)+ (width/2);
+                
+                top = UIProperty.TrayHeight + width * (positionY - 2)-(width/2);
+            
 
-            var left = 10 + width * (positionX - 2);
+            }else{
+                left = UIProperty.FunctionWidth + width * (positionX - 2);
+                top = UIProperty.TrayHeight + width * (positionY - 2);
 
-            var top = 12.5 + width * (positionY - 2);
+            }
 
             htmlElement.style.left = left + 'vw';
             htmlElement.style.top = top + 'vw';
-
             htmlElement.style.setProperty("--magnification", 1);
             htmlElement.style.transformOrigin = '50% 50%';
 
@@ -164,18 +184,14 @@ class Visual {
     }
 
     select(piece) {
-
         this.selected = piece;
         this.showManipulations();
 
     }
 
     deleteSelection() {
-
         if (!this.selected) return;
-
         this.selected = false;
-
         this.pd.visual.hideManipulations();
     }
 
@@ -207,44 +223,30 @@ class Visual {
 
         var that = this;
 
-        //pointer events generalize mouse and touch events
-        //the events are registered on the document object
-        //in order to avoid problems of losing objects when moving too fast
-        //(which can happen in mouse interaction).
-        //
-        //Ad differnt things have to happen in relation to different
-        //kinds of objects and in different states of the application
-        //this basically becomes a big state automaton.
+        /**
+         * pointer events generalize mouse and touch events the events are registered on
+         * the document object in order to avoid problems of losing objects when moving
+         * too fast (which can happen in mouse interaction). Ad differnt things have to
+         * happen in relation to different kinds of objects and in different states of
+         * the application this basically becomes a big state automaton.
+         *
+         */
 
         document.onpointerdown = function (event) {//clicking or moving begins
-
-            //check, whether action started on a gamepiece
-
-            //get all elements on the given positions and go through them.
-            //This has to be done instead of getting the element which has been
-            //clicked onto from the event, as transparent parts of
-            //bounding box pieces can overlap other pieces, so the element
-            //which is technically clicked onto may not be the one visually
-            //clicked onto. But we need that one.
-
             var elements = document.elementsFromPoint(event.clientX, event.clientY);
-
             for (var i in elements) {
                 var check = elements[i].className;
                 if (check !== 'bmPoint') continue;
 
-                //as soon as we have a bmPoint(an element of a piece),
-                //we determine the bounding box and the piece object itself
-                //and save those into a global variable "currentlyMoving"
-                //which we access during movement and at the end of movement.
-
+            /**
+             * As soon as we have a bmPoint(an element of a piece),we determine the bounding box
+             * and the piece object itself and save those into a global variable "currentlyMoving"
+             * which we access during movement and at the end of movement.
+             */
                 var piece = elements[i * 1 + 1].id.split('_')[1];
-
                 if (!piece) return;
-
                 var container = elements[i * 1 + 1];       //For some strange reason, i is a String, using *1 to convert it
                 var piece = that.pieces.find(p => { return p.name === piece; });
-
                 window.currentlyMoving = [container, piece];
             }
 
@@ -252,36 +254,28 @@ class Visual {
 
         }
 
+        /**
+         * move an object in case a drag operation stared on a piece (see above)
+         */
+
         document.onpointermove = function (event) {
 
-            //move an object in case a drag operation stared on a piece (see above)
-
             if (window.currentlyMoving) {
-
                 var x = event.clientX;
                 var y = event.clientY;
-
-                //console.log("x: " + x);
-                //console.log("y: " + y);
-
                 var container = window.currentlyMoving[0];
-                //console.log(container.clientWidth);
 
-                //resize object to full size while moving and attach their center to the
-                //pointer
-
-                var width = 90 / that.pd.gameWidth;
-
+                //resize object to full size while moving and attach their center to the pointer
+                var width = UIProperty.WindowWidth / that.pd.gameWidth;
                 //set new style for left and top value of element, BUT do not cross borders
                 var functionsWidth = document.getElementById("functions").clientWidth;
                 var gameWidth = document.getElementById("game").clientWidth;
                 var gameHeight = document.getElementById("game").clientHeight;
-              //  console.log("FW: " + functionsWidth + " " + "GW: " + gameHeight);
 
-                if ((x > functionsWidth) && (x < gameWidth + functionsWidth)) {
+                if ((x > functionsWidth) && (x < (gameWidth + functionsWidth))) {
                     if ((y > 0) && (y < gameHeight)) {
                         container.style.left = 'calc(' + x + 'px - ' + (width * 2.5) + 'vw)';
-                        container.style.top = 'calc(' + y + 'px - ' + (width * 1) + 'vw)';
+                        container.style.top = 'calc(' + y + 'px - ' + (width * 2.5) + 'vw)';
                         container.style.setProperty("--magnification", 1);
                         container.style.transformOrigin = '50% 50%';
                     }
@@ -289,82 +283,54 @@ class Visual {
             }
         }
 
+        /**
+         * this is called when mouse key is released or fingers are removed from the screen
+         */
         document.onpointerup = function (event) {
-
-            //this is called when mouse key is released or fingers are removed from the screen
-
             if (window.currentlyMoving) {
 
-                //in case an object was in the process of being moved, this changes the movement.
-                //which means it is determined, where it was moved to and then the backend is informed
-                //about that movement (which in turn  repositions the element so it snaps to the grid)
-
+                /*  In case an object was in the process of being moved, this changes the movement.
+                    which means it is determined, where it was moved to and then the backend is informed
+                    about that movement (which in turn  repositions the element so it snaps to the grid)
+                */
                 var data = window.currentlyMoving;
                 window.currentlyMoving = false;
-
-                //determine the target
-
-                var elements = document.elementsFromPoint(event.clientX, event.clientY);
+                var elements = document.elementsFromPoint(event.clientX, event.clientY); //determine the target
 
                 for (var i in elements) {
-
                     var element = elements[i];
-
                     var id = element.id;
-
                     //Ashwini: when piece is moved back to tray reset Pentomio inTray variable to 1 and place the piece in Tray
                     if (id == 'tray') {
                         let piece = data[1].toTray();
                         that.positionPiece(piece);
                         that.movePentominoToTray(piece);
-                        //that.renderPieces();
-                        // return data[1].toTray();
                     }
 
                     if (id.split('_')[0] == 'field') {
                         var coords = (id.split('_')[1].split(','));
+                        data[1].removeFromTray();
                         that.placePentomino(data[1], coords[0],coords[1] );
-                        let piece = data[1].removeFromTray();
-                        that.positionPiece(piece);
-
-                        // make this the selected element which activates manipulation GUI
-
-                        // data[1].select(); // TODO: Make buttons disappear/appear if nothing/something is selected
+                        /**
+                         * make this the selected element which activates manipulation GUI data[1].select();
+                         *
+                         * TODO: Make buttons disappear/appear if nothing/something is selected
+                         */
                         that.select(data[1]);
-                        //	<!-- var obj = JSON.parse(localStorage.getItem('SAVEGAME')); -->
-
-
-                        //	<!-- console.log("before",obj[data[1].name]); -->
-                        //	<!-- obj[data[1].name]['bitMap'] = data[1].bitMap; -->
-                        //	<!-- obj[data[1].name]['inTray'] = data[1].inTray; -->
-                        //	<!-- obj[data[1].name]['position'] = data[1].position; -->
-
-
-                        //	<!-- localStorage.setItem('SAVEGAME',JSON.stringify(obj)); -->
-                        //	<!-- console.log("after",localStorage.getItem('SAVEGAME')); -->
-
-                        // that.PD.ui.save(); // TODO: Save UI state
 
                         return;
-
                     }
                 }
-
-
             } else {
 
-                // in case nothing was moving, this becomes an unselect operation
-
+                // In case nothing was moving, this becomes an unselect operation
                 var elements = document.elementsFromPoint(event.clientX, event.clientY);
-
                 for (var i in elements) {
                     var element = elements[i];
                     if (element.id == 'functions') return; //do not unselect if operations have been applied to the functions panel
                 }
 
                 that.deleteSelection();
-
-
             }
         }
 
@@ -376,9 +342,10 @@ class Visual {
             let pieceDiv = document.getElementById("piece_" + piece.name);
             let flipped = pieceDiv.getAttribute("flipped") * 1;
             let currentRot = pieceDiv.style.getPropertyValue("--rotationZ").split(/(-?\d+)/)[1] * 1; //converts string value to int
-            let newRot = flipped ? currentRot - 90 : currentRot + 90;
+            let newRot = flipped ? currentRot - UIProperty.WindowWidth : currentRot + UIProperty.WindowWidth;
             // Update the backend
             this.gameController.rotatePentominoClkWise(piece);
+            this.handleCollision(piece);
             pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
         }
     }
@@ -389,9 +356,10 @@ class Visual {
             let pieceDiv = document.getElementById("piece_" + piece.name);
             let flipped = pieceDiv.getAttribute("flipped") * 1;
             let currentRot = pieceDiv.style.getPropertyValue("--rotationZ").split(/(-?\d+)/)[1] * 1; //converts string value to int
-            let newRot = flipped ? currentRot + 90 : currentRot - 90;
+            let newRot = flipped ? currentRot + UIProperty.WindowWidth : currentRot - UIProperty.WindowWidth;
             // Update the backend
             this.gameController.rotatePentominoAntiClkWise(piece);
+            this.handleCollision(piece);
             pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
         }
     }
@@ -405,6 +373,7 @@ class Visual {
             let newRot = currentRot + 180;
             // Update the backend
             this.gameController.mirrorPentominoH(piece);
+            this.handleCollision(piece);
             pieceDiv.style.setProperty("--rotationX", newRot.toString() + "deg");
             pieceDiv.setAttribute("flipped", 1 - flipped);
         }
@@ -419,6 +388,7 @@ class Visual {
             let newRot = currentRot + 180;
             // Update the backend
             this.gameController.mirrorPentominoV(piece);
+            this.handleCollision(piece);
             pieceDiv.style.setProperty("--rotationY", newRot.toString() + "deg");
             pieceDiv.setAttribute("flipped", 1 - flipped);
         }
