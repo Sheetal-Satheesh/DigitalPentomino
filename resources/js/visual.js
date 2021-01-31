@@ -59,15 +59,31 @@ class Visual {
             for (var col = 0; col < this.pd.gameWidth; col++) {
 
                 var isBoard = true;   //indicate where on the field the board is
-
+				var blockedCell = false;
                 //TODO: Implement blocked elements
                 if (col < this.boardY) isBoard = false;
                 if (col >= this.boardY + this.gameController.getBoardSize()[1]) isBoard = false;
                 if (row < this.boardX) isBoard = false;
                 if (row >= this.boardX + this.gameController.getBoardSize()[0]) isBoard = false;
+              //Ashwini: For Blocking the cells
+				if (baseConfig[selectedConfig.configName].hasOwnProperty('blockedCells'))
+				{
+					this.blockedCells = baseConfig[selectedConfig.configName].blockedCells;
+					
+					for (var arr = 0; arr < this.blockedCells.length; arr++) {
+						if(row == this.blockedCells[arr][0] && col == this.blockedCells[arr][1]) {
+							blockedCell = true;
+							break;
+						}
+					}
 
-                //TODO: This is ugly!
-                out += '<div class="gamearea ' + ((isBoard) ? 'boardarea' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';
+					if(blockedCell)
+						out += '<div class="gamearea ' + ((isBoard) ? 'boardarea blockedcell' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';
+					else
+						out += '<div class="gamearea ' + ((isBoard) ? 'boardarea' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';
+				}
+				else
+					out += '<div class="gamearea ' + ((isBoard) ? 'boardarea' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';   //'+col+','+row+'
             }
         }
 
