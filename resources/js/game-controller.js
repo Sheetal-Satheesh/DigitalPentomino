@@ -218,6 +218,14 @@ class GameController {
     }
 }
 
+
+function debug_mode(boardStartXY, boardSizeXY){
+    let gc = new GameController();
+    let game = new GameLoader('Level 2');
+    game.display();
+}
+
+
 if(typeof module != 'undefined') {
     module.exports = GameController;
 }
