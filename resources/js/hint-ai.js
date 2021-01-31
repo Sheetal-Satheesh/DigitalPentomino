@@ -57,11 +57,11 @@ class HintAI {
             return false;
         });
 
-        if (command === null) {
+        if (command === null || command === undefined) {
             throw new Error("No next command found");
         }
 
-        return new Hint("TODO: Insert hint text that makes more sense", command);
+        return new Hint(command);
     }
 
     /**
