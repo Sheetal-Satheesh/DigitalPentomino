@@ -10,7 +10,7 @@
     z-index: 1;
     top: 0;
     left: 0;
-    background: rgb(136, 155, 150);
+    background: rgb(173, 192, 185);
     bottom: 0;
     width: 10vw;
 }
@@ -28,7 +28,7 @@
     position: fixed;
     top: 0;
     left: 10vw;
-    background: rgb(201, 212, 208);
+    background:rgb(166, 180, 182);
     height: 7vw;
     width: 90vw;
 }
@@ -71,7 +71,7 @@
 }
 
 .boardarea {
-    background: rgb(136, 155, 150);
+  background: rgb(173, 192, 185);
 }
 
 .piece {
@@ -151,6 +151,7 @@
 
 .CActionTB {
   margin-top: 100%;
+  padding-left: 5%;
 }
 /* 
 .CActionTB tr td {
@@ -173,8 +174,16 @@ float: left;
 width:  3vw;
 height: 3vw;
 object-fit: cover;
+background-color:rgb(136, 155, 150);
+
 }
 
+.cActionBtn {
+  background-color:rgb(136, 155, 150);
+  border-radius: 10%;
+  border: 0;
+  
+}
 img:hover {
   box-shadow: 1px 1px 10px 10px rgba(55, 89, 107, 0.5);
 }
