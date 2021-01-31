@@ -25,8 +25,8 @@ class Hint {
                 this.text = "Why don't you try to mirror " + command._pentomino.name + " vertical";
                 break;
             default:
-                this.text = "Error - no text found for command with name '" + command.getName() + "'";
-                break;
+                this.text = "Error - unknown command with name '" + command.getName() + "'";
+                throw new Error("Error: unknown command with name " + command.getName());
         }
     }
 
