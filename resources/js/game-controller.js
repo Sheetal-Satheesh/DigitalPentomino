@@ -1,11 +1,13 @@
 if(typeof require != 'undefined') {
     Pentomino = require('./pentomino.js');
     CommandPath = require('./command-history/command-path.js');
+    HintAI = require('./hint-ai.js');
 }
 
 class GameController {
     constructor() {
         this._game = null;
+        this._hintAI = new HintAI();
     }
 
     exceptionHandler(pentomino){
@@ -54,6 +56,13 @@ class GameController {
     removePentomino(pentomino) {
         this.exceptionHandler(pentomino);
         return this._game.doCommandAndAddToHistory(new RemoveCommand(this._game, pentomino));
+    }
+
+    // --- --- --- Hints --- --- ---
+    getHint()
+    {
+        if (this._game === null) throw new Error("Game is not set");
+        return this._hintAI.getHint(this._game);
     }
 
     // --- --- --- History --- --- ---

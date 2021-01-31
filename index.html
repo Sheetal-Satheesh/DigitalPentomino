@@ -73,7 +73,7 @@
                 let hint = document.getElementById("myHint");
                 hint.classList.toggle("show");
                 let popupText = document.getElementById("myHint");
-                popupText.textContent = "Test" + pd.gameController.getBoardSize();
+                popupText.textContent = pd.gameController.getHint().getText();
             }
         </script>
     </div>
