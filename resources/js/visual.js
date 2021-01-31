@@ -297,15 +297,15 @@ class Visual {
          * this is called when mouse key is released or fingers are removed from the screen
          * in case of just a click operation (not move operation) piece should not move
          */
-        if( onpointerdownX == event.clientX &&
-            onpointerdownY == event.clientY &&
-            window.currentlyMoving) {
-                let data_ = window.currentlyMoving;
-                window.currentlyMoving = false;
-                that.positionPiece(data_[1]);
-                that.select(data_[1]);
-                return;
-        }
+            if( onpointerdownX == event.clientX &&
+                onpointerdownY == event.clientY &&
+                window.currentlyMoving) {
+                    let data_ = window.currentlyMoving;
+                    window.currentlyMoving = false;
+                    that.positionPiece(data_[1]);
+                    that.select(data_[1]);
+                    return;
+            }
 
             if (window.currentlyMoving) {
 
