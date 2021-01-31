@@ -176,19 +176,26 @@ class Visual {
 
         this.selected = false;
 
-        this.pd.visual.hideManipulations();
+        this.pd.visual.disableManipulations();
     }
 
-    //show or hide the manipulation buttons
-    //TODO: Dirty! The UI needs to sensibly handle those things!!
+    //Enable or Disable manipulation buttons
 
     showManipulations() {
-        // console.log("Show Manipulation::",piece)
-        document.getElementById('operations').style.display = 'block';
+
+        document.getElementById("btnRotateRight").disabled = false;
+        document.getElementById("btnRotateLeft").disabled = false;
+        document.getElementById("btnFlipH").disabled = false;
+        document.getElementById("btnFlipV").disabled = false;
     }
 
-    hideManipulations() {
-        document.getElementById('operations').style.display = 'none';
+    disableManipulations() {
+
+        document.getElementById("btnRotateRight").disabled =true;
+        document.getElementById("btnRotateLeft").disabled =true;
+        document.getElementById("btnFlipH").disabled =true;
+        document.getElementById("btnFlipV").disabled =true;
+
     }
     // 	save(piece) {
     // 		console.log("insave::",piece)
