@@ -1,6 +1,6 @@
 
 const UIProperty = {
-    "TrayCSSLeft":10, // [Hot-Fix : Bug-#63 ] Pieces disappear after rotation and placement onto the tray
+    "TrayCSSLeft":7, // [Hot-Fix : Bug-#63 ] Pieces disappear after rotation and placement onto the tray
     "TrayHeight":12.5, // [Hot-Fix : Bug-#63 ] Pieces disappear after rotation and placement onto the tray
     "WindowWidth":90,
     "PentominoX": 5,
