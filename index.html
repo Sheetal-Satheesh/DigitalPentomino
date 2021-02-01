@@ -66,14 +66,13 @@
                 <tr>
                     <td><button type="button" id='btnBoardSelect' class = "cActionBtn" onclick="selectBoard()" disabled> <img src="resources/images/icons/board.png"> </button></td>
                     <td><button type="button" id='Hints' class = "cActionBtn" onclick="callHintAI()" ><img src="resources/images/icons/help.png"></button></td>
-                   </tr>
+                </tr>
                   <tr>
                     <button style="display:none" onclick="pd.ui.save()">Save</button>
                     <button style="display:none" onclick="pd.ui.load()">Load</button>
                   </tr>
             </thead>
           </table>
-
       </div>
 
     <div id="game">
@@ -96,7 +95,8 @@
         function callHintAI() {
             document.getElementById("Hints").classList.toggle("show");
             let popupText = document.getElementById("Hints");
-            popupText.textContent = pd.gameController.getHint().getText();
+            hintsText = pd.hints().getText();
+            alert(hintsText); // this must be shown as animated way
         }
 
         function rotateClkWise(){

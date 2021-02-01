@@ -45,6 +45,10 @@ class PD {
 
         this.visual = new Visual(this);
     }
+
+    hints(){
+       return this.gameController.getHint();
+    }
 }
 
 
