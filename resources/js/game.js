@@ -25,6 +25,13 @@ class Game {
         this._pentominoOutsidePositions = [];
     }
 
+    reset(){
+        this._board.reset();
+        this._tray=[];
+        this._fillUpTray(); 
+        this._pentominosOutside = [];
+        this._pentominoOutsidePositions = [];
+    }
     // --- --- --- Pentomino Operations --- --- ---
     /**
      * Executes the specified and adds it to the history tree.

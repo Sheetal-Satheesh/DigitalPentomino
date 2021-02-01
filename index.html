@@ -39,26 +39,27 @@
 
   <div class = "cGame">
     <div id="functions">
-        <div id="operations">
+      <img id = "logo" src="resources/images/icons/Pentomino.png" alt="Pentomino" class="cLogo">
+      <div id="operations">
           <table id="actionTB" class="CActionTB">
             <thead>
                   <tr>
-                    <td><button type="button" id='btnRotateRight' class = "cActionBtn"> <img src="resources/images/action_buttons/rotate_right.png"> </button></td>
-                    <td><button type="button" id='btnRotateLeft' class = "cActionBtn" ><img src="resources/images/action_buttons/rotate_left.png"></button></td>
+                    <td><button type="button" id='btnRotateRight' class = "cActionBtn"> <img src="resources/images/icons/rotate_right.png"> </button></td>
+                    <td><button type="button" id='btnRotateLeft' class = "cActionBtn" ><img src="resources/images/icons/rotate_left.png"></button></td>
                    </tr>
                   <tr>
-                    <td><button type="button" id='btnFlipH' class = "cActionBtn"><img src="resources/images/action_buttons/flip_horizontally.png"></button></td>
-                    <td><button type="button" id='btnFlipV' class = "cActionBtn" ><img src="resources/images/action_buttons/flip_vertically.png"></button></td>
+                    <td><button type="button" id='btnFlipH' class = "cActionBtn"><img src="resources/images/icons/flip_horizontally.png"></button></td>
+                    <td><button type="button" id='btnFlipV' class = "cActionBtn" ><img src="resources/images/icons/flip_vertically.png"></button></td>
                   </tr>
 
                   <tr>
-                    <td><button type="button" id='import' class = "cActionBtn" onclick="pd.ui.import()"><img src="resources/images/action_buttons/import.png"></button></td>
-                    <td><button type="button" id='export' class = "cActionBtn" onclick="pd.ui.export()" ><img src="resources/images/action_buttons/exporting.png"></button></td>
+                    <td><button type="button" id='import' class = "cActionBtn" onclick="pd.ui.import()"><img src="resources/images/icons/import.png"></button></td>
+                    <td><button type="button" id='export' class = "cActionBtn" onclick="pd.ui.export()" ><img src="resources/images/icons/export.png"></button></td>
                   </tr>
 
                   <tr>
-                    <td><button type="button" id='reset' class = "cActionBtn" onclick="pd.ui.reset()"><img src="resources/images/action_buttons/tidy_up.png"></button></td>
-                    <td><button type="button" id='Hints' class = "cActionBtn" onclick="callHintAI()" ><img src="resources/images/action_buttons/help.png"></button></td>
+                    <td><button type="button" id='reset' class = "cActionBtn" onclick="resetGame()"><img src="resources/images/icons/tidy_up.png"></button></td>
+                    <td><button type="button" id='Hints' class = "cActionBtn" onclick="callHintAI()" ><img src="resources/images/icons/help.png"></button></td>
                   </tr>
             </thead>
           </table>
@@ -78,10 +79,13 @@
         pd = new PD();
       }
 
+      function resetGame(){
+        pd.reset();
+      }
       function callHintAI() {
-        let hint = document.getElementById("myHint");
+        let hint = document.getElementById("Hints");
         hint.classList.toggle("show");
-        let popupText = document.getElementById("myHint");
+        let popupText = document.getElementById("Hints");
         popupText.textContent = pd.gameController.getHint().getText();
       }
     </script>

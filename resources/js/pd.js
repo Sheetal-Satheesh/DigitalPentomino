@@ -37,6 +37,13 @@ class PD {
         document.getElementById("btnFlipV").onclick = () => { _this.visual.flipV(); };
         //Refresh button on the browser which loads the saved game state with configuration
         // this.ui.load();
+        this.reset();
     }
+
+    reset(){
+       this.gameController.resetGame();
+       this.visual.clear();
+    }
+
 
 }

@@ -27,9 +27,7 @@ class Visual {
 
     handleCollision(pentomino){
         let collisionPentominoes = this.gameController.getCollisionPentominoesOfPentomino(pentomino);
-
         if (collisionPentominoes.length != 0){
-            //offset the pieces when colliding.
             this.positionPiece(pentomino,true);
         }else{
             this.positionPiece(pentomino);
@@ -38,12 +36,19 @@ class Visual {
 
     placePentomino(pentomino, posX, posY){
         this.gameController.placePentomino(pentomino, posX, posY);
-        //offset on collision
         this.handleCollision(pentomino);
     }
 
     movePentominoToTray(pentomino){
         this.gameController.removePentomino(pentomino);
+    }
+
+    clear(){
+        this.gameController.resetGame();
+        this.pieces = this.gameController.getPentominoes();
+        this.renderPieces();
+        
+
     }
 
     renderBoard() {
@@ -148,19 +153,28 @@ class Visual {
             htmlElement.style.top = '0';
             htmlElement.style.setProperty("--magnification", magnification);
             htmlElement.style.transformOrigin='0 5%';
+            htmlElement.style.zIndex == 1000;
+
         } else {
             let [positionY, positionX] = this.gameController.getPositionOfPentomino(piece);
             let left = undefined;
             let top = undefined;
-
-            //offset piece on collision
             if(overlapp){
                 left = UIProperty.FunctionWidth + width * (positionX - 2)+ (width/2);
-                top = UIProperty.TrayHeight + width * (positionY - 2)-(width/2);
+                top = UIProperty.   TrayHeight + width * (positionY - 2)-(width/2);
+                if(htmlElement.style.zIndex > 500){
+                    htmlElement.style.zIndex--;
+                }else{
+                    htmlElement.style.zIndex++;               
+                }
             }else{
                 left = UIProperty.FunctionWidth + width * (positionX - 2);
                 top = UIProperty.TrayHeight + width * (positionY - 2);
-
+                if(htmlElement.style.zIndex == 1000){
+                    htmlElement.style.zIndex = 0;
+                }else{
+                    htmlElement.style.zIndex++;
+                }
             }
 
             htmlElement.style.left = left + 'vw';
@@ -280,6 +294,7 @@ class Visual {
                         container.style.top = 'calc(' + y + 'px - ' + (width * 2.5) + 'vw)';
                         container.style.setProperty("--magnification", 1);
                         container.style.transformOrigin = '50% 50%';
+                        container.style.zIndex = 1000;
                     }
                 }
             }
@@ -289,7 +304,6 @@ class Visual {
          * this is called when mouse key is released or fingers are removed from the screen
          */
         document.onpointerup = function (event) {
-
         /**
          * this is called when mouse key is released or fingers are removed from the screen
          * in case of just a click operation (not move operation) piece should not move
