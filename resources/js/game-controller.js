@@ -4,6 +4,33 @@ if(typeof require != 'undefined') {
     HintAI = require('./hint-ai.js');
 }
 
+/**
+ * This is a singleton object for game controller. If front-end call gameController
+ * two times, then there will two game state, which is unexpected at all. We need
+ * one instance of gameController for a running game.
+ *
+ * UseCases: Front-end function more often event based trigger. We can not pass
+ * controller object in event based function trigger. In this case, this class can 
+ * be called multiple times, but always result same instance of gameController. VOLLA :)
+ *
+ */
+
+var FrontController = (function() {
+    var instance;
+    function getController() {
+        if (instance) {
+            return instance;
+        }
+        instance = this;
+        this.controller = new GameController();
+    }
+    getController.getInstance = function () {
+        return instance || new getController();
+    }
+    return getController;
+}());
+
+
 class GameController {
     constructor() {
         this._game = null;

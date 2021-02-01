@@ -21,7 +21,11 @@ class PD {
          *      the same co-ordinates system.
          */
 
-        this.gameController = new GameController();
+        /**
+         * Front-end interface always call FrontController instead of GameController.
+         */
+        var fController = new FrontController();
+        this.gameController = fController.controller;
         this.gameController.createGame(
                                     [this.boardStartX, this.boardStartY],
                                     config.boardSize,
