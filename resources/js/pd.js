@@ -30,7 +30,7 @@ class PD {
                                     [this.boardStartX, this.boardStartY],
                                    this.boardSize,
                                     this.boardShape);
-       
+
         this.visual = new Visual(this);
 
         // Attach event handlers and provide correct "this" reference inside
@@ -41,6 +41,31 @@ class PD {
         document.getElementById("btnFlipV").onclick = () => { _this.visual.flipV(); };
         //Refresh button on the browser which loads the saved game state with configuration
         // this.ui.load();
+        document.getElementById("btnBoardSelect").onclick = () => { this.loadBoard('board_6x10'); };
     }
+    loadBoard(boardName){
+
+    selectedConfig.configName = boardName;
+    console.log('loadBoard',selectedConfig.configName);
+
+    this.gameWidth    = baseConfig[selectedConfig.configName].gameWidth;
+    this.gameHeight = baseConfig[selectedConfig.configName].gameHeight;
+    this.boardSize    = baseConfig[selectedConfig.configName].boardSize;
+    this.boardShape = baseConfig[selectedConfig.configName].boardShape;
+
+
+
+    this.boardStartX = Math.floor((this.gameHeight - this.boardSize[0]) / 2);
+    this.boardStartY = Math.floor((this.gameWidth - this.boardSize[1]) / 2);
+    this.gameController.createGame(
+                                [this.boardStartX, this.boardStartY],
+                                this.boardSize,
+                                this.boardShape);
+
+
+
+    this.visual = new Visual(this);
+}
+
 
 }
