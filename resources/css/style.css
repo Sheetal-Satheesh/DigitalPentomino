@@ -171,12 +171,12 @@
 }
 
 .cActionBtn img {
-float: center;
-width:  3vw;
-height: 3vw;
-object-fit: cover;
-background: rgb(140, 170, 158);
-border-radius: 25%;
+    float: center;
+    width:  3vw;
+    height: 3vw;
+    object-fit: cover;
+    background: rgb(140, 170, 158);
+    border-radius: 25%;
 }
 
 .cActionBtn {

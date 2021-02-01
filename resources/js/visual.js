@@ -150,9 +150,7 @@ class Visual {
 
     }
 
-
    positionPiece(piece, overlapp=false) {
-
         var width = UIProperty.WindowWidth / this.pd.gameWidth;
         var htmlElement = document.getElementById('piece_' + piece.name);
 
@@ -169,7 +167,7 @@ class Visual {
             htmlElement.style.top = '0';
             htmlElement.style.setProperty("--magnification", magnification);
             htmlElement.style.transformOrigin='0 5%';
-            htmlElement.style.zIndex == 1000;
+            htmlElement.style.zIndex = 3000;
 
         } else {
             let [positionY, positionX] = this.gameController.getPositionOfPentomino(piece);
@@ -178,18 +176,25 @@ class Visual {
             if(overlapp){
                 left = UIProperty.FunctionWidth + width * (positionX - 2)+ (width/2);
                 top = UIProperty.   TrayHeight + width * (positionY - 2)-(width/2);
-                if(htmlElement.style.zIndex > 500){
-                    htmlElement.style.zIndex--;
-                }else{
-                    htmlElement.style.zIndex++;               
+           
+
+                if(htmlElement.style.zIndex >= 2000 ){
+                    htmlElement.style.zIndex =1500;
+                }else {
+                    htmlElement.style.zIndex =htmlElement.style.zIndex + 20; ;
                 }
+
             }else{
                 left = UIProperty.FunctionWidth + width * (positionX - 2);
                 top = UIProperty.TrayHeight + width * (positionY - 2);
-                if(htmlElement.style.zIndex == 1000){
-                    htmlElement.style.zIndex = 0;
+
+
+                if(htmlElement.style.zIndex >= 2000 ){
+                    htmlElement.style.zIndex = 1000;
+                }else if (htmlElement.style.zIndex > 0){
+                    htmlElement.style.zIndex = htmlElement.style.zIndex+10;
                 }else{
-                    htmlElement.style.zIndex++;
+                    htmlElement.style.zIndex -= 50;
                 }
             }
 
@@ -318,7 +323,9 @@ class Visual {
                         container.style.top = 'calc(' + y + 'px - ' + (width * 2.5) + 'vw)';
                         container.style.setProperty("--magnification", 1);
                         container.style.transformOrigin = '50% 50%';
-                        container.style.zIndex = 1000;
+                  
+                        htmlElement.style.zIndex = htmlElement.style.zIndex+1000;
+
                     }
                 }
             }

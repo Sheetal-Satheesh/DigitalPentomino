@@ -22,7 +22,7 @@ baseConfig = {
 	},
 	board_8x8a:{
 				boardSize : [8,8],
-				blockedCells: [[5,11],[5,12],[6,11],[6,12]],
+				blockedCells: [[4,11],[4,12],[5,11],[5,12]],  /*TODO: needs to be dynamically handle*/ 
 				boardShape : "Block"
 	},
 	board_4x15:{
