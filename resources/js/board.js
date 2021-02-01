@@ -611,10 +611,13 @@ class Board {
                 for (let relCol = 0; relCol < pentomino.iCols; ++relCol) {
                     if (pentomino.getCharAtMatrixPosition(relRow, relCol) === '1') {
                         let coordinatePosition = pentomino.getCoordinatePosition([anchorRow, anchorCol], [relRow, relCol]);
-                        if (board[coordinatePosition[0]][coordinatePosition[1]] === '-') {
-                            board[coordinatePosition[0]][coordinatePosition[1]] = pentomino.name;
+                        let boardCoordX =coordinatePosition[0] - this._boardSRows;
+                        let boardCoordY =  coordinatePosition[1] - this._boardSCols ;
+
+                        if (board[boardCoordX][boardCoordY] === '-') {
+                            board[boardCoordX][boardCoordY] = pentomino.name;
                         } else {
-                            board[coordinatePosition[0]][coordinatePosition[1]] = board[coordinatePosition[0]][coordinatePosition[1]] + ',' + pentomino.name;
+                            board[boardCoordX][boardCoordY] = board[boardCoordX][boardCoordY] + ',' + pentomino.name;
                         }
                     }
                 }
@@ -622,6 +625,14 @@ class Board {
 
         },this);
 
+        console.table(board);
+
+        /**
+         * Console table is better otherwise table representation will be messy
+         *
+         * this below code segment should be removed
+        */
+        /*
         let string = '   ';
         for (let i = 0; i < board[0].length; i++) {
             string = string + i + ' ';
@@ -635,7 +646,7 @@ class Board {
             }
             string = string + ' |';
             console.log(string);
-        }
+        }*/
     }
 }
 
