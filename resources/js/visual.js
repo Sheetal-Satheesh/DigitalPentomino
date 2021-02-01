@@ -71,9 +71,9 @@ class Visual {
                 if (row < this.boardX) isBoard = false;
                 if (row >= this.boardX + this.gameController.getBoardSize()[0]) isBoard = false;
               //Ashwini: For Blocking the cells
-				if (baseConfig[selectedConfig.configName].hasOwnProperty('blockedCells'))
+				if (baseConfig[boardCfg.board].hasOwnProperty('blockedCells'))
 				{
-					this.blockedCells = baseConfig[selectedConfig.configName].blockedCells;
+					this.blockedCells = baseConfig[boardCfg.board].blockedCells;
 					
 					for (var arr = 0; arr < this.blockedCells.length; arr++) {
 						if(row == this.blockedCells[arr][0] && col == this.blockedCells[arr][1]) {
@@ -82,7 +82,7 @@ class Visual {
 						}
 					}
 
-					if(blockedCell)
+                    if(blockedCell)
 						out += '<div class="gamearea ' + ((isBoard) ? 'boardarea blockedcell' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';
 					else
 						out += '<div class="gamearea ' + ((isBoard) ? 'boardarea' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';

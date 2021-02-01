@@ -48,6 +48,7 @@
 
 #operations {
     display: inline-block;
+    margin-top: 10vw;
 }
 
 /* #operations  img{
@@ -160,8 +161,13 @@
 }
 
 .CActionTB {
-  margin-top: 10vw;
-  padding-left: 5%;
+    padding-top: 10%;
+    padding-left: 5%;
+}
+
+.CMenuTB {
+    padding-top: 40%;
+    padding-left: 5%;
 }
 
 .cActionBtn img {
