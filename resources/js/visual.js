@@ -177,19 +177,12 @@ class Visual {
             let top = undefined;
             if(overlapp){
                 left = UIProperty.FunctionWidth + width * (positionX - 2)+ (width/2);
-<<<<<<< HEAD
                 top = UIProperty.   TrayHeight + width * (positionY - 2)-(width/2);
                 if(htmlElement.style.zIndex > 500){
                     htmlElement.style.zIndex--;
                 }else{
                     htmlElement.style.zIndex++;               
                 }
-=======
-
-                top = UIProperty.TrayHeight + width * (positionY - 2)-(width/2);
-
-
->>>>>>> development
             }else{
                 left = UIProperty.FunctionWidth + width * (positionX - 2);
                 top = UIProperty.TrayHeight + width * (positionY - 2);
