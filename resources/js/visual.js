@@ -1,7 +1,7 @@
 
 const UIProperty = {
-    "TrayCSSLeft":12,
-    "TrayHeight":7,
+    "TrayCSSLeft":10, // [Hot-Fix : Bug-#63 ] Pieces disappear after rotation and placement onto the tray
+    "TrayHeight":12.5, // [Hot-Fix : Bug-#63 ] Pieces disappear after rotation and placement onto the tray
     "WindowWidth":90,
     "PentominoX": 5,
     "PentominoY": 5,
@@ -159,14 +159,16 @@ class Visual {
             /**
              * 7 is trayHeight
              */
-            var widthVW = UIProperty.TrayCSSLeft + (piece.trayPosition) * UIProperty.TrayHeight;
+            var widthVW = UIProperty.TrayCSSLeft + (piece.trayPosition) * 7; //HOT-FIX: 7 is tray height
             var magnification = 6 / (5 * width);
             htmlElement.style.left = widthVW + 'vw';
 
             let trayWidth = document.getElementById("tray");
             htmlElement.style.top = '0';
+            htmlElement.style.marginTop = "-5.5%";// [Hot-Fix : Bug-#63 ] Pieces disappear after rotation and placement onto the tray
             htmlElement.style.setProperty("--magnification", magnification);
-            htmlElement.style.transformOrigin='0 5%';
+            htmlElement.style.transformOrigin = 'center'; // [Hot-Fix : Bug-#63 ] Pieces disappear after rotation and placement onto the tray
+            //htmlElement.style.transformOrigin='0 5%';
             htmlElement.style.zIndex = 3000;
 
         } else {
@@ -175,7 +177,7 @@ class Visual {
             let top = undefined;
             if(overlapp){
                 left = UIProperty.FunctionWidth + width * (positionX - 2)+ (width/2);
-                top = UIProperty.   TrayHeight + width * (positionY - 2)-(width/2);
+                top = UIProperty.TrayHeight + width * (positionY - 2)-(width/2);
            
 
                 if(htmlElement.style.zIndex >= 2000 ){
@@ -320,8 +322,8 @@ class Visual {
                 if ((x > functionsWidth) && (x < (gameWidth + functionsWidth))) {
                     if ((y > 0) && (y < gameHeight)) {
                         container.style.left = 'calc(' + x + 'px - ' + (width * 2.5) + 'vw)';
-                        container.style.top = 'calc(' + y + 'px - ' + (width * 2.5) + 'vw)';
-                        container.style.setProperty("--magnification", 1);
+                        container.style.top = 'calc(' + y + 'px - ' + (width * 1) + 'vw)';
+                        container.style.setProperty("--magnification", 1);// [Hot-Fix : Bug-#63 ] Pieces disappear after rotation and placement onto the tray
                         container.style.transformOrigin = '50% 50%';
                         container.style.zIndex += 1000;
 
