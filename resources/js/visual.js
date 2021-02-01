@@ -386,7 +386,7 @@ class Visual {
             let pieceDiv = document.getElementById("piece_" + piece.name);
             let flipped = pieceDiv.getAttribute("flipped") * 1;
             let currentRot = pieceDiv.style.getPropertyValue("--rotationZ").split(/(-?\d+)/)[1] * 1; //converts string value to int
-            let newRot = flipped ? currentRot - UIProperty.WindowWidth : currentRot + UIProperty.WindowWidth;
+            let newRot = flipped ? currentRot - 90 : currentRot + 90;
             // Update the backend
             this.gameController.rotatePentominoClkWise(piece);
             this.handleCollision(piece);
@@ -400,7 +400,7 @@ class Visual {
             let pieceDiv = document.getElementById("piece_" + piece.name);
             let flipped = pieceDiv.getAttribute("flipped") * 1;
             let currentRot = pieceDiv.style.getPropertyValue("--rotationZ").split(/(-?\d+)/)[1] * 1; //converts string value to int
-            let newRot = flipped ? currentRot + UIProperty.WindowWidth : currentRot - UIProperty.WindowWidth;
+            let newRot = flipped ? currentRot + 90 : currentRot - 90;
             // Update the backend
             this.gameController.rotatePentominoAntiClkWise(piece);
             this.handleCollision(piece);
