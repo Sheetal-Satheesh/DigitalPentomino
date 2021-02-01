@@ -5,6 +5,7 @@
     --magnification:1;
 }
 
+
 #functions {
     position: fixed;
     z-index: 1;
@@ -150,51 +151,43 @@
 }
 
 .CActionTB {
-  margin-top: 100%;
+  margin-top: 10vw;
   padding-left: 5%;
 }
-/* 
-.CActionTB tr td {
-  table-layout:fixed;
-  table-layout:fixed;
-  border: 1px solid black;
-  width: 100%;
-  overflow: hidden;
-} */
 
-.CActionTB td:nth-child(odd) {
-  background-color: #484b61;
-}
-.CActionTB td:nth-child(even) {
-  background-color: #385461;
-}
-
-img {
-float: left;
+.cActionBtn img {
+float: center;
 width:  3vw;
 height: 3vw;
 object-fit: cover;
-background-color:rgb(136, 155, 150);
-
+background: rgb(140, 170, 158);
+border-radius: 25%;
 }
 
 .cActionBtn {
-  background-color:rgb(136, 155, 150);
+  background:rgb(141, 160, 157);
   border-radius: 10%;
   border: 0;
   
 }
-img:hover {
-  box-shadow: 1px 1px 10px 10px rgba(55, 89, 107, 0.5);
+
+.cActionBtn:hover {
+  box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
 }
 
-
 .cGame {
-    border: 2px solid green;
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    overflow: auto;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: auto;
+}
+
+img#logo{
+  position: fixed;
+  width: 9.5vw;
+  height: 6.5vw;
+  border: 2.5px solid rgb(141, 160, 157);
+  background: rgb(197, 207, 203);
 }
