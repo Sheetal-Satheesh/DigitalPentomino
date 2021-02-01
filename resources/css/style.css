@@ -47,7 +47,11 @@
 }
 
 #operations {
+<<<<<<< HEAD
     display: inline-block;
+=======
+    display: block;
+>>>>>>> development
 }
 
 /* #operations  img{
@@ -70,9 +74,23 @@
     outline: 1px solid #eee;
     color: #ddd
 }
+<<<<<<< HEAD
 
 .boardarea {
   background: rgb(173, 192, 185);
+=======
+	.boardarea {
+    background: gray;
+}				 
+.blockedcell {
+	background: repeating-linear-gradient(
+  45deg,
+  rgba(0, 0, 0, 0.2),
+  rgba(0, 0, 0, 0.2) 10px,
+  rgba(0, 0, 0, 0.3) 10px,
+  rgba(0, 0, 0, 0.3) 20px
+)
+>>>>>>> development
 }
 
 .piece {

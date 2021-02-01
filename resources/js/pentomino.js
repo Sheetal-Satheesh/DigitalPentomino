@@ -17,62 +17,62 @@ class Pentomino {
         this.inTray = 1;
         switch (sPentominoType) {
             case 'F':
-                this.color = "blue";
+                this.color = "#040897";
                 this.trayPosition = 0;
                 this.sRepr = '0000000110011000010000000';
                 break;
             case 'L':
-                this.color = "yellow";
+                this.color = "#F7FF00";
                 this.trayPosition = 1;
                 this.sRepr = '0010000100001000011000000';
                 break;
             case 'N':
-                this.color = "green";
+                this.color = "#034444";
                 this.trayPosition = 2;
                 this.sRepr = '0010000100011000100000000';
                 break;
             case 'P':
-                this.color = "purple";
+                this.color = "#EA4EDA";
                 this.trayPosition = 3;
                 this.sRepr = '0000001100011000100000000';
                 break;
             case 'Y':
-                this.color = "coral";
+                this.color = "#FFA200";
                 this.trayPosition = 4;
                 this.sRepr = '0000000000001001111000000';
                 break;
             case 'T':
-                this.color = "lime";
+                this.color = "#6FFF03";
                 this.trayPosition = 5;
                 this.sRepr = '0000001110001000010000000';
                 break;
             case 'U':
-                this.color = "chocolate";
+                this.color = "#FF007B";
                 this.trayPosition = 6;
                 this.sRepr = '0000001010011100000000000';
                 break;
             case 'V':
-                this.color = "maroon";
+                this.color = "#8D0009";
                 this.trayPosition = 7;
                 this.sRepr = '0000001000010000111000000';
                 break;
             case 'W':
-                this.color = "peru";
+                this.color = "#048497";
                 this.trayPosition = 8;
                 this.sRepr = '0000001000011000011000000';
                 break;
             case 'Z':
-                this.color = "brown";
+                this.color = "#7BFFFC";
                 this.trayPosition = 9;
                 this.sRepr = '0000001100001000011000000';
                 break;
             case 'I':
-                this.color = "indigo";
+                this.color = "#A49F5A";
                 this.trayPosition = 10;
                 this.sRepr = '0010000100001000010000100';
                 break;
             case 'X':
-                this.color = "red";
+                this.color = "#FF0000";
                 this.trayPosition = 11;
                 this.sRepr = '0000000100011100010000000';
                 break;

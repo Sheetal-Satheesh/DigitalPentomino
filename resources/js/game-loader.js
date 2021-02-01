@@ -27,7 +27,7 @@ class GameLoader {
         switch (name) {
             case "Level 1":
                 // Create a board
-                game = new Game(new Board(7, 5));
+                game = new Game(new Board([0,0],[7,5]));
                 // add pieces to board
                 game.placePentomino(penL, 1, 3);
                 game.placePentomino(penX, -1, -5);
@@ -36,7 +36,7 @@ class GameLoader {
                 
             case "Level 2":
                 // Create a board
-                game = new Game(new Board(7, 7));
+                game = new Game(new Board([0,0],[7,7]));
                 // add pieces to board
                 game.placePentomino(penT, 0, 1);
                 game.placePentomino(penX, 4, 0);
@@ -55,7 +55,7 @@ class GameLoader {
 
             case "Level 3":
                 // Create a board
-                game = new Game(new Board(8, 9));
+                game = new Game(new Board([0,0],[8,9]));
                 // add pieces to board
                 game.placePentomino(penT, 3, 0);
                 game.placePentomino(penX, 0, 5);
@@ -66,7 +66,7 @@ class GameLoader {
 
             case "Level 4":
                 // Create a board
-                game = new Game(new Board(6, 10));
+                game = new Game(new Board([0,0],[6,10]));
                 // add pieces to board
                 game.placePentomino(penT, 1, 1);
                 game.placePentomino(penX, 1, 0);
