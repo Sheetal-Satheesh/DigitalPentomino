@@ -15,7 +15,7 @@
 
 baseConfig = {
 	gameWidth: 25,
-	gameHeight: 12,
+	gameHeight: 10,
 	board_6x10:{
 				boardSize : [6,10],
 				boardShape : "Block"
