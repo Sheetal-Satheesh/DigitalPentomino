@@ -1,7 +1,7 @@
 
 const UIProperty = {
-    "TrayCSSLeft":12,
-    "TrayHeight":7,
+    "TrayCSSLeft":7, // [Hot-Fix : Bug-#63 ] Pieces disappear after rotation and placement onto the tray
+    "TrayHeight":12.5, // [Hot-Fix : Bug-#63 ] Pieces disappear after rotation and placement onto the tray
     "WindowWidth":90,
     "PentominoX": 5,
     "PentominoY": 5,
@@ -27,9 +27,7 @@ class Visual {
 
     handleCollision(pentomino){
         let collisionPentominoes = this.gameController.getCollisionPentominoesOfPentomino(pentomino);
-
         if (collisionPentominoes.length != 0){
-            //offset the pieces when colliding.
             this.positionPiece(pentomino,true);
         }else{
             this.positionPiece(pentomino);
@@ -38,12 +36,19 @@ class Visual {
 
     placePentomino(pentomino, posX, posY){
         this.gameController.placePentomino(pentomino, posX, posY);
-        //offset on collision
         this.handleCollision(pentomino);
     }
 
     movePentominoToTray(pentomino){
         this.gameController.removePentomino(pentomino);
+    }
+
+    clear(){
+        this.gameController.resetGame();
+        this.pieces = this.gameController.getPentominoes();
+        this.renderPieces();
+        
+
     }
 
     renderBoard() {
@@ -66,9 +71,9 @@ class Visual {
                 if (row < this.boardX) isBoard = false;
                 if (row >= this.boardX + this.gameController.getBoardSize()[0]) isBoard = false;
               //Ashwini: For Blocking the cells
-				if (baseConfig[selectedConfig.configName].hasOwnProperty('blockedCells'))
+				if (baseConfig[boardCfg.board].hasOwnProperty('blockedCells'))
 				{
-					this.blockedCells = baseConfig[selectedConfig.configName].blockedCells;
+					this.blockedCells = baseConfig[boardCfg.board].blockedCells;
 					
 					for (var arr = 0; arr < this.blockedCells.length; arr++) {
 						if(row == this.blockedCells[arr][0] && col == this.blockedCells[arr][1]) {
@@ -77,7 +82,7 @@ class Visual {
 						}
 					}
 
-					if(blockedCell)
+                    if(blockedCell)
 						out += '<div class="gamearea ' + ((isBoard) ? 'boardarea blockedcell' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';
 					else
 						out += '<div class="gamearea ' + ((isBoard) ? 'boardarea' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';
@@ -145,9 +150,7 @@ class Visual {
 
     }
 
-
    positionPiece(piece, overlapp=false) {
-
         var width = UIProperty.WindowWidth / this.pd.gameWidth;
         var htmlElement = document.getElementById('piece_' + piece.name);
 
@@ -156,30 +159,45 @@ class Visual {
             /**
              * 7 is trayHeight
              */
-            var widthVW = UIProperty.TrayCSSLeft + (piece.trayPosition) * UIProperty.TrayHeight;
+            var widthVW = UIProperty.TrayCSSLeft + (piece.trayPosition) * 7; //HOT-FIX: 7 is tray height
             var magnification = 6 / (5 * width);
             htmlElement.style.left = widthVW + 'vw';
 
             let trayWidth = document.getElementById("tray");
             htmlElement.style.top = '0';
+            htmlElement.style.marginTop = "-5.5%";// [Hot-Fix : Bug-#63 ] Pieces disappear after rotation and placement onto the tray
             htmlElement.style.setProperty("--magnification", magnification);
-            htmlElement.style.transformOrigin='0 5%';
+            htmlElement.style.transformOrigin = 'center'; // [Hot-Fix : Bug-#63 ] Pieces disappear after rotation and placement onto the tray
+            //htmlElement.style.transformOrigin='0 5%';
+            htmlElement.style.zIndex = 3000;
+
         } else {
             let [positionY, positionX] = this.gameController.getPositionOfPentomino(piece);
             let left = undefined;
             let top = undefined;
-
-            //offset piece on collision
             if(overlapp){
                 left = UIProperty.FunctionWidth + width * (positionX - 2)+ (width/2);
-
                 top = UIProperty.TrayHeight + width * (positionY - 2)-(width/2);
+           
 
+                if(htmlElement.style.zIndex >= 2000 ){
+                    htmlElement.style.zIndex =1500;
+                }else {
+                    htmlElement.style.zIndex =htmlElement.style.zIndex + 20; ;
+                }
 
             }else{
                 left = UIProperty.FunctionWidth + width * (positionX - 2);
                 top = UIProperty.TrayHeight + width * (positionY - 2);
 
+
+                if(htmlElement.style.zIndex >= 2000 ){
+                    htmlElement.style.zIndex = 1000;
+                }else if (htmlElement.style.zIndex > 0){
+                    htmlElement.style.zIndex = htmlElement.style.zIndex+10;
+                }else{
+                    htmlElement.style.zIndex -= 50;
+                }
             }
 
             htmlElement.style.left = left + 'vw';
@@ -304,9 +322,11 @@ class Visual {
                 if ((x > functionsWidth) && (x < (gameWidth + functionsWidth))) {
                     if ((y > 0) && (y < gameHeight)) {
                         container.style.left = 'calc(' + x + 'px - ' + (width * 2.5) + 'vw)';
-                        container.style.top = 'calc(' + y + 'px - ' + (width * 2.5) + 'vw)';
-                        container.style.setProperty("--magnification", 1);
+                        container.style.top = 'calc(' + y + 'px - ' + (width * 1) + 'vw)';
+                        container.style.setProperty("--magnification", 1);// [Hot-Fix : Bug-#63 ] Pieces disappear after rotation and placement onto the tray
                         container.style.transformOrigin = '50% 50%';
+                        container.style.zIndex += 1000;
+
                     }
                 }
             }
@@ -316,7 +336,6 @@ class Visual {
          * this is called when mouse key is released or fingers are removed from the screen
          */
         document.onpointerup = function (event) {
-
         /**
          * this is called when mouse key is released or fingers are removed from the screen
          * in case of just a click operation (not move operation) piece should not move

@@ -5,14 +5,15 @@
     --magnification:1;
 }
 
+
 #functions {
     position: fixed;
     z-index: 1;
     top: 0;
     left: 0;
-    background: darkgray;
+    background: rgb(197, 207, 203);
     bottom: 0;
-    width: 10vw
+    width: 10vw;
 }
 
 #game {
@@ -21,14 +22,14 @@
     left: 10vw;
     background: green;
     bottom: 0;
-    width: 90vw
+    width: 90vw;
 }
 
 #tray {
     position: fixed;
     top: 0;
     left: 10vw;
-    background: lightgray;
+    background:rgb(188, 196, 197);
     height: 7vw;
     width: 90vw;
 }
@@ -46,20 +47,20 @@
 }
 
 #operations {
-    display: block;
+    display: inline-block;
+    margin-top: 10vw;
 }
 
-#operations  img{
+/* #operations  img{
     width:3.5vw;
     height:3.5vw;
     
 }
 
-
 #operations button{
   margin:14px;
   margin-top: 2px;
-}
+} */
 
 
 .gamearea {
@@ -70,8 +71,9 @@
     outline: 1px solid #eee;
     color: #ddd
 }
-	.boardarea {
-    background: gray;
+
+.boardarea {
+  background: rgb(173, 192, 185);
 }				 
 .blockedcell {
 	background: repeating-linear-gradient(
@@ -97,7 +99,7 @@
 }
 
 /* hint container - can be anything you want */
-.hintPopup {
+.cHints {
     position: relative;
     margin: 20px;
     background-color: #fff;
@@ -113,7 +115,7 @@
 }
 
 /* The actual hint */
-.hintPopup .hintPopupText {
+.cHints .cTextPopup {
     visibility: hidden;
     width: 100px;
     background-color: #555;
@@ -129,7 +131,7 @@
 }
 
 /* hint arrow */
-.hintPopup .hintPopupText::after {
+.cHints .cTextPopup::after {
     content: "";
     position: absolute;
     top: 100%;
@@ -141,7 +143,7 @@
 }
 
 /* Toggle this class - hide and show the hint */
-.hintPopup .show {
+.cHints .show {
     visibility: visible;
     -webkit-animation: fadeIn 1s;
     animation: fadeIn 1s;
@@ -156,4 +158,51 @@
 @keyframes fadeIn {
     from {opacity: 0;}
     to {opacity:1 ;}
+}
+
+.CActionTB {
+    padding-top: 10%;
+    padding-left: 5%;
+}
+
+.CMenuTB {
+    padding-top: 40%;
+    padding-left: 5%;
+}
+
+.cActionBtn img {
+    float: center;
+    width:  3vw;
+    height: 3vw;
+    object-fit: cover;
+    background: rgb(140, 170, 158);
+    border-radius: 25%;
+}
+
+.cActionBtn {
+  background:rgb(141, 160, 157);
+  border-radius: 10%;
+  border: 0;
+  
+}
+
+.cActionBtn:hover {
+  box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
+}
+
+.cGame {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: auto;
+}
+
+img#logo{
+  position: fixed;
+  width: 9.5vw;
+  height: 6.5vw;
+  border: 2.5px solid rgb(141, 160, 157);
+  background: rgb(197, 207, 203);
 }
