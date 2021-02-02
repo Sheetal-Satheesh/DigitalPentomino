@@ -464,16 +464,15 @@ class Visual {
             let currentRot = pieceDiv.style.getPropertyValue("--rotationZ").split(/(-?\d+)/)[1] * 1; //converts string value to int
             let newRot = flipped ? currentRot - 90 : currentRot + 90;
             // Update the backend
-            let [penX,penY] = this.gameController.getPositionOfPentomino(piece);    
             this.gameController.rotatePentominoClkWise(piece);
+            this.handleCollision(piece);
+            pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
 
             var bCellsFnd = this.isPentominoInBlockCells(piece);
             if(bCellsFnd){
-                this.gameController.placePentomino(piece, penX, penY);
+              this.rotateAntiClkWise();
             }
 
-            this.handleCollision(piece);
-            pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
         }
     }
 
@@ -485,15 +484,15 @@ class Visual {
             let currentRot = pieceDiv.style.getPropertyValue("--rotationZ").split(/(-?\d+)/)[1] * 1; //converts string value to int
             let newRot = flipped ? currentRot + 90 : currentRot - 90;
             // Update the backend
-            let [penX,penY] = this.gameController.getPositionOfPentomino(piece);    
             this.gameController.rotatePentominoAntiClkWise(piece);
-            var bCellsFnd = this.isPentominoInBlockCells(piece);
-            if(bCellsFnd){
-                this.gameController.placePentomino(piece, penX, penY);
-            }
-
             this.handleCollision(piece);
             pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
+
+            var bCellsFnd = this.isPentominoInBlockCells(piece);
+            if(bCellsFnd){
+              this.rotateClkWise();
+            }
+
         }
     }
 
@@ -505,16 +504,15 @@ class Visual {
             let currentRot = pieceDiv.style.getPropertyValue("--rotationX").split(/(-?\d+)/)[1] * 1; //converts string value to int
             let newRot = currentRot + 180;
             // Update the backend
-            let [penX,penY] = this.gameController.getPositionOfPentomino(piece);    
             this.gameController.mirrorPentominoH(piece);
-            var bCellsFnd = this.isPentominoInBlockCells(piece);
-            if(bCellsFnd){
-                this.gameController.placePentomino(piece, penX, penY);
-            }
-
             this.handleCollision(piece);
             pieceDiv.style.setProperty("--rotationX", newRot.toString() + "deg");
             pieceDiv.setAttribute("flipped", 1 - flipped);
+            var bCellsFnd = this.isPentominoInBlockCells(piece);
+            if(bCellsFnd){
+              this.flipV();
+            }
+
         }
     }
 
@@ -536,6 +534,11 @@ class Visual {
             this.handleCollision(piece);
             pieceDiv.style.setProperty("--rotationY", newRot.toString() + "deg");
             pieceDiv.setAttribute("flipped", 1 - flipped);
+
+            var bCellsFnd = this.isPentominoInBlockCells(piece);
+            if(bCellsFnd){
+              this.flipH();
+            }
         }
     }
 }
