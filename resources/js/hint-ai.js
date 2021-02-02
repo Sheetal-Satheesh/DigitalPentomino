@@ -12,7 +12,7 @@ class HintAI {
     }
 
     getHint(game) {
-        let solutions = this._getMockSolutions();
+        let solutions = GameLoader.getGamesFromSolutionsConfig();
         let closestSolution = this._getClosesSolution(game, solutions);
         return this._getNextCommandToSolution(game, closestSolution);
     }
@@ -93,12 +93,21 @@ class HintAI {
         } else {
             if (solution.isPlacedOnBoard(solutionPentomino)) {
                 // pentomino should be on board
+                let gamePentominoPosition = game.getPosition(gamePentomino);
                 let solutionPentominoPosition = solution.getPosition(solutionPentomino);
                 let solutionPentominoRelPosition = [
                     solutionPentominoPosition[0] + game._board._boardSRows,
                     solutionPentominoPosition[1] + game._board._boardSCols
-                ]
-                return new PlaceCommand(game, gamePentomino, solutionPentominoRelPosition[0], solutionPentominoRelPosition[1]);
+                ];
+
+                if (gamePentominoPosition[0] === solutionPentominoRelPosition[0]
+                    && gamePentominoPosition[1] === solutionPentominoRelPosition[1]) {
+                    // Needs operations to be on the board
+                    return this._getNextCommandOfPentominoOnBoardToSolution(game, solution, gamePentomino, solutionPentomino);
+                } else {
+                    // Pentomino is hopelessly outside board
+                    return new PlaceCommand(game, gamePentomino, solutionPentominoRelPosition[0], solutionPentominoRelPosition[1]);
+                }
             } else {
                 // perfect pentomino
                 throw Error("Pentomino " + gamePentomino.name + " is already placed correct.");
