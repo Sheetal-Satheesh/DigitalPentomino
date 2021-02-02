@@ -27,8 +27,8 @@ class Visual {
 
     isBlockCell(posX, posY){
         var bCellsFnd=false;
-            if (this.pd.blockedCells != undefined){
-                this.pd.blockedCells.forEach(function(cells){
+            if (this.pd.blockCells != undefined){
+                this.pd.blockCells.forEach(function(cells){
                     if(cells[0] == posX && cells[1] == posY){
                         bCellsFnd= true;
                     }
@@ -38,7 +38,7 @@ class Visual {
             return bCellsFnd ;
     }
 
-    isPentominoInBlockedCells(pentomino){
+    isPentominoInBlockCells(pentomino){
             var [pX, pY] = this.gameController.getPositionOfPentomino(pentomino);
             var pMatrix = pentomino.getMatrixRepresentation();
 
@@ -57,12 +57,12 @@ class Visual {
         return false;
     }
 
-    isCollision(pentomino){
+    handleCollision(pentomino){
         let collisionPentominoes = this.gameController.getCollisionPentominoesOfPentomino(pentomino);
         if (collisionPentominoes.length != 0){
-            return true;
+            this.positionPiece(pentomino, true);
         }else{
-            return false;
+            this.positionPiece(pentomino);
         }
     }
 
@@ -74,20 +74,15 @@ class Visual {
         }
 
         this.gameController.placePentomino(pentomino, posX, posY);
-        var bCellsFnd = this.isPentominoInBlockedCells(pentomino, posX, posY);
+        var bCellsFnd = this.isPentominoInBlockCells(pentomino, posX, posY);
 
         if(bCellsFnd){
             this.gameController.placePentomino(pentomino, penX, penY);
             this.positionPiece(pentomino);
             return;
         }
-
-        var collisionFnd = this.isCollision(pentomino);
-        if(collisionFnd){
-            this.positionPiece(pentomino, true);
-        }else{
-            this.positionPiece(pentomino);
-        }
+        
+        this.handleCollision(pentomino);
     }
 
     movePentominoToTray(pentomino){
