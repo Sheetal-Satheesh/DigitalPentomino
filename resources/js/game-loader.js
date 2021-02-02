@@ -3,9 +3,9 @@ if(typeof require != 'undefined') {
     Board = require('./board.js');
 }
 
-class GameLoader {
+const solutionsString = "1, FFIIIII LFFNNNY LFNNUUY LPPPUYY LLPPUUY \n\ 2, FFIIIII LFFPPUU LFXPPPU LXXXYUU LLXYYYY \n\ 3, FFIIIII LFFUUUY LFXUTUY LXXXTYY LLXTTTY \n\ 4, FFIIIII LFFWPPP LFWWPPT LWWYTTT LLYYYYT";
 
-    solutionsString = "1, FFIIIII LFFNNNY LFNNUUY LPPPUYY LLPPUUY \n\ 2, FFIIIII LFFPPUU LFXPPPU LXXXYUU LLXYYYY \n\ 3, FFIIIII LFFUUUY LFXUTUY LXXXTYY LLXTTTY \n\ 4, FFIIIII LFFWPPP LFWWPPT LWWYTTT LLYYYYT";
+class GameLoader {
 
     static loadByName(name) {
         let game;
@@ -82,12 +82,12 @@ class GameLoader {
         return game;
     }
 
-    getGamesFromSolutionsConfig(){
+    static getGamesFromSolutionsConfig(){
         let gameArray = [];
         console.log("Calling getGamesFromSolutionsConfig");
 
         //TODO: somehow obtain the txt file from fetch/FS/...
-        let fileString = this.solutionsString;
+        let fileString = solutionsString;
         let fileLines = fileString.split("\n");
         for (let i = 0; i < fileLines.length; i++) {
             let line = fileLines[i];
@@ -102,7 +102,7 @@ class GameLoader {
     }
 
     /*TODO: Move to gameLoader class */
-    getGameFromString(gameString) {
+    static getGameFromString(gameString) {
             
         let rows = gameString.split(" ");
         let height = rows.length;
@@ -159,7 +159,7 @@ class GameLoader {
     }
 
 
-    doNextOperationOnPento(pentomino, x){
+    static doNextOperationOnPento(pentomino, x){
         
         switch (x) {
             case 0:
@@ -219,7 +219,7 @@ class GameLoader {
     }
 
 
-    findInParent(smallMatrix, bigMatrix){
+    static findInParent(smallMatrix, bigMatrix){
         let centerPosition = [0,0];
 
         let a = bigMatrix;
@@ -249,7 +249,7 @@ class GameLoader {
     }
 
 
-    normalizeBoard(gameString, element){
+    static normalizeBoard(gameString, element){
         let rows = gameString.split(" ");
         let height = rows.length;
         let width = rows[0].length;
@@ -269,7 +269,7 @@ class GameLoader {
     }
 
 
-    transform(someString, element){
+    static transform(someString, element){
         //e.g. take "FFIIIIILFFPPUULFXPPPULXXXYUULLXYYYY" and "X" as input
         let resultString='';
         

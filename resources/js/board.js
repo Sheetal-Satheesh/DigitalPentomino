@@ -617,10 +617,11 @@ class Board {
                 for (let relCol = 0; relCol < pentomino.iCols; ++relCol) {
                     if (pentomino.getCharAtMatrixPosition(relRow, relCol) === '1') {
                         let coordinatePosition = pentomino.getCoordinatePosition([anchorRow, anchorCol], [relRow, relCol]);
-                        if (board[coordinatePosition[0]][coordinatePosition[1]] === '-') {
-                            board[coordinatePosition[0]][coordinatePosition[1]] = pentomino.name;
+                        let relCoordinatePosition = [coordinatePosition[0] - this._boardSRows, coordinatePosition[1] - this._boardSCols];
+                        if (board[relCoordinatePosition[0]][relCoordinatePosition[1]] === '-') {
+                            board[relCoordinatePosition[0]][relCoordinatePosition[1]] = pentomino.name;
                         } else {
-                            board[coordinatePosition[0]][coordinatePosition[1]] = board[coordinatePosition[0]][coordinatePosition[1]] + ',' + pentomino.name;
+                            board[relCoordinatePosition[0]][relCoordinatePosition[1]] = board[relCoordinatePosition[0]][relCoordinatePosition[1]] + ',' + pentomino.name;
                         }
                     }
                 }
