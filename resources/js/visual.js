@@ -25,18 +25,69 @@ class Visual {
         this.initalizeListeners();
     }
 
-    handleCollision(pentomino){
+    isBlockCell(posX, posY){
+        var bCellsFnd=false;
+            if (this.pd.blockedCells != undefined){
+                this.pd.blockedCells.forEach(function(cells){
+                    if(cells[0] == posX && cells[1] == posY){
+                        bCellsFnd= true;
+                    }
+                },this);
+            }
+
+            return bCellsFnd ;
+    }
+
+    isPentominoInBlockedCells(pentomino){
+            var [pX, pY] = this.gameController.getPositionOfPentomino(pentomino);
+            var pMatrix = pentomino.getMatrixRepresentation();
+
+            for(let i=0; i <pentomino.iRows; ++i){
+                for(let j=0; j < pentomino.iCols; ++j){
+                    if(pMatrix[i][j]===1){
+                        let px = (pX - 2)+i;
+                        let py = (pY - 2)+j;
+                        if(this.isBlockCell(px,py)){
+                            return true;
+                        }
+                    }
+                }
+            }
+
+        return false;
+    }
+
+    isCollision(pentomino){
         let collisionPentominoes = this.gameController.getCollisionPentominoesOfPentomino(pentomino);
         if (collisionPentominoes.length != 0){
-            this.positionPiece(pentomino,true);
+            return true;
         }else{
-            this.positionPiece(pentomino);
+            return false;
         }
     }
 
     placePentomino(pentomino, posX, posY){
+        let penX, penY;
+
+        if(this.gameController.isPlacedInGame(pentomino)){
+            [penX,penY] = this.gameController.getPositionOfPentomino(pentomino);
+        }
+
         this.gameController.placePentomino(pentomino, posX, posY);
-        this.handleCollision(pentomino);
+        var bCellsFnd = this.isPentominoInBlockedCells(pentomino, posX, posY);
+
+        if(bCellsFnd){
+            this.gameController.placePentomino(pentomino, penX, penY);
+            this.positionPiece(pentomino);
+            return;
+        }
+
+        var collisionFnd = this.isCollision(pentomino);
+        if(collisionFnd){
+            this.positionPiece(pentomino, true);
+        }else{
+            this.positionPiece(pentomino);
+        }
     }
 
     movePentominoToTray(pentomino){
@@ -171,7 +222,20 @@ class Visual {
             //htmlElement.style.transformOrigin='0 5%';
             htmlElement.style.zIndex = 3000;
 
-        } else {
+        } else  {
+            /**
+             * This part of code activated and fixed when tray support in backend,
+             * This feature include that any piece put in block area from tray, it should goes to
+             * tray
+             *
+                if(this.gameController.isPlacedInTray() == false){
+                    piece.inTray = true;
+                    this.positionPiece(piece);
+                }
+
+            *
+            */
+
             let [positionY, positionX] = this.gameController.getPositionOfPentomino(piece);
             let left = undefined;
             let top = undefined;
