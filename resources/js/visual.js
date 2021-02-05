@@ -209,19 +209,7 @@ class Visual {
             htmlElement.style.zIndex = 3000;
 
         } else  {
-            /**
-             * This part of code activated and fixed when tray support in backend,
-             * This feature include that any piece put in block area from tray, it should goes to
-             * tray
-             *
-                if(this.gameController.isPlacedInTray() == false){
-                    piece.inTray = true;
-                    this.positionPiece(piece);
-                }
-
-            *
-            */
-
+            
             let [positionY, positionX] = this.gameController.getPositionOfPentomino(piece);
             let left = undefined;
             let top = undefined;
