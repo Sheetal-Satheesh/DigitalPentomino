@@ -138,21 +138,33 @@ class HintAI {
 
         if (game.isPlacedOnBoard(gamePentomino)) {
             if (solution.isPlacedOnBoard(solutionPentomino)) {
-                // problem lies inside board
-                return this._getNextCommandOfPentominoOnBoardToSolution(game, solution, gamePentomino, solutionPentomino);
+
+                if (!(gamePentomino.sRepr.localeCompare(solutionPentomino.sRepr) === 0)) {
+                    // some local operations need to be performed on the pentomino
+                    return this._getNextLocalCommandOfPentominoToSolution(game, solution, gamePentomino, solutionPentomino);
+                } else {
+                    // pentomino needs to change position
+                    let solutionPentominoPosition = solution.getPosition(solutionPentomino);
+                    let solutionPentominoRelPosition = [
+                        solutionPentominoPosition[0] + game._board._boardSRows,
+                        solutionPentominoPosition[1] + game._board._boardSCols
+                    ];
+
+                    return new PlaceCommand(game, gamePentomino, solutionPentominoRelPosition[0], solutionPentominoRelPosition[1]);
+                }
             } else {
                 // place should be outside board
                 let gamePentominoPos = game.getPosition(gamePentomino);
-                // FIXME - add to tray
+                // FIXME - move outside and not move completely -> Eventually move to tray
                 return new RemoveCommand(game, gamePentomino, gamePentominoPos[0], gamePentominoPos[1]);
             }
         } else {
             if (solution.isPlacedOnBoard(solutionPentomino)) {
                 // pentomino should be on board
 
-                if (!gamePentomino.sRepr.localeCompare(solutionPentomino.sRepr)) {
+                if (!(gamePentomino.sRepr.localeCompare(solutionPentomino.sRepr) === 0)) {
                     // some local operations need to be performed on the pentomino
-                    return this._getNextCommandOfPentominoOnBoardToSolution(game, solution, gamePentomino, solutionPentomino);
+                    return this._getNextLocalCommandOfPentominoToSolution(game, solution, gamePentomino, solutionPentomino);
                 } else {
                     // pentomino needs to change position
                     let solutionPentominoPosition = solution.getPosition(solutionPentomino);
@@ -170,42 +182,27 @@ class HintAI {
         }
     }
 
-    _getNextCommandOfPentominoOnBoardToSolution(game, solution, gamePentomino, solutionPentomino) {
-        // Check if wrong position
-        let gamePentominoPosition = game.getPosition(gamePentomino);
-        let solutionPentominoPosition = solution.getPosition(solutionPentomino);
-        let solutionPentominoRelPosition = [
-            solutionPentominoPosition[0] + game._board._boardSRows,
-            solutionPentominoPosition[1] + game._board._boardSCols
-        ]
+    _getNextLocalCommandOfPentominoToSolution(game, solution, gamePentomino, solutionPentomino) {
+        // Correct position
+        let operations = this._searchShortestWayForCorrectPentominoState(game, solution, gamePentomino, solutionPentomino, [], []);
 
-        if (gamePentominoPosition[0] === solutionPentominoRelPosition[0]
-                && gamePentominoPosition[1] === solutionPentominoRelPosition[1]) {
-            // Correct position
-            let operations = this._searchShortestWayForCorrectPentominoState(game, solution, gamePentomino, solutionPentomino, [], []);
-
-            if (operations === null || operations === undefined) {
-                throw new Error("State error: no operation sequence found to reach desired pentomino state");
-            } else if (operations.length === 0) {
-                throw new Error("Illegal State exception");
-            } else {
-                switch (operations[0].name) {
-                    case "rotateClkWise":
-                        return new RotateClkWiseCommand(game, gamePentomino);
-                    case "rotateAntiClkWise":
-                        return new RotateAntiClkWiseCommand(game, gamePentomino);
-                    case "mirrorH":
-                        return new MirrorHCommand(game, gamePentomino);
-                    case "mirrorV":
-                        return new MirrorVCommand(game, gamePentomino);
-                    default:
-                        throw new Error("Unrecognized pentomino operation: '" + operations.name + "'");
-                }
-            }
-
+        if (operations === null || operations === undefined) {
+            throw new Error("State error: no operation sequence found to reach desired pentomino state");
+        } else if (operations.length === 0) {
+            throw new Error("Illegal State exception");
         } else {
-            // Incorrect position
-            return new MoveToPositionCommand(game, gamePentomino, solutionPentominoRelPosition[0], solutionPentominoRelPosition[1]);
+            switch (operations[0].name) {
+                case "rotateClkWise":
+                    return new RotateClkWiseCommand(game, gamePentomino);
+                case "rotateAntiClkWise":
+                    return new RotateAntiClkWiseCommand(game, gamePentomino);
+                case "mirrorH":
+                    return new MirrorHCommand(game, gamePentomino);
+                case "mirrorV":
+                    return new MirrorVCommand(game, gamePentomino);
+                default:
+                    throw new Error("Unrecognized pentomino operation: '" + operations.name + "'");
+            }
         }
     }
 
