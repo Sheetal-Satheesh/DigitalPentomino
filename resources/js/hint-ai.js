@@ -16,12 +16,14 @@ class HintAI {
         let possibleSolutions = this._getPossibleSolutions(game, solutions);
         if (possibleSolutions.length > 0) {
             // Pursue closest solution
-            let closestSolution = this._getClosesSolution(game, solutions);
+            let closestSolution = possibleSolutions[0];
             let command = this._getNextCommandToSolution(game, closestSolution);
             return new Hint(command, possibleSolutions);
         } else {
             // Pursue closest game state, which has at least one possible solution
-            return new Hint(null, possibleSolutions);
+            let closestSolution = this._getClosesSolution(game, solutions);
+            let command = this._getNextCommandToSolution(game, closestSolution);
+            return new Hint(command, possibleSolutions);
         }
     }
 
@@ -36,7 +38,7 @@ class HintAI {
             let allPentominoesOnBoardArePerfect = game.getPentominoes()
                 .filter(pentomino => game.isPlacedOnBoard(pentomino))
                 .every(pentominoOnBoard => {
-                    return this._isPerfectPentomino(game, solution, pentominoOnBoard);
+                    return this._isPerfectPentomino(game, solution, pentominoOnBoard.name);
                 });
             if (allPentominoesOnBoardArePerfect) {
                 possibleSolutions.push(solution);
@@ -58,8 +60,34 @@ class HintAI {
      * @returns {*}
      */
     _getClosesSolution(game, solutions) {
-        // FIXME
-        return solutions[0];
+        let closestSolution = null;
+        let numOfPerfectPentominoesOnBoardOfClosestSolution = -1;
+
+        solutions.forEach(solution => {
+            let numOfPerfectPentominoesOnBoard = 0;
+            let counter = 0;
+            let numOfPentominoes = solution.getPentominoes().length;
+
+            solution.getPentominoes().filter(p => game.isPlacedOnBoard(p)).some(gamePentomino => {
+                let remainingPentominoes = numOfPentominoes - counter;
+                let maxPossibleNumOfPerfectPentominoes = remainingPentominoes + numOfPerfectPentominoesOnBoard;
+                if (maxPossibleNumOfPerfectPentominoes <= numOfPerfectPentominoesOnBoardOfClosestSolution) {
+                    return false;
+                }
+
+                if (this._isPerfectPentomino(game, solution, gamePentomino.name)) {
+                    numOfPerfectPentominoesOnBoard++;
+                }
+                counter++;
+                return true;
+            });
+
+            if (numOfPerfectPentominoesOnBoard > numOfPerfectPentominoesOnBoardOfClosestSolution) {
+                closestSolution = solution;
+                numOfPerfectPentominoesOnBoardOfClosestSolution = numOfPerfectPentominoesOnBoard;
+            }
+        });
+        return closestSolution;
     }
 
     // --- --- --- Pursue Closest Solution --- --- ---
@@ -77,7 +105,7 @@ class HintAI {
         }
 
         game.getPentominoes().some(pentomino =>  {
-            if (!this._isPerfectPentomino(game, solution, pentomino)) {
+            if (!this._isPerfectPentomino(game, solution, pentomino.name)) {
                 command = this._getNextCommandOfPentominoToSolution(game, solution, pentomino);
                 return true;
             }
@@ -259,8 +287,17 @@ class HintAI {
      * @param solution
      * @param gamePentomino
      */
-    _isPerfectPentomino(game, solution, gamePentomino) {
-        let solutionPentomino = solution.getPentominoByName(gamePentomino.name);
+    _isPerfectPentomino(game, solution, pentominoName) {
+        let gamePentomino = game.getPentominoByName(pentominoName);
+        let solutionPentomino = solution.getPentominoByName(pentominoName);
+
+        if (gamePentomino === null && solutionPentomino === null) {
+            throw new Error("Pentomino '" + pentominoName + "' does neither exist in the game nor in the solution");
+        }
+
+        if (gamePentomino === null) {
+            return !solution.isPlacedOnBoard(solutionPentomino);
+        }
 
         if (solutionPentomino === null) {
             return !game.isPlacedOnBoard(gamePentomino);
