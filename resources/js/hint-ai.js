@@ -12,11 +12,6 @@ class HintAI {
     }
 
     getHint(game) {
-        if (game.getPentominoes().every(p => game.isPlacedInGame(p))) {
-            // FIXME - getPosition need to be fixed, handle pieces in tray correctly
-            return new Hint(null, []);
-        }
-
         let solutions = GameLoader.getGamesFromSolutionsConfig();
         let possibleSolutions = this._getPossibleSolutions(game, solutions);
         if (possibleSolutions.length > 0) {
