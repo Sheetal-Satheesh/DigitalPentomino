@@ -13,8 +13,29 @@ class HintAI {
 
     getHint(game) {
         let solutions = GameLoader.getGamesFromSolutionsConfig();
-        let closestSolution = this._getClosesSolution(game, solutions);
-        return this._getNextCommandToSolution(game, closestSolution);
+        let possibleSolutions = this._getPossibleSolutions(game, solutions);
+        return new Hint(null, possibleSolutions);
+    }
+
+    // --- --- --- Number of possible Solutions --- --- ---
+    _getPossibleSolutions(game, solutions) {
+        if (game.getPentominoes().length === 0) {
+            throw new Error("game is empty");
+        }
+
+        let possibleSolutions = [];
+        solutions.forEach(solution => {
+            let allPentominoesOnBoardArePerfect = game.getPentominoes()
+                .filter(pentomino => game.isPlacedOnBoard(pentomino))
+                .every(pentominoOnBoard => {
+                    return this._isPerfectPentomino(game, solution, pentominoOnBoard);
+                });
+            if (allPentominoesOnBoardArePerfect) {
+                possibleSolutions.push(solution);
+            }
+        });
+
+        return possibleSolutions;
     }
 
     // --- --- --- Closest Solution --- --- ---
@@ -59,7 +80,8 @@ class HintAI {
             throw new Error("No next command found");
         }
 
-        return new Hint(command);
+        // FIXME - maybe return several commands
+        return command;
     }
 
     /**

@@ -12,23 +12,28 @@ class PD {
 
     rotateClkWise(){
         this.visual.rotateClkWise();
+        this.visual.showNumberOfPossibleSolutions();
     }
 
     rotateAntiClkWise() {
         this.visual.rotateAntiClkWise();
+        this.visual.showNumberOfPossibleSolutions();
     }
 
     flipH(){
         this.visual.flipH();
+        this.visual.showNumberOfPossibleSolutions();
     }
 
     flipV(){
         this.visual.flipV();
+        this.visual.showNumberOfPossibleSolutions();
     }
 
     reset(){
        this.gameController.resetGame();
        this.visual.clear();
+       this.visual.showNumberOfPossibleSolutions();
     }
 
     loadBoard(board){
@@ -44,6 +49,7 @@ class PD {
                                     this.boardShape);
 
         this.visual = new Visual(this);
+        this.visual.showNumberOfPossibleSolutions();
     }
 
     hints(){
