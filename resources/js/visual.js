@@ -57,30 +57,23 @@ class Visual {
         return false;
     }
 
-    handleCollision(pentomino){
+    isCollision(pentomino){
         let collisionPentominoes = this.gameController.getCollisionPentominoesOfPentomino(pentomino);
         if (collisionPentominoes.length != 0){
-            this.positionPiece(pentomino, true);
+            return true;
         }else{
-            this.positionPiece(pentomino);
+            return false;
         }
     }
 
     placePentomino(pentomino, posX, posY){
-        let penX, penY;
-
-        if(this.gameController.isPlacedInGame(pentomino)){
-            [penX,penY] = this.gameController.getPositionOfPentomino(pentomino);
-        }
-
+        
         this.gameController.placePentomino(pentomino, posX, posY);
         var bCellsFnd = this.isPentominoInBlockCells(pentomino);
+        var collisonFnd = this.isCollision(pentomino);
+        var offset = (bCellsFnd || collisonFnd)?true:false;
 
-        if(bCellsFnd){
-            this.gameController.placePentomino(pentomino, penX, penY);
-        }
-        
-        this.handleCollision(pentomino);
+        this.positionPiece(pentomino, offset);
     }
 
     movePentominoToTray(pentomino){
@@ -194,7 +187,7 @@ class Visual {
 
     }
 
-   positionPiece(piece, overlapp=false) {
+   positionPiece(piece, offset=false) {
         var width = UIProperty.WindowWidth / this.pd.gameWidth;
         var htmlElement = document.getElementById('piece_' + piece.name);
 
@@ -232,7 +225,7 @@ class Visual {
             let [positionY, positionX] = this.gameController.getPositionOfPentomino(piece);
             let left = undefined;
             let top = undefined;
-            if(overlapp){
+            if(offset){
                 left = UIProperty.FunctionWidth + width * (positionX - 2)+ (width/2);
                 top = UIProperty.TrayHeight + width * (positionY - 2)-(width/2);
            
@@ -465,14 +458,11 @@ class Visual {
             let newRot = flipped ? currentRot - 90 : currentRot + 90;
             // Update the backend
             this.gameController.rotatePentominoClkWise(piece);
-            this.handleCollision(piece);
-            pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
-
             var bCellsFnd = this.isPentominoInBlockCells(piece);
-            if(bCellsFnd){
-              this.rotateAntiClkWise();
-            }
-
+            var collisonFnd = this.isCollision(piece);
+            var offset = (bCellsFnd || collisonFnd)?true:false;
+            this.positionPiece(piece, offset);
+            pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
         }
     }
 
@@ -485,14 +475,11 @@ class Visual {
             let newRot = flipped ? currentRot + 90 : currentRot - 90;
             // Update the backend
             this.gameController.rotatePentominoAntiClkWise(piece);
-            this.handleCollision(piece);
-            pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
-
             var bCellsFnd = this.isPentominoInBlockCells(piece);
-            if(bCellsFnd){
-              this.rotateClkWise();
-            }
-
+            var collisonFnd = this.isCollision(piece);
+            var offset = (bCellsFnd || collisonFnd)?true:false;
+            this.positionPiece(piece, offset);
+            pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
         }
     }
 
@@ -505,14 +492,12 @@ class Visual {
             let newRot = currentRot + 180;
             // Update the backend
             this.gameController.mirrorPentominoH(piece);
-            this.handleCollision(piece);
+            var bCellsFnd = this.isPentominoInBlockCells(piece);
+            var collisonFnd = this.isCollision(piece);
+            var offset = (bCellsFnd || collisonFnd)?true:false;
+            this.positionPiece(piece, offset);
             pieceDiv.style.setProperty("--rotationX", newRot.toString() + "deg");
             pieceDiv.setAttribute("flipped", 1 - flipped);
-            var bCellsFnd = this.isPentominoInBlockCells(piece);
-            if(bCellsFnd){
-              this.flipV();
-            }
-
         }
     }
 
@@ -527,18 +512,11 @@ class Visual {
             let [penX,penY] = this.gameController.getPositionOfPentomino(piece);    
             this.gameController.mirrorPentominoV(piece);
             var bCellsFnd = this.isPentominoInBlockCells(piece);
-            if(bCellsFnd){
-                this.gameController.placePentomino(piece, penX, penY);
-            }
-
-            this.handleCollision(piece);
+            var collisonFnd = this.isCollision(piece);
+            var offset = (bCellsFnd || collisonFnd)?true:false;
+            this.positionPiece(piece, offset);
             pieceDiv.style.setProperty("--rotationY", newRot.toString() + "deg");
             pieceDiv.setAttribute("flipped", 1 - flipped);
-
-            var bCellsFnd = this.isPentominoInBlockCells(piece);
-            if(bCellsFnd){
-              this.flipH();
-            }
         }
     }
 }
