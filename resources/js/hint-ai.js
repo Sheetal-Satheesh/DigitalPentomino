@@ -12,9 +12,22 @@ class HintAI {
     }
 
     getHint(game) {
+        if (game.getPentominoes().every(p => game.isPlacedInGame(p))) {
+            // FIXME - getPosition need to be fixed, handle pieces in tray correctly
+            return new Hint(null, []);
+        }
+
         let solutions = GameLoader.getGamesFromSolutionsConfig();
         let possibleSolutions = this._getPossibleSolutions(game, solutions);
-        return new Hint(null, possibleSolutions);
+        if (possibleSolutions.length > 0) {
+            // Pursue closest solution
+            let closestSolution = this._getClosesSolution(game, solutions);
+            let command = this._getNextCommandToSolution(game, closestSolution);
+            return new Hint(command, possibleSolutions);
+        } else {
+            // Pursue closest game state, which has at least one possible solution
+            return new Hint(null, possibleSolutions);
+        }
     }
 
     // --- --- --- Number of possible Solutions --- --- ---
@@ -112,7 +125,7 @@ class HintAI {
                 // FIXME - add to tray
                 return new RemoveCommand(game, gamePentomino, gamePentominoPos[0], gamePentominoPos[1]);
             }
-        } else {
+        } else if (game.isPlacedInGame(gamePentomino)) {
             if (solution.isPlacedOnBoard(solutionPentomino)) {
                 // pentomino should be on board
                 let gamePentominoPosition = game.getPosition(gamePentomino);
@@ -130,6 +143,22 @@ class HintAI {
                     // Pentomino is hopelessly outside board
                     return new PlaceCommand(game, gamePentomino, solutionPentominoRelPosition[0], solutionPentominoRelPosition[1]);
                 }
+            } else {
+                // perfect pentomino
+                throw Error("Pentomino " + gamePentomino.name + " is already placed correct.");
+            }
+        } else {
+            // In tray
+            // FIXME - Replace with function isInTray(...)
+            if (solution.isPlacedOnBoard(solutionPentomino)) {
+                // pentomino should be on board
+                let solutionPentominoPosition = solution.getPosition(solutionPentomino);
+                let solutionPentominoRelPosition = [
+                    solutionPentominoPosition[0] + game._board._boardSRows,
+                    solutionPentominoPosition[1] + game._board._boardSCols
+                ];
+
+                return new PlaceCommand(game, gamePentomino, solutionPentominoRelPosition[0], solutionPentominoRelPosition[1]);
             } else {
                 // perfect pentomino
                 throw Error("Pentomino " + gamePentomino.name + " is already placed correct.");
