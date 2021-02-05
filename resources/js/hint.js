@@ -6,7 +6,10 @@ class Hint {
         console.log("Number of possible solutions: " + possibleSolutions.length);
 
         this._text = "";
-        this._text += "This doesn't look right. The pentominoes on your board aren't part of a solution."
+
+        if (possibleSolutions.length === 0) {
+            this._text += "This doesn't look right. The pentominoes on your board aren't part of a solution."
+        }
 
         switch (command.getName()) {
             case "remove":

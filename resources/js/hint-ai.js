@@ -98,19 +98,17 @@ class HintAI {
      * @returns {null}
      */
     _getNextCommandToSolution(game, solution) {
-        let command = null;
-
         if (game.getPentominoes().length === 0) {
             throw new Error("game is empty");
         }
 
-        game.getPentominoes().some(pentomino =>  {
-            if (!this._isPerfectPentomino(game, solution, pentomino.name)) {
-                command = this._getNextCommandOfPentominoToSolution(game, solution, pentomino);
-                return true;
-            }
-            return false;
-        });
+        let pentomino = game.getPentominoes().find(p => !this._isPerfectPentomino(game, solution, p.name));
+        if (pentomino === null || pentomino === undefined) {
+            // TODO - handle differently
+            throw new Error("All pentominoes are placed perfect");
+        }
+
+        let command = this._getNextCommandOfPentominoToSolution(game, solution, pentomino);
 
         if (command === null || command === undefined) {
             throw new Error("No next command found");
@@ -148,40 +146,23 @@ class HintAI {
                 // FIXME - add to tray
                 return new RemoveCommand(game, gamePentomino, gamePentominoPos[0], gamePentominoPos[1]);
             }
-        } else if (game.isPlacedInGame(gamePentomino)) {
+        } else {
             if (solution.isPlacedOnBoard(solutionPentomino)) {
                 // pentomino should be on board
-                let gamePentominoPosition = game.getPosition(gamePentomino);
-                let solutionPentominoPosition = solution.getPosition(solutionPentomino);
-                let solutionPentominoRelPosition = [
-                    solutionPentominoPosition[0] + game._board._boardSRows,
-                    solutionPentominoPosition[1] + game._board._boardSCols
-                ];
 
-                if (gamePentominoPosition[0] === solutionPentominoRelPosition[0]
-                    && gamePentominoPosition[1] === solutionPentominoRelPosition[1]) {
-                    // Needs operations to be on the board
+                if (!gamePentomino.sRepr.localeCompare(solutionPentomino.sRepr)) {
+                    // some local operations need to be performed on the pentomino
                     return this._getNextCommandOfPentominoOnBoardToSolution(game, solution, gamePentomino, solutionPentomino);
                 } else {
-                    // Pentomino is hopelessly outside board
+                    // pentomino needs to change position
+                    let solutionPentominoPosition = solution.getPosition(solutionPentomino);
+                    let solutionPentominoRelPosition = [
+                        solutionPentominoPosition[0] + game._board._boardSRows,
+                        solutionPentominoPosition[1] + game._board._boardSCols
+                    ];
+
                     return new PlaceCommand(game, gamePentomino, solutionPentominoRelPosition[0], solutionPentominoRelPosition[1]);
                 }
-            } else {
-                // perfect pentomino
-                throw Error("Pentomino " + gamePentomino.name + " is already placed correct.");
-            }
-        } else {
-            // In tray
-            // FIXME - Replace with function isInTray(...)
-            if (solution.isPlacedOnBoard(solutionPentomino)) {
-                // pentomino should be on board
-                let solutionPentominoPosition = solution.getPosition(solutionPentomino);
-                let solutionPentominoRelPosition = [
-                    solutionPentominoPosition[0] + game._board._boardSRows,
-                    solutionPentominoPosition[1] + game._board._boardSCols
-                ];
-
-                return new PlaceCommand(game, gamePentomino, solutionPentominoRelPosition[0], solutionPentominoRelPosition[1]);
             } else {
                 // perfect pentomino
                 throw Error("Pentomino " + gamePentomino.name + " is already placed correct.");
@@ -292,7 +273,9 @@ class HintAI {
         let solutionPentomino = solution.getPentominoByName(pentominoName);
 
         if (gamePentomino === null && solutionPentomino === null) {
-            throw new Error("Pentomino '" + pentominoName + "' does neither exist in the game nor in the solution");
+            // FIXME - should return the pentomino if its in the tray and not return null
+            //throw new Error("Pentomino '" + pentominoName + "' does neither exist in the game nor in the solution");
+            return true;
         }
 
         if (gamePentomino === null) {
