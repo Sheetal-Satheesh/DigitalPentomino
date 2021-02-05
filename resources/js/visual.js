@@ -226,9 +226,8 @@ class Visual {
             let left = undefined;
             let top = undefined;
             if(offset){
-                left = UIProperty.FunctionWidth + width * (positionX - 2)+ (width/2);
-                top = UIProperty.TrayHeight + width * (positionY - 2)-(width/2);
-           
+                left = UIProperty.FunctionWidth + width * (positionX - 2)+ (width/8);
+                top = UIProperty.TrayHeight + width * (positionY - 2)-(width/8);
 
                 if(htmlElement.style.zIndex >= 2000 ){
                     htmlElement.style.zIndex =1500;
