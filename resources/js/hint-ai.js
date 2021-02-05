@@ -66,9 +66,9 @@ class HintAI {
         solutions.forEach(solution => {
             let numOfPerfectPentominoesOnBoard = 0;
             let counter = 0;
-            let numOfPentominoes = solution.getPentominoes().length;
+            let numOfPentominoes = game.getPentominoes().length;
 
-            solution.getPentominoes().filter(p => game.isPlacedOnBoard(p)).some(gamePentomino => {
+            game.getPentominoes().filter(p => game.isPlacedOnBoard(p)).every(gamePentomino => {
                 let remainingPentominoes = numOfPentominoes - counter;
                 let maxPossibleNumOfPerfectPentominoes = remainingPentominoes + numOfPerfectPentominoesOnBoard;
                 if (maxPossibleNumOfPerfectPentominoes <= numOfPerfectPentominoesOnBoardOfClosestSolution) {
