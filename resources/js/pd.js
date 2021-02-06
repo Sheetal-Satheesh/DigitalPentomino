@@ -1,9 +1,13 @@
 class PD {
 
     constructor() {
+        /**
+         * Front-end interface always call FrontController instead of GameController.
+         */
         this.gameWidth = baseConfig.gameWidth;
         this.gameHeight = baseConfig.gameHeight;
-        this.gameController = new GameController();
+        var fController = new FrontController();
+        this.gameController = fController.controller;
         this.loadBoard("board_8x8a");
 
         this.visual = new Visual(this);
