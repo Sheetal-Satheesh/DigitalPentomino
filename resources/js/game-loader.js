@@ -284,6 +284,40 @@ class GameLoader {
         
         return resultString;
     }
+
+    /**
+     * Returns all boards with configurations and solutions
+     */
+    static getAllBoards(){
+        let boardsWithConfig = [];
+        if(baseConfigs != undefined && boardConfigs != undefined){
+            if(baseConfigs.hasOwnProperty("boards")){
+                baseConfigs.boards.forEach(board => {
+                    if(boardConfigs.hasOwnProperty(board)){
+                        boardsWithConfig.push(board);
+                    }
+                });
+            }else{
+                throw new Error("Error in configuration: Could not find any boards");    
+            }
+        } else{
+            throw new Error("Error in configuration: Could not find basic game configurations");
+        }
+        return boardsWithConfig;
+    }
+
+    /**
+     * Returns a game object of the selected/default game that can be used to draw the board
+     */
+    static getGameObject(board){
+        return {
+            gameHeight: boardConfigs[board].gameHeight || baseConfigs.gameHeight,
+            gameWidth: boardConfigs[board].gameWidth || baseConfigs.gameWidth,
+            boardSize: boardConfigs[board].boardSize,
+            blockedCells: boardConfigs[board].blockedCells || undefined,
+            boardShape: boardConfigs[board].boardShape || baseConfigs.boardShape
+        };
+    }
 }
 
 if(typeof module != 'undefined') {
