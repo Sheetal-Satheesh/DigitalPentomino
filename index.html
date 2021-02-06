@@ -41,37 +41,64 @@
     <div id="functions">
       <img id = "logo" src="resources/images/icons/pentomino.png" alt="Pentomino" class="cLogo">
       <div id="operations">
-          <table id="actionTB" class="CActionTB">
-            <thead>
-                  <tr>
-                    <td><button type="button" id='btnRotateLeft' class = "cActionBtn" onclick="rotateAntiClkWise()"" disabled><img src="resources/images/icons/rotate_left.png"></button></td>
-                    <td><button type="button" id='btnRotateRight' class = "cActionBtn" onclick="rotateClkWise()" disabled> <img src="resources/images/icons/rotate_right.png"> </button></td>
-                   </tr>
-                  <tr>
-                    <td><button type="button" id='btnFlipH' class = "cActionBtn" onclick="flipH()" disabled><img src="resources/images/icons/flip_horizontally.png"></button></td>
-                    <td><button type="button" id='btnFlipV' class = "cActionBtn" onclick="flipV()" disabled><img src="resources/images/icons/flip_vertically.png"></button></td>
-                  </tr>
-                  <tr>
-                    <td><button type="button" id='reset' class = "cActionBtn" onclick="resetGame()"><img src="resources/images/icons/tidy_up.png"></button></td>
-                  </tr>
-            </thead>
+          <table>
+                <tr>
+                    <td>
+                        <button type="button" id='btnRotateLeft' class = "cActionBtn" onclick="rotateAntiClkWise()"" disabled><img src="resources/images/icons/rotate_left.png">
+                            
+                        </button>
+                    </td>
+                    <td>
+                        <button type="button" id='btnRotateRight' class = "cActionBtn" onclick="rotateClkWise()" disabled> <img src="resources/images/icons/rotate_right.png"> 
+                        </button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <button type="button" id='btnFlipH' class = "cActionBtn" onclick="flipH()" disabled><img src="resources/images/icons/flip_horizontally.png">
+                        </button>
+                    </td>
+                    <td>
+                        <button type="button" id='btnFlipV' class = "cActionBtn" onclick="flipV()" disabled><img src="resources/images/icons/flip_vertically.png">
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button type="button" id='reset' class = "cActionBtn" onclick="resetGame()"><img src="resources/images/icons/tidy_up.png"></button>
+                    </td>
+                </tr>
           </table>
 
-          <table id="menutTB" class="CMenuTB">
-            <thead>
+          <table>
                 <tr>
-                    <td><button type="button" id='undo' class = "cActionBtn" ><img src="resources/images/icons/undo.png"></button></td>
-                    <td><button type="button" id='redo' class = "cActionBtn" ><img src="resources/images/icons/redo.png"></button></td>
-                  </tr>
+                    <td>
+                        <button type="button" id='undo' class = "cActionBtn" ><img src="resources/images/icons/undo.png">
+                        </button>
+                    </td>
+                    <td>
+                        <button type="button" id='redo' class = "cActionBtn" ><img src="resources/images/icons/redo.png">
+                        </button>
+                    </td>
+                </tr>
                 <tr>
-                    <td><button type="button" id='btnBoardSelect' class = "cActionBtn" onclick="selectBoard()" disabled> <img src="resources/images/icons/board.png"> </button></td>
-                    <td><button type="button" id='Hints' class = "cActionBtn" onclick="callHintAI()" ><img src="resources/images/icons/help.png"></button></td>
+                    <td>
+                        <button type="button" id='btnBoardSelect' class = "cActionBtn" onclick="selectBoard()" disabled> <img src="resources/images/icons/board.png"> 
+                        </button>
+                    </td>
+                    <td>
+                        <div class="hintPopup" onclick="callHintAI()">
+                            <img src="resources/images/UI_images/hint.png">
+                            <span class="hintPopupText" id="myHint">Move the pieces ! then ask me the hint
+                            </span>
+                        </div>
+                    </td>
                 </tr>
                   <tr>
                     <button style="display:none" onclick="pd.ui.save()">Save</button>
                     <button style="display:none" onclick="pd.ui.load()">Load</button>
                   </tr>
-            </thead>
           </table>
       </div>
 
@@ -92,12 +119,12 @@
             pd.reset();
         }
 
-        function callHintAI() {
-            document.getElementById("Hints").classList.toggle("show");
-            let popupText = document.getElementById("Hints");
-            hintsText = pd.hints().getText();
-            alert(hintsText); // this must be shown as animated way
-        }
+         function callHintAI() {
+                let hint = document.getElementById("myHint");
+                hint.classList.toggle("show");
+                let popupText = document.getElementById("myHint");
+                popupText.textContent = pd.gameController.getHint().getText();
+            }
 
         function rotateClkWise(){
             pd.rotateClkWise();
