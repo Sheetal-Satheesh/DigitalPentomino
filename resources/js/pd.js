@@ -40,6 +40,8 @@ class PD {
         boardCfg.board = board;
         this.boardSize = baseConfig[boardCfg.board].boardSize;
         this.boardShape = baseConfig[boardCfg.board].boardShape;
+        this.blockCells = (baseConfig[boardCfg.board].hasOwnProperty('blockedCells'))?
+                                        baseConfig[boardCfg.board].blockedCells:undefined;
 
         this.boardStartX = Math.floor((this.gameHeight - this.boardSize[0]) / 2);
         this.boardStartY = Math.floor((this.gameWidth - this.boardSize[1]) / 2);
