@@ -373,6 +373,7 @@ class Visual {
                         var coords = (id.split('_')[1].split(','));
                         data[1].removeFromTray();
                         that.placePentomino(data[1], coords[0],coords[1] );
+                        that.showNumberOfPossibleSolutions();
                         /**
                          * make this the selected element which activates manipulation GUI data[1].select();
                          *
@@ -454,5 +455,10 @@ class Visual {
             pieceDiv.style.setProperty("--rotationY", newRot.toString() + "deg");
             pieceDiv.setAttribute("flipped", 1 - flipped);
         }
+    }
+
+    showNumberOfPossibleSolutions() {
+        let labelPossibleSolutions = document.getElementById("labelNumberSolutions");
+        labelPossibleSolutions.innerText = this.gameController.getHint().getPossibleSolutions().length;
     }
 }
