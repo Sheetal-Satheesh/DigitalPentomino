@@ -145,6 +145,11 @@ class GameController {
         this._game = game;
     };
 
+    resetGame(){
+        this._game.reset();
+        return this._game;
+    }
+
     createGame(boardStartXY, boardSizeXY, Boardshape) {
         boardStartXY[0] = parseInt(boardStartXY[0]);
         boardStartXY[1] = parseInt(boardStartXY[1]);
@@ -244,6 +249,14 @@ class GameController {
         return JSON.stringify(Object.getPrototypeOf(commandPath)) === JSON.stringify(CommandPath.prototype);
     }
 }
+
+
+function debug_mode(boardStartXY, boardSizeXY){
+    let gc = new GameController();
+    let game = new GameLoader('Level 2');
+    game.display();
+}
+
 
 if(typeof module != 'undefined') {
     module.exports = GameController;

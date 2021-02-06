@@ -3,9 +3,9 @@ if(typeof require != 'undefined') {
     Board = require('./board.js');
 }
 
-class GameLoader {
+const solutionsString = "1, FFIIIII LFFNNNY LFNNUUY LPPPUYY LLPPUUY \n\ 2, FFIIIII LFFPPUU LFXPPPU LXXXYUU LLXYYYY \n\ 3, FFIIIII LFFUUUY LFXUTUY LXXXTYY LLXTTTY \n\ 4, FFIIIII LFFWPPP LFWWPPT LWWYTTT LLYYYYT";
 
-    solutionsString = "1, FFIIIII LFFNNNY LFNNUUY LPPPUYY LLPPUUY \n\ 2, FFIIIII LFFPPUU LFXPPPU LXXXYUU LLXYYYY \n\ 3, FFIIIII LFFUUUY LFXUTUY LXXXTYY LLXTTTY \n\ 4, FFIIIII LFFWPPP LFWWPPT LWWYTTT LLYYYYT";
+class GameLoader {
 
     static loadByName(name) {
         let game;
@@ -27,7 +27,7 @@ class GameLoader {
         switch (name) {
             case "Level 1":
                 // Create a board
-                game = new Game(new Board(7, 5));
+                game = new Game(new Board([0,0],[7,5]));
                 // add pieces to board
                 game.placePentomino(penL, 1, 3);
                 game.placePentomino(penX, -1, -5);
@@ -36,7 +36,7 @@ class GameLoader {
                 
             case "Level 2":
                 // Create a board
-                game = new Game(new Board([5,5],[7,7]));
+                game = new Game(new Board([0,0],[7,7]));
                 // add pieces to board
                 game.placePentomino(penT, 0, 1);
                 game.placePentomino(penX, 4, 0);
@@ -55,7 +55,7 @@ class GameLoader {
 
             case "Level 3":
                 // Create a board
-                game = new Game(new Board(8, 9));
+                game = new Game(new Board([0,0],[8,9]));
                 // add pieces to board
                 game.placePentomino(penT, 3, 0);
                 game.placePentomino(penX, 0, 5);
@@ -66,7 +66,7 @@ class GameLoader {
 
             case "Level 4":
                 // Create a board
-                game = new Game(new Board(6, 10));
+                game = new Game(new Board([0,0],[6,10]));
                 // add pieces to board
                 game.placePentomino(penT, 1, 1);
                 game.placePentomino(penX, 1, 0);
@@ -99,12 +99,12 @@ class GameLoader {
         return game;
     }
 
-    getGamesFromSolutionsConfig(){
+    static getGamesFromSolutionsConfig(){
         let gameArray = [];
         console.log("Calling getGamesFromSolutionsConfig");
 
         //TODO: somehow obtain the txt file from fetch/FS/...
-        let fileString = this.solutionsString;
+        let fileString = solutionsString;
         let fileLines = fileString.split("\n");
         for (let i = 0; i < fileLines.length; i++) {
             let line = fileLines[i];
@@ -119,7 +119,7 @@ class GameLoader {
     }
 
     /*TODO: Move to gameLoader class */
-    getGameFromString(gameString) {
+    static getGameFromString(gameString) {
             
         let rows = gameString.split(" ");
         let height = rows.length;
@@ -176,7 +176,7 @@ class GameLoader {
     }
 
 
-    doNextOperationOnPento(pentomino, x){
+    static doNextOperationOnPento(pentomino, x){
         
         switch (x) {
             case 0:
@@ -236,7 +236,7 @@ class GameLoader {
     }
 
 
-    findInParent(smallMatrix, bigMatrix){
+    static findInParent(smallMatrix, bigMatrix){
         let centerPosition = [0,0];
 
         let a = bigMatrix;
@@ -266,7 +266,7 @@ class GameLoader {
     }
 
 
-    normalizeBoard(gameString, element){
+    static normalizeBoard(gameString, element){
         let rows = gameString.split(" ");
         let height = rows.length;
         let width = rows[0].length;
@@ -286,7 +286,7 @@ class GameLoader {
     }
 
 
-    transform(someString, element){
+    static transform(someString, element){
         //e.g. take "FFIIIIILFFPPUULFXPPPULXXXYUULLXYYYY" and "X" as input
         let resultString='';
         
