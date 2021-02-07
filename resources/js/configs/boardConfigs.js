@@ -1,8 +1,8 @@
 /**
  * Notes on implementation
  * 
- * 1. gameHeight/gameWidth are adjusted so that there are atleast
- *    3 rows/columns of game area on either side of the board
+ * 1. gameWidth is adjusted so that there are atleast
+ *    3 columns of game area on either side of the board
  *    (only if baseConfig doesnt already have this condition fulfilled)
  * 
  * 2. blocked cells should be denoted by their position with respect to the board and not the game,
@@ -34,7 +34,6 @@ boardConfigs = {
         boardSize: [6,10]
     },
     "board_8x8a": {
-        gameHeight: 14,
         boardSize: [8,8],
         blockedCells: [[3,3], [3,4], [4,3], [4,4]]
     },

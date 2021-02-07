@@ -1,8 +1,6 @@
 class PD {
 
     constructor() {
-        this.gameWidth = baseConfig.gameWidth;
-        this.gameHeight = baseConfig.gameHeight;
         this.gameController = new GameController();
         this.loadBoard("board_8x8a");
 
@@ -32,9 +30,12 @@ class PD {
     }
 
     loadBoard(board){
-        boardCfg.board = board;
-        this.boardSize = baseConfig[boardCfg.board].boardSize;
-        this.boardShape = baseConfig[boardCfg.board].boardShape;
+        let gameObject = GameLoader.getGameObject(board);
+        this.boardSize = gameObject.boardSize;
+        this.boardShape = gameObject.boardShape;
+        this.gameHeight = gameObject.gameHeight;
+        this.gameWidth = gameObject.gameWidth;
+        this.blockedCells = gameObject.blockedCells;
 
         this.boardStartX = Math.floor((this.gameHeight - this.boardSize[0]) / 2);
         this.boardStartY = Math.floor((this.gameWidth - this.boardSize[1]) / 2);
