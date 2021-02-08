@@ -230,7 +230,7 @@ class GameLoader {
                 return false;
                 break;
             default:
-                console.log("Strange behavior in findingNextOp...");
+                // console.log("Strange behavior in findingNextOp...");
                 return false;
                 break;
         }

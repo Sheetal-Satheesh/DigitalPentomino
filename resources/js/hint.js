@@ -3,8 +3,11 @@ class Hint {
         this._command = command;
         this._possibleSolutions = possibleSolutions;
 
+<<<<<<< HEAD
         // console.log("Number of possible solutions: " + possibleSolutions.length);
 
+=======
+>>>>>>> 5f50a6dbc96e8f16a71d918bcfd47dddb17fa80d
         this._text = "";
 
         if (possibleSolutions.length === 0) {
