@@ -25,6 +25,13 @@ class Visual {
         this.initalizeListeners();
     }
 
+     callHintAI() {
+                let hint = document.getElementById("myHint");
+                hint.classList.toggle("show");
+                let popupText = document.getElementById("myHint");
+                popupText.textContent = this.gameController.getHint().getText();
+            }
+
     isBlockCell(posX, posY){
         var bCellsFnd=false;
             if (this.pd.blockCells != undefined){
