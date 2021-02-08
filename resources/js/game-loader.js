@@ -112,7 +112,7 @@ class GameLoader {
 
         for (let i = 0; i < tempArray.length; i++) {
             let line = tempArray[i];
-            console.log(line);
+            // console.log(line);
             
             let game = this.getGameFromString(line);
             gameArray.push(game);
@@ -230,7 +230,7 @@ class GameLoader {
                 return false;
                 break;
             default:
-                console.log("Strange behavior in findingNextOp...");
+                // console.log("Strange behavior in findingNextOp...");
                 return false;
                 break;
         }
