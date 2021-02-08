@@ -101,7 +101,7 @@ class GameLoader {
 
     static getGamesFromSolutionsConfig(){
         let gameArray = [];
-        console.log("Calling getGamesFromSolutionsConfig");
+        //console.log("Calling getGamesFromSolutionsConfig");
 
         //TODO: somehow obtain the txt file from fetch/FS/...
         let fileString = solutionsString;
@@ -124,7 +124,7 @@ class GameLoader {
         let rows = gameString.split(" ");
         let height = rows.length;
         let width = rows[0].length;
-        console.log("Initialize game with height: " + height + " and width: " + width);
+        //console.log("Initialize game with height: " + height + " and width: " + width);
         let game = new Game(new Board([0, 0], [height, width]));
 
         //prepare pentominos for the board
@@ -159,8 +159,8 @@ class GameLoader {
                 let position = this.findInParent(matrixRep, boardRep);
                 if (position != null){
                     //TODO: Place pentomino on Board
-                    console.log("Center of piece " + pento.name + " found: " + position);
-                    console.log("Placing element" + pento.name + " on board...");
+                    //console.log("Center of piece " + pento.name + " found: " + position);
+                    //console.log("Placing element" + pento.name + " on board...");
                     game.placePentomino(pento, position[0], position[1]);
                     hasNextOp = false;
                 } else {

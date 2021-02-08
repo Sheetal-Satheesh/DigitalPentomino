@@ -96,6 +96,9 @@ class Visual {
                 let penHint = this.gameController.getHint();
                 let hintinPen = penHint.getCommand()._pentomino;
                 popupText.textContent = this.penHint.getText();
+                hint.addEventListener("mouseout",function(){
+                    popupText.style.display = "none";
+                });
             }
 
 
