@@ -6,4 +6,4 @@ let Board = require('../../js/board.js');
 let GameLoader = require('../../js/game-loader.js');
 
 let garray = GameLoader.getGamesFromSolutionsConfig();
-
+console.log(garray.length);
