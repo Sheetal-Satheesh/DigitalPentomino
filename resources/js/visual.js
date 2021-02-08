@@ -93,7 +93,9 @@ class Visual {
                 let hint = document.getElementById("myHint");
                 hint.classList.toggle("show");
                 let popupText = document.getElementById("myHint");
-                popupText.textContent = this.gameController.getHint().getText();
+                let penHint = this.gameController.getHint();
+                let hintinPen = penHint.getCommand()._pentomino;
+                popupText.textContent = this.penHint.getText();
             }
 
 
