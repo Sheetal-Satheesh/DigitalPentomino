@@ -27,9 +27,9 @@ class Visual {
 
     isBlockCell(posX, posY){
         var bCellsFnd=false;
-            if (this.pd.blockCells != undefined){
-                this.pd.blockCells.forEach(function(cells){
-                    if(cells[0] == posX && cells[1] == posY){
+            if (this.pd.blockedCells != undefined){
+                this.pd.blockedCells.forEach(function(cells){
+                    if(cells[0] + this.boardX == posX && cells[1] + this.boardY == posY){
                         bCellsFnd= true;
                     }
                 },this);
