@@ -459,7 +459,7 @@ class Visual {
 
 //handling touch gestures for mobile devices
 }
-//intialize the touch events
+//intialize the touch events for all pieces
 function startup(){
 	var touchElement = document.getElementById("piecearea");
 	touchElement.addEventListener("touchstart", touchStartHandle, false);
