@@ -74,6 +74,23 @@ class GameLoader {
                 game.placePentomino(penP, 0, 0);
 //                document.write("Starting level 4.."+ "<br>");
                 break;
+            case "Level 5":
+                // Create a board
+                game = new Game(new Board([3,7],[6,10]));
+                // add pieces to board
+                game.placePentomino(penT, 4, 9);
+                game.placePentomino(penX, 4, 15);
+                game.placePentomino(penU, 4, 15);
+                game.placePentomino(penL, 5, 12);
+                game.placePentomino(penF, 5, 12);
+                game.placePentomino(penN, 4, 15);
+                game.placePentomino(penY, 19, 7);
+                game.placePentomino(penI, 5, 7);
+                game.placePentomino(penW, 17, 3);
+                game.placePentomino(penV, 6, 8);
+     //           document.write("Starting level 2.."+ "<br>");
+                break;
+
 
             default:
                 throw new Error("No game found with the name '" + name + "'");
