@@ -134,12 +134,13 @@
             //hinting popup appears when hovered over button
             document.getElementById("hintPopup").addEventListener("mouseenter", function() {
                  document.getElementById("myHint").style.display = "block";
+                 console.log("mouseenter");
             });
 
             //hinting popup disappears when mouse pointer is away
             document.getElementById("hintPopup").addEventListener("mouseleave", function() {
                  document.getElementById("myHint").style.display = "none";
-                // console.log("mouseleave");
+                console.log("mouseleave");
             });
 
 
