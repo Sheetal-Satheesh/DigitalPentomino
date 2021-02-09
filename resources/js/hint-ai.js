@@ -199,7 +199,7 @@ class HintAI {
         } else if (operations.length === 0) {
             throw new Error("Illegal State exception");
         } else {
-            return operations.map(operation => {
+            let commands = operations.map(operation => {
                 switch (operation.name) {
                     case "rotateClkWise":
                         return new RotateClkWiseCommand(game, gamePentomino);
@@ -213,6 +213,29 @@ class HintAI {
                         throw new Error("Unrecognized pentomino operation: '" + operations.name + "'");
                 }
             });
+
+            if (game.isPlacedOnBoard(gamePentomino)) {
+                let gamePentominoPosition = game.getPosition(gamePentomino);
+                let solutionPentominoPosition = solution.getPosition(solutionPentomino);
+                let solutionPentominoRelPosition = [
+                    solutionPentominoPosition[0] + game._board._boardSRows,
+                    solutionPentominoPosition[1] + game._board._boardSCols
+                ];
+
+                if (!(solutionPentominoRelPosition[0] === gamePentominoPosition[0])
+                    || !(solutionPentominoRelPosition[1] === gamePentominoPosition[1])) {
+                    commands.push(new PlaceCommand(game, gamePentomino, solutionPentominoRelPosition[0], solutionPentominoRelPosition[1]));
+                }
+            } else {
+                let solutionPentominoPosition = solution.getPosition(solutionPentomino);
+                let solutionPentominoRelPosition = [
+                    solutionPentominoPosition[0] + game._board._boardSRows,
+                    solutionPentominoPosition[1] + game._board._boardSCols
+                ];
+                commands.push(new PlaceCommand(game, gamePentomino, solutionPentominoRelPosition[0], solutionPentominoRelPosition[1]));
+            }
+
+            return commands;
         }
     }
 
