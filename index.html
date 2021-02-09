@@ -123,25 +123,25 @@
             pd.reset();
         }
 
-        let hint = document.getElementById("myHint");
          function callHintAI() {
-                
+                let hint = document.getElementById("myHint");
                 hint.classList.toggle("show");
                 let popupText = document.getElementById("myHint");
                 popupText.textContent = pd.gameController.getHint().getText();
             }
 
 
-            document.getElementById("hintPopup").addEventListener("onclick", function() {
-                //document.getElementById("demo").innerHTML = "Hello World";
-                console.log("onclick");
-
-            });
+            
 
              document.getElementById("myHint").addEventListener("mouseout", function() {
                 //document.getElementById("demo").innerHTML = "Hello World";
                 console.log("mouseout");
                  document.getElementById("myHint").style.display = "none";
+                         document.getElementById("hintPopup").addEventListener("onclick", function() {
+                        //document.getElementById("demo").innerHTML = "Hello World";
+                        console.log("onclick");
+
+                    });
             });
 
         function rotateClkWise(){
