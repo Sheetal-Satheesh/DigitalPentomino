@@ -24,8 +24,14 @@ class HintAI {
             // Pursue closest game state, which has at least one possible solution
             let closestSolution = this._getClosesSolution(game, solutions);
             let commands = this._getNextCommandsToSolution(game, closestSolution);
-            // TODO - do smarter things with commands
-            return new Hint(commands[0], possibleSolutions);
+            if (commands.length === 1) {
+                return new Hint(commands[0], possibleSolutions);
+            } else {
+                return new Hint(
+                    new RemoveCommand(game, commands[0]._pentomino, commands[0]._row, commands[0]._col),
+                    possibleSolutions
+                );
+            }
         }
     }
 
@@ -193,8 +199,8 @@ class HintAI {
         } else if (operations.length === 0) {
             throw new Error("Illegal State exception");
         } else {
-            return operations.map(operationName => {
-                switch (operationName) {
+            return operations.map(operation => {
+                switch (operation.name) {
                     case "rotateClkWise":
                         return new RotateClkWiseCommand(game, gamePentomino);
                     case "rotateAntiClkWise":
