@@ -88,7 +88,7 @@
                         </button>
                     </td>
                     <td>
-                        <div class="hintPopup" id="hintPopup" onmouseenter="callHintAI()">
+                        <div class="hintPopup" id="hintButton" onclick="callHintAI()">
                             <img src="resources/images/UI_images/hint.png">
                             <span class="hintPopupText" id="myHint">Move the pieces ! then ask me the hint
                             </span>
@@ -127,20 +127,16 @@
          function callHintAI() {
                 let hint = document.getElementById("myHint");
                 hint.classList.toggle("show");
+                hint.style.visibility = "visible";
                 let popupText = document.getElementById("myHint");
                 popupText.textContent = pd.gameController.getHint().getText();
             }
 
-            //hinting popup appears when hovered over button
-            document.getElementById("hintPopup").addEventListener("mouseenter", function() {
-                 document.getElementById("myHint").style.visibility= "block";
-                 console.log("mouseenter");
-            });
+            
 
             //hinting popup disappears when mouse pointer is away
-            document.getElementById("hintPopup").addEventListener("mouseleave", function() {
-                 document.getElementById("myHint").style.visibility= "none";
-                console.log("mouseleave");
+            document.getElementById("hintButton").addEventListener("mouseleave", function() {
+                 document.getElementById("myHint").style.visibility= "hidden";
             });
 
 
