@@ -129,6 +129,20 @@
             hint.style.visibility = "visible";
             let popupText = document.getElementById("myHint");
             popupText.textContent = pd.gameController.getHint().getText();
+
+            // START: FOR TESTING
+            let hintCommand = pd.gameController.getHint().getCommand();
+            let hintRow = hintCommand._row;
+            let hintColumn = hintCommand._col;
+            console.log(hintCommand);
+            console.log("Position should be " + hintRow + "," + hintColumn);
+            //--> now color the field on the board
+            let fieldvalue = document.getElementById("field_" + hintRow + "," + hintColumn);
+            fieldvalue.style.background = "blue";
+            
+            // TODO: make it fade back to previous background color
+
+            // END: FOR TESTING
         }
 
         //hinting popup disappears when mouse pointer is away
