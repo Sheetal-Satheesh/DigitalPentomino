@@ -25,6 +25,7 @@ class Visual {
         this.initalizeListeners();
     }
 
+     
     isBlockCell(posX, posY){
         var bCellsFnd=false;
             if (this.pd.blockCells != undefined){
@@ -84,9 +85,19 @@ class Visual {
         this.gameController.resetGame();
         this.pieces = this.gameController.getPentominoes();
         this.renderPieces();
-        
-
     }
+
+
+
+    callHintAI() {
+                let hint = document.getElementById("myHint");
+                hint.classList.toggle("show");
+                let popupText = document.getElementById("myHint");
+                let penHint = this.gameController.getHint();
+                let hintinPen = penHint.getCommand()._pentomino;
+                popupText.textContent = this.penHint.getText();
+            }
+
 
     renderBoard() {
         //TODO: Check whether in the innerHTML approach is good here!

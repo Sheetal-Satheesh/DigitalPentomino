@@ -61,6 +61,10 @@ class PD {
     hints(){
        return this.gameController.getHint();
     }
+
+     callHintAI(){
+        this.visual.callHintAI();
+    }
 }
 
 
