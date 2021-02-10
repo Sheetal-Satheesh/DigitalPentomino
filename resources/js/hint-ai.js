@@ -17,13 +17,13 @@ class HintAI {
         if (possibleSolutions.length > 0) {
             // Pursue closest solution
             let closestSolution = possibleSolutions[0];
-            let commands = this._getNextCommandsToSolution(game, closestSolution);
+            let commands = this._getNextCommandsToSolution(game, closestSolution, false);
             // TODO - do smarter things with commands
             return new Hint(commands[0], possibleSolutions);
         } else {
             // Pursue closest game state, which has at least one possible solution
             let closestSolution = this._getClosesSolution(game, solutions);
-            let commands = this._getNextCommandsToSolution(game, closestSolution);
+            let commands = this._getNextCommandsToSolution(game, closestSolution, true);
             if (commands.length === 1) {
                 return new Hint(commands[0], possibleSolutions);
             } else {
@@ -105,12 +105,23 @@ class HintAI {
      * @param solution
      * @returns {null}
      */
-    _getNextCommandsToSolution(game, solution) {
+    _getNextCommandsToSolution(game, solution, backtracking) {
         if (game.getPentominoes().length === 0) {
             throw new Error("game is empty");
         }
 
-        let pentomino = game.getPentominoes().find(p => !this._isPerfectPentomino(game, solution, p.name));
+        let pentomino;
+        if (backtracking) {
+            pentomino = game.getPentominoes().find(p => !this._isPerfectPentomino(game, solution, p.name));
+        } else {
+            let pentominoesOnBoard = game.getPentominoes().filter(p => game.isPlacedOnBoard(p));
+            pentomino = pentominoesOnBoard.find(p => !this._isPerfectPentomino(game, solution, p.name));
+            if (pentomino === undefined || pentomino === null) {
+                // no non perfect pentominoes inside the board
+                pentomino = game.getPentominoes().filter(p => !game.isPlacedOnBoard(p)).find(p => !this._isPerfectPentomino(game, solution, p.name));
+            }
+        }
+
         if (pentomino === null || pentomino === undefined) {
             // TODO - handle differently
             throw new Error("All pentominoes are placed perfect");
