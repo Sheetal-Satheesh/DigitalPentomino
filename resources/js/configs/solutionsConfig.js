@@ -23,22 +23,19 @@ solutionsConfig = {
             "UUX.ZZNNNFTTTWWIIIIIV UXXXZNNYFF.TWWPPLLLLV UUXZZYYYYFFTWPPPL.VVV",
             "UUX.ZZWWTTTFNNNIIIIIV UXXXZPPWWT.FFYNNLLLLV UUXZZPPPWTFFYYYYL.VVV",
             "UUX.ZZWWTTTFNNNIIIIIV UXXXZWWPPT.FFYNNLLLLV UUXZZWPPPTFFYYYYL.VVV"
-        ],
-        active: false
+        ]
     },
     "board_3x21b": {
         solutionsArray: [
             "UUUWLLLL.FTTTXIIIIIZV UYUWWNNLFF.TXXXPPZZZV YYYYWWNNNFFT.XPPPZVVV",
             "UUUWLLLL.FTTTXPPPZVVV UYUWWNNLFF.TXXXPPZZZV YYYYWWNNNFFT.XIIIIIZV",
             "UUXIIIII.NNFTTTWWZVVV UXXXPPLNNN.FFTWWYZZZV UUXPPPLLLLFF.TWYYYYZV]"
-        ],
-        active: false
+        ]
     },
     "board_3x21c": {
         solutionsArray: [
             "UUXIIIIIZ.WWTTTFLLLLV UXXXPPZZZY.WWTFFFNNLV UUXPPPZYYYY.WTFNNNVVV"
-        ],
-        active: false
+        ]
     },
     "board_3x21d": {
         solutionsArray: [
@@ -48,8 +45,7 @@ solutionsConfig = {
             "UUXIIIIIFZZTWPPPLLLLV UXXX.YFFFZ.TWWPP.NNLV UUXYYYYFZZTTTWWNNNVVV",
             "UUXIIIIIWTZZFYYYYPPPV UXXX.NNWWT.ZFFFY.LPPV UUXNNNWWTTTZZFLLLLVVV",
             "UUXIIIIIWZZTFYYYYPPPV UXXX.NNWWZ.TFFFY.LPPV UUXNNNWWZZTTTFLLLLVVV"
-        ],
-        active: false
+        ]
     },
     "board_6x10": {
         solutionsArray: [
@@ -2462,8 +2458,7 @@ solutionsConfig = {
             "LLLLXVVV LPPXXXFV ZPPPXFFV ZZZ..TFF YWZ..TTT YWWNNTUU YYWWNNNU YIIIIIUU",
             "LLLLXVVV LWWXXXPV WWFFXPPV WFF..PPZ NNF..ZZZ TNNNYZUU TTTYYYYU TIIIIIUU",
             "PPPLLLLT PPXLZTTT WXXXZZZT WWX..UZU YWW..UUU YYFNNVVV YFFFNNNV YFIIIIIV"
-        ],
-        active: false
+        ]
     },
     "board_4x15": {
         solutionsArray: [
@@ -2835,7 +2830,6 @@ solutionsConfig = {
         "VVVNWWTTTXUUPPY VZZNFWWTXXXUPPY VZNNFFWTLXUUPYY ZZNFFLLLLIIIIIY",
         "VVVPPPXWWFFTTTY VZZPPXXXWWFFTYY VZLLLLXNNWFUTUY ZZLIIIIINNNUUUY",
         "VVVPPPXWWTTTFFY VZZPPXXXWWTFFYY VZLLLLXNNWTUFUY ZZLIIIIINNNUUUY"
-        ],
-        active: true
+        ]
     }    
 };

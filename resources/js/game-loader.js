@@ -98,21 +98,20 @@ class GameLoader {
         return game;
     }
 
-    static getGamesFromSolutionsConfig(){
+    static getGamesFromSolutionsConfig(boardname){
         let gameArray = [];
 
         //loop over solutionsConfig to find currently active Board
         let tempArray = [];
         for (let boardType in solutionsConfig){
             //check which board has active status
-            if (solutionsConfig[boardType]["active"] == true){
+            if (boardType == boardname){
                 tempArray = solutionsConfig[boardType]["solutionsArray"];
             }
         }
 
         for (let i = 0; i < tempArray.length; i++) {
             let line = tempArray[i];
-            // console.log(line);
             
             let game = this.getGameFromString(line);
             gameArray.push(game);
