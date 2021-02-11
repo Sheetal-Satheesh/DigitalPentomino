@@ -28,9 +28,9 @@ class Visual {
 
     isBlockCell(posX, posY){
         var bCellsFnd=false;
-            if (this.pd.blockCells != undefined){
-                this.pd.blockCells.forEach(function(cells){
-                    if(cells[0] == posX && cells[1] == posY){
+            if (this.pd.blockedCells != undefined){
+                this.pd.blockedCells.forEach(function(cells){
+                    if(cells[0] + this.boardX == posX && cells[1] + this.boardY == posY){
                         bCellsFnd= true;
                     }
                 },this);
@@ -119,17 +119,16 @@ class Visual {
                 if (row < this.boardX) isBoard = false;
                 if (row >= this.boardX + this.gameController.getBoardSize()[0]) isBoard = false;
               //Ashwini: For Blocking the cells
-				if (baseConfig[boardCfg.board].hasOwnProperty('blockedCells'))
+				if (this.pd.blockedCells != undefined)
 				{
-					this.blockedCells = baseConfig[boardCfg.board].blockedCells;
-
-					for (var arr = 0; arr < this.blockedCells.length; arr++) {
-						if(row == this.blockedCells[arr][0] && col == this.blockedCells[arr][1]) {
+					for (var arr = 0; arr < this.pd.blockedCells.length; arr++) {
+						if(row == this.pd.blockedCells[arr][0] + this.pd.boardStartX && 
+                                col == this.pd.blockedCells[arr][1] + this.pd.boardStartY) {
 							blockedCell = true;
 							break;
 						}
 					}
-
+                   
                     if(blockedCell)
 						out += '<div class="gamearea ' + ((isBoard) ? 'boardarea blockedcell' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';
 					else

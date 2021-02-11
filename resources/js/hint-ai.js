@@ -12,7 +12,7 @@ class HintAI {
     }
 
     getHint(game) {
-        let solutions = GameLoader.getGamesFromSolutionsConfig();
+        let solutions = GameLoader.getGamesFromSolutionsConfig("board_3x21a");
         let possibleSolutions = this._getPossibleSolutions(game, solutions);
         if (possibleSolutions.length > 0) {
             // Pursue closest solution
