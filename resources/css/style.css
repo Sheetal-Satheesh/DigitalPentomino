@@ -58,7 +58,7 @@
 #operations  img{
     width:3vw;
     height:3vw;
-    
+
 }
 
 #operations table tr td div{
@@ -72,6 +72,21 @@
   margin-top: 2px;
 }
 
+#pieceManipulation table tr td div{
+  margin:14px;
+  margin-top: 2px;
+}
+
+#pieceManipulation  img{
+    width:3vw;
+    height:3vw;
+
+}
+#pieceManipulation{
+   position: absolute;
+   display: none;
+   z-index: 10;
+}
 
 .gamearea {
     display: block;
@@ -84,7 +99,7 @@
 
 .boardarea {
   background: rgb(173, 192, 185);
-}				 
+}
 .blockedcell {
 	background: repeating-linear-gradient(
   45deg,
@@ -131,7 +146,7 @@
   background:rgb(141, 160, 157);
   border-radius: 10%;
   border: 0;
-  
+
 }
 
 .CMenuTB img{
@@ -238,7 +253,7 @@ img#logo{
 
 
 
-table 
+table
     {
      position: relative;
       margin-top: 50px;
@@ -250,7 +265,7 @@ table
 
      table tr td{
         margin:-20px;
-        border-width:0px; 
+        border-width:0px;
         margin:0px;
         width: 10px;
         padding: 0px;
@@ -279,7 +294,7 @@ table
       border-radius: 10%;
       border: 0;
       padding: 0px;
-     } 
+     }
 
      table tr td div:hover {
      box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
@@ -294,7 +309,7 @@ table
  @media only screen and (max-width: 1137px) {
       #operations  img{
             width:2.5vw;
-            height:2.5vw; 
+            height:2.5vw;
         }
 
         #operations table tr td div{
@@ -313,7 +328,7 @@ table
     @media only screen and (max-width: 1137px) {
       #operations  img{
             width:2vw;
-            height:2vw; 
+            height:2vw;
         }
 
         #operations table tr td div{

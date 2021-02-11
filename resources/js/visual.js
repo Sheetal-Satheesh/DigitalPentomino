@@ -25,7 +25,7 @@ class Visual {
         this.initalizeListeners();
     }
 
-     
+
     isBlockCell(posX, posY){
         var bCellsFnd=false;
             if (this.pd.blockedCells != undefined){
@@ -68,7 +68,7 @@ class Visual {
     }
 
     placePentomino(pentomino, posX, posY){
-        
+
         this.gameController.placePentomino(pentomino, posX, posY);
         var bCellsFnd = this.isPentominoInBlockCells(pentomino);
         var collisonFnd = this.isCollision(pentomino);
@@ -219,7 +219,7 @@ class Visual {
             htmlElement.style.zIndex = 3000;
 
         } else  {
-            
+
             let [positionY, positionX] = this.gameController.getPositionOfPentomino(piece);
             let left = undefined;
             let top = undefined;
@@ -264,27 +264,29 @@ class Visual {
 
     }
 
-    select(piece) {
+    select(piece,xPosition,yPosition) {
         this.selected = piece;
-        this.showManipulations();
+        this.showManipulations(xPosition,yPosition);
 
     }
 
     deleteSelection() {
         if (!this.selected) return;
         this.selected = false;
-
         this.pd.visual.disableManipulations();
     }
 
     //Enable or Disable manipulation buttons
 
-    showManipulations() {
+    showManipulations(xPosition,yPosition) {
 
         document.getElementById("btnRotateRight").disabled = false;
         document.getElementById("btnRotateLeft").disabled = false;
         document.getElementById("btnFlipH").disabled = false;
-        document.getElementById("btnFlipV").disabled = false;
+        document.getElementById("btnFlipV").disabled = false
+        document.getElementById('pieceManipulation').style.display = 'block';
+        document.getElementById('pieceManipulation').style.left = xPosition + 'px';
+        document.getElementById('pieceManipulation').style.top = yPosition + 'px';
     }
 
     disableManipulations() {
@@ -293,6 +295,7 @@ class Visual {
         document.getElementById("btnRotateLeft").disabled =true;
         document.getElementById("btnFlipH").disabled =true;
         document.getElementById("btnFlipV").disabled =true;
+        document.getElementById('pieceManipulation').style.display = 'none';
 
     }
     // 	save(piece) {
@@ -393,7 +396,7 @@ class Visual {
                     let data_ = window.currentlyMoving;
                     window.currentlyMoving = false;
                     that.positionPiece(data_[1]);
-                    that.select(data_[1]);
+                    that.select(data_[1],event.clientX,event.clientY);
                     return;
             }
 
@@ -427,7 +430,7 @@ class Visual {
                          *
                          * TODO: Make buttons disappear/appear if nothing/something is selected
                          */
-                        that.select(data[1]);
+                        that.select(data[1],event.clientX,event.clientY);
 
                         return;
                     }
@@ -438,7 +441,7 @@ class Visual {
                 var elements = document.elementsFromPoint(event.clientX, event.clientY);
                 for (var i in elements) {
                     var element = elements[i];
-                    if (element.id == 'functions') return; //do not unselect if operations have been applied to the functions panel
+                    if (element.id == 'functions' || element.id == 'pieceManipulation') return; //do not unselect if operations have been applied to the functions panel
                 }
 
                 that.deleteSelection();
@@ -449,7 +452,7 @@ class Visual {
 
     rotateClkWise() {
         let piece = this.selected;
-        if (piece) {        
+        if (piece) {
             let pieceDiv = document.getElementById("piece_" + piece.name);
             let flipped = pieceDiv.getAttribute("flipped") * 1;
             let currentRot = pieceDiv.style.getPropertyValue("--rotationZ").split(/(-?\d+)/)[1] * 1; //converts string value to int
@@ -507,7 +510,7 @@ class Visual {
             let currentRot = pieceDiv.style.getPropertyValue("--rotationY").split(/(-?\d+)/)[1] * 1; //converts string value to int
             let newRot = currentRot + 180;
             // Update the backend
-            let [penX,penY] = this.gameController.getPositionOfPentomino(piece);    
+            let [penX,penY] = this.gameController.getPositionOfPentomino(piece);
             this.gameController.mirrorPentominoV(piece);
             var bCellsFnd = this.isPentominoInBlockCells(piece);
             var collisonFnd = this.isCollision(piece);
