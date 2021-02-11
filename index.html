@@ -44,12 +44,12 @@
           <table>
                 <tr>
                     <td>
-                        <button type="button" id='btnRotateLeft' class = "cActionBtn" onclick="rotateAntiClkWise()"" disabled><img src="resources/images/icons/rotate_left.png">
-                            
+                        <button type="button" id='btnRotateLeft' class = "cActionBtn" onclick="rotateAntiClkWise()" disabled><img src="resources/images/icons/rotate_left.png">
+
                         </button>
                     </td>
                     <td>
-                        <button type="button" id='btnRotateRight' class = "cActionBtn" onclick="rotateClkWise()" disabled> <img src="resources/images/icons/rotate_right.png"> 
+                        <button type="button" id='btnRotateRight' class = "cActionBtn" onclick="rotateClkWise()" disabled> <img src="resources/images/icons/rotate_right.png">
                         </button>
                     </td>
                 </tr>
@@ -84,7 +84,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <button type="button" id='btnBoardSelect' class = "cActionBtn" onclick="selectBoard()" disabled> <img src="resources/images/icons/board.png"> 
+                        <button type="button" id='btnBoardSelect' class = "cActionBtn" onclick="selectBoard()" disabled> <img src="resources/images/icons/board.png">
                         </button>
                     </td>
                     <td>
@@ -112,6 +112,27 @@
         <div id="piecearea"></div>
     </div>
   </div>
+  <div class = "cPieceManipulation" id ="pieceManipulation" >
+    <table>
+      <tr>
+          <td>
+              <button type="button"  id='OpRotateLeft' onclick="rotateAntiClkWise()"><img src="resources/images/icons/rotate_left.png">
+              </button>
+          </td>
+          <td>
+              <button type="button" id='OpRotateRight' onclick="rotateClkWise()"><img src="resources/images/icons/rotate_right.png">
+              </button>
+          </td>
+          <td>
+              <button type="button" id='OpflipH' onclick="flipV()"><img src="resources/images/icons/flip_vertically.png">
+              </button>
+          </td>
+          <td>
+              <button type="button" id='OpflipH' onclick="flipH()"><img src="resources/images/icons/flip_horizontally.png">
+              </button>
+          </td>
+      </tr>
+  </table>
 
     <script type="text/javascript">
         let pd;
@@ -124,7 +145,7 @@
         }
 
         //call hint function
-        
+
         function callHintAI() {
             let hint = document.getElementById("myHint");
             hint.classList.toggle("show");
@@ -158,7 +179,7 @@
         }
 
     </script>
-    <script src="./registerSW.js"></script> 
+    <script src="./registerSW.js"></script>
 
 </body>
 </html>
