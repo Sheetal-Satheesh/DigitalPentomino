@@ -6,7 +6,7 @@ class PD {
          */
         var fController = new FrontController();
         this.gameController = fController.controller;
-        this.loadBoard("board_8x8a");
+        this.loadBoard("board_6x10");
 
         this.visual = new Visual(this);
         this.reset();
@@ -40,6 +40,7 @@ class PD {
 
     loadBoard(board){
         let gameObject = GameLoader.getGameObject(board);
+        this.allSolutions = GameLoader.getGamesFromSolutionsConfig(board);
         this.boardSize = gameObject.boardSize;
         this.boardShape = gameObject.boardShape;
         this.gameHeight = gameObject.gameHeight;
