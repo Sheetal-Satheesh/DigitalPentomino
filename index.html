@@ -135,18 +135,24 @@
             let hintRow = hintCommand._row;
             let hintColumn = hintCommand._col;
             let hintinPen = hintCommand._pentomino;
-            
-           // getOccupiedPositions(hintinPen);
-            console.log(hintinPen, getOccupiedPositions(hintinPen));
            // console.log("Position should be " + hintRow + "," + hintColumn);
             //--> now color the field on the board
-            let fieldvalue = document.getElementById("field_" + hintRow + "," + hintColumn);
+            
             let piecePos = getOccupiedPositions(hintinPen);
-            piecePos.style.background = "red";
+            console.log("hintinPen",hintinPen, piecePos);
+              for(let i=0;i<5;i++){
+                     console.log("here====>",piecePos[i][0], piecePos[i][1]);
+                }
+            //piecePos.style.background = "red";
+
             // TODO: make it fade back to previous background color
+            let fieldvalue = document.getElementById("field_" + hintRow + "," + hintColumn);
+             fieldvalue.style.background = "red";
              setTimeout(function(){
                     fieldvalue.style.background = "#adc0b9";
                 }, 300);
+
+
             // END: FOR TESTING
         }
 
@@ -189,14 +195,11 @@
             }
             else{
                 occupiedPosArr.push(PiecePostions[i][j]);
-                     console.log(PiecePostions[i][j]);
+                     //console.log(PiecePostions[i][j]);
             }
         }
     }
-
-
-
-   console.log("occupiedPosArr",occupiedPosArr);
+//console.log("occupiedPosArr",occupiedPosArr);
 
    return occupiedPosArr;
 }
