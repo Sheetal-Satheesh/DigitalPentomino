@@ -7,13 +7,18 @@ if(typeof require != 'undefined') {
 
 class HintAI {
 
-    setSolutionsString(solString){
-        this.solutionsString = solString;
+    loadGameForHinting(game) {
+        this._game = game;
+        this._solutions = GameLoader.getGamesFromSolutionsConfig(game.getName());
     }
 
-    getHint(game) {
-        let solutions = GameLoader.getGamesFromSolutionsConfig("board_3x21a");
-        let possibleSolutions = this._getPossibleSolutions(game, solutions);
+    getHint() {
+        if (this._game === null || this._game === undefined) {
+            throw new Error("No build set (call loadGameForHinting)");
+        }
+
+        let game = this._game;
+        let possibleSolutions = this._getPossibleSolutions(game, this._solutions);
         if (possibleSolutions.length > 0) {
             // Pursue closest solution
             let closestSolution = possibleSolutions[0];
@@ -22,7 +27,7 @@ class HintAI {
             return new Hint(commands[0], possibleSolutions);
         } else {
             // Pursue closest game state, which has at least one possible solution
-            let closestSolution = this._getClosesSolution(game, solutions);
+            let closestSolution = this._getClosesSolution(game, this._solutions);
             let commands = this._getNextCommandsToSolution(game, closestSolution, true);
             if (commands.length === 1) {
                 return new Hint(commands[0], possibleSolutions);

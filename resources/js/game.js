@@ -11,7 +11,8 @@ if(typeof require != 'undefined') {
 }
 
 class Game {
-    constructor(board) {
+    constructor(board, name) {
+        this._name = name;
         this._board = board;
         this._commandManager = new CommandManager();
         /**
@@ -366,6 +367,10 @@ class Game {
 
     getBoardSize() {
         return [this._board._boardRows,this._board._boardCols];
+    }
+
+    getName() {
+        return this._name;
     }
 
     // --- --- --- Debugging --- --- ---
