@@ -134,30 +134,40 @@
             let hintCommand = pd.gameController.getHint().getCommand();
             let hintRow = hintCommand._row;
             let hintColumn = hintCommand._col;
-            console.log(hintCommand);
-            console.log("Position should be " + hintRow + "," + hintColumn);
+            let hintinPen = hintCommand._pentomino;
+            
+            getOccupiedPositions(hintinPen);
+            console.log(hintinPen, getOccupiedPositions(hintinPen));
+           // console.log("Position should be " + hintRow + "," + hintColumn);
             //--> now color the field on the board
             let fieldvalue = document.getElementById("field_" + hintRow + "," + hintColumn);
-            //fieldvalue.style.background = "grey";
-            //fieldvalue.style.visibility = "auto";
-            fieldvalue.style.background = "red";
-
-            // make it fade back to previous background color
+            let piecePos = getOccupiedPositions(hintinPen);
+            piecePos.style.background = "red";
+            // TODO: make it fade back to previous background color
              setTimeout(function(){
                     fieldvalue.style.background = "#adc0b9";
                 }, 300);
             // END: FOR TESTING
         }
 
-        function getOccupiedPositions(piece){
+         function getOccupiedPositions(piece){
 
         let PiecePostions = [];
-
         //calcultions of the positions rendered on the field
         //calculation of the start cell of the piece bitmap
-        let startCellPos = [parseInt(piece.position[0])-2, parseInt(piece.position[1])-2];
-
-        for(let j=0; j<5; j++){
+        let hintCommand = pd.gameController.getHint().getCommand();
+        let hintRow = hintCommand._row;
+        let hintColumn = hintCommand._col;
+        let hintinPen = hintCommand._pentomino;
+        const occupiedPosArr=[];
+        const ZeroPosition  = [0,0];
+        piece = hintinPen;
+        console.log("this==>",piece);
+        let startCellPos = [parseInt(hintRow)-2, parseInt(hintColumn)-2];       
+         console.log("this -- startCellPos ==>",startCellPos,hintRow, hintColumn); 
+         const pieceBitmap = piece.getMatrixRepresentation();
+         console.log(pieceBitmap);
+          for(let j=0; j<5; j++){
             let row = [];
             for(let i=0;i<5;i++){
                 row.push([startCellPos[0]+i, startCellPos[1]]);
@@ -167,25 +177,29 @@
             //increments the rows
             startCellPos[1] = startCellPos[1] + 1;
         }
-        //stores all the positions of the pieceBitmap rendered on the board
-        //stores bitmap of the piece on the field area
-        const pieceBitmap = piece.bitMap;
-        const occupiedPosArr=[];
-        //assume bitmap with entries zeros are ZeroPostion
-        const ZeroPosition  = [0,0];
-        for(let i=0;i<5;i++){
-            for(let j=0;j<5;j++){
-                if(pieceBitmap[i][j] == 0){
-                    PiecePostions[i][j] = ZeroPosition;
-                }
-                else{
-                    occupiedPosArr.push(PiecePostions[i][j]);
 
-                }
+        console.log(PiecePostions);
+
+
+
+       for(let i=0;i<5;i++){
+        for(let j=0;j<5;j++){
+            if(pieceBitmap[i][j] == 0){
+                PiecePostions[i][j] = ZeroPosition;
+            }
+            else{
+                occupiedPosArr.push(PiecePostions[i][j]);
+                     console.log(PiecePostions[i][j]);
             }
         }
-        return {occupiedPosArr, PiecePostions};
-      }
+    }
+
+
+
+   console.log("occupiedPosArr",occupiedPosArr);
+
+   return occupiedPosArr;
+}
 
     
 
@@ -193,7 +207,6 @@
 
         //hinting popup disappears when mouse pointer is away
         document.getElementById("hintButton").addEventListener("mouseleave", function() {
-            console.log("mouse out");
                  document.getElementById("myHint").style.visibility = "hidden";
         });
 
