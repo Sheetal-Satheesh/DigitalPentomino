@@ -6,7 +6,7 @@ class PD {
          */
         var fController = new FrontController();
         this.gameController = fController.controller;
-        this.loadBoard("board_3x21a");
+        this.loadBoard("board_6x10");
     }
 
     rotateClkWise(){

@@ -20,7 +20,7 @@ class Visual {
         this.selected = false
 
         this.renderBoard();
-        this.renderPieces(this.pieces);
+        this.renderPieces();
 
         this.initalizeListeners();
     }
@@ -84,10 +84,9 @@ class Visual {
     clear(){
         this.gameController.resetGame();
         this.pieces = this.gameController.getPentominoes();
-        this.renderPieces(this.pieces);
+        this.pd.visual.disableManipulations();
+        this.renderPieces();
     }
-
-
 
     callHintAI() {
                 let hint = document.getElementById("myHint");
@@ -146,7 +145,7 @@ class Visual {
      * Create the visual representations of the pieces
      * */
 
-    renderPieces(pieces) {
+    renderPieces() {
 
         //TODO: Check whether in the innerHTML approach is good here!
 
@@ -162,7 +161,7 @@ class Visual {
         var pieceArea = document.getElementById('piecearea');
         let out = '';
         var width = UIProperty.WindowWidth / this.pd.gameWidth;
-        pieces.forEach(piece => {
+        this.pieces.forEach(piece => {
             let bitMap = piece.getMatrixRepresentation();
 
             /**
@@ -430,12 +429,10 @@ class Visual {
                          * TODO: Make buttons disappear/appear if nothing/something is selected
                          */
                         that.select(data[1],event.clientX,event.clientY);
-
                         return;
                     }
                 }
             } else {
-
                 // In case nothing was moving, this becomes an unselect operation
                 var elements = document.elementsFromPoint(event.clientX, event.clientY);
                 for (var i in elements) {
@@ -529,7 +526,6 @@ class Visual {
         this.clear();
         let prefillCandidates = [];
         let randomSolution = undefined;
-        let candidate = undefined;
         let positions = [];
         let currentAnchor = [];
         let candidateAnchor = [];
@@ -543,32 +539,34 @@ class Visual {
         }
         if (randomSolution != undefined) {
             for(let i = 0; i < randomSolution[0].length; ++i) {
-                let bOverlap = false;
                 piecePosition = randomSolution[0][i];
                 piece = randomSolution[1][i];
                 currentAnchor = [piecePosition.boardPosition[0] + this.boardX, piecePosition.boardPosition[1] + this.boardY];
                 for (let j = 0; j < positions.length; ++j) {
+                    bOverlap = false;
                     candidateAnchor = [positions[j][0], positions[j][1]];
                     if(Math.sqrt(
-                        Math.pow((currentAnchor[0]-candidateAnchor[0]),2) + Math.pow((currentAnchor[1]-candidateAnchor[1]),2) < 2)) {
+                        Math.pow((currentAnchor[0]-candidateAnchor[0]),2) + Math.pow((currentAnchor[1]-candidateAnchor[1]),2)) < 2.2) {
                             bOverlap = true;
                             break;
                     }
                 }
-                if(bOverlap) 
-                    break;
-                positions.push(currentAnchor);
-                this.gameController.placePentomino(piece, currentAnchor[0], currentAnchor[1]);
+                if(bOverlap) {
+                    piece = new Pentomino(piece.name);
+                    prefillCandidates.push(piece);
+                    continue;   
+                }
                 prefillCandidates.push(piece);
+                positions.push(currentAnchor);
+                piece.removeFromTray();
+                this.gameController.placePentomino(piece, currentAnchor[0], currentAnchor[1]);
             }
 
         } else {
             // TODO: throw error
         }
-        if (prefillCandidates.length > 0) {
-            prefillCandidates.forEach(candidate => candidate.removeFromTray());
-            this.renderPieces(prefillCandidates);
-        }
+        this.pieces = prefillCandidates;
+        this.renderPieces();
     }
 
     _getRandomElementFromArray(arrayObject) {
