@@ -89,7 +89,7 @@ class GameController {
     getHint()
     {
         if (this._game === null) throw new Error("Game is not set");
-        return this._hintAI.getHint(this._game);
+        return this._hintAI.getHint();
     }
 
     // --- --- --- History --- --- ---
@@ -143,6 +143,7 @@ class GameController {
     // --- --- --- Set Game --- --- ---
     setGame(game) {
         this._game = game;
+        this._hintAI.loadGameForHinting(game);
     };
 
     resetGame(){
@@ -150,14 +151,14 @@ class GameController {
         return this._game;
     }
 
-    createGame(boardStartXY, boardSizeXY, Boardshape) {
+    createGame(boardStartXY, boardSizeXY, Boardshape, name) {
         boardStartXY[0] = parseInt(boardStartXY[0]);
         boardStartXY[1] = parseInt(boardStartXY[1]);
 
         boardSizeXY[0]=parseInt(boardSizeXY[0]);
         boardSizeXY[1]=parseInt(boardSizeXY[1]);
 
-        this.setGame(new Game(new Board(boardStartXY,boardSizeXY,Boardshape)));
+        this.setGame(new Game(new Board(boardStartXY,boardSizeXY,Boardshape), name));
         this._game._fillUpTray();
     }
 
