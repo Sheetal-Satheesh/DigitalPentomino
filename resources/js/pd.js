@@ -52,7 +52,8 @@ class PD {
         this.gameController.createGame(
                                     [this.boardStartX, this.boardStartY],
                                     this.boardSize,
-                                    this.boardShape);
+                                    this.boardShape,
+                            "board_6x10");
 
         this.visual = new Visual(this);
         this.visual.showNumberOfPossibleSolutions();
