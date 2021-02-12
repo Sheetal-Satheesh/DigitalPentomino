@@ -20,7 +20,7 @@ class Visual {
         this.selected = false
 
         this.renderBoard();
-        this.renderPieces();
+        this.renderPieces(this.pieces);
 
         this.initalizeListeners();
     }
@@ -84,7 +84,7 @@ class Visual {
     clear(){
         this.gameController.resetGame();
         this.pieces = this.gameController.getPentominoes();
-        this.renderPieces();
+        this.renderPieces(this.pieces);
     }
 
 
@@ -146,7 +146,7 @@ class Visual {
      * Create the visual representations of the pieces
      * */
 
-    renderPieces() {
+    renderPieces(pieces) {
 
         //TODO: Check whether in the innerHTML approach is good here!
 
@@ -162,7 +162,7 @@ class Visual {
         var pieceArea = document.getElementById('piecearea');
         let out = '';
         var width = UIProperty.WindowWidth / this.pd.gameWidth;
-        this.pieces.forEach(piece => {
+        pieces.forEach(piece => {
             let bitMap = piece.getMatrixRepresentation();
 
             /**
@@ -189,7 +189,6 @@ class Visual {
             setTimeout(function (that, piece) {
                 that.positionPiece(piece);
             }, 0, this, piece);
-
 
         });
 
@@ -524,5 +523,58 @@ class Visual {
     showNumberOfPossibleSolutions() {
         let labelPossibleSolutions = document.getElementById("labelNumberSolutions");
         labelPossibleSolutions.innerText = this.gameController.getHint().getPossibleSolutions().length;
+    }
+
+    prefillBoard() {
+        this.clear();
+        let prefillCandidates = [];
+        let randomSolution = undefined;
+        let candidate = undefined;
+        let positions = [];
+        let currentAnchor = [];
+        let candidateAnchor = [];
+        let piece = undefined;
+        let piecePosition = undefined;
+        let bOverlap = false;
+        if (this.pd.allSolutions.length > 0) {
+            randomSolution = this._getRandomElementFromArray(this.pd.allSolutions);
+        } else {
+            // TODO: throw error
+        }
+        if (randomSolution != undefined) {
+            for(let i = 0; i < randomSolution[0].length; ++i) {
+                let bOverlap = false;
+                piecePosition = randomSolution[0][i];
+                piece = randomSolution[1][i];
+                currentAnchor = [piecePosition.boardPosition[0] + this.boardX, piecePosition.boardPosition[1] + this.boardY];
+                for (let j = 0; j < positions.length; ++j) {
+                    candidateAnchor = [positions[j][0], positions[j][1]];
+                    if(Math.sqrt(
+                        Math.pow((currentAnchor[0]-candidateAnchor[0]),2) + Math.pow((currentAnchor[1]-candidateAnchor[1]),2) < 2)) {
+                            bOverlap = true;
+                            break;
+                    }
+                }
+                if(bOverlap) 
+                    break;
+                positions.push(currentAnchor);
+                this.gameController.placePentomino(piece, currentAnchor[0], currentAnchor[1]);
+                prefillCandidates.push(piece);
+            }
+
+        } else {
+            // TODO: throw error
+        }
+        if (prefillCandidates.length > 0) {
+            prefillCandidates.forEach(candidate => candidate.removeFromTray());
+            this.renderPieces(prefillCandidates);
+        }
+    }
+
+    _getRandomElementFromArray(arrayObject) {
+        if (Array.isArray(arrayObject)) {
+            return arrayObject[Math.floor(Math.random() * arrayObject.length)];
+        }
+        return undefined;
     }
 }

@@ -6,10 +6,7 @@ class PD {
          */
         var fController = new FrontController();
         this.gameController = fController.controller;
-        this.loadBoard("board_6x10");
-
-        this.visual = new Visual(this);
-        this.reset();
+        this.loadBoard("board_3x21a");
     }
 
     rotateClkWise(){
@@ -33,14 +30,17 @@ class PD {
     }
 
     reset(){
-       this.gameController.resetGame();
        this.visual.clear();
        this.visual.showNumberOfPossibleSolutions();
     }
 
     loadBoard(board){
         let gameObject = GameLoader.getGameObject(board);
-        this.allSolutions = GameLoader.getGamesFromSolutionsConfig(board);
+        let allSolutions = [];
+        // Get all the games and filter solutions
+        GameLoader.getGamesFromSolutionsConfig(board).forEach(game => 
+            allSolutions.push([game._board._pentominoPositions, game._board._pentominoes]));
+        this.allSolutions = allSolutions;
         this.boardSize = gameObject.boardSize;
         this.boardShape = gameObject.boardShape;
         this.gameHeight = gameObject.gameHeight;
@@ -64,6 +64,10 @@ class PD {
 
      callHintAI(){
         this.visual.callHintAI();
+    }
+
+    prefillBoard(){
+        this.visual.prefillBoard();
     }
 }
 
