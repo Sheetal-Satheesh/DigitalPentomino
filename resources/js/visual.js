@@ -533,21 +533,61 @@ class Visual {
         let popupText = document.getElementById("myHint");
         popupText.textContent = pd.gameController.getHint().getText();
 
+        this.indicateHint();
+            
+    }
+
+    indicateHint(){
+        //possible command names (place, remove, moveToPosition, rotateClkWise, rotateAntiClkWise, mirrorH, mirrorV)
         let hintCommand = pd.gameController.getHint().getCommand();
-        let hintRow = hintCommand._row;
-        let hintColumn = hintCommand._col;
-        let hintinPen = hintCommand._pentomino;
-        let fieldvalue;
-        let prevBackground = [];
-        
-        let piecePos = this.getOccupiedPositions(hintinPen);
-        console.log("hintinPen",hintinPen, piecePos);
-            for(let i=0;i<5;i++){
-                    fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
-                    prevBackground[i] = fieldvalue.style.background;
-                    fieldvalue.style.background = "red";
-                    this.hide(piecePos, prevBackground);
-            }
+        let hintName = hintCommand.getName();
+
+        switch (hintName) {
+            case "place":
+                // handle place hint
+                let hintRow = hintCommand._row;
+                let hintColumn = hintCommand._col;
+                let hintinPen = hintCommand._pentomino;
+                let fieldvalue;
+                let prevBackground = [];
+                
+                let piecePos = this.getOccupiedPositions(hintinPen,hintCommand);
+                console.log("hintinPen",hintinPen, piecePos);
+                    for(let i=0;i<5;i++){
+                            fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
+                            prevBackground[i] = fieldvalue.style.background;
+                            fieldvalue.style.background = "red";
+                            this.hide(piecePos, prevBackground);
+                    }
+                break;
+
+            case "moveToPosition":
+                // handle moveToPosition hint
+                break;
+            
+            case "remove":
+                // handle remove hint
+                break;
+                    
+            case "rotateClkWise":
+                // handle rotateClkWise hint
+                break;
+
+            case "rotateAntiClkWise":
+                // handle rotateAntiClkWise hint
+                break;
+            
+            case "mirrorH":
+                // handle mirrorH hint
+                break;
+
+            case "mirrorV":
+                // handle mirrorV hint
+                break;
+
+            default:
+                console.log("Unknown piece action detected!");
+        }
     }
 
     hide(piecePos, prevBackground){
@@ -555,6 +595,7 @@ class Visual {
         setTimeout(function(){
             for (let j=0;j<5;j++){
                     let fvalue = document.getElementById("field_" + piecePos[j][0] + "," + piecePos[j][1]);
+                    //TODO: replace with proper fadeOut animation
                     fvalue.style.background = prevBackground[j];
                 
             }
@@ -562,49 +603,33 @@ class Visual {
     }
 
 
-    getOccupiedPositions(piece){
+    getOccupiedPositions(piece,hintCommand){
 
         let PiecePostions = [];
-        //calcultions of the positions rendered on the field
-        //calculation of the start cell of the piece bitmap
-        let hintCommand = pd.gameController.getHint().getCommand();
         let hintRow = hintCommand._row;
+        let startRow = hintRow-2;
         let hintColumn = hintCommand._col;
-        let hintinPen = hintCommand._pentomino;
-        let occupiedPosArr=[];
-        let ZeroPosition  = [0,0];
-        piece = hintinPen;
-        console.log("this==>",piece);
-        let startCellPos = [parseInt(hintRow)-2, parseInt(hintColumn)-2];       
-        console.log("this -- startCellPos ==>",startCellPos,hintRow, hintColumn); 
+        let startColumn = hintColumn-2;
+        let occupiedPosArray=[];
+        
         let pieceBitmap = piece.getMatrixRepresentation();
-        console.log(pieceBitmap);
-        for(let j=0; j<5; j++){
-            let row = [];
-            for(let i=0;i<5;i++){
-                row.push([startCellPos[0]+i, startCellPos[1]]);
-            }
-            //PiecePostions stores positions of each row of the bitmap
-            PiecePostions.push(row);
-            //increments the rows
-            startCellPos[1] = startCellPos[1] + 1;
-        }
 
-        console.log(PiecePostions);
-
-        for(let i=0;i<5;i++){
-            for(let j=0;j<5;j++){
-                if(pieceBitmap[i][j] == 0){
-                    PiecePostions[i][j] = ZeroPosition;
-                }
-                else{
-                    occupiedPosArr.push(PiecePostions[i][j]);
-                        //console.log(PiecePostions[i][j]);
+        //add all elements of current 5*5 overlay on board where piece matrix has 1's
+        let k=0;
+        for (let i = 0; i<5; i++){
+            for (let j = 0; j<5; j++){
+                let piecePos = [];
+                if (pieceBitmap[i][j] == "1"){
+                    //add to occupiedPosArray
+                    piecePos[0] = i+startRow;
+                    piecePos[1] = j+startColumn;
+                    occupiedPosArray[k] = piecePos;
+                    k++;
                 }
             }
         }
 
-        return occupiedPosArr;
+        return occupiedPosArray;
     }
 
 
