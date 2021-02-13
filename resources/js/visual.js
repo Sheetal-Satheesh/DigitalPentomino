@@ -535,7 +535,7 @@ class Visual {
         if (this.pd.allSolutions.length > 0) {
             randomSolution = this._getRandomElementFromArray(this.pd.allSolutions);
         } else {
-            // TODO: throw error
+            ;// TODO: throw error
         }
         if (randomSolution != undefined) {
             for(let i = 0; i < randomSolution[0].length; ++i) {
@@ -563,7 +563,7 @@ class Visual {
             }
 
         } else {
-            // TODO: throw error
+            ;// TODO: throw error
         }
         this.pieces = prefillCandidates;
         this.renderPieces();
