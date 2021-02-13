@@ -548,12 +548,14 @@ class Visual {
             for(let i = 0; i < randomSolution[0].length; ++i) {
                 piecePosition = randomSolution[0][i];
                 piece = randomSolution[1][i];
-                currentAnchor = [piecePosition.boardPosition[0] + this.boardX, piecePosition.boardPosition[1] + this.boardY];
+                currentAnchor = [piecePosition.boardPosition[0] + this.boardX,
+                                piecePosition.boardPosition[1] + this.boardY];
                 for (let j = 0; j < positions.length; ++j) {
                     bOverlap = false;
                     candidateAnchor = [positions[j][0], positions[j][1]];
                     if(Math.sqrt(
-                        Math.pow((currentAnchor[0]-candidateAnchor[0]),2) + Math.pow((currentAnchor[1]-candidateAnchor[1]),2)) < 2.2) {
+                        Math.pow((currentAnchor[0]-candidateAnchor[0]),2) +
+                        Math.pow((currentAnchor[1]-candidateAnchor[1]),2)) < 2.2) {
                             bOverlap = true;
                             break;
                     }
@@ -568,7 +570,6 @@ class Visual {
                 piece.removeFromTray();
                 this.gameController.placePentomino(piece, currentAnchor[0], currentAnchor[1]);
             }
-
         } else {
             ;// TODO: throw error
         }
