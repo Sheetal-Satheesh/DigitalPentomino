@@ -84,10 +84,9 @@ class Visual {
     clear(){
         this.gameController.resetGame();
         this.pieces = this.gameController.getPentominoes();
+        this.pd.visual.disableManipulations();
         this.renderPieces();
     }
-
-
 
     callHintAI() {
                 let hint = document.getElementById("myHint");
@@ -189,7 +188,6 @@ class Visual {
             setTimeout(function (that, piece) {
                 that.positionPiece(piece);
             }, 0, this, piece);
-
 
         });
 
@@ -431,12 +429,10 @@ class Visual {
                          * TODO: Make buttons disappear/appear if nothing/something is selected
                          */
                         that.select(data[1],event.clientX,event.clientY);
-
                         return;
                     }
                 }
             } else {
-
                 // In case nothing was moving, this becomes an unselect operation
                 var elements = document.elementsFromPoint(event.clientX, event.clientY);
                 for (var i in elements) {
@@ -524,5 +520,67 @@ class Visual {
     showNumberOfPossibleSolutions() {
         let labelPossibleSolutions = document.getElementById("labelNumberSolutions");
         labelPossibleSolutions.innerText = this.gameController.getHint().getPossibleSolutions().length;
+    }
+
+    prefillBoard() {
+        this.clear();
+        let allSolutions = [];
+        // Get all the games and filter solutions
+        if(this.allSolutions == undefined) {
+            GameLoader.getGamesFromSolutionsConfig(this.pd.boardName).forEach(game => 
+                allSolutions.push([game._board._pentominoPositions, game._board._pentominoes]));
+            this.allSolutions = allSolutions;
+        }
+        let prefillCandidates = [];
+        let randomSolution = undefined;
+        let positions = [];
+        let currentAnchor = [];
+        let candidateAnchor = [];
+        let piece = undefined;
+        let piecePosition = undefined;
+        let bOverlap = false;
+        if (this.allSolutions.length > 0) {
+            randomSolution = this._getRandomElementFromArray(this.allSolutions);
+        } else {
+            ;// TODO: throw error
+        }
+        if (randomSolution != undefined) {
+            for(let i = 0; i < randomSolution[0].length; ++i) {
+                piecePosition = randomSolution[0][i];
+                piece = randomSolution[1][i];
+                currentAnchor = [piecePosition.boardPosition[0] + this.boardX,
+                                piecePosition.boardPosition[1] + this.boardY];
+                for (let j = 0; j < positions.length; ++j) {
+                    bOverlap = false;
+                    candidateAnchor = [positions[j][0], positions[j][1]];
+                    if(Math.sqrt(
+                        Math.pow((currentAnchor[0]-candidateAnchor[0]),2) +
+                        Math.pow((currentAnchor[1]-candidateAnchor[1]),2)) < 2.2) {
+                            bOverlap = true;
+                            break;
+                    }
+                }
+                if(bOverlap) {
+                    piece = new Pentomino(piece.name);
+                    prefillCandidates.push(piece);
+                    continue;   
+                }
+                prefillCandidates.push(piece);
+                positions.push(currentAnchor);
+                piece.removeFromTray();
+                this.gameController.placePentomino(piece, currentAnchor[0], currentAnchor[1]);
+            }
+        } else {
+            ;// TODO: throw error
+        }
+        this.pieces = prefillCandidates;
+        this.renderPieces();
+    }
+
+    _getRandomElementFromArray(arrayObject) {
+        if (Array.isArray(arrayObject)) {
+            return arrayObject[Math.floor(Math.random() * arrayObject.length)];
+        }
+        return undefined;
     }
 }
