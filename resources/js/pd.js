@@ -38,8 +38,8 @@ class PD {
        this.visual.showNumberOfPossibleSolutions();
     }
 
-    loadBoard(board){
-        let gameObject = GameLoader.getGameObject(board);
+    loadBoard(boardName){
+        let gameObject = GameLoader.getGameObject(boardName);
         this.boardSize = gameObject.boardSize;
         this.boardShape = gameObject.boardShape;
         this.gameHeight = gameObject.gameHeight;
@@ -52,7 +52,7 @@ class PD {
                                     [this.boardStartX, this.boardStartY],
                                     this.boardSize,
                                     this.boardShape,
-                            "board_6x10");
+                            boardName);
 
         this.visual = new Visual(this);
         this.visual.showNumberOfPossibleSolutions();
