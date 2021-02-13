@@ -533,28 +533,32 @@ class Visual {
         let popupText = document.getElementById("myHint");
         popupText.textContent = pd.gameController.getHint().getText();
 
-        // START: FOR TESTING
         let hintCommand = pd.gameController.getHint().getCommand();
         let hintRow = hintCommand._row;
         let hintColumn = hintCommand._col;
         let hintinPen = hintCommand._pentomino;
-            //let fieldvalue;
-        // console.log("Position should be " + hintRow + "," + hintColumn);
-        //--> now color the field on the board
+        let fieldvalue;
+        let prevBackground = [];
         
         let piecePos = this.getOccupiedPositions(hintinPen);
         console.log("hintinPen",hintinPen, piecePos);
             for(let i=0;i<5;i++){
-                    console.log("destination positon field: [" + piecePos[i][0] + "],[" + piecePos[i][1] + "]");
+                    fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
+                    prevBackground[i] = fieldvalue.style.background;
+                    fieldvalue.style.background = "red";
+                    this.hide(piecePos, prevBackground);
             }
-        //piecePos.style.background = "red";
+    }
 
-        // TODO: make it fade back to previous background color
-        let fieldvalue = document.getElementById("field_" + hintRow + "," + hintColumn);
-            fieldvalue.style.background = "red";
-            setTimeout(function(){
-                fieldvalue.style.background = "#adc0b9";
-            }, 300);
+    hide(piecePos, prevBackground){
+
+        setTimeout(function(){
+            for (let j=0;j<5;j++){
+                    let fvalue = document.getElementById("field_" + piecePos[j][0] + "," + piecePos[j][1]);
+                    fvalue.style.background = prevBackground[j];
+                
+            }
+        }, 2000);
     }
 
 
@@ -599,7 +603,6 @@ class Visual {
                 }
             }
         }
-        //console.log("occupiedPosArr",occupiedPosArr);
 
         return occupiedPosArr;
     }
