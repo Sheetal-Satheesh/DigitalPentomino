@@ -124,96 +124,14 @@
         }
 
         function callHintAI() {
-            let hint = document.getElementById("myHint");
-            hint.classList.toggle("show");
-            hint.style.visibility = "visible";
-            let popupText = document.getElementById("myHint");
-            popupText.textContent = pd.gameController.getHint().getText();
-
-            // START: FOR TESTING
-            let hintCommand = pd.gameController.getHint().getCommand();
-            let hintRow = hintCommand._row;
-            let hintColumn = hintCommand._col;
-            let hintinPen = hintCommand._pentomino;
-             //let fieldvalue;
-           // console.log("Position should be " + hintRow + "," + hintColumn);
-            //--> now color the field on the board
+            pd.visual.callHintAI();
             
-            let piecePos = getOccupiedPositions(hintinPen);
-            console.log("hintinPen",hintinPen, piecePos);
-              for(let i=0;i<5;i++){
-                     console.log("here====>",piecePos[i][0], piecePos[i][1]);
-                }
-            //piecePos.style.background = "red";
-
-            // TODO: make it fade back to previous background color
-            let fieldvalue = document.getElementById("field_" + hintRow + "," + hintColumn);
-             fieldvalue.style.background = "red";
-             setTimeout(function(){
-                    fieldvalue.style.background = "#adc0b9";
-                }, 300);
-
-
-            // END: FOR TESTING
         }
-
-         function getOccupiedPositions(piece){
-
-        let PiecePostions = [];
-        //calcultions of the positions rendered on the field
-        //calculation of the start cell of the piece bitmap
-        let hintCommand = pd.gameController.getHint().getCommand();
-        let hintRow = hintCommand._row;
-        let hintColumn = hintCommand._col;
-        let hintinPen = hintCommand._pentomino;
-        const occupiedPosArr=[];
-        const ZeroPosition  = [0,0];
-        piece = hintinPen;
-        console.log("this==>",piece);
-        let startCellPos = [parseInt(hintRow)-2, parseInt(hintColumn)-2];       
-         console.log("this -- startCellPos ==>",startCellPos,hintRow, hintColumn); 
-         const pieceBitmap = piece.getMatrixRepresentation();
-         console.log(pieceBitmap);
-          for(let j=0; j<5; j++){
-            let row = [];
-            for(let i=0;i<5;i++){
-                row.push([startCellPos[0]+i, startCellPos[1]]);
-            }
-            //PiecePostions stores positions of each row of the bitmap
-            PiecePostions.push(row);
-            //increments the rows
-            startCellPos[1] = startCellPos[1] + 1;
-        }
-
-        console.log(PiecePostions);
-
-
-
-       for(let i=0;i<5;i++){
-        for(let j=0;j<5;j++){
-            if(pieceBitmap[i][j] == 0){
-                PiecePostions[i][j] = ZeroPosition;
-            }
-            else{
-                occupiedPosArr.push(PiecePostions[i][j]);
-                     //console.log(PiecePostions[i][j]);
-            }
-        }
-    }
-//console.log("occupiedPosArr",occupiedPosArr);
-
-   return occupiedPosArr;
-}
-
-    
-
-        
 
         //hinting popup disappears when mouse pointer is away
         document.getElementById("hintButton").addEventListener("mouseleave", function() {
                  document.getElementById("myHint").style.visibility = "hidden";
         });
-
         
 
         function rotateClkWise(){
