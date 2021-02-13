@@ -8,8 +8,6 @@ class PD {
         /**
          * Front-end interface always call FrontController instead of GameController.
          */
-        this.gameWidth = baseConfig.gameWidth;
-        this.gameHeight = baseConfig.gameHeight;
         var fController = new FrontController();
         this.gameController = fController.controller;
         this.loadBoard("board_8x8a");
@@ -43,19 +41,21 @@ class PD {
        this.visual.showNumberOfPossibleSolutions();
     }
 
-    loadBoard(board){
-        boardCfg.board = board;
-        this.boardSize = baseConfig[boardCfg.board].boardSize;
-        this.boardShape = baseConfig[boardCfg.board].boardShape;
-        this.blockCells = (baseConfig[boardCfg.board].hasOwnProperty('blockedCells'))?
-                                        baseConfig[boardCfg.board].blockedCells:undefined;
+    loadBoard(boardName){
+        let gameObject = GameLoader.getGameObject(boardName);
+        this.boardSize = gameObject.boardSize;
+        this.boardShape = gameObject.boardShape;
+        this.gameHeight = gameObject.gameHeight;
+        this.gameWidth = gameObject.gameWidth;
+        this.blockedCells = gameObject.blockedCells;
 
         this.boardStartX = Math.floor((this.gameHeight - this.boardSize[0]) / 2);
         this.boardStartY = Math.floor((this.gameWidth - this.boardSize[1]) / 2);
         this.gameController.createGame(
                                     [this.boardStartX, this.boardStartY],
                                     this.boardSize,
-                                    this.boardShape);
+                                    this.boardShape,
+                            boardName);
 
         this.visual = new Visual(this);
         this.visual.showNumberOfPossibleSolutions();
@@ -63,6 +63,10 @@ class PD {
 
     hints(){
        return this.gameController.getHint();
+    }
+
+     callHintAI(){
+        this.visual.callHintAI();
     }
 }
 

@@ -1,9 +1,8 @@
 if(typeof require != 'undefined') {
     Game = require('./game.js');
     Board = require('./board.js');
+    SolConfig = require('./configs/solutionsConfig.js');
 }
-
-const solutionsString = "1, FFIIIII LFFNNNY LFNNUUY LPPPUYY LLPPUUY \n\ 2, FFIIIII LFFPPUU LFXPPPU LXXXYUU LLXYYYY \n\ 3, FFIIIII LFFUUUY LFXUTUY LXXXTYY LLXTTTY \n\ 4, FFIIIII LFFWPPP LFWWPPT LWWYTTT LLYYYYT";
 
 class GameLoader {
 
@@ -99,17 +98,20 @@ class GameLoader {
         return game;
     }
 
-    static getGamesFromSolutionsConfig(){
+    static getGamesFromSolutionsConfig(boardname){
         let gameArray = [];
-        console.log("Calling getGamesFromSolutionsConfig");
 
-        //TODO: somehow obtain the txt file from fetch/FS/...
-        let fileString = solutionsString;
-        let fileLines = fileString.split("\n");
-        for (let i = 0; i < fileLines.length; i++) {
-            let line = fileLines[i];
-            line = line.split(",")[1];
-            line = line.trim();
+        //loop over solutionsConfig to find currently active Board
+        let tempArray = [];
+        for (let boardType in solutionsConfig){
+            //check which board has active status
+            if (boardType == boardname){
+                tempArray = solutionsConfig[boardType]["solutionsArray"];
+            }
+        }
+
+        for (let i = 0; i < tempArray.length; i++) {
+            let line = tempArray[i];
             
             let game = this.getGameFromString(line);
             gameArray.push(game);
@@ -124,7 +126,7 @@ class GameLoader {
         let rows = gameString.split(" ");
         let height = rows.length;
         let width = rows[0].length;
-        console.log("Initialize game with height: " + height + " and width: " + width);
+        //console.log("Initialize game with height: " + height + " and width: " + width);
         let game = new Game(new Board([0, 0], [height, width]));
 
         //prepare pentominos for the board
@@ -158,7 +160,6 @@ class GameLoader {
 
                 let position = this.findInParent(matrixRep, boardRep);
                 if (position != null){
-                    //TODO: Place pentomino on Board
                     //console.log("Center of piece " + pento.name + " found: " + position);
                     //console.log("Placing element" + pento.name + " on board...");
                     game.placePentomino(pento, position[0], position[1]);
@@ -228,7 +229,7 @@ class GameLoader {
                 return false;
                 break;
             default:
-                console.log("Strange behavior in findingNextOp...");
+                // console.log("Strange behavior in findingNextOp...");
                 return false;
                 break;
         }
@@ -300,6 +301,40 @@ class GameLoader {
         }
         
         return resultString;
+    }
+
+    /**
+     * Returns all boards with configurations and solutions
+     */
+    static getAllBoards(){
+        let boardsWithConfig = [];
+        if(baseConfigs != undefined && boardConfigs != undefined){
+            if(baseConfigs.hasOwnProperty("boards")){
+                baseConfigs.boards.forEach(board => {
+                    if(boardConfigs.hasOwnProperty(board)){
+                        boardsWithConfig.push(board);
+                    }
+                });
+            }else{
+                throw new Error("Error in configuration: Could not find any boards");    
+            }
+        } else{
+            throw new Error("Error in configuration: Could not find basic game configurations");
+        }
+        return boardsWithConfig;
+    }
+
+    /**
+     * Returns a game object of the selected/default game that can be used to draw the board
+     */
+    static getGameObject(board){
+        return {
+            gameHeight: boardConfigs[board].gameHeight || baseConfigs.gameHeight,
+            gameWidth: boardConfigs[board].gameWidth || baseConfigs.gameWidth,
+            boardSize: boardConfigs[board].boardSize,
+            blockedCells: boardConfigs[board].blockedCells || undefined,
+            boardShape: boardConfigs[board].boardShape || baseConfigs.boardShape
+        };
     }
 }
 

@@ -9,6 +9,7 @@
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="resources/images/icons/dp_192.png">
     <link rel="stylesheet" href="resources/css/style.css">
+	<link rel="stylesheet" href="resources/css/board_selection.css">
     <script src="resources/index.js"></script>
     <script src="resources/js/board.js"></script>
     <script src="resources/js/pentomino.js"></script>
@@ -27,6 +28,9 @@
     <script src="resources/js/command-history/command-path.js"></script>
     <script src="resources/js/command-history/command-history-tree.js"></script>
     <script src="resources/js/config.js"></script>
+    <script src="resources/js/configs/baseConfigs.js"></script>
+    <script src="resources/js/configs/boardConfigs.js"></script>
+    <script src="resources/js/configs/solutionsConfig.js"></script>
     <script src="resources/js/pd.js"></script>
     <script src="resources/js/visual.js"></script>
 
@@ -44,12 +48,12 @@
           <table>
                 <tr>
                     <td>
-                        <button type="button" id='btnRotateLeft' class = "cActionBtn" onclick="rotateAntiClkWise()"" disabled><img src="resources/images/icons/rotate_left.png">
-                            
+                        <button type="button" id='btnRotateLeft' class = "cActionBtn" onclick="rotateAntiClkWise()" disabled><img src="resources/images/icons/rotate_left.png">
+
                         </button>
                     </td>
                     <td>
-                        <button type="button" id='btnRotateRight' class = "cActionBtn" onclick="rotateClkWise()" disabled> <img src="resources/images/icons/rotate_right.png"> 
+                        <button type="button" id='btnRotateRight' class = "cActionBtn" onclick="rotateClkWise()" disabled> <img src="resources/images/icons/rotate_right.png">
                         </button>
                     </td>
                 </tr>
@@ -84,7 +88,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <button type="button" id='btnBoardSelect' class = "cActionBtn" onclick="selectBoard()" disabled> <img src="resources/images/icons/board.png"> 
+                        <button type="button" id='btnBoardSelect' class = "cActionBtn" onclick="selectBoard()"> <img src="resources/images/icons/board.png">
                         </button>
                     </td>
                     <td>
@@ -104,6 +108,83 @@
           <p>
               Number of solutions: <label id="labelNumberSolutions">?</label>
           </p>
+		<div class="form-popup" id="board_selection_form">
+
+			<div class="container">
+				<div class="board_list">
+					<div class="numbertext">1 / 7</div>
+					<img src="resources/images/boards/board_8x8a.png" style="width:40%; height:40%;">
+				</div>
+
+				<div class="board_list">
+					<div class="numbertext">2 / 7</div>
+					<img src="resources/images/boards/board_6x10.png" style="width:40%; height:40%;">
+				</div>
+
+				<div class="board_list">
+					<div class="numbertext">3 / 7</div>
+					<img src="resources/images/boards/board_4x15.png" style="width:40%; height:40%;">
+				</div>
+
+				<div class="board_list">
+					<div class="numbertext">4 / 7</div>
+					<img src="resources/images/boards/board_3x21a.png" style="width:40%; height:40%;">
+				</div>
+
+				<div class="board_list">
+					<div class="numbertext">5 / 7</div>
+					<img src="resources/images/boards/board_3x21b.png" style="width:40%; height:40%;">
+				</div>
+
+				<div class="board_list">
+					<div class="numbertext">6 / 7</div>
+					<img src="resources/images/boards/board_3x21c.png" style="width:40%; height:40%;">
+				</div>
+
+				<div class="board_list">
+					<div class="numbertext"> 7 / 7</div>
+					<img src="resources/images/boards/board_3x21d.png" style="width:40%; height:40%;">
+				</div>
+
+				<a class="prev" onclick="changeBoard(-1)"><</a>
+				<a class="next" onclick="changeBoard(1)">></a>
+
+				<div class="caption-container">
+					<p id="caption"></p>
+				</div>
+
+				<div class="row" style="display: none;">
+					<div class="column">
+					<img class="board_cursor" src="resources/images/boards/board_8x8a.png" onclick="currentBoard(1)" alt="Board 8x8a">
+					</div>
+					<div class="column">
+					<img class="board_cursor" src="resources/images/boards/board_6x10.png" onclick="currentBoard(2)" alt="Board 6x10">
+					</div>
+					<div class="column">
+					<img class="board_cursor" src="resources/images/boards/board_4x15.png" onclick="currentBoard(3)" alt="Board 4x15">
+					</div>
+					<div class="column">
+					<img class="board_cursor" src="resources/images/boards/board_3x21a.png" onclick="currentBoard(4)" alt="Board 3x21a">
+					</div>
+					<div class="column">
+					<img class="board_cursor" src="resources/images/boards/board_3x21b.png" onclick="currentBoard(5)" alt="Board 3x21b">
+					</div>
+					<div class="column">
+					<img class="board_cursor" src="resources/images/boards/board_3x21c.png" onclick="currentBoard(6)" alt="Board 3x21c">
+					</div>
+					<div class="column">
+					<img class="board_cursor" src="resources/images/boards/board_3x21d.png" onclick="currentBoard(7)" alt="Board 3x21d">
+					</div>
+				</div>
+
+				<div class="action_btn">
+					<button type="button" class="btnLoadboard" onclick="loadBoard()">Load Board</button>
+					<button type="button" class="btnCancel" onclick="closeForm()">Cancel</button>
+				</div>
+			</div>
+
+
+		</div>
       </div>
 
     <div id="game">
@@ -112,9 +193,60 @@
         <div id="piecearea"></div>
     </div>
   </div>
+  <div class = "cPieceManipulation" id ="pieceManipulation" >
+    <table>
+      <tr>
+          <td>
+              <button type="button"  id='OpRotateLeft' onclick="rotateAntiClkWise()"><img src="resources/images/icons/rotate_left.png">
+              </button>
+          </td>
+          <td>
+              <button type="button" id='OpRotateRight' onclick="rotateClkWise()"><img src="resources/images/icons/rotate_right.png">
+              </button>
+          </td>
+          <td>
+              <button type="button" id='OpflipH' onclick="flipV()"><img src="resources/images/icons/flip_vertically.png">
+              </button>
+          </td>
+          <td>
+              <button type="button" id='OpflipH' onclick="flipH()"><img src="resources/images/icons/flip_horizontally.png">
+              </button>
+          </td>
+      </tr>
+  </table>
 
     <script type="text/javascript">
         let pd;
+		var boardIndex = 1;
+		showBoard(boardIndex);
+
+		function changeBoard(n) {
+			showBoard(boardIndex += n);
+		}
+
+		function currentBoard(n) {
+			showBoard(boardIndex = n);
+		}
+
+		function showBoard(n) {
+			var i;
+			var slides = document.getElementsByClassName("board_list");
+			var dots = document.getElementsByClassName("board_cursor");
+			var captionText = document.getElementById("caption");
+
+			if (n > slides.length) {boardIndex = 1}
+			if (n < 1) {boardIndex = slides.length}
+			for (i = 0; i < slides.length; i++) {
+				slides[i].style.display = "none";
+			}
+
+			for (i = 0; i < dots.length; i++) {
+				dots[i].className = dots[i].className.replace(" active", "");
+			}
+			slides[boardIndex-1].style.display = "block";
+			dots[boardIndex-1].className += " active";
+			captionText.innerHTML = dots[boardIndex-1].alt;
+		}
         function initialize() {
             pd = new PD();
         }
@@ -151,11 +283,22 @@
         }
 
         function selectBoard(){
-            pd.loadBoard();
+			document.getElementById("board_selection_form").style.display = "block";
         }
 
+		function loadBoard(){
+			var captionText = document.getElementById("caption").innerHTML;
+			var selectedBoard = 'board_' + captionText.replace("Board ", "");
+            pd.loadBoard(selectedBoard);
+			document.getElementById("board_selection_form").style.display = "none";
+        }
+		
+		function closeForm() {
+			document.getElementById("board_selection_form").style.display = "none";
+		}
+
     </script>
-    <script src="./registerSW.js"></script> 
+    <script src="./registerSW.js"></script>
 
 </body>
 </html>
