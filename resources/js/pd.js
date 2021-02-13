@@ -6,7 +6,7 @@ class PD {
          */
         var fController = new FrontController();
         this.gameController = fController.controller;
-        this.loadBoard("board_3x21a");
+        this.loadBoard("board_6x10");
     }
 
     rotateClkWise(){
@@ -36,11 +36,7 @@ class PD {
 
     loadBoard(board){
         let gameObject = GameLoader.getGameObject(board);
-        let allSolutions = [];
-        // Get all the games and filter solutions
-        GameLoader.getGamesFromSolutionsConfig(board).forEach(game => 
-            allSolutions.push([game._board._pentominoPositions, game._board._pentominoes]));
-        this.allSolutions = allSolutions;
+        this.boardName = board; // HACK: To be changed later. This needs to be obtained from the backend. 
         this.boardSize = gameObject.boardSize;
         this.boardShape = gameObject.boardShape;
         this.gameHeight = gameObject.gameHeight;

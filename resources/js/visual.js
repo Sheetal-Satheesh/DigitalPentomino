@@ -524,6 +524,13 @@ class Visual {
 
     prefillBoard() {
         this.clear();
+        let allSolutions = [];
+        // Get all the games and filter solutions
+        if(this.allSolutions == undefined) {
+            GameLoader.getGamesFromSolutionsConfig(this.pd.boardName).forEach(game => 
+                allSolutions.push([game._board._pentominoPositions, game._board._pentominoes]));
+            this.allSolutions = allSolutions;
+        }
         let prefillCandidates = [];
         let randomSolution = undefined;
         let positions = [];
@@ -532,8 +539,8 @@ class Visual {
         let piece = undefined;
         let piecePosition = undefined;
         let bOverlap = false;
-        if (this.pd.allSolutions.length > 0) {
-            randomSolution = this._getRandomElementFromArray(this.pd.allSolutions);
+        if (this.allSolutions.length > 0) {
+            randomSolution = this._getRandomElementFromArray(this.allSolutions);
         } else {
             ;// TODO: throw error
         }
