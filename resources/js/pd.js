@@ -10,9 +10,8 @@ class PD {
          */
         var fController = new FrontController();
         this.gameController = fController.controller;
-        this.loadBoard("board_8x8a");
-        this.visual = new Visual(this);
-        this.reset();
+        this.loadBoard("board_6x10");
+        
     }
 
     rotateClkWise(){
@@ -36,13 +35,13 @@ class PD {
     }
 
     reset(){
-       this.gameController.resetGame();
        this.visual.clear();
        this.visual.showNumberOfPossibleSolutions();
     }
 
-    loadBoard(boardName){
-        let gameObject = GameLoader.getGameObject(boardName);
+    loadBoard(board){
+        let gameObject = GameLoader.getGameObject(board);
+        this.boardName = board; // HACK: To be changed later. This needs to be obtained from the backend. 
         this.boardSize = gameObject.boardSize;
         this.boardShape = gameObject.boardShape;
         this.gameHeight = gameObject.gameHeight;
@@ -55,7 +54,7 @@ class PD {
                                     [this.boardStartX, this.boardStartY],
                                     this.boardSize,
                                     this.boardShape,
-                            boardName);
+                                    board);
 
         this.visual = new Visual(this);
         this.visual.showNumberOfPossibleSolutions();
@@ -67,6 +66,10 @@ class PD {
 
      callHintAI(){
         this.visual.callHintAI();
+    }
+
+    prefillBoard(){
+        this.visual.prefillBoard();
     }
 }
 
