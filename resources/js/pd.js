@@ -1,3 +1,7 @@
+if(typeof require != 'undefined') {
+                         Pentomino = require('./pentomino.js');
+                     }
+
 class PD {
 
     constructor() {
@@ -7,6 +11,7 @@ class PD {
         var fController = new FrontController();
         this.gameController = fController.controller;
         this.loadBoard("board_6x10");
+        
     }
 
     rotateClkWise(){

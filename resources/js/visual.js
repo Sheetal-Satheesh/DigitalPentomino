@@ -522,6 +522,112 @@ class Visual {
         labelPossibleSolutions.innerText = this.gameController.getHint().getPossibleSolutions().length;
     }
 
+    callHintAI(){
+        let hint = document.getElementById("myHint");
+        hint.classList.toggle("show");
+        hint.style.visibility = "visible";
+        let popupText = document.getElementById("myHint");
+        popupText.textContent = pd.gameController.getHint().getText();
+
+        this.indicateHint();
+            
+    }
+
+    indicateHint(){
+        //possible command names (place, remove, moveToPosition, rotateClkWise, rotateAntiClkWise, mirrorH, mirrorV)
+        let hintCommand = pd.gameController.getHint().getCommand();
+        let hintName = hintCommand.getName();
+
+        switch (hintName) {
+            case "place":
+                // handle place hint
+                let hintRow = hintCommand._row;
+                let hintColumn = hintCommand._col;
+                let hintinPen = hintCommand._pentomino;
+                let fieldvalue;
+                let prevBackground = [];
+                
+                let piecePos = this.getOccupiedPositions(hintinPen,hintCommand);
+                console.log("hintinPen",hintinPen, piecePos);
+                    for(let i=0;i<5;i++){
+                            fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
+                            prevBackground[i] = fieldvalue.style.background;
+                            fieldvalue.style.background = "red";
+                            this.hide(piecePos, prevBackground);
+                    }
+                break;
+
+            case "moveToPosition":
+                // handle moveToPosition hint
+                break;
+            
+            case "remove":
+                // handle remove hint
+                break;
+                    
+            case "rotateClkWise":
+                // handle rotateClkWise hint
+                break;
+
+            case "rotateAntiClkWise":
+                // handle rotateAntiClkWise hint
+                break;
+            
+            case "mirrorH":
+                // handle mirrorH hint
+                break;
+
+            case "mirrorV":
+                // handle mirrorV hint
+                break;
+
+            default:
+                console.log("Unknown piece action detected!");
+        }
+    }
+
+    hide(piecePos, prevBackground){
+
+        setTimeout(function(){
+            for (let j=0;j<5;j++){
+                    let fvalue = document.getElementById("field_" + piecePos[j][0] + "," + piecePos[j][1]);
+                    //TODO: replace with proper fadeOut animation
+                    fvalue.style.background = prevBackground[j];
+                
+            }
+        }, 2000);
+    }
+
+
+    getOccupiedPositions(piece,hintCommand){
+
+        let PiecePostions = [];
+        let hintRow = hintCommand._row;
+        let startRow = hintRow-2;
+        let hintColumn = hintCommand._col;
+        let startColumn = hintColumn-2;
+        let occupiedPosArray=[];
+        
+        let pieceBitmap = piece.getMatrixRepresentation();
+
+        //add all elements of current 5*5 overlay on board where piece matrix has 1's
+        let k=0;
+        for (let i = 0; i<5; i++){
+            for (let j = 0; j<5; j++){
+                let piecePos = [];
+                if (pieceBitmap[i][j] == "1"){
+                    //add to occupiedPosArray
+                    piecePos[0] = i+startRow;
+                    piecePos[1] = j+startColumn;
+                    occupiedPosArray[k] = piecePos;
+                    k++;
+                }
+            }
+        }
+
+        return occupiedPosArray;
+    }
+
     prefillBoard() {
         this.clear();
         let allSolutions = [];
