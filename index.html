@@ -39,7 +39,7 @@
 
 </head>
 
-<body onload="initialize(); touchStartup()">
+<body onload="touchStartup(); initialize()">
 
   <div class = "cGame">
     <div id="functions">
@@ -216,92 +216,8 @@
   </table>
 
     <script type="text/javascript">
-        let pd;
-		var boardIndex = 1;
-		showBoard(boardIndex);
 
-		function changeBoard(n) {
-			showBoard(boardIndex += n);
-		}
-
-		function currentBoard(n) {
-			showBoard(boardIndex = n);
-		}
-
-		function showBoard(n) {
-			var i;
-			var slides = document.getElementsByClassName("board_list");
-			var dots = document.getElementsByClassName("board_cursor");
-			var captionText = document.getElementById("caption");
-
-			if (n > slides.length) {boardIndex = 1}
-			if (n < 1) {boardIndex = slides.length}
-			for (i = 0; i < slides.length; i++) {
-				slides[i].style.display = "none";
-			}
-
-			for (i = 0; i < dots.length; i++) {
-				dots[i].className = dots[i].className.replace(" active", "");
-			}
-			slides[boardIndex-1].style.display = "block";
-			dots[boardIndex-1].className += " active";
-			captionText.innerHTML = dots[boardIndex-1].alt;
-		}
-        function initialize() {
-            pd = new PD();
-        }
-
-        function resetGame(){
-            pd.reset();
-        }
-
-        //call hint function
-
-        function callHintAI() {
-            let hint = document.getElementById("myHint");
-            hint.classList.toggle("show");
-            hint.style.visibility = "visible";
-            let popupText = document.getElementById("myHint");
-            popupText.textContent = pd.gameController.getHint().getText();
-        }
-
-        function onHintButtonMouseLeave() {
-            document.getElementById("myHint").style.visibility= "hidden";
-        }
-
-        function rotateClkWise(){
-            pd.rotateClkWise();
-        }
-
-        function rotateAntiClkWise() {
-            pd.rotateAntiClkWise();
-        }
-
-        function flipH(){
-            pd.flipH();
-        }
-
-        function flipV(){
-            pd.flipV();
-        }
-
-        function selectBoard(){
-			document.getElementById("board_selection_form").style.display = "block";
-        }
-
-		function loadBoard(){
-			var captionText = document.getElementById("caption").innerHTML;
-			var selectedBoard = 'board_' + captionText.replace("Board ", "");
-            pd.loadBoard(selectedBoard);
-			document.getElementById("board_selection_form").style.display = "none";
-        }
-		
-		function closeForm() {
-			document.getElementById("board_selection_form").style.display = "none";
-		}
-
-
-        // Touch Handling for mobile devices
+    // Touch Handling for mobile devices
         //intialize the touch events
         function touchStartup(){
             console.log('Initialize touch events for mobile devices');
@@ -418,7 +334,93 @@
             currentTouches.splice(idx, 1);  
         }
         }//end touch events
-    </script>
+
+        let pd;
+		var boardIndex = 1;
+		showBoard(boardIndex);
+
+		function changeBoard(n) {
+			showBoard(boardIndex += n);
+		}
+
+		function currentBoard(n) {
+			showBoard(boardIndex = n);
+		}
+
+		function showBoard(n) {
+			var i;
+			var slides = document.getElementsByClassName("board_list");
+			var dots = document.getElementsByClassName("board_cursor");
+			var captionText = document.getElementById("caption");
+
+			if (n > slides.length) {boardIndex = 1}
+			if (n < 1) {boardIndex = slides.length}
+			for (i = 0; i < slides.length; i++) {
+				slides[i].style.display = "none";
+			}
+
+			for (i = 0; i < dots.length; i++) {
+				dots[i].className = dots[i].className.replace(" active", "");
+			}
+			slides[boardIndex-1].style.display = "block";
+			dots[boardIndex-1].className += " active";
+			captionText.innerHTML = dots[boardIndex-1].alt;
+		}
+        function initialize() {
+            pd = new PD();
+        }
+
+        function resetGame(){
+            pd.reset();
+        }
+
+        //call hint function
+
+        function callHintAI() {
+            let hint = document.getElementById("myHint");
+            hint.classList.toggle("show");
+            hint.style.visibility = "visible";
+            let popupText = document.getElementById("myHint");
+            popupText.textContent = pd.gameController.getHint().getText();
+        }
+
+        function onHintButtonMouseLeave() {
+            document.getElementById("myHint").style.visibility= "hidden";
+        }
+
+        function rotateClkWise(){
+            pd.rotateClkWise();
+        }
+
+        function rotateAntiClkWise() {
+            pd.rotateAntiClkWise();
+        }
+
+        function flipH(){
+            pd.flipH();
+        }
+
+        function flipV(){
+            pd.flipV();
+        }
+
+        function selectBoard(){
+			document.getElementById("board_selection_form").style.display = "block";
+        }
+
+		function loadBoard(){
+			var captionText = document.getElementById("caption").innerHTML;
+			var selectedBoard = 'board_' + captionText.replace("Board ", "");
+            pd.loadBoard(selectedBoard);
+			document.getElementById("board_selection_form").style.display = "none";
+        }
+		
+		function closeForm() {
+			document.getElementById("board_selection_form").style.display = "none";
+		}
+
+
+            </script>
     <script src="./registerSW.js"></script>
 
 </body>
