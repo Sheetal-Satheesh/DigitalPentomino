@@ -123,63 +123,6 @@
     pointer-events: none
 }
 
-.CActionTB {
-    padding-top: 10%;
-    padding-left: 5%;
-}
-
-.CMenuTB {
-    padding-top: 40%;
-    padding-left: 5%;
-}
-
-.cActionBtn img {
-    float: center;
-    width:  3vw;
-    height: 3vw;
-    object-fit: cover;
-    background: rgb(140, 170, 158);
-    border-radius: 25%;
-}
-
-.cActionBtn {
-  background:rgb(141, 160, 157);
-  border-radius: 10%;
-  border: 0;
-
-}
-
-.CMenuTB img{
-    float: center;
-    width:  3vw;
-    height: 3vw;
-    object-fit: cover;
-    background: rgb(140, 170, 158);
-    border-radius: 25%;
-}
-
-.CMenuTB div{
-  background:rgb(141, 160, 157);
-  border-radius: 10%;
-  border: 0;
-}
-
-.CMenuTB div:hover{
-  box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
-}
-
-.cActionBtn:hover {
-  box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
-}
-
-.cGame {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  overflow: auto;
-}
 
 img#logo{
   position: fixed;

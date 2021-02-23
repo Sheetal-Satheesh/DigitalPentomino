@@ -563,22 +563,27 @@ class Visual {
             
             case "remove":
                 // handle remove hint
+                 console.log("remove");
                 break;
                     
             case "rotateClkWise":
                 // handle rotateClkWise hint
+                console.log("rotateClkWise");
                 break;
 
             case "rotateAntiClkWise":
                 // handle rotateAntiClkWise hint
+                 console.log("rotateAntiClkWise");
                 break;
             
             case "mirrorH":
                 // handle mirrorH hint
+                console.log("mirrorH");
                 break;
 
             case "mirrorV":
                 // handle mirrorV hint
+                 console.log("mirrorV");
                 break;
 
             default:
