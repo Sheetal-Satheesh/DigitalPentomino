@@ -83,10 +83,9 @@ class Visual {
     clear(){
         this.gameController.resetGame();
         this.pieces = this.gameController.getPentominoes();
+        this.pd.visual.disableManipulations();
         this.renderPieces();
     }
-
-
 
     callHintAI() {
                 let hint = document.getElementById("myHint");
@@ -188,7 +187,6 @@ class Visual {
             setTimeout(function (that, piece) {
                 that.positionPiece(piece);
             }, 0, this, piece);
-
 
         });
 
@@ -429,12 +427,10 @@ class Visual {
                          * TODO: Make buttons disappear/appear if nothing/something is selected
                          */
                         that.select(data[1],event.clientX,event.clientY);
-
                         return;
                     }
                 }
             } else {
-
                 // In case nothing was moving, this becomes an unselect operation
                 var elements = document.elementsFromPoint(event.clientX, event.clientY);
                 for (var i in elements) {
@@ -518,4 +514,177 @@ class Visual {
             pieceDiv.setAttribute("flipped", 1 - flipped);
         }
     }
-}//End Class visual
+
+    showNumberOfPossibleSolutions() {
+        let labelPossibleSolutions = document.getElementById("labelNumberSolutions");
+        labelPossibleSolutions.innerText = this.gameController.getHint().getPossibleSolutions().length;
+    }
+
+    callHintAI(){
+        let hint = document.getElementById("myHint");
+        hint.classList.toggle("show");
+        hint.style.visibility = "visible";
+        let popupText = document.getElementById("myHint");
+        popupText.textContent = pd.gameController.getHint().getText();
+
+        this.indicateHint();
+            
+    }
+
+    indicateHint(){
+        //possible command names (place, remove, moveToPosition, rotateClkWise, rotateAntiClkWise, mirrorH, mirrorV)
+        let hintCommand = pd.gameController.getHint().getCommand();
+        let hintName = hintCommand.getName();
+
+        switch (hintName) {
+            case "place":
+                // handle place hint
+                let hintRow = hintCommand._row;
+                let hintColumn = hintCommand._col;
+                let hintinPen = hintCommand._pentomino;
+                let fieldvalue;
+                let prevBackground = [];
+                
+                let piecePos = this.getOccupiedPositions(hintinPen,hintCommand);
+                console.log("hintinPen",hintinPen, piecePos);
+                    for(let i=0;i<5;i++){
+                            fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
+                            prevBackground[i] = fieldvalue.style.background;
+                            fieldvalue.style.background = "red";
+                            this.hide(piecePos, prevBackground);
+                    }
+                break;
+
+            case "moveToPosition":
+                // handle moveToPosition hint
+                break;
+            
+            case "remove":
+                // handle remove hint
+                break;
+                    
+            case "rotateClkWise":
+                // handle rotateClkWise hint
+                break;
+
+            case "rotateAntiClkWise":
+                // handle rotateAntiClkWise hint
+                break;
+            
+            case "mirrorH":
+                // handle mirrorH hint
+                break;
+
+            case "mirrorV":
+                // handle mirrorV hint
+                break;
+
+            default:
+                console.log("Unknown piece action detected!");
+        }
+    }
+
+    hide(piecePos, prevBackground){
+
+        setTimeout(function(){
+            for (let j=0;j<5;j++){
+                    let fvalue = document.getElementById("field_" + piecePos[j][0] + "," + piecePos[j][1]);
+                    //TODO: replace with proper fadeOut animation
+                    fvalue.style.background = prevBackground[j];
+                
+            }
+        }, 2000);
+    }
+
+
+    getOccupiedPositions(piece,hintCommand){
+
+        let PiecePostions = [];
+        let hintRow = hintCommand._row;
+        let startRow = hintRow-2;
+        let hintColumn = hintCommand._col;
+        let startColumn = hintColumn-2;
+        let occupiedPosArray=[];
+        
+        let pieceBitmap = piece.getMatrixRepresentation();
+
+        //add all elements of current 5*5 overlay on board where piece matrix has 1's
+        let k=0;
+        for (let i = 0; i<5; i++){
+            for (let j = 0; j<5; j++){
+                let piecePos = [];
+                if (pieceBitmap[i][j] == "1"){
+                    //add to occupiedPosArray
+                    piecePos[0] = i+startRow;
+                    piecePos[1] = j+startColumn;
+                    occupiedPosArray[k] = piecePos;
+                    k++;
+                }
+            }
+        }
+
+        return occupiedPosArray;
+    }
+
+    prefillBoard() {
+        this.clear();
+        let allSolutions = [];
+        // Get all the games and filter solutions
+        if(this.allSolutions == undefined) {
+            GameLoader.getGamesFromSolutionsConfig(this.pd.boardName).forEach(game => 
+                allSolutions.push([game._board._pentominoPositions, game._board._pentominoes]));
+            this.allSolutions = allSolutions;
+        }
+        let prefillCandidates = [];
+        let randomSolution = undefined;
+        let positions = [];
+        let currentAnchor = [];
+        let candidateAnchor = [];
+        let piece = undefined;
+        let piecePosition = undefined;
+        let bOverlap = false;
+        if (this.allSolutions.length > 0) {
+            randomSolution = this._getRandomElementFromArray(this.allSolutions);
+        } else {
+            ;// TODO: throw error
+        }
+        if (randomSolution != undefined) {
+            for(let i = 0; i < randomSolution[0].length; ++i) {
+                piecePosition = randomSolution[0][i];
+                piece = randomSolution[1][i];
+                currentAnchor = [piecePosition.boardPosition[0] + this.boardX,
+                                piecePosition.boardPosition[1] + this.boardY];
+                for (let j = 0; j < positions.length; ++j) {
+                    bOverlap = false;
+                    candidateAnchor = [positions[j][0], positions[j][1]];
+                    if(Math.sqrt(
+                        Math.pow((currentAnchor[0]-candidateAnchor[0]),2) +
+                        Math.pow((currentAnchor[1]-candidateAnchor[1]),2)) < 2.2) {
+                            bOverlap = true;
+                            break;
+                    }
+                }
+                if(bOverlap) {
+                    piece = new Pentomino(piece.name);
+                    prefillCandidates.push(piece);
+                    continue;   
+                }
+                prefillCandidates.push(piece);
+                positions.push(currentAnchor);
+                piece.removeFromTray();
+                this.gameController.placePentomino(piece, currentAnchor[0], currentAnchor[1]);
+            }
+        } else {
+            ;// TODO: throw error
+        }
+        this.pieces = prefillCandidates;
+        this.renderPieces();
+    }
+
+    _getRandomElementFromArray(arrayObject) {
+        if (Array.isArray(arrayObject)) {
+            return arrayObject[Math.floor(Math.random() * arrayObject.length)];
+        }
+        return undefined;
+    }
+}

@@ -72,6 +72,9 @@
                     <td>
                         <button type="button" id='reset' class = "cActionBtn" onclick="resetGame()"><img src="resources/images/icons/tidy_up.png"></button>
                     </td>
+                    <td>
+                        <button type="button" id='prefillBoard' class = "cActionBtn" onclick="prefillBoard()"><img src="resources/images/icons/prefill.png"></button>
+                    </td>
                 </tr>
           </table>
 
@@ -92,7 +95,7 @@
                         </button>
                     </td>
                     <td>
-                        <div class="hintPopup" id="hintButton" onclick="callHintAI()" onmouseleave="onHintButtonMouseLeave()">
+                        <div class="hintPopup" id="hintButton" onclick="callHintAI()">
                             <img src="resources/images/UI_images/hint.png">
                             <span class="hintPopupText" id="myHint">Move the pieces ! then ask me the hint
                             </span>
@@ -374,19 +377,16 @@
             pd.reset();
         }
 
-        //call hint function
-
         function callHintAI() {
-            let hint = document.getElementById("myHint");
-            hint.classList.toggle("show");
-            hint.style.visibility = "visible";
-            let popupText = document.getElementById("myHint");
-            popupText.textContent = pd.gameController.getHint().getText();
+            pd.visual.callHintAI();
+            
         }
 
-        function onHintButtonMouseLeave() {
-            document.getElementById("myHint").style.visibility= "hidden";
-        }
+        //hinting popup disappears when mouse pointer is away
+        document.getElementById("hintButton").addEventListener("mouseleave", function() {
+                 document.getElementById("myHint").style.visibility = "hidden";
+        });
+        
 
         function rotateClkWise(){
             pd.rotateClkWise();
@@ -419,8 +419,11 @@
 			document.getElementById("board_selection_form").style.display = "none";
 		}
 
+        function prefillBoard(){
+            pd.prefillBoard();
+        }
 
-            </script>
+    </script>
     <script src="./registerSW.js"></script>
 
 </body>
