@@ -537,13 +537,12 @@ class Visual {
         //possible command names (place, remove, moveToPosition, rotateClkWise, rotateAntiClkWise, mirrorH, mirrorV)
         let hintCommand = pd.gameController.getHint().getCommand();
         let hintName = hintCommand.getName();
-
+        let hintinPen = hintCommand._pentomino;
         switch (hintName) {
             case "place":
                 // handle place hint
                 let hintRow = hintCommand._row;
                 let hintColumn = hintCommand._col;
-                let hintinPen = hintCommand._pentomino;
                 let fieldvalue;
                 let prevBackground = [];
                 
@@ -559,31 +558,44 @@ class Visual {
 
             case "moveToPosition":
                 // handle moveToPosition hint
+                console.log("moved");
+                 console.log("hintinPen",hintinPen)
                 break;
             
             case "remove":
                 // handle remove hint
                  console.log("remove");
+                 console.log("hintinPen",hintinPen);
                 break;
                     
             case "rotateClkWise":
                 // handle rotateClkWise hint
                 console.log("rotateClkWise");
+                console.log("hintinPen",hintinPen);
                 break;
 
             case "rotateAntiClkWise":
                 // handle rotateAntiClkWise hint
                  console.log("rotateAntiClkWise");
+                 console.log("hintinPen",hintinPen);
                 break;
             
             case "mirrorH":
                 // handle mirrorH hint
+
                 console.log("mirrorH");
+                console.log("hintinPen",hintinPen);
+                //select piece in the UI to flip
+               // select(hintinPen ,xPosition,yPosition);
+                flipH();
+
+               // hintinPen.classList.add("horizontal-mirror");
                 break;
 
             case "mirrorV":
                 // handle mirrorV hint
                  console.log("mirrorV");
+                 console.log("hintinPen",hintinPen);
                 break;
 
             default:
