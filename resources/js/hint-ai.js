@@ -19,30 +19,22 @@ class HintAI {
 
         let game = this._game;
         let possibleSolutions = this._getPossibleSolutions(game, this._solutions);
+
         if (possibleSolutions.length > 0) {
-            // Pursue closest solution
             let closestSolution = possibleSolutions[0];
             let commandSequenceList = this._getCommandSequenceListToSolution(game, closestSolution);
-            let commands = this._getNextCommandsToSolution(game, closestSolution, false);
-            // TODO - do smarter things with commands
+            let commands = this._getBestNextCommands(game, commandSequenceList);
             return new Hint(commands[0], possibleSolutions);
         } else {
             // Pursue closest game state, which has at least one possible solution
             let closestSolution = this._getClosesSolution(game, this._solutions);
             let commandSequenceList = this._getCommandSequenceListToSolution(game, closestSolution);
-            let commands = this._getNextCommandsToSolution(game, closestSolution, true);
-            if (commands.length === 1) {
-                return new Hint(commands[0], possibleSolutions);
-            } else {
-                return new Hint(
-                    new RemoveCommand(game, commands[0]._pentomino, commands[0]._row, commands[0]._col),
-                    possibleSolutions
-                );
-            }
+            let commands = this._getBestNextCommands(game, commandSequenceList);
+            return new Hint(commands[0], possibleSolutions);
         }
     }
 
-    // --- --- --- Number of possible Solutions --- --- ---
+    // --- --- --- Possible Solutions --- --- ---
     _getPossibleSolutions(game, solutions) {
         if (game.getPentominoes().length === 0) {
             throw new Error("game is empty");
@@ -105,7 +97,7 @@ class HintAI {
         return closestSolution;
     }
 
-    // --- --- --- Calculate All Command Sequences To Solution
+    // --- --- --- Calculate All Command Sequences To Solution --- --- ---
     _getCommandSequenceListToSolution(game, solution) {
         let commandSequenceList = new CommandSequenceList();
 
@@ -117,18 +109,13 @@ class HintAI {
         return commandSequenceList;
     }
 
-    _getCommandsToPerfectPentominoState(game, solution, pentomino) {
-        return this._getNextCommandsOfPentominoToSolution(game, solution, pentomino);
-    }
-
-    // --- --- --- Pursue Closest Solution --- --- ---
     /**
      * Returns the next command that, when executed, brings the game closer to the solution.
      * @param game
      * @param solution
      * @returns {null}
      */
-    _getNextCommandsToSolution(game, solution, backtracking) {
+    /*_getNextCommandsToSolution(game, solution, backtracking) {
         if (game.getPentominoes().length === 0) {
             throw new Error("game is empty");
         }
@@ -158,7 +145,7 @@ class HintAI {
 
         // FIXME - maybe return several commands
         return commands;
-    }
+    }*/
 
     /**
      * Returns a command of a specific pentomino, that brings the game closer to the solution
@@ -166,7 +153,7 @@ class HintAI {
      * @param solution
      * @param gamePentomino
      */
-    _getNextCommandsOfPentominoToSolution(game, solution, gamePentomino) {
+    _getCommandsToPerfectPentominoState(game, solution, gamePentomino) {
         let solutionPentomino = solution.getPentominoByName(gamePentomino.name);
 
         if (solutionPentomino === null) {
@@ -312,6 +299,11 @@ class HintAI {
         executedOperations.pop();
 
         return result;
+    }
+
+    // --- --- --- Get Best Command Sequence To Solution --- --- ---
+    _getBestNextCommands(game, commandSequenceList) {
+        return commandSequenceList.getAllCommandSequences()[0].commands;
     }
 
     // --- --- --- Helper functions --- --- ---
