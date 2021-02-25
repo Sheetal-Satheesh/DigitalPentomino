@@ -576,7 +576,7 @@ class Visual {
                 this.select(hintinPen,null,null);
                 rotateClkWise();
                 setTimeout(function(){
-                  rotateClkWise();
+                  rotateAntiClkWise();
                 },2000);
                 break;
 
