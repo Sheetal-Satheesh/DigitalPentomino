@@ -559,43 +559,54 @@ class Visual {
             case "moveToPosition":
                 // handle moveToPosition hint
                 console.log("moved");
-                 console.log("hintinPen",hintinPen)
+                console.log("hintinPen",hintinPen)
                 break;
             
             case "remove":
                 // handle remove hint
-                 console.log("remove");
-                 console.log("hintinPen",hintinPen);
+                var pen = this.select(hintinPen,null,null);
+                pen.style.display = none;
+                setTimeout(function(){
+                   pen.style.display = block;
+                },2000);
                 break;
                     
             case "rotateClkWise":
                 // handle rotateClkWise hint
-                console.log("rotateClkWise");
-                console.log("hintinPen",hintinPen);
+                this.select(hintinPen,null,null);
+                rotateClkWise();
+                setTimeout(function(){
+                  rotateClkWise();
+                },2000);
                 break;
 
             case "rotateAntiClkWise":
                 // handle rotateAntiClkWise hint
-                 console.log("rotateAntiClkWise");
-                 console.log("hintinPen",hintinPen);
+                this.select(hintinPen,null,null);
+                rotateAntiClkWise();
+                setTimeout(function(){
+                  rotateClkWise();
+                },2000);
+
                 break;
             
             case "mirrorH":
                 // handle mirrorH hint
-
-                console.log("mirrorH");
-                console.log("hintinPen",hintinPen);
                 //select piece in the UI to flip
-               // select(hintinPen ,xPosition,yPosition);
+                this.select(hintinPen,null,null);
                 flipH();
-
-               // hintinPen.classList.add("horizontal-mirror");
+                setTimeout(function(){
+                  flipH();
+                },2000);
                 break;
 
             case "mirrorV":
                 // handle mirrorV hint
-                 console.log("mirrorV");
-                 console.log("hintinPen",hintinPen);
+                this.select(hintinPen,null,null);
+                flipV();
+                setTimeout(function(){
+                  flipV();
+                },2000);
                 break;
 
             default:
