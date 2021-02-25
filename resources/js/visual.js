@@ -555,58 +555,62 @@ class Visual {
                             this.hide(piecePos, prevBackground);
                     }
                 break;
-
-            case "moveToPosition":
-                // handle moveToPosition hint
-                console.log("moved");
-                console.log("hintinPen",hintinPen)
-                break;
             
             case "remove":
                 // handle remove hint
                 var pen = this.select(hintinPen,null,null);
-                pen.style.display = none;
-                setTimeout(function(){
-                   pen.style.display = block;
-                },2000);
+                if (!this.selected.inTray){
+                    pen.style.display = none;
+                    setTimeout(function(){
+                    pen.style.display = block;
+                    },500);
+                }
                 break;
                     
             case "rotateClkWise":
                 // handle rotateClkWise hint
                 this.select(hintinPen,null,null);
-                rotateClkWise();
-                setTimeout(function(){
-                  rotateAntiClkWise();
-                },2000);
+                if (!this.selected.inTray){
+                    console.log("Remove piece from tray for visual hint.");
+                    rotateClkWise();
+                    setTimeout(function(){
+                    rotateAntiClkWise();
+                    },500);
+                }
                 break;
 
             case "rotateAntiClkWise":
                 // handle rotateAntiClkWise hint
                 this.select(hintinPen,null,null);
-                rotateAntiClkWise();
-                setTimeout(function(){
-                  rotateClkWise();
-                },2000);
-
+                if (!this.selected.inTray){
+                    rotateAntiClkWise();
+                    setTimeout(function(){
+                    rotateClkWise();
+                    },500);
+                }
                 break;
             
             case "mirrorH":
                 // handle mirrorH hint
                 //select piece in the UI to flip
                 this.select(hintinPen,null,null);
-                flipH();
-                setTimeout(function(){
-                  flipH();
-                },2000);
+                if (!this.selected.inTray){
+                    flipH();
+                    setTimeout(function(){
+                    flipH();
+                    },500);
+                }
                 break;
 
             case "mirrorV":
                 // handle mirrorV hint
                 this.select(hintinPen,null,null);
-                flipV();
-                setTimeout(function(){
-                  flipV();
-                },2000);
+                if (!this.selected.inTray){
+                    flipV();
+                    setTimeout(function(){
+                    flipV();
+                    },500);
+                }
                 break;
 
             default:
