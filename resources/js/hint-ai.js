@@ -22,12 +22,14 @@ class HintAI {
         if (possibleSolutions.length > 0) {
             // Pursue closest solution
             let closestSolution = possibleSolutions[0];
+            let commandSequenceList = this._getCommandSequenceListToSolution(game, closestSolution);
             let commands = this._getNextCommandsToSolution(game, closestSolution, false);
             // TODO - do smarter things with commands
             return new Hint(commands[0], possibleSolutions);
         } else {
             // Pursue closest game state, which has at least one possible solution
             let closestSolution = this._getClosesSolution(game, this._solutions);
+            let commandSequenceList = this._getCommandSequenceListToSolution(game, closestSolution);
             let commands = this._getNextCommandsToSolution(game, closestSolution, true);
             if (commands.length === 1) {
                 return new Hint(commands[0], possibleSolutions);
@@ -101,6 +103,22 @@ class HintAI {
             }
         });
         return closestSolution;
+    }
+
+    // --- --- --- Calculate All Command Sequences To Solution
+    _getCommandSequenceListToSolution(game, solution) {
+        let commandSequenceList = new CommandSequenceList();
+
+        let nonPerfectPentominoes = game.getPentominoes().filter(p => !this._isPerfectPentomino(game, solution, p.name));
+        nonPerfectPentominoes.forEach(p => {
+            commandSequenceList.addCommandSequence(p.name, this._getCommandsToPerfectPentominoState(game, solution, p));
+        });
+
+        return commandSequenceList;
+    }
+
+    _getCommandsToPerfectPentominoState(game, solution, pentomino) {
+        return this._getNextCommandsOfPentominoToSolution(game, solution, pentomino);
     }
 
     // --- --- --- Pursue Closest Solution --- --- ---
