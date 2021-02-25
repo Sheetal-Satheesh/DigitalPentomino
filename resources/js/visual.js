@@ -538,6 +538,7 @@ class Visual {
         let hintCommand = pd.gameController.getHint().getCommand();
         let hintName = hintCommand.getName();
         let hintinPen = hintCommand._pentomino;
+        let pentominoColor = hintinPen.color;
         switch (hintName) {
             case "place":
                 // handle place hint
@@ -551,7 +552,7 @@ class Visual {
                     for(let i=0;i<5;i++){
                             fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
                             prevBackground[i] = fieldvalue.style.background;
-                            fieldvalue.style.background = "red";
+                            fieldvalue.style.background = pentominoColor;
                             this.hide(piecePos, prevBackground);
                     }
                 break;
