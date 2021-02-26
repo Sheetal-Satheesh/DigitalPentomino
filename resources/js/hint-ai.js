@@ -34,6 +34,22 @@ class HintAI {
         }
     }
 
+    // --- --- --- Apply Skill --- --- ---
+    tryToApplyUnoccupiedCellsSkill(game) {
+        let unoccupiedCellSpaces = game._board.getUnoccupiedCellSpaces();
+        let bestCellSpace = null;
+        let bestCellSpaceSize = 1000;
+        unoccupiedCellSpaces.forEach(space => {
+            if (space.length < bestCellSpaceSize && !(space.length % 5 === 0)) {
+                bestCellSpace = space;
+                bestCellSpaceSize = space.length;
+            }
+        });
+
+        // Pick neighboring pentomino that's not part of any solution
+        // Return remove command and cell space
+    }
+
     // --- --- --- Possible Solutions --- --- ---
     _getPossibleSolutions(game, solutions) {
         if (game.getPentominoes().length === 0) {
