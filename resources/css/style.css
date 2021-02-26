@@ -342,9 +342,9 @@ table
         margin-top: 1px;
       }
 
-  }
+    }
 
-  body {
-    /* Disables pull-to-refresh but allows overscroll glow effects. */
-    overscroll-behavior-y: contain;
-  } 
+    body {
+      /* Disables pull-to-refresh but allows overscroll glow effects. */
+      overscroll-behavior-y: contain;
+    } 
