@@ -537,13 +537,13 @@ class Visual {
         //possible command names (place, remove, moveToPosition, rotateClkWise, rotateAntiClkWise, mirrorH, mirrorV)
         let hintCommand = pd.gameController.getHint().getCommand();
         let hintName = hintCommand.getName();
-
+        let hintinPen = hintCommand._pentomino;
+        let pentominoColor = hintinPen.color;
         switch (hintName) {
             case "place":
                 // handle place hint
                 let hintRow = hintCommand._row;
                 let hintColumn = hintCommand._col;
-                let hintinPen = hintCommand._pentomino;
                 let fieldvalue;
                 let prevBackground = [];
                 
@@ -552,33 +552,66 @@ class Visual {
                     for(let i=0;i<5;i++){
                             fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
                             prevBackground[i] = fieldvalue.style.background;
-                            fieldvalue.style.background = "red";
+                            fieldvalue.style.background = pentominoColor;
                             this.hide(piecePos, prevBackground);
                     }
-                break;
-
-            case "moveToPosition":
-                // handle moveToPosition hint
                 break;
             
             case "remove":
                 // handle remove hint
+                var pen = this.select(hintinPen,null,null);
+                if (!this.selected.inTray){
+                    pen.style.display = none;
+                    setTimeout(function(){
+                    pen.style.display = block;
+                    },500);
+                }
                 break;
                     
             case "rotateClkWise":
                 // handle rotateClkWise hint
+                this.select(hintinPen,null,null);
+                if (!this.selected.inTray){
+                    console.log("Remove piece from tray for visual hint.");
+                    rotateClkWise();
+                    setTimeout(function(){
+                    rotateAntiClkWise();
+                    },500);
+                }
                 break;
 
             case "rotateAntiClkWise":
                 // handle rotateAntiClkWise hint
+                this.select(hintinPen,null,null);
+                if (!this.selected.inTray){
+                    rotateAntiClkWise();
+                    setTimeout(function(){
+                    rotateClkWise();
+                    },500);
+                }
                 break;
             
             case "mirrorH":
                 // handle mirrorH hint
+                //select piece in the UI to flip
+                this.select(hintinPen,null,null);
+                if (!this.selected.inTray){
+                    flipH();
+                    setTimeout(function(){
+                    flipH();
+                    },500);
+                }
                 break;
 
             case "mirrorV":
                 // handle mirrorV hint
+                this.select(hintinPen,null,null);
+                if (!this.selected.inTray){
+                    flipV();
+                    setTimeout(function(){
+                    flipV();
+                    },500);
+                }
                 break;
 
             default:

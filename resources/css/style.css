@@ -1,345 +1,345 @@
 :root {
-    --rotationX: 0;
-    --rotationY: 0;
-    --rotationZ: 0;
-    --magnification:1;
+  --rotationX: 0;
+  --rotationY: 0;
+  --rotationZ: 0;
+  --magnification:1;
 }
 
 
 #functions {
-    position: fixed;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    background: rgb(197, 207, 203);
-    bottom: 0;
-    width: 10vw;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background: rgb(197, 207, 203);
+  bottom: 0;
+  width: 10vw;
 }
 
 #game {
-    position: fixed;
-    top: 0;
-    left: 10vw;
-    background: green;
-    bottom: 0;
-    width: 90vw;
+  position: fixed;
+  top: 0;
+  left: 10vw;
+  background: green;
+  bottom: 0;
+  width: 90vw;
 }
 
 #tray {
-    position: fixed;
-    top: 0;
-    left: 10vw;
-    background:rgb(188, 196, 197);
-    height: 7vw;
-    width: 90vw;
+  position: fixed;
+  top: 0;
+  left: 10vw;
+  background:rgb(188, 196, 197);
+  height: 7vw;
+  width: 90vw;
 }
 
 #field {
-    position: fixed;
-    top: 7vw;
-    bottom: 0;
-    background: white;
-    width: 90vw;
+  position: fixed;
+  top: 7vw;
+  bottom: 0;
+  background: white;
+  width: 90vw;
 }
 
 #piecearea {
-    user-select: none;
+  user-select: none;
 }
 
 #operations {
-    display: inline-block;
-    margin-top: 10vw;
+  display: inline-block;
+  margin-top: 10vw;
 }
 
 #operations {
-    display: block;
+  display: block;
 }
 
 #operations  img{
-    width:3vw;
-    height:3vw;
+  width:3vw;
+  height:3vw;
 
 }
 
 #operations table tr td div{
-    margin:14px;
-  margin-top: 2px;
+  margin:14px;
+margin-top: 2px;
 }
 
 
 #operations button{
-  margin:14px;
-  margin-top: 2px;
+margin:14px;
+margin-top: 2px;
 }
 
 #pieceManipulation table tr td div{
-  margin:14px;
-  margin-top: 2px;
+margin:14px;
+margin-top: 2px;
 }
 
 #pieceManipulation  img{
-    width:3vw;
-    height:3vw;
+  width:3vw;
+  height:3vw;
 
 }
 #pieceManipulation{
-   position: absolute;
-   display: none;
-   z-index: 10;
+ position: absolute;
+ display: none;
+ z-index: 10;
 }
 
 .gamearea {
-    display: block;
-    float: left;
-    user-select: none;
-    text-align: center;
-    outline: 1px solid #eee;
-    color: #ddd
+  display: block;
+  float: left;
+  user-select: none;
+  text-align: center;
+  outline: 1px solid #eee;
+  color: #ddd
 }
 
 .boardarea {
-  background: rgb(173, 192, 185);
+background: rgb(173, 192, 185);
 }
 .blockedcell {
-	background: repeating-linear-gradient(
-  45deg,
-  rgba(0, 0, 0, 0.2),
-  rgba(0, 0, 0, 0.2) 10px,
-  rgba(0, 0, 0, 0.3) 10px,
-  rgba(0, 0, 0, 0.3) 20px
+background: repeating-linear-gradient(
+45deg,
+rgba(0, 0, 0, 0.2),
+rgba(0, 0, 0, 0.2) 10px,
+rgba(0, 0, 0, 0.3) 10px,
+rgba(0, 0, 0, 0.3) 20px
 )
 }
 
 .piece {
-    position: fixed;
-    top: 0;
-    width: 9vw;
-    height: 9vw;
-    transform: scale(var(--magnification)) rotateX(var(--rotationX)) rotateY(var(--rotationY)) rotateZ(var(--rotationZ));
-    transition: transform .2s;
+  position: fixed;
+  top: 0;
+  width: 9vw;
+  height: 9vw;
+  transform: scale(var(--magnification)) rotateX(var(--rotationX)) rotateY(var(--rotationY)) rotateZ(var(--rotationZ));
+  transition: transform .2s;
 }
 
 .bmAround {
-    pointer-events: none
+  pointer-events: none
 }
 
 .CActionTB {
-    padding-top: 10%;
-    padding-left: 5%;
+  padding-top: 10%;
+  padding-left: 5%;
 }
 
 .CMenuTB {
-    padding-top: 40%;
-    padding-left: 5%;
+  padding-top: 40%;
+  padding-left: 5%;
 }
 
 .cActionBtn img {
-    float: center;
-    width:  3vw;
-    height: 3vw;
-    object-fit: cover;
-    background: rgb(140, 170, 158);
-    border-radius: 25%;
+  float: center;
+  width:  3vw;
+  height: 3vw;
+  object-fit: cover;
+  background: rgb(140, 170, 158);
+  border-radius: 25%;
 }
 
 .cActionBtn {
-  background:rgb(141, 160, 157);
-  border-radius: 10%;
-  border: 0;
+background:rgb(141, 160, 157);
+border-radius: 10%;
+border: 0;
 
 }
 
 .CMenuTB img{
-    float: center;
-    width:  3vw;
-    height: 3vw;
-    object-fit: cover;
-    background: rgb(140, 170, 158);
-    border-radius: 25%;
+  float: center;
+  width:  3vw;
+  height: 3vw;
+  object-fit: cover;
+  background: rgb(140, 170, 158);
+  border-radius: 25%;
 }
 
 .CMenuTB div{
-  background:rgb(141, 160, 157);
-  border-radius: 10%;
-  border: 0;
+background:rgb(141, 160, 157);
+border-radius: 10%;
+border: 0;
 }
 
 .CMenuTB div:hover{
-  box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
+box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
 }
 
 .cActionBtn:hover {
-  box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
+box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
 }
 
 .cGame {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  overflow: auto;
+position: absolute;
+top: 0;
+right: 0;
+bottom: 0;
+left: 0;
+overflow: auto;
 }
 
 img#logo{
-  position: fixed;
-  width: 9.5vw;
-  height: 6.5vw;
-  border: 2.5px solid rgb(141, 160, 157);
-  background: rgb(197, 207, 203);
+position: fixed;
+width: 9.5vw;
+height: 6.5vw;
+border: 2.5px solid rgb(141, 160, 157);
+background: rgb(197, 207, 203);
 }
 
 /* hint container - can be anything you want */
 .hintPopup {
-    position: relative;
-    margin: 20px;
-    background-color: #fff;
-    padding: 10px;
-    border:red 40px;
-    display: inline-block;
-    cursor: pointer;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    margin-right:30px !important
+  position: relative;
+  margin: 20px;
+  background-color: #fff;
+  padding: 10px;
+  border:red 40px;
+  display: inline-block;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  margin-right:30px !important
 }
 
 /* The actual hint */
 .hintPopup .hintPopupText {
-    visibility: hidden;
-    width: 100px;
-    background-color: #555;
-    color: #fff;
-    text-align: center;
-    border-radius: 6px;
-    padding: 8px 0;
-    position: absolute;
-    z-index: 1;
-    bottom: 125%;
-    left: 50%;
-    margin-left:-40px;
+  visibility: hidden;
+  width: 100px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left:-40px;
 }
 
 /* hint arrow */
 .hintPopup .hintPopupText::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: #555 transparent transparent transparent;
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
 }
 
 /* Toggle this class - hide and show the hint */
 .hintPopup .show {
-    visibility: visible;
-    -webkit-animation: fadeIn 1s;
-    animation: fadeIn 1s;
+  visibility: visible;
+  -webkit-animation: fadeIn 1s;
+  animation: fadeIn 1s;
 }
 
 /* Add animation (fade in the hint) */
 @-webkit-keyframes fadeIn {
-    from {opacity: 0;}
-    to {opacity: 1;}
+  from {opacity: 0;}
+  to {opacity: 1;}
 }
 
 @keyframes fadeIn {
-    from {opacity: 0;}
-    to {opacity:1 ;}
+  from {opacity: 0;}
+  to {opacity:1 ;}
 }
 
 
 
 table
-    {
-     position: relative;
-      margin-top: 50px;
-      width: -10px!important;
-       border-spacing: 0px;
-       border-collapse:collapse;
-       padding: 0px;
-     }
+  {
+   position: relative;
+    margin-top: 50px;
+    width: -10px!important;
+     border-spacing: 0px;
+     border-collapse:collapse;
+     padding: 0px;
+   }
 
-     table tr td{
-        margin:-20px;
-        border-width:0px;
-        margin:0px;
-        width: 10px;
-        padding: 0px;
-     }
+   table tr td{
+      margin:-20px;
+      border-width:0px;
+      margin:0px;
+      width: 10px;
+      padding: 0px;
+   }
 
-     table tr td button:hover {
-     box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
-    }
+   table tr td button:hover {
+   box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
+  }
 
-    table tr td button{
+  table tr td button{
+    background:rgb(141, 160, 157);
+    border-radius: 10%;
+    border: 0;
+    padding: 0px;
+  }
+
+  #operations table tr td div{
+    background:rgb(141, 160, 157);
+    border-radius: 10%;
+    border: 0;
+    padding: 0px;
+  }
+
+   table tr td div{
       background:rgb(141, 160, 157);
-      border-radius: 10%;
-      border: 0;
-      padding: 0px;
-    }
+    border-radius: 10%;
+    border: 0;
+    padding: 0px;
+   }
 
-    #operations table tr td div{
-      background:rgb(141, 160, 157);
-      border-radius: 10%;
-      border: 0;
-      padding: 0px;
-    }
+   table tr td div:hover {
+   box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
+  }
 
-     table tr td div{
-        background:rgb(141, 160, 157);
-      border-radius: 10%;
-      border: 0;
-      padding: 0px;
-     }
-
-     table tr td div:hover {
-     box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
-    }
-
-    #logo{
-    height:7vw!important;
-    width:10vw !important
+  #logo{
+  height:7vw!important;
+  width:10vw !important
 }
 
 
- @media only screen and (max-width: 1137px) {
-      #operations  img{
-            width:2.5vw;
-            height:2.5vw;
-        }
+@media only screen and (max-width: 1137px) {
+    #operations  img{
+          width:2.5vw;
+          height:2.5vw;
+      }
 
-        #operations table tr td div{
-            margin:10px;
-          margin-top: 1px;
-        }
-
-
-        #operations button{
+      #operations table tr td div{
           margin:10px;
-          margin-top: 1px;
-        }
-
-    }
-
-    @media only screen and (max-width: 1137px) {
-      #operations  img{
-            width:2vw;
-            height:2vw;
-        }
-
-        #operations table tr td div{
-            margin:10px;
-          margin-top: 1px;
-        }
+        margin-top: 1px;
+      }
 
 
-        #operations button{
+      #operations button{
+        margin:10px;
+        margin-top: 1px;
+      }
+
+  }
+
+  @media only screen and (max-width: 1137px) {
+    #operations  img{
+          width:2vw;
+          height:2vw;
+      }
+
+      #operations table tr td div{
           margin:10px;
-          margin-top: 1px;
-        }
+        margin-top: 1px;
+      }
 
-    }
+
+      #operations button{
+        margin:10px;
+        margin-top: 1px;
+      }
+
+  }
