@@ -7,11 +7,6 @@ if(typeof require != 'undefined') {
 
 class HintAI {
 
-    constructor() {
-        this._directPursuingSkills = [];
-        this._backtrackingSkills = [];
-    }
-
     loadGameForHinting(game) {
         this._game = game;
         this._solutions = GameLoader.getGamesFromSolutionsConfig(game.getName());
@@ -28,26 +23,14 @@ class HintAI {
         if (possibleSolutions.length > 0) {
             let closestSolution = possibleSolutions[0];
             let commandSequenceList = this._getCommandSequenceListToSolution(game, closestSolution);
-            let skillResult = this._tryToApplySkills(game, closestSolution, this._directPursuingSkills);
-            if (!(skillResult === null)) {
-                // TODO - do something cool
-                return new Hint([], "Not yet implemented");
-            } else {
-                let commands = this._getBestNextCommands(game, commandSequenceList);
-                return new Hint(commands[0], possibleSolutions);
-            }
+            let commands = this._getBestNextCommands(game, commandSequenceList);
+            return new Hint(commands[0], possibleSolutions);
         } else {
             // Pursue closest game state, which has at least one possible solution
             let closestSolution = this._getClosesSolution(game, this._solutions);
             let commandSequenceList = this._getCommandSequenceListToSolution(game, closestSolution);
-            let skillResults = this._tryToApplySkills(game, closestSolution, this._backtrackingSkills);
-            if (!(skillResults === null)) {
-                // TODO - do something cool
-                return new Hint([], "Not yet implemented");
-            } else {
-                let commands = this._getBestNextCommands(game, commandSequenceList);
-                return new Hint(commands[0], possibleSolutions);
-            }
+            let commands = this._getBestNextCommands(game, commandSequenceList);
+            return new Hint(commands[0], possibleSolutions);
         }
     }
 
@@ -112,17 +95,6 @@ class HintAI {
             }
         });
         return closestSolution;
-    }
-
-    // --- --- -- Try To Apply Skills --- --- ---
-    _tryToApplySkills(game, closestSolution, skills) {
-        let skillResult = null;
-        skills.every(skill => {
-            let result = skill.tryToApplySkill(game, closestSolution);
-            if (!(result === null))  skillResult = skill;
-            return result === null;
-        });
-        return skillResult;
     }
 
     // --- --- --- Calculate All Command Sequences To Solution --- --- ---
