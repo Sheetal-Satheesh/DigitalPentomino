@@ -28,14 +28,22 @@ class HintAI {
         } else {
             // Pursue closest game state, which has at least one possible solution
             let closestSolution = this._getClosesSolution(game, this._solutions);
-            let commandSequenceList = this._getCommandSequenceListToSolution(game, closestSolution);
-            let commands = this._getBestNextCommands(game, commandSequenceList);
-            return new Hint(commands[0], possibleSolutions);
+
+            let bestImpossibleCellSpace = this._calculateBestImpossibleUnoccupiedCellSpace(game);
+
+            if (bestImpossibleCellSpace === null) {
+                let commandSequenceList = this._getCommandSequenceListToSolution(game, closestSolution);
+                let commands = this._getBestNextCommands(game, commandSequenceList);
+                return new Hint(commands[0], possibleSolutions);
+            } else {
+                let command = this._getCommandBasedOnUnoccupiedCellsSkill(game, closestSolution, bestImpossibleCellSpace);
+                return new Hint(command, possibleSolutions, bestImpossibleCellSpace);
+            }
         }
     }
 
     // --- --- --- Apply Skill --- --- ---
-    tryToApplyUnoccupiedCellsSkill(game) {
+    _calculateBestImpossibleUnoccupiedCellSpace(game) {
         let unoccupiedCellSpaces = game._board.getUnoccupiedCellSpaces();
         let bestCellSpace = null;
         let bestCellSpaceSize = 1000;
@@ -45,9 +53,13 @@ class HintAI {
                 bestCellSpaceSize = space.length;
             }
         });
+        return bestCellSpace;
+    }
 
-        // Pick neighboring pentomino that's not part of any solution
-        // Return remove command and cell space
+    _getCommandBasedOnUnoccupiedCellsSkill(game, closestSolution, bestImpossibleCellSpace) {
+        let neighboringPentominoes = game._board.getNeighborPentominoesOfSpace(bestImpossibleCellSpace);
+        let nonPerfectPentominoes = neighboringPentominoes.filter(p => !this._isPerfectPentomino(game, closestSolution, p.name));
+        return new RemoveCommand(game, nonPerfectPentominoes[0], game.getPositionOfPentomino(nonPerfectPentominoes));
     }
 
     // --- --- --- Possible Solutions --- --- ---

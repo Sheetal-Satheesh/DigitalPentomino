@@ -1,7 +1,8 @@
 class Hint {
-    constructor(command, possibleSolutions) {
+    constructor(command, possibleSolutions, skill=null) {
         this._command = command;
         this._possibleSolutions = possibleSolutions;
+        this._skill = skill;
 
         // console.log("Number of possible solutions: " + possibleSolutions.length);
 
