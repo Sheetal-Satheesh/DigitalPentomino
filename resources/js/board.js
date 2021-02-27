@@ -567,8 +567,8 @@ class Board {
 
     getUnoccupiedCells() {
         let unoccupiedCells = [];
-        for (let row = this._boardSRows; row < this._boardRows; row++) {
-            for (let col = this._boardSCols; col < this._boardCols; col++) {
+        for (let row = this._boardSRows; row < this._boardSRows + this._boardRows; row++) {
+            for (let col = this._boardSCols; col < this._boardSCols + this._boardCols; col++) {
                 if (!this.isOccupied(row, col)) {
                     unoccupiedCells.push({row: row, col: col});
                 }
