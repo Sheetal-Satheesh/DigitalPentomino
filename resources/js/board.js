@@ -518,7 +518,7 @@ class Board {
             let initCell = remainingUnoccupiedCells[0];
             let space = [initCell];
             remainingUnoccupiedCells = remainingUnoccupiedCells.filter(cell => !(cell === initCell));
-            let nextPossibleCells = this._getNeighborPositions(initCell["row"], initCell["col"]);
+            let nextPossibleCells = this._getValidNeighborPositions(initCell["row"], initCell["col"]);
             this._createSpace(remainingUnoccupiedCells, nextPossibleCells, space);
             spaces.push(space);
         }
@@ -536,17 +536,25 @@ class Board {
                 let index = remainingUnoccupiedCells.findIndex(x => x === neighborCell);
                 if (index === -1) throw new Error("No cell found with [" + neighborCell["row"] + "," + neighborCell["col"] + "]");
                 remainingUnoccupiedCells.splice(index, 1);
-                this._createSpace(remainingUnoccupiedCells, this._getNeighborPositions(neighborCell["row"], neighborCell["col"]), space);
+                this._createSpace(remainingUnoccupiedCells, this._getValidNeighborPositions(neighborCell["row"], neighborCell["col"]), space);
             }
         });
     }
 
-    _getNeighborPositions(row, col) {
+    _getValidNeighborPositions(row, col) {
         let unoccupiedNeighbors = [];
-        unoccupiedNeighbors.push({"row": row + 1, "col": col});
-        unoccupiedNeighbors.push({"row": row - 1, "col": col});
-        unoccupiedNeighbors.push({"row": row, "col": col + 1});
-        unoccupiedNeighbors.push({"row": row, "col": col - 1});
+        if (this.positionIsValid(row + 1, col)) {
+            unoccupiedNeighbors.push({"row": row + 1, "col": col});
+        }
+        if (this.positionIsValid(row - 1, col)) {
+            unoccupiedNeighbors.push({"row": row - 1, "col": col});
+        }
+        if (this.positionIsValid(row, col + 1)) {
+            unoccupiedNeighbors.push({"row": row, "col": col + 1});
+        }
+        if (this.positionIsValid(row, col - 1)) {
+            unoccupiedNeighbors.push({"row": row, "col": col - 1});
+        }
         return unoccupiedNeighbors;
     }
 
@@ -593,11 +601,13 @@ class Board {
         let neighborPentominoes = [];
 
         space.forEach(cell => {
-            let neighborPositions = this._getNeighborPositions(cell["row"], cell["col"]);
-            let pentomino = this.isOccupied(neighborPositions["row"], neighborPositions["col"]);
-            if (!(pentomino === null) && neighborPentominoes.find(p => p.name === pentomino.name) === undefined) {
-                neighborPentominoes.push(pentomino);
-            }
+            let neighborPositions = this._getValidNeighborPositions(cell["row"], cell["col"]);
+            neighborPositions.forEach(neighborPosition => {
+                let pentomino = this.isOccupied(neighborPosition["row"], neighborPosition["col"]);
+                if (!(pentomino === null) && neighborPentominoes.find(p => p.name === pentomino.name) === undefined) {
+                    neighborPentominoes.push(pentomino);
+                }
+            });
         });
 
         return neighborPentominoes;

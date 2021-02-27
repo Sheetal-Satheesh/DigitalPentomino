@@ -59,7 +59,8 @@ class HintAI {
     _getCommandBasedOnUnoccupiedCellsSkill(game, closestSolution, bestImpossibleCellSpace) {
         let neighboringPentominoes = game._board.getNeighborPentominoesOfSpace(bestImpossibleCellSpace);
         let nonPerfectPentominoes = neighboringPentominoes.filter(p => !this._isPerfectPentomino(game, closestSolution, p.name));
-        return new RemoveCommand(game, nonPerfectPentominoes[0], game.getPositionOfPentomino(nonPerfectPentominoes));
+        let pentomino = nonPerfectPentominoes[0];
+        return new RemoveCommand(game, pentomino, game.getPosition(pentomino));
     }
 
     // --- --- --- Possible Solutions --- --- ---
