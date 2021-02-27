@@ -528,7 +528,6 @@ class Board {
 
     _createSpace(remainingUnoccupiedCells, nextPossibleCells, space) {
         nextPossibleCells.forEach(possibleNeighbor => {
-            let cellToAdd = null;
             let neighborCell = remainingUnoccupiedCells.find(cell => cell["row"] === possibleNeighbor["row"]
                 && cell["col"] === possibleNeighbor["col"]);
 
@@ -537,7 +536,7 @@ class Board {
                 let index = remainingUnoccupiedCells.findIndex(x => x === neighborCell);
                 if (index === -1) throw new Error("No cell found with [" + neighborCell["row"] + "," + neighborCell["col"] + "]");
                 remainingUnoccupiedCells.splice(index, 1);
-                this._createSpace(remainingUnoccupiedCells, this._getUnoccupiedNeighbors(cellToAdd["row"], cellToAdd["col"]), space);
+                this._createSpace(remainingUnoccupiedCells, this._getUnoccupiedNeighbors(neighborCell["row"], neighborCell["col"]), space);
             }
         });
     }
