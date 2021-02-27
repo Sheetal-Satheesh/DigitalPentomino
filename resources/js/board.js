@@ -517,7 +517,7 @@ class Board {
         while (!(remainingUnoccupiedCells.length === 0)) {
             let initCell = remainingUnoccupiedCells[0];
             let space = [initCell];
-            let remainingUnoccupiedCells = remainingUnoccupiedCells.filter(cell => !(cell === initCell));
+            remainingUnoccupiedCells = remainingUnoccupiedCells.filter(cell => !(cell === initCell));
             let nextPossibleCells = this._getUnoccupiedNeighbors(initCell["row"], initCell["col"]);
             this._createSpace(remainingUnoccupiedCells, nextPossibleCells, space);
             spaces.push(space);
