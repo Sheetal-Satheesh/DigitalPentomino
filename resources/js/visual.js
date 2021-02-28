@@ -547,13 +547,7 @@ class Visual {
                 let fieldvalue;
                 let prevBackground = [];
 
-                //indicate piece to be moved
-                //let frontendBmPoints = document.getElementById("piece_" + hintinPen.name).getElementsByClassName("bmPoint");
-                //frontendBmPoints.forEach(function(){
-                //    this.style["box-shadow"] = "0 0 10px blue";
-                //});
-                //console.log(frontendBmPoints);
-
+                //indicate piece to be moved (and fade away)
                 Array.prototype.forEach.call(document.getElementById("piece_" + hintinPen.name).getElementsByClassName("bmPoint"), function(element) {
                     element.style["box-shadow"] = "0 0 20px " + pentominoColor;
                     setTimeout(function(){
