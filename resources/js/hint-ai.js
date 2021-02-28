@@ -23,7 +23,7 @@ class HintAI {
         if (possibleSolutions.length > 0) {
             let closestSolution = possibleSolutions[0];
             let commandSequenceList = this._getCommandSequenceListToSolution(game, closestSolution);
-            let commands = this._getBestNextCommands(game, commandSequenceList);
+            let commands = this._getBestNextCommands(game, closestSolution, commandSequenceList);
             return new Hint(commands[0], possibleSolutions);
         } else {
             // Pursue closest game state, which has at least one possible solution
@@ -33,7 +33,7 @@ class HintAI {
 
             if (bestImpossibleCellSpace === null) {
                 let commandSequenceList = this._getCommandSequenceListToSolution(game, closestSolution);
-                let commands = this._getBestNextCommands(game, commandSequenceList);
+                let commands = this._getBestNextCommands(game, closestSolution, commandSequenceList);
                 return new Hint(commands[0], possibleSolutions);
             } else {
                 let command = this._getCommandBasedOnUnoccupiedCellsSkill(game, closestSolution, bestImpossibleCellSpace);
@@ -331,8 +331,24 @@ class HintAI {
     }
 
     // --- --- --- Get Best Command Sequence To Solution --- --- ---
-    _getBestNextCommands(game, commandSequenceList) {
-        return commandSequenceList.getAllCommandSequences()[0].commands;
+    _getBestNextCommands(game, closestSolution, commandSequenceList) {
+        let bestNextCommands = null;
+        let bestDistance = Number.MAX_VALUE;
+
+        commandSequenceList.getAllCommandSequences().forEach(commandSequence => {
+            let pentominoName = commandSequence["pentominoName"];
+            let solutionPentomino = closestSolution.getPentominoByName(pentominoName);
+            let solutionPosition = closestSolution.getPosition(solutionPentomino);
+
+            let distance = Math.sqrt(Math.pow(solutionPosition[0] - closestSolution._board._boardSRows, 2)
+                + Math.pow(solutionPosition[1] - closestSolution._board._boardSCols, 2));
+            if (distance < bestDistance) {
+                bestNextCommands = commandSequence["commands"];
+                bestDistance = distance;
+            }
+        });
+
+        return bestNextCommands;
     }
 
     // --- --- --- Helper functions --- --- ---

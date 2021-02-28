@@ -3,9 +3,9 @@ class CommandSequenceList {
         this._commandSequences = [];
     }
 
-    addCommandSequence(pentomino, commands) {
+    addCommandSequence(pentominoName, commands) {
         this._commandSequences.push({
-           pentomino: pentomino,
+           pentominoName: pentominoName,
            commands: commands
         });
     }
