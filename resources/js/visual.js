@@ -546,7 +546,22 @@ class Visual {
                 let hintColumn = hintCommand._col;
                 let fieldvalue;
                 let prevBackground = [];
-                
+
+                //indicate piece to be moved
+                //let frontendBmPoints = document.getElementById("piece_" + hintinPen.name).getElementsByClassName("bmPoint");
+                //frontendBmPoints.forEach(function(){
+                //    this.style["box-shadow"] = "0 0 10px blue";
+                //});
+                //console.log(frontendBmPoints);
+
+                Array.prototype.forEach.call(document.getElementById("piece_" + hintinPen.name).getElementsByClassName("bmPoint"), function(element) {
+                    element.style["box-shadow"] = "0 0 20px " + pentominoColor;
+                    setTimeout(function(){
+                        element.style.removeProperty("box-shadow");
+                    }, 2000);
+                });
+
+                //show destination position (and fade away)
                 let piecePos = this.getOccupiedPositions(hintinPen,hintCommand);
                 console.log("hintinPen",hintinPen, piecePos);
                     for(let i=0;i<5;i++){
