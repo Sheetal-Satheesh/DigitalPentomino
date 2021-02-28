@@ -361,8 +361,13 @@ class HintAI {
             let neighboringPositions = closestSolution._board._getNeighborPositionsOfPentomino(solutionPentomino);
             let numOccupiedNeighbors = 0;
             neighboringPositions.forEach(neighboringPosition => {
-                if (!game._board.positionIsValid(neighboringPosition["row"], neighboringPosition["col"]) ||
-                    !(game._board.isOccupied(neighboringPosition["row"], neighboringPosition["col"]) === null)) {
+                let neighboringGamePosition = [
+                    neighboringPosition["row"] + game._board._boardSRows,
+                    neighboringPosition["col"] + game._board._boardSCols
+                ];
+
+                if (!game._board.positionIsValid(neighboringGamePosition[0], neighboringGamePosition[1]) ||
+                    !(game._board.isOccupied(neighboringGamePosition[0], neighboringGamePosition[1]) === null)) {
                     numOccupiedNeighbors++;
                 }
             });
