@@ -353,13 +353,13 @@ class HintAI {
 
     _getBestNextCommandsMaxOccupiedNeighbors(game, closestSolution, commandSequenceList) {
         let bestNextCommands = null;
-        let bestNumNeighbors = -1;
+        let bestNumUnoccupiedNeighbors = Number.MAX_VALUE;
 
         commandSequenceList.getAllCommandSequences().forEach(commandSequence => {
             let pentominoName = commandSequence["pentominoName"];
             let solutionPentomino = closestSolution.getPentominoByName(pentominoName);
             let neighboringPositions = closestSolution._board._getNeighborPositionsOfPentomino(solutionPentomino);
-            let numOccupiedNeighbors = 0;
+            let numUnoccupiedNeighbors = neighboringPositions.length;
             neighboringPositions.forEach(neighboringPosition => {
                 let neighboringGamePosition = [
                     neighboringPosition["row"] + game._board._boardSRows,
@@ -368,12 +368,12 @@ class HintAI {
 
                 if (!game._board.positionIsValid(neighboringGamePosition[0], neighboringGamePosition[1]) ||
                     !(game._board.isOccupied(neighboringGamePosition[0], neighboringGamePosition[1]) === null)) {
-                    numOccupiedNeighbors++;
+                    numUnoccupiedNeighbors--;
                 }
             });
-            if (numOccupiedNeighbors > bestNumNeighbors) {
+            if (numUnoccupiedNeighbors < bestNumUnoccupiedNeighbors) {
                 bestNextCommands = commandSequence["commands"];
-                bestNumNeighbors = numOccupiedNeighbors;
+                bestNumUnoccupiedNeighbors = numUnoccupiedNeighbors;
             }
         });
 
