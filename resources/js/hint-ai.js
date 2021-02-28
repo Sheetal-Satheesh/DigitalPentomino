@@ -23,7 +23,7 @@ class HintAI {
         if (possibleSolutions.length > 0) {
             let closestSolution = possibleSolutions[0];
             let commandSequenceList = this._getCommandSequenceListToSolution(game, closestSolution);
-            let commands = this._getBestNextCommands(game, closestSolution, commandSequenceList);
+            let commands = this._getBestNextCommandsMaxOccupiedNeighbors(game, closestSolution, commandSequenceList);
             return new Hint(commands[0], possibleSolutions);
         } else {
             // Pursue closest game state, which has at least one possible solution
@@ -33,7 +33,7 @@ class HintAI {
 
             if (bestImpossibleCellSpace === null) {
                 let commandSequenceList = this._getCommandSequenceListToSolution(game, closestSolution);
-                let commands = this._getBestNextCommands(game, closestSolution, commandSequenceList);
+                let commands = this._getBestNextCommandsMaxOccupiedNeighbors(game, closestSolution, commandSequenceList);
                 return new Hint(commands[0], possibleSolutions);
             } else {
                 let command = this._getCommandBasedOnUnoccupiedCellsSkill(game, closestSolution, bestImpossibleCellSpace);
@@ -331,7 +331,7 @@ class HintAI {
     }
 
     // --- --- --- Get Best Command Sequence To Solution --- --- ---
-    _getBestNextCommands(game, closestSolution, commandSequenceList) {
+    _getBestNextCommandsEuclid(game, closestSolution, commandSequenceList) {
         let bestNextCommands = null;
         let bestDistance = Number.MAX_VALUE;
 
@@ -345,6 +345,30 @@ class HintAI {
             if (distance < bestDistance) {
                 bestNextCommands = commandSequence["commands"];
                 bestDistance = distance;
+            }
+        });
+
+        return bestNextCommands;
+    }
+
+    _getBestNextCommandsMaxOccupiedNeighbors(game, closestSolution, commandSequenceList) {
+        let bestNextCommands = null;
+        let bestNumNeighbors = -1;
+
+        commandSequenceList.getAllCommandSequences().forEach(commandSequence => {
+            let pentominoName = commandSequence["pentominoName"];
+            let solutionPentomino = closestSolution.getPentominoByName(pentominoName);
+            let neighboringPositions = closestSolution._board._getNeighborPositionsOfPentomino(solutionPentomino);
+            let numOccupiedNeighbors = 0;
+            neighboringPositions.forEach(neighboringPosition => {
+                if (!game._board.positionIsValid(neighboringPosition["row"], neighboringPosition["col"]) ||
+                    !(game._board.isOccupied(neighboringPosition["row"], neighboringPosition["col"]) === null)) {
+                    numOccupiedNeighbors++;
+                }
+            });
+            if (numOccupiedNeighbors > bestNumNeighbors) {
+                bestNextCommands = commandSequence["commands"];
+                bestNumNeighbors = numOccupiedNeighbors;
             }
         });
 

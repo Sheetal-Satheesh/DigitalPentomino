@@ -558,6 +558,57 @@ class Board {
         return unoccupiedNeighbors;
     }
 
+    /**
+     * Returns neighboring positions that may be invalid but are not occupied by specified pentomino
+     * @param pentomino
+     * @param row
+     * @param col
+     * @returns {[]}
+     * @private
+     */
+    _getNeighborPositionsUnoccupiedByPentomino(pentomino, row, col) {
+        let unoccupiedNeighbors = [];
+        if (!this.positionIsValid(row + 1, col) || !(this.isOccupied(row + 1, col) === pentomino)) {
+            unoccupiedNeighbors.push({"row": row + 1, "col": col});
+        }
+        if (!this.positionIsValid(row - 1, col) || !(this.isOccupied(row - 1, col) === pentomino)) {
+            unoccupiedNeighbors.push({"row": row - 1, "col": col});
+        }
+        if (!this.positionIsValid(row, col + 1) || !(this.isOccupied(row, col + 1) === pentomino)) {
+            unoccupiedNeighbors.push({"row": row, "col": col + 1});
+        }
+        if (!this.positionIsValid(row, col - 1) || !(this.isOccupied(row, col - 1) === pentomino)) {
+            unoccupiedNeighbors.push({"row": row, "col": col - 1});
+        }
+        return unoccupiedNeighbors;
+    }
+
+    /**
+     * Returns neighboring cells of pentomino (could be out of the board)
+     */
+    _getNeighborPositionsOfPentomino(pentomino) {
+        let neighborPositions = [];
+
+        for (let row = 0; row < pentomino.iRows; row++) {
+            for (let col = 0; col < pentomino.iCols; col++) {
+                if (pentomino.getCharAtMatrixPosition(row, col) === '1') {
+                    let position = this.getPosition(pentomino);
+                    let coordinatePosition = pentomino.getCoordinatePosition(position, [row, col]);
+                    let unoccupiedNeighborPositions = this._getNeighborPositionsUnoccupiedByPentomino(pentomino, coordinatePosition[0], coordinatePosition[1]);
+                    unoccupiedNeighborPositions.forEach(unoccupiedNeighborPosition => {
+                        let isNewElement = neighborPositions.find(c => c["row"] === unoccupiedNeighborPosition["row"]
+                            && c["col"] === unoccupiedNeighborPosition["col"]) === undefined;
+                        if (isNewElement) {
+                            neighborPositions.push(unoccupiedNeighborPosition);
+                        }
+                    });
+                }
+            }
+        }
+
+        return neighborPositions;
+    }
+
     arePositionsNeighbors(rowA, colA, rowB, colB) {
         return rowA === rowB && colA + 1 === colB
             || rowA === rowB && colA - 1 === colB
