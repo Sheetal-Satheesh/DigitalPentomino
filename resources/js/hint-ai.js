@@ -362,8 +362,8 @@ class HintAI {
             let numUnoccupiedNeighbors = neighboringPositions.length;
             neighboringPositions.forEach(neighboringPosition => {
                 let neighboringGamePosition = [
-                    neighboringPosition["row"] + game._board._boardSRows,
-                    neighboringPosition["col"] + game._board._boardSCols
+                    neighboringPosition[0] + game._board._boardSRows,
+                    neighboringPosition[1] + game._board._boardSCols
                 ];
 
                 if (!game._board.positionIsValid(neighboringGamePosition[0], neighboringGamePosition[1]) ||
