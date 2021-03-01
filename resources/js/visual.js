@@ -541,7 +541,8 @@ class Visual {
         let hintName = hintCommand.getName();
         let hintinPen = hintCommand._pentomino;
         let pentominoColor = hintinPen.color;
-        let [posX, posY] = [document.getElementById("piece_" + hintinPen.name).getBoundingClientRect().x, document.getElementById("piece_" + hintinPen.name).getBoundingClientRect().y];
+        let clientRect = document.getElementById("piece_" + hintinPen.name).getBoundingClientRect();
+        let [posX, posY] = [clientRect.x + clientRect.width/2, clientRect.y + clientRect.height/2];
         switch (hintName) {
             case "place":
                 // handle place hint
