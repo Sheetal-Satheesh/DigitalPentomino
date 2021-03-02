@@ -529,16 +529,20 @@ class Visual {
         let popupText = document.getElementById("myHint");
         popupText.textContent = pd.gameController.getHint().getText();
 
-        this.indicateHint();
+        //call indication of hint
+        this.indicateHint(500);
+
             
     }
 
-    indicateHint(){
+    indicateHint(timeoutFrame){
         //possible command names (place, remove, moveToPosition, rotateClkWise, rotateAntiClkWise, mirrorH, mirrorV)
         let hintCommand = pd.gameController.getHint().getCommand();
         let hintName = hintCommand.getName();
         let hintinPen = hintCommand._pentomino;
         let pentominoColor = hintinPen.color;
+        let clientRect = document.getElementById("piece_" + hintinPen.name).getBoundingClientRect();
+        let [posX, posY] = [clientRect.x + clientRect.width/2, clientRect.y + clientRect.height/2];
         switch (hintName) {
             case "place":
                 // handle place hint
@@ -546,7 +550,16 @@ class Visual {
                 let hintColumn = hintCommand._col;
                 let fieldvalue;
                 let prevBackground = [];
-                
+
+                //indicate piece to be moved (and fade away)
+                Array.prototype.forEach.call(document.getElementById("piece_" + hintinPen.name).getElementsByClassName("bmPoint"), function(element) {
+                    element.style["box-shadow"] = "0 0 20px " + pentominoColor;
+                    setTimeout(function(){
+                        element.style.removeProperty("box-shadow");
+                    }, timeoutFrame*4);
+                });
+
+                //show destination position (and fade away)
                 let piecePos = this.getOccupiedPositions(hintinPen,hintCommand);
                 console.log("hintinPen",hintinPen, piecePos);
                     for(let i=0;i<5;i++){
@@ -559,64 +572,65 @@ class Visual {
             
             case "remove":
                 // handle remove hint
-                var pen = this.select(hintinPen,null,null);
+                var pen = this.select(hintinPen,posX,posY);
                 if (!this.selected.inTray){
                     pen.style.display = none;
                     setTimeout(function(){
                     pen.style.display = block;
-                    },500);
+                    },timeoutFrame);
                 }
                 break;
                     
             case "rotateClkWise":
                 // handle rotateClkWise hint
-                this.select(hintinPen,null,null);
+                this.select(hintinPen,posX,posY);
                 if (!this.selected.inTray){
                     console.log("Remove piece from tray for visual hint.");
                     rotateClkWise();
                     setTimeout(function(){
                     rotateAntiClkWise();
-                    },500);
+                    },timeoutFrame);
                 }
                 break;
 
             case "rotateAntiClkWise":
                 // handle rotateAntiClkWise hint
-                this.select(hintinPen,null,null);
+                this.select(hintinPen,posX,posY);
                 if (!this.selected.inTray){
                     rotateAntiClkWise();
                     setTimeout(function(){
                     rotateClkWise();
-                    },500);
+                    },timeoutFrame);
                 }
                 break;
             
             case "mirrorH":
                 // handle mirrorH hint
                 //select piece in the UI to flip
-                this.select(hintinPen,null,null);
+                this.select(hintinPen,posX,posY);
                 if (!this.selected.inTray){
                     flipH();
                     setTimeout(function(){
                     flipH();
-                    },500);
+                    },timeoutFrame);
                 }
                 break;
 
             case "mirrorV":
                 // handle mirrorV hint
-                this.select(hintinPen,null,null);
+                this.select(hintinPen,posX,posY);
                 if (!this.selected.inTray){
                     flipV();
                     setTimeout(function(){
                     flipV();
-                    },500);
+                    },timeoutFrame);
                 }
                 break;
 
             default:
                 console.log("Unknown piece action detected!");
         }
+        
     }
 
     hide(piecePos, prevBackground){
