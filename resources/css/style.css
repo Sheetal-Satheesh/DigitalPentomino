@@ -345,6 +345,6 @@ table
     }
 
     body {
-      /* Disables pull-to-refresh but allows overscroll flow effects. */
+      /* Disables pull-to-refresh but allows overscroll flow effects. TODO: Need to check on different screen sizes*/
       overscroll-behavior-y: contain;
     } 
