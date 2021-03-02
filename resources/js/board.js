@@ -566,7 +566,7 @@ class Board {
      * @returns {[]}
      * @private
      */
-    _getNeighbPositionsUnoccByPentomino(pentomino, row, col) {
+    _getNeighbPosnsUnoccByPentomino(pentomino, row, col) {
         let unoccupiedNeighbors = [];
         if (!this.positionIsValid(row + 1, col) || !(this.isOccupied(row + 1, col) === pentomino)) {
             unoccupiedNeighbors.push([row + 1, col]);
@@ -594,7 +594,7 @@ class Board {
                 if (pentomino.getCharAtMatrixPosition(row, col) === '1') {
                     let position = this.getPosition(pentomino);
                     let coordinatePosition = pentomino.getCoordinatePosition(position, [row, col]);
-                    let unoccupiedNeighborPositions = this._getNeighbPositionsUnoccByPentomino(pentomino, coordinatePosition[0], coordinatePosition[1]);
+                    let unoccupiedNeighborPositions = this._getNeighbPosnsUnoccByPentomino(pentomino, coordinatePosition[0], coordinatePosition[1]);
                     unoccupiedNeighborPositions.forEach(unoccupiedNeighborPosition => {
                         let isNewElement = neighborPositions.find(c => c[0] === unoccupiedNeighborPosition[0]
                             && c[1] === unoccupiedNeighborPosition[1]) === undefined;
