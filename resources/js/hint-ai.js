@@ -46,9 +46,10 @@ class HintAI {
     _calculateBestImpossibleUnoccupiedCellSpace(game) {
         let unoccupiedCellSpaces = game._board.getUnoccupiedCellSpaces();
         let bestCellSpace = null;
-        let bestCellSpaceSize = 1000;
+        let bestCellSpaceSize = Number.MAX_VALUE;
         unoccupiedCellSpaces.forEach(space => {
-            if (space.length < bestCellSpaceSize && !(space.length % 5 === 0)) {
+            const PENTOMINO_SIZE = 5;
+            if (space.length < bestCellSpaceSize && !(space.length % PENTOMINO_SIZE === 0)) {
                 bestCellSpace = space;
                 bestCellSpaceSize = space.length;
             }
@@ -57,7 +58,7 @@ class HintAI {
     }
 
     _getCommandBasedOnUnoccupiedCellsSkill(game, closestSolution, bestImpossibleCellSpace) {
-        let neighboringPentominoes = game._board.getNeighborPentominoesOfSpace(bestImpossibleCellSpace);
+        let neighboringPentominoes = game._board.getNeighbPentominoesOfCellSpace(bestImpossibleCellSpace);
         let nonPerfectPentominoes = neighboringPentominoes.filter(p => !this._isPerfectPentomino(game, closestSolution, p.name));
         let pentomino = nonPerfectPentominoes[0];
         return new RemoveCommand(game, pentomino, game.getPosition(pentomino));
@@ -358,7 +359,7 @@ class HintAI {
         commandSequenceList.getAllCommandSequences().forEach(commandSequence => {
             let pentominoName = commandSequence["pentominoName"];
             let solutionPentomino = closestSolution.getPentominoByName(pentominoName);
-            let neighboringPositions = closestSolution._board._getNeighborPositionsOfPentomino(solutionPentomino);
+            let neighboringPositions = closestSolution._board._getNeighbPositionsOfPentomino(solutionPentomino);
             let numUnoccupiedNeighbors = neighboringPositions.length;
             neighboringPositions.forEach(neighboringPosition => {
                 let neighboringGamePosition = [
