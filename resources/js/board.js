@@ -503,6 +503,167 @@ class Board {
         return this.pentominoIsValidAtPosition(pentomino, position[0], position[1]);
     }
 
+    getUnoccupiedCellSpaces() {
+        let spaces = [];
+
+        let remainingUnoccupiedCells = this.getUnoccupiedPositions();
+        if (remainingUnoccupiedCells.length === 0) {
+            return [[]];
+        }
+        if (remainingUnoccupiedCells.length === 1) {
+            return [[remainingUnoccupiedCells[0]]];
+        }
+
+        while (!(remainingUnoccupiedCells.length === 0)) {
+            let initCell = remainingUnoccupiedCells[0];
+            let space = [initCell];
+            remainingUnoccupiedCells = remainingUnoccupiedCells.filter(cell => !(cell === initCell));
+            let nextPossibleCells = this._getValidNeighborPositions(initCell[0], initCell[1]);
+            this._createSpace(remainingUnoccupiedCells, nextPossibleCells, space);
+            spaces.push(space);
+        }
+
+        return spaces;
+    }
+
+    _createSpace(remainingUnoccupiedCells, nextPossibleCells, space) {
+        nextPossibleCells.forEach(possibleNeighbor => {
+            let neighborCell = remainingUnoccupiedCells.find(cell => cell[0] === possibleNeighbor[0]
+                && cell[1] === possibleNeighbor[1]);
+
+            if (!(neighborCell === undefined)) {
+                space.push(neighborCell);
+                let index = remainingUnoccupiedCells.findIndex(x => x === neighborCell);
+                if (index === -1) throw new Error("No cell found with [" + neighborCell[0] + "," + neighborCell[1] + "]");
+                remainingUnoccupiedCells.splice(index, 1);
+                this._createSpace(remainingUnoccupiedCells, this._getValidNeighborPositions(neighborCell[0], neighborCell[1]), space);
+            }
+        });
+    }
+
+    _getValidNeighborPositions(row, col) {
+        let unoccupiedNeighbors = [];
+        if (this.positionIsValid(row + 1, col)) {
+            unoccupiedNeighbors.push([row + 1, col]);
+        }
+        if (this.positionIsValid(row - 1, col)) {
+            unoccupiedNeighbors.push([row - 1, col]);
+        }
+        if (this.positionIsValid(row, col + 1)) {
+            unoccupiedNeighbors.push([row, col + 1]);
+        }
+        if (this.positionIsValid(row, col - 1)) {
+            unoccupiedNeighbors.push([row, col - 1]);
+        }
+        return unoccupiedNeighbors;
+    }
+
+    /**
+     * Returns neighboring positions that may be invalid but are not occupied by specified pentomino
+     * @param pentomino
+     * @param row
+     * @param col
+     * @returns {[]}
+     * @private
+     */
+    _getNeighbPosnsUnoccByPentomino(pentomino, row, col) {
+        let unoccupiedNeighbors = [];
+        if (!this.positionIsValid(row + 1, col) || !(this.isOccupied(row + 1, col) === pentomino)) {
+            unoccupiedNeighbors.push([row + 1, col]);
+        }
+        if (!this.positionIsValid(row - 1, col) || !(this.isOccupied(row - 1, col) === pentomino)) {
+            unoccupiedNeighbors.push([row - 1, col]);
+        }
+        if (!this.positionIsValid(row, col + 1) || !(this.isOccupied(row, col + 1) === pentomino)) {
+            unoccupiedNeighbors.push([row, col + 1]);
+        }
+        if (!this.positionIsValid(row, col - 1) || !(this.isOccupied(row, col - 1) === pentomino)) {
+            unoccupiedNeighbors.push([row, col - 1]);
+        }
+        return unoccupiedNeighbors;
+    }
+
+    /**
+     * Returns neighboring positions of pentomino (could be out of the board)
+     */
+    _getNeighbPositionsOfPentomino(pentomino) {
+        let neighborPositions = [];
+
+        for (let row = 0; row < pentomino.iRows; row++) {
+            for (let col = 0; col < pentomino.iCols; col++) {
+                if (pentomino.getCharAtMatrixPosition(row, col) === '1') {
+                    let position = this.getPosition(pentomino);
+                    let coordinatePosition = pentomino.getCoordinatePosition(position, [row, col]);
+                    let unoccupiedNeighborPositions = this._getNeighbPosnsUnoccByPentomino(pentomino, coordinatePosition[0], coordinatePosition[1]);
+                    unoccupiedNeighborPositions.forEach(unoccupiedNeighborPosition => {
+                        let isNewElement = neighborPositions.find(c => c[0] === unoccupiedNeighborPosition[0]
+                            && c[1] === unoccupiedNeighborPosition[1]) === undefined;
+                        if (isNewElement) {
+                            neighborPositions.push(unoccupiedNeighborPosition);
+                        }
+                    });
+                }
+            }
+        }
+
+        return neighborPositions;
+    }
+
+    arePositionsNeighbors(rowA, colA, rowB, colB) {
+        return rowA === rowB && colA + 1 === colB
+            || rowA === rowB && colA - 1 === colB
+            || colA === colB && rowA + 1 === rowB
+            || colA === colB && rowA - 1 === rowB;
+    }
+
+    getUnoccupiedPositions() {
+        let unoccupiedPositions = [];
+        for (let row = this._boardSRows; row < this._boardSRows + this._boardRows; row++) {
+            for (let col = this._boardSCols; col < this._boardSCols + this._boardCols; col++) {
+                if (this.isOccupied(row, col) === null) {
+                    unoccupiedPositions.push([row, col]);
+                }
+            }
+        }
+        return unoccupiedPositions;
+    }
+
+    isOccupied(row, col) {
+        if (!this.positionIsValid(row, col)) {
+            throw new Error("Position [" + row + "," + col + "] is outside the board");
+        }
+
+        let pentomino = null;
+        this._pentominoes.some(p => {
+            let position = this.getPosition(p);
+            let matrixPosition = p.getMatrixPosition(position, [row, col]);
+
+            if (p.matrixPositionIsValid(matrixPosition[0], matrixPosition[1])
+                && p.getCharAtMatrixPosition(matrixPosition[0], matrixPosition[1]) === '1') {
+                pentomino = p;
+                return true;
+            }
+            return false;
+        });
+        return pentomino;
+    }
+
+    getNeighbPentominoesOfCellSpace(space) {
+        let neighborPentominoes = [];
+
+        space.forEach(cell => {
+            let neighborPositions = this._getValidNeighborPositions(cell[0], cell[1]);
+            neighborPositions.forEach(neighborPosition => {
+                let pentomino = this.isOccupied(neighborPosition[0], neighborPosition[1]);
+                if (!(pentomino === null) && neighborPentominoes.find(p => p.name === pentomino.name) === undefined) {
+                    neighborPentominoes.push(pentomino);
+                }
+            });
+        });
+
+        return neighborPentominoes;
+    }
+
     /**
      * Returns all pentomino objects that are currently placed on the board
      * @returns {Array}

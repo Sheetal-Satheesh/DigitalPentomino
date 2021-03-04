@@ -37,7 +37,7 @@ class Pentomino {
                 this.sRepr = '0000001100011000100000000';
                 break;
             case 'Y':
-                this.color = "#FFA200";
+                this.color = "#ffa200";
                 this.trayPosition = 4;
                 this.sRepr = '0000000000001001111000000';
                 break;
@@ -52,7 +52,7 @@ class Pentomino {
                 this.sRepr = '0000001010011100000000000';
                 break;
             case 'V':
-                this.color = "#8D0009";
+                this.color = "#8d0009";
                 this.trayPosition = 7;
                 this.sRepr = '0000001000010000111000000';
                 break;
