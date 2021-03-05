@@ -551,6 +551,7 @@ class Visual {
                 let fieldvalue = document.getElementById("field_" + hintSkill[i][0] + "," + hintSkill[i][1]); 
                 var defaultBackground = fieldvalue.style.background = "#adc0b9";
                 fieldvalue.style.background = "#f08080";
+                //fieldvalue.style.boxShadow ="0 15px 25px -4px rgba(0,0,0,0.4), inset 0 -8px 25px -1px rgba(255,255,255,0.9), 0 -10px 15px -1px rgba(255,255,255,0.6), inset 0 8px 20px 0 rgba(0,0,0,0.2), inset 0 0 5px 1px rgba(255,255,255,0.6)";
                 setTimeout(function(){ fieldvalue.style.background = defaultBackground; }, 2000);
             }
         }
