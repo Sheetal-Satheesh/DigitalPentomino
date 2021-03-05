@@ -582,7 +582,7 @@ class Visual {
                     pen.style.display = 'none';
                     setTimeout(function(){
                     pen.style.display = 'block';
-                    },timeoutFrame);
+                    },2000);
                 }
                 break;
                     
