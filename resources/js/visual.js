@@ -25,6 +25,7 @@ class Visual {
         this.initalizeListeners();
     }
 
+
     isBlockCell(posX, posY){
         var bCellsFnd=false;
             if (this.pd.blockedCells != undefined){
@@ -358,6 +359,7 @@ class Visual {
                 var x = event.clientX;
                 var y = event.clientY;
                 var container = window.currentlyMoving[0];
+
                 //resize object to full size while moving and attach their center to the pointer
                 var width = UIProperty.WindowWidth / that.pd.gameWidth;
                 //set new style for left and top value of element, BUT do not cross borders
@@ -420,7 +422,7 @@ class Visual {
                         var coords = (id.split('_')[1].split(','));
                         data[1].removeFromTray();
                         that.placePentomino(data[1], coords[0],coords[1] );
-                       // that.showNumberOfPossibleSolutions();
+                        that.showNumberOfPossibleSolutions();
                         /**
                          * make this the selected element which activates manipulation GUI data[1].select();
                          *
@@ -536,11 +538,14 @@ class Visual {
     indicateHint(timeoutFrame){
         //possible command names (place, remove, moveToPosition, rotateClkWise, rotateAntiClkWise, mirrorH, mirrorV)
         let hintCommand = pd.gameController.getHint().getCommand();
+        let hintSkill = pd.gameController.getHint()._skill;
         let hintName = hintCommand.getName();
         let hintinPen = hintCommand._pentomino;
         let pentominoColor = hintinPen.color;
         let clientRect = document.getElementById("piece_" + hintinPen.name).getBoundingClientRect();
-        let [posX, posY] = [clientRect.x + clientRect.width/2, clientRect.y + clientRect.height/2];
+       let [posX, posY] = [clientRect.x + clientRect.width/2, clientRect.y + clientRect.height/2];
+        
+
         switch (hintName) {
             case "place":
                 // handle place hint
@@ -570,11 +575,13 @@ class Visual {
             
             case "remove":
                 // handle remove hint
-                var pen = this.select(hintinPen,posX,posY);
+                this.select(hintinPen,posX,posY);
+                var pen = document.getElementById("piece_" + hintinPen.name);
+                console.log("pent",hintinPen,this.selected);
                 if (!this.selected.inTray){
-                    pen.style.display = none;
+                    pen.style.display = 'none';
                     setTimeout(function(){
-                    pen.style.display = block;
+                    pen.style.display = 'block';
                     },timeoutFrame);
                 }
                 break;
