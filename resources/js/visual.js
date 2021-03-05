@@ -544,7 +544,17 @@ class Visual {
         let pentominoColor = hintinPen.color;
         let clientRect = document.getElementById("piece_" + hintinPen.name).getBoundingClientRect();
        let [posX, posY] = [clientRect.x + clientRect.width/2, clientRect.y + clientRect.height/2];
-        
+
+       //indication of unoccupied cells
+        if (!(hintSkill === null)) {
+            for(let i=0;i<hintSkill.length;i++){
+                let fieldvalue = document.getElementById("field_" + hintSkill[i][0] + "," + hintSkill[i][1]); 
+                var defaultBackground = fieldvalue.style.background = "#adc0b9";
+                fieldvalue.style.background = "#000";
+                setTimeout(function(){ fieldvalue.style.background = defaultBackground; }, 2000);
+            }
+        }
+
 
         switch (hintName) {
             case "place":
