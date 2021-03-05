@@ -555,8 +555,8 @@ class Visual {
             }
         }
 
-
-        switch (hintName) {
+        else{
+              switch (hintName) {
             case "place":
                 // handle place hint
                 let hintRow = hintCommand._row;
@@ -647,6 +647,10 @@ class Visual {
         }
         
     }
+}
+
+
+      
 
     hide(piecePos, prevBackground){
 
