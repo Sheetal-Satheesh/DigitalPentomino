@@ -550,7 +550,7 @@ class Visual {
             for(let i=0;i<hintSkill.length;i++){
                 let fieldvalue = document.getElementById("field_" + hintSkill[i][0] + "," + hintSkill[i][1]); 
                 var defaultBackground = fieldvalue.style.background = "#adc0b9";
-                fieldvalue.style.background = "#000";
+                fieldvalue.style.background = "#f08080";
                 setTimeout(function(){ fieldvalue.style.background = defaultBackground; }, 2000);
             }
         }
