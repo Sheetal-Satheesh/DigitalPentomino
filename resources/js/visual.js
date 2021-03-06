@@ -339,13 +339,9 @@ class Visual {
 
         for (var i in elements) {
             var check = elements[i].className;
-            
-            console.log("Element: " + elements[i].className);
             //if button is clicked, forget the rest
 
             if (check !== 'bmPoint') continue;
-
-            console.log("Button over piece: " + buttonOverPiece);
 
             if (buttonOverPiece) continue;
 
