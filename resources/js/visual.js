@@ -61,7 +61,7 @@ class Visual {
     }
 
     isCollision(pentomino){
-        let collisionPentominoes = this.gameController.getCollisionPentominoesOfPentomino(pentomino);
+        let collisionPentominoes = this.gameController.getCollisionOfPentominoes(pentomino);
         if (collisionPentominoes.length != 0){
             return true;
         }else{

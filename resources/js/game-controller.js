@@ -45,12 +45,20 @@ class GameController {
     }
 
     exceptionHandler(pentomino){
-        if (this._game === null) 
+        if (this._game === null) {
             throw new Error("Game is not set");
-        if (pentomino === null || pentomino === undefined) 
+        }
+       
+        if ( (pentomino === null) || 
+             (pentomino === undefined)) {
+                
             throw new Error("Type Error: Pentomino is null or undefined");
-        if(!this._isOfTypePentomino(pentomino)) 
-            throw new Error("Type Error: Pentomino isn't an instance of the Pentomino class.");
+        }
+        
+        if(!this._isOfTypePentomino(pentomino)) {
+            throw new Error(
+                "Type Error: Pentomino isn't an instance of the Pentomino class.");
+        }
     }
 
     placePentomino(
@@ -141,38 +149,56 @@ class GameController {
     }
 
     // --- --- --- Hints --- --- ---
-    getHint()
-    {
-        if (this._game === null) throw new Error("Game is not set");
+    getHint() {
+        if (this._game === null) {
+            throw new Error("Game is not set");
+        }
+
         return this._hintAI.getHint();
     }
 
     // --- --- --- History --- --- ---
     jumpToCommand(command) {
-        if (this._game === null) throw new Error("Game is not set");
+        if (this._game === null) {
+            throw new Error("Game is not set");
+        }
+
         return this._game._commandManager.jumpToCommand(command);
     }
 
     jumpToBeginning() {
-        if (this._game === null) throw new Error("Game is not set");
+        if (this._game === null) {
+            throw new Error("Game is not set");
+        }
+
         return this._game._commandManager.jumpToBeginning();
     }
 
     executeCommandPath(commandPath, onUndo, onRedo) {
-        if (this._game === null) throw new Error("Game is not set");
-        if (commandPath === null || commandPath === undefined) throw new Error("Reference error: commandPath is null or undefined");
+        if (this._game === null) {
+            throw new Error("Game is not set");
+        }
+        if ( (commandPath === null) || 
+             (commandPath === undefined)){
+                throw new Error("Reference error: commandPath is null or undefined");
+            } 
 
-        this._game._commandManager.executeCommandPath(commandPath, onUndo, onRedo);
+        this._game._commandManager.executeCommandPath(
+                                                commandPath, 
+                                                onUndo, 
+                                                onRedo);
     }
 
     getHistory() {
-        if (this._game === null) throw new Error("Game is not set");
+        if (this._game === null) {
+            throw new Error("Game is not set");
+        }
 
         return this._game._commandManager.getHistory();
     }
 
     undo() {
-        if(this._game === null) {
+        if (this._game === null) {
             throw new Error("Game is not set");
         }
 
@@ -180,7 +206,7 @@ class GameController {
     }
 
     redo() {
-        if(this._game === null) {
+        if (this._game === null) {
             throw new Error("Game is not set");
         }
 
@@ -188,7 +214,9 @@ class GameController {
     }
 
     isUndoPossible() {
-        if (this._game === null) throw new Error("Game is not set");
+        if (this._game === null) {
+            throw new Error("Game is not set");
+        }
 
         return this._game.isUndoPossible();
     }
@@ -196,7 +224,9 @@ class GameController {
    
 
     getPossibleRedoCommands() {
-        if (this._game === null) throw new Error("Game is not set");
+        if (this._game === null) {
+            throw new Error("Game is not set");
+        }
 
         return this._game.getPossibleRedoCommands();
     }
@@ -212,26 +242,41 @@ class GameController {
         return this._game;
     }
 
-    createGame(boardStartXY, boardSizeXY, Boardshape, name) {
+    createGame( boardStartXY, 
+                boardSizeXY, 
+                Boardshape, 
+                name) {
+        
         boardStartXY[0] = parseInt(boardStartXY[0]);
         boardStartXY[1] = parseInt(boardStartXY[1]);
 
         boardSizeXY[0]=parseInt(boardSizeXY[0]);
         boardSizeXY[1]=parseInt(boardSizeXY[1]);
 
-        this.setGame(new Game(new Board(boardStartXY,boardSizeXY,Boardshape), name));
+        this.setGame(
+                    new Game(
+                        new Board(
+                                boardStartXY,
+                                boardSizeXY,
+                                Boardshape), 
+                    name));
+
         this._game._fillUpTray();
         this._commandManager = new CommandManager();
     }
 
     // --- --- --- Debugging --- --- ---
     display() {
-        if (this._game === null) throw new Error("Game is not set");
+        if (this._game === null) {
+            throw new Error("Game is not set");
+        }
         this._game.display();
     }
 
     writeToDocument() {
-        if (this._game === null) throw new Error("Game is not set");
+        if (this._game === null) {
+            throw new Error("Game is not set");
+        }
         this._game.writeToDocument();
     }
 
@@ -257,9 +302,9 @@ class GameController {
      * @param pentomino
      * @returns {*}
      */
-    getCollisionPentominoesOfPentomino(pentomino) {
+    getCollisionOfPentominoes(pentomino) {
         this.exceptionHandler(pentomino);
-        return this._game.getCollisionPentominoesOfPentomino(pentomino);
+        return this._game.getCollisionOfPentominoes(pentomino);
     }
 
     /**
@@ -268,7 +313,9 @@ class GameController {
      * @returns {*}
      */
     getCollisionCellsOfPentomino(pentomino) {
-        if (this._game === null) throw new Error("Game is not set");
+        if (this._game === null) {
+            throw new Error("Game is not set");
+        }
         return this._game.getCollisionCellsOfPentomino(pentomino);
     }
 
@@ -277,18 +324,24 @@ class GameController {
      * @returns {*}
      */
     getCollisionCells(){
-        if (this._game === null) throw new Error("Game is not set");
+        if (this._game === null) {
+            throw new Error("Game is not set");
+        }
         return this._game.getCollisionCells();
     }
 
     // --- --- --- Get Information About The Game For Loading --- --- ---
     getBoardSize() {
-        if (this._game === null) throw new Error("Game is not set");
+        if (this._game === null) {
+            throw new Error("Game is not set");
+        }
         return this._game.getBoardSize();
     }
 
     getPentominoes() {
-        if (this._game === null) throw new Error("Game is not set");
+        if (this._game === null) {
+            throw new Error("Game is not set");
+        }
         return this._game.getPentominoes();
     }
 
@@ -299,17 +352,21 @@ class GameController {
 
     // --- --- --- Get Information About The Game For User Interaction --- --- ---
     getPentominoesAtPosition(row, col) {
-        if (this._game === null) throw new Error("Game is not set");
+        if (this._game === null) {
+            throw new Error("Game is not set");
+        }
         return this._game.getPentominoesAtPosition(row, col);
     }
 
     // --- --- --- Helper --- --- ---
     _isOfTypePentomino(pentomino) {
-        return JSON.stringify(Object.getPrototypeOf(pentomino)) === JSON.stringify(Pentomino.prototype);
+        return JSON.stringify(
+                        Object.getPrototypeOf(pentomino)) === JSON.stringify(Pentomino.prototype);
     }
 
     _isOfTypeCommandPath(commandPath) {
-        return JSON.stringify(Object.getPrototypeOf(commandPath)) === JSON.stringify(CommandPath.prototype);
+        return JSON.stringify(
+                        Object.getPrototypeOf(commandPath)) === JSON.stringify(CommandPath.prototype);
     }
 }
 
