@@ -33,17 +33,6 @@ class Game {
         this._cmdKey = cmdKey;
     }
     
-    // --- --- --- Pentomino Operations --- --- ---
-    /**
-     * Executes the specified and adds it to the history tree.
-     * Commands can be undone with the undo() and redo() methods.
-     * @param command
-     * @returns {*}
-     */
-    doCommandAndAddToHistory(command) {
-        return this._commandManager.executeNewCommand(command);
-    }
-
     /**
      * Adds new pentomino to game
      * @param pentomino
@@ -255,9 +244,9 @@ class Game {
         }
     }
 
-    getCollisionPentominoesOfPentomino(pentomino) {
+    getCollisionOfPentominoes(pentomino) {
         if (this.isPlacedOnBoard(pentomino)) {
-            return this._board.getCollisionPentominoesOfPentomino(pentomino);
+            return this._board.getCollisionOfPentominoes(pentomino);
         } else {
             return [];
         }
