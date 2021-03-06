@@ -787,7 +787,6 @@ class Visual {
     undo(){
         let command = this.gameController.undo(); 
         if(command == undefined){
-            console.error("Game is not started");
             return;
         }
         this.execShadowCmd(command, "Undo");     
@@ -796,7 +795,6 @@ class Visual {
     redo(){
         let command = this.gameController.redo();
         if(command == undefined){
-            console.error("Leaf reached");
             return;
         }
         this.execShadowCmd(command,"Redo");

@@ -9,9 +9,8 @@ class CommandManager {
         this._game = fController.controller.game();
     }
 
-    Add(command) {
-        let cmdNode= this._cmdTree.Insert(command);
-        return cmdNode.Key();
+    Reset(){
+        this._cmdTree.Clean();
     }
 
     Seach(key) {
@@ -36,6 +35,7 @@ class CommandManager {
                 break;
             
             case "Remove":
+                this._game.removePentomino(cmdVal.Pentomino);
                 break;
             
             case "RotateClkWise":
@@ -62,9 +62,11 @@ class CommandManager {
 
        }
 
-       if(isSuccess) {
+       if(isSuccess && (currNode != undefined)) {
             this._game.updateCmdKey(currNode.Key());
-       }
+            console.info("Root Key: "+ this._cmdTree.RootKey());
+            console.info("Current Key: "+ this._cmdTree.CurrentKey());
+        }
 
         return command;
     }

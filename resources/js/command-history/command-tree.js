@@ -1,29 +1,37 @@
 if(typeof require != 'undefined') {
-    Command = require('./commandNode.js');
+    Command = require('./command-node.js');
     CommandPath = require('./command-path.js');
 }
 
 class CommandTree {
     constructor() {
         this._rootCmdNode = undefined;
-        this._currentCmdNode = this._rootCmdNode;
+        this._currentCmdNode = undefined;
+        this._lastCmdNode = undefined;
+    }
+
+    Clean(){
+        this._rootCmdNode = undefined;
+        this._currentCmdNode = undefined;
+        this._lastCmdNode = undefined;
     }
 
     _insert(current, parent, command) {
+
         if(current == undefined) {
             current =  new CommandNode(command);
             if(parent != undefined) {
                 current = new CommandNode(command);
                 parent.AddChild(current);   
-                this._currentCmdNode = current; 
             }
-            
+
+            this._currentCmdNode = current; 
             return current;
         }
 
         parent = current;
         if(current.Children().length != 0){
-            current = current.nextNode(); 
+            current = current.ChildTopNode(); 
         }
         else {
             current = undefined;
@@ -31,7 +39,7 @@ class CommandTree {
 
         current = this._insert(current, parent, command);
         
-        return current == current.Parent()?parent:current;    
+        return parent == current.Parent()? parent:current;    
     }
 
     Insert(command){
@@ -39,6 +47,7 @@ class CommandTree {
         if(this._currentCmdNode == undefined) {
             this._currentCmdNode = this._rootCmdNode;
         }
+        this._lastCmdNode = this._currentCmdNode;
         return this._currentCmdNode;
     }
 
@@ -63,12 +72,19 @@ class CommandTree {
         let current = undefined;
 
         if((this._currentCmdNode == undefined)){
-            console.error("Command Tree is Empty");
-            return current;
+            if(this._rootCmdNode == undefined){
+                console.error("Command Tree is Emty: Game is not Started");
+                return undefined;
+            }
+            else{
+                this._currentCmdNode = this._rootCmdNode;
+            }
         }
 
         if( this._currentCmdNode.Key() === this._currentCmdNode.Parent().Key()){
-            return this._currentCmdNode.Command();
+            current = this._currentCmdNode;
+            this._currentCmdNode = undefined;
+            return current.Command();
         }
         else{
             current = this._currentCmdNode;
@@ -97,11 +113,24 @@ class CommandTree {
      MoveDown(){
         let current=undefined;
         if((this._currentCmdNode == undefined)){
-            console.error("Branch Leaf reached");
+            if(this._rootCmdNode == undefined){
+                console.error("Command Tree is Emty: Game is not Started");
+                return undefined;
+            }
+            else if(this._lastCmdNode != undefined){
+                console.error("Redo Not Possible");
+                return undefined;
+            }
+            else{
+                this._currentCmdNode = this._rootCmdNode;
+                return this._currentCmdNode.Command();
+            }
         }
 
-        if(this._currentCmdNode.Children().length == 0){
-            return this._currentCmdNode.Command();
+        if(this._currentCmdNode == this._lastCmdNode){
+            current = this._currentCmdNode;
+            this._currentCmdNode = undefined;
+            return current.Command();
         }
         else{
             current = this._currentCmdNode;
@@ -127,8 +156,16 @@ class CommandTree {
         return this._rootCmdNode;
     }
 
+    RootKey(){
+        return this._rootCmdNode.Key();
+    }
+
     Current(){
         return this._currentCmdNode;
+    }
+
+    CurrentKey(){
+        return this._currentCmdNode.Key();
     }
 
     CommandSequences(startKey, endKey){

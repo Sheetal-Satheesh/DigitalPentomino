@@ -282,7 +282,11 @@ class Game {
         },this);
         if (outsidePosition === null) {
             //throw new Error("No pentomino: " + pentomino.name + " placed outside the board");
-            console.warn("Pentomino not in the Game area, Is it in Tray?");
+            console.info(
+                            "Pentomino" + 
+                             pentomino.name+ 
+                            " not in the Game area, Is it in Tray?");
+            
             return undefined;
         }
         return outsidePosition;
