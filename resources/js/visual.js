@@ -7,7 +7,10 @@ const UIProperty = {
     "PentominoY": 5,
     "FunctionWidth": 10
 }
-Object.freeze(UIProperty)
+Object.freeze(UIProperty);
+
+const CommandTypes = {"Original":1, "Shadow":2};
+Object.freeze(CommandTypes);
 
 class Visual {
 
@@ -66,9 +69,9 @@ class Visual {
         }
     }
 
-    placePentomino(pentomino, posX, posY){
+    placePentomino(pentomino, posX, posY, cmdType=CommandTypes.Original){
 
-        this.gameController.placePentomino(pentomino, posX, posY);
+        this.gameController.placePentomino(pentomino, posX, posY,cmdType);
         var bCellsFnd = this.isPentominoInBlockCells(pentomino);
         var collisonFnd = this.isCollision(pentomino);
         var offset = (bCellsFnd || collisonFnd)?true:false;
@@ -76,8 +79,8 @@ class Visual {
         this.positionPiece(pentomino, offset);
     }
 
-    movePentominoToTray(pentomino){
-        this.gameController.removePentomino(pentomino);
+    movePentominoToTray(pentomino,cmdType=CommandTypes.Original){
+        this.gameController.removePentomino(pentomino, cmdType);
     }
 
     clear(){
@@ -444,7 +447,7 @@ class Visual {
 
     }
 
-    rotateClkWise() {
+    rotateClkWise(cmdType=CommandTypes.Original) {
         let piece = this.selected;
         if (piece) {
             let pieceDiv = document.getElementById("piece_" + piece.name);
@@ -452,7 +455,7 @@ class Visual {
             let currentRot = pieceDiv.style.getPropertyValue("--rotationZ").split(/(-?\d+)/)[1] * 1; //converts string value to int
             let newRot = flipped ? currentRot - 90 : currentRot + 90;
             // Update the backend
-            this.gameController.rotatePentominoClkWise(piece);
+            this.gameController.rotatePentominoClkWise(piece,cmdType);
             var bCellsFnd = this.isPentominoInBlockCells(piece);
             var collisonFnd = this.isCollision(piece);
             var offset = (bCellsFnd || collisonFnd)?true:false;
@@ -461,7 +464,7 @@ class Visual {
         }
     }
 
-    rotateAntiClkWise() {
+    rotateAntiClkWise(cmdType=CommandTypes.Original) {
         let piece = this.selected;
         if (piece) {
             let pieceDiv = document.getElementById("piece_" + piece.name);
@@ -469,7 +472,7 @@ class Visual {
             let currentRot = pieceDiv.style.getPropertyValue("--rotationZ").split(/(-?\d+)/)[1] * 1; //converts string value to int
             let newRot = flipped ? currentRot + 90 : currentRot - 90;
             // Update the backend
-            this.gameController.rotatePentominoAntiClkWise(piece);
+            this.gameController.rotatePentominoAntiClkWise(piece,cmdType);
             var bCellsFnd = this.isPentominoInBlockCells(piece);
             var collisonFnd = this.isCollision(piece);
             var offset = (bCellsFnd || collisonFnd)?true:false;
@@ -478,7 +481,7 @@ class Visual {
         }
     }
 
-    flipH() {
+    flipH(cmdType=CommandTypes.Original) {
         let piece = this.selected;
         if (piece) {
             let pieceDiv = document.getElementById("piece_" + piece.name);
@@ -486,7 +489,7 @@ class Visual {
             let currentRot = pieceDiv.style.getPropertyValue("--rotationX").split(/(-?\d+)/)[1] * 1; //converts string value to int
             let newRot = currentRot + 180;
             // Update the backend
-            this.gameController.mirrorPentominoH(piece);
+            this.gameController.mirrorPentominoH(piece,cmdType);
             var bCellsFnd = this.isPentominoInBlockCells(piece);
             var collisonFnd = this.isCollision(piece);
             var offset = (bCellsFnd || collisonFnd)?true:false;
@@ -496,7 +499,7 @@ class Visual {
         }
     }
 
-    flipV() {
+    flipV(cmdType=CommandTypes.Original) {
         let piece = this.selected;
         if (piece) {
             let pieceDiv = document.getElementById("piece_" + piece.name);
@@ -505,7 +508,7 @@ class Visual {
             let newRot = currentRot + 180;
             // Update the backend
             let [penX,penY] = this.gameController.getPositionOfPentomino(piece);
-            this.gameController.mirrorPentominoV(piece);
+            this.gameController.mirrorPentominoV(piece,cmdType);
             var bCellsFnd = this.isPentominoInBlockCells(piece);
             var collisonFnd = this.isCollision(piece);
             var offset = (bCellsFnd || collisonFnd)?true:false;
@@ -734,4 +737,70 @@ class Visual {
         }
         return undefined;
     }
+
+    execShadowCmd(command){
+        switch(command.name){
+            case "Place":
+                if( (command.PosX == undefined) && 
+                    (command.PosY == undefined)) {
+                    command.Pentomino.toTray();
+                    this.movePentominoToTray(command.Pentomino, CommandTypes.Shadow);
+                    this.positionPiece(command.Pentomino);
+                }
+                else{
+                    command.Pentomino.inTray=0;
+                    this.placePentomino(command.Pentomino, command.PosX,command.PosY,CommandTypes.Shadow);
+                }
+
+                break;
+
+            case "Remove":
+                break;
+            
+            case "RotateClkWise":
+                this.selected = command.Pentomino;
+                this.rotateClkWise(CommandTypes.Shadow);
+                break;
+            
+            case "RotateAntiClkWise":
+                this.selected = command.Pentomino;
+                this.rotateAntiClkWise(CommandTypes.Shadow);
+                break;
+            
+            case "MirrorH":
+                this.selected = command.Pentomino;
+                this.flipH(CommandTypes.Shadow);
+                break;
+            
+            case "MirrorV":
+                this.selected = command.Pentomino;
+                this.flipV(CommandTypes.Shadow);
+                break;
+            
+            default:
+                //TODO: add commund related flag variable
+                throw new Error("Can not undo");
+                
+        }
+    }
+
+    undo(){
+        let command = this.gameController.undo(); 
+        if(command == undefined){
+            console.error("Game is not started");
+            return;
+        }
+        this.execShadowCmd(command, "Undo");     
+    }
+
+    redo(){
+        let command = this.gameController.redo();
+        if(command == undefined){
+            console.error("Leaf reached");
+            return;
+        }
+        this.execShadowCmd(command,"Redo");
+    }
+
+
 }

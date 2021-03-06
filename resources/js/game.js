@@ -1,12 +1,6 @@
 if(typeof require != 'undefined') {
     CommandManager = require('./command-history/command-manager.js');
-    PlaceCommand = require('./command-history/place-command.js');
-    MoveToPositionCommand = require('./command-history/move-to-position-command.js');
-    RotateAntiClkWiseCommand = require('./command-history/rotate-anti-clk-wise-command.js');
-    RotateClkWiseCommand = require('./command-history/rotate-clk-wise-command.js');
-    MirrorHCommand = require('./command-history/mirror-h-command.js');
-    MirrorVCommand = require('./command-history/mirror-v-command.js');
-    RemoveCommand = require('./command-history/remove-command.js');
+    RemoveCommand = require('./command-history/commands.js');
     Pentomino = require('./pentomino');
 }
 
@@ -14,7 +8,8 @@ class Game {
     constructor(board, name) {
         this._name = name;
         this._board = board;
-        this._commandManager = new CommandManager();
+        this._cmdKey = undefined;
+        
         /**
             TODO: reconsider this tray, do we really need to store tray information.
 
@@ -33,6 +28,11 @@ class Game {
         this._pentominosOutside = [];
         this._pentominoOutsidePositions = [];
     }
+
+    updateCmdKey(cmdKey){
+        this._cmdKey = cmdKey;
+    }
+    
     // --- --- --- Pentomino Operations --- --- ---
     /**
      * Executes the specified and adds it to the history tree.
@@ -292,7 +292,9 @@ class Game {
             }
         },this);
         if (outsidePosition === null) {
-            throw new Error("No pentomino: " + pentomino.name + " placed outside the board");
+            //throw new Error("No pentomino: " + pentomino.name + " placed outside the board");
+            console.warn("Pentomino not in the Game area, Is it in Tray?");
+            return undefined;
         }
         return outsidePosition;
     }
