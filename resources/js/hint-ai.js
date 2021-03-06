@@ -51,6 +51,52 @@ class HintAI {
 
     // --- --- --- Apply Skill --- --- ---
     _calculateBestUnreachableCellSpace(game, unoccupiedCellSpaces) {
+        let bestCellSpace = null;
+        let bestCellSpaceSize = -1;
+
+        let pentominoesOutsideBoard = game._pentominosOutside;
+
+        unoccupiedCellSpaces.forEach(cellSpace => {
+            let i = 0;
+            while (i < cellSpace.length) {
+                let cell = cellSpace[i];
+                let occupiedCells = this._tryToCoverCellWithPentominoes(game, cell, pentominoesOutsideBoard);
+
+                if (!(occupiedCells === null)) {
+                    occupiedCells.forEach(occupiedCell => {
+                        let index = cellSpace.find(cell => cell[0] === occupiedCell[0] && cell[1] === occupiedCell[1]);
+
+                        if (index === undefined) {
+                            throw new Error("cell [" + occupiedCell[0] + "," + occupiedCell[1] + "] not found");
+                        }
+
+                        if (index > i) {
+                            cellSpace.splice(index, 1);
+                            i--;
+                        }
+                    });
+                }
+
+                i++;
+            }
+
+            if (cellSpace.length > 0 && cellSpace.length > bestCellSpaceSize) {
+                bestCellSpace = cellSpace;
+                bestCellSpaceSize = cellSpace.length;
+            }
+        });
+
+        return bestCellSpace;
+    }
+
+    /**
+     * Returns when a pentomino state is found that covers the cell. Occupied cells are returned.
+     * @param game
+     * @param cell
+     * @param pentominoesOutsideBoard
+     * @private
+     */
+    _tryToCoverCellWithPentominoes(game, cell, pentominoesOutsideBoard) {
         // TODO
     }
 
