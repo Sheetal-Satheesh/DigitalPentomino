@@ -29,12 +29,19 @@ class HintAI {
             // Pursue closest game state, which has at least one possible solution
             let closestSolution = this._getClosesSolution(game, this._solutions);
 
-            let bestImpossibleCellSpace = this._calculateBestImpossibleUnoccupiedCellSpace(game);
+            let unoccupiedCellSpaces = game._board.getUnoccupiedCellSpaces();
+            let bestImpossibleCellSpace = this._calculateBestImpossibleUnoccupiedCellSpace(game, unoccupiedCellSpaces);
 
             if (bestImpossibleCellSpace === null) {
-                let commandSequenceList = this._getCommandSequenceListToSolution(game, closestSolution);
-                let commands = this._getBestNextCommandsMaxOccupiedNeighbors(game, closestSolution, commandSequenceList);
-                return new Hint(commands[0], possibleSolutions);
+                let bestUnreachableCellSpace = this._calculateBestUnreachableCellSpace(game, unoccupiedCellSpaces);
+
+                if (bestUnreachableCellSpace === null) {
+                    let commandSequenceList = this._getCommandSequenceListToSolution(game, closestSolution);
+                    let commands = this._getBestNextCommandsMaxOccupiedNeighbors(game, closestSolution, commandSequenceList);
+                    return new Hint(commands[0], possibleSolutions);
+                } else {
+                    // TODO
+                }
             } else {
                 let command = this._getCommandBasedOnUnoccupiedCellsSkill(game, closestSolution, bestImpossibleCellSpace);
                 return new Hint(command, possibleSolutions, bestImpossibleCellSpace);
@@ -43,8 +50,11 @@ class HintAI {
     }
 
     // --- --- --- Apply Skill --- --- ---
-    _calculateBestImpossibleUnoccupiedCellSpace(game) {
-        let unoccupiedCellSpaces = game._board.getUnoccupiedCellSpaces();
+    _calculateBestUnreachableCellSpace(game, unoccupiedCellSpaces) {
+        // TODO
+    }
+
+    _calculateBestImpossibleUnoccupiedCellSpace(game, unoccupiedCellSpaces) {
         let bestCellSpace = null;
         let bestCellSpaceSize = Number.MAX_VALUE;
         unoccupiedCellSpaces.forEach(space => {
