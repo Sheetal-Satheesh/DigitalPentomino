@@ -22,16 +22,26 @@ class CommandTree {
     _insert(current, parent, command) {
         if(current == undefined) {
             current =  new CommandNode(command);
-            if(parent != undefined) {
-                current = new CommandNode(command);
-                parent.AddChild(current);   
+            if(parent == undefined) {
+                return current;
+            }else{
+                if((this._operationStatus & UNDO) != UNDO){
+                   return current;
+                 }
+                parent.AddChild(current);
+                this._currentCmdNode = current;
+                return parent;
             }
-
-            this._currentCmdNode = current; 
-            return current;
         }
 
         parent = current;
+        if(current == this._currentCmdNode) {
+            current = new CommandNode(command);
+            this._currentCmdNode = current;
+            parent.AddChild(current);
+            return parent;
+        }
+
         if(current.Children().length != 0){
             current = current.ChildTopNode(); 
         }
@@ -94,6 +104,7 @@ class CommandTree {
         if( this._currentCmdNode.Key() === this._currentCmdNode.Parent().Key()){
             current = this._currentCmdNode;
             this._operationStatus &= ~UNDO; 
+            this._currentCmdNode = undefined;
             return current.Command();
         }
         else{
@@ -148,9 +159,9 @@ class CommandTree {
         }
         else{
             current = this._currentCmdNode;
-            this._currentCmdNode = this._currentCmdNode.ChildTopNode();
+            this._currentCmdNode = current.ChildTopNode();
             this._operationStatus |= (UNDO|REDO);
-            return current.Command();
+            return this._currentCmdNode.Command();
         }
     }
 
