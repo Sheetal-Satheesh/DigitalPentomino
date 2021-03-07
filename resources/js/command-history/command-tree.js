@@ -90,13 +90,10 @@ class CommandTree {
                 console.error("Command Tree is Emty: Game is not Started");
                 return undefined;
             }
-            else{
-                this._currentCmdNode = this._rootCmdNode;
-                this._operationStatus |= UNDO;
-            }
+
         }
         if((this._operationStatus & UNDO) != UNDO){
-           console.error("Undo not Possible");
+            console.error("Undo not Possible");
             return undefined;
  
         }

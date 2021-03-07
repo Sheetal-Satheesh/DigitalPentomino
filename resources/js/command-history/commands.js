@@ -42,10 +42,9 @@ class PlaceCommand extends Command {
 }
 
 class RemoveCommand extends Command {
-    constructor(pentomino, prevPos) {
+    constructor(pentomino) {
         super("Remove");
         this._pentomino = pentomino;
-        this._prevPosition = prevPos;
     }
 
     ExecValues() {
@@ -61,8 +60,8 @@ class RemoveCommand extends Command {
         return {
             "name":this._name,
             "Pentomino": this._pentomino,
-            "PosX": this._prevPosition[0],
-            "PosY": this._prevPosition[1]
+            "PosX": this.undefined,
+            "PosY": this.undefined
           };
     }
 }
