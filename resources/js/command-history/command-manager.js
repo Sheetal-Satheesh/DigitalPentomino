@@ -70,7 +70,6 @@ class CommandManager {
 
         return command;
     }
- 
 
     JumpToRoot() {
         let cmdSequences = [];

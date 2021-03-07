@@ -3,21 +3,23 @@ if(typeof require != 'undefined') {
     CommandPath = require('./command-path.js');
 }
 
+const UNDO = 1;
+const REDO = 1<<1;
+
 class CommandTree {
     constructor() {
         this._rootCmdNode = undefined;
         this._currentCmdNode = undefined;
-        this._lastCmdNode = undefined;
+        this._operationStatus &= ~(UNDO & REDO);
     }
 
     Clean(){
         this._rootCmdNode = undefined;
         this._currentCmdNode = undefined;
-        this._lastCmdNode = undefined;
+        this._operationStatus &= ~(UNDO & REDO);
     }
 
     _insert(current, parent, command) {
-
         if(current == undefined) {
             current =  new CommandNode(command);
             if(parent != undefined) {
@@ -47,7 +49,8 @@ class CommandTree {
         if(this._currentCmdNode == undefined) {
             this._currentCmdNode = this._rootCmdNode;
         }
-        this._lastCmdNode = this._currentCmdNode;
+        this._operationStatus &= ~REDO ;
+        this._operationStatus |= UNDO ;
         return this._currentCmdNode;
     }
 
@@ -71,24 +74,32 @@ class CommandTree {
     MoveUp(){
         let current = undefined;
 
-        if((this._currentCmdNode == undefined)){
+        if(this._currentCmdNode == undefined){
             if(this._rootCmdNode == undefined){
+                this._operationStatus &= ~(UNDO & REDO);
                 console.error("Command Tree is Emty: Game is not Started");
                 return undefined;
             }
             else{
                 this._currentCmdNode = this._rootCmdNode;
+                this._operationStatus |= UNDO;
             }
+        }
+        if((this._operationStatus & UNDO) != UNDO){
+           console.error("Undo not Possible");
+            return undefined;
+ 
         }
 
         if( this._currentCmdNode.Key() === this._currentCmdNode.Parent().Key()){
             current = this._currentCmdNode;
-            this._currentCmdNode = undefined;
+            this._operationStatus &= ~UNDO; 
             return current.Command();
         }
         else{
             current = this._currentCmdNode;
             this._currentCmdNode = this._currentCmdNode.Parent();
+            this._operationStatus |= (UNDO|REDO); 
             return current.Command();
         }
     }
@@ -112,29 +123,33 @@ class CommandTree {
 
      MoveDown(){
         let current=undefined;
-        if((this._currentCmdNode == undefined)){
+        if(this._currentCmdNode == undefined){
             if(this._rootCmdNode == undefined){
+                this._operationStatus &= ~(UNDO & REDO);
                 console.error("Command Tree is Emty: Game is not Started");
-                return undefined;
-            }
-            else if(this._lastCmdNode != undefined){
-                console.error("Redo Not Possible");
                 return undefined;
             }
             else{
                 this._currentCmdNode = this._rootCmdNode;
+                this._operationStatus |= UNDO; 
                 return this._currentCmdNode.Command();
             }
         }
+      
+        if((this._operationStatus & REDO) !=REDO){
+            console.error("Redo not Possible");
+             return undefined;
+        } 
 
-        if(this._currentCmdNode == this._lastCmdNode){
+        if(this._currentCmdNode.Children().length == 0){
             current = this._currentCmdNode;
-            this._currentCmdNode = undefined;
+            this._operationStatus &= ~REDO;
             return current.Command();
         }
         else{
             current = this._currentCmdNode;
             this._currentCmdNode = this._currentCmdNode.ChildTopNode();
+            this._operationStatus |= (UNDO|REDO);
             return current.Command();
         }
     }

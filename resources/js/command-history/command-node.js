@@ -1,4 +1,4 @@
-let idCounter = 0;
+
 
 class CommandNode {
     constructor(command) {
@@ -9,7 +9,6 @@ class CommandNode {
         this._command = command;
         this._parent = this;
         this._childMap=[];
-
     }
 
     AddChild(commandNode){

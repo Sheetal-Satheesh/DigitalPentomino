@@ -30,8 +30,12 @@ class PlaceCommand extends Command {
         return {
             "name":this._name,
             "Pentomino": this._pentomino,
-            "PosX": (this._prevPosition != undefined)? this._prevPosition[0] : undefined,
-            "PosY": (this._prevPosition != undefined)? this._prevPosition[1] : undefined,
+            "PosX": (this._prevPosition != undefined)? 
+                            this._prevPosition[0] : 
+                            undefined,
+            "PosY": (this._prevPosition != undefined)? 
+                            this._prevPosition[1] : 
+                            undefined,
           };
     }
 
