@@ -189,7 +189,28 @@ class Pentomino {
       	    return this;
         }
 
+    static getDistinctPentominoStates(pentomino) {
+        let pentominoStates = [];
+        let generatorPentomino = new Pentomino(pentomino.name);
+        Pentomino.addRotationPentominoStates(generatorPentomino, pentominoStates);
+        generatorPentomino.mirrorV();
+        Pentomino.addRotationPentominoStates(generatorPentomino, pentominoStates);
+        return pentominoStates;
+    }
 
+    static addRotationPentominoStates(pentomino, pentominoStates) {
+        for (let i = 0; i < 4; i++) {
+            if (pentominoStates.find(p => p.sRepr === pentomino.sRepr) === undefined) {
+                let p1 = new Pentomino(pentomino.name);
+                Object.assign(p1, generatorPentomino);
+                pentominoStates.push(p1);
+            }
+
+            if (i < 3) {
+                pentomino.rotateClkWise();
+            }
+        }
+    }
 }
 
 

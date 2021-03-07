@@ -97,7 +97,49 @@ class HintAI {
      * @private
      */
     _tryToCoverCellWithPentominoes(game, cell, pentominoesOutsideBoard) {
-        // TODO
+        let result = null;
+
+        pentominoesOutsideBoard.some(pentomino => {
+            let board = game._board;
+            let occupiedCells = this._tryToCoverCellWithPentomino(board, cell, pentomino);
+            if (!(occupiedCells === null)) {
+                result = occupiedCells;
+                return true;
+            }
+            return false;
+        });
+        return result;
+    }
+
+    _tryToCoverCellWithPentomino(board, cell, pentomino) {
+        let result = null;
+        let pentominoStates = Pentomino.getDistinctPentominoStates(pentomino);
+        pentominoStates.some(pentominoState => {
+            let occupiedCells = this._tryToCoverCellWithPentominoState(board, cell, pentominoState);
+            if (!(occupiedCells === null)) {
+                result = occupiedCells;
+                return true;
+            }
+            return false;
+        });
+        return result;
+    }
+
+    _tryToCoverCellWithPentominoState(board, cell, pentominoState) {
+        let result = null;
+
+        let relPentominoPositions = pentominoState.getRelPentominoPositions(); // TODO
+        relPentominoPositions.some(relPentominoPosition => {
+            let boardPosition = ; // TODO
+            let isValid = board.pentominoIsValidAtPosition(pentominoState, boardPosition[0], boardPosition[1]);
+            if (isValid) {
+                result = ;
+                return true;
+            }
+            return false;
+        });
+
+        return result;
     }
 
     _calculateBestImpossibleUnoccupiedCellSpace(game, unoccupiedCellSpaces) {
