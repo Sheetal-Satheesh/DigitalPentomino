@@ -80,8 +80,7 @@ class CommandTree {
         return undefined;
     }
 
-
-    MoveUp(){
+    MoveUp(childSelection = RedoStrategy.TOP){
         let current = undefined;
 
         if(this._currentCmdNode == undefined){
@@ -112,16 +111,43 @@ class CommandTree {
         }
     }
 
-    NextBranchNode(current){
-        if(current == current.Parent()){
-            return current;
+    NextBranchNode(current, target){
+        let retCurrent,firstNode;
+        if(current == undefined){
+            console.error("Node undefined");
+            return [undefined, firstNode];
+        }
+        else if(target == current){
+            if(target.Children().length == 0){
+                return [target, firstNode=true];
+            }
+
+            return [target.Children()[0], firstNode];
+        }
+        else  if(current.Children().length == 0){
+            return [current,firstNode];
         }
 
-        if(current.Children.length > 1){
-            return current.Children()
+        for(let prevIndex=0, index=0;
+                             index < current.Children().length; ++index){
+
+            let child = current.Children();
+            if(index != prevIndex){
+                if(firstNode == true){
+                    return [child[index],firstNode];
+                }
+                if(child[index] == target){
+                    return [target.Children()[0], firstNode];
+                }
+            }
+            [retCurrent,firstNode] = this.NextBranchNode(child[index],target, firstNode);
+            prevIndex = index; 
+            if(retCurrent.Parent() == target){
+                return [retCurrent,firstNode];
+            }
         }
 
-        this.nextBranchNode(current.Parent());
+        return [current,firstNode];
     }
 
     /**
@@ -129,7 +155,7 @@ class CommandTree {
      * @returns 
      */
 
-     MoveDown(){
+     MoveDown(childSelection = RedoStrategy.TOP){
         let current=undefined;
         if(this._currentCmdNode == undefined){
             if(this._rootCmdNode == undefined){
@@ -151,12 +177,37 @@ class CommandTree {
 
         if(this._currentCmdNode.Children().length == 0){
             current = this._currentCmdNode;
-            this._operationStatus &= ~REDO;
-            return current.Command();
+            let nextBrNode = this._rootCmdNode;
+            let ignoreVar;
+            if(childSelection != RedoStrategy.TOP){
+                let [tempNext,tempPL] = this.NextBranchNode(
+                                            this._rootCmdNode,
+                                            this._currentCmdNode);
+            
+                nextBrNode = tempNext;
+                }
+            
+            if(nextBrNode != this._rootCmdNode){
+                this._currentCmdNode = nextBrNode;
+                return this._currentCmdNode.Command();                
+            }
+            else{
+                this._operationStatus &= ~REDO;
+                return undefined; 
+            }
+            
         }
         else{
+
             current = this._currentCmdNode;
-            this._currentCmdNode = current.ChildTopNode();
+            if(childSelection === RedoStrategy.TOP){
+                this._currentCmdNode = current.ChildTopNode();
+            }else{
+                let [tempCurr,tempPL] = this.NextBranchNode(
+                                                    this._rootCmdNode, 
+                                                    this._currentCmdNode);
+                this._currentCmdNode =tempCurr;
+             }
             this._operationStatus |= (UNDO|REDO);
             return this._currentCmdNode.Command();
         }

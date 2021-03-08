@@ -12,6 +12,9 @@ Object.freeze(UIProperty);
 const CommandTypes = {"Original":1, "Shadow":2};
 Object.freeze(CommandTypes);
 
+const RedoStrategy = {"TOP":1, "BOTTOM":2};
+Object.freeze(RedoStrategy);
+
 class Visual {
 
     constructor(pd) {
@@ -793,7 +796,7 @@ class Visual {
     }
 
     redo(){
-        let command = this.gameController.redo();
+        let command = this.gameController.redo(RedoStrategy.TOP);
         if(command == undefined){
             return;
         }

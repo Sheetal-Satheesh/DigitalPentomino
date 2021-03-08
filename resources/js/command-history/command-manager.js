@@ -64,8 +64,10 @@ class CommandManager {
 
        if(isSuccess && (currNode != undefined)) {
             this._game.updateCmdKey(currNode.Key());
-            console.info("Root Key: "+ this._cmdTree.RootKey());
-            console.info("Current Key: "+ this._cmdTree.CurrentKey());
+            /*
+                console.info("Root Key: "+ this._cmdTree.RootKey());
+                console.info("Current Key: "+ this._cmdTree.CurrentKey());
+            */
         }
 
         return command;
@@ -132,8 +134,8 @@ class CommandManager {
 
     }
 
-    Redo(){
-        let command =  this._cmdTree.MoveDown();
+    Redo(strategy){
+        let command =  this._cmdTree.MoveDown(strategy);
         if(command == undefined){
             return undefined;
         }

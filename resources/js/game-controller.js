@@ -205,12 +205,12 @@ class GameController {
         return this._commandManager.Undo();
     }
 
-    redo() {
+    redo(strategy = RedoStrategy.TOP) {
         if (this._game === null) {
             throw new Error("Game is not set");
         }
 
-        return this._commandManager.Redo();
+        return this._commandManager.Redo(strategy);
     }
 
     isUndoPossible() {
