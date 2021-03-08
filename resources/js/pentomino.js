@@ -227,7 +227,7 @@ class Pentomino {
         for (let i = 0; i < 4; i++) {
             if (pentominoStates.find(p => p.sRepr === pentomino.sRepr) === undefined) {
                 let p1 = new Pentomino(pentomino.name);
-                Object.assign(p1, generatorPentomino);
+                Object.assign(p1, pentomino);
                 pentominoStates.push(p1);
             }
 

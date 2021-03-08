@@ -40,7 +40,9 @@ class HintAI {
                     let commands = this._getBestNextCommandsMaxOccupiedNeighbors(game, closestSolution, commandSequenceList);
                     return new Hint(commands[0], possibleSolutions);
                 } else {
-                    // TODO
+                    // FIXME
+                    let command = this._getCommandBasedOnUnoccupiedCellsSkill(game, closestSolution, bestImpossibleCellSpace);
+                    return new Hint(command, possibleSolutions, bestImpossibleCellSpace);
                 }
             } else {
                 let command = this._getCommandBasedOnUnoccupiedCellsSkill(game, closestSolution, bestImpossibleCellSpace);
@@ -66,13 +68,11 @@ class HintAI {
                     occupiedCells.forEach(occupiedCell => {
                         let index = cellSpace.find(cell => cell[0] === occupiedCell[0] && cell[1] === occupiedCell[1]);
 
-                        if (index === undefined) {
-                            throw new Error("cell [" + occupiedCell[0] + "," + occupiedCell[1] + "] not found");
-                        }
-
-                        if (index > i) {
+                        if (!(index === undefined)) {
                             cellSpace.splice(index, 1);
-                            i--;
+                            if (index > i) {
+                                i--;
+                            }
                         }
                     });
                 }
