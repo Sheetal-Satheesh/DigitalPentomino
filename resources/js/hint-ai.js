@@ -40,9 +40,9 @@ class HintAI {
                     let commands = this._getBestNextCommandsMaxOccupiedNeighbors(game, closestSolution, commandSequenceList);
                     return new Hint(commands[0], possibleSolutions);
                 } else {
-                    // FIXME
-                    let command = this._getCommandBasedOnUnoccupiedCellsSkill(game, closestSolution, bestImpossibleCellSpace);
-                    return new Hint(command, possibleSolutions, bestImpossibleCellSpace);
+                    // FIXME: Implement different hints
+                    let command = this._getCommandBasedOnUnoccupiedCellsSkill(game, closestSolution, bestUnreachableCellSpace);
+                    return new Hint(command, possibleSolutions, bestUnreachableCellSpace);
                 }
             } else {
                 let command = this._getCommandBasedOnUnoccupiedCellsSkill(game, closestSolution, bestImpossibleCellSpace);
