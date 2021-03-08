@@ -6,16 +6,22 @@ if(typeof require != 'undefined') {
 const UNDO = 1;
 const REDO = 1<<1;
 
+
+const SearchStrategy = {"Top2Bottom":1, "BottomUp":1<<1};
+Object.freeze(SearchStrategy);
+
 class CommandTree {
     constructor() {
         this._rootCmdNode = undefined;
         this._currentCmdNode = undefined;
+        this._lastComandNode = undefined;
         this._operationStatus &= ~(UNDO & REDO);
     }
 
     Clean(){
         this._rootCmdNode = undefined;
         this._currentCmdNode = undefined;
+        this._lastComandNode = undefined;
         this._operationStatus &= ~(UNDO & REDO);
     }
 
@@ -59,6 +65,7 @@ class CommandTree {
         if(this._currentCmdNode == undefined) {
             this._currentCmdNode = this._rootCmdNode;
         }
+        this._lastComandNode = this._currentCmdNode;
         this._operationStatus &= ~REDO ;
         this._operationStatus |= UNDO ;
         return this._currentCmdNode;
@@ -69,50 +76,64 @@ class CommandTree {
             return undefined;
         }
 
-        if(current.getKey() == key){
+        if(current.Key() == key){
             return current;
         }
         
-        current.getChildren().forEach((node) => {
-            this.SearchCmdNode(node,key);
+        current.Children().forEach((node) => {
+            return this.SearchCmdNode(node,key);
         },this);
                 
-        return undefined;
+        return current;
     }
 
 
     CollectCmdSequences(
                         currNode, 
-                        startNode, 
-                        endNode, 
-                        cmdSeq=undefined,
-                        collectCmd=false){
+                        startKey, 
+                        endKey, 
+                        searchType){
 
+        let cmdSeq = [];
         if(currNode == undefined){
             return undefined;
         }
 
-        if(currNode.Key() == startNode.Key()){
-            collectCmd = true;
+        if(currNode.Key() == startKey){
+            searchType |= SearchStrategy.Top2Bottom;
+            if((SearchStrategy.BottomUp & searchType) != 0){
+                return [currNode.Command()] ;
+            }
         }
-        if(collectCmd == true){
-            cmdSeq.push(currNode.Command());
-        }
-        if(currNode.Key() == endNode.Key()){
-            cmdSeq.push(currNode.Command());
-            collectCmd = false;
-            return cmdSeq;
+           
+        if(currNode.Key() == endKey){
+            searchType |= SearchStrategy.BottomUp;
+            if((SearchStrategy.Top2Bottom & searchType) != 0){
+                return [currNode.Command()];
+            }
         }
 
-        currNode.Children().forEach((childNode) => {
-            return this.CollectCmdSequences(
-                                    childNode,
-                                    startNode,
-                                    endNode,
-                                    cmdSeq,
-                                    collectCmd
-                                    );
-        });
+        for(let indx=0; indx < currNode.Children().length; ++indx){
+            let childs = currNode.Children();
+            let commands = this.CollectCmdSequences(
+                                                childs[indx],
+                                                startKey,
+                                                endKey,
+                                                searchType
+                                                );
+
+            if((commands != undefined) &&
+                    (((SearchStrategy.Top2Bottom & searchType) != 0) ||
+                    ((SearchStrategy.BottomUp & searchType) != 0))){
+                
+                cmdSeq.push(currNode.Command());
+                commands.forEach(cmd => {
+                    cmdSeq.push(cmd);
+                });
+               
+           }
+        }
+
 
         return cmdSeq;
     }
@@ -267,7 +288,7 @@ class CommandTree {
         return this._rootCmdNode;
     }
 
-    RooCmdtKey(){
+    RootCmdKey(){
         if(this._rootCmdNode != undefined){
             return this._rootCmdNode.Key();
         }
@@ -285,8 +306,15 @@ class CommandTree {
         return undefined;
     }
 
-    CommandSequences(startKey, endKey){
-       
+    Leaf(){
+        return this._lastComandNode;
+    }
+
+    LeafCmdKey(){
+        if(this._lastComandNode != undefined){
+            return this._lastComandNode.Key();
+        }
+        return undefined;
     }
 
     Flush(){

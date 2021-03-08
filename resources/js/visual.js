@@ -828,22 +828,35 @@ class Visual {
         
         if(startKey.length == 0){
             startKey = this.gameController.getStartCmdKey();
+            if(startKey == undefined){
+                console.error("Game is not Started yet");
+                return;
+            }
         }
 
         if(endKey.length == 0){
-            startKey = this.gameController.getLastCmdKey();
+            endKey = this.gameController.getLastCmdKey();
+            if(endKey == undefined){
+                console.error("Game is not Started yet");
+                return;
+            }
         }
 
-        let cmdSequences = this.gameController.getCmdSequences(startKey, endKey);
-        let ldGame = this.gameController.loadGame(startKey);
+        let cmdSequences = this.gameController.getCmdSequences(startKey, endKey,"REDO");
+        let ldGame = this.gameController.loadGameByCmdKey(startKey);
         if(ldGame != undefined){
             this.pieces = this.gameController.getPentominoes();
-            this.selected = false
-            this.renderPieces();
+            this.pieces = this.pieces.map((pentomino)=>{
+                let inGameArea = this.gameController.isPlacedInGame(pentomino);
+                if(inGameArea == false){
+                    pentomino.toTray();
+                }         
+                return pentomino;
+            },this);
         }
-        cmdSequences.forEach(command => {
-            execShadowCmd(command);
 
+        cmdSequences.forEach(command => {
+            this.execShadowCmd(command);
             setTimeout(function(){
             }, 2000);
 

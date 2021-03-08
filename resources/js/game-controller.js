@@ -240,16 +240,20 @@ class GameController {
         return this._commandManager.LastCmdKey();
     }
 
-    getCmdSequences(startKey, endKey){
-        if( this._commandManager.isKeyFound(startKey) == false){
+    getCurrentCmdKey(){
+        return this._commandManager.CurrentCmdKey();
+    }
+
+    getCmdSequences(startKey, endKey,seqType){
+        if( this._commandManager.IsKeyFound(startKey) == false){
             throw new Error("Selected Game State Not Found :(");
         }
         
-        if( this._commandManager.isKeyFound(endKey) == false){
+        if( this._commandManager.IsKeyFound(endKey) == false){
             throw new Error("Selected Game State Not Found :(");
         }
 
-        return this._commandManager.CmdSequences(startKey, endKey);
+        return this._commandManager.CmdSequences(startKey, endKey,seqType);
     }
 
     // --- --- --- Set Game --- --- ---
@@ -293,7 +297,7 @@ class GameController {
     }
 
     loadGameByCmdKey(cmdKey){
-        GameLoader.loadGameByCmdKey(cmdKey);
+        return GameLoader.loadGameByCmdKey(cmdKey);
     }
     // --- --- --- Debugging --- --- ---
     display() {

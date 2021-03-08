@@ -78,11 +78,39 @@ class CommandManager {
     }
 
     LastCmdKey(){
+        return this._cmdTree.LeafCmdKey();
+    }
+
+    CurrentCmdKey(){
         return this._cmdTree.CurrentCmdKey();
     }
 
-    CmdSequences(startKey, endKey){
-        return this._cmdTree.cmdSequences(startKey, endKey);
+    IsKeyFound(key){
+        let retNode = this._cmdTree.SearchCmdNode(
+                                        this._cmdTree.Root(), key);
+        if(retNode != undefined){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    CmdSequences(startKey, endKey,seqType){
+  
+        let cmdSequences =  this._cmdTree.CollectCmdSequences(
+                                                        this._cmdTree.Root(),
+                                                        startKey, 
+                                                        endKey,0);
+        let redoCommands = [];
+        cmdSequences.forEach((command) => {
+            if(seqType == "REDO"){
+                redoCommands.push(command.ExecValues());
+
+            }else{
+                redoCommands.push(command.ExecUndoValues());
+            }
+        },this);
+        return redoCommands;
     }
 
     JumpToRoot() {

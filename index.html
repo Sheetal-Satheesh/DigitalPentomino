@@ -71,6 +71,11 @@
                         <button type="button" id='prefillBoard' class = "cActionBtn" onclick="prefillBoard()"><img src="resources/images/icons/prefill.png"></button>
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        <button type="button" id='replay' class = "cActionBtn" onclick="execReplay()"><img src="resources/images/icons/replay.png"></button>
+                    </td>
+                </tr>
           </table>
 
           <table>
@@ -425,6 +430,10 @@
 
         function execRedo(){
             pd.redo();
+        }
+
+        function execReplay(){
+            pd.replay();
         }
 
 

@@ -80,6 +80,10 @@ class PD {
         this.visual.redo();
     }
 
+    replay(){
+        this.visual.replay();
+    }
+
 }
 
 
