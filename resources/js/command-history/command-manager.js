@@ -73,6 +73,18 @@ class CommandManager {
         return command;
     }
 
+    StartCmdKey(){
+        return this._cmdTree.RootCmdKey();
+    }
+
+    LastCmdKey(){
+        return this._cmdTree.CurrentCmdKey();
+    }
+
+    CmdSequences(startKey, endKey){
+        return this._cmdTree.cmdSequences(startKey, endKey);
+    }
+
     JumpToRoot() {
         let cmdSequences = [];
         while (!this._cmdTree.isAtRoot()) {

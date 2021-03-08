@@ -64,20 +64,57 @@ class CommandTree {
         return this._currentCmdNode;
     }
 
-    Search(current, key){
+    SearchCmdNode(current, key){
         if(current == undefined){
             return undefined;
         }
 
         if(current.getKey() == key){
-            return current.Command();
+            return current;
         }
         
         current.getChildren().forEach((node) => {
-            this.Search(node,key);
+            this.SearchCmdNode(node,key);
         },this);
                 
         return undefined;
+    }
+
+
+    CollectCmdSequences(
+                        currNode, 
+                        startNode, 
+                        endNode, 
+                        cmdSeq=undefined,
+                        collectCmd=false){
+
+        if(currNode == undefined){
+            return undefined;
+        }
+
+        if(currNode.Key() == startNode.Key()){
+            collectCmd = true;
+        }
+        if(collectCmd == true){
+            cmdSeq.push(currNode.Command());
+        }
+        if(currNode.Key() == endNode.Key()){
+            cmdSeq.push(currNode.Command());
+            collectCmd = false;
+            return cmdSeq;
+        }
+
+        currNode.Children().forEach((childNode) => {
+            return this.CollectCmdSequences(
+                                    childNode,
+                                    startNode,
+                                    endNode,
+                                    cmdSeq,
+                                    collectCmd
+                                    );
+        });
+
+        return cmdSeq;
     }
 
     MoveUp(childSelection = RedoStrategy.TOP){
@@ -189,6 +226,30 @@ class CommandTree {
         }
     }
 
+    CommandSequences(startKey, endKey){
+        let startNode = this.SearchCmdNode(this._rootCmdNode, startKey);
+        if(startNode == undefined){
+            console.error("Search Failed: Node with key"+
+                                            startKey+"Not Found");
+            return undefined;
+        }
+
+        let endNode = this.SearchCmdNode(this._rootCmdNode, endKey);
+        if(endNode == undefined){
+            console.error("Search Failed: Node with key"+
+                                            endKey+"Not Found");
+            return undefined;
+        }
+
+        let cmdSequences = this.CollectCmdSequences(
+                                            this._rootCmdNode,
+                                            startNode,
+                                            endNode);
+        
+        return cmdSequences;
+
+    }
+
     isEmpty() {
         return this.isAtRoot() && this.isAtLeaf();
     }
@@ -206,16 +267,22 @@ class CommandTree {
         return this._rootCmdNode;
     }
 
-    RootKey(){
-        return this._rootCmdNode.Key();
+    RooCmdtKey(){
+        if(this._rootCmdNode != undefined){
+            return this._rootCmdNode.Key();
+        }
+        return undefined;
     }
 
     Current(){
         return this._currentCmdNode;
     }
 
-    CurrentKey(){
-        return this._currentCmdNode.Key();
+    CurrentCmdKey(){
+        if(this._currentCmdNode != undefined){
+            return this._currentCmdNode.Key();
+        }
+        return undefined;
     }
 
     CommandSequences(startKey, endKey){

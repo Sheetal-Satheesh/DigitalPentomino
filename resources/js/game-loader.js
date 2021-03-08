@@ -336,6 +336,20 @@ class GameLoader {
             boardShape: boardConfigs[board].boardShape || baseConfigs.boardShape
         };
     }
+
+    loadGameByCmdKey(cmdKey){
+        var fController = new FrontController();
+        let gmController = fController.controller;
+        let currGame = gmController.game();
+        let startCmdKey = gmController.getStartCmdKey();
+        let cmdSequences = gmController.getCmdSequences(startCmdKey, cmdKey);
+
+        gmController.saveGame(currGame);
+
+        cmdSequences.forEach((command) => {
+            gmController._commandManager.ExecCommand(command, cmdTypes=CommandTypes.Shadow)
+        },this);
+    }
 }
 
 if(typeof module != 'undefined') {

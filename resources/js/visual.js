@@ -822,6 +822,34 @@ class Visual {
         }
         this.execShadowCmd(command,"Redo");
     }
+    replay(){
+        let startKey="",
+            endKey="";
+        
+        if(startKey.length == 0){
+            startKey = this.gameController.getStartCmdKey();
+        }
+
+        if(endKey.length == 0){
+            startKey = this.gameController.getLastCmdKey();
+        }
+
+        let cmdSequences = this.gameController.getCmdSequences(startKey, endKey);
+        let ldGame = this.gameController.loadGame(startKey);
+        if(ldGame != undefined){
+            this.pieces = this.gameController.getPentominoes();
+            this.selected = false
+            this.renderPieces();
+        }
+        cmdSequences.forEach(command => {
+            execShadowCmd(command);
+
+            setTimeout(function(){
+            }, 2000);
+
+        },this);
+    
+    }
 
 
 }

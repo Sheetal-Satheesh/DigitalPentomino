@@ -38,6 +38,7 @@ class GameController {
         this._game = null;
         this._hintAI = new HintAI();
         this._commandManager = null;
+        this._gameLists =[];
     }
 
     game(){
@@ -231,15 +232,37 @@ class GameController {
         return this._game.getPossibleRedoCommands();
     }
 
+    getStartCmdKey(){
+        return this._commandManager.StartCmdKey();
+    }
+
+    getLastCmdKey(){
+        return this._commandManager.LastCmdKey();
+    }
+
+    getCmdSequences(startKey, endKey){
+        if( this._commandManager.isKeyFound(startKey) == false){
+            throw new Error("Selected Game State Not Found :(");
+        }
+        
+        if( this._commandManager.isKeyFound(endKey) == false){
+            throw new Error("Selected Game State Not Found :(");
+        }
+
+        return this._commandManager.CmdSequences(startKey, endKey);
+    }
+
     // --- --- --- Set Game --- --- ---
     setGame(game) {
         this._game = game;
         this._hintAI.loadGameForHinting(game);
+        this._gameLists.push(game);
     };
 
     resetGame(){
         this._game.reset();
         this._commandManager.Reset();
+        this._gameLists =[];
         return this._game;
     }
 
@@ -265,7 +288,13 @@ class GameController {
         this._game._fillUpTray();
         this._commandManager = new CommandManager();
     }
+    saveGame(game){
+        this._gameLists.push(game);
+    }
 
+    loadGameByCmdKey(cmdKey){
+        GameLoader.loadGameByCmdKey(cmdKey);
+    }
     // --- --- --- Debugging --- --- ---
     display() {
         if (this._game === null) {
