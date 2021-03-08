@@ -334,15 +334,29 @@ class Visual {
         onpointerdownX = event.clientX;
         onpointerdownY = event.clientY;
 
+        //check if a button is clicked
+        let buttonOverPiece = false;
+        for (let j in elements){
+            let precheck = elements[j].className;
+            if (precheck == 'controlButton'){
+                buttonOverPiece = true;
+            }
+        }
+
         for (var i in elements) {
             var check = elements[i].className;
+            //if button is clicked, forget the rest
+
             if (check !== 'bmPoint') continue;
+
+            if (buttonOverPiece) continue;
 
             /**
              * As soon as we have a bmPoint(an element of a piece),we determine the bounding box
              * and the piece object itself and save those into a global variable "currentlyMoving"
              * which we access during movement and at the end of movement.
              */
+
                 var piece = elements[i * 1 + 1].id.split('_')[1];
                 if (!piece) return;
                 var container = elements[i * 1 + 1];       //For some strange reason, i is a String, using *1 to convert it
@@ -392,6 +406,7 @@ class Visual {
          * this is called when mouse key is released or fingers are removed from the screen
          * in case of just a click operation (not move operation) piece should not move
          */
+
             if( onpointerdownX == event.clientX &&
                 onpointerdownY == event.clientY &&
                 window.currentlyMoving) {
