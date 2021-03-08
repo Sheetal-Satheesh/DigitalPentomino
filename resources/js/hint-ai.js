@@ -128,12 +128,13 @@ class HintAI {
     _tryToCoverCellWithPentominoState(board, cell, pentominoState) {
         let result = null;
 
-        let relPentominoPositions = pentominoState.getRelPentominoPositions(); // TODO
+        let relPentominoPositions = pentominoState.getRelPentominoPositions();
         relPentominoPositions.some(relPentominoPosition => {
-            let boardPosition = ; // TODO
-            let isValid = board.pentominoIsValidAtPosition(pentominoState, boardPosition[0], boardPosition[1]);
+            let anchorPosition = pentominoState.getAnchorPosition(cell, relPentominoPosition);
+            let isValid = board.pentominoIsValidAtPosition(pentominoState, anchorPosition[0], anchorPosition[1]);
             if (isValid) {
-                result = ;
+                result = pentominoState.getRelPentominoPositions().map(relPos =>
+                    pentominoState.getCoordinatePosition(anchorPosition, relPos));
                 return true;
             }
             return false;
