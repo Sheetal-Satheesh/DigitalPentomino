@@ -177,37 +177,13 @@ class CommandTree {
 
         if(this._currentCmdNode.Children().length == 0){
             current = this._currentCmdNode;
-            let nextBrNode = this._rootCmdNode;
-            let ignoreVar;
-            if(childSelection != RedoStrategy.TOP){
-                let [tempNext,tempPL] = this.NextBranchNode(
-                                            this._rootCmdNode,
-                                            this._currentCmdNode);
-            
-                nextBrNode = tempNext;
-                }
-            
-            if(nextBrNode != this._rootCmdNode){
-                this._currentCmdNode = nextBrNode;
-                return this._currentCmdNode.Command();                
-            }
-            else{
                 this._operationStatus &= ~REDO;
-                return undefined; 
-            }
-            
+
+                return undefined;
         }
         else{
-
             current = this._currentCmdNode;
-            if(childSelection === RedoStrategy.TOP){
-                this._currentCmdNode = current.ChildTopNode();
-            }else{
-                let [tempCurr,tempPL] = this.NextBranchNode(
-                                                    this._rootCmdNode, 
-                                                    this._currentCmdNode);
-                this._currentCmdNode =tempCurr;
-             }
+            this._currentCmdNode = current.ChildTopNode();
             this._operationStatus |= (UNDO|REDO);
             return this._currentCmdNode.Command();
         }

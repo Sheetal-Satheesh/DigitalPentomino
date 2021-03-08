@@ -84,6 +84,7 @@ class Visual {
 
     movePentominoToTray(pentomino,cmdType=CommandTypes.Original){
         this.gameController.removePentomino(pentomino, cmdType);
+        this.positionPiece(pentomino);
     }
 
     clear(){
@@ -433,7 +434,6 @@ class Visual {
                     //Ashwini: when piece is moved back to tray reset Pentomio inTray variable to 1 and place the piece in Tray
                     if (id == 'tray') {
                         let piece = data[1].toTray();
-                        that.positionPiece(piece);
                         that.movePentominoToTray(piece);
                     }
 
@@ -762,12 +762,17 @@ class Visual {
                 if( (command.PosX == undefined) && 
                     (command.PosY == undefined)) {
                     command.Pentomino.toTray();
-                    this.movePentominoToTray(command.Pentomino, CommandTypes.Shadow);
-                    this.positionPiece(command.Pentomino);
+                    this.movePentominoToTray(
+                                        command.Pentomino,
+                                        CommandTypes.Shadow);
                 }
                 else{
                     command.Pentomino.inTray=0;
-                    this.placePentomino(command.Pentomino, command.PosX,command.PosY,CommandTypes.Shadow);
+                    this.placePentomino(
+                                command.Pentomino,
+                                command.PosX,
+                                command.PosY,
+                                CommandTypes.Shadow);
                 }
 
                 break;
@@ -811,7 +816,7 @@ class Visual {
     }
 
     redo(){
-        let command = this.gameController.redo(RedoStrategy.TOP);
+        let command = this.gameController.redo(RedoStrategy.BOTTOM);
         if(command == undefined){
             return;
         }
