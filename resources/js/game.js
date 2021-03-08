@@ -264,6 +264,12 @@ class Game {
     }
     // --- --- --- Getter and Helper --- --- ---
 
+    getPentominoesOutsideBoard() {
+        return this._pentominosOutside.concat(this._tray).filter(pentomino => {
+            return this._board.getPentominoes().find(p => p.name === pentomino.name) === undefined;
+        });
+    }
+
     getPentominoes() {
         return this._board.getPentominoes().concat(this._pentominosOutside).concat(this._tray);
     }

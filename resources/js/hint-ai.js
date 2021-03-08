@@ -56,7 +56,7 @@ class HintAI {
         let bestCellSpace = null;
         let bestCellSpaceSize = -1;
 
-        let pentominoesOutsideBoard = game._pentominosOutside;
+        let pentominoesOutsideBoard = game.getPentominoesOutsideBoard();
 
         unoccupiedCellSpaces.forEach(cellSpace => {
             let i = 0;
@@ -66,11 +66,11 @@ class HintAI {
 
                 if (!(occupiedCells === null)) {
                     occupiedCells.forEach(occupiedCell => {
-                        let index = cellSpace.find(cell => cell[0] === occupiedCell[0] && cell[1] === occupiedCell[1]);
+                        let index = cellSpace.findIndex(cell => cell[0] === occupiedCell[0] && cell[1] === occupiedCell[1]);
 
-                        if (!(index === undefined)) {
+                        if (!(index === -1)) {
                             cellSpace.splice(index, 1);
-                            if (index > i) {
+                            if (index <= i) {
                                 i--;
                             }
                         }
@@ -131,8 +131,8 @@ class HintAI {
         let relPentominoPositions = pentominoState.getRelPentominoPositions();
         relPentominoPositions.some(relPentominoPosition => {
             let anchorPosition = pentominoState.getAnchorPosition(cell, relPentominoPosition);
-            let isValid = board.pentominoIsValidAtPosition(pentominoState, anchorPosition[0], anchorPosition[1]);
-            if (isValid) {
+            if (board.pentominoIsValidAtPosition(pentominoState, anchorPosition[0], anchorPosition[1])
+                && board.isCollidesAtPosition(pentominoState, anchorPosition[0], anchorPosition[1]).length === 0) {
                 result = pentominoState.getRelPentominoPositions().map(relPos =>
                     pentominoState.getCoordinatePosition(anchorPosition, relPos));
                 return true;
