@@ -7,7 +7,8 @@ const UIProperty = {
     "PentominoY": 5,
     "FunctionWidth": 10
 }
-Object.freeze(UIProperty)
+Object.freeze(UIProperty);
+
 
 class Visual {
 
