@@ -348,3 +348,5 @@ table
       /* Disables pull-to-refresh but allows overscroll flow effects. TODO: Need to check on different screen sizes*/
       overscroll-behavior-y: contain;
     } 
+
+    @keyframes blinking { 0%{ color:red; } 100%{ color:green; } }

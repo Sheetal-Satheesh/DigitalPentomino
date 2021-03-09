@@ -528,12 +528,33 @@ class Visual {
         hint.style.visibility = "visible";
         let popupText = document.getElementById("myHint");
         popupText.textContent = pd.gameController.getHint().getText();
-
         //call indication of hint
-        this.indicateHint(500);
-
-            
+        this.indicateHint(500);           
     }
+
+
+
+
+    blinkCell(element){
+
+            var count = 1;
+             //count++;
+            var intervalId = setInterval(function() {
+                if (element.style.background == 'rgb(240, 128, 128)') {
+                    element.style.background = '#adc0b9';
+                    count++;
+                    if (count === 3) {
+                        clearInterval(intervalId);
+                    }
+                } else {
+                    element.style.background='#f08080';
+                    count++;
+                }    
+            }, 700);
+    }
+
+   
+                
 
     indicateHint(timeoutFrame){
         //possible command names (place, remove, moveToPosition, rotateClkWise, rotateAntiClkWise, mirrorH, mirrorV)
@@ -548,11 +569,15 @@ class Visual {
        //indication of unoccupied cells
         if (!(hintSkill === null)) {
             for(let i=0;i<hintSkill.length;i++){
-                let fieldvalue = document.getElementById("field_" + hintSkill[i][0] + "," + hintSkill[i][1]); 
-                var defaultBackground = fieldvalue.style.background = "#adc0b9";
-                fieldvalue.style.background = "#f08080";
-                //fieldvalue.style.boxShadow ="0 15px 25px -4px rgba(0,0,0,0.4), inset 0 -8px 25px -1px rgba(255,255,255,0.9), 0 -10px 15px -1px rgba(255,255,255,0.6), inset 0 8px 20px 0 rgba(0,0,0,0.2), inset 0 0 5px 1px rgba(255,255,255,0.6)";
-                setTimeout(function(){ fieldvalue.style.background = defaultBackground; }, 2000);
+                let fv = document.getElementById("field_" + hintSkill[i][0] + "," + hintSkill[i][1]); 
+                this.blinkCell(fv);
+               var defaultBackground = fv.style.background = "#adc0b9";
+                //red
+                fv.style.background = "#f08080";
+                        setTimeout(function(){ 
+                        fv.style.background = defaultBackground;
+                         }, 500);
+                
             }
         }
 
