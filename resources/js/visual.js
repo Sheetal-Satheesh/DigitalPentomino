@@ -265,7 +265,6 @@ class Visual {
 
         //making the element visible (see remark in renderPieces)
         htmlElement.style.display = 'block';
-
     }
 
     select(piece,xPosition,yPosition) {
@@ -853,16 +852,21 @@ class Visual {
                 }         
                 return pentomino;
             },this);
+            this.renderPieces();
         }
 
-        cmdSequences.forEach(command => {
-            this.execShadowCmd(command);
-            setTimeout(function(){
-            }, 2000);
+        let timeInterval=1000;
+        let intervalId=0;
+        for (let indx = 0; indx < cmdSequences.length; indx++) {
+            let command = cmdSequences[indx];
+            var that = this;
 
-        },this);
-    
+            setTimeout(function (that, command) {
+                that.execShadowCmd(command);
+            }, timeInterval+=1000, that, command);
+        }
+
+       
+   
     }
-
-
 }
