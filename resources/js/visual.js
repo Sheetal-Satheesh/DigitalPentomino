@@ -536,7 +536,6 @@ class Visual {
 
 
     blinkCell(element){
-
             var count = 1;
              //count++;
             var intervalId = setInterval(function() {
