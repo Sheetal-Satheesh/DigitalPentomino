@@ -369,19 +369,23 @@ class GameLoader {
                     break;
                 
                 case "RotateClkWise":
-                    gmController.rotatePentominoClkWise(CommandTypes.Shadow);
+                    gmController.rotatePentominoClkWise(command.Pentomino,
+                                                        CommandTypes.Shadow);
                     break;
                 
                 case "RotateAntiClkWise":
-                    gmController.rotatePentominoAntiClkWise(CommandTypes.Shadow);
+                    gmController.rotatePentominoAntiClkWise(command.Pentomino,
+                                                            CommandTypes.Shadow);
                     break;
                 
                 case "MirrorH":
-                    gmController.mirrorPentominoH(CommandTypes.Shadow);
+                    gmController.mirrorPentominoH(command.Pentomino,
+                                                 CommandTypes.Shadow);
                     break;
                 
                 case "MirrorV":
-                    gmController.mirrorPentominoV(CommandTypes.Shadow);
+                    gmController.mirrorPentominoV( command.Pentomino,
+                                                   CommandTypes.Shadow);
                     break;
                 
                 default:
