@@ -758,9 +758,13 @@ class Visual {
 
     execShadowCmd(command){
         switch(command.name){
+            case "Remove":
             case "Place":
                 if( (command.PosX == undefined) && 
                     (command.PosY == undefined)) {
+                    if(command.Pentomino.inTray == 1){
+                        break;
+                    }
                     command.Pentomino.toTray();
                     this.movePentominoToTray(command.Pentomino, CommandTypes.Shadow);
                     this.positionPiece(command.Pentomino);
@@ -770,10 +774,7 @@ class Visual {
                     this.placePentomino(command.Pentomino, command.PosX,command.PosY,CommandTypes.Shadow);
                 }
 
-                break;
-
-            case "Remove":
-                break;
+                break;    
             
             case "RotateClkWise":
                 this.selected = command.Pentomino;

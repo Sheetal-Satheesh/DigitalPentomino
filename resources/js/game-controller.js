@@ -144,8 +144,9 @@ class GameController {
         this.exceptionHandler(pentomino);
         
         return this._commandManager.ExecCommand(
-                                    new RemoveCommand(pentomino),
-                                    cmdType);
+                                    new RemoveCommand(pentomino,
+                                        this._game.getPosition(pentomino)
+                                    ), cmdType);
     }
 
     // --- --- --- Hints --- --- ---
