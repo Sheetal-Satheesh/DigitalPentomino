@@ -11,16 +11,16 @@ class Hint {
         if (possibleSolutions.length === 0) {
             this._text += "This doesn't look right. The pentominoes on your board aren't part of a solution."
         }
-
+        let cmdValues = command.ExecValues();
         switch (command.Name()) {
             case "Remove":
                 this._text += "This doesn't look right. Why don't you remove " + command._pentomino.name;
                 break;
             case "MoveToPosition":
-                this._text += "Maybe try to move " + command._pentomino.name + " to position [" + command._row + "," + command._col + "]";
+                this._text += "Maybe try to move " + command._pentomino.name + " to position [" + cmdValues.PosX + "," + cmdValues.PosY + "]";
                 break;
             case "Place":
-                this._text += "Why don't you place " + command._pentomino.name + " at position [" + command._row + "," + command._col + "]";
+                this._text += "Why don't you place " + command._pentomino.name + " at position [" + cmdValues.PosX + "," + cmdValues.PosY + "]";
                 break;
             case "RotateClkWise":
                 this._text += "Why don't you try to rotate " + command._pentomino.name + " clock-wise";
