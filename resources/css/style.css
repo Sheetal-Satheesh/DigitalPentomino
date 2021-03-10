@@ -349,4 +349,11 @@ table
       overscroll-behavior-y: contain;
     } 
 
-    @keyframes blinking { 0%{ color:red; } 100%{ color:green; } }
+    
+    #blink {
+  text-align: center;
+  background: #c6c6c6;
+  color: #fff;
+  margin: 0;
+  padding: 20px;
+}

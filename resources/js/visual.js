@@ -533,24 +533,28 @@ class Visual {
     }
 
 
-
-
     blinkCell(element){
             var count = 1;
-             //count++;
             var intervalId = setInterval(function() {
-                if (element.style.background == 'rgb(240, 128, 128)') {
-                    element.style.background = '#adc0b9';
                     count++;
-                    if (count === 3) {
+                if (element.style.background == '#f08080') {
+                    element.style.background = '#adc0b9';
+                        console.log("3",count);
+
+                    if (count++ === 3) {
                         clearInterval(intervalId);
+                            console.log("4",count);
                     }
                 } else {
                     element.style.background='#f08080';
                     count++;
                 }    
-            }, 700);
+            }, 200);
     }
+
+
+
+
 
    
                 
@@ -564,20 +568,51 @@ class Visual {
         let pentominoColor = hintinPen.color;
         let clientRect = document.getElementById("piece_" + hintinPen.name).getBoundingClientRect();
        let [posX, posY] = [clientRect.x + clientRect.width/2, clientRect.y + clientRect.height/2];
-
+        let fv;
+        const menu = new Array()
        //indication of unoccupied cells
         if (!(hintSkill === null)) {
             for(let i=0;i<hintSkill.length;i++){
-                let fv = document.getElementById("field_" + hintSkill[i][0] + "," + hintSkill[i][1]); 
-                this.blinkCell(fv);
-               var defaultBackground = fv.style.background = "#adc0b9";
+                fv = document.getElementById("field_" + hintSkill[i][0] + "," + hintSkill[i][1]); 
+                var defaultBackground = fv.style.background = "#adc0b9";
+                console.log("inside",fv); 
+                menu.push(fv);
                 //red
-                fv.style.background = "#f08080";
+               /* fv.style.background = "#f08080";
+                var count = 0;
+                console.log("first count",count);
                         setTimeout(function(){ 
                         fv.style.background = defaultBackground;
+                        //count--;
                          }, 500);
-                
+                        fv.style.background = "#f08080";
+                        setTimeout(function(){
+                            fv.style.background = defaultBackground;
+                        },500);*/
+                        //this.blinkCell(fv);
+                //count ++;*/
             }
+                    var myVar;
+                    myVar = setInterval(blinkFont, 500); 
+
+                     for(var j=0;j<=menu.length;j++){
+                    setTimeout(function () {
+                                     //document.querySelector("fv").css('visibility', 'visible');
+                        clearInterval(myVar);        
+                                }, 3000); // after 3 seconds it'll stop blinking
+                            }
+
+                    function blinkFont() {
+
+                        for(var j=0;j<=menu.length;j++){
+                            //var curColor = document.getElementById("blink").style.color;
+                             console.log("bl-font-outside",menu);
+                            const curBgC = menu[j].style.background;
+                           // document.getElementById("blink").style.color = curColor === "red" ? "blue" : "red";
+                           menu[j].style.background = curBgC === "red" ? "#adc0b9" : "red";
+                        }
+                }
+            console.log("outside",menu);
         }
 
         else{
