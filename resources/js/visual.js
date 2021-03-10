@@ -575,7 +575,6 @@ class Visual {
             for(let i=0;i<hintSkill.length;i++){
                 fv = document.getElementById("field_" + hintSkill[i][0] + "," + hintSkill[i][1]); 
                 var defaultBackground = fv.style.background = "#adc0b9";
-                console.log("inside",fv); 
                 menu.push(fv);
                 //red
                /* fv.style.background = "#f08080";
@@ -603,16 +602,13 @@ class Visual {
                             }
 
                     function blinkFont() {
-
                         for(var j=0;j<=menu.length;j++){
                             //var curColor = document.getElementById("blink").style.color;
-                             console.log("bl-font-outside",menu);
                             const curBgC = menu[j].style.background;
                            // document.getElementById("blink").style.color = curColor === "red" ? "blue" : "red";
                            menu[j].style.background = curBgC === "red" ? "#adc0b9" : "red";
                         }
                 }
-            console.log("outside",menu);
         }
 
         else{
