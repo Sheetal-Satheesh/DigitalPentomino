@@ -563,10 +563,10 @@ class Visual {
         let clientRect = document.getElementById("piece_" + hintinPen.name).getBoundingClientRect();
         let [posX, posY] = [clientRect.x + clientRect.width/2, clientRect.y + clientRect.height/2];
         switch (hintName) {
-            case "place":
+            case "Place":
                 // handle place hint
-                let hintRow = hintCommand._row;
-                let hintColumn = hintCommand._col;
+                let hintRow = hintCommand._nextPosition[0];
+                let hintColumn = hintCommand._nextPosition[1];
                 let fieldvalue;
                 let prevBackground = [];
 
@@ -589,7 +589,7 @@ class Visual {
                     }
                 break;
             
-            case "remove":
+            case "Remove":
                 // handle remove hint
                 var pen = this.select(hintinPen,posX,posY);
                 if (!this.selected.inTray){
@@ -600,7 +600,7 @@ class Visual {
                 }
                 break;
                     
-            case "rotateClkWise":
+            case "RotateClkWise":
                 // handle rotateClkWise hint
                 this.select(hintinPen,posX,posY);
                 if (!this.selected.inTray){
@@ -612,7 +612,7 @@ class Visual {
                 }
                 break;
 
-            case "rotateAntiClkWise":
+            case "RotateAntiClkWise":
                 // handle rotateAntiClkWise hint
                 this.select(hintinPen,posX,posY);
                 if (!this.selected.inTray){
@@ -623,7 +623,7 @@ class Visual {
                 }
                 break;
             
-            case "mirrorH":
+            case "MirrorH":
                 // handle mirrorH hint
                 //select piece in the UI to flip
                 this.select(hintinPen,posX,posY);
@@ -635,7 +635,7 @@ class Visual {
                 }
                 break;
 
-            case "mirrorV":
+            case "MirrorV":
                 // handle mirrorV hint
                 this.select(hintinPen,posX,posY);
                 if (!this.selected.inTray){
@@ -668,9 +668,9 @@ class Visual {
     getOccupiedPositions(piece,hintCommand){
 
         let PiecePostions = [];
-        let hintRow = hintCommand._row;
+        let hintRow = hintCommand._nextPosition[0];
         let startRow = hintRow-2;
-        let hintColumn = hintCommand._col;
+        let hintColumn = hintCommand._nextPosition[1];
         let startColumn = hintColumn-2;
         let occupiedPosArray=[];
         
