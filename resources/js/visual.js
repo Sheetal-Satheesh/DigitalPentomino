@@ -602,12 +602,14 @@ class Visual {
                             }
 
                     function blinkFont() {
-                        for(var j=0;j<=menu.length;j++){
-                            //var curColor = document.getElementById("blink").style.color;
+                        for(var j=0;j<menu.length;j++){
+                            console.log(" menu[j] ",menu[j]);
+                            console.log(" menu ",menu);
                             const curBgC = menu[j].style.background;
-                           // document.getElementById("blink").style.color = curColor === "red" ? "blue" : "red";
                            menu[j].style.background = curBgC === "red" ? "#adc0b9" : "red";
+                           console.log("menu[j]", menu[j]);
                         }
+
                 }
         }
 
