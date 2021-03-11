@@ -583,7 +583,7 @@ class Visual {
         //possible command names (place, remove, moveToPosition, rotateClkWise, rotateAntiClkWise, mirrorH, mirrorV)
         let hintCommand = pd.gameController.getHint().getCommand();
         let hintSkill = pd.gameController.getHint()._skill;
-        let hintName = hintCommand.getName();
+        let hintName = hintCommand._name;
         let hintinPen = hintCommand._pentomino;
         let pentominoColor = hintinPen.color;
         let clientRect = document.getElementById("piece_" + hintinPen.name).getBoundingClientRect();
@@ -597,7 +597,7 @@ class Visual {
             this.blinkCells(hintSkill, DEFAULT_BG_COLOR, RED_COLOR);
         } else {
               switch (hintName) {
-            case "place":
+            case "Place":
                 // handle place hint
                 let hintRow = hintCommand._nextPosition[0];
                 let hintColumn = hintCommand._nextPosition[1];
