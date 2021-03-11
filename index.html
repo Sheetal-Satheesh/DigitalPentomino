@@ -16,17 +16,11 @@
     <script src="resources/js/game-controller.js"></script>
     <script src="resources/js/game-loader.js"></script>
     <script src="resources/js/game.js"></script>
-    <script src="resources/js/command-history/command.js"></script>
+    <script src="resources/js/command-history/command-node.js"></script>
+    <script src="resources/js/command-history/commands.js"></script>
     <script src="resources/js/command-history/command-manager.js"></script>
-    <script src="resources/js/command-history/place-command.js"></script>
-    <script src="resources/js/command-history/move-to-position-command.js"></script>
-    <script src="resources/js/command-history/rotate-anti-clk-wise-command.js"></script>
-    <script src="resources/js/command-history/rotate-clk-wise-command.js"></script>
-    <script src="resources/js/command-history/mirror-h-command.js"></script>
-    <script src="resources/js/command-history/mirror-v-command.js"></script>
-    <script src="resources/js/command-history/remove-command.js"></script>
     <script src="resources/js/command-history/command-path.js"></script>
-    <script src="resources/js/command-history/command-history-tree.js"></script>
+    <script src="resources/js/command-history/command-tree.js"></script>
     <script src="resources/js/config.js"></script>
     <script src="resources/js/configs/baseConfigs.js"></script>
     <script src="resources/js/configs/boardConfigs.js"></script>
@@ -82,13 +76,14 @@
           <table>
                 <tr>
                     <td>
-                        <button type="button" id='undo' class = "cActionBtn" ><img src="resources/images/icons/undo.png">
+                        <button type="button" id='undo' class = "cActionBtn" onclick="execUndo()" ><img src="resources/images/icons/undo.png">
                         </button>
                     </td>
                     <td>
-                        <button type="button" id='redo' class = "cActionBtn" ><img src="resources/images/icons/redo.png">
+                        <button type="button" id='redo' class = "cActionBtn" onclick="execRedo()" ><img src="resources/images/icons/redo.png">
                         </button>
                     </td>
+                   
                 </tr>
                 <tr>
                     <td>
@@ -423,6 +418,16 @@
         function prefillBoard(){
             pd.prefillBoard();
         }
+
+        function execUndo(){
+            pd.undo();
+        }
+
+        function execRedo(){
+            pd.redo();
+        }
+
+
 
     </script>
     <script src="./registerSW.js"></script>
