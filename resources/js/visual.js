@@ -31,6 +31,7 @@ class Visual {
         this.initalizeListeners();
     }
 
+
     isBlockCell(posX, posY){
         var bCellsFnd=false;
             if (this.pd.blockedCells != undefined){
@@ -378,6 +379,7 @@ class Visual {
                 var x = event.clientX;
                 var y = event.clientY;
                 var container = window.currentlyMoving[0];
+
                 //resize object to full size while moving and attach their center to the pointer
                 var width = UIProperty.WindowWidth / that.pd.gameWidth;
                 //set new style for left and top value of element, BUT do not cross borders
@@ -441,7 +443,7 @@ class Visual {
                         var coords = (id.split('_')[1].split(','));
                         data[1].removeFromTray();
                         that.placePentomino(data[1], coords[0],coords[1] );
-                       // that.showNumberOfPossibleSolutions();
+                        that.showNumberOfPossibleSolutions();
                         /**
                          * make this the selected element which activates manipulation GUI data[1].select();
                          *
@@ -547,22 +549,54 @@ class Visual {
         hint.style.visibility = "visible";
         let popupText = document.getElementById("myHint");
         popupText.textContent = pd.gameController.getHint().getText();
-
         //call indication of hint
-        this.indicateHint(500);
+        this.indicateHint(500);           
+    }
 
-            
+    blinkCells(cells, bgColor, blinkColor) {
+        let menu = [];
+
+        for(let i=0;i<cells.length;i++) {
+            let fv = document.getElementById("field_" + cells[i][0] + "," + cells[i][1]);
+            fv.style.background = blinkColor;
+            menu.push(fv);
+        }
+        let blinkInterval;
+        let counter = 0;
+        clearInterval(blinkInterval);
+        blinkInterval = setInterval(function () {
+            for(let j=0; j < menu.length; j++){
+                if (counter % 2 === 0) {
+                    menu[j].style.background = bgColor;
+                } else {
+                    menu[j].style.background = blinkColor;
+                }
+            }
+            counter++;
+            if (counter > 4) {
+                clearInterval(blinkInterval);
+            }
+        }, 100);
     }
 
     indicateHint(timeoutFrame){
         //possible command names (place, remove, moveToPosition, rotateClkWise, rotateAntiClkWise, mirrorH, mirrorV)
         let hintCommand = pd.gameController.getHint().getCommand();
-        let hintName = hintCommand.Name();
+        let hintSkill = pd.gameController.getHint()._skill;
+        let hintName = hintCommand._name;
         let hintinPen = hintCommand._pentomino;
         let pentominoColor = hintinPen.color;
         let clientRect = document.getElementById("piece_" + hintinPen.name).getBoundingClientRect();
         let [posX, posY] = [clientRect.x + clientRect.width/2, clientRect.y + clientRect.height/2];
-        switch (hintName) {
+
+       //indication of unoccupied cells
+        if (!(hintSkill === null)) {
+            const DEFAULT_BG_COLOR = "#adc0b9";
+            const RED_COLOR = "#ff4500";
+
+            this.blinkCells(hintSkill, DEFAULT_BG_COLOR, RED_COLOR);
+        } else {
+              switch (hintName) {
             case "Place":
                 // handle place hint
                 let hintRow = hintCommand._nextPosition[0];
@@ -591,12 +625,14 @@ class Visual {
             
             case "Remove":
                 // handle remove hint
-                var pen = this.select(hintinPen,posX,posY);
+                this.select(hintinPen,posX,posY);
+                var pen = document.getElementById("piece_" + hintinPen.name);
+                console.log("pent",hintinPen,this.selected);
                 if (!this.selected.inTray){
-                    pen.style.display = none;
+                    pen.style.display = 'none';
                     setTimeout(function(){
-                    pen.style.display = block;
-                    },timeoutFrame);
+                    pen.style.display = 'block';
+                    },2000);
                 }
                 break;
                     
@@ -651,6 +687,10 @@ class Visual {
         }
         
     }
+}
+
+
+      
 
     hide(piecePos, prevBackground){
 

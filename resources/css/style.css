@@ -348,3 +348,12 @@ table
       /* Disables pull-to-refresh but allows overscroll flow effects. TODO: Need to check on different screen sizes*/
       overscroll-behavior-y: contain;
     } 
+
+    
+    #blink {
+  text-align: center;
+  background: #c6c6c6;
+  color: #fff;
+  margin: 0;
+  padding: 20px;
+}
