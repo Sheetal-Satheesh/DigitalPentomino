@@ -532,32 +532,31 @@ class Visual {
         this.indicateHint(500);           
     }
 
+    blinkCells(cells, bgColor, blinkColor) {
+        let menu = [];
 
-    blinkCell(element){
-            var count = 1;
-            var intervalId = setInterval(function() {
-                    count++;
-                if (element.style.background == '#f08080') {
-                    element.style.background = '#adc0b9';
-                        console.log("3",count);
-
-                    if (count++ === 3) {
-                        clearInterval(intervalId);
-                            console.log("4",count);
-                    }
+        for(let i=0;i<cells.length;i++) {
+            let fv = document.getElementById("field_" + cells[i][0] + "," + cells[i][1]);
+            fv.style.background = blinkColor;
+            menu.push(fv);
+        }
+        let blinkInterval;
+        let counter = 0;
+        clearInterval(blinkInterval);
+        blinkInterval = setInterval(function () {
+            for(let j=0; j < menu.length; j++){
+                if (counter % 2 === 0) {
+                    menu[j].style.background = bgColor;
                 } else {
-                    element.style.background='#f08080';
-                    count++;
-                }    
-            }, 200);
+                    menu[j].style.background = blinkColor;
+                }
+            }
+            counter++;
+            if (counter > 4) {
+                clearInterval(blinkInterval);
+            }
+        }, 100);
     }
-
-
-
-
-
-   
-                
 
     indicateHint(timeoutFrame){
         //possible command names (place, remove, moveToPosition, rotateClkWise, rotateAntiClkWise, mirrorH, mirrorV)
@@ -567,53 +566,15 @@ class Visual {
         let hintinPen = hintCommand._pentomino;
         let pentominoColor = hintinPen.color;
         let clientRect = document.getElementById("piece_" + hintinPen.name).getBoundingClientRect();
-       let [posX, posY] = [clientRect.x + clientRect.width/2, clientRect.y + clientRect.height/2];
-        let fv;
-        const menu = new Array()
+        let [posX, posY] = [clientRect.x + clientRect.width/2, clientRect.y + clientRect.height/2];
+
        //indication of unoccupied cells
         if (!(hintSkill === null)) {
-            for(let i=0;i<hintSkill.length;i++){
-                fv = document.getElementById("field_" + hintSkill[i][0] + "," + hintSkill[i][1]); 
-                var defaultBackground = fv.style.background = "#adc0b9";
-                menu.push(fv);
-                //red
-               /* fv.style.background = "#f08080";
-                var count = 0;
-                console.log("first count",count);
-                        setTimeout(function(){ 
-                        fv.style.background = defaultBackground;
-                        //count--;
-                         }, 500);
-                        fv.style.background = "#f08080";
-                        setTimeout(function(){
-                            fv.style.background = defaultBackground;
-                        },500);*/
-                        //this.blinkCell(fv);
-                //count ++;*/
-            }
-                    var myVar;
-                    myVar = setInterval(blinkFont, 500); 
+            const DEFAULT_BG_COLOR = "#adc0b9";
+            const RED_COLOR = "#ff4500";
 
-                     for(var j=0;j<=menu.length;j++){
-                    setTimeout(function () {
-                                     //document.querySelector("fv").css('visibility', 'visible');
-                        clearInterval(myVar);        
-                                }, 3000); // after 3 seconds it'll stop blinking
-                            }
-
-                    function blinkFont() {
-                        for(var j=0;j<menu.length;j++){
-                            console.log(" menu[j] ",menu[j]);
-                            console.log(" menu ",menu);
-                            const curBgC = menu[j].style.background;
-                           menu[j].style.background = curBgC === "red" ? "#adc0b9" : "red";
-                           console.log("menu[j]", menu[j]);
-                        }
-
-                }
-        }
-
-        else{
+            this.blinkCells(hintSkill, DEFAULT_BG_COLOR, RED_COLOR);
+        } else {
               switch (hintName) {
             case "place":
                 // handle place hint
