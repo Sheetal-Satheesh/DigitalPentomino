@@ -1,12 +1,6 @@
 if(typeof require != 'undefined') {
     CommandManager = require('./command-history/command-manager.js');
-    PlaceCommand = require('./command-history/place-command.js');
-    MoveToPositionCommand = require('./command-history/move-to-position-command.js');
-    RotateAntiClkWiseCommand = require('./command-history/rotate-anti-clk-wise-command.js');
-    RotateClkWiseCommand = require('./command-history/rotate-clk-wise-command.js');
-    MirrorHCommand = require('./command-history/mirror-h-command.js');
-    MirrorVCommand = require('./command-history/mirror-v-command.js');
-    RemoveCommand = require('./command-history/remove-command.js');
+    RemoveCommand = require('./command-history/commands.js');
     Pentomino = require('./pentomino');
 }
 
@@ -14,7 +8,8 @@ class Game {
     constructor(board, name) {
         this._name = name;
         this._board = board;
-        this._commandManager = new CommandManager();
+        this._cmdKey = undefined;
+        
         /**
             TODO: reconsider this tray, do we really need to store tray information.
 
@@ -33,17 +28,11 @@ class Game {
         this._pentominosOutside = [];
         this._pentominoOutsidePositions = [];
     }
-    // --- --- --- Pentomino Operations --- --- ---
-    /**
-     * Executes the specified and adds it to the history tree.
-     * Commands can be undone with the undo() and redo() methods.
-     * @param command
-     * @returns {*}
-     */
-    doCommandAndAddToHistory(command) {
-        return this._commandManager.executeNewCommand(command);
-    }
 
+    updateCmdKey(cmdKey){
+        this._cmdKey = cmdKey;
+    }
+    
     /**
      * Adds new pentomino to game
      * @param pentomino
@@ -106,15 +95,18 @@ class Game {
         if (oldPentominoPositionIsOnBoard) {
             if (newPentominoPositionIsOnBoard) {
                 this._board.movePentominoToPosition(pentomino, row, col);
-            } else {
+            } 
+            else {
                 this._board.removePentomino(pentomino);
                 this._placePentominoOutsideBoard(pentomino, row, col);
             }
-        } else {
+        } 
+        else {
             if (newPentominoPositionIsOnBoard) {
                 this._removePentominoOutsideTheBoard(pentomino);
                 this._board.placePentomino(pentomino, row, col);
-            } else {
+            }
+            else {
                 this._movePentominoOutsideBoardToPosition(pentomino, row, col);
             }
         }
@@ -123,29 +115,44 @@ class Game {
     removePentomino(pentomino) {
         if (this._board.isPlacedOnBoard(pentomino)) {
             this._board.removePentomino(pentomino);
-        } else {
+        } 
+        else {
             if (this.isPlacedOutsideBoard(pentomino)) {
                 this._removePentominoOutsideTheBoard(pentomino);
-            } else {
+            } 
+            else {
                 throw new Error("Pentomino \'" + pentomino.name + "\' does not exist in this game.");
             }
         }
     }
 
     rotatePentominoClkWise(pentomino) {
-        this._doLocalOperation(pentomino, p => p.rotateClkWise(), p => this._board.rotatePentominoClkWise(p));
+        this._doLocalOperation(
+                        pentomino, 
+                        p => p.rotateClkWise(), 
+                        p => this._board.rotatePentominoClkWise(p));
     }
 
     rotatePentominoAntiClkWise(pentomino) {
-        this._doLocalOperation(pentomino, p => p.rotateAntiClkWise(), p => this._board.rotatePentominoAntiClkWise(p));
+        this._doLocalOperation(
+                        pentomino, 
+                        p => p.rotateAntiClkWise(),
+                        p => this._board.rotatePentominoAntiClkWise(p));
     }
 
     mirrorPentominoH(pentomino) {
-        this._doLocalOperation(pentomino, p => p.mirrorH(), p => this._board.mirrorPentominoH(p));
+        this._doLocalOperation(
+                        pentomino,
+                        p => p.mirrorH(),
+                        p => this._board.mirrorPentominoH(p));
+
     }
 
     mirrorPentominoV(pentomino) {
-        this._doLocalOperation(pentomino, p => p.mirrorV(), p => this._board.mirrorPentominoV(p));
+        this._doLocalOperation(
+                        pentomino,
+                        p => p.mirrorV(),
+                        p => this._board.mirrorPentominoV(p));
     }
 
     // --- --- --- Helper Pentomino Operations --- --- ---
@@ -156,18 +163,30 @@ class Game {
 
         let oldPentominoIsOnBoard = this._board.isPlacedOnBoard(pentomino);
         let position = this.getPosition(pentomino);
-        let newPentominoIsOnBoard = this._board.pentominoIsValidAtPosition(tempPentomino, position[0], position[1]);
+        let newPentominoIsOnBoard = this._board.pentominoIsValidAtPosition(
+                                                    tempPentomino,
+                                                    position[0],
+                                                    position[1]);
 
         if (oldPentominoIsOnBoard && newPentominoIsOnBoard) {
             boardOperation(pentomino);
-        } else if (oldPentominoIsOnBoard && !newPentominoIsOnBoard) {
+        }
+        else if (oldPentominoIsOnBoard && !newPentominoIsOnBoard) {
             let position = this._board.getPosition(pentomino);
             this._board.removePentomino(pentomino);
             Object.assign(pentomino, tempPentomino);
-            this._placePentominoOutsideBoard(pentomino, position[0], position[1]);
-        } else if (!oldPentominoIsOnBoard && !newPentominoIsOnBoard) {
+            this._placePentominoOutsideBoard(
+                                                pentomino,
+                                                position[0], 
+                                                position[1]);
+
+        }
+        else if ( (!oldPentominoIsOnBoard) &&
+                  (!newPentominoIsOnBoard)) {
+
             Object.assign(pentomino, tempPentomino);
-        } else {
+        }
+        else {
             // !oldPentominoIsOnBoard && newPentominoIsOnBoard
             this._removePentominoOutsideTheBoard(pentomino);
             Object.assign(pentomino, tempPentomino);
@@ -255,9 +274,9 @@ class Game {
         }
     }
 
-    getCollisionPentominoesOfPentomino(pentomino) {
+    getCollisionOfPentominoes(pentomino) {
         if (this.isPlacedOnBoard(pentomino)) {
-            return this._board.getCollisionPentominoesOfPentomino(pentomino);
+            return this._board.getCollisionOfPentominoes(pentomino);
         } else {
             return [];
         }
@@ -298,7 +317,7 @@ class Game {
             }
         },this);
         if (outsidePosition === null) {
-            throw new Error("No pentomino: " + pentomino.name + " placed outside the board");
+            return undefined;
         }
         return outsidePosition;
     }

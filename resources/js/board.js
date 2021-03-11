@@ -342,7 +342,7 @@ class Board {
         return collisionCells;
     }
 
-    getCollisionPentominoesOfPentomino(pentomino) {
+    getCollisionOfPentominoes(pentomino) {
         if (!this.isPlacedOnBoard(pentomino)) {
             throw new Error("Pentomino with name '" + pentomino.name + "' is not placed on the board." +
                 "Collisions are only detected for pentominoes on the board.");

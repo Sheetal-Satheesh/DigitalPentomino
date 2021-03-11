@@ -72,7 +72,7 @@ class Pentomino {
                 this.sRepr = '0010000100001000010000100';
                 break;
             case 'X':
-                this.color = "#FF0000";
+                this.color = "tomato";
                 this.trayPosition = 11;
                 this.sRepr = '0000000100011100010000000';
                 break;
