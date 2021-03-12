@@ -623,7 +623,7 @@ class Visual {
 
                 //show destination position (and fade away)
                 let piecePos = this.getOccupiedPositions(hintinPen,hintCommand);
-                console.log("hintinPen",hintinPen, piecePos);
+                console.log("hintingPen",hintinPen, piecePos);
                 //usage of random cell variable to indicate hinting
                     for(let i=0;i<randomCell;i++){
                             fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
@@ -655,6 +655,8 @@ class Visual {
                     rotateAntiClkWise();
                     },timeoutFrame);
                 }
+
+
                 break;
 
             case "RotateAntiClkWise":
