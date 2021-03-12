@@ -592,7 +592,7 @@ class Visual {
        //indication of unoccupied cells
         if (!(hintSkill === null)) {
             const DEFAULT_BG_COLOR = "#adc0b9";
-            const RED_COLOR = "#ff4500";
+            const RED_COLOR = "red";
 
             this.blinkCells(hintSkill, DEFAULT_BG_COLOR, RED_COLOR);
         } else {
@@ -615,7 +615,7 @@ class Visual {
                 //show destination position (and fade away)
                 let piecePos = this.getOccupiedPositions(hintinPen,hintCommand);
                 console.log("hintinPen",hintinPen, piecePos);
-                    for(let i=0;i<5;i++){
+                    for(let i=0;i<2;i++){
                             fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
                             prevBackground[i] = fieldvalue.style.background;
                             fieldvalue.style.background = pentominoColor;
@@ -640,7 +640,6 @@ class Visual {
                 // handle rotateClkWise hint
                 this.select(hintinPen,posX,posY);
                 if (!this.selected.inTray){
-                    console.log("Remove piece from tray for visual hint.");
                     rotateClkWise();
                     setTimeout(function(){
                     rotateAntiClkWise();
