@@ -589,18 +589,9 @@ class Visual {
         let clientRect = document.getElementById("piece_" + hintinPen.name).getBoundingClientRect();
         let [posX, posY] = [clientRect.x + clientRect.width/2, clientRect.y + clientRect.height/2];
 
-        //generating random cells to indicate position
-        var cellIndication = [];
-        for (var i = 1, l = 4; i < l; i++) {
-            cellIndication.push(Math.round(Math.random() * l));
-            if(cellIndication.includes(0)){
-                cellIndication.pop(0);
-            }else{
-                //do nothing
-            }
-        }
+       
         //random variable that selects
-        var randomCell = cellIndication[Math.floor(Math.random()*cellIndication.length)];
+        var randomCell = Math.floor(Math.random() * (5 - 1)) + 1;
 
        //indication of unoccupied cells
         if (!(hintSkill === null)) {
