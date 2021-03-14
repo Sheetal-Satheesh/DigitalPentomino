@@ -635,9 +635,8 @@ class Visual {
                             prevBackground[i] = fieldvalue.style.background;
                             fieldvalue.style.background = pentominoColor;
                             this.hide(piecePos, prevBackground);  
-                            
-
                     }
+
                 break;
             
             case "Remove":
@@ -718,7 +717,7 @@ class Visual {
                     //TODO: replace with proper fadeOut animation
                     fvalue.style.background = prevBackground[j];
             }
-        }, 2000);
+        }, 100);
     }
 
 
