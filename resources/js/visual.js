@@ -591,7 +591,7 @@ class Visual {
 
        
         //random variable that selects
-        var randomCell = Math.floor(Math.random() * (5 - 1)) + 1;
+        var randomCell = Math.floor(Math.random() * (4)) + 1;
         console.log("randomCell",randomCell);
 
        //indication of unoccupied cells
