@@ -592,12 +592,12 @@ class Visual {
        
         //random variable that selects
         var randomCell = Math.floor(Math.random() * (5 - 1)) + 1;
+        console.log("randomCell",randomCell);
 
        //indication of unoccupied cells
         if (!(hintSkill === null)) {
             const DEFAULT_BG_COLOR = "#adc0b9";
             const RED_COLOR = "red";
-            console.log("randomCell",randomCell);
             //blink unoccupied cells
             this.blinkCells(hintSkill, DEFAULT_BG_COLOR, RED_COLOR);
         } else {
