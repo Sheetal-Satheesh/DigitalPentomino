@@ -591,11 +591,16 @@ class Visual {
         let clientRect = document.getElementById("piece_" + hintinPen.name).getBoundingClientRect();
         let [posX, posY] = [clientRect.x + clientRect.width/2, clientRect.y + clientRect.height/2];
 
+       
+        //random variable that selects
+        var randomCell = Math.floor(Math.random() * (4)) + 1;
+        console.log("randomCell",randomCell);
+
        //indication of unoccupied cells
         if (!(hintSkill === null)) {
             const DEFAULT_BG_COLOR = "#adc0b9";
-            const RED_COLOR = "#ff4500";
-
+            const RED_COLOR = "red";
+            //blink unoccupied cells
             this.blinkCells(hintSkill, DEFAULT_BG_COLOR, RED_COLOR);
         } else {
               switch (hintName) {
@@ -616,13 +621,15 @@ class Visual {
 
                 //show destination position (and fade away)
                 let piecePos = this.getOccupiedPositions(hintinPen,hintCommand);
-                console.log("hintinPen",hintinPen, piecePos);
-                    for(let i=0;i<5;i++){
+                console.log("hintingPen",hintinPen, piecePos);
+                //usage of random cell variable to indicate hinting
+                    for(let i=0;i<randomCell;i++){
                             fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
                             prevBackground[i] = fieldvalue.style.background;
                             fieldvalue.style.background = pentominoColor;
-                            this.hide(piecePos, prevBackground);
+                            this.hide(piecePos, prevBackground);  
                     }
+
                 break;
             
             case "Remove":
@@ -642,12 +649,13 @@ class Visual {
                 // handle rotateClkWise hint
                 this.select(hintinPen,posX,posY);
                 if (!this.selected.inTray){
-                    console.log("Remove piece from tray for visual hint.");
                     rotateClkWise();
                     setTimeout(function(){
                     rotateAntiClkWise();
                     },timeoutFrame);
                 }
+
+
                 break;
 
             case "RotateAntiClkWise":
@@ -701,9 +709,8 @@ class Visual {
                     let fvalue = document.getElementById("field_" + piecePos[j][0] + "," + piecePos[j][1]);
                     //TODO: replace with proper fadeOut animation
                     fvalue.style.background = prevBackground[j];
-                
             }
-        }, 2000);
+        }, 100);
     }
 
 
