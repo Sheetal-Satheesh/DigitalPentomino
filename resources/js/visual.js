@@ -601,12 +601,13 @@ class Visual {
         }
         //random variable that selects
         var randomCell = cellIndication[Math.floor(Math.random()*cellIndication.length)];
+                    console.log("randomCell",randomCell);
+
 
        //indication of unoccupied cells
         if (!(hintSkill === null)) {
             const DEFAULT_BG_COLOR = "#adc0b9";
             const RED_COLOR = "red";
-            console.log("randomCell",randomCell);
             //blink unoccupied cells
             this.blinkCells(hintSkill, DEFAULT_BG_COLOR, RED_COLOR);
         } else {
@@ -634,7 +635,7 @@ class Visual {
                             fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
                             prevBackground[i] = fieldvalue.style.background;
                             fieldvalue.style.background = pentominoColor;
-                            this.hide(piecePos, prevBackground);
+                            this.hide(piecePos, prevBackground); 
                     }
                 break;
             
@@ -715,7 +716,6 @@ class Visual {
                     let fvalue = document.getElementById("field_" + piecePos[j][0] + "," + piecePos[j][1]);
                     //TODO: replace with proper fadeOut animation
                     fvalue.style.background = prevBackground[j];
-                
             }
         }, 2000);
     }
