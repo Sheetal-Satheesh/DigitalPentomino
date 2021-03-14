@@ -591,8 +591,10 @@ class Visual {
 
         //generating random cells to indicate position
         var cellIndication = [];
-        for (var i = 0, l = 4; i < l; i++) {
-            cellIndication.push(Math.round(Math.random() * l))
+        for (var i = 1, l = 4; i < l; i++) {
+            console.log("i ==>",i, "l ==> ", l);
+            cellIndication.push(Math.round(Math.random() * l));
+            console.log("cellIndication array ==> ", cellIndication);
         }
         //random variable that selects
         var randomCell = cellIndication[Math.floor(Math.random()*cellIndication.length)];
