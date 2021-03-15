@@ -80,9 +80,15 @@ class HintAI {
                 i++;
             }
 
-            if (cellSpace.length > 0 && cellSpace.length > bestCellSpaceSize) {
-                bestCellSpace = cellSpace;
-                bestCellSpaceSize = cellSpace.length;
+            if (cellSpace.length > 0) {
+                let separateCellSpaces = this._getSeparateCellSpaces(cellSpace);
+                let maxCellSpace = separateCellSpaces.reduce((cellSpace1, cellSpace2) => {
+                    return cellSpace1.length > cellSpace2.length ? cellSpace1 : cellSpace2;
+                });
+                if (maxCellSpace.length > bestCellSpaceSize) {
+                    bestCellSpace = maxCellSpace;
+                    bestCellSpaceSize = maxCellSpace.length;
+                }
             }
         });
 
@@ -162,6 +168,26 @@ class HintAI {
         let pentomino = nonPerfectPentominoes[0];
         return new RemoveCommand( pentomino,
                                   game.getPosition(pentomino));
+    }
+
+    _getSeparateCellSpaces(cellSpace) {
+        let spaces = [];
+
+        spaces.push(cellSpace.pop());
+
+        cellSpace.forEach(cell => {
+            spaces.some(space => {
+                return space.some(spaceCell => {
+                    if (Board.arePositionsNeighbors(cell[0], cell[1], spaceCell[0], spaceCell[1])) {
+                        spaces.push(cell);
+                        return true;
+                    }
+                    return false;
+                });
+            });
+        });
+
+        return spaces;
     }
 
     // --- --- --- Possible Solutions --- --- ---

@@ -609,7 +609,7 @@ class Board {
         return neighborPositions;
     }
 
-    arePositionsNeighbors(rowA, colA, rowB, colB) {
+    static arePositionsNeighbors(rowA, colA, rowB, colB) {
         return rowA === rowB && colA + 1 === colB
             || rowA === rowB && colA - 1 === colB
             || colA === colB && rowA + 1 === rowB
