@@ -173,18 +173,21 @@ class HintAI {
     _getSeparateCellSpaces(cellSpace) {
         let spaces = [];
 
-        spaces.push(cellSpace.pop());
+        spaces.push([cellSpace.pop()]);
 
         cellSpace.forEach(cell => {
-            spaces.some(space => {
+            let foundSpace = spaces.some(space => {
                 return space.some(spaceCell => {
                     if (Board.arePositionsNeighbors(cell[0], cell[1], spaceCell[0], spaceCell[1])) {
-                        spaces.push(cell);
+                        space.push(cell);
                         return true;
                     }
                     return false;
                 });
             });
+            if (!foundSpace) {
+                spaces.push([cell]);
+            }
         });
 
         return spaces;
