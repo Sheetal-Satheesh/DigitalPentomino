@@ -173,24 +173,52 @@ class HintAI {
     _getSeparateCellSpaces(cellSpace) {
         let spaces = [];
 
-        spaces.push([cellSpace.pop()]);
+        let initSpace = [cellSpace.pop()];
+        spaces.push(initSpace);
 
-        cellSpace.forEach(cell => {
-            let foundSpace = spaces.some(space => {
-                return space.some(spaceCell => {
-                    if (Board.arePositionsNeighbors(cell[0], cell[1], spaceCell[0], spaceCell[1])) {
-                        space.push(cell);
-                        return true;
-                    }
-                    return false;
-                });
+        let spaceCounter = 0;
+        let spaceElementCounter = 0;
+        let spaceUpperBound = 0;
+        while (cellSpace.length > 0) {
+            let space = spaces[spaceCounter];
+            let spaceElement = space[spaceElementCounter];
+            let neighborIndices = [];
+            let i = 0;
+            cellSpace.forEach(cell => {
+                if (Board.arePositionsNeighbors(cell[0], cell[1], spaceElement[0], spaceElement[1])) {
+                    space.push(cell);
+                    neighborIndices.push(i);
+                }
+                i++;
             });
-            if (!foundSpace) {
-                spaces.push([cell]);
+            HintAI._deleteIndicesFromArray(cellSpace, neighborIndices);
+
+            if (neighborIndices.length === 0 && spaceElementCounter === spaceUpperBound) {
+                let newSpace = [cellSpace.pop()];
+                spaces.push(newSpace);
+                spaceCounter++;
+                spaceElementCounter = 0;
+                spaceUpperBound = 0;
+            } else if (neighborIndices.length === 0) {
+                spaceElementCounter++;
+            } else {
+                // numOfNeighbors > 0
+                spaceUpperBound += neighborIndices.length;
+                spaceElementCounter++;
             }
-        });
+        }
 
         return spaces;
+    }
+
+    static _deleteIndicesFromArray(array, indices) {
+        indices.forEach(i => {
+            array.splice(i, 1);
+            indices.map(j => {
+                if (j > i) return j - 1;
+                else return j;
+            });
+        });
     }
 
     // --- --- --- Possible Solutions --- --- ---
