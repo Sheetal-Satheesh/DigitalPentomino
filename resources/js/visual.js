@@ -280,14 +280,33 @@ class Visual {
         this.pd.visual.disableManipulations();
     }
 
+
+    hexToRgb(hex) {
+      var rgbFormat = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return rgbFormat ? {
+        r: parseInt(rgbFormat[1], 16),
+        g: parseInt(rgbFormat[2], 16),
+        b: parseInt(rgbFormat[3], 16)
+      } : null;
+    }
     //Enable or Disable manipulation buttons
 
     showManipulations(xPosition,yPosition) {
-
+        var pieceMan = document.getElementById('pieceManipulation').firstElementChild;
+        var pieceManip = pieceMan.firstElementChild;
+        var pieceManipul = pieceManip.firstElementChild;
+        var clr = pieceManipul.children;
+        for(let i=0;i< clr.length ;i++){
+            var btnClr = clr[i].firstElementChild;
+            var colorR = this.hexToRgb(this.selected.color).r;
+            var colorG = this.hexToRgb(this.selected.color).g;
+            var colorB = this.hexToRgb(this.selected.color).b;
+           btnClr.style.background =  "rgba(" + [colorR,colorG,colorB,0.5].join(',') +")";
+        }
         document.getElementById("btnRotateRight").disabled = false;
         document.getElementById("btnRotateLeft").disabled = false;
         document.getElementById("btnFlipH").disabled = false;
-        document.getElementById("btnFlipV").disabled = false
+        document.getElementById("btnFlipV").disabled = false;
         document.getElementById('pieceManipulation').style.display = 'block';
         document.getElementById('pieceManipulation').style.left = xPosition + 'px';
         document.getElementById('pieceManipulation').style.top = yPosition + 'px';
@@ -553,6 +572,10 @@ class Visual {
         this.indicateHint(500);           
     }
 
+
+
+
+
     blinkCells(cells, bgColor, blinkColor) {
         let menu = [];
 
@@ -589,13 +612,18 @@ class Visual {
         let clientRect = document.getElementById("piece_" + hintinPen.name).getBoundingClientRect();
         let [posX, posY] = [clientRect.x + clientRect.width/2, clientRect.y + clientRect.height/2];
 
+       
+        //random variable that selects
+        var randomCell = Math.floor(Math.random() * (4)) + 1;
+
        //indication of unoccupied cells
         if (!(hintSkill === null)) {
             const DEFAULT_BG_COLOR = "#adc0b9";
-            const RED_COLOR = "#ff4500";
-
+            const RED_COLOR = "red";
+            //blink unoccupied cells
             this.blinkCells(hintSkill, DEFAULT_BG_COLOR, RED_COLOR);
-        } else {
+        } 
+        else {
               switch (hintName) {
             case "Place":
                 // handle place hint
@@ -614,13 +642,15 @@ class Visual {
 
                 //show destination position (and fade away)
                 let piecePos = this.getOccupiedPositions(hintinPen,hintCommand);
-                console.log("hintinPen",hintinPen, piecePos);
-                    for(let i=0;i<5;i++){
+                console.log("hintingPen",hintinPen, piecePos);
+                //usage of random cell variable to indicate hinting
+                    for(let i=0;i<randomCell;i++){
                             fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
                             prevBackground[i] = fieldvalue.style.background;
                             fieldvalue.style.background = pentominoColor;
-                            this.hide(piecePos, prevBackground);
+                            this.hide(piecePos, prevBackground);  
                     }
+
                 break;
             
             case "Remove":
@@ -640,12 +670,13 @@ class Visual {
                 // handle rotateClkWise hint
                 this.select(hintinPen,posX,posY);
                 if (!this.selected.inTray){
-                    console.log("Remove piece from tray for visual hint.");
                     rotateClkWise();
                     setTimeout(function(){
                     rotateAntiClkWise();
                     },timeoutFrame);
                 }
+
+
                 break;
 
             case "RotateAntiClkWise":
@@ -699,9 +730,8 @@ class Visual {
                     let fvalue = document.getElementById("field_" + piecePos[j][0] + "," + piecePos[j][1]);
                     //TODO: replace with proper fadeOut animation
                     fvalue.style.background = prevBackground[j];
-                
             }
-        }, 2000);
+        }, 70);
     }
 
 
