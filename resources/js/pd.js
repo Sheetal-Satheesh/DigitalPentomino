@@ -11,11 +11,6 @@ class PD {
         var fController = new FrontController();
         this.gameController = fController.controller;
         this.loadBoard("board_6x10");
-
-        // test REST calls
-        fetch('https://api.predic8.de/shop/orders/1432')
-        .then(response => response.json())
-        .then(data => console.log(data))
         
     }
 
