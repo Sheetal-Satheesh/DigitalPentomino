@@ -73,6 +73,15 @@ class PD {
     prefillBoard(){
         this.visual.prefillBoard();
     }
+    
+    undo(){
+        this.visual.undo();
+    }
+
+    redo(){
+        this.visual.redo();
+    }
+
 }
 
 
