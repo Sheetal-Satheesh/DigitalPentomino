@@ -28,6 +28,8 @@ class Visual {
         this.renderBoard();
         this.renderPieces();
 
+        this.disablePrefillButton(false);
+
         this.initalizeListeners();
     }
 
@@ -314,10 +316,10 @@ class Visual {
 
     disableManipulations() {
 
-        document.getElementById("btnRotateRight").disabled =true;
-        document.getElementById("btnRotateLeft").disabled =true;
-        document.getElementById("btnFlipH").disabled =true;
-        document.getElementById("btnFlipV").disabled =true;
+        document.getElementById("btnRotateRight").disabled = true;
+        document.getElementById("btnRotateLeft").disabled = true;
+        document.getElementById("btnFlipH").disabled = true;
+        document.getElementById("btnFlipV").disabled = true;
         document.getElementById('pieceManipulation').style.display = 'none';
 
     }
@@ -642,7 +644,7 @@ class Visual {
 
                 //show destination position (and fade away)
                 let piecePos = this.getOccupiedPositions(hintinPen,hintCommand);
-                console.log("hintingPen",hintinPen, piecePos);
+                //console.log("hintingPen",hintinPen, piecePos);
                 //usage of random cell variable to indicate hinting
                     for(let i=0;i<randomCell;i++){
                             fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
@@ -657,7 +659,7 @@ class Visual {
                 // handle remove hint
                 this.select(hintinPen,posX,posY);
                 var pen = document.getElementById("piece_" + hintinPen.name);
-                console.log("pent",hintinPen,this.selected);
+                //console.log("pent",hintinPen,this.selected);
                 if (!this.selected.inTray){
                     pen.style.display = 'none';
                     setTimeout(function(){
@@ -764,8 +766,14 @@ class Visual {
         return occupiedPosArray;
     }
 
+    disablePrefillButton(bValue) {
+        document.getElementById("prefillBoard").disabled = bValue;
+    }
+
     prefillBoard() {
         this.clear();
+        // Prevent clicking of button while previous prefilling is going on
+        this.disablePrefillButton(true);
         let allSolutions = [];
         // Get all the games and filter solutions
         if(this.allSolutions == undefined) {
@@ -784,7 +792,8 @@ class Visual {
         if (this.allSolutions.length > 0) {
             randomSolution = this._getRandomElementFromArray(this.allSolutions);
         } else {
-            ;// TODO: throw error
+            this.disablePrefillButton(false);
+            throw new Error("Solutions not found for current board!!!");
         }
         if (randomSolution != undefined) {
             for(let i = 0; i < randomSolution[0].length; ++i) {
@@ -813,10 +822,15 @@ class Visual {
                 this.gameController.placePentomino(piece, currentAnchor[0], currentAnchor[1]);
             }
         } else {
-            ;// TODO: throw error
+            this.disablePrefillButton(false);
+            throw new Error("Could not find a random solution!!!"); //TODO: Need more meaningful error message here
         }
         this.pieces = prefillCandidates;
         this.renderPieces();
+        // So that pieces are rendered before the button becomes enabled
+        setTimeout(function(that) {
+            that.disablePrefillButton(false);
+        }, 100, this);
     }
 
     _getRandomElementFromArray(arrayObject) {
