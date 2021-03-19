@@ -75,8 +75,36 @@
   height: 100%;
   width: 100%;
   padding: 10px;
-  background-color: white;
+  background-color: rgb(197, 207, 203);
+  overflow: scroll;
 }
+
+.input-hidden {
+  position: absolute;
+  left: -9999px;
+}
+
+input[type=radio]:checked + label>img {
+  border: 1px solid #fff;
+  box-shadow: 0 0 3px 3px #090;
+}
+
+/* Stuff after this is only to make things more pretty */
+input[type=radio] + label>img {
+  
+  width: 150px;
+  height: 150px;
+  transition: 500ms all;
+}
+
+input[type=radio]:checked + label>img {
+  transform: 
+    rotateZ(-10deg) 
+    rotateX(10deg);
+}
+
+
+
 
 /* Hide the images by default */
 .board_list {
