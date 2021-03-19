@@ -293,7 +293,6 @@
 			var action_btn = '\n<div class="action_btn">\n<button type="button" class="btnLoadboard" onclick="loadBoard()">Load Board</button>\n<button type="button" class="btnCancel" onclick="closeForm()">Cancel</button>\n</div>'
 			
 			for (var i=0; i< board_list.length; i++){
-				console.log('board_list',board_list[i]);
 				out += input_element.replaceAll("$$", board_list[i]) +'\n'+ label.replaceAll("$$", board_list[i]) + '<br><br>\n';
 			}
 			
