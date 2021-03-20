@@ -33,7 +33,7 @@ settingsSchema = {
     hinting: {
         supportedHintingStrategies: {
             type: SettingsEntryType.ENUM,
-            allowedValues: ["full","partial"],
+            allowedValues: ["full","partial","another"],
             titleEn: "Supported Hinting Strategies",
             titleGe: "Unterstütze Hilf-Strategien"
         },
@@ -60,15 +60,16 @@ settingsSchema = {
 
 settingsTest = {
     schema: {
-      name: {
-        type: 'string',
-        title: 'Entry',
-        required: true
-      },
-      age: {
-        type: 'number',
-        title: 'Age'
-      }
+        hintingStrategy: {
+            "title": "Hinting Strategy",
+            "description": "Please pick a hinting strategy",
+            "type": "string",
+            "enum": settingsSchema.hinting.supportedHintingStrategies.allowedValues
+          },
+        skillTeaching: {
+            type: 'boolean',
+            title: 'Skill Teaching'
+        }
     },
     onSubmit: function (errors, values) {
         closeSettings();
