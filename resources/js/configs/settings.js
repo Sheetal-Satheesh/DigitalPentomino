@@ -58,6 +58,23 @@ settingsSchema = {
     }
 };
 
+settingsTest = {
+    schema: {
+      name: {
+        type: 'string',
+        title: 'Entry',
+        required: true
+      },
+      age: {
+        type: 'number',
+        title: 'Age'
+      }
+    },
+    onSubmit: function (errors, values) {
+        closeSettings();
+    }
+  };
+
 // --- --- --- Parser --- --- ---
 // Input: seed and settings-schema-object
 // Output: setting-object
