@@ -349,6 +349,14 @@
    <script src="./registerSW.js"></script>
     <script type="text/javascript">
         $('form').jsonForm(settingsTest);
+        
+        //Removal of default jsonform submit button & inclusion of buttons
+        var btnContainer = $('form input[type=submit]').parent();
+        // Remove default 'submit' button
+        //$('form input[type=submit]').remove();
+        // Add own buttons
+        var $input = $('<input type="button" value="Cancel" onClick="closeSettings()" />');
+        $input.appendTo(btnContainer);
       </script>
 
 
