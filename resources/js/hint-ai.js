@@ -24,7 +24,7 @@ class HintAI {
             let closestSolution = possibleSolutions[0];
             let commandSequenceList = this._getCommandSequenceListToSolution(game, closestSolution);
             let commands = this._getBestNextCommandsMaxOccupiedNeighbors(game, closestSolution, commandSequenceList);
-            return new Hint(commands[0], possibleSolutions);
+            return new Hint(commands, possibleSolutions);
         } else {
             // Pursue closest game state, which has at least one possible solution
             let closestSolution = this._getClosesSolution(game, this._solutions);
@@ -34,10 +34,10 @@ class HintAI {
             if (bestImpossibleCellSpace === null) {
                 let commandSequenceList = this._getCommandSequenceListToSolution(game, closestSolution);
                 let commands = this._getBestNextCommandsMaxOccupiedNeighbors(game, closestSolution, commandSequenceList);
-                return new Hint(commands[0], possibleSolutions);
+                return new Hint(commands, possibleSolutions);
             } else {
                 let command = this._getCommandBasedOnUnoccupiedCellsSkill(game, closestSolution, bestImpossibleCellSpace);
-                return new Hint(command, possibleSolutions, bestImpossibleCellSpace);
+                return new Hint([command], possibleSolutions, bestImpossibleCellSpace);
             }
         }
     }

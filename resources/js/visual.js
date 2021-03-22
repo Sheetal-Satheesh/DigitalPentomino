@@ -565,13 +565,14 @@ class Visual {
     }
 
     callHintAI(){
-        let hint = document.getElementById("myHint");
-        hint.classList.toggle("show");
-        hint.style.visibility = "visible";
+        let hintElement = document.getElementById("myHint");
+        hintElement.classList.toggle("show");
+        hintElement.style.visibility = "visible";
         let popupText = document.getElementById("myHint");
-        popupText.textContent = pd.gameController.getHint().getText();
+        let hint = pd.gameController.getHint();
+        popupText.textContent = hint.getText();
         //call indication of hint
-        this.indicateHint(500);           
+        this.indicateHint(hint);
     }
 
 
@@ -604,10 +605,11 @@ class Visual {
         }, 100);
     }
 
-    indicateHint(timeoutFrame){
+    indicateHint(hint){
+        let timeoutFrame = 500;
         //possible command names (place, remove, moveToPosition, rotateClkWise, rotateAntiClkWise, mirrorH, mirrorV)
-        let hintCommand = pd.gameController.getHint().getCommand();
-        let hintSkill = pd.gameController.getHint()._skill;
+        let hintCommand = hint.getCommands()[0];
+        let hintSkill = hint._skill;
         let hintName = hintCommand._name;
         let hintinPen = hintCommand._pentomino;
         let pentominoColor = hintinPen.color;

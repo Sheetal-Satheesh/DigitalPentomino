@@ -1,6 +1,6 @@
 class Hint {
-    constructor(command, possibleSolutions, skill=null) {
-        this._command = command;
+    constructor(commands, possibleSolutions, skill=null) {
+        this._commands = commands;
         this._possibleSolutions = possibleSolutions;
         this._skill = skill;
 
@@ -11,6 +11,7 @@ class Hint {
         if (possibleSolutions.length === 0) {
             this._text += "This doesn't look right. The pentominoes on your board aren't part of a solution."
         }
+        let command = commands[0];
         let cmdValues = command.ExecValues();
         switch (command.Name()) {
             case "Remove":
@@ -45,8 +46,8 @@ class Hint {
         return this._text;
     }
 
-    getCommand() {
-        return this._command;
+    getCommands() {
+        return this._commands;
     }
 
     getPossibleSolutions() {
