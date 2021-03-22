@@ -58,6 +58,11 @@ const SettingsEntryType = {
     }
 };*/
 
+/** RULES
+ *  - entries of type string only with enum specified
+ *  - number entries only with min and max specified
+ *  - Only depth of one supported
+ */
 settingsSchema = {
     hintingStrategy: {
         "title": "Hinting Strategy",
