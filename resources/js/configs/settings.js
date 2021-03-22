@@ -63,9 +63,17 @@ const SettingsEntryType = {
  *  - number entries only with min and max specified
  *  - Only depth of one supported
  */
+
+let language = "de";
+
+title = {
+    "en": "Hinting Strategy",
+    "de": "Hinting Strategie"
+}
+
 settingsSchema = {
     hintingStrategy: {
-        "title": "Hinting Strategy",
+        "title": title[language],
         "description": "Please pick a hinting strategy",
         "type": "string",
         "enum": ["full","partial","another"]
