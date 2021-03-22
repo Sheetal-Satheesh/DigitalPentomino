@@ -71,12 +71,17 @@ title = {
     "de": "Hinting Strategie"
 }
 
+strategies = {
+    "en": ["full","partial","another"],
+    "de": ["vollständig","teilweise","andere"]
+}
+
 settingsSchema = {
     hintingStrategy: {
         "title": title[language],
         "description": "Please pick a hinting strategy",
         "type": "string",
-        "enum": ["full","partial","another"]
+        "enum": strategies[language]
       },
     skillTeaching: {
         type: 'boolean',
