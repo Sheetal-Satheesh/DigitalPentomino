@@ -561,7 +561,6 @@ class Visual {
         let popupText = document.getElementById("myHint");
         let hint = pd.gameController.getHint();
         popupText.textContent = this.generateHintText(hint);
-        //call indication of hint
         this.indicateHint(hint);
     }
 
