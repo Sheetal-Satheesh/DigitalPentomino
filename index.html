@@ -27,7 +27,7 @@
     <script src="resources/js/configs/boardConfigs.js"></script>
     <script src="resources/js/configs/solutionsConfig.js"></script>
     <script src="resources/js/configs/settings.js"></script>
-    <script src="resources/js/settings/json-schema-parser.js"></script>
+    <script src="resources/js/settings/settings-parser.js"></script>
     <script src="resources/js/pd.js"></script>
     <script src="resources/js/visual.js"></script>
     <script src="resources/js/handleMobile.js"></script>
@@ -353,7 +353,7 @@
             console.log("JsonForm: Submitted values:");
             console.log(values);
 
-            let seed = JsonSchemaParser.parseSettingsToSeed(settingsSchema, values);
+            let seed = SettingsParser.parseSettingsToSeed(settingsSchema, values);
             console.log("Seed: " + seed);
 
             closeSettings();
