@@ -60,7 +60,7 @@ const SettingsEntryType = {
 
 /** RULES
  *  - entries of type string only with enum specified
- *  - number entries only with min and max specified
+ *  - number entries only with minimum and maximum specified
  *  - Only depth of one supported
  */
 
