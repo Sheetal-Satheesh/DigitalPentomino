@@ -81,3 +81,7 @@ class SettingsParser {
         return seed;
     }
 }
+
+if(typeof module != 'undefined') {
+    module.exports = SettingsParser;
+}
