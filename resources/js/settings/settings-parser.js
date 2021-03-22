@@ -25,6 +25,14 @@ class SettingsParser {
                     console.log("found integer");
                     break;
                 case "boolean":
+                    if (seed[0] === "1") {
+                        settings[key] = true;
+                    } else if (seed[0] === "0") {
+                        settings[key] = false;
+                    } else {
+                        throw new Error("Boolean parse error with entry: " + key + ": " + seed[0]);
+                    }
+                    seed.slice(0, 1);
                     console.log("found boolean");
                     break;
                 case "array": case "object":
