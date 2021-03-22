@@ -29,7 +29,7 @@ const SettingsEntryType = {
     ENUM: 3
 };
 
-settingsSchema = {
+/*settingsSchema = {
     hinting: {
         supportedHintingStrategies: {
             type: SettingsEntryType.ENUM,
@@ -56,25 +56,20 @@ settingsSchema = {
     prefilling: {
         // ...
     }
-};
+};*/
 
-settingsTest = {
-    schema: {
-        hintingStrategy: {
-            "title": "Hinting Strategy",
-            "description": "Please pick a hinting strategy",
-            "type": "string",
-            "enum": settingsSchema.hinting.supportedHintingStrategies.allowedValues
-          },
-        skillTeaching: {
-            type: 'boolean',
-            title: 'Skill Teaching'
-        }
-    },
-    onSubmit: function (errors, values) {
-        closeSettings();
+settingsSchema = {
+    hintingStrategy: {
+        "title": "Hinting Strategy",
+        "description": "Please pick a hinting strategy",
+        "type": "string",
+        "enum": ["full","partial","another"]
+      },
+    skillTeaching: {
+        type: 'boolean',
+        title: 'Skill Teaching'
     }
-  };
+};
 
 // --- --- --- Parser --- --- ---
 // Input: seed and settings-schema-object
