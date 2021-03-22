@@ -3,47 +3,10 @@ class Hint {
         this._commands = commands;
         this._possibleSolutions = possibleSolutions;
         this._skill = skill;
-
-        // console.log("Number of possible solutions: " + possibleSolutions.length);
-
-        this._text = "";
-
-        if (possibleSolutions.length === 0) {
-            this._text += "This doesn't look right. The pentominoes on your board aren't part of a solution."
-        }
-        let command = commands[0];
-        let cmdValues = command.ExecValues();
-        switch (command.Name()) {
-            case "Remove":
-                this._text += "This doesn't look right. Why don't you remove " + command._pentomino.name;
-                break;
-            case "MoveToPosition":
-                this._text += "Maybe try to move " + command._pentomino.name + " to position [" + cmdValues.PosX + "," + cmdValues.PosY + "]";
-                break;
-            case "Place":
-                this._text += "Why don't you place " + command._pentomino.name + " at position [" + cmdValues.PosX + "," + cmdValues.PosY + "]";
-                break;
-            case "RotateClkWise":
-                this._text += "Why don't you try to rotate " + command._pentomino.name + " clock-wise";
-                break;
-            case "RotateAntiClkWise":
-                this._text += "Why don't you try to rotate " + command._pentomino.name + " anti-clock-wise";
-                break;
-            case "MirrorH":
-                this._text += "Why don't you try to mirror " + command._pentomino.name + " horizontal";
-                break;
-            case "MirrorV":
-                this._text += "Why don't you try to mirror " + command._pentomino.name + " vertical";
-                break;
-            default:
-                this._text += "Error - unknown command with name '" + command.Name() + "'";
-                throw new Error("Error: unknown command with name " + command.Name());
-        }
-
     }
 
-    getText() {
-        return this._text;
+    getSkill() {
+        return this._skill;
     }
 
     getCommands() {
