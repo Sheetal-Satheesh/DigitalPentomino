@@ -1,5 +1,6 @@
 class SettingsParser {
 
+    // --- --- --- Seed To Settings --- --- ---
     /**
      * Uses schema and seed to generate settings object
      * @param schema
@@ -11,12 +12,14 @@ class SettingsParser {
         let i = 0;
         let currentChar = seed[i];
 
+        let end;
+
         for (let key in schema) {
             let schemaEntry = schema[key];
 
             switch (schemaEntry.type) {
                 case "string":
-                    console.log("found string");
+                    end = SettingsParser.parseStringFromSeed(schemaEntry, seed, settings, key);
                     break;
                 case "number":
                     console.log("found number");
@@ -41,12 +44,27 @@ class SettingsParser {
                     throw new Error("Unknown type: " + schemaEntry.type);
             }
 
+            seed = seed.substr(0, end);
+
             i++;
         }
 
         return settings;
     }
 
+    static parseStringFromSeed(schemaEntry, seed, settings, key) {
+        let numOfDigits = SettingsParser.getNumOfDigits(schemaEntry.enum.length);
+        let subStr = seed.substr(0, numOfDigits);
+        let index = parseInt(subStr);
+        settings[key] = schemaEntry.enum[index];
+        return numOfDigits;
+    }
+
+    static parseNumberFromSeed(schemaEntry, seed) {
+        // TODO
+    }
+
+    // --- --- --- Settings To Seed --- --- ---
     /**
      * Takes as input the settings schema and an actual instance and returns a seed
      * @param schema
