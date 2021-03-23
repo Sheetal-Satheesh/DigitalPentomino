@@ -50,26 +50,50 @@ class SettingsParser {
     /**
      * Takes as input the settings schema and an actual instance and returns a seed
      * @param schema
-     * @param values
+     * @param settings
      */
-    static parseSettingsToSeed(schema, values) {
+    static parseSettingsToSeed(schema, settings) {
         let seed = "";
 
         for (let key in schema) {
             let schemaEntry = schema[key];
+            let settingsValue = settings[key];
 
             switch (schemaEntry.type) {
                 case "string":
-                    seed += values[key];
+                    let possibleValues = schemaEntry.enum;
+                    if (possibleValues === undefined) {
+                        throw new Error("Parse Error: settings schema entry " + schemaEntry + " is of type string but doesn't have a minimum entry");
+                    }
+                    let index = possibleValues.findIndex(v => v === settingsValue);
+                    if (index === -1) {
+                        throw new Error("settings entry: " + schemaEntry + ":" + settingsValue + " doesn't match with any of the values specified in the enum entry in settings-schema");
+                    } else {
+                        seed += index;
+                    }
                     break;
                 case "number":
                     console.log("found number");
                     break;
                 case "integer":
-                    console.log("found integer");
+                    let minimum = schemaEntry.minimum;
+                    if (minimum === undefined) {
+                        throw new Error("Settings schema entry " + schemaEntry + " is of type integer but doesn't have a minimum entry");
+                    }
+                    let maximum = schemaEntry.maximum;
+                    if (maximum === undefined) {
+                        throw new Error("Settings schema entry " + schemaEntry + " is of type integer but doesn't have a maximum entry");
+                    }
+                    if (settingsValue < minimum) {
+                        throw new Error("Settings entry " + schemaEntry + ": " + settingsValue + " is below specified minimum: " + minimum);
+                    }
+                    if (settingsValue > maximum) {
+                        throw new Error("Settings entry " + schemaEntry + ": " + settingsValue + " is above specified maximum: " + maximum);
+                    }
+                    seed += settingsValue - minimum;
                     break;
                 case "boolean":
-                    seed += values[key] === true ? 1 : 0;
+                    seed += settings[key] === true ? 1 : 0;
                     break;
                 case "array": case "object":
                     throw new Error("Unsupported type: " + schemaEntry.type);
@@ -79,6 +103,11 @@ class SettingsParser {
         }
 
         return seed;
+    }
+
+    // --- --- --- Helper --- --- ---
+    static getNumOfDigits(number) {
+        return Math.floor(Math.log10(number) + 1);
     }
 }
 

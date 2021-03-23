@@ -49,7 +49,7 @@ let settingsSchemaInteger = {
 }
 
 let settingInteger = {
-    startLevel: 3
+    startLevel: 4
 }
 
 describe('SettingsParser.parseSettingsToSeed(schema, values)', function() {
@@ -59,7 +59,7 @@ describe('SettingsParser.parseSettingsToSeed(schema, values)', function() {
     });
 
     it('should parse schema which contains string entry', function () {
-        assert.strictEqual(SettingsParser.parseSettingsToSeed(settingsSchemaString, settingString), "f");
+        assert.strictEqual(SettingsParser.parseSettingsToSeed(settingsSchemaString, settingString), "0");
     });
 
     it('should parse schema which contains number entry', function () {
@@ -67,6 +67,6 @@ describe('SettingsParser.parseSettingsToSeed(schema, values)', function() {
     });
 
     it('should parse schema which contains integer entry', function () {
-        assert.strictEqual(SettingsParser.parseSettingsToSeed(settingsSchemaInteger, settingInteger), "3");
+        assert.strictEqual(SettingsParser.parseSettingsToSeed(settingsSchemaInteger, settingInteger), "1");
     });
 });
