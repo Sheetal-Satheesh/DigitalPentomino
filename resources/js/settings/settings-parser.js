@@ -70,9 +70,13 @@ class SettingsParser {
         let numOfDecimals = schemaEntry.decimals;
         let entryLength = numOfPreDecimals + numOfDecimals;
         let subStr = seed.substr(0, entryLength);
-        let valueStr = SettingsParser.insertCharAtPosition(subStr, ".", numOfPreDecimals);
 
-        settings[key] = parseFloat(valueStr) + minimum;
+        if (numOfDecimals > 0) {
+            let valueStr = SettingsParser.insertCharAtPosition(subStr, ".", numOfPreDecimals);
+            settings[key] = parseFloat(valueStr) + minimum;
+        } else {
+            settings[key] = parseInt(subStr) + minimum;
+        }
 
         return entryLength - 1;
     }
