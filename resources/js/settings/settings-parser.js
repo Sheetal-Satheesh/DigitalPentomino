@@ -9,34 +9,23 @@ class SettingsParser {
     static parseSettingsFromSeed(schema, seed) {
         let settings = {};
 
-        let i = 0;
-        let currentChar = seed[i];
-
-        let end;
+        let lastElement;
 
         for (let key in schema) {
             let schemaEntry = schema[key];
 
             switch (schemaEntry.type) {
                 case "string":
-                    end = SettingsParser.parseStringFromSeed(schemaEntry, seed, settings, key);
+                    lastElement = SettingsParser.parseStringFromSeed(schemaEntry, seed, settings, key);
                     break;
                 case "number":
-                    console.log("found number");
+                    lastElement = SettingsParser.parseNumberFromSeed(schemaEntry, seed, settings, key);
                     break;
                 case "integer":
-                    console.log("found integer");
+                    lastElement = SettingsParser.parseIntegerFromSeed(schemaEntry, seed, settings, key);
                     break;
                 case "boolean":
-                    if (seed[0] === "1") {
-                        settings[key] = true;
-                    } else if (seed[0] === "0") {
-                        settings[key] = false;
-                    } else {
-                        throw new Error("Boolean parse error with entry: " + key + ": " + seed[0]);
-                    }
-                    seed.slice(0, 1);
-                    console.log("found boolean");
+                    lastElement = SettingsParser.parseBooleanFromSeed(schemaEntry, seed, settings, key);
                     break;
                 case "array": case "object":
                     throw new Error("Unsupported type: " + schemaEntry.type);
@@ -44,12 +33,15 @@ class SettingsParser {
                     throw new Error("Unknown type: " + schemaEntry.type);
             }
 
-            seed = seed.substr(0, end);
-
-            i++;
+            seed = seed.substr(0, lastElement + 1);
         }
 
         return settings;
+    }
+
+    static parseBooleanFromSeed(schemaEntry, seed, settings, key) {
+        settings[key] = seed[0] === "1";
+        return 0;
     }
 
     static parseStringFromSeed(schemaEntry, seed, settings, key) {
@@ -57,10 +49,23 @@ class SettingsParser {
         let subStr = seed.substr(0, numOfDigits);
         let index = parseInt(subStr);
         settings[key] = schemaEntry.enum[index];
-        return numOfDigits;
+        return numOfDigits - 1;
+    }
+
+    static parseIntegerFromSeed(schemaEntry, seed, settings, key) {
+        let minimum = schemaEntry.minimum;
+        let maximum = schemaEntry.maximum;
+        let numOfDigits = SettingsParser.getNumOfDigits(maximum - minimum);
+        let subStr = seed.substr(0, numOfDigits);
+        let seedValue = parseInt(subStr);
+        settings[key] = seedValue + minimum;
+        return numOfDigits - 1;
     }
 
     static parseNumberFromSeed(schemaEntry, seed) {
+        let minimum = schemaEntry.minimum;
+        let maximum = schemaEntry.maximum;
+
         // TODO
     }
 
