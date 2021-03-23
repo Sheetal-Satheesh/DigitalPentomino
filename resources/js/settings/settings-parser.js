@@ -62,11 +62,23 @@ class SettingsParser {
         return numOfDigits - 1;
     }
 
-    static parseNumberFromSeed(schemaEntry, seed) {
+    static parseNumberFromSeed(schemaEntry, seed, settings, key) {
         let minimum = schemaEntry.minimum;
         let maximum = schemaEntry.maximum;
 
-        // TODO
+        let numOfPreDecimals = SettingsParser.getNumOfDigits(maximum - minimum);
+        let numOfDecimals = schemaEntry.decimals;
+        let entryLength = numOfPreDecimals + numOfDecimals;
+        let subStr = seed.substr(0, entryLength);
+        let valueStr = SettingsParser.insertCharAtPosition(subStr, ".", numOfPreDecimals);
+
+        settings[key] = parseFloat(valueStr) + minimum;
+
+        return entryLength;
+    }
+
+    static insertCharAtPosition(strA, strB, pos) {
+        return [strA.slice(0, pos), strB, strA.slice(pos)].join('');
     }
 
     // --- --- --- Settings To Seed --- --- ---
