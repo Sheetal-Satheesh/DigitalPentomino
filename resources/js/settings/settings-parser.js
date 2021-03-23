@@ -66,11 +66,7 @@ class SettingsParser {
                         throw new Error("Parse Error: settings schema entry " + schemaEntry + " is of type string but doesn't have a minimum entry");
                     }
                     let index = possibleValues.findIndex(v => v === settingsValue);
-                    if (index === -1) {
-                        throw new Error("settings entry: " + schemaEntry + ":" + settingsValue + " doesn't match with any of the values specified in the enum entry in settings-schema");
-                    } else {
-                        seed += index;
-                    }
+                    seed += index;
                     break;
                 case "number":
                     console.log("found number");
@@ -83,12 +79,6 @@ class SettingsParser {
                     let maximum = schemaEntry.maximum;
                     if (maximum === undefined) {
                         throw new Error("Settings schema entry " + schemaEntry + " is of type integer but doesn't have a maximum entry");
-                    }
-                    if (settingsValue < minimum) {
-                        throw new Error("Settings entry " + schemaEntry + ": " + settingsValue + " is below specified minimum: " + minimum);
-                    }
-                    if (settingsValue > maximum) {
-                        throw new Error("Settings entry " + schemaEntry + ": " + settingsValue + " is above specified maximum: " + maximum);
                     }
                     seed += settingsValue - minimum;
                     break;
