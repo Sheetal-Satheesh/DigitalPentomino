@@ -61,29 +61,16 @@ class SettingsParser {
 
             switch (schemaEntry.type) {
                 case "string":
-                    let possibleValues = schemaEntry.enum;
-                    if (possibleValues === undefined) {
-                        throw new Error("Parse Error: settings schema entry " + schemaEntry + " is of type string but doesn't have a minimum entry");
-                    }
-                    let index = possibleValues.findIndex(v => v === settingsValue);
-                    seed += index;
+                    seed += SettingsParser.parseStringToSeed(schemaEntry, settingsValue);
                     break;
                 case "number":
-                    console.log("found number");
+                    seed += SettingsParser.parseNumberToSeed(schemaEntry, settingsValue);
                     break;
                 case "integer":
-                    let minimum = schemaEntry.minimum;
-                    if (minimum === undefined) {
-                        throw new Error("Settings schema entry " + schemaEntry + " is of type integer but doesn't have a minimum entry");
-                    }
-                    let maximum = schemaEntry.maximum;
-                    if (maximum === undefined) {
-                        throw new Error("Settings schema entry " + schemaEntry + " is of type integer but doesn't have a maximum entry");
-                    }
-                    seed += settingsValue - minimum;
+                    seed += SettingsParser.parseIntegerToSeed(schemaEntry, settingsValue);
                     break;
                 case "boolean":
-                    seed += settings[key] === true ? 1 : 0;
+                    seed += SettingsParser.parseBooleanToSeed(schemaEntry, settingsValue);
                     break;
                 case "array": case "object":
                     throw new Error("Unsupported type: " + schemaEntry.type);
@@ -93,6 +80,49 @@ class SettingsParser {
         }
 
         return seed;
+    }
+
+    static parseStringToSeed(schemaEntry, settingsValue) {
+        let possibleValues = schemaEntry.enum;
+        if (possibleValues === undefined) {
+            throw new Error("Parse Error: settings schema entry " + schemaEntry + " is of type string but doesn't have a minimum entry");
+        }
+        return possibleValues.findIndex(v => v === settingsValue);
+    }
+
+    static parseNumberToSeed(schemaEntry, settingsValue) {
+        let minimum = schemaEntry.minimum;
+        if (minimum === undefined) {
+            throw new Error("Settings schema entry " + schemaEntry + " is of type number but doesn't have a minimum entry");
+        }
+        let maximum = schemaEntry.maximum;
+        if (maximum === undefined) {
+            throw new Error("Settings schema entry " + schemaEntry + " is of type number but doesn't have a maximum entry");
+        }
+        let numOfDecimals = schemaEntry.decimals;
+        if (numOfDecimals === undefined) {
+            throw new Error("Settings schema entry " + schemaEntry + " is of type number but doesn't have a maximum decimals");
+        }
+
+        let seedValue = settingsValue - minimum;
+
+        return seedValue.toFixed(numOfDecimals).split(".").join("");
+    }
+
+    static parseIntegerToSeed(schemaEntry, settingsValue) {
+        let minimum = schemaEntry.minimum;
+        if (minimum === undefined) {
+            throw new Error("Settings schema entry " + schemaEntry + " is of type integer but doesn't have a minimum entry");
+        }
+        let maximum = schemaEntry.maximum;
+        if (maximum === undefined) {
+            throw new Error("Settings schema entry " + schemaEntry + " is of type integer but doesn't have a maximum entry");
+        }
+        return settingsValue - minimum;
+    }
+
+    static parseBooleanToSeed(schemaEntry, settingsValue) {
+        return settingsValue === true ? 1 : 0;
     }
 
     // --- --- --- Helper --- --- ---

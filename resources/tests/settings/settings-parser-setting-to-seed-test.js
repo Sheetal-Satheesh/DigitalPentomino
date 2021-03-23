@@ -30,13 +30,14 @@ let settingsSchemaNumber = {
     euclideanPrefillingDistance: {
         type: "number",
         title: "Prefilling: Euclidian Prefilling Distance",
-        maximum: 10.0,
-        minimum: 0.0
+        decimals: 2,
+        maximum: 10.5,
+        minimum: 1.0
     }
 };
 
 let settingNumber = {
-    euclideanPrefillingDistance: 4.0
+    euclideanPrefillingDistance: 4.5
 }
 
 let settingsSchemaInteger = {
@@ -63,7 +64,7 @@ describe('SettingsParser.parseSettingsToSeed(schema, values)', function() {
     });
 
     it('should parse schema which contains number entry', function () {
-        assert.strictEqual(SettingsParser.parseSettingsToSeed(settingsSchemaNumber, settingNumber), "400");
+        assert.strictEqual(SettingsParser.parseSettingsToSeed(settingsSchemaNumber, settingNumber), "350");
     });
 
     it('should parse schema which contains integer entry', function () {
