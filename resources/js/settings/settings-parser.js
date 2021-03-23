@@ -33,7 +33,7 @@ class SettingsParser {
                     throw new Error("Unknown type: " + schemaEntry.type);
             }
 
-            seed = seed.substr(0, lastElement + 1);
+            seed = seed.substr(lastElement + 1, seed.length);
         }
 
         return settings;
@@ -74,7 +74,7 @@ class SettingsParser {
 
         settings[key] = parseFloat(valueStr) + minimum;
 
-        return entryLength;
+        return entryLength - 1;
     }
 
     static insertCharAtPosition(strA, strB, pos) {
