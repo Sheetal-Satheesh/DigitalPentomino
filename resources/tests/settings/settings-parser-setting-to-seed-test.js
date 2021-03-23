@@ -38,7 +38,7 @@ let settingsSchemaNumber = {
 
 let settingNumber = {
     euclideanPrefillingDistance: 4.5
-}
+};
 
 let settingsSchemaInteger = {
     startLevel: {
@@ -47,11 +47,44 @@ let settingsSchemaInteger = {
         maximum: 5,
         minimum: 3
     }
-}
+};
 
 let settingInteger = {
     startLevel: 4
-}
+};
+
+let settingsSchemaMixed = {
+    skillTeaching: {
+        type: 'boolean',
+        title: 'Skill Teaching'
+    },
+    startLevel: {
+        type: "integer",
+        title: "Id of start level",
+        maximum: 5,
+        minimum: 3
+    },
+    euclideanPrefillingDistance: {
+        type: "number",
+        title: "Prefilling: Euclidian Prefilling Distance",
+        decimals: 2,
+        maximum: 10.5,
+        minimum: 1.0
+    },
+    hintingStrategy: {
+        "type": "string",
+        "enum": ["full", "partial", "another"],
+        "title": "Hinting Strategy",
+        "description": "Please pick a hinting strategy"
+    }
+};
+
+let settingsMixed = {
+    skillTeaching: true,
+    startLevel: 5,
+    euclideanPrefillingDistance: 3.66,
+    hintingStrategy: "another"
+};
 
 describe('SettingsParser.parseSettingsToSeed(schema, values)', function() {
 
@@ -69,5 +102,9 @@ describe('SettingsParser.parseSettingsToSeed(schema, values)', function() {
 
     it('should parse schema which contains integer entry', function () {
         assert.strictEqual(SettingsParser.parseSettingsToSeed(settingsSchemaInteger, settingInteger), "1");
+    });
+
+    it('should parse a schema that combines several types', function () {
+        assert.strictEqual(SettingsParser.parseSettingsToSeed(settingsSchemaMixed, settingsMixed), "122662");
     });
 });
