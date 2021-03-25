@@ -25,8 +25,29 @@
   z-index: 9;
 }
 
+/* The popup form - hidden by default */
+.settings-popup {
+  display: none;
+  position: fixed;
+  height: 80%;
+  width: 50%;
+  bottom: 0;
+  left: 15px;
+  border: 3px solid #f1f1f1;
+  z-index: 9;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: auto !important;
+}
+
 /* Add styles to the form container */
 .form-container {
+  width: 100%;
+  padding: 10px;
+  background-color: white;
+}
+
+/* Add styles to the form container */
+.settings-container {
   width: 100%;
   padding: 10px;
   background-color: white;

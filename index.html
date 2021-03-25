@@ -125,9 +125,9 @@
               Number of solutions: <label id="labelNumberSolutions">?</label>
           </p>
 
-        <div class="form-popup" id="settings_form">
+        <div class="settings-popup" id="settings_form">
 
-            <div class="container">
+            <div class="settings-container">
                 <h2>Game settings</h2>
                 <form></form>
             </div>
@@ -352,11 +352,10 @@
         function handleJsonFormSubmit (errors, values) {
             console.log("JsonForm: Submitted values:");
             console.log(values);
+            closeSettings();
 
             let seed = SettingsParser.parseSettingsToSeed(settingsSchema, values);
             console.log("Seed: " + seed);
-
-            closeSettings();
         }
 
         $('form').jsonForm({
@@ -367,10 +366,12 @@
         //Removal of default jsonform submit button & inclusion of buttons
         let btnContainer = $('form input[type=submit]').parent();
         // Remove default 'submit' button
-        //$('form input[type=submit]').remove();
+        $('form input[type=submit]').remove();
         // Add own buttons
-        let $input = $('<input type="button" value="Cancel" onClick="closeSettings()" />');
-        $input.appendTo(btnContainer);
+        let $submitButton = $('<input type="button" value="Submit" onClick="handleJsonFormSubmit()" />');
+        $submitButton.appendTo(btnContainer);
+        let $closeButton = $('<input type="button" value="Cancel" onClick="closeSettings()" />');
+        $closeButton.appendTo(btnContainer);
       </script>
 
 
