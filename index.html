@@ -350,6 +350,7 @@
    <script src="./registerSW.js"></script>
     <script type="text/javascript">
         function handleJsonFormSubmit (errors, values) {
+            event.preventDefault();
             console.log("JsonForm: Submitted values:");
             console.log(values);
             closeSettings();
@@ -368,7 +369,7 @@
         // Remove default 'submit' button
         $('form input[type=submit]').remove();
         // Add own buttons
-        let $submitButton = $('<input type="button" value="Submit" onClick="handleJsonFormSubmit()" />');
+        let $submitButton = $('<input type="submit" value="Submit""/>');
         $submitButton.appendTo(btnContainer);
         let $closeButton = $('<input type="button" value="Cancel" onClick="closeSettings()" />');
         $closeButton.appendTo(btnContainer);
