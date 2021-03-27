@@ -79,15 +79,15 @@ settingsSchema = {
             },
             skillTeaching: {
                 "type": "boolean",
-                "title": "Skill Teaching hints?",       
+                "title": "Skill Teaching hints?",
             },
-            indicateDestination: {
+            indicateDestinationPosition: {
                 "type": "boolean",
                 "title": "Indication of Destination positions?",       
             },
             indicateDestination: {
                 "type": "boolean",
-                "title": "Indication of pentomino?",       
+                "title": "Indication of pentomino?",
             }
         }
     },
@@ -102,7 +102,6 @@ settingsSchema = {
             },
             distanceValue: [
                 {
-                  "type": "range",
                   "step": 1,
                   "type": "integer",
                   "title": "How much distance between pieces?",
