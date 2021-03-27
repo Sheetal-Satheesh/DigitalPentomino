@@ -100,17 +100,15 @@ settingsSchema = {
                 "title": "prefillingStrategy",
                 "enum": ["distance"]
             },
-            distanceValue: [
-                {
-                  "step": 1,
-                  "type": "integer",
-                  "title": "How much distance between pieces?",
-                  "default": 2,
-                  "minimum": 1,
-                  "exclusiveMinimum": true,
-                  "maximum": 10
-                }
-              ]
+            distanceValue: {
+                "step": 1,
+                "type": "integer",
+                "title": "How much distance between pieces?",
+                "default": 2,
+                "minimum": 1,
+                "exclusiveMinimum": true,
+                "maximum": 10
+            }
         }
     }
 };
