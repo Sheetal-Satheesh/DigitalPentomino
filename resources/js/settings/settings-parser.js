@@ -11,29 +11,35 @@ class SettingsParser {
 
         let lastElement;
 
-        for (let key in schema) {
-            let schemaEntry = schema[key];
+        for (let heading in schema) {
+            let subSettings = schema[heading].properties;
+            settings[heading] = {};
+            let settingsEntry = settings[heading];
+            for (let key in subSettings) {
+                let schemaEntry = subSettings[key];
 
-            switch (schemaEntry.type) {
-                case "string":
-                    lastElement = SettingsParser.parseStringFromSeed(schemaEntry, seed, settings, key);
-                    break;
-                case "number":
-                    lastElement = SettingsParser.parseNumberFromSeed(schemaEntry, seed, settings, key);
-                    break;
-                case "integer":
-                    lastElement = SettingsParser.parseIntegerFromSeed(schemaEntry, seed, settings, key);
-                    break;
-                case "boolean":
-                    lastElement = SettingsParser.parseBooleanFromSeed(schemaEntry, seed, settings, key);
-                    break;
-                case "array": case "object":
-                    throw new Error("Unsupported type: " + schemaEntry.type);
-                default:
-                    throw new Error("Unknown type: " + schemaEntry.type);
+                switch (schemaEntry.type) {
+                    case "string":
+                        lastElement = SettingsParser.parseStringFromSeed(schemaEntry, seed, settingsEntry, key);
+                        break;
+                    case "number":
+                        lastElement = SettingsParser.parseNumberFromSeed(schemaEntry, seed, settingsEntry, key);
+                        break;
+                    case "integer":
+                        lastElement = SettingsParser.parseIntegerFromSeed(schemaEntry, seed, settingsEntry, key);
+                        break;
+                    case "boolean":
+                        lastElement = SettingsParser.parseBooleanFromSeed(schemaEntry, seed, settingsEntry, key);
+                        break;
+                    case "array":
+                    case "object":
+                        throw new Error("Unsupported type: " + schemaEntry.type);
+                    default:
+                        throw new Error("Unknown type: " + schemaEntry.type);
+                }
+
+                seed = seed.substr(lastElement + 1, seed.length);
             }
-
-            seed = seed.substr(lastElement + 1, seed.length);
         }
 
         return settings;
