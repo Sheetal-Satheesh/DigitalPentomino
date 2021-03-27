@@ -94,27 +94,30 @@ class SettingsParser {
     static parseSettingsToSeed(schema, settings) {
         let seed = "";
 
-        for (let key in schema) {
-            let schemaEntry = schema[key];
-            let settingsValue = settings[key];
+        for (let heading in schema) {
+            let subSettings = schema[heading].properties;
+            for (let key in subSettings) {
+                let schemaEntry = subSettings[key];
+                let settingsValue = settings[heading][key];
 
-            switch (schemaEntry.type) {
-                case "string":
-                    seed += SettingsParser.parseStringToSeed(schemaEntry, settingsValue);
-                    break;
-                case "number":
-                    seed += SettingsParser.parseNumberToSeed(schemaEntry, settingsValue);
-                    break;
-                case "integer":
-                    seed += SettingsParser.parseIntegerToSeed(schemaEntry, settingsValue);
-                    break;
-                case "boolean":
-                    seed += SettingsParser.parseBooleanToSeed(schemaEntry, settingsValue);
-                    break;
-                case "array": case "object":
-                    throw new Error("Unsupported type: " + schemaEntry.type);
-                default:
-                    throw new Error("Unknown type: " + schemaEntry.type);
+                switch (schemaEntry.type) {
+                    case "string":
+                        seed += SettingsParser.parseStringToSeed(schemaEntry, settingsValue);
+                        break;
+                    case "number":
+                        seed += SettingsParser.parseNumberToSeed(schemaEntry, settingsValue);
+                        break;
+                    case "integer":
+                        seed += SettingsParser.parseIntegerToSeed(schemaEntry, settingsValue);
+                        break;
+                    case "boolean":
+                        seed += SettingsParser.parseBooleanToSeed(schemaEntry, settingsValue);
+                        break;
+                    case "array": case "object":
+                        throw new Error("Unsupported type: " + schemaEntry.type);
+                    default:
+                        throw new Error("Unknown type: " + schemaEntry.type);
+                }
             }
         }
 
