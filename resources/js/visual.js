@@ -1,4 +1,3 @@
-
 const UIProperty = {
     "TrayCSSLeft":7, // [Hot-Fix : Bug-#63 ] Pieces disappear after rotation and placement onto the tray
     "TrayHeight":12.5, // [Hot-Fix : Bug-#63 ] Pieces disappear after rotation and placement onto the tray
@@ -355,6 +354,11 @@ class Visual {
         var elements = document.elementsFromPoint(event.clientX, event.clientY);
         onpointerdownX = event.clientX;
         onpointerdownY = event.clientY;
+
+        //close seedbar
+        if (!event.target.matches('.seed') && !event.target.matches('.cSeedBtn')) {
+            closeSeeding();
+          }
 
         //check if a button is clicked
         let buttonOverPiece = false;

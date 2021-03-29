@@ -45,6 +45,11 @@
 <body onload="touchStartup(); initialize()">
 
   <div class = "cGame">
+    <div id="seedingCover"></div>
+    <div id="seeding" class="seed">
+        <input type="search" id="seedBar" class="seed" placeholder="Input seed...">
+        <button type="button" id='seedSubmit' class = "cActionBtn" onclick="submitSeed()"><img class="cSeedBtn" src="resources/images/icons/seed.png">
+    </div>
     <div id="functions">
       <img id = "logo" src="resources/images/icons/pentomino.png" alt="Pentomino" class="cLogo">
       <div id="operations">
@@ -112,7 +117,7 @@
                         </button>
                     </td>
                     <td>
-                        
+                        <button type="button" id='btnSeed' class = "cActionBtn" onclick="selectSeeding()"> <img src="resources/images/icons/seed.png">
                     </td>
                 </tr>
                   <tr>
@@ -319,6 +324,26 @@
 
         function closeSettings(){
 			document.getElementById("settings_form").style.display = "none";
+        }
+
+        function selectSeeding(){
+			document.getElementById("seedingCover").style.visibility = "visible";
+            document.getElementById("seeding").style.visibility = "visible";
+        }
+
+        function closeSeeding(){
+			document.getElementById("seedingCover").style.visibility = "hidden";
+            document.getElementById("seeding").style.visibility = "hidden";
+        }
+
+        function submitSeed(){
+            //TODO: handle Seeding
+            let seedValue = document.getElementById("seedBar").value;
+            console.log("Seedbar entered value: " + seedValue);
+            document.getElementById("seedBar").value = "";
+
+            document.getElementById("seedingCover").style.visibility = "hidden";
+            document.getElementById("seeding").style.visibility = "hidden";
         }
 
 		function loadBoard(){
