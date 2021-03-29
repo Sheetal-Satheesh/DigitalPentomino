@@ -339,6 +339,8 @@
         function submitSeed(){
             //TODO: handle Seeding
             let seedValue = document.getElementById("seedBar").value;
+            SettingsSingleton.getInstance().setSeed(seedValue);
+
             console.log("Seedbar entered value: " + seedValue);
             document.getElementById("seedBar").value = "";
 
@@ -380,7 +382,9 @@
             console.log(values);
             closeSettings();
 
+            SettingsSingleton.getInstance().setSettings(values);
             let seed = SettingsParser.parseSettingsToSeed(settingsSchema, values);
+            SettingsSingleton.getInstance().setSeed(seed);
             console.log("Seed: " + seed);
         }
 
