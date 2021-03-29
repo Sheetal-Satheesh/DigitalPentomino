@@ -384,13 +384,13 @@
             closeSettings();
 
             SettingsSingleton.getInstance().setSettings(values);
-            let seed = SettingsParser.parseSettingsToSeed(settingsSchema, values);
+            let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), values);
             SettingsSingleton.getInstance().setSeed(seed);
             console.log("Seed: " + seed);
         }
 
         $('form').jsonForm({
-            schema: settingsSchema,
+            schema: SettingsSchemaSingleton.getInstance().getSettingsSchema(),
             onSubmit: this.handleJsonFormSubmit
         });
         
