@@ -319,8 +319,53 @@
 			document.getElementById("board_selection_form").style.display = "block";
         }
 
+        function handleJsonFormSubmit (errors, values) {
+            event.preventDefault();
+            console.log("JsonForm: Submitted values:");
+            console.log(values);
+            closeSettings();
+
+            SettingsSingleton.getInstance().setSettings(values);
+            let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), values);
+            SettingsSingleton.getInstance().setSeed(seed);
+            console.log("Seed: " + seed);
+        }
+
         function selectSettings(){
-			document.getElementById("settings_form").style.display = "block";
+            let formElement = $('form')[0];
+            formElement.innerHTML = '';
+
+            $('form').jsonForm({
+                schema: SettingsSchemaSingleton.getInstance().getSettingsSchema(),
+                onSubmit: this.handleJsonFormSubmit
+            });
+
+            document.getElementById("settings_form").style.display = "block";
+
+            //Removal of default jsonform submit button & inclusion of buttons
+            let btnContainer = $('form input[type=submit]').parent();
+            // Remove default 'submit' button
+            $('form input[type=submit]').remove();
+            // Add own buttons
+            let $submitButton = $('<input type="submit" value="Submit""/>');
+            $submitButton.appendTo(btnContainer);
+            let $closeButton = $('<input type="button" value="Cancel" onClick="closeSettings()" />');
+            $closeButton.appendTo(btnContainer);
+
+            // Adjust string enum values
+            /*let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+            for (let heading in schema) {
+                for (let key in heading) {
+                    if (schema[heading][key].type === "string") {
+                        let enumText = schema[heading][key];
+                        let name = heading + "." + key;
+                        let selectElement = $(btnContainer).children('select[name=' + name + ']');
+                        for (let option in selectElement.children()) {
+                            console.log(option);
+                        }
+                    }
+                }
+            }*/
         }
 
         function closeSettings(){
@@ -376,36 +421,6 @@
 
     </script>
    <script src="./registerSW.js"></script>
-    <script type="text/javascript">
-        function handleJsonFormSubmit (errors, values) {
-            event.preventDefault();
-            console.log("JsonForm: Submitted values:");
-            console.log(values);
-            closeSettings();
-
-            SettingsSingleton.getInstance().setSettings(values);
-            let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), values);
-            SettingsSingleton.getInstance().setSeed(seed);
-            console.log("Seed: " + seed);
-        }
-
-        $('form').jsonForm({
-            schema: SettingsSchemaSingleton.getInstance().getSettingsSchema(),
-            onSubmit: this.handleJsonFormSubmit
-        });
-        
-        //Removal of default jsonform submit button & inclusion of buttons
-        let btnContainer = $('form input[type=submit]').parent();
-        // Remove default 'submit' button
-        $('form input[type=submit]').remove();
-        // Add own buttons
-        let $submitButton = $('<input type="submit" value="Submit""/>');
-        $submitButton.appendTo(btnContainer);
-        let $closeButton = $('<input type="button" value="Cancel" onClick="closeSettings()" />');
-        $closeButton.appendTo(btnContainer);
-      </script>
-
-
 
 </body>
 </html>

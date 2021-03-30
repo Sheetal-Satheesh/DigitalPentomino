@@ -58,7 +58,8 @@ class SettingsSchema {
                     hintingStrategy: {
                         "type": "string",
                         "title": "hintingStrategy",
-                        "enum": ["full","partial"]
+                        "enum": ["full","partial"],
+                        "enumText": ["Full", "Partial"]
                     },
                     skillTeaching: {
                         "type": "boolean",
@@ -81,7 +82,8 @@ class SettingsSchema {
                     prefillingStrategy: {
                         "type": "string",
                         "title": "prefillingStrategy",
-                        "enum": ["distance"]
+                        "enum": ["distance"],
+                        "enumText": ["Distance"]
                     },
                     distanceValue: {
                         "step": 1,
