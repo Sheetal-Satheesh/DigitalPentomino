@@ -748,78 +748,72 @@ class Visual {
     }
 
     prefillBoard() {
-        this.clear();
-        // Prevent clicking of button while previous prefilling is going on
-        this.disablePrefillButton(true);
-        let allSolutions = [];
-        // Get all the games and filter solutions
-        if(this.allSolutions == undefined) {
-            GameLoader.getGamesFromSolutionsConfig(this.pd.boardName).forEach(game => 
-                allSolutions.push([game._board._pentominoPositions, game._board._pentominoes]));
-            this.allSolutions = allSolutions;
-        }
+        this._readyForPrefilling();
+        let randomSolution = this._fetchRandomSolution();
+
         let prefillCandidates = [];
-        let randomSolution = undefined;
+        
         let positions = [];
         let currentAnchor = [];
         let candidateAnchor = [];
         let piece = undefined;
         let piecePosition = undefined;
         let bOverlap = false;
-        if (this.allSolutions.length > 0) {
-            // randomSolution = this._getRandomElementFromArray(this.allSolutions);
-            randomSolution = this.allSolutions[0];
-        } else {
-            this.disablePrefillButton(false);
-            throw new Error("Solutions not found for current board!!!");
-        }
+        
         let blockedCells = {};
-        let closePentominoCells = 0;
-        let blockedCellsTemp = {};
+        let bNearPentomino = false;
+        let blockedCellsTemp = {}; 
+        let x = 0, y = 0; 
         if (randomSolution != undefined) {
-            for(let i = 0; i < randomSolution[0].length; ++i) {
-                piecePosition = randomSolution[0][i];
+            while(randomSolution[0].length != 0) {
+                piecePosition = randomSolution[0].shift(); //Return and remove the first element of the array
+                
                 currentAnchor = [piecePosition.boardPosition[0] + this.boardX,
                                 piecePosition.boardPosition[1] + this.boardY];
-                piece = randomSolution[1][i];
+                piece = randomSolution[1].shift();
                 let matrix = piece.getMatrixRepresentation();
 
                 blockedCellsTemp = {};
-                Object.assign(blockedCellsTemp, blockedCells);
+                blockedCellsTemp = JSON.parse(JSON.stringify(blockedCells));
                 blockedCellsTemp[piece.name] = {};
                 blockedCellsTemp[piece.name].coordinates = [];
-                blockedCellsTemp[piece.name].closePentominoCells = 0;
-                for(let i = 0; i < 5; ++i) {
-                    for(let j = 0; j < 5; ++j) {
-                        if(matrix[i][j] == 0) continue;
-                        let x = i + currentAnchor[0] - 2;
-                        let y = j + currentAnchor[1] - 2;
-                        blockedCellsTemp[piece.name].coordinates.push([x,y]);
-                        blockedCellsTemp[piece.name].coordinates.push([x+1,y]);
-                        blockedCellsTemp[piece.name].coordinates.push([x,y+1]);
-                        blockedCellsTemp[piece.name].coordinates.push([x,y-1]);
-                        blockedCellsTemp[piece.name].coordinates.push([x-1,y]);
-                        let tempObj = {};
-                        blockedCellsTemp[piece.name].coordinates = blockedCellsTemp[piece.name].coordinates
-                            .filter(coordinate => tempObj[coordinate] ? false : tempObj[coordinate] = true );
+                blockedCellsTemp[piece.name].nearbyPentominos = 0;
 
-                        Object.keys(blockedCells).forEach(blockedPieceName => {
-                            closePentominoCells = 0;
-                            blockedCells[blockedPieceName].coordinates.forEach(coordinates => {
-                                if(coordinates[0] == x && coordinates[1] == y) ++closePentominoCells;
-                            });
-                            blockedCellsTemp[blockedPieceName].closePentominoCells += closePentominoCells;
-                            blockedCellsTemp[piece.name].closePentominoCells += closePentominoCells;
-                        });
-                    }
-                }
                 bOverlap = false;
-                Object.keys(blockedCellsTemp).forEach(blockedPieceName => {
-                    if(blockedCellsTemp[blockedPieceName].closePentominoCells > 2) bOverlap = true;
+                Object.keys(blockedCells).forEach(blockedPieceName => {
+                    bNearPentomino = false;
+                    for(let i = 0; i < 5; ++i) {
+                        for(let j = 0; j < 5; ++j) {
+                            if(matrix[i][j] == 0) continue;
+                            x = i + currentAnchor[0] - 2;
+                            y = j + currentAnchor[1] - 2;
+                            blockedCells[blockedPieceName].coordinates.forEach(coordinates => {
+                                if(coordinates[0] == x+1 && coordinates[1] == y) bNearPentomino = true;
+                                else if(coordinates[0] == x-1 && coordinates[1] == y) bNearPentomino = true;
+                                else if(coordinates[0] == x && coordinates[1] == y+1) bNearPentomino = true;
+                                else if(coordinates[0] == x && coordinates[1] == y-1) bNearPentomino = true;
+                            });                            
+                        }
+                    }
+                    if(bNearPentomino) {
+                        blockedCellsTemp[piece.name].nearbyPentominos += 1;
+                        blockedCellsTemp[blockedPieceName].nearbyPentominos += 1;
+                    }
+                });
+
+                bOverlap = false;
+                Object.keys(blockedCellsTemp).forEach(pieceName => {
+                    if(blockedCellsTemp[pieceName].nearbyPentominos > 0) bOverlap = true;
                 });
 
                 if(!bOverlap) {
-                    Object.assign(blockedCells, blockedCellsTemp);
+                    for(let i = 0; i < 5; ++i) {
+                        for(let j = 0; j < 5; ++j) {
+                            if(matrix[i][j] == 0) continue;
+                            blockedCellsTemp[piece.name].coordinates.push([i + currentAnchor[0] - 2, j + currentAnchor[1] - 2]);
+                        }
+                    }
+                    blockedCells = JSON.parse(JSON.stringify(blockedCellsTemp));
                     prefillCandidates.push(piece);
                     piece.removeFromTray();
                     this.gameController.placePentomino(piece, currentAnchor[0], currentAnchor[1]);
@@ -871,6 +865,28 @@ class Visual {
             return arrayObject[Math.floor(Math.random() * arrayObject.length)];
         }
         return undefined;
+    }
+
+    _readyForPrefilling() {
+        this.clear();
+        // Prevent clicking of button while previous prefilling is going on
+        this.disablePrefillButton(true);
+    }
+
+    _fetchRandomSolution() {
+        let allSolutions = [];
+        // Get all the games and filter solutions
+        if(this.allSolutions == undefined) {
+            GameLoader.getGamesFromSolutionsConfig(this.pd.boardName).forEach(game => 
+                allSolutions.push([game._board._pentominoPositions, game._board._pentominoes]));
+            this.allSolutions = allSolutions;
+        }
+        if (this.allSolutions.length > 0) {
+            return this._getRandomElementFromArray(this.allSolutions);
+        } else {
+            this.disablePrefillButton(false);
+            throw new Error("Solutions not found for current board!!!");
+        }
     }
 
     execShadowCmd(command){
