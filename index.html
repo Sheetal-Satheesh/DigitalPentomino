@@ -327,7 +327,7 @@
 
             SettingsSingleton.getInstance().setSettings(values);
             let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), values);
-            SettingsSingleton.getInstance().setSeed(seed);
+            // TODO: display seed somehow
             console.log("Seed: " + seed);
         }
 
@@ -383,9 +383,9 @@
         }
 
         function submitSeed(){
-            //TODO: handle Seeding
             let seedValue = document.getElementById("seedBar").value;
-            SettingsSingleton.getInstance().setSeed(seedValue);
+            let settings = SettingsParser.parseSettingsFromSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), seedValue);
+            SettingsSingleton.getInstance().setSettings(settings);
 
             console.log("Seedbar entered value: " + seedValue);
             document.getElementById("seedBar").value = "";

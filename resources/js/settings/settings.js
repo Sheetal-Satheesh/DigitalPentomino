@@ -16,16 +16,19 @@ const SettingsSingleton = (function () {
 })();
 
 class Settings {
-    setSeed(seed) {
-        this._seed = seed;
-    }
-
-    getSeed() {
-        return this._seed;
+    constructor() {
+        this._settings = {};
     }
 
     setSettings(settings) {
-        this._settings = settings;
+        let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+        for (let heading in schema) {
+            let subSettings = schema[heading].properties;
+            this._settings[heading] = {};
+            for (let key in subSettings) {
+                this._settings[heading][key] = settings[heading][key];
+            }
+        }
     }
 
     getSettings() {
