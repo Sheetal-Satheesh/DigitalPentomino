@@ -236,8 +236,8 @@ class Game {
 
     _fillUpTray(){
         var allPentominos=[
-                    'F','I','L','N','P','T',
-                    'U','V','W','X','Y','Z'];
+                    'F','L','N','P','Y','T',
+                    'U','V','W','Z','I','Z'];
         allPentominos.forEach(function(pentominoType){
             let pentomino = new Pentomino(pentominoType); 
             this._tray.push(pentomino);
