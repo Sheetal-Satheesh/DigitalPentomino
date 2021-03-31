@@ -83,13 +83,13 @@ class Visual {
         var collisonFnd = this.isCollision(pentomino);
         var offset = (bCellsFnd || collisonFnd)?true:false;
 
-        if(collisonFnd){
-           let collisonPentomino = this.gameController.getCollisionOfPentominoes(pentomino).pop();
-           this.overlapBlock.add(pentomino,collisonPentomino);
-        }
-        else{
-            this.overlapBlock.remove(pentomino);
-        }
+        // if(collisonFnd){
+        //    let collisonPentomino = this.gameController.getCollisionOfPentominoes(pentomino).pop();
+        //    this.overlapBlock.add(pentomino,collisonPentomino);
+        // }
+        // else{
+        //     this.overlapBlock.remove(pentomino);
+        // }
 
         this.positionPiece(pentomino, offset);
     }
@@ -213,11 +213,21 @@ class Visual {
     }
 
    positionPiece(piece, offset=false) {
+
+
         var width = UIProperty.WindowWidth / this.pd.gameWidth;
         var htmlElement = document.getElementById('piece_' + piece.name);
-        var value = window.getComputedStyle(htmlElement, null)['zIndex'];
-        console.log("Existing: "+ piece.name+ " value:"+value);
-        if (piece.inTray) {
+        if(offset){
+            let collisonPentomino = this.gameController.getCollisionOfPentominoes(piece).pop();
+            this.overlapBlock.add(piece,collisonPentomino);
+         }
+         else{
+             this.overlapBlock.remove(piece);
+         }
+
+        htmlElement.style.zIndex = this.overlapBlock.getZIndex(piece);
+        
+         if (piece.inTray) {
             var trayPosition = piece.trayPosition;
             /**
              * 7 is trayHeight
@@ -242,9 +252,7 @@ class Visual {
             if(offset){
                 left = UIProperty.FunctionWidth + width * (positionX - 2)+ (width/8);
                 top = UIProperty.TrayHeight + width * (positionY - 2)-(width/8);
-                htmlElement.style.zIndex = this.overlapBlock.getZIndex(piece);
-                var val = this.overlapBlock.getZIndex(piece);
-                console.log(piece.name+": "+ val);
+                
 
                 /*
                 if(htmlElement.style.zIndex >= 2000 ){
@@ -431,7 +439,7 @@ class Visual {
                         container.style.top = 'calc(' + y + 'px - ' + (width * 1) + 'vw)';
                         container.style.setProperty("--magnification", 1);// [Hot-Fix : Bug-#63 ] Pieces disappear after rotation and placement onto the tray
                         container.style.transformOrigin = '50% 50%';
-                        // container.style.zIndex += 1000;
+                        container.style.zIndex += 1000;
 
                     }
                 }
