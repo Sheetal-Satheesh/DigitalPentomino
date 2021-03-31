@@ -335,6 +335,7 @@
             console.log("Seed: " + seed);
 
             processChangesToSettings(changesToSettings, values);
+            updateSettingSchemaDefaultFromSettings(schema, values);
         }
 
         function processChangesToSettings(changes, settings) {
@@ -355,9 +356,16 @@
             });
         }
 
+        function updateSettingSchemaDefaultFromSettings(settingsSchema, settings) {
+            //TODO: set/change default values for settingsSchema based on settings
+        }
+
         function selectSettings(){
             let formElement = $('form')[0];
             formElement.innerHTML = '';
+
+            console.log(SettingsSchemaSingleton.getInstance().getSettingsSchema());
+            console.log(SettingsSingleton.getInstance().getSettings());
 
             $('form').jsonForm({
                 schema: SettingsSchemaSingleton.getInstance().getSettingsSchema(),
