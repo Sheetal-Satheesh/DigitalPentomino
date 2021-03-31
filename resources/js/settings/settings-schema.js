@@ -50,16 +50,31 @@ class SettingsSchema {
     }
 
     createSchema() {
+        const GENERAL_TITLE = {
+            "en": "General",
+            "de": "Allgemein"
+        };
+
+        const LANGUAGE_TITLE = {
+            "en": "Language",
+            "de": "Sprache"
+        };
+
+        const LANGUAGE_ENUM_TITLE = {
+            "en": ["German", "English"],
+            "de": ["Deutsch", "Englisch"]
+        };
+
         return this._schema = {
             general: {
                 "type": "object",
-                "title": "General",
+                "title": GENERAL_TITLE[this._language],
                 "properties": {
                     language: {
                         "type": "string",
-                        "title": "Language",
+                        "title": LANGUAGE_TITLE[this._language],
                         "enum": ["de","en"],
-                        "enumText": ["Deutsch", "English"]
+                        "enumText": LANGUAGE_ENUM_TITLE[this._language]
                     }
                 }
             },

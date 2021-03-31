@@ -325,10 +325,28 @@
             console.log(values);
             closeSettings();
 
+            let oldSettings = SettingsSingleton.getInstance().getSettings();
+            let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+            let changesToSettings = SettingsParser.compareSettings(schema, oldSettings, values);
+
             SettingsSingleton.getInstance().setSettings(values);
             let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), values);
             // TODO: display seed somehow
             console.log("Seed: " + seed);
+
+            processChangesToSettings(changesToSettings);
+        }
+
+        function processChangesToSettings(changes) {
+            changes.forEach(changesEntry => {
+                let heading = changesEntry.heading;
+                let key = changesEntry.key;
+
+                if (heading === "general" && key === "language") {
+                    let newLang = changes.heading.key;
+                    SettingsSchemaSingleton.getInstance().setLanguage(newLang);
+                }
+            });
         }
 
         function selectSettings(){

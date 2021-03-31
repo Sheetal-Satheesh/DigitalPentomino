@@ -173,6 +173,24 @@ class SettingsParser {
         return settingsValue === true ? 1 : 0;
     }
 
+    // --- --- --- Compare Settings Object --- --- ---
+    static compareSettings(schema, settingsA, settingsB) {
+        let result = [];
+
+        /*for (let heading in schema) {
+            let subSettings = schema[heading].properties;
+            for (let key in subSettings) {
+                if (settingsA === null || settingsB === null || !(settingsA.heading.key === settingsB.heading.key)) {
+                    result.push({
+                        heading: heading,
+                        key: key
+                    });
+                }
+            }
+        }*/
+        return result;
+    }
+
     // --- --- --- Helper --- --- ---
     static getNumOfDigits(number) {
         return Math.floor(Math.log10(number) + 1);
