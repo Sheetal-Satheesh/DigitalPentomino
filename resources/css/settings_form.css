@@ -39,6 +39,8 @@
   -webkit-overflow-scrolling: auto !important;
 }
 
+
+
 /* Add styles to the form container */
 .form-container {
   width: 100%;
@@ -52,7 +54,6 @@
   padding: 10px;
   background-color: white;
 }
-
 
 .action_btn {
   display: inline-block;

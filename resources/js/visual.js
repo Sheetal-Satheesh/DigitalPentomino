@@ -362,10 +362,14 @@ class Visual {
 
         //check if a button is clicked
         let buttonOverPiece = false;
+        let settingsEnabled = false;
         for (let j in elements){
             let precheck = elements[j].className;
             if (precheck == 'controlButton'){
                 buttonOverPiece = true;
+            }
+            if (precheck == 'settings-popup'){
+                settingsEnabled = true;
             }
         }
 
@@ -376,6 +380,8 @@ class Visual {
             if (check !== 'bmPoint') continue;
 
             if (buttonOverPiece) continue;
+
+            if (settingsEnabled) continue;
 
             /**
              * As soon as we have a bmPoint(an element of a piece),we determine the bounding box
