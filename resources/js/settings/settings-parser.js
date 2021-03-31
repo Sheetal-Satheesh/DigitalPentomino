@@ -177,17 +177,18 @@ class SettingsParser {
     static compareSettings(schema, settingsA, settingsB) {
         let result = [];
 
-        /*for (let heading in schema) {
+        for (let heading in schema) {
             let subSettings = schema[heading].properties;
             for (let key in subSettings) {
-                if (settingsA === null || settingsB === null || !(settingsA.heading.key === settingsB.heading.key)) {
+                // FIXME - Remove settingsA === {}
+                if (jQuery.isEmptyObject(settingsA) || !(settingsA[heading][key] === settingsB[heading][key])) {
                     result.push({
                         heading: heading,
                         key: key
                     });
                 }
             }
-        }*/
+        }
         return result;
     }
 

@@ -334,16 +334,16 @@
             // TODO: display seed somehow
             console.log("Seed: " + seed);
 
-            processChangesToSettings(changesToSettings);
+            processChangesToSettings(changesToSettings, values);
         }
 
-        function processChangesToSettings(changes) {
+        function processChangesToSettings(changes, settings) {
             changes.forEach(changesEntry => {
                 let heading = changesEntry.heading;
                 let key = changesEntry.key;
 
                 if (heading === "general" && key === "language") {
-                    let newLang = changes.heading.key;
+                    let newLang = settings[heading][key];
                     SettingsSchemaSingleton.getInstance().setLanguage(newLang);
                 }
             });
