@@ -51,6 +51,18 @@ class SettingsSchema {
 
     createSchema() {
         return this._schema = {
+            general: {
+                "type": "object",
+                "title": "General",
+                "properties": {
+                    language: {
+                        "type": "string",
+                        "title": "Language",
+                        "enum": ["de","en"],
+                        "enumText": ["Deutsch", "English"]
+                    }
+                }
+            },
             hinting: {
                 "type": "object",
                 "title": "Hinting",
