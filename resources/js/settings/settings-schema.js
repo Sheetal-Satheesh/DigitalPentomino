@@ -61,8 +61,18 @@ class SettingsSchema {
         };
 
         const LANGUAGE_ENUM_TITLE = {
-            "en": ["German", "English"],
-            "de": ["Deutsch", "Englisch"]
+            "en": ["English", "German"],
+            "de": ["Englisch", "Deutsch"]
+        };
+
+        const HINTING_TITLE = {
+            "en": "Hints",
+            "de": "Hinweise"
+        };
+
+        const HINTING_ENABLED_TITLE = {
+            "en": "Enable hints?",
+            "de": "Hinweise einschalten?"
         };
 
         return this._schema = {
@@ -73,18 +83,18 @@ class SettingsSchema {
                     language: {
                         "type": "string",
                         "title": LANGUAGE_TITLE[this._language],
-                        "enum": ["de","en"],
+                        "enum": ["en", "de"],
                         "enumText": LANGUAGE_ENUM_TITLE[this._language]
                     }
                 }
             },
             hinting: {
                 "type": "object",
-                "title": "Hinting",
+                "title": HINTING_TITLE[this._language],
                 "properties": {
                     enableHinting: {
                         "type": "boolean",
-                        "title": "Should hinting be enabled?"
+                        "title": HINTING_ENABLED_TITLE[this._language]
                     },
                     hintingStrategy: {
                         "type": "string",
