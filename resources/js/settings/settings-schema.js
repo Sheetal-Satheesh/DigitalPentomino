@@ -50,90 +50,97 @@ class SettingsSchema {
     }
 
     createSchema() {
-        const GENERAL_TITLE = {
-            "en": "General",
-            "de": "Allgemein"
-        };
 
-        const LANGUAGE_TITLE = {
-            "en": "Language",
-            "de": "Sprache"
-        };
-
-        const LANGUAGE_ENUM_TITLE = {
-            "en": ["English", "German"],
-            "de": ["Englisch", "Deutsch"]
-        };
-
-        const HINTING_TITLE = {
-            "en": "Hints",
-            "de": "Hinweise"
-        };
-
-        const HINTING_ENABLED_TITLE = {
-            "en": "Enable hints?",
-            "de": "Hinweise einschalten?"
+        let lang = this._language === "en" ? 0 : 1;
+        let titles = {
+            general: {
+                title: ["General", "Allgemein"],
+                language: {
+                    title: ["Language", "Sprache"],
+                    enumTitles: [["English", "German"], ["Englisch", "Deutsch"]]
+                }
+            },
+            hinting: {
+                title: ["Hints", "Hinweise"],
+                enableHinting: ["Enable hints", "Hinweise einschalten"],
+                hintingStrategy: {
+                    title: ["Hint-Strategy", "Strategie der Hinweise"],
+                    enumTitles: [["Full", "Partial"], ["Voll", "Partiell"]]
+                },
+                skillTeaching: ["Enable Skill-Teaching?", "Fähigkeits-lehrende Hinweise einschalten?"],
+                indicateDestinationPosition: ["Enable indication of pentomino position?", "Anzeigen der Pentomino-Position einschalten"],
+                indicateDestination: ["Enalbe indication of pentomino piece?", "Anzeigen des Pentominos einschalten?"]
+            },
+            prefilling: {
+                title: ["Prefilling", "Automatisches Füllen"],
+                enablePrefilling: ["Enable Prefilling?", "Automatisches Füllen einschalten"],
+                prefillingStrategy: {
+                    title: ["Prefill-Strategy", "Automatisches Füllen-Stragie"],
+                    enumTitles: [["Distance"], ["Distanz"]]
+                },
+                distanceValue: ["Distance value", "Distanz Wert"]
+            }
         };
 
         return this._schema = {
             general: {
                 "type": "object",
-                "title": GENERAL_TITLE[this._language],
+                "title": titles.general.title[lang],
                 "properties": {
                     language: {
                         "type": "string",
-                        "title": LANGUAGE_TITLE[this._language],
+                        "title": titles.general.language.title[lang],
                         "enum": ["en", "de"],
-                        "enumText": LANGUAGE_ENUM_TITLE[this._language]
+                        "enumText": titles.general.language.enumTitles[lang]
                     }
                 }
             },
             hinting: {
                 "type": "object",
-                "title": HINTING_TITLE[this._language],
+                "title": titles.hinting.title[lang],
                 "properties": {
                     enableHinting: {
                         "type": "boolean",
-                        "title": HINTING_ENABLED_TITLE[this._language]
+                        "title": titles.hinting.enableHinting[lang]
                     },
                     hintingStrategy: {
                         "type": "string",
-                        "title": "hintingStrategy",
+                        "title": titles.hinting.hintingStrategy.title[lang],
                         "enum": ["full","partial"],
-                        "enumText": ["Full", "Partial"]
+                        "enumText": titles.hinting.hintingStrategy.enumTitles[lang]
                     },
                     skillTeaching: {
                         "type": "boolean",
-                        "title": "Skill Teaching hints?",
+                        "title": titles.hinting.skillTeaching[lang],
                     },
                     indicateDestinationPosition: {
                         "type": "boolean",
-                        "title": "Indication of Destination positions?",
+                        "title": titles.hinting.indicateDestinationPosition[lang],
                     },
                     indicateDestination: {
                         "type": "boolean",
-                        "title": "Indication of pentomino?",
+                        "title": titles.hinting.indicateDestination[lang],
                     }
                 }
             },
             prefilling: {
                 "type": "object",
-                "title": "Prefilling",
+                "title": titles.prefilling.title[lang],
                 "properties": {
                     enablePrefilling: {
                         "type": "boolean",
-                        "title": "Should prefilling be enabled?"
+                        "title": titles.prefilling.enablePrefilling[lang]
                     },
                     prefillingStrategy: {
                         "type": "string",
-                        "title": "prefillingStrategy",
+                        "title": titles.prefilling.prefillingStrategy.title[lang],
                         "enum": ["distance"],
-                        "enumText": ["Distance"]
+                        "enumText": titles.prefilling.prefillingStrategy.enumTitles[lang]
                     },
                     distanceValue: {
                         "step": 1,
                         "type": "integer",
-                        "title": "How much distance between pieces?",
+                        "title": titles.prefilling.distanceValue[lang],
                         "default": 2,
                         "minimum": 1,
                         "exclusiveMinimum": true,
