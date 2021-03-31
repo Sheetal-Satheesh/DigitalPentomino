@@ -82,6 +82,10 @@ class SettingsSchema {
                 "type": "object",
                 "title": "Hinting",
                 "properties": {
+                    enableHinting: {
+                        "type": "boolean",
+                        "title": "Should hinting be enabled?"
+                    },
                     hintingStrategy: {
                         "type": "string",
                         "title": "hintingStrategy",
@@ -106,6 +110,10 @@ class SettingsSchema {
                 "type": "object",
                 "title": "Prefilling",
                 "properties": {
+                    enablePrefilling: {
+                        "type": "boolean",
+                        "title": "Should prefilling be enabled?"
+                    },
                     prefillingStrategy: {
                         "type": "string",
                         "title": "prefillingStrategy",
