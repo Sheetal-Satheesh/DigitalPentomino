@@ -49,20 +49,21 @@ class Visual {
     }
 
     isPentominoInBlockCells(pentomino){
-            var [pX, pY] = this.gameController.getPositionOfPentomino(pentomino);
-            var pMatrix = pentomino.getMatrixRepresentation();
 
-            for(let i=0; i <pentomino.iRows; ++i){
-                for(let j=0; j < pentomino.iCols; ++j){
-                    if(pMatrix[i][j]===1){
-                        let px = (pX - 2)+i;
-                        let py = (pY - 2)+j;
-                        if(this.isBlockCell(px,py)){
-                            return true;
-                        }
+        var [pX, pY] = this.gameController.getPositionOfPentomino(pentomino);
+        var pMatrix = pentomino.getMatrixRepresentation();
+
+        for(let i=0; i <pentomino.iRows; ++i){
+            for(let j=0; j < pentomino.iCols; ++j){
+                if(pMatrix[i][j]===1){
+                    let px = (pX - 2)+i;
+                    let py = (pY - 2)+j;
+                    if(this.isBlockCell(px,py)){
+                        return true;
                     }
                 }
             }
+        }
 
         return false;
     }
@@ -79,19 +80,7 @@ class Visual {
     placePentomino(pentomino, posX, posY, cmdType=CommandTypes.Original){
 
         this.gameController.placePentomino(pentomino, posX, posY,cmdType);
-        var bCellsFnd = this.isPentominoInBlockCells(pentomino);
-        var collisonFnd = this.isCollision(pentomino);
-        var offset = (bCellsFnd || collisonFnd)?true:false;
-
-        // if(collisonFnd){
-        //    let collisonPentomino = this.gameController.getCollisionOfPentominoes(pentomino).pop();
-        //    this.overlapBlock.add(pentomino,collisonPentomino);
-        // }
-        // else{
-        //     this.overlapBlock.remove(pentomino);
-        // }
-
-        this.positionPiece(pentomino, offset);
+        this.positionPiece(pentomino);
     }
 
     movePentominoToTray(pentomino,cmdType=CommandTypes.Original){
@@ -203,7 +192,7 @@ class Visual {
             //TODO: this is a disadvantage of chosing the innerHTML approach.
 
             setTimeout(function (that, piece) {
-                that.positionPiece(piece);
+                 that.positionPiece(piece);
             }, 0, this, piece);
 
         });
@@ -212,21 +201,17 @@ class Visual {
 
     }
 
-   positionPiece(piece, offset=false) {
-
+   positionPiece(piece) {
 
         var width = UIProperty.WindowWidth / this.pd.gameWidth;
         var htmlElement = document.getElementById('piece_' + piece.name);
-        if(offset){
-            let collisonPentomino = this.gameController.getCollisionOfPentominoes(piece).pop();
-            this.overlapBlock.add(piece,collisonPentomino);
-         }
-         else{
-             this.overlapBlock.remove(piece);
-         }
 
+        var style = window.getComputedStyle(htmlElement)
+        var zI = style.zIndex;
+        console.log("Previous "+ piece.name+": "+ parseInt(zI));
         htmlElement.style.zIndex = this.overlapBlock.getZIndex(piece);
-        
+        console.log("new "+ piece.name+": "+ htmlElement.style.zIndex);
+
          if (piece.inTray) {
             var trayPosition = piece.trayPosition;
             /**
@@ -241,10 +226,12 @@ class Visual {
             htmlElement.style.marginTop = "-5.5%";// [Hot-Fix : Bug-#63 ] Pieces disappear after rotation and placement onto the tray
             htmlElement.style.setProperty("--magnification", magnification);
             htmlElement.style.transformOrigin = 'center'; // [Hot-Fix : Bug-#63 ] Pieces disappear after rotation and placement onto the tray
-            //htmlElement.style.transformOrigin='0 5%';
-            //htmlElement.style.zIndex = 3000;
 
         } else  {
+
+            var bCellsFnd = this.isPentominoInBlockCells(piece);
+            var collisonFnd = this.isCollision(piece);
+            var offset = (bCellsFnd || collisonFnd)?true:false;
 
             let [positionY, positionX] = this.gameController.getPositionOfPentomino(piece);
             let left = undefined;
@@ -252,32 +239,16 @@ class Visual {
             if(offset){
                 left = UIProperty.FunctionWidth + width * (positionX - 2)+ (width/8);
                 top = UIProperty.TrayHeight + width * (positionY - 2)-(width/8);
-                
-
-                /*
-                if(htmlElement.style.zIndex >= 2000 ){
-                    htmlElement.style.zIndex =1500;
-                }else {
-                    htmlElement.style.zIndex =htmlElement.style.zIndex + 20; ;
-                }
-                */
-
-            }else{
+                let collisonPentomino = this.gameController.getCollisionOfPentominoes(piece).pop();
+                this.overlapBlock.add(piece,collisonPentomino);
+            }
+            else{
                 left = UIProperty.FunctionWidth + width * (positionX - 2);
                 top = UIProperty.TrayHeight + width * (positionY - 2);
-
-
-                /*
-                if(htmlElement.style.zIndex >= 2000 ){
-                    htmlElement.style.zIndex = 1000;
-                }else if (htmlElement.style.zIndex > 0){
-                    htmlElement.style.zIndex = htmlElement.style.zIndex+10;
-                }else{
-                    htmlElement.style.zIndex -= 50;
-                }
-                */
+                this.overlapBlock.remove(piece);
             }
 
+            htmlElement.style.zIndex = this.overlapBlock.getZIndex(piece);
             htmlElement.style.left = left + 'vw';
             htmlElement.style.top = top + 'vw';
             htmlElement.style.setProperty("--magnification", 1);
@@ -522,10 +493,7 @@ class Visual {
             let newRot = flipped ? currentRot - 90 : currentRot + 90;
             // Update the backend
             this.gameController.rotatePentominoClkWise(piece,cmdType);
-            var bCellsFnd = this.isPentominoInBlockCells(piece);
-            var collisonFnd = this.isCollision(piece);
-            var offset = (bCellsFnd || collisonFnd)?true:false;
-            this.positionPiece(piece, offset);
+            this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
         }
     }
@@ -539,10 +507,7 @@ class Visual {
             let newRot = flipped ? currentRot + 90 : currentRot - 90;
             // Update the backend
             this.gameController.rotatePentominoAntiClkWise(piece,cmdType);
-            var bCellsFnd = this.isPentominoInBlockCells(piece);
-            var collisonFnd = this.isCollision(piece);
-            var offset = (bCellsFnd || collisonFnd)?true:false;
-            this.positionPiece(piece, offset);
+            this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
         }
     }
@@ -556,10 +521,7 @@ class Visual {
             let newRot = currentRot + 180;
             // Update the backend
             this.gameController.mirrorPentominoH(piece,cmdType);
-            var bCellsFnd = this.isPentominoInBlockCells(piece);
-            var collisonFnd = this.isCollision(piece);
-            var offset = (bCellsFnd || collisonFnd)?true:false;
-            this.positionPiece(piece, offset);
+            this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationX", newRot.toString() + "deg");
             pieceDiv.setAttribute("flipped", 1 - flipped);
         }
@@ -573,12 +535,8 @@ class Visual {
             let currentRot = pieceDiv.style.getPropertyValue("--rotationY").split(/(-?\d+)/)[1] * 1; //converts string value to int
             let newRot = currentRot + 180;
             // Update the backend
-            let [penX,penY] = this.gameController.getPositionOfPentomino(piece);
             this.gameController.mirrorPentominoV(piece,cmdType);
-            var bCellsFnd = this.isPentominoInBlockCells(piece);
-            var collisonFnd = this.isCollision(piece);
-            var offset = (bCellsFnd || collisonFnd)?true:false;
-            this.positionPiece(piece, offset);
+            this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationY", newRot.toString() + "deg");
             pieceDiv.setAttribute("flipped", 1 - flipped);
         }
