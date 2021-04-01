@@ -36,10 +36,12 @@
 
 <body onload="touchStartup(); initialize()">
 
-  <div class = "cGame">
+<div class = "cGame">
+    
     <div id="functions">
-      <img id = "logo" src="resources/images/icons/pentomino.png" alt="Pentomino" class="cLogo">
-      <div id="operations">
+        <img id = "logo" src="resources/images/icons/pentomino.png" alt="Pentomino" class="cLogo">
+    
+        <div id="operations">
           <table>
                 <tr>
                     <td>
@@ -121,16 +123,17 @@
 
 
 		</div>
-      </div>
+        </div>  <!-- operation -->
+    </div>
 
     <div id="game">
-        <div id="tray"></div>
-        <div id="field"></div>
-        <div id="piecearea"></div>
-    </div>
-  </div>
-  <div class = "cPieceManipulation" id ="pieceManipulation" >
-    <table>
+        <div id="tray"></div> <!-- tray -->
+        <div id="field"></div> <!-- field -->
+        <div id="piecearea"></div> <!-- piecearea -->
+    </div> 
+    
+    <div class = "cPieceManipulation" id ="pieceManipulation" >
+        <table>
       <tr>
           <td>
               <button type="button" class="controlButton"  id='OpRotateLeft' onclick="rotateAntiClkWise()"><img src="resources/images/icons/rotate_left.png">
@@ -149,9 +152,12 @@
               </button>
           </td>
       </tr>
-  </table>
+        </table>
+    </div>  <!-- cPieceManipulation -->
+</div>
 
-    <script type="text/javascript">
+
+<script type="text/javascript">
 
     // Touch Handling for mobile devices
         //intialize the touch events
