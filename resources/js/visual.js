@@ -231,21 +231,25 @@ class Visual {
 
             var bCellsFnd = this.isPentominoInBlockCells(piece);
             var collisonFnd = this.isCollision(piece);
-            var offset = (bCellsFnd || collisonFnd)?true:false;
+            if(collisonFnd){
+                let collisonPentomino = this.gameController.getCollisionOfPentominoes(piece).pop();
+                this.overlapBlock.add(piece,collisonPentomino);
+            }
+            else{
+                this.overlapBlock.remove(piece);
+            }
 
+            var offset = (bCellsFnd || collisonFnd)?true:false;
             let [positionY, positionX] = this.gameController.getPositionOfPentomino(piece);
             let left = undefined;
             let top = undefined;
             if(offset){
                 left = UIProperty.FunctionWidth + width * (positionX - 2)+ (width/8);
                 top = UIProperty.TrayHeight + width * (positionY - 2)-(width/8);
-                let collisonPentomino = this.gameController.getCollisionOfPentominoes(piece).pop();
-                this.overlapBlock.add(piece,collisonPentomino);
             }
             else{
                 left = UIProperty.FunctionWidth + width * (positionX - 2);
                 top = UIProperty.TrayHeight + width * (positionY - 2);
-                this.overlapBlock.remove(piece);
             }
 
             htmlElement.style.zIndex = this.overlapBlock.getZIndex(piece);

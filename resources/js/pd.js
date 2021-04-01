@@ -10,7 +10,7 @@ class PD {
          */
         var fController = new FrontController();
         this.gameController = fController.controller;
-        this.loadBoard("board_6x10");
+        this.loadBoard("board_8x8a");
         
     }
 
