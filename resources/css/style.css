@@ -21,18 +21,22 @@
   top: 0;
   bottom: 0;
   left: 10vw;
-  background: white;
+
   width: 89vw;
-  border: solid rgb(27, 175, 155) 0.5vh;
+  height: 98vh;
+  border-top: solid rgb(27, 175, 155) 0.5vh;
+  border-bottom: solid rgb(27, 175, 155) 0.5vh;
+  border-left: solid rgb(27, 175, 155) 0.2vw;
+  border-right: solid rgb(27, 175, 155) 0.2vw;
 }
 
 #tray {
   position: fixed;
-  top: 0.5vh;
   bottom: 0;
-  border-bottom: solid rgb(27, 175, 155) 0.3vh;;
-  background:rgb(188, 196, 197);
-  height: 15vh; 
+  top: 0;
+  border-bottom: solid rgb(54, 27, 175) 0.3vh;
+  background:rgb(84, 133, 140);
+  height: 15vh;
   width: 89vw;
   z-index: 1;
 
@@ -40,12 +44,10 @@
 
 #field {
   position: fixed;
-  top: 15vh;
-  height: 84vh;
-  
-  bottom: 0;
+  top: 15vh;  
   background: white;
   width: 89vw;
+  height: 83.5vh;
 }
 
 #piecearea {
