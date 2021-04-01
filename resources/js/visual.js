@@ -272,8 +272,12 @@ class Visual {
 
     select(piece,xPosition,yPosition) {
         this.selected = piece;
-        this.showManipulations(xPosition,yPosition);
-
+        if(piece.inTray){
+            this.disableManipulations();
+        }
+        else{
+            this.showManipulations(xPosition,yPosition);
+        }    
     }
 
     deleteSelection() {
