@@ -19,28 +19,33 @@
 #game {
   position: fixed;
   top: 0;
-  left: 10vw;
-  background: green;
   bottom: 0;
-  width: 90vw;
+  left: 10vw;
+  background: white;
+  width: 89vw;
+  border: solid rgb(27, 175, 155) 0.5vh;
 }
 
 #tray {
   position: fixed;
-  top: 0;
-  left: 10vw;
+  top: 0.5vh;
+  bottom: 0;
+  border-bottom: solid rgb(27, 175, 155) 0.3vh;;
   background:rgb(188, 196, 197);
-  height: 7vw;
-  width: 90vw;
-  padding: 20vw;
+  height: 15vh; 
+  width: 89vw;
+  z-index: 1;
+
 }
 
 #field {
   position: fixed;
-  top: 7vw;
+  top: 15vh;
+  height: 84vh;
+  
   bottom: 0;
   background: white;
-  width: 90vw;
+  width: 89vw;
 }
 
 #piecearea {
@@ -95,7 +100,7 @@ margin-top: 2px;
   user-select: none;
   text-align: center;
   outline: 1px solid #eee;
-  color: #ddd
+  color: #ddd;
 }
 
 .boardarea {
@@ -186,7 +191,6 @@ img#logo{
 position: fixed;
 width: 9.5vw;
 height: 6.5vw;
-border: 2.5px solid rgb(141, 160, 157);
 background: rgb(197, 207, 203);
 }
 
