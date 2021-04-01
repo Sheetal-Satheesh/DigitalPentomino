@@ -1,8 +1,8 @@
 
 const UIProperty = {
-    "TrayCSSLeft":10, // [Hot-Fix : Bug-#63 ] Pieces disappear after rotation and placement onto the tray
-    "TrayHeight":7, // [Hot-Fix : Bug-#63 ] Pieces disappear after rotation and placement onto the tray
-    "WindowWidth":90,
+    "TrayCSSLeft":7,
+    "TrayHeight":7, 
+    "WindowWidth":89,
     "PentominoX": 5,
     "PentominoY": 5,
     "FunctionWidth": 10
@@ -211,7 +211,7 @@ class Visual {
             var widthVW = UIProperty.TrayCSSLeft + (piece.trayPosition) * 7; 
             var magnification = 6 / (5 * width);
             htmlElement.style.left = widthVW + 'vw';
-            htmlElement.style.top = '0vw';
+            htmlElement.style.top = '.7vw';
             htmlElement.style.transformOrigin = 'top';
             htmlElement.style.setProperty("--magnification", magnification);
             htmlElement.style.setProperty("--rotationX", "0deg");

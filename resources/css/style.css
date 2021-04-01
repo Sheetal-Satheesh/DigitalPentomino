@@ -11,7 +11,7 @@
   z-index: 1;
   top: 0;
   left: 0;
-  background: rgb(197, 207, 203);
+  background:  rgb(149, 172, 170);
   bottom: 0;
   width: 9.8vw;
 }
@@ -20,25 +20,24 @@
   position: fixed;
   top: 0;
   bottom: 0;
-  left: 10vw;
-
-  width: 100vw;
-  height: 100vw;
-  /* border-top: solid rgb(27, 175, 155) 0.5vh;
-  border-bottom: solid rgb(27, 175, 155) 0.5vh;
-  border-left: solid rgb(27, 175, 155) 0.2vw;
-  border-right: solid rgb(27, 175, 155) 0.2vw; */
+  left: 9.8vw;
+  width: 89vw;
+  height: 46vw;
+  border-top: solid rgb(2, 71, 62) 0.2vw;
+  border-bottom: solid rgb(2, 71, 62) 0.2vw;
+  border-left: solid rgb(2, 71, 62) 0.2vw;
+  border-right: solid rgb(2, 71, 62) 0.2vw;
 }
 
 #tray {
   position: fixed;
   bottom: 0;
-  top: 0;
-  
-  /* border-bottom: solid rgb(54, 27, 175) 0.3vh; */
-  background:rgb(84, 133, 140);
-  height: 7vw;
-  width: 90vw;
+  top: 0.1vw;
+  left: 10vw; 
+  border-bottom: solid rgb(2, 71, 62) 0.2vw;
+  background :rgb(149, 172, 170);
+  height: 6.7vw;
+  width: 89vw;
   z-index: 0;
 
 }
@@ -47,8 +46,9 @@
   position: fixed;
   top: 7vw;  
   background: white;
-  width: 90vw;
-  height: 93vw;
+  width: 89vw;
+  height: 39.32vw;
+  z-index: -1;
 }
 
 #piecearea {
@@ -107,7 +107,7 @@ margin-top: 2px;
 }
 
 .boardarea {
-background: rgb(173, 192, 185);
+background: rgb(149, 172, 170);
 }
 .blockedcell {
 background: repeating-linear-gradient(
@@ -152,7 +152,7 @@ rgba(0, 0, 0, 0.3) 20px
 }
 
 .cActionBtn {
-background:rgb(141, 160, 157);
+background: rgb(2, 71, 62);
 border-radius: 10%;
 border: 0;
 
@@ -163,7 +163,7 @@ border: 0;
   width:  3vw;
   height: 3vw;
   object-fit: cover;
-  background: rgb(140, 170, 158);
+  background: rgb(193, 199, 201);
   border-radius: 25%;
 }
 
