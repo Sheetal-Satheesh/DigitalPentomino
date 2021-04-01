@@ -392,6 +392,13 @@ class Game {
             Object.assign(pentomino, tempPentomino);
             this._board.placePentomino(pentomino, position[0], position[1]);
         }
+
+        position = this.getPosition(pentomino);
+        this.removeCollisionByPentomino(pentomino);
+        let collisonCells= this.isCollidesAtPosition(pentomino,position[0], position[1]);
+        if(collisonCells.length != 0){
+            this.setCollisionCells(collisonCells);
+        }
     }
 
     _removePentominoOutsideTheBoard(pentomino) {
