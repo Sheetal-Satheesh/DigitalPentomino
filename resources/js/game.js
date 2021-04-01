@@ -180,7 +180,7 @@ class Game {
     isCollidesAtPosition(pentomino, row, col) {
 
         var collisionsCell=[];
-        var pentominoes = this.getPentominoes();
+        var pentominoes = this.getPentominoesInGmArea();
         pentominoes.forEach(function(entry){
             if(pentomino.name === entry.name){/** if same pentomino placed again */
                 return this.getCollisionCellsOfPentomino(pentomino);
@@ -471,6 +471,10 @@ class Game {
 
     getPentominoes() {
         return this._board.getPentominoes().concat(this._pentominosOutside).concat(this._tray);
+    }
+
+    getPentominoesInGmArea(){
+        return this._board.getPentominoes().concat(this._pentominosOutside);
     }
 
     getPentominoByName(name) {
