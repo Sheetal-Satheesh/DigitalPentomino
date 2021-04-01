@@ -77,7 +77,7 @@ class Game {
                 this._placePentominoOutsideBoard(pentomino, row, col);
             }
         }
-
+        this.removeCollisionByPentomino(pentomino);
         let collisonCells= this.isCollidesAtPosition(pentomino, row, col);
             if(collisonCells.length != 0){
                 this.setCollisionCells(collisonCells);
