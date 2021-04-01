@@ -107,7 +107,7 @@ class HintAI {
 
         pentominoesOutsideBoard.some(pentomino => {
             let board = game._board;
-            let occupiedCells = this._tryToCoverCellWithPentomino(board, cell, pentomino);
+            let occupiedCells = this._tryToCoverCellWithPentomino(game, cell, pentomino);
             if (!(occupiedCells === null)) {
                 result = occupiedCells;
                 return true;
@@ -117,11 +117,11 @@ class HintAI {
         return result;
     }
 
-    _tryToCoverCellWithPentomino(board, cell, pentomino) {
+    _tryToCoverCellWithPentomino(game, cell, pentomino) {
         let result = null;
         let pentominoStates = Pentomino.getDistinctPentominoStates(pentomino);
         pentominoStates.some(pentominoState => {
-            let occupiedCells = this._tryToCoverCellWithPentominoState(board, cell, pentominoState);
+            let occupiedCells = this._tryToCoverCellWithPentominoState(game, cell, pentominoState);
             if (!(occupiedCells === null)) {
                 result = occupiedCells;
                 return true;
@@ -131,14 +131,14 @@ class HintAI {
         return result;
     }
 
-    _tryToCoverCellWithPentominoState(board, cell, pentominoState) {
+    _tryToCoverCellWithPentominoState(game, cell, pentominoState) {
         let result = null;
-
+        let board = game._board;
         let relPentominoPositions = pentominoState.getRelPentominoPositions();
         relPentominoPositions.some(relPentominoPosition => {
             let anchorPosition = pentominoState.getAnchorPosition(cell, relPentominoPosition);
             if (board.pentominoIsValidAtPosition(pentominoState, anchorPosition[0], anchorPosition[1])
-                && board.isCollidesAtPosition(pentominoState, anchorPosition[0], anchorPosition[1]).length === 0) {
+                && game.isCollidesAtPosition(pentominoState, anchorPosition[0], anchorPosition[1]).length === 0) {
                 result = pentominoState.getRelPentominoPositions().map(relPos =>
                     pentominoState.getCoordinatePosition(anchorPosition, relPos));
                 return true;
