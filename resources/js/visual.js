@@ -1,7 +1,7 @@
 
 const UIProperty = {
     "TrayCSSLeft":7,
-    "TrayHeight":7, 
+    "TrayHeight":7,
     "WindowWidth":89,
     "PentominoX": 5,
     "PentominoY": 5,
@@ -243,7 +243,7 @@ class Visual {
                 }else if (htmlElement.style.zIndex > 0){
                     htmlElement.style.zIndex = htmlElement.style.zIndex+10;
                 }else{
-                    htmlElement.style.zIndex -= 50;
+                    htmlElement.style.zIndex = 50; // Don't worry, related fix already in merge request
                 }
             }
 
