@@ -357,7 +357,21 @@
         }
 
         function updateSettingSchemaDefaultFromSettings(settingsSchema, settings) {
-            //TODO: set/change default values for settingsSchema based on settings
+            //change default values according to current schema
+
+            if (Object.keys(settings).length === 0){
+                //Do nothing and load blank settingsSchema
+            } else {
+                for (let key in settings) {
+                    //console.log(settings[key]);
+                    for (let subkey in settings[key]){
+                        //console.log(settings[key][subkey]);
+                        settingsSchema[key]["properties"][subkey]["default"] = settings[key][subkey];
+                    }
+                }
+
+            }
+
         }
 
         function selectSettings(){
@@ -366,6 +380,8 @@
 
             console.log(SettingsSchemaSingleton.getInstance().getSettingsSchema());
             console.log(SettingsSingleton.getInstance().getSettings());
+
+            updateSettingSchemaDefaultFromSettings(SettingsSchemaSingleton.getInstance().getSettingsSchema(), SettingsSingleton.getInstance().getSettings());
 
             $('form').jsonForm({
                 schema: SettingsSchemaSingleton.getInstance().getSettingsSchema(),
