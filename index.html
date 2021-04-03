@@ -381,8 +381,6 @@
 
             //console.log(SettingsSchemaSingleton.getInstance().getSettingsSchema());
             //console.log(SettingsSingleton.getInstance().getSettings());
-
-            Translator.translateHeaders(SettingsSchemaSingleton.getInstance().getLanguage());
             updateSettingSchemaDefaultFromSettings(SettingsSchemaSingleton.getInstance().getSettingsSchema(), SettingsSingleton.getInstance().getSettings());
 
             $('form').jsonForm({
@@ -397,10 +395,12 @@
             // Remove default 'submit' button
             $('form input[type=submit]').remove();
             // Add own buttons
-            let $submitButton = $('<input type="submit" value="Submit""/>');
+            let $submitButton = $('<input id="settings-submit-button" type="submit" value="Confirm""/>');
             $submitButton.appendTo(btnContainer);
-            let $closeButton = $('<input type="button" value="Cancel" onClick="closeSettings()" />');
+            let $closeButton = $('<input id="settings-close-button" type="button" value="Abort" onClick="closeSettings()" />');
             $closeButton.appendTo(btnContainer);
+
+            Translator.translateHeaders(SettingsSchemaSingleton.getInstance().getLanguage());
 
             // Adjust string enum values
             /*let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
