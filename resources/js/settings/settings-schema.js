@@ -69,7 +69,7 @@ class SettingsSchema {
                 },
                 skillTeaching: ["Enable Skill-Teaching?", "Fähigkeits-lehrende Hinweise einschalten?"],
                 indicateDestinationPosition: ["Enable indication of pentomino position?", "Anzeigen der Pentomino-Position einschalten"],
-                indicateDestination: ["Enalbe indication of pentomino piece?", "Anzeigen des Pentominos einschalten?"]
+                indicateDestination: ["Enable indication of pentomino piece?", "Anzeigen des Pentominos einschalten?"]
             },
             prefilling: {
                 title: ["Prefilling", "Automatisches Füllen"],
@@ -91,7 +91,8 @@ class SettingsSchema {
                         "type": "string",
                         "title": titles.general.language.title[lang],
                         "enum": ["en", "de"],
-                        "enumText": titles.general.language.enumTitles[lang]
+                        "enumText": titles.general.language.enumTitles[lang],
+                        "default": "en"
                     }
                 }
             },
@@ -101,25 +102,30 @@ class SettingsSchema {
                 "properties": {
                     enableHinting: {
                         "type": "boolean",
-                        "title": titles.hinting.enableHinting[lang]
+                        "title": titles.hinting.enableHinting[lang],
+                        "default": true
                     },
                     hintingStrategy: {
                         "type": "string",
                         "title": titles.hinting.hintingStrategy.title[lang],
                         "enum": ["full","partial"],
-                        "enumText": titles.hinting.hintingStrategy.enumTitles[lang]
+                        "enumText": titles.hinting.hintingStrategy.enumTitles[lang],
+                        "default": "full"
                     },
                     skillTeaching: {
                         "type": "boolean",
                         "title": titles.hinting.skillTeaching[lang],
+                        "default": true
                     },
                     indicateDestinationPosition: {
                         "type": "boolean",
                         "title": titles.hinting.indicateDestinationPosition[lang],
+                        "default": true
                     },
                     indicateDestination: {
                         "type": "boolean",
                         "title": titles.hinting.indicateDestination[lang],
+                        "default": true
                     }
                 }
             },
@@ -129,13 +135,15 @@ class SettingsSchema {
                 "properties": {
                     enablePrefilling: {
                         "type": "boolean",
-                        "title": titles.prefilling.enablePrefilling[lang]
+                        "title": titles.prefilling.enablePrefilling[lang],
+                        "default": true
                     },
                     prefillingStrategy: {
                         "type": "string",
                         "title": titles.prefilling.prefillingStrategy.title[lang],
                         "enum": ["distance"],
-                        "enumText": titles.prefilling.prefillingStrategy.enumTitles[lang]
+                        "enumText": titles.prefilling.prefillingStrategy.enumTitles[lang],
+                        "default": "distance"
                     },
                     distanceValue: {
                         "step": 1,
