@@ -29,6 +29,7 @@
     <script src="resources/js/settings/settings-schema.js"></script>
     <script src="resources/js/settings/settings.js"></script>
     <script src="resources/js/settings/settings-parser.js"></script>
+    <script src="resources/js/settings/translator.js"></script>
     <script src="resources/js/pd.js"></script>
     <script src="resources/js/visual.js"></script>
     <script src="resources/js/handleMobile.js"></script>
@@ -134,7 +135,7 @@
         <div class="settings-popup" id="settings_form">
 
             <div class="settings-container">
-                <h2>Game settings</h2>
+                <h2 id="header-game-settings">Game settings</h2>
                 <form></form>
             </div>
         </div>
@@ -381,6 +382,7 @@
             //console.log(SettingsSchemaSingleton.getInstance().getSettingsSchema());
             //console.log(SettingsSingleton.getInstance().getSettings());
 
+            Translator.translateHeaders(SettingsSchemaSingleton.getInstance().getLanguage());
             updateSettingSchemaDefaultFromSettings(SettingsSchemaSingleton.getInstance().getSettingsSchema(), SettingsSingleton.getInstance().getSettings());
 
             $('form').jsonForm({
