@@ -95,22 +95,23 @@ class CommandManager {
         }
     }
 
-    CmdSequences(startKey, endKey,seqType){
-  
-        let cmdSequences =  this._cmdTree.CollectCmdSequences(
+    CmdSequences(startKey, endKey){
+        let cmdObj =  this._cmdTree.CollectCmdSequences(
                                                         this._cmdTree.Root(),
                                                         startKey, 
                                                         endKey,0);
-        let redoCommands = [];
-        cmdSequences.forEach((command) => {
-            if(seqType == "REDO"){
-                redoCommands.push(command.ExecValues());
+
+        console.log(cmdObj);                                                        
+        let cmdSequences = [];
+        cmdObj.commands.forEach((command) => {
+            if(cmdObj.seqType == 1){
+                cmdSequences.push(command.ExecValues());
 
             }else{
-                redoCommands.push(command.ExecUndoValues());
+                cmdSequences.push(command.ExecUndoValues());
             }
         },this);
-        return redoCommands;
+        return cmdSequences;
     }
 
     JumpToRoot() {

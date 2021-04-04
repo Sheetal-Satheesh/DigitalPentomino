@@ -821,9 +821,25 @@ class Visual {
         }
         this.execShadowCmd(command,"Redo");
     }
+
+    loadGameState(targetStateKey){
+        let currGame = this.gameController.game();
+        let currentCmdKey = this.gameController.getCurrentCmdKey();
+        this.gameController.saveGame(currGame);
+        let cmdSequences = this.gameController.getCmdSequences(currentCmdKey, targetStateKey);
+
+        for (let indx = 0; indx < cmdSequences.length; indx++) {
+            this.execShadowCmd(cmdSequences[indx]);
+        }        
+    }
+
     replay(){
         let startKey="",
             endKey="";
+
+        console.log("Start Cmd Key: "+this.gameController.getStartCmdKey());
+        console.log("Current Cmd Key: "+this.gameController.getCurrentCmdKey());
+        console.log("Last Cmd Key: "+this.gameController.getLastCmdKey());
         
         if(startKey.length == 0){
             startKey = this.gameController.getStartCmdKey();
@@ -841,8 +857,8 @@ class Visual {
             }
         }
 
-        let cmdSequences = this.gameController.getCmdSequences(startKey, endKey,"REDO");
-        let ldGame = this.gameController.loadGameByCmdKey(startKey);
+        let cmdSequences = this.gameController.getCmdSequences(startKey,endKey);
+        let ldGame = this.loadGameState(startKey);
         if(ldGame != undefined){
             this.pieces = this.gameController.getPentominoes();
             this.pieces = this.pieces.map((pentomino)=>{
@@ -864,9 +880,6 @@ class Visual {
             setTimeout(function (that, command) {
                 that.execShadowCmd(command);
             }, timeInterval+=1000, that, command);
-        }
-
-       
-   
+        }   
     }
 }

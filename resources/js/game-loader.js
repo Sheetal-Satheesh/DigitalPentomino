@@ -337,63 +337,65 @@ class GameLoader {
         };
     }
 
-    static loadGameByCmdKey(cmdKey){
+    static loadGameState(cmdKey){
         var fController = new FrontController();
         let gmController = fController.controller;
         let currGame = gmController.game();
         let currentCmdKey = gmController.getCurrentCmdKey();
-        let cmdSequences = gmController.getCmdSequences(currentCmdKey, cmdKey);
-        cmdSequences = cmdSequences.reverse();
         gmController.saveGame(currGame);
+        let cmdSequences = gmController.getCmdSequences(currentCmdKey, cmdKey);
+        return cmdSequences;
 
-        cmdSequences.forEach((command) => {
-            switch(command.name){
-                case "Place":
-                    if( (command.PosX == undefined) && 
-                        (command.PosY == undefined)) {
-                        gmController.removePentomino(
-                                            command.Pentomino,
-                                            CommandTypes.Shadow);
-                    }
-                    else{
-                        gmController.placePentomino(
-                                    command.Pentomino,
-                                    command.PosX,
-                                    command.PosY,
-                                    CommandTypes.Shadow);
-                    }
+       // cmdSequences = cmdSequences.reverse();
+        
+        // cmdSequences.forEach((command) => {
+        //     switch(command.name){
+        //         case "Place":
+        //             if( (command.PosX == undefined) && 
+        //                 (command.PosY == undefined)) {
+        //                 gmController.removePentomino(
+        //                                     command.Pentomino,
+        //                                     CommandTypes.Shadow);
+        //             }
+        //             else{
+        //                 gmController.placePentomino(
+        //                             command.Pentomino,
+        //                             command.PosX,
+        //                             command.PosY,
+        //                             CommandTypes.Shadow);
+        //             }
     
-                    break;
+        //             break;
     
-                case "Remove":
-                    break;
+        //         case "Remove":
+        //             break;
                 
-                case "RotateClkWise":
-                    gmController.rotatePentominoClkWise(command.Pentomino,
-                                                        CommandTypes.Shadow);
-                    break;
+        //         case "RotateClkWise":
+        //             gmController.rotatePentominoClkWise(command.Pentomino,
+        //                                                 CommandTypes.Shadow);
+        //             break;
                 
-                case "RotateAntiClkWise":
-                    gmController.rotatePentominoAntiClkWise(command.Pentomino,
-                                                            CommandTypes.Shadow);
-                    break;
+        //         case "RotateAntiClkWise":
+        //             gmController.rotatePentominoAntiClkWise(command.Pentomino,
+        //                                                     CommandTypes.Shadow);
+        //             break;
                 
-                case "MirrorH":
-                    gmController.mirrorPentominoH(command.Pentomino,
-                                                 CommandTypes.Shadow);
-                    break;
+        //         case "MirrorH":
+        //             gmController.mirrorPentominoH(command.Pentomino,
+        //                                          CommandTypes.Shadow);
+        //             break;
                 
-                case "MirrorV":
-                    gmController.mirrorPentominoV( command.Pentomino,
-                                                   CommandTypes.Shadow);
-                    break;
+        //         case "MirrorV":
+        //             gmController.mirrorPentominoV( command.Pentomino,
+        //                                            CommandTypes.Shadow);
+        //             break;
                 
-                default:
-                    //TODO: add commund related flag variable
-                    throw new Error("Can not undo");
+        //         default:
+        //             //TODO: add commund related flag variable
+        //             throw new Error("Can not undo");
                     
-            }
-        },this);
+        //     }
+        // },this);
 
         return true;
     }

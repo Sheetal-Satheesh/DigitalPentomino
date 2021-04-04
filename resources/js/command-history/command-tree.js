@@ -94,7 +94,7 @@ class CommandTree {
                         endKey, 
                         searchType){
 
-        let cmdSeq = [];
+        
         if(currNode == undefined){
             return undefined;
         }
@@ -102,40 +102,49 @@ class CommandTree {
         if(currNode.Key() == startKey){
             searchType |= SearchStrategy.Top2Bottom;
             if((SearchStrategy.BottomUp & searchType) != 0){
-                return [currNode.Command()] ;
+                return {
+                    seqType: SearchStrategy.BottomUp,
+                    commands: [currNode.Command()]
+                } ;
             }
         }
            
         if(currNode.Key() == endKey){
             searchType |= SearchStrategy.BottomUp;
             if((SearchStrategy.Top2Bottom & searchType) != 0){
-                return [currNode.Command()];
+                return {
+                    seqType: SearchStrategy.Top2Bottom,
+                    commands: [currNode.Command()]
+                } ;
             }
         }
 
         for(let indx=0; indx < currNode.Children().length; ++indx){
+            let cmdSeq = [];
             let childs = currNode.Children();
-            let commands = this.CollectCmdSequences(
+            let retObj= this.CollectCmdSequences(
                                                 childs[indx],
                                                 startKey,
                                                 endKey,
                                                 searchType
                                                 );
 
-            if((commands != undefined) &&
+            if((retObj.commands != undefined) &&
                     (((SearchStrategy.Top2Bottom & searchType) != 0) ||
                     ((SearchStrategy.BottomUp & searchType) != 0))){
                 
                 cmdSeq.push(currNode.Command());
-                commands.forEach(cmd => {
+                retObj.commands.forEach(cmd => {
                     cmdSeq.push(cmd);
                 });
                
            }
-        }
 
-
-        return cmdSeq;
+           return {
+               seqType: retObj.seqType,
+               commands: cmdSeq
+            };
+        }        
     }
 
     MoveUp(childSelection = RedoStrategy.TOP){
