@@ -127,13 +127,13 @@ class Visual {
 				if (this.pd.blockedCells != undefined)
 				{
 					for (var arr = 0; arr < this.pd.blockedCells.length; arr++) {
-						if(row == this.pd.blockedCells[arr][0] + this.pd.boardStartX && 
+						if(row == this.pd.blockedCells[arr][0] + this.pd.boardStartX &&
                                 col == this.pd.blockedCells[arr][1] + this.pd.boardStartY) {
 							blockedCell = true;
 							break;
 						}
 					}
-                   
+
                     if(blockedCell)
 						out += '<div class="gamearea ' + ((isBoard) ? 'boardarea blockedcell' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';
 					else
@@ -272,8 +272,12 @@ class Visual {
 
     select(piece,xPosition,yPosition) {
         this.selected = piece;
-        this.showManipulations(xPosition,yPosition);
-
+        if(piece.inTray){
+            this.disableManipulations();
+        }
+        else{
+            this.showManipulations(xPosition,yPosition);
+        }
     }
 
     deleteSelection() {
@@ -309,9 +313,23 @@ class Visual {
         document.getElementById("btnRotateLeft").disabled = false;
         document.getElementById("btnFlipH").disabled = false;
         document.getElementById("btnFlipV").disabled = false;
-        document.getElementById('pieceManipulation').style.display = 'block';
-        document.getElementById('pieceManipulation').style.left = xPosition + 'px';
-        document.getElementById('pieceManipulation').style.top = yPosition + 'px';
+
+        //set style for left and top value of element, but do not cross borders
+        var width = UIProperty.WindowWidth / this.pd.gameWidth;
+        var gameWidth = document.getElementById("game").clientWidth;
+        var gameHeight = document.getElementById("game").clientHeight;
+        if ( (xPosition + 15 > gameWidth)) {
+          if ((yPosition > 0) && (yPosition < gameHeight)) {
+                document.getElementById('pieceManipulation').style.left = 'calc(' + xPosition + 'px - '+ (width * 3) + 'vw)';
+                document.getElementById('pieceManipulation').style.top = 'calc(' + yPosition + 'px - ' + (width * 1) + 'vw)';
+                document.getElementById('pieceManipulation').style.display = 'block';
+          }
+        } else {
+                document.getElementById('pieceManipulation').style.display = 'block';
+                document.getElementById('pieceManipulation').style.left = xPosition + 'px';
+                document.getElementById('pieceManipulation').style.top = 'calc(' + yPosition + 'px - ' + (width * 2.5) + 'vw)';
+                }
+
     }
 
     disableManipulations() {
@@ -558,7 +576,7 @@ class Visual {
         let popupText = document.getElementById("myHint");
         popupText.textContent = pd.gameController.getHint().getText();
         //call indication of hint
-        this.indicateHint(500);           
+        this.indicateHint(500);
     }
 
 
@@ -601,7 +619,7 @@ class Visual {
         let clientRect = document.getElementById("piece_" + hintinPen.name).getBoundingClientRect();
         let [posX, posY] = [clientRect.x + clientRect.width/2, clientRect.y + clientRect.height/2];
 
-       
+
         //random variable that selects
         var randomCell = Math.floor(Math.random() * (4)) + 1;
 
@@ -611,7 +629,7 @@ class Visual {
             const RED_COLOR = "red";
             //blink unoccupied cells
             this.blinkCells(hintSkill, DEFAULT_BG_COLOR, RED_COLOR);
-        } 
+        }
         else {
               switch (hintName) {
             case "Place":
@@ -637,11 +655,11 @@ class Visual {
                             fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
                             prevBackground[i] = fieldvalue.style.background;
                             fieldvalue.style.background = pentominoColor;
-                            this.hide(piecePos, prevBackground);  
+                            this.hide(piecePos, prevBackground);
                     }
 
                 break;
-            
+
             case "Remove":
                 // handle remove hint
                 this.select(hintinPen,posX,posY);
@@ -654,7 +672,7 @@ class Visual {
                     },2000);
                 }
                 break;
-                    
+
             case "RotateClkWise":
                 // handle rotateClkWise hint
                 this.select(hintinPen,posX,posY);
@@ -678,7 +696,7 @@ class Visual {
                     },timeoutFrame);
                 }
                 break;
-            
+
             case "MirrorH":
                 // handle mirrorH hint
                 //select piece in the UI to flip
@@ -705,12 +723,12 @@ class Visual {
             default:
                 console.log("Unknown piece action detected!");
         }
-        
+
     }
 }
 
 
-      
+
 
     hide(piecePos, prevBackground){
 
@@ -732,7 +750,7 @@ class Visual {
         let hintColumn = hintCommand._nextPosition[1];
         let startColumn = hintColumn-2;
         let occupiedPosArray=[];
-        
+
         let pieceBitmap = piece.getMatrixRepresentation();
 
         //add all elements of current 5*5 overlay on board where piece matrix has 1's
@@ -764,7 +782,7 @@ class Visual {
         let allSolutions = [];
         // Get all the games and filter solutions
         if(this.allSolutions == undefined) {
-            GameLoader.getGamesFromSolutionsConfig(this.pd.boardName).forEach(game => 
+            GameLoader.getGamesFromSolutionsConfig(this.pd.boardName).forEach(game =>
                 allSolutions.push([game._board._pentominoPositions, game._board._pentominoes]));
             this.allSolutions = allSolutions;
         }
@@ -801,7 +819,7 @@ class Visual {
                 if(bOverlap) {
                     piece = new Pentomino(piece.name);
                     prefillCandidates.push(piece);
-                    continue;   
+                    continue;
                 }
                 prefillCandidates.push(piece);
                 positions.push(currentAnchor);
@@ -831,7 +849,7 @@ class Visual {
         switch(command.name){
             case "Remove":
             case "Place":
-                if( (command.PosX == undefined) && 
+                if( (command.PosX == undefined) &&
                     (command.PosY == undefined)) {
                     if(command.Pentomino.inTray == 1){
                         break;
@@ -845,41 +863,41 @@ class Visual {
                     this.placePentomino(command.Pentomino, command.PosX,command.PosY,CommandTypes.Shadow);
                 }
 
-                break;    
-            
+                break;
+
             case "RotateClkWise":
                 this.selected = command.Pentomino;
                 this.rotateClkWise(CommandTypes.Shadow);
                 break;
-            
+
             case "RotateAntiClkWise":
                 this.selected = command.Pentomino;
                 this.rotateAntiClkWise(CommandTypes.Shadow);
                 break;
-            
+
             case "MirrorH":
                 this.selected = command.Pentomino;
                 this.flipH(CommandTypes.Shadow);
                 break;
-            
+
             case "MirrorV":
                 this.selected = command.Pentomino;
                 this.flipV(CommandTypes.Shadow);
                 break;
-            
+
             default:
                 //TODO: add commund related flag variable
                 throw new Error("Can not undo");
-                
+
         }
     }
 
     undo(){
-        let command = this.gameController.undo(); 
+        let command = this.gameController.undo();
         if(command == undefined){
             return;
         }
-        this.execShadowCmd(command, "Undo");     
+        this.execShadowCmd(command, "Undo");
     }
 
     redo(){
