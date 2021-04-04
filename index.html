@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="resources/css/style.css">
 	<link rel="stylesheet" href="resources/css/board_selection.css">
     <script src="resources/index.js"></script>
-    <script src="resources/jquery.min.js"></script>
     <script src="resources/js/board.js"></script>
     <script src="resources/js/overlapping.js"></script>
     <script src="resources/js/pentomino.js"></script>
@@ -29,6 +28,7 @@
     <script src="resources/js/configs/solutionsConfig.js"></script>
     <script src="resources/js/pd.js"></script>
     <script src="resources/js/visual.js"></script>
+
     <script src="resources/js/hint.js"></script>
     <script src="resources/js/hint-ai.js"></script>
     <script src="resources/js/help/hinting/command-sequence-list.js"></script>
@@ -167,22 +167,22 @@
 <script type="text/javascript">
 
     // Touch Handling for mobile devices
-    //intialize the touch events
-    function touchStartup(){
-        console.log('Initialize touch events for mobile devices');
-        var touchElement = document.getElementById("piecearea");
-        touchElement.addEventListener("touchstart", touchStartHandle, false);
-        touchElement.addEventListener("touchend", touchEndhandle, false);
-        touchElement.addEventListener("touchcancel", touchCancelhandle, false);
-        touchElement.addEventListener("touchmove", touchMoveHandle, false);
-    }
+        //intialize the touch events
+        function touchStartup(){
+            console.log('Initialize touch events for mobile devices');
+            var touchElement = document.getElementById("piecearea");
+            touchElement.addEventListener("touchstart", touchStartHandle, false);
+            touchElement.addEventListener("touchend", touchEndhandle, false);
+            touchElement.addEventListener("touchcancel", touchCancelhandle, false);
+            touchElement.addEventListener("touchmove", touchMoveHandle, false);
+        }
 
-    document.addEventListener("Mouse controls initialized ", touchStartup);
-    var currentTouches = [];
+        document.addEventListener("Mouse controls initialized ", touchStartup);
+        var currentTouches = [];
 
-    //when touch starts handle start function is called
-    function touchStartHandle(evt) {
-        console.log('In handle start function');
+        //when touch starts handle start function is called
+        function touchStartHandle(evt) {
+            console.log('In handle start function');
         evt.preventDefault();
         console.log("touchstart.");
         //putting the ID of the HTML entity where touch controls we need to implement
@@ -200,9 +200,9 @@
             ctx.fill();
             console.log("touchstart:" + i + ".");
         }
-    }
+        }
 
-    function touchMoveHandle(evt) {
+        function touchMoveHandle(evt) {
         evt.preventDefault();
         var touchElement = document.getElementById("piecearea");
         var ctx = touchElement.getContext("2d");
@@ -213,26 +213,27 @@
             var idx = ongoingTouchIndexById(touches[i].identifier);
 
             if (idx >= 0) {
-                console.log("continuing touch "+idx);
-                ctx.beginPath();
-                console.log("ctx.moveTo(" + currentTouches[idx].pageX + ", " + currentTouches[idx].pageY + ");");
-                ctx.moveTo(currentTouches[idx].pageX, currentTouches[idx].pageY);
-                console.log("ctx.lineTo(" + touches[i].pageX + ", " + touches[i].pageY + ");");
-                ctx.lineTo(touches[i].pageX, touches[i].pageY);
-                ctx.lineWidth = 4;
-                ctx.strokeStyle = color;
-                ctx.stroke();
+            console.log("continuing touch "+idx);
+            ctx.beginPath();
+            console.log("ctx.moveTo(" + currentTouches[idx].pageX + ", " + currentTouches[idx].pageY + ");");
+            ctx.moveTo(currentTouches[idx].pageX, currentTouches[idx].pageY);
+            console.log("ctx.lineTo(" + touches[i].pageX + ", " + touches[i].pageY + ");");
+            ctx.lineTo(touches[i].pageX, touches[i].pageY);
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = color;
+            ctx.stroke();
 
-                currentTouches.splice(idx, 1, copyTouch(touches[i])); 
-                console.log(".");
+            currentTouches.splice(idx, 1, copyTouch(touches[i])); 
+            console.log(".");
             } else {
-                console.log("Unable to determine which touch to continue");
+            console.log("Unable to determine which touch to continue");
             }
         }
-    }
+        }
 
-    function touchEndhandle(evt) {
+        function touchEndhandle(evt) {
         evt.preventDefault();
+        log("touchend");
         var touchElement = document.getElementById("piecearea");
         var ctx = touchElement.getContext("2d");
         var touches = evt.changedTouches;
@@ -242,129 +243,162 @@
             var idx = ongoingTouchIndexById(touches[i].identifier);
 
             if (idx >= 0) {
-                ctx.lineWidth = 4;
-                ctx.fillStyle = color;
-                ctx.beginPath();
-                ctx.moveTo(currentTouches[idx].pageX, currentTouches[idx].pageY);
-                ctx.lineTo(touches[i].pageX, touches[i].pageY);
-                ctx.fillRect(touches[i].pageX - 4, touches[i].pageY - 4, 8, 8);  
-                currentTouches.splice(idx, 1); 
-            } 
-            else {
-                console.log("Unable to determine which touch to end");
+            ctx.lineWidth = 4;
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.moveTo(currentTouches[idx].pageX, currentTouches[idx].pageY);
+            ctx.lineTo(touches[i].pageX, touches[i].pageY);
+            ctx.fillRect(touches[i].pageX - 4, touches[i].pageY - 4, 8, 8);  
+            currentTouches.splice(idx, 1); 
+            } else {
+            console.log("Unable to determine which touch to end");
             }
         }
-    }
+        }
 
-    //copying the touch objects 
-    function copyTouch({ identifier, pageX, pageY }) {
+        //copying the touch objects 
+        function copyTouch({ identifier, pageX, pageY }) {
         return { identifier, pageX, pageY };
-    }
+        }
 
-    //find the current position of the mouse pointer
-    function ongoingTouchIndexById(idToFind) {
+        //find the current position of the mouse pointer
+        function ongoingTouchIndexById(idToFind) {
         for (var i = 0; i < currentTouches.length; i++) {
             var id = currentTouches[i].identifier;
 
             if (id == idToFind) {
-                return i;
+            return i;
             }
         }
         return -1;    // not found
-    }
+        }
 
-    function touchCancelhandle(evt) {
+        function touchCancelhandle(evt) {
         evt.preventDefault();
+        console.log("touchcancel.");
         var touches = evt.changedTouches;
 
         for (var i = 0; i < touches.length; i++) {
             var idx = ongoingTouchIndexById(touches[i].identifier);
-            currentTouches.splice(idx, 1);
+            currentTouches.splice(idx, 1);  
         }
-    }//end touch events
+        }//end touch events
 
-    let pd;
-    function initialize() {
-        pd = new PD();
-        loadBoardList();
-    }
-
-    function loadBoardList() {
-        var board_container = document.getElementById('container');
-        var board_list = GameLoader.getAllBoards();
-        var out = '';
-                
-        var input_element = '<input type="radio" name="board_list" class="input-hidden" id="$$" value="$$" >';
-        var label = '<label for="$$"> $$ <img src="resources/images/boards/$$.png" alt="$$" style="width:50%; height:50%;"/></label>';
-        var action_btn = '\n<div class="action_btn">\n<button type="button" class="btnLoadboard" onclick="loadBoard()">Load Board</button>\n<button type="button" class="btnCancel" onclick="closeForm()">Cancel</button>\n</div>'
-                
-        for (var i=0; i< board_list.length; i++){
-            out += input_element.replaceAll("$$", board_list[i]) +'\n'+ label.replaceAll("$$", board_list[i]) + '<br><br>\n';
+        let pd;
+		
+        function initialize() {
+            pd = new PD();
+			
+			loadBoardList();
         }
-                
-        board_container.innerHTML = out + action_btn;
-    }
 
-    function resetGame(){
-        pd.reset();
-    }
+		function loadBoardList() {
+			var board_container = document.getElementById('container');
+			var board_list = GameLoader.getAllBoards();
+			var out = '';
+			
+			var input_element = '<input type="radio" name="board_list" class="input-hidden" id="$$" value="$$" >';
+			var label = '<label for="$$"> $$ <img src="resources/images/boards/$$.png" alt="$$" style="width:50%; height:50%;"/></label>';
+			var action_btn = '\n<div class="action_btn">\n<button type="button" class="btnLoadboard" onclick="loadBoard()">Load Board</button>\n<button type="button" class="btnCancel" onclick="closeForm()">Cancel</button>\n</div>'
+			
+			for (var i=0; i< board_list.length; i++){
+				out += input_element.replaceAll("$$", board_list[i]) +'\n'+ label.replaceAll("$$", board_list[i]) + '<br><br>\n';
+			}
+			
+			board_container.innerHTML = out + action_btn;
+		}
 
-    function callHintAI() {
-        pd.visual.callHintAI();
-    }
+        function resetGame(){
+            pd.reset();
+        }
 
-    //hinting popup disappears when mouse pointer is away
-    document.getElementById("hintButton").addEventListener("mouseleave", function() {
-        document.getElementById("myHint").style.visibility = "hidden";
-    });
-
-    function rotateClkWise(){
-        pd.rotateClkWise();
-    }
-
-    function rotateAntiClkWise() {
-        pd.rotateAntiClkWise();
-    }
-
-    function flipH(){
-        pd.flipH();
-    }
-
-    function flipV(){
-        pd.flipV();
-    }
-
-    function selectBoard(){
-        document.getElementById("board_selection_form").style.display = "block";
-    }
-
-    function loadBoard(){
-        var selectedBoard = document.querySelector("input[name=board_list]:checked").value;
-        document.getElementById("board_selection_form").style.display = "none";
-        pd.loadBoard(selectedBoard);
-    }
+        function callHintAI() {
+            pd.visual.callHintAI();
             
-    function closeForm() {
-        document.getElementById("board_selection_form").style.display = "none";
-    }
+        }
 
-    function prefillBoard(){
-        pd.prefillBoard();
-    }
-
-    function execUndo(){
-        pd.undo();
-    }
-
-    function execRedo(){
-        pd.redo();
-    }
+        //hinting popup disappears when mouse pointer is away
+        document.getElementById("hintButton").addEventListener("mouseleave", function() {
+                 document.getElementById("myHint").style.visibility = "hidden";
+        });
         
-    function execReplay(){
-        pd.replay();
-    }
-</script>
-<script src="./registerSW.js"></script>
+
+        function rotateClkWise(){
+            pd.rotateClkWise();
+        }
+
+        function rotateAntiClkWise() {
+            pd.rotateAntiClkWise();
+        }
+
+        function flipH(){
+            pd.flipH();
+        }
+
+        function flipV(){
+            pd.flipV();
+        }
+
+        function selectBoard(){
+			document.getElementById("board_selection_form").style.display = "block";
+        }
+
+		function loadBoard(){
+			var selectedBoard = document.querySelector("input[name=board_list]:checked").value;
+			document.getElementById("board_selection_form").style.display = "none";
+            pd.loadBoard(selectedBoard);
+			
+        }
+		
+		function closeForm() {
+			document.getElementById("board_selection_form").style.display = "none";
+		}
+
+        function prefillBoard(){
+            pd.prefillBoard();
+        }
+
+        function execUndo(){
+            pd.undo();
+        }
+
+        function execRedo(){
+            pd.redo();
+        }
+
+        function execReplay(){
+            var br = document.createElement("br");
+
+            let form = document.createElement("form");
+            let startStateElem = document.createElement("input");
+            startStateElem.setAttribute("type", "text");
+            startStateElem.setAttribute("name", "StartGameState");
+            startStateElem.setAttribute("placeholder", "Enter Start Game State");
+
+            let endStateElem = document.createElement("input");
+            endStateElem.setAttribute("type", "text");
+            endStateElem.setAttribute("name", "endGameState");
+            endStateElem.setAttribute("placeholder", "Enter End Game State");    
+
+            var submit = document.createElement("input");
+            submit.setAttribute("type", "submit");
+            submit.setAttribute("value", "Submit");
+
+            form.appendChild(startStateElem); 
+            form.appendChild(br.cloneNode()); 
+            form.appendChild(endStateElem);
+            form.appendChild(br.cloneNode()); 
+            form.appendChild(submit); 
+            document.getElementsByTagName("body")[0].appendChild(form);
+            console.log(document.getElementsByTagName("body")[0]);
+            pd.replay();
+
+        }
+
+
+
+    </script>
+    <script src="./registerSW.js"></script>
 
 </body>
 </html>
