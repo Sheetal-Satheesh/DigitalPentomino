@@ -1,8 +1,8 @@
 
 const UIProperty = {
-    "TrayCSSLeft":7, // [Hot-Fix : Bug-#63 ] Pieces disappear after rotation and placement onto the tray
-    "TrayHeight":12.5, // [Hot-Fix : Bug-#63 ] Pieces disappear after rotation and placement onto the tray
-    "WindowWidth":90,
+    "TrayCSSLeft":7,
+    "TrayHeight":7,
+    "WindowWidth":89,
     "PentominoX": 5,
     "PentominoY": 5,
     "FunctionWidth": 10
@@ -23,13 +23,17 @@ class Visual {
         this.boardX = pd.boardStartX;
         this.boardY = pd.boardStartY;
         this.pieces = this.gameController.getPentominoes();
-        this.selected = false
+        this.selected = false;
+        this.overlapBlock = new OverlapBlock();
 
         this.renderBoard();
         this.renderPieces();
 
+        this.disablePrefillButton(false);
+
         this.initalizeListeners();
     }
+
 
     isBlockCell(posX, posY){
         var bCellsFnd=false;
@@ -45,20 +49,21 @@ class Visual {
     }
 
     isPentominoInBlockCells(pentomino){
-            var [pX, pY] = this.gameController.getPositionOfPentomino(pentomino);
-            var pMatrix = pentomino.getMatrixRepresentation();
 
-            for(let i=0; i <pentomino.iRows; ++i){
-                for(let j=0; j < pentomino.iCols; ++j){
-                    if(pMatrix[i][j]===1){
-                        let px = (pX - 2)+i;
-                        let py = (pY - 2)+j;
-                        if(this.isBlockCell(px,py)){
-                            return true;
-                        }
+        var [pX, pY] = this.gameController.getPositionOfPentomino(pentomino);
+        var pMatrix = pentomino.getMatrixRepresentation();
+
+        for(let i=0; i <pentomino.iRows; ++i){
+            for(let j=0; j < pentomino.iCols; ++j){
+                if(pMatrix[i][j]===1){
+                    let px = (pX - 2)+i;
+                    let py = (pY - 2)+j;
+                    if(this.isBlockCell(px,py)){
+                        return true;
                     }
                 }
             }
+        }
 
         return false;
     }
@@ -75,11 +80,7 @@ class Visual {
     placePentomino(pentomino, posX, posY, cmdType=CommandTypes.Original){
 
         this.gameController.placePentomino(pentomino, posX, posY,cmdType);
-        var bCellsFnd = this.isPentominoInBlockCells(pentomino);
-        var collisonFnd = this.isCollision(pentomino);
-        var offset = (bCellsFnd || collisonFnd)?true:false;
-
-        this.positionPiece(pentomino, offset);
+        this.positionPiece(pentomino);
     }
 
     movePentominoToTray(pentomino,cmdType=CommandTypes.Original){
@@ -127,13 +128,13 @@ class Visual {
 				if (this.pd.blockedCells != undefined)
 				{
 					for (var arr = 0; arr < this.pd.blockedCells.length; arr++) {
-						if(row == this.pd.blockedCells[arr][0] + this.pd.boardStartX && 
+						if(row == this.pd.blockedCells[arr][0] + this.pd.boardStartX &&
                                 col == this.pd.blockedCells[arr][1] + this.pd.boardStartY) {
 							blockedCell = true;
 							break;
 						}
 					}
-                   
+
                     if(blockedCell)
 						out += '<div class="gamearea ' + ((isBoard) ? 'boardarea blockedcell' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';
 					else
@@ -176,7 +177,7 @@ class Visual {
              *
             */
 
-           out += '<div class="piece" id="piece_' + piece.name + '" style="width:' + (5 * width) + 'vw;height:' + (5 * width) + 'vw;display:none">';
+           out += '<div class="piece" id="piece_' + piece.name + '" style="width:' + (5 * width) + 'vw;height:' + (5 * width) + 'vw;display:none;z-index:0;">';
 
             //this "paints" the bitmap of the pice into the bounding box
             for (var i in bitMap) {
@@ -192,7 +193,7 @@ class Visual {
             //TODO: this is a disadvantage of chosing the innerHTML approach.
 
             setTimeout(function (that, piece) {
-                that.positionPiece(piece);
+                 that.positionPiece(piece);
             }, 0, this, piece);
 
         });
@@ -201,61 +202,50 @@ class Visual {
 
     }
 
-   positionPiece(piece, offset=false) {
+   positionPiece(piece) {
+
         var width = UIProperty.WindowWidth / this.pd.gameWidth;
         var htmlElement = document.getElementById('piece_' + piece.name);
 
         if (piece.inTray) {
-            var trayPosition = piece.trayPosition;
-            /**
-             * 7 is trayHeight
-             */
-            var widthVW = UIProperty.TrayCSSLeft + (piece.trayPosition) * 7; //HOT-FIX: 7 is tray height
+            var widthVW = UIProperty.TrayCSSLeft + (piece.trayPosition) * 7;
             var magnification = 6 / (5 * width);
             htmlElement.style.left = widthVW + 'vw';
-
-            let trayWidth = document.getElementById("tray");
-            htmlElement.style.top = '0';
-            htmlElement.style.marginTop = "-5.5%";// [Hot-Fix : Bug-#63 ] Pieces disappear after rotation and placement onto the tray
+            htmlElement.style.top = '.7vw';
+            htmlElement.style.transformOrigin = 'top';
             htmlElement.style.setProperty("--magnification", magnification);
-            htmlElement.style.transformOrigin = 'center'; // [Hot-Fix : Bug-#63 ] Pieces disappear after rotation and placement onto the tray
-            //htmlElement.style.transformOrigin='0 5%';
-            htmlElement.style.zIndex = 3000;
+            htmlElement.style.setProperty("--rotationX", "0deg");
+            htmlElement.style.setProperty("--rotationY", "0deg");
+            htmlElement.style.setProperty("--rotationZ", "0deg");
+        } 
+        else {
+            var bCellsFnd = this.isPentominoInBlockCells(piece);
+            var collisonFnd = this.isCollision(piece);
+            if(collisonFnd){
+                let collisonPentomino = this.gameController.getCollisionOfPentominoes(piece).pop();
+                this.overlapBlock.add(piece,collisonPentomino);
+            }
+            else{
+                this.overlapBlock.remove(piece);
+            }
 
-        } else  {
-
+            var offset = (bCellsFnd || collisonFnd)?true:false;
             let [positionY, positionX] = this.gameController.getPositionOfPentomino(piece);
             let left = undefined;
             let top = undefined;
             if(offset){
                 left = UIProperty.FunctionWidth + width * (positionX - 2)+ (width/8);
                 top = UIProperty.TrayHeight + width * (positionY - 2)-(width/8);
-
-                if(htmlElement.style.zIndex >= 2000 ){
-                    htmlElement.style.zIndex =1500;
-                }else {
-                    htmlElement.style.zIndex =htmlElement.style.zIndex + 20; ;
-                }
-
-            }else{
+            }
+            else{
                 left = UIProperty.FunctionWidth + width * (positionX - 2);
                 top = UIProperty.TrayHeight + width * (positionY - 2);
-
-
-                if(htmlElement.style.zIndex >= 2000 ){
-                    htmlElement.style.zIndex = 1000;
-                }else if (htmlElement.style.zIndex > 0){
-                    htmlElement.style.zIndex = htmlElement.style.zIndex+10;
-                }else{
-                    htmlElement.style.zIndex -= 50;
-                }
             }
 
+            htmlElement.style.zIndex = this.overlapBlock.getZIndex(piece);
             htmlElement.style.left = left + 'vw';
             htmlElement.style.top = top + 'vw';
             htmlElement.style.setProperty("--magnification", 1);
-            htmlElement.style.transformOrigin = '50% 50%';
-
         }
         if (htmlElement.style.getPropertyValue("--rotationX") === "") {
             htmlElement.style.setProperty("--rotationX", "0deg");
@@ -269,8 +259,12 @@ class Visual {
 
     select(piece,xPosition,yPosition) {
         this.selected = piece;
-        this.showManipulations(xPosition,yPosition);
-
+        if(piece.inTray){
+            this.disableManipulations();
+        }
+        else{
+            this.showManipulations(xPosition,yPosition);
+        }
     }
 
     deleteSelection() {
@@ -279,25 +273,58 @@ class Visual {
         this.pd.visual.disableManipulations();
     }
 
+
+    hexToRgb(hex) {
+      var rgbFormat = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return rgbFormat ? {
+        r: parseInt(rgbFormat[1], 16),
+        g: parseInt(rgbFormat[2], 16),
+        b: parseInt(rgbFormat[3], 16)
+      } : null;
+    }
     //Enable or Disable manipulation buttons
 
     showManipulations(xPosition,yPosition) {
-
+        var pieceMan = document.getElementById('pieceManipulation').firstElementChild;
+        var pieceManip = pieceMan.firstElementChild;
+        var pieceManipul = pieceManip.firstElementChild;
+        var clr = pieceManipul.children;
+        for(let i=0;i< clr.length ;i++){
+            var btnClr = clr[i].firstElementChild;
+            var colorR = this.hexToRgb(this.selected.color).r;
+            var colorG = this.hexToRgb(this.selected.color).g;
+            var colorB = this.hexToRgb(this.selected.color).b;
+           btnClr.style.background =  "rgba(" + [colorR,colorG,colorB,0.5].join(',') +")";
+        }
         document.getElementById("btnRotateRight").disabled = false;
         document.getElementById("btnRotateLeft").disabled = false;
         document.getElementById("btnFlipH").disabled = false;
-        document.getElementById("btnFlipV").disabled = false
-        document.getElementById('pieceManipulation').style.display = 'block';
-        document.getElementById('pieceManipulation').style.left = xPosition + 'px';
-        document.getElementById('pieceManipulation').style.top = yPosition + 'px';
+        document.getElementById("btnFlipV").disabled = false;
+
+        //set style for left and top value of element, but do not cross borders
+        var width = UIProperty.WindowWidth / this.pd.gameWidth;
+        var gameWidth = document.getElementById("game").clientWidth;
+        var gameHeight = document.getElementById("game").clientHeight;
+        if ( (xPosition + 15 > gameWidth)) {
+          if ((yPosition > 0) && (yPosition < gameHeight)) {
+                document.getElementById('pieceManipulation').style.left = 'calc(' + xPosition + 'px - '+ (width * 3) + 'vw)';
+                document.getElementById('pieceManipulation').style.top = 'calc(' + yPosition + 'px - ' + (width * 1) + 'vw)';
+                document.getElementById('pieceManipulation').style.display = 'block';
+          }
+        } else {
+                document.getElementById('pieceManipulation').style.display = 'block';
+                document.getElementById('pieceManipulation').style.left = xPosition + 'px';
+                document.getElementById('pieceManipulation').style.top = 'calc(' + yPosition + 'px - ' + (width * 2.5) + 'vw)';
+                }
+
     }
 
     disableManipulations() {
 
-        document.getElementById("btnRotateRight").disabled =true;
-        document.getElementById("btnRotateLeft").disabled =true;
-        document.getElementById("btnFlipH").disabled =true;
-        document.getElementById("btnFlipV").disabled =true;
+        document.getElementById("btnRotateRight").disabled = true;
+        document.getElementById("btnRotateLeft").disabled = true;
+        document.getElementById("btnFlipH").disabled = true;
+        document.getElementById("btnFlipV").disabled = true;
         document.getElementById('pieceManipulation').style.display = 'none';
 
     }
@@ -362,8 +389,8 @@ class Visual {
                 var container = elements[i * 1 + 1];       //For some strange reason, i is a String, using *1 to convert it
                 var piece = that.pieces.find(p => { return p.name === piece; });
                 window.currentlyMoving = [container, piece];
-            }
-
+                break;
+        }
             return;
 
         }
@@ -378,6 +405,7 @@ class Visual {
                 var x = event.clientX;
                 var y = event.clientY;
                 var container = window.currentlyMoving[0];
+
                 //resize object to full size while moving and attach their center to the pointer
                 var width = UIProperty.WindowWidth / that.pd.gameWidth;
                 //set new style for left and top value of element, BUT do not cross borders
@@ -385,14 +413,15 @@ class Visual {
                 var gameWidth = document.getElementById("game").clientWidth;
                 var gameHeight = document.getElementById("game").clientHeight;
 
+
                 if ((x > functionsWidth) && (x < (gameWidth + functionsWidth))) {
                     if ((y > 0) && (y < gameHeight)) {
-                        container.style.left = 'calc(' + x + 'px - ' + (width * 2.5) + 'vw)';
-                        container.style.top = 'calc(' + y + 'px - ' + (width * 1) + 'vw)';
-                        container.style.setProperty("--magnification", 1);// [Hot-Fix : Bug-#63 ] Pieces disappear after rotation and placement onto the tray
-                        container.style.transformOrigin = '50% 50%';
-                        container.style.zIndex += 1000;
 
+                        container.style.left = 'calc(' + x + 'px - ' + (width * 2.5) + 'vw)';
+                        container.style.top = 'calc(' + y + 'px - ' + (width * 2.5) + 'vw)';
+                        container.style.transformOrigin='50% 50%';
+                        container.style.zIndex = 100;
+                        container.style.setProperty("--magnification", 1);
                     }
                 }
             }
@@ -440,7 +469,7 @@ class Visual {
                         var coords = (id.split('_')[1].split(','));
                         data[1].removeFromTray();
                         that.placePentomino(data[1], coords[0],coords[1] );
-                       // that.showNumberOfPossibleSolutions();
+                        that.showNumberOfPossibleSolutions();
                         /**
                          * make this the selected element which activates manipulation GUI data[1].select();
                          *
@@ -473,10 +502,7 @@ class Visual {
             let newRot = flipped ? currentRot - 90 : currentRot + 90;
             // Update the backend
             this.gameController.rotatePentominoClkWise(piece,cmdType);
-            var bCellsFnd = this.isPentominoInBlockCells(piece);
-            var collisonFnd = this.isCollision(piece);
-            var offset = (bCellsFnd || collisonFnd)?true:false;
-            this.positionPiece(piece, offset);
+            this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
         }
     }
@@ -490,10 +516,7 @@ class Visual {
             let newRot = flipped ? currentRot + 90 : currentRot - 90;
             // Update the backend
             this.gameController.rotatePentominoAntiClkWise(piece,cmdType);
-            var bCellsFnd = this.isPentominoInBlockCells(piece);
-            var collisonFnd = this.isCollision(piece);
-            var offset = (bCellsFnd || collisonFnd)?true:false;
-            this.positionPiece(piece, offset);
+            this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
         }
     }
@@ -507,10 +530,7 @@ class Visual {
             let newRot = currentRot + 180;
             // Update the backend
             this.gameController.mirrorPentominoH(piece,cmdType);
-            var bCellsFnd = this.isPentominoInBlockCells(piece);
-            var collisonFnd = this.isCollision(piece);
-            var offset = (bCellsFnd || collisonFnd)?true:false;
-            this.positionPiece(piece, offset);
+            this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationX", newRot.toString() + "deg");
             pieceDiv.setAttribute("flipped", 1 - flipped);
         }
@@ -524,12 +544,8 @@ class Visual {
             let currentRot = pieceDiv.style.getPropertyValue("--rotationY").split(/(-?\d+)/)[1] * 1; //converts string value to int
             let newRot = currentRot + 180;
             // Update the backend
-            let [penX,penY] = this.gameController.getPositionOfPentomino(piece);
             this.gameController.mirrorPentominoV(piece,cmdType);
-            var bCellsFnd = this.isPentominoInBlockCells(piece);
-            var collisonFnd = this.isCollision(piece);
-            var offset = (bCellsFnd || collisonFnd)?true:false;
-            this.positionPiece(piece, offset);
+            this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationY", newRot.toString() + "deg");
             pieceDiv.setAttribute("flipped", 1 - flipped);
         }
@@ -546,26 +562,67 @@ class Visual {
         hint.style.visibility = "visible";
         let popupText = document.getElementById("myHint");
         popupText.textContent = pd.gameController.getHint().getText();
-
         //call indication of hint
         this.indicateHint(500);
+    }
 
-            
+
+
+
+
+    blinkCells(cells, bgColor, blinkColor) {
+        let menu = [];
+
+        for(let i=0;i<cells.length;i++) {
+            let fv = document.getElementById("field_" + cells[i][0] + "," + cells[i][1]);
+            fv.style.background = blinkColor;
+            menu.push(fv);
+        }
+        let blinkInterval;
+        let counter = 0;
+        clearInterval(blinkInterval);
+        blinkInterval = setInterval(function () {
+            for(let j=0; j < menu.length; j++){
+                if (counter % 2 === 0) {
+                    menu[j].style.background = bgColor;
+                } else {
+                    menu[j].style.background = blinkColor;
+                }
+            }
+            counter++;
+            if (counter > 4) {
+                clearInterval(blinkInterval);
+            }
+        }, 100);
     }
 
     indicateHint(timeoutFrame){
         //possible command names (place, remove, moveToPosition, rotateClkWise, rotateAntiClkWise, mirrorH, mirrorV)
         let hintCommand = pd.gameController.getHint().getCommand();
-        let hintName = hintCommand.Name();
+        let hintSkill = pd.gameController.getHint()._skill;
+        let hintName = hintCommand._name;
         let hintinPen = hintCommand._pentomino;
         let pentominoColor = hintinPen.color;
         let clientRect = document.getElementById("piece_" + hintinPen.name).getBoundingClientRect();
         let [posX, posY] = [clientRect.x + clientRect.width/2, clientRect.y + clientRect.height/2];
-        switch (hintName) {
-            case "place":
+
+
+        //random variable that selects
+        var randomCell = Math.floor(Math.random() * (4)) + 1;
+
+       //indication of unoccupied cells
+        if (!(hintSkill === null)) {
+            const DEFAULT_BG_COLOR = "#adc0b9";
+            const RED_COLOR = "red";
+            //blink unoccupied cells
+            this.blinkCells(hintSkill, DEFAULT_BG_COLOR, RED_COLOR);
+        }
+        else {
+              switch (hintName) {
+            case "Place":
                 // handle place hint
-                let hintRow = hintCommand._row;
-                let hintColumn = hintCommand._col;
+                let hintRow = hintCommand._nextPosition[0];
+                let hintColumn = hintCommand._nextPosition[1];
                 let fieldvalue;
                 let prevBackground = [];
 
@@ -579,39 +636,44 @@ class Visual {
 
                 //show destination position (and fade away)
                 let piecePos = this.getOccupiedPositions(hintinPen,hintCommand);
-                console.log("hintinPen",hintinPen, piecePos);
-                    for(let i=0;i<5;i++){
+                //console.log("hintingPen",hintinPen, piecePos);
+                //usage of random cell variable to indicate hinting
+                    for(let i=0;i<randomCell;i++){
                             fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
                             prevBackground[i] = fieldvalue.style.background;
                             fieldvalue.style.background = pentominoColor;
                             this.hide(piecePos, prevBackground);
                     }
+
                 break;
-            
-            case "remove":
+
+            case "Remove":
                 // handle remove hint
-                var pen = this.select(hintinPen,posX,posY);
+                this.select(hintinPen,posX,posY);
+                var pen = document.getElementById("piece_" + hintinPen.name);
+                //console.log("pent",hintinPen,this.selected);
                 if (!this.selected.inTray){
-                    pen.style.display = none;
+                    pen.style.display = 'none';
                     setTimeout(function(){
-                    pen.style.display = block;
-                    },timeoutFrame);
+                    pen.style.display = 'block';
+                    },2000);
                 }
                 break;
-                    
-            case "rotateClkWise":
+
+            case "RotateClkWise":
                 // handle rotateClkWise hint
                 this.select(hintinPen,posX,posY);
                 if (!this.selected.inTray){
-                    console.log("Remove piece from tray for visual hint.");
                     rotateClkWise();
                     setTimeout(function(){
                     rotateAntiClkWise();
                     },timeoutFrame);
                 }
+
+
                 break;
 
-            case "rotateAntiClkWise":
+            case "RotateAntiClkWise":
                 // handle rotateAntiClkWise hint
                 this.select(hintinPen,posX,posY);
                 if (!this.selected.inTray){
@@ -621,8 +683,8 @@ class Visual {
                     },timeoutFrame);
                 }
                 break;
-            
-            case "mirrorH":
+
+            case "MirrorH":
                 // handle mirrorH hint
                 //select piece in the UI to flip
                 this.select(hintinPen,posX,posY);
@@ -634,7 +696,7 @@ class Visual {
                 }
                 break;
 
-            case "mirrorV":
+            case "MirrorV":
                 // handle mirrorV hint
                 this.select(hintinPen,posX,posY);
                 if (!this.selected.inTray){
@@ -648,8 +710,12 @@ class Visual {
             default:
                 console.log("Unknown piece action detected!");
         }
-        
+
     }
+}
+
+
+
 
     hide(piecePos, prevBackground){
 
@@ -658,21 +724,20 @@ class Visual {
                     let fvalue = document.getElementById("field_" + piecePos[j][0] + "," + piecePos[j][1]);
                     //TODO: replace with proper fadeOut animation
                     fvalue.style.background = prevBackground[j];
-                
             }
-        }, 2000);
+        }, 70);
     }
 
 
     getOccupiedPositions(piece,hintCommand){
 
         let PiecePostions = [];
-        let hintRow = hintCommand._row;
+        let hintRow = hintCommand._nextPosition[0];
         let startRow = hintRow-2;
-        let hintColumn = hintCommand._col;
+        let hintColumn = hintCommand._nextPosition[1];
         let startColumn = hintColumn-2;
         let occupiedPosArray=[];
-        
+
         let pieceBitmap = piece.getMatrixRepresentation();
 
         //add all elements of current 5*5 overlay on board where piece matrix has 1's
@@ -693,12 +758,18 @@ class Visual {
         return occupiedPosArray;
     }
 
+    disablePrefillButton(bValue) {
+        document.getElementById("prefillBoard").disabled = bValue;
+    }
+
     prefillBoard() {
         this.clear();
+        // Prevent clicking of button while previous prefilling is going on
+        this.disablePrefillButton(true);
         let allSolutions = [];
         // Get all the games and filter solutions
         if(this.allSolutions == undefined) {
-            GameLoader.getGamesFromSolutionsConfig(this.pd.boardName).forEach(game => 
+            GameLoader.getGamesFromSolutionsConfig(this.pd.boardName).forEach(game =>
                 allSolutions.push([game._board._pentominoPositions, game._board._pentominoes]));
             this.allSolutions = allSolutions;
         }
@@ -713,7 +784,8 @@ class Visual {
         if (this.allSolutions.length > 0) {
             randomSolution = this._getRandomElementFromArray(this.allSolutions);
         } else {
-            ;// TODO: throw error
+            this.disablePrefillButton(false);
+            throw new Error("Solutions not found for current board!!!");
         }
         if (randomSolution != undefined) {
             for(let i = 0; i < randomSolution[0].length; ++i) {
@@ -734,7 +806,7 @@ class Visual {
                 if(bOverlap) {
                     piece = new Pentomino(piece.name);
                     prefillCandidates.push(piece);
-                    continue;   
+                    continue;
                 }
                 prefillCandidates.push(piece);
                 positions.push(currentAnchor);
@@ -742,10 +814,15 @@ class Visual {
                 this.gameController.placePentomino(piece, currentAnchor[0], currentAnchor[1]);
             }
         } else {
-            ;// TODO: throw error
+            this.disablePrefillButton(false);
+            throw new Error("Could not find a random solution!!!"); //TODO: Need more meaningful error message here
         }
         this.pieces = prefillCandidates;
         this.renderPieces();
+        // So that pieces are rendered before the button becomes enabled
+        setTimeout(function(that) {
+            that.disablePrefillButton(false);
+        }, 100, this);
     }
 
     _getRandomElementFromArray(arrayObject) {
@@ -757,9 +834,13 @@ class Visual {
 
     execShadowCmd(command){
         switch(command.name){
+            case "Remove":
             case "Place":
-                if( (command.PosX == undefined) && 
+                if( (command.PosX == undefined) &&
                     (command.PosY == undefined)) {
+                    if(command.Pentomino.inTray == 1){
+                        break;
+                    }
                     command.Pentomino.toTray();
                     this.movePentominoToTray(
                                         command.Pentomino,
@@ -776,42 +857,39 @@ class Visual {
 
                 break;
 
-            case "Remove":
-                break;
-            
             case "RotateClkWise":
                 this.selected = command.Pentomino;
                 this.rotateClkWise(CommandTypes.Shadow);
                 break;
-            
+
             case "RotateAntiClkWise":
                 this.selected = command.Pentomino;
                 this.rotateAntiClkWise(CommandTypes.Shadow);
                 break;
-            
+
             case "MirrorH":
                 this.selected = command.Pentomino;
                 this.flipH(CommandTypes.Shadow);
                 break;
-            
+
             case "MirrorV":
                 this.selected = command.Pentomino;
                 this.flipV(CommandTypes.Shadow);
                 break;
-            
+
             default:
                 //TODO: add commund related flag variable
                 throw new Error("Can not undo");
-                
+
         }
     }
 
     undo(){
-        let command = this.gameController.undo(); 
+        let command = this.gameController.undo();
         if(command == undefined){
             return;
         }
-        this.execShadowCmd(command, "Undo");     
+        this.execShadowCmd(command, "Undo");
     }
 
     redo(){

@@ -12,6 +12,7 @@
 	<link rel="stylesheet" href="resources/css/board_selection.css">
     <script src="resources/index.js"></script>
     <script src="resources/js/board.js"></script>
+    <script src="resources/js/overlapping.js"></script>
     <script src="resources/js/pentomino.js"></script>
     <script src="resources/js/game-controller.js"></script>
     <script src="resources/js/game-loader.js"></script>
@@ -36,10 +37,12 @@
 
 <body onload="touchStartup(); initialize()">
 
-  <div class = "cGame">
+<div class = "cGame">
+    
     <div id="functions">
-      <img id = "logo" src="resources/images/icons/pentomino.png" alt="Pentomino" class="cLogo">
-      <div id="operations">
+        <img id = "logo" src="resources/images/icons/pentomino.png" alt="Pentomino" class="cLogo">
+    
+        <div id="operations">
           <table>
                 <tr>
                     <td>
@@ -68,7 +71,7 @@
                         <button type="button" id='reset' class = "cActionBtn" onclick="resetGame()"><img src="resources/images/icons/tidy_up.png"></button>
                     </td>
                     <td>
-                        <button type="button" id='prefillBoard' class = "cActionBtn" onclick="prefillBoard()"><img src="resources/images/icons/prefill.png"></button>
+                        <button type="button" id='prefillBoard' class = "cActionBtn" onclick="prefillBoard()" disabled><img src="resources/images/icons/prefill.png"></button>
                     </td>
                 </tr>
                 <tr>
@@ -114,73 +117,10 @@
           </p>
 		<div class="form-popup" id="board_selection_form">
 
-			<div class="container">
-				<div class="board_list">
-					<div class="numbertext">1 / 7</div>
-					<img src="resources/images/boards/board_8x8a.png" style="width:40%; height:40%;">
-				</div>
-
-				<div class="board_list">
-					<div class="numbertext">2 / 7</div>
-					<img src="resources/images/boards/board_6x10.png" style="width:40%; height:40%;">
-				</div>
-
-				<div class="board_list">
-					<div class="numbertext">3 / 7</div>
-					<img src="resources/images/boards/board_4x15.png" style="width:40%; height:40%;">
-				</div>
-
-				<div class="board_list">
-					<div class="numbertext">4 / 7</div>
-					<img src="resources/images/boards/board_3x21a.png" style="width:40%; height:40%;">
-				</div>
-
-				<div class="board_list">
-					<div class="numbertext">5 / 7</div>
-					<img src="resources/images/boards/board_3x21b.png" style="width:40%; height:40%;">
-				</div>
-
-				<div class="board_list">
-					<div class="numbertext">6 / 7</div>
-					<img src="resources/images/boards/board_3x21c.png" style="width:40%; height:40%;">
-				</div>
-
-				<div class="board_list">
-					<div class="numbertext"> 7 / 7</div>
-					<img src="resources/images/boards/board_3x21d.png" style="width:40%; height:40%;">
-				</div>
-
-				<a class="prev" onclick="changeBoard(-1)"><</a>
-				<a class="next" onclick="changeBoard(1)">></a>
-
-				<div class="caption-container">
-					<p id="caption"></p>
-				</div>
-
-				<div class="row" style="display: none;">
-					<div class="column">
-					<img class="board_cursor" src="resources/images/boards/board_8x8a.png" onclick="currentBoard(1)" alt="Board 8x8a">
-					</div>
-					<div class="column">
-					<img class="board_cursor" src="resources/images/boards/board_6x10.png" onclick="currentBoard(2)" alt="Board 6x10">
-					</div>
-					<div class="column">
-					<img class="board_cursor" src="resources/images/boards/board_4x15.png" onclick="currentBoard(3)" alt="Board 4x15">
-					</div>
-					<div class="column">
-					<img class="board_cursor" src="resources/images/boards/board_3x21a.png" onclick="currentBoard(4)" alt="Board 3x21a">
-					</div>
-					<div class="column">
-					<img class="board_cursor" src="resources/images/boards/board_3x21b.png" onclick="currentBoard(5)" alt="Board 3x21b">
-					</div>
-					<div class="column">
-					<img class="board_cursor" src="resources/images/boards/board_3x21c.png" onclick="currentBoard(6)" alt="Board 3x21c">
-					</div>
-					<div class="column">
-					<img class="board_cursor" src="resources/images/boards/board_3x21d.png" onclick="currentBoard(7)" alt="Board 3x21d">
-					</div>
-				</div>
-
+			<div class="container" id="container">
+				
+				<!-- Board List is loaded dynamically from Board Config -->
+				
 				<div class="action_btn">
 					<button type="button" class="btnLoadboard" onclick="loadBoard()">Load Board</button>
 					<button type="button" class="btnCancel" onclick="closeForm()">Cancel</button>
@@ -189,16 +129,17 @@
 
 
 		</div>
-      </div>
+        </div>  <!-- operation -->
+    </div>
 
     <div id="game">
-        <div id="tray"></div>
-        <div id="field"></div>
-        <div id="piecearea"></div>
-    </div>
-  </div>
-  <div class = "cPieceManipulation" id ="pieceManipulation" >
-    <table>
+        <div id="tray"></div> <!-- tray -->
+        <div id="field"></div> <!-- field -->
+        <div id="piecearea"></div> <!-- piecearea -->
+    </div> 
+    
+    <div class = "cPieceManipulation" id ="pieceManipulation" >
+        <table>
       <tr>
           <td>
               <button type="button" class="controlButton"  id='OpRotateLeft' onclick="rotateAntiClkWise()"><img src="resources/images/icons/rotate_left.png">
@@ -217,9 +158,12 @@
               </button>
           </td>
       </tr>
-  </table>
+        </table>
+    </div>  <!-- cPieceManipulation -->
+</div>
 
-    <script type="text/javascript">
+
+<script type="text/javascript">
 
     // Touch Handling for mobile devices
         //intialize the touch events
@@ -340,39 +284,29 @@
         }//end touch events
 
         let pd;
-		var boardIndex = 1;
-		showBoard(boardIndex);
-
-		function changeBoard(n) {
-			showBoard(boardIndex += n);
-		}
-
-		function currentBoard(n) {
-			showBoard(boardIndex = n);
-		}
-
-		function showBoard(n) {
-			var i;
-			var slides = document.getElementsByClassName("board_list");
-			var dots = document.getElementsByClassName("board_cursor");
-			var captionText = document.getElementById("caption");
-
-			if (n > slides.length) {boardIndex = 1}
-			if (n < 1) {boardIndex = slides.length}
-			for (i = 0; i < slides.length; i++) {
-				slides[i].style.display = "none";
-			}
-
-			for (i = 0; i < dots.length; i++) {
-				dots[i].className = dots[i].className.replace(" active", "");
-			}
-			slides[boardIndex-1].style.display = "block";
-			dots[boardIndex-1].className += " active";
-			captionText.innerHTML = dots[boardIndex-1].alt;
-		}
+		
         function initialize() {
             pd = new PD();
+			
+			loadBoardList();
         }
+
+		function loadBoardList() {
+			var board_container = document.getElementById('container');
+			var board_list = GameLoader.getAllBoards();
+			var out = '';
+			
+			var input_element = '<input type="radio" name="board_list" class="input-hidden" id="$$" value="$$" >';
+			var label = '<label for="$$"> $$ <img src="resources/images/boards/$$.png" alt="$$" style="width:50%; height:50%;"/></label>';
+			var action_btn = '\n<div class="action_btn">\n<button type="button" class="btnLoadboard" onclick="loadBoard()">Load Board</button>\n<button type="button" class="btnCancel" onclick="closeForm()">Cancel</button>\n</div>'
+			
+			for (var i=0; i< board_list.length; i++){
+				out += input_element.replaceAll("$$", board_list[i]) +'\n'+ label.replaceAll("$$", board_list[i]) + '<br><br>\n';
+			}
+			
+			<!-- console.log(out); -->
+			board_container.innerHTML = out + action_btn;
+		}
 
         function resetGame(){
             pd.reset();
@@ -410,10 +344,10 @@
         }
 
 		function loadBoard(){
-			var captionText = document.getElementById("caption").innerHTML;
-			var selectedBoard = 'board_' + captionText.replace("Board ", "");
-            pd.loadBoard(selectedBoard);
+			var selectedBoard = document.querySelector("input[name=board_list]:checked").value;
 			document.getElementById("board_selection_form").style.display = "none";
+            pd.loadBoard(selectedBoard);
+			
         }
 		
 		function closeForm() {

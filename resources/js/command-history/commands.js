@@ -30,21 +30,20 @@ class PlaceCommand extends Command {
         return {
             "name":this._name,
             "Pentomino": this._pentomino,
-            "PosX": (this._prevPosition != undefined)? 
-                            this._prevPosition[0] : 
-                            undefined,
-            "PosY": (this._prevPosition != undefined)? 
-                            this._prevPosition[1] : 
-                            undefined,
+            "PosX": (this._prevPosition != undefined)?
+                            this._prevPosition[0] : undefined,
+            "PosY": (this._prevPosition != undefined)?
+                            this._prevPosition[1] : undefined,
           };
     }
 
 }
 
 class RemoveCommand extends Command {
-    constructor(pentomino) {
+    constructor(pentomino, prevPos) {
         super("Remove");
         this._pentomino = pentomino;
+        this._prevPosition = prevPos;
     }
 
     ExecValues() {
@@ -60,8 +59,10 @@ class RemoveCommand extends Command {
         return {
             "name":this._name,
             "Pentomino": this._pentomino,
-            "PosX": this.undefined,
-            "PosY": this.undefined
+            "PosX": (this._prevPosition != undefined)?
+                            this._prevPosition[0] : undefined,
+            "PosY": (this._prevPosition != undefined)?
+                            this._prevPosition[1] : undefined,
           };
     }
 }
