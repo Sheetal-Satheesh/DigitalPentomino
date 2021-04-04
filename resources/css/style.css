@@ -79,8 +79,8 @@ margin-top: 2px;
 }
 
 #pieceManipulation  img{
-  width:3vw;
-  height:3vw;
+  width:5vw;
+  height:5vw;
 
 }
 #pieceManipulation{
@@ -257,7 +257,7 @@ background: rgb(197, 207, 203);
 table
   {
    position: relative;
-    margin-top: 50px;
+    margin-top: 30px;
     width: -10px!important;
      border-spacing: 0px;
      border-collapse:collapse;
@@ -272,9 +272,10 @@ table
       padding: 0px;
    }
 
-   table tr td button:hover {
-   box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
-  }
+  table tr td button:hover {
+    box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
+   }
+   
 
   table tr td button{
     background:rgb(141, 160, 157);
