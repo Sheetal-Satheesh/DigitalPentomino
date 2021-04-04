@@ -19,6 +19,7 @@ class Game {
         this._tray=[]; 
         this._pentominosOutside = [];
         this._pentominoOutsidePositions = [];
+        this._collisions = [];
     }
 
     reset(){
@@ -27,6 +28,7 @@ class Game {
         this._fillUpTray(); 
         this._pentominosOutside = [];
         this._pentominoOutsidePositions = [];
+        this._collisions = [];
     }
 
     updateCmdKey(cmdKey){
@@ -75,6 +77,11 @@ class Game {
                 this._placePentominoOutsideBoard(pentomino, row, col);
             }
         }
+        this.removeCollisionByPentomino(pentomino);
+        let collisonCells= this.isCollidesAtPosition(pentomino, row, col);
+            if(collisonCells.length != 0){
+                this.setCollisionCells(collisonCells);
+            }
     }
 
     /**
@@ -110,9 +117,15 @@ class Game {
                 this._movePentominoOutsideBoardToPosition(pentomino, row, col);
             }
         }
+        this.removeCollisionByPentomino(pentomino);
+        let collisonCells= this.isCollidesAtPosition(pentomino, row, col);
+        if(collisonCells.length != 0){
+            this.setCollisionCells(collisonCells);
+        }
     }
 
     removePentomino(pentomino) {
+        this.removeCollisionByPentomino(pentomino);
         if (this._board.isPlacedOnBoard(pentomino)) {
             this._board.removePentomino(pentomino);
         } 
@@ -155,6 +168,193 @@ class Game {
                         p => this._board.mirrorPentominoV(p));
     }
 
+    // --- --- --- Collisions --- --- ---
+    /**
+    _arraynother pentomino at the specified position
+     * @param pentomino
+     * @param row new row position
+     * @param col new col position
+     * @throws {Error} if new position is outside the board
+     * @returns {boolean}
+     */
+    isCollidesAtPosition(pentomino, row, col) {
+
+        var collisionsCell=[];
+        var pentominoes = this.getPentominoesInGmArea();
+        pentominoes.forEach(function(entry){
+            if(pentomino.name === entry.name){/** if same pentomino placed again */
+                return this.getCollisionCellsOfPentomino(pentomino);
+            }
+            if(this.doPentominoMatricesOverlapAtPosition(row,col, pentomino, entry)){
+                let entryPosition = this.getPosition(entry);
+                let pentominoPosition = [row, col];
+                let overlapCells = this.getOverlappingCells(row,col,pentomino,entry);
+
+                for (let i=0; i < overlapCells.length;++i) {
+                    let cell = overlapCells[i];
+                    let pOverlapCellMatrixPos = pentomino.getMatrixPosition(pentominoPosition, [cell.x, cell.y]);
+                    let pValue = pentomino.getCharAtMatrixPosition(pOverlapCellMatrixPos[0], pOverlapCellMatrixPos[1]);
+                    let eOverlapCellMatrixPos = entry.getMatrixPosition(entryPosition, [cell.x, cell.y]);
+                    let eValue = entry.getCharAtMatrixPosition(eOverlapCellMatrixPos[0], eOverlapCellMatrixPos[1]);
+                    if(eValue === '1' && pValue === eValue) {
+                        let index = collisionsCell.findIndex(item => item.cell[0] === cell.x &&
+                            item.cell[1] === cell.y);
+                        if (index === -1) {
+                            collisionsCell.push({
+                                'cell':[cell.x,cell.y],
+                                'pentominos':[pentomino.name,entry.name]
+                            });
+                        } else {
+                            collisionsCell[index].pentominos.push(pentomino.name);
+                        }
+                    }
+                }
+            }
+        },this);
+
+        return collisionsCell;
+    }
+
+    /**
+     * Returns whether matrices of the specified pentominoes overlap at the specified position
+     * @param row
+     * @param col
+     * @param pentominoA
+     * @param pentominoB
+     * @returns {boolean}
+     */
+    doPentominoMatricesOverlapAtPosition(row, col, pentominoA, pentominoB) {
+
+        if(this.isPlacedInGame(pentominoB) == false){
+            return false;
+        }
+
+        let aLowestRow = row - pentominoA.rowAnchor;
+        let aHighestCol = col + pentominoA.colAnchor;
+        let aHighestRow = row + pentominoA.rowAnchor;
+        let aLowestCol = col - pentominoA.colAnchor;
+
+        let [p1, q1] = this.getPosition(pentominoB);
+        let bLowestRow = p1 - pentominoB.rowAnchor;
+        let bHighestRow = p1 + pentominoB.rowAnchor;
+        let bLowestCol = q1 - pentominoB.rowAnchor;
+        let bHighestCol = q1 + pentominoB.colAnchor;
+
+        return (Math.max(aLowestRow, bLowestRow) <= Math.min(aHighestRow, bHighestRow)
+            && Math.max(aLowestCol, bLowestCol) <= Math.min(aHighestCol, bHighestCol));
+    }
+
+    getOverlappingCells(row, col, pentominoA, pentominoB){
+        let cells = [];
+
+        let aLowestRow = row - pentominoA.rowAnchor;
+        let aHighestCol = col + pentominoA.colAnchor;
+        let aHighestRow = row + pentominoA.rowAnchor;
+        let aLowestCol = col - pentominoA.colAnchor;
+
+        let [p1, q1] = this.getPosition(pentominoB);
+        let bLowestRow = p1 - pentominoB.rowAnchor;
+        let bHighestRow = p1 + pentominoB.rowAnchor;
+        let bLowestCol = q1 - pentominoB.colAnchor;
+        let bHighestCol = q1 + pentominoB.colAnchor;
+
+        let bottomRow   = Math.max(aLowestRow, bLowestRow);
+        let topRow      = Math.min(aHighestRow, bHighestRow);
+        let leftCol     = Math.max(aLowestCol, bLowestCol);
+        let rightCol    = Math.min(aHighestCol, bHighestCol);
+
+        for(let i=bottomRow; i <= topRow; ++i){
+            for(let j=leftCol; j <= rightCol; ++j){
+                cells.push({
+                    'x':i,
+                    'y':j
+                });
+            }
+        }
+
+        return cells;
+    }
+
+    setCollisionCells(collisionCells){
+        if(this._collisions.length === 0){
+            this._collisions.push(...collisionCells);
+        }else{
+            collisionCells.forEach(function(element){
+                let index = this._collisions.findIndex(item => item.cell[0] === element.cell[0] &&
+                    item.cell[1] === element.cell[1]);
+                if (index === -1) {
+                    this._collisions.push({
+                        'cell':element.cell,
+                        'pentominos':element.pentominos
+                    });
+                }else {
+                    this._collisions[index].pentominos = [...new Set([...this._collisions[index].pentominos,
+                        ...element.pentominos])];
+                }
+            },this);
+        }
+    }
+
+    removeCollisionByCells(cells){
+        this._collisions = this._collisions.filter(
+                    item => (item.cell[0] != cells[0]) &&
+                            (item.cell[1] != cells[1])
+                             );
+    }
+
+    removeCollisionByPentomino(pentomino){
+        this._collisions = this._collisions.map((cItem, index)=>{
+            cItem.pentominos =  cItem.pentominos.filter(
+                                        item =>item !== pentomino.name);
+            return cItem;
+        },this);
+
+        this._collisions = this._collisions.filter(
+            item => (item.pentominos.length != 1));
+    }
+
+    getCollisionCells(){
+        return this._collisions;
+    }
+
+    getCollisionCellsOfPentomino(pentomino) {
+        /**
+         * This kind of defensive programming may cause efficiency issue. Can we use
+         * logging mechanism instead? Is there anything javascript?
+         *
+         * https://console.spec.whatwg.org/#log
+        */
+  
+        var collisionCells=[];
+        this._collisions.forEach(function(element){
+            element.pentominos.forEach(item => {
+                if(item === pentomino.name){
+                    let collidePentominos = element.pentominos.filter(item => (item != pentomino.name));
+                    collisionCells.push({
+                        'cell':element.cell,
+                        'pentominos':collidePentominos
+                        });
+                    }
+                },this);
+        },this);
+
+        return collisionCells;
+    }
+
+    getCollisionOfPentominoes(pentomino) {
+      
+        let allCollisions = this.getCollisionCellsOfPentomino(pentomino);
+        var pentominos = [];
+
+        allCollisions.forEach(element=> {
+            element.pentominos.forEach(item => {
+                pentominos.push(item);
+            },this);
+        },this);
+
+        return [...new Set(pentominos)];
+    }
+
     // --- --- --- Helper Pentomino Operations --- --- ---
     _doLocalOperation(pentomino, operation, boardOperation) {
         let tempPentomino = new Pentomino(pentomino.name);
@@ -191,6 +391,13 @@ class Game {
             this._removePentominoOutsideTheBoard(pentomino);
             Object.assign(pentomino, tempPentomino);
             this._board.placePentomino(pentomino, position[0], position[1]);
+        }
+
+        position = this.getPosition(pentomino);
+        this.removeCollisionByPentomino(pentomino);
+        let collisonCells= this.isCollidesAtPosition(pentomino,position[0], position[1]);
+        if(collisonCells.length != 0){
+            this.setCollisionCells(collisonCells);
         }
     }
 
@@ -236,8 +443,8 @@ class Game {
 
     _fillUpTray(){
         var allPentominos=[
-                    'F','I','L','N','P','T',
-                    'U','V','W','X','Y','Z'];
+            'F','I','L','N','P','T',
+            'U','V','W','X','Y','Z'];
         allPentominos.forEach(function(pentominoType){
             let pentomino = new Pentomino(pentominoType); 
             this._tray.push(pentomino);
@@ -261,26 +468,6 @@ class Game {
         return this._commandManager.getPossibleRedoCommands();
     }
 
-    // --- --- --- Collision --- --- ---
-    getCollisionCells(){
-        return this._board.getCollisionCells();
-    }
-
-    getCollisionCellsOfPentomino(pentomino) {
-        if (this.isPlacedOnBoard(pentomino)) {
-            return this._board.getCollisionCellsOfPentomino(pentomino);
-        } else {
-            return [];
-        }
-    }
-
-    getCollisionOfPentominoes(pentomino) {
-        if (this.isPlacedOnBoard(pentomino)) {
-            return this._board.getCollisionOfPentominoes(pentomino);
-        } else {
-            return [];
-        }
-    }
     // --- --- --- Getter and Helper --- --- ---
 
     getPentominoesOutsideBoard() {
@@ -293,6 +480,10 @@ class Game {
         return this._board.getPentominoes().concat(this._pentominosOutside).concat(this._tray);
     }
 
+    getPentominoesInGmArea(){
+        return this._board.getPentominoes().concat(this._pentominosOutside);
+    }
+
     getPentominoByName(name) {
         let pentominoOnBoard = this._board.getPentominoByName(name);
         if (pentominoOnBoard === null)
@@ -302,11 +493,14 @@ class Game {
     }
 
     getPosition(pentomino) {
+        let retPosition = undefined;
         if (this._board.isPlacedOnBoard(pentomino)) {
-            return this._board.getPosition(pentomino);
+            retPosition = this._board.getPosition(pentomino);
         } else {
-            return this._getOutsidePosition(pentomino);
+            retPosition = this._getOutsidePosition(pentomino);
         }
+        
+        return retPosition;
     }
 
     _getOutsidePosition(pentomino) {
