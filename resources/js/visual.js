@@ -464,6 +464,7 @@ class Visual {
                         let piece = data[1].toTray();
                         that.positionPiece(piece);
                         that.movePentominoToTray(piece);
+                        that.disableManipulations();
                     }
 
                     if (id.split('_')[0] == 'field') {
