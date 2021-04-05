@@ -1,8 +1,8 @@
 
 const UIProperty = {
-    "TrayCSSLeft":7, // [Hot-Fix : Bug-#63 ] Pieces disappear after rotation and placement onto the tray
-    "TrayHeight":12.5, // [Hot-Fix : Bug-#63 ] Pieces disappear after rotation and placement onto the tray
-    "WindowWidth":90,
+    "TrayCSSLeft":7,
+    "TrayHeight":7,
+    "WindowWidth":89,
     "PentominoX": 5,
     "PentominoY": 5,
     "FunctionWidth": 10
@@ -206,29 +206,18 @@ class Visual {
         var width = UIProperty.WindowWidth / this.pd.gameWidth;
         var htmlElement = document.getElementById('piece_' + piece.name);
 
-        var style = window.getComputedStyle(htmlElement)
-        var zI = style.zIndex;
-        console.log("Previous "+ piece.name+": "+ parseInt(zI));
-        htmlElement.style.zIndex = this.overlapBlock.getZIndex(piece);
-        console.log("new "+ piece.name+": "+ htmlElement.style.zIndex);
-
-         if (piece.inTray) {
-            var trayPosition = piece.trayPosition;
-            /**
-             * 7 is trayHeight
-             */
-            var widthVW = UIProperty.TrayCSSLeft + (piece.trayPosition) * 7; //HOT-FIX: 7 is tray height
+        if (piece.inTray) {
+            var widthVW = UIProperty.TrayCSSLeft + (piece.trayPosition) * 7;
             var magnification = 6 / (5 * width);
             htmlElement.style.left = widthVW + 'vw';
-
-            let trayWidth = document.getElementById("tray");
-            htmlElement.style.top = '0';
-            htmlElement.style.marginTop = "-5.5%";// [Hot-Fix : Bug-#63 ] Pieces disappear after rotation and placement onto the tray
+            htmlElement.style.top = '.7vw';
+            htmlElement.style.transformOrigin = 'top';
             htmlElement.style.setProperty("--magnification", magnification);
-            htmlElement.style.transformOrigin = 'center'; // [Hot-Fix : Bug-#63 ] Pieces disappear after rotation and placement onto the tray
-
-        } else  {
-
+            htmlElement.style.setProperty("--rotationX", "0deg");
+            htmlElement.style.setProperty("--rotationY", "0deg");
+            htmlElement.style.setProperty("--rotationZ", "0deg");
+        } 
+        else {
             var bCellsFnd = this.isPentominoInBlockCells(piece);
             var collisonFnd = this.isCollision(piece);
             if(collisonFnd){
@@ -256,8 +245,6 @@ class Visual {
             htmlElement.style.left = left + 'vw';
             htmlElement.style.top = top + 'vw';
             htmlElement.style.setProperty("--magnification", 1);
-            htmlElement.style.transformOrigin = '50% 50%';
-
         }
         if (htmlElement.style.getPropertyValue("--rotationX") === "") {
             htmlElement.style.setProperty("--rotationX", "0deg");
@@ -426,14 +413,15 @@ class Visual {
                 var gameWidth = document.getElementById("game").clientWidth;
                 var gameHeight = document.getElementById("game").clientHeight;
 
+
                 if ((x > functionsWidth) && (x < (gameWidth + functionsWidth))) {
                     if ((y > 0) && (y < gameHeight)) {
-                        container.style.left = 'calc(' + x + 'px - ' + (width * 2.5) + 'vw)';
-                        container.style.top = 'calc(' + y + 'px - ' + (width * 1) + 'vw)';
-                        container.style.setProperty("--magnification", 1);// [Hot-Fix : Bug-#63 ] Pieces disappear after rotation and placement onto the tray
-                        container.style.transformOrigin = '50% 50%';
-                        container.style.zIndex += 1000;
 
+                        container.style.left = 'calc(' + x + 'px - ' + (width * 2.5) + 'vw)';
+                        container.style.top = 'calc(' + y + 'px - ' + (width * 2.5) + 'vw)';
+                        container.style.transformOrigin='50% 50%';
+                        container.style.zIndex = 100;
+                        container.style.setProperty("--magnification", 1);
                     }
                 }
             }

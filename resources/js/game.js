@@ -134,7 +134,7 @@ class Game {
                 this._removePentominoOutsideTheBoard(pentomino);
             } 
             else {
-                throw new Error("Pentomino \'" + pentomino.name + "\' does not exist in this game.");
+               ;// throw new Error("Pentomino \'" + pentomino.name + "\' does not exist in this game.");
             }
         }
     }
