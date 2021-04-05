@@ -17,10 +17,11 @@
 .form-popup {
   display: none;
   position: fixed;
-  height: 80%;
+  top:7vw;
+  height: 50%;
   width: 50%;
-  bottom: 0;
-  left: 15px;
+  bottom: 30%;
+  left: 10vw;
   border: 3px solid #f1f1f1;
   z-index: 9;
 }
@@ -195,6 +196,10 @@ input[type=radio]:checked + label>img {
   opacity: 1;
 }
 
+.replayBoards {
+  position: relative;
+  padding-left: 3vw;
+}
 
 /* --------------------------------------- */
 

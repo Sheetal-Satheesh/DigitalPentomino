@@ -117,9 +117,7 @@
               Number of solutions: <label id="labelNumberSolutions">?</label>
           </p>
 		<div class="form-popup" id="board_selection_form">
-
 			<div class="container" id="container">
-				
 				<!-- Board List is loaded dynamically from Board Config -->
 				
 				<div class="action_btn">
@@ -127,9 +125,14 @@
 					<button type="button" class="btnCancel" onclick="closeForm()">Cancel</button>
 				</div>
 			</div>
+		</div> <!--form-popup-->
 
+        <div class="form-popup" id="replayWindow">
+			<div class="container" id="replayContainer">
+				<!-- Board List is loaded dynamically from Board Config -->
+			</div>
+		</div> <!--form-popup-->
 
-		</div>
         </div>  <!-- operation -->
     </div>
 
@@ -166,6 +169,13 @@
 
 <script type="text/javascript">
 
+/**************All Global Variable **************/
+var currentTouches = [];
+let pd;
+let IsReplayButtonClicked = false;
+
+/*------------------------------------------------*/
+
     // Touch Handling for mobile devices
         //intialize the touch events
         function touchStartup(){
@@ -178,8 +188,6 @@
         }
 
         document.addEventListener("Mouse controls initialized ", touchStartup);
-        var currentTouches = [];
-
         //when touch starts handle start function is called
         function touchStartHandle(evt) {
             console.log('In handle start function');
@@ -284,12 +292,10 @@
         }
         }//end touch events
 
-        let pd;
+        
 		
         function initialize() {
             pd = new PD();
-			
-			loadBoardList();
         }
 
 		function loadBoardList() {
@@ -340,6 +346,7 @@
         }
 
         function selectBoard(){
+            loadBoardList();
 			document.getElementById("board_selection_form").style.display = "block";
         }
 
@@ -366,33 +373,71 @@
             pd.redo();
         }
 
+        function disappearReplayWindow(){
+            document.getElementById("replayWindow").style.display = "none";
+            document.getElementById("replayContainer").innerHTML = "";
+            IsReplayButtonClicked = false;
+        }
+
         function execReplay(){
-            var br = document.createElement("br");
+
+            if(IsReplayButtonClicked){
+                disappearReplayWindow();
+                return;
+            }
+            IsReplayButtonClicked = true;
+            document.getElementById("replayWindow").style.display = "block";
+            var submit = document.createElement("input");
+            submit.setAttribute("type", "button");
+            submit.setAttribute("value", "Submit");
+            submit.classList.add("replayBoards", "replayConfigSubmit");
+
+
+            submit.onclick = function(){
+                // let sValue = startStateElem.value;
+                // let eValue = endStateElem.value;
+                // console.log(sValue);
+
+                pd.replay();
+                disappearReplayWindow();
+            }
+            
+
+            if(pd.getGameState("start") == undefined){
+               var errorMsg= document.createElement('h1');
+               errorMsg.setAttribute("align","center");
+               errorMsg.setAttribute("style","color:red");
+
+               errorMsg.innerText="Game is not started Yet";
+               errorMsg.setAttribute
+               document.getElementById("replayContainer").appendChild(errorMsg);
+          
+               return;
+
+            }
 
             let form = document.createElement("form");
             let startStateElem = document.createElement("input");
             startStateElem.setAttribute("type", "text");
             startStateElem.setAttribute("name", "StartGameState");
             startStateElem.setAttribute("placeholder", "Enter Start Game State");
+            startStateElem.classList.add("replayBoards");
+            startStateElem.value=pd.getGameState("start");
+
+
 
             let endStateElem = document.createElement("input");
             endStateElem.setAttribute("type", "text");
             endStateElem.setAttribute("name", "endGameState");
-            endStateElem.setAttribute("placeholder", "Enter End Game State");    
-
-            var submit = document.createElement("input");
-            submit.setAttribute("type", "submit");
-            submit.setAttribute("value", "Submit");
+            endStateElem.setAttribute("placeholder", "Enter End Game State");
+            endStateElem.classList.add("replayBoards");
+            endStateElem.value=pd.getGameState("current");  
 
             form.appendChild(startStateElem); 
-            form.appendChild(br.cloneNode()); 
             form.appendChild(endStateElem);
-            form.appendChild(br.cloneNode()); 
             form.appendChild(submit); 
-            document.getElementsByTagName("body")[0].appendChild(form);
-            console.log(document.getElementsByTagName("body")[0]);
-            pd.replay();
-
+            form.setAttribute("align","center");
+            document.getElementById("replayContainer").appendChild(form);
         }
 
 

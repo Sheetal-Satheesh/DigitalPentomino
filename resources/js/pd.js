@@ -84,6 +84,10 @@ class PD {
         this.visual.replay();
     }
 
+    getGameState(type){
+        return this.visual.getCmdState(type);
+    }
+
 }
 
 

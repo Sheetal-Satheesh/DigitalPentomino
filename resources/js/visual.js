@@ -884,6 +884,15 @@ class Visual {
         }
     }
 
+    getCmdState(stateType){
+        if(stateType == "start"){
+            return this.gameController.getStartCmdKey();
+        }
+        else{
+            return this.gameController.getCurrentCmdKey()
+        }
+    }
+
     undo(){
         let command = this.gameController.undo();
         if(command == undefined){
