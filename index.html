@@ -322,6 +322,8 @@
         }
 
         function handleJsonFormSubmit (errors, values) {
+            postProcessSettings(values);
+
             event.preventDefault();
             console.log("JsonForm: Submitted values:");
             console.log(values);
@@ -338,6 +340,19 @@
 
             processChangesToSettings(changesToSettings, values);
             updateSettingSchemaDefaultFromSettings(schema, values);
+        }
+
+        function postProcessSettings(settings) {
+            let selectedLanguage = settings.general.language;
+            let selectedLanguageNum;
+            if (selectedLanguage === "en") {
+                selectedLanguageNum = 0;
+            } else if (selectedLanguage === "de") {
+                selectedLanguageNum = 1;
+            } else {
+                throw new Error("Unknown language: " + selectedLanguage);
+            }
+            settings.general.language = selectedLanguageNum;
         }
 
         function processChangesToSettings(changes, settings) {

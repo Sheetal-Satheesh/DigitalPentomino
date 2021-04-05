@@ -24,7 +24,7 @@ const SettingsSchemaSingleton = (function () {
 
 class SettingsSchema {
     constructor() {
-        this._language = "en";
+        this._language = 0;
         this._dirty = true;
     }
 
@@ -50,7 +50,7 @@ class SettingsSchema {
     }
 
     createSchema() {
-        let lang = this._language === "en" ? 0 : 1;
+        let lang = this._language;
         let titles = strings.settings;
 
         return this._schema = {
