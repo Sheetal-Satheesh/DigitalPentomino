@@ -257,6 +257,10 @@ class GameController {
         return this._commandManager.CmdSequences(startKey, endKey);
     }
 
+    getCmdKeySequences() {
+        return this._commandManager.CmdKeySequences();
+    }
+
     // --- --- --- Set Game --- --- ---
     setGame(game) {
         this._game = game;

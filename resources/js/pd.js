@@ -80,12 +80,16 @@ class PD {
         this.visual.redo();
     }
 
-    replay(){
-        this.visual.replay();
+    replay(startState, targetState){
+        this.visual.replay(startState,targetState);
     }
 
     getGameState(type){
         return this.visual.getCmdState(type);
+    }
+
+    getAllGameStates(){
+        return this.visual.getGameStates();
     }
 
 }

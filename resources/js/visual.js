@@ -893,6 +893,12 @@ class Visual {
         }
     }
 
+    getGameStates(){
+        let cmdKeySequences = this.gameController.getCmdKeySequences();
+        return cmdKeySequences;
+    }
+
+
     undo(){
         let command = this.gameController.undo();
         if(command == undefined){
@@ -920,9 +926,8 @@ class Visual {
         }        
     }
 
-    replay(){
-        let startKey="",
-            endKey="";
+    replay(startKey, targetKey){
+
 
         console.log("Start Cmd Key: "+this.gameController.getStartCmdKey());
         console.log("Current Cmd Key: "+this.gameController.getCurrentCmdKey());
@@ -936,15 +941,15 @@ class Visual {
             }
         }
 
-        if(endKey.length == 0){
-            endKey = this.gameController.getLastCmdKey();
-            if(endKey == undefined){
+        if(targetKey.length == 0){
+            targetKey = this.gameController.getLastCmdKey();
+            if(targetKey == undefined){
                 console.error("Game is not Started yet");
                 return;
             }
         }
 
-        let cmdSequences = this.gameController.getCmdSequences(startKey,endKey);
+        let cmdSequences = this.gameController.getCmdSequences(startKey,targetKey);
         let ldGame = this.loadGameState(startKey);
         if(ldGame != undefined){
             this.pieces = this.gameController.getPentominoes();
@@ -958,15 +963,14 @@ class Visual {
             this.renderPieces();
         }
 
-        let timeInterval=1000;
-        let intervalId=0;
+        let timeInterval=100;
         for (let indx = 0; indx < cmdSequences.length; indx++) {
             let command = cmdSequences[indx];
             var that = this;
 
             setTimeout(function (that, command) {
                 that.execShadowCmd(command);
-            }, timeInterval+=1000, that, command);
+            }, timeInterval+=500, that, command);
         }   
     }
 }

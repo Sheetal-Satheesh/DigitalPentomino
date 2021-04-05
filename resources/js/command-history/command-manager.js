@@ -95,6 +95,18 @@ class CommandManager {
         }
     }
 
+    CmdKeySequences(){
+
+        let startKey = this._cmdTree.RootCmdKey();
+        let endKey = this._cmdTree.LeafCmdKey();
+        let cmdKeySeq =  this._cmdTree.CollectCmdKeySequences(
+                                            this._cmdTree.Root(),
+                                            startKey, 
+                                            endKey,0);
+
+        return cmdKeySeq;
+    }
+
     CmdSequences(startKey, endKey){
         let cmdObj =  this._cmdTree.CollectCmdSequences(
                                                         this._cmdTree.Root(),

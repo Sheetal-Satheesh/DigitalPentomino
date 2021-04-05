@@ -87,6 +87,57 @@ class CommandTree {
         return current;
     }
 
+    CollectCmdKeySequences(
+        currNode, 
+        startKey, 
+        endKey, 
+        searchType){
+
+
+        if(currNode == undefined){
+            return undefined;
+        }
+
+        if(currNode.Key() == startKey){
+            searchType |= SearchStrategy.Top2Bottom;
+            if((SearchStrategy.BottomUp & searchType) != 0){
+                return [currNode._key];
+            }
+        }
+
+        if(currNode.Key() == endKey){
+            searchType |= SearchStrategy.BottomUp;
+            if((SearchStrategy.Top2Bottom & searchType) != 0){
+                return [currNode._key] ;
+            }
+        }
+
+        for(let indx=0; indx < currNode.Children().length; ++indx){
+            let cmdKeySeq = [];
+            let childs = currNode.Children();
+            let commandKeys= this.CollectCmdKeySequences(
+                                            childs[indx],
+                                            startKey,
+                                            endKey,
+                                            searchType
+                                            );
+
+            if((commandKeys != undefined) &&
+                (((SearchStrategy.Top2Bottom & searchType) != 0) ||
+                ((SearchStrategy.BottomUp & searchType) != 0))){
+
+                cmdKeySeq.push(currNode._key);
+                commandKeys.forEach(cmdKey => {
+                    cmdKeySeq.push(cmdKey);
+                });
+
+            }
+
+            return cmdKeySeq;
+        }        
+    }
+
+
 
     CollectCmdSequences(
                         currNode, 
