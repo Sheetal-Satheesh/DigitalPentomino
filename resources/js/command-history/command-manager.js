@@ -101,7 +101,7 @@ class CommandManager {
         let endKey = this._cmdTree.LeafCmdKey();
         let cmdKeySeq =  this._cmdTree.CollectCmdKeySequences(
                                             this._cmdTree.Root(),
-                                            startKey, 
+                                            startKey,
                                             endKey,0);
 
         return cmdKeySeq;
@@ -113,7 +113,11 @@ class CommandManager {
                                                         startKey, 
                                                         endKey,0);
 
-        console.log(cmdObj);                                                        
+        console.log(cmdObj); 
+        if(cmdObj.seqType == 2){
+            cmdObj.commands = cmdObj.commands.reverse();                                                       
+        }
+        
         let cmdSequences = [];
         cmdObj.commands.forEach((command) => {
             if(cmdObj.seqType == 1){
