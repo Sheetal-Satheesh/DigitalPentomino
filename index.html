@@ -173,44 +173,40 @@
 var currentTouches = [];
 let pd;
 let IsReplayButtonClicked = false;
+document.addEventListener("Mouse controls initialized ", touchStartup);
 
 /*------------------------------------------------*/
 
-    // Touch Handling for mobile devices
-        //intialize the touch events
-        function touchStartup(){
-            console.log('Initialize touch events for mobile devices');
-            var touchElement = document.getElementById("piecearea");
-            touchElement.addEventListener("touchstart", touchStartHandle, false);
-            touchElement.addEventListener("touchend", touchEndhandle, false);
-            touchElement.addEventListener("touchcancel", touchCancelhandle, false);
-            touchElement.addEventListener("touchmove", touchMoveHandle, false);
-        }
+// Touch Handling for mobile devices
+//intialize the touch events
+    function touchStartup(){
+        console.log('Initialize touch events for mobile devices');
+        var touchElement = document.getElementById("piecearea");
+        touchElement.addEventListener("touchstart", touchStartHandle, false);
+        touchElement.addEventListener("touchend", touchEndhandle, false);
+        touchElement.addEventListener("touchcancel", touchCancelhandle, false);
+        touchElement.addEventListener("touchmove", touchMoveHandle, false);
+    }
 
-        document.addEventListener("Mouse controls initialized ", touchStartup);
-        //when touch starts handle start function is called
-        function touchStartHandle(evt) {
-            console.log('In handle start function');
+//when touch starts handle start function is called
+    function touchStartHandle(evt) {
         evt.preventDefault();
-        console.log("touchstart.");
         //putting the ID of the HTML entity where touch controls we need to implement
         var touchElement = document.getElementById("piecearea");
         var ctx = touchElement.getContext("2d");
         var touches = evt.changedTouches;
-
+    
         for (var i = 0; i < touches.length; i++) {
-            console.log("touchstart:" + i + "...");
             currentTouches.push(copyTouch(touches[i]));
             var color = colorForTouch(touches[i]);
             ctx.beginPath();
             ctx.arc(touches[i].pageX, touches[i].pageY, 4, 0, 2 * Math.PI, false);  
             ctx.fillStyle = color;
             ctx.fill();
-            console.log("touchstart:" + i + ".");
         }
-        }
+    }
 
-        function touchMoveHandle(evt) {
+    function touchMoveHandle(evt) {
         evt.preventDefault();
         var touchElement = document.getElementById("piecearea");
         var ctx = touchElement.getContext("2d");
@@ -221,27 +217,22 @@ let IsReplayButtonClicked = false;
             var idx = ongoingTouchIndexById(touches[i].identifier);
 
             if (idx >= 0) {
-            console.log("continuing touch "+idx);
-            ctx.beginPath();
-            console.log("ctx.moveTo(" + currentTouches[idx].pageX + ", " + currentTouches[idx].pageY + ");");
-            ctx.moveTo(currentTouches[idx].pageX, currentTouches[idx].pageY);
-            console.log("ctx.lineTo(" + touches[i].pageX + ", " + touches[i].pageY + ");");
-            ctx.lineTo(touches[i].pageX, touches[i].pageY);
-            ctx.lineWidth = 4;
-            ctx.strokeStyle = color;
-            ctx.stroke();
-
-            currentTouches.splice(idx, 1, copyTouch(touches[i])); 
-            console.log(".");
-            } else {
-            console.log("Unable to determine which touch to continue");
+                ctx.beginPath();
+                ctx.moveTo(currentTouches[idx].pageX, currentTouches[idx].pageY);
+                ctx.lineTo(touches[i].pageX, touches[i].pageY);
+                ctx.lineWidth = 4;
+                ctx.strokeStyle = color;
+                ctx.stroke();
+                currentTouches.splice(idx, 1, copyTouch(touches[i])); 
+            } 
+            else {
+                console.error("Unable to determine which touch to continue");
             }
         }
-        }
+    }
 
-        function touchEndhandle(evt) {
+    function touchEndhandle(evt) {
         evt.preventDefault();
-        log("touchend");
         var touchElement = document.getElementById("piecearea");
         var ctx = touchElement.getContext("2d");
         var touches = evt.changedTouches;
@@ -251,194 +242,185 @@ let IsReplayButtonClicked = false;
             var idx = ongoingTouchIndexById(touches[i].identifier);
 
             if (idx >= 0) {
-            ctx.lineWidth = 4;
-            ctx.fillStyle = color;
-            ctx.beginPath();
-            ctx.moveTo(currentTouches[idx].pageX, currentTouches[idx].pageY);
-            ctx.lineTo(touches[i].pageX, touches[i].pageY);
-            ctx.fillRect(touches[i].pageX - 4, touches[i].pageY - 4, 8, 8);  
-            currentTouches.splice(idx, 1); 
+                ctx.lineWidth = 4;
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.moveTo(currentTouches[idx].pageX, currentTouches[idx].pageY);
+                ctx.lineTo(touches[i].pageX, touches[i].pageY);
+                ctx.fillRect(touches[i].pageX - 4, touches[i].pageY - 4, 8, 8);  
+                currentTouches.splice(idx, 1); 
             } else {
-            console.log("Unable to determine which touch to end");
+                console.error("Unable to determine which touch to end");
             }
         }
         }
 
         //copying the touch objects 
-        function copyTouch({ identifier, pageX, pageY }) {
+    function copyTouch({ identifier, pageX, pageY }) {
         return { identifier, pageX, pageY };
-        }
+    }
 
         //find the current position of the mouse pointer
-        function ongoingTouchIndexById(idToFind) {
+    function ongoingTouchIndexById(idToFind) {
         for (var i = 0; i < currentTouches.length; i++) {
             var id = currentTouches[i].identifier;
 
             if (id == idToFind) {
-            return i;
+                return i;
             }
         }
         return -1;    // not found
-        }
+    }
 
-        function touchCancelhandle(evt) {
+    function touchCancelhandle(evt) {
         evt.preventDefault();
-        console.log("touchcancel.");
         var touches = evt.changedTouches;
 
         for (var i = 0; i < touches.length; i++) {
             var idx = ongoingTouchIndexById(touches[i].identifier);
             currentTouches.splice(idx, 1);  
         }
-        }//end touch events
+    }//end touch events
 
         
 		
-        function initialize() {
-            pd = new PD();
-        }
+    function initialize() {
+        pd = new PD();
+    }
 
-		function loadBoardList() {
-			var board_container = document.getElementById('container');
-			var board_list = GameLoader.getAllBoards();
-			var out = '';
+	function loadBoardList() {
+		var board_container = document.getElementById('container');
+		var board_list = GameLoader.getAllBoards();
+		var out = '';
 			
-			var input_element = '<input type="radio" name="board_list" class="input-hidden" id="$$" value="$$" >';
-			var label = '<label for="$$"> $$ <img src="resources/images/boards/$$.png" alt="$$" style="width:50%; height:50%;"/></label>';
-			var action_btn = '\n<div class="action_btn">\n<button type="button" class="btnLoadboard" onclick="loadBoard()">Load Board</button>\n<button type="button" class="btnCancel" onclick="closeForm()">Cancel</button>\n</div>'
+		var input_element = '<input type="radio" name="board_list" class="input-hidden" id="$$" value="$$" >';
+		var label = '<label for="$$"> $$ <img src="resources/images/boards/$$.png" alt="$$" style="width:50%; height:50%;"/></label>';
+		var action_btn = '\n<div class="action_btn">\n<button type="button" class="btnLoadboard" onclick="loadBoard()">Load Board</button>\n<button type="button" class="btnCancel" onclick="closeForm()">Cancel</button>\n</div>'
 			
-			for (var i=0; i< board_list.length; i++){
-				out += input_element.replaceAll("$$", board_list[i]) +'\n'+ label.replaceAll("$$", board_list[i]) + '<br><br>\n';
-			}
-			
-			board_container.innerHTML = out + action_btn;
+		for (var i=0; i< board_list.length; i++){
+			out += input_element.replaceAll("$$", board_list[i]) +'\n'+ label.replaceAll("$$", board_list[i]) + '<br><br>\n';
 		}
+		board_container.innerHTML = out + action_btn;
+	}
 
-        function resetGame(){
-            pd.reset();
-        }
+    function resetGame(){
+        pd.reset();
+    }
 
-        function callHintAI() {
-            pd.visual.callHintAI();
+    function callHintAI() {
+        pd.visual.callHintAI();
+    }
+//hinting popup disappears when mouse pointer is away
+    document.getElementById("hintButton").addEventListener("mouseleave", function() {
+        document.getElementById("myHint").style.visibility = "hidden";
+    });
+        
+
+    function rotateClkWise(){
+        pd.rotateClkWise();
+    }
+
+    function rotateAntiClkWise() {
+        pd.rotateAntiClkWise();
+    }
+
+    function flipH(){
+        pd.flipH();
+    }
+
+    function flipV(){
+        pd.flipV();
+    }
+
+    function selectBoard(){
+        loadBoardList();
+		document.getElementById("board_selection_form").style.display = "block";
+    }
+
+	function loadBoard(){
+		var selectedBoard = document.querySelector("input[name=board_list]:checked").value;
+		document.getElementById("board_selection_form").style.display = "none";
+        pd.loadBoard(selectedBoard);
+    }
+		
+	function closeForm() {
+		document.getElementById("board_selection_form").style.display = "none";
+	}
+
+    function prefillBoard(){
+        pd.prefillBoard();
+    }
+
+    function execUndo(){
+        pd.undo();
+    }
+
+    function execRedo(){
+        pd.redo();
+    }
+
+    function disappearReplayWindow(){
+        document.getElementById("replayWindow").style.display = "none";
+        document.getElementById("replayContainer").innerHTML = "";
+        IsReplayButtonClicked = false;
+    }
+
+    function execReplay(){
+
+        if(IsReplayButtonClicked){
+            disappearReplayWindow();
+            return;
             
         }
-
-        //hinting popup disappears when mouse pointer is away
-        document.getElementById("hintButton").addEventListener("mouseleave", function() {
-                 document.getElementById("myHint").style.visibility = "hidden";
-        });
         
+        IsReplayButtonClicked = true;
+        document.getElementById("replayWindow").style.display = "block";
+        var submit = document.createElement("input");
+        submit.setAttribute("type", "button");
+        submit.setAttribute("value", "Submit");
+        submit.classList.add("replayBoards", "replayConfigSubmit");
 
-        function rotateClkWise(){
-            pd.rotateClkWise();
-        }
-
-        function rotateAntiClkWise() {
-            pd.rotateAntiClkWise();
-        }
-
-        function flipH(){
-            pd.flipH();
-        }
-
-        function flipV(){
-            pd.flipV();
-        }
-
-        function selectBoard(){
-            loadBoardList();
-			document.getElementById("board_selection_form").style.display = "block";
-        }
-
-		function loadBoard(){
-			var selectedBoard = document.querySelector("input[name=board_list]:checked").value;
-			document.getElementById("board_selection_form").style.display = "none";
-            pd.loadBoard(selectedBoard);
-			
-        }
-		
-		function closeForm() {
-			document.getElementById("board_selection_form").style.display = "none";
-		}
-
-        function prefillBoard(){
-            pd.prefillBoard();
-        }
-
-        function execUndo(){
-            pd.undo();
-        }
-
-        function execRedo(){
-            pd.redo();
-        }
-
-        function disappearReplayWindow(){
-            document.getElementById("replayWindow").style.display = "none";
-            document.getElementById("replayContainer").innerHTML = "";
-            IsReplayButtonClicked = false;
-        }
-
-        function execReplay(){
-
-            if(IsReplayButtonClicked){
-                disappearReplayWindow();
-                return;
-            }
-            IsReplayButtonClicked = true;
-            document.getElementById("replayWindow").style.display = "block";
-            var submit = document.createElement("input");
-            submit.setAttribute("type", "button");
-            submit.setAttribute("value", "Submit");
-            submit.classList.add("replayBoards", "replayConfigSubmit");
-
-
-            submit.onclick = function(){
+        submit.onclick = function(){
                 // let sValue = startStateElem.value;
                 // let eValue = endStateElem.value;
                 // console.log(sValue);
-
-                pd.replay();
-                disappearReplayWindow();
-            }
+            pd.replay();
+            disappearReplayWindow();
+        }
             
 
-            if(pd.getGameState("start") == undefined){
-               var errorMsg= document.createElement('h1');
-               errorMsg.setAttribute("align","center");
-               errorMsg.setAttribute("style","color:red");
-
-               errorMsg.innerText="Game is not started Yet";
-               errorMsg.setAttribute
-               document.getElementById("replayContainer").appendChild(errorMsg);
-          
-               return;
-
-            }
-
-            let form = document.createElement("form");
-            let startStateElem = document.createElement("input");
-            startStateElem.setAttribute("type", "text");
-            startStateElem.setAttribute("name", "StartGameState");
-            startStateElem.setAttribute("placeholder", "Enter Start Game State");
-            startStateElem.classList.add("replayBoards");
-            startStateElem.value=pd.getGameState("start");
-
-
-
-            let endStateElem = document.createElement("input");
-            endStateElem.setAttribute("type", "text");
-            endStateElem.setAttribute("name", "endGameState");
-            endStateElem.setAttribute("placeholder", "Enter End Game State");
-            endStateElem.classList.add("replayBoards");
-            endStateElem.value=pd.getGameState("current");  
-
-            form.appendChild(startStateElem); 
-            form.appendChild(endStateElem);
-            form.appendChild(submit); 
-            form.setAttribute("align","center");
-            document.getElementById("replayContainer").appendChild(form);
+        if(pd.getGameState("start") == undefined){
+           var errorMsg= document.createElement('h1');
+            errorMsg.setAttribute("align","center");
+            errorMsg.setAttribute("style","color:red");
+            errorMsg.innerText="Game is not started Yet";
+            errorMsg.setAttribute
+            document.getElementById("replayContainer").appendChild(errorMsg);
+            
+            return;
         }
+
+        let form = document.createElement("form");
+        let startStateElem = document.createElement("input");
+        startStateElem.setAttribute("type", "text");
+        startStateElem.setAttribute("name", "StartGameState");
+        startStateElem.setAttribute("placeholder", "Enter Start Game State");
+        startStateElem.classList.add("replayBoards");
+        startStateElem.value=pd.getGameState("start");
+
+        let endStateElem = document.createElement("input");
+        endStateElem.setAttribute("type", "text");
+        endStateElem.setAttribute("name", "endGameState");
+        endStateElem.setAttribute("placeholder", "Enter End Game State");
+        endStateElem.classList.add("replayBoards");
+        endStateElem.value=pd.getGameState("current");  
+
+        form.appendChild(startStateElem); 
+        form.appendChild(endStateElem);
+        form.appendChild(submit); 
+        form.setAttribute("align","center");
+        document.getElementById("replayContainer").appendChild(form);
+    }
 
 
 
