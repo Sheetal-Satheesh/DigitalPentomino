@@ -24,7 +24,7 @@ const SettingsSchemaSingleton = (function () {
 
 class SettingsSchema {
     constructor() {
-        this._language = 0;
+        this._language = languages.ENGLISH;
         this._dirty = true;
     }
 

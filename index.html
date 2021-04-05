@@ -346,9 +346,9 @@
             let selectedLanguage = settings.general.language;
             let selectedLanguageNum;
             if (selectedLanguage === "en") {
-                selectedLanguageNum = 0;
+                selectedLanguageNum = languages.ENGLISH;
             } else if (selectedLanguage === "de") {
-                selectedLanguageNum = 1;
+                selectedLanguageNum = languages.GERMAN;
             } else {
                 throw new Error("Unknown language: " + selectedLanguage);
             }
@@ -386,7 +386,7 @@
                     }
                 }
                 let currentLanguage = settings.general.language;
-                settingsSchema["general"]["properties"]["language"]["default"] = currentLanguage === 0 ? "en" : "de";
+                settingsSchema["general"]["properties"]["language"]["default"] = currentLanguage === languages.ENGLISH ? "en" : "de";
             }
         }
 
