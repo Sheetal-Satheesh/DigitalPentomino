@@ -375,7 +375,6 @@
 
         function updateSettingSchemaDefaultFromSettings(settingsSchema, settings) {
             //change default values according to current schema
-
             if (Object.keys(settings).length === 0){
                 //Do nothing and load blank settingsSchema
             } else {
@@ -386,9 +385,9 @@
                         settingsSchema[key]["properties"][subkey]["default"] = settings[key][subkey];
                     }
                 }
-
+                let currentLanguage = settings.general.language;
+                settingsSchema["general"]["properties"]["language"]["default"] = currentLanguage === 0 ? "en" : "de";
             }
-
         }
 
         function selectSettings(){
