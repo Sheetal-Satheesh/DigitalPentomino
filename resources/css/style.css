@@ -49,7 +49,7 @@
 
 #operations {
   display: inline-block;
-  margin-top: 10vw;
+  margin-top: 8vw;
 }
 
 #operations {
@@ -57,20 +57,22 @@
 }
 
 #operations  img{
-  width:3vw;
-  height:3vw;
+  width:4vw;
+  height:4vw;
 
 }
 
 #operations table tr td div{
-  margin:14px;
-margin-top: 2px;
+  margin:20%;
+  margin-top: 2%;
 }
 
 
 #operations button{
-margin:14px;
-margin-top: 2px;
+margin:20%;
+margin-top: 2%;
+width: 4vw;
+height: 4vw;
 }
 
 #pieceManipulation table tr td div{
@@ -152,8 +154,8 @@ border: 0;
 
 .CMenuTB img{
   float: center;
-  width:  3vw;
-  height: 3vw;
+  width:  4vw;
+  height: 4vw;
   object-fit: cover;
   background: rgb(140, 170, 158);
   border-radius: 25%;
@@ -310,37 +312,38 @@ table
 
 @media only screen and (max-width: 1137px) {
     #operations  img{
-          width:2.5vw;
-          height:2.5vw;
+          width:4vw;
+          height:4vw;
       }
 
       #operations table tr td div{
           margin:10px;
-        margin-top: 1px;
       }
 
 
       #operations button{
         margin:10px;
         margin-top: 1px;
+        width: 4vw;
+        height: 4vw;
       }
 
   }
 
   @media only screen and (max-width: 1137px) {
     #operations  img{
-          width:2vw;
-          height:2vw;
+          width:4vw;
+          height:4vw;
       }
 
       #operations table tr td div{
-          margin:10px;
+          margin:3px;
         margin-top: 1px;
       }
 
 
       #operations button{
-        margin:10px;
+        margin:3px;
         margin-top: 1px;
       }
 
@@ -358,4 +361,10 @@ table
   color: #fff;
   margin: 0;
   padding: 20px;
+}
+
+#possibleSolutions {
+  font-size: x-small;
+   font-family: Nuevo Disco;
+   margin-left: 10%;
 }
