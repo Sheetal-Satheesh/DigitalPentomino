@@ -412,7 +412,7 @@
             let $closeButton = $('<input id="settings-close-button" type="button" value="Abort" onClick="closeSettings()" />');
             $closeButton.appendTo(btnContainer);
 
-            Translator.translateHeaders(SettingsSchemaSingleton.getInstance().getLanguage());
+            Translator.translateHeaders(SettingsSingleton.getInstance().getSettings().general.language);
 
             // Adjust string enum values
             /*let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();

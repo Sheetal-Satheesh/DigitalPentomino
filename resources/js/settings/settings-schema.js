@@ -36,10 +36,6 @@ class SettingsSchema {
         this._language = language;
     }
 
-    getLanguage() {
-        return this._language;
-    }
-
     getSettingsSchema() {
         if (this._dirty === false) {
             return this._schema;
