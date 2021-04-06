@@ -46,13 +46,12 @@
 </head>
 
 <body onload="touchStartup(); initialize()">
-
+  <div id="seedingCover"></div>
+  <div id="seeding" class="seed">
+    <input type="search" id="seedBar" class="seed" placeholder="Input seed...">
+    <button type="button" id='seedSubmit' class = "cActionBtn" onclick="submitSeed()"><img class="cSeedBtn" src="resources/images/icons/seed.png">
+  </div>
   <div class = "cGame">
-    <div id="seedingCover"></div>
-    <div id="seeding" class="seed">
-        <input type="search" id="seedBar" class="seed" placeholder="Input seed...">
-        <button type="button" id='seedSubmit' class = "cActionBtn" onclick="submitSeed()"><img class="cSeedBtn" src="resources/images/icons/seed.png">
-    </div>
     <div id="functions">
       <img id = "logo" src="resources/images/icons/pentomino.png" alt="Pentomino" class="cLogo">
       <div id="operations">
@@ -120,7 +119,6 @@
                         </button>
                     </td>
                     <td>
-                        <button type="button" id='btnSeed' class = "cActionBtn" onclick="selectSeeding()"> <img src="resources/images/icons/seed.png">
                     </td>
                 </tr>
                   <tr>
@@ -409,6 +407,9 @@
             $submitButton.appendTo(btnContainer);
             let $closeButton = $('<input id="settings-close-button" type="button" value="Abort" onClick="closeSettings()" />');
             $closeButton.appendTo(btnContainer);
+            let $seedButton = $('<input id="btnSeed" class="button" type="button" value="Enter a seed..." onClick="selectSeeding()" />');
+            $seedButton.appendTo(btnContainer);
+
 
             Translator.translateHeaders(SettingsSingleton.getInstance().getSettings().general.language);
 
