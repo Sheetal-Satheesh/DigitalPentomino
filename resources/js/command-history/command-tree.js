@@ -88,9 +88,9 @@ class CommandTree {
     }
 
     CollectCmdKeySequences(
-        currNode, 
-        startKey, 
-        endKey, 
+        currNode,
+        startKey,
+        endKey,
         searchType){
 
 
@@ -134,7 +134,7 @@ class CommandTree {
             }
 
             return cmdKeySeq;
-        }        
+        }
     }
 
 
@@ -170,10 +170,11 @@ class CommandTree {
             }
         }
 
+        let retObj={};
         for(let indx=0; indx < currNode.Children().length; ++indx){
             let cmdSeq = [];
             let childs = currNode.Children();
-            let retObj= this.CollectCmdSequences(
+            retObj= this.CollectCmdSequences(
                                                 childs[indx],
                                                 startKey,
                                                 endKey,
@@ -188,14 +189,12 @@ class CommandTree {
                 retObj.commands.forEach(cmd => {
                     cmdSeq.push(cmd);
                 });
-               
-           }
 
-           return {
-               seqType: retObj.seqType,
-               commands: cmdSeq
-            };
-        }        
+                retObj.commands = cmdSeq;
+               
+           }           
+        }   
+        return retObj;     
     }
 
     MoveUp(childSelection = RedoStrategy.TOP){
