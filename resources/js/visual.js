@@ -1,4 +1,3 @@
-
 const UIProperty = {
     "TrayCSSLeft":7,
     "TrayHeight":7,
@@ -361,12 +360,21 @@ class Visual {
         onpointerdownX = event.clientX;
         onpointerdownY = event.clientY;
 
+        //close seedbar
+        if (!event.target.matches('.seed') && !event.target.matches('.cSeedBtn')) {
+            closeSeeding();
+          }
+
         //check if a button is clicked
         let buttonOverPiece = false;
+        let settingsEnabled = false;
         for (let j in elements){
             let precheck = elements[j].className;
             if (precheck == 'controlButton'){
                 buttonOverPiece = true;
+            }
+            if (precheck == 'settings-popup'){
+                settingsEnabled = true;
             }
         }
 
@@ -377,6 +385,8 @@ class Visual {
             if (check !== 'bmPoint') continue;
 
             if (buttonOverPiece) continue;
+
+            if (settingsEnabled) continue;
 
             /**
              * As soon as we have a bmPoint(an element of a piece),we determine the bounding box
@@ -602,6 +612,8 @@ class Visual {
         //possible command names (place, remove, moveToPosition, rotateClkWise, rotateAntiClkWise, mirrorH, mirrorV)
         let hintCommand = pd.gameController.getHint().getCommand();
         let hintSkill = pd.gameController.getHint()._skill;
+        console.log(pd.gameController.getHint());
+        console.log("Skill: " + hintSkill);
         let hintName = hintCommand._name;
         let hintinPen = hintCommand._pentomino;
         let pentominoColor = hintinPen.color;
@@ -614,12 +626,14 @@ class Visual {
 
        //indication of unoccupied cells
         if (!(hintSkill === null)) {
+            console.log("Skill (inside loop): " + hintSkill);
             const DEFAULT_BG_COLOR = "#adc0b9";
             const RED_COLOR = "red";
             //blink unoccupied cells
             this.blinkCells(hintSkill, DEFAULT_BG_COLOR, RED_COLOR);
         }
         else {
+            console.log("Skill (else): " + hintSkill);
               switch (hintName) {
             case "Place":
                 // handle place hint

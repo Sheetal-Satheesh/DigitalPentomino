@@ -1,6 +1,8 @@
 if(typeof require != 'undefined') {
                          Pentomino = require('./pentomino.js');
+                         Config = require('./config.js');
                      }
+
 
 class PD {
 
