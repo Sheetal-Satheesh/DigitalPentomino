@@ -322,6 +322,10 @@
         }
 
         function handleJsonFormSubmit (errors, values) {
+            let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), values);
+            // TODO: display seed somehow
+            console.log("Seed: " + seed);
+
             postProcessSettings(values);
 
             event.preventDefault();
@@ -334,9 +338,6 @@
             let changesToSettings = SettingsParser.compareSettings(schema, oldSettings, values);
 
             SettingsSingleton.getInstance().setSettings(values);
-            let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), values);
-            // TODO: display seed somehow
-            console.log("Seed: " + seed);
 
             processChangesToSettings(changesToSettings, values);
             updateSettingSchemaDefaultFromSettings(schema, values);
@@ -444,6 +445,7 @@
         function submitSeed(){
             let seedValue = document.getElementById("seedBar").value;
             let settings = SettingsParser.parseSettingsFromSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), seedValue);
+            postProcessSettings(settings);
             SettingsSingleton.getInstance().setSettings(settings);
 
             console.log("Seedbar entered value: " + seedValue);
