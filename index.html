@@ -258,19 +258,23 @@
 
             postProcessSettings(values);
 
-            event.preventDefault();
-            console.log("JsonForm: Submitted values:");
-            console.log(values);
-            closeSettings();
+            if (errors.length === 0) {
+                event.preventDefault();
+                console.log("JsonForm: Submitted values:");
+                console.log(values);
+                closeSettings();
 
-            let oldSettings = SettingsSingleton.getInstance().getSettings();
-            let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
-            let changesToSettings = SettingsParser.compareSettings(schema, oldSettings, values);
+                let oldSettings = SettingsSingleton.getInstance().getSettings();
+                let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+                let changesToSettings = SettingsParser.compareSettings(schema, oldSettings, values);
 
-            SettingsSingleton.getInstance().setSettings(values);
+                SettingsSingleton.getInstance().setSettings(values);
 
-            processChangesToSettings(changesToSettings, values);
-            updateSettingSchemaDefaultFromSettings(schema, values);
+                processChangesToSettings(changesToSettings, values);
+                updateSettingSchemaDefaultFromSettings(schema, values);
+            } else {
+                // Handle errors
+            }
         }
 
         function postProcessSettings(settings) {
