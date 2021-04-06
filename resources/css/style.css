@@ -11,36 +11,43 @@
   z-index: 1;
   top: 0;
   left: 0;
-  background: rgb(197, 207, 203);
+  background:  rgb(149, 172, 170);
   bottom: 0;
-  width: 10vw;
+  width: 9.8vw;
 }
 
 #game {
   position: fixed;
   top: 0;
-  left: 10vw;
-  background: green;
   bottom: 0;
-  width: 90vw;
+  left: 9.8vw;
+  width: 89vw;
+  height: 46vw;
+  border-top: solid rgb(2, 71, 62) 0.2vw;
+  border-bottom: solid rgb(2, 71, 62) 0.2vw;
+  border-left: solid rgb(2, 71, 62) 0.2vw;
+  border-right: solid rgb(2, 71, 62) 0.2vw;
 }
 
 #tray {
   position: fixed;
-  top: 0;
-  left: 10vw;
-  background:rgb(188, 196, 197);
-  height: 7vw;
-  width: 90vw;
-  padding: 20vw;
+  bottom: 0;
+  top: 0.1vw;
+  left: 10vw; 
+  border-bottom: solid rgb(2, 71, 62) 0.2vw;
+  background :rgb(149, 172, 170);
+  height: 6.7vw;
+  width: 89vw;
+  z-index: 0;
+
 }
 
 #field {
   position: fixed;
-  top: 7vw;
-  bottom: 0;
+  top: 7vw;  
   background: white;
-  width: 90vw;
+  width: 89vw;
+  height: 39.32vw;
 }
 
 #piecearea {
@@ -97,11 +104,11 @@ margin-top: 2px;
   user-select: none;
   text-align: center;
   outline: 1px solid #eee;
-  color: #ddd
+  color: #ddd;
 }
 
 .boardarea {
-background: rgb(173, 192, 185);
+background: rgb(149, 172, 170);
 }
 .blockedcell {
 background: repeating-linear-gradient(
@@ -146,7 +153,7 @@ rgba(0, 0, 0, 0.3) 20px
 }
 
 .cActionBtn {
-background:rgb(141, 160, 157);
+background: rgb(2, 71, 62);
 border-radius: 10%;
 border: 0;
 
@@ -157,7 +164,7 @@ border: 0;
   width:  4vw;
   height: 4vw;
   object-fit: cover;
-  background: rgb(140, 170, 158);
+  background: rgb(193, 199, 201);
   border-radius: 25%;
 }
 
@@ -188,7 +195,6 @@ img#logo{
 position: fixed;
 width: 9.5vw;
 height: 6.5vw;
-border: 2.5px solid rgb(141, 160, 157);
 background: rgb(197, 207, 203);
 }
 
@@ -363,8 +369,36 @@ table
   padding: 20px;
 }
 
-#possibleSolutions {
-  font-size: x-small;
-   font-family: Nuevo Disco;
-   margin-left: 10%;
+
+/* Styling of search bar for seeding */
+
+#seeding {
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  /* bring your own prefixes */
+  transform: translate(-50%, -50%);
+  z-index: 99999999999;
+  visibility: hidden;
+}
+
+#seedingCover {
+  position: fixed;
+  background: white;
+  width: 100%;
+  height: 100%;
+  opacity: 80%;
+  z-index: 99999999998;
+  visibility: hidden;
+}
+
+#seedBar {
+  border: 2px solid #999;
+  border-radius: 0.5em;;
+  font-size: 1.2em;
+  width: 10em;
+  transition: width 0.5s ease-in-out;
+}
+ 
+#seedBar:focus {
 }
