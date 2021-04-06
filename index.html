@@ -360,10 +360,7 @@
                 let heading = changesEntry.heading;
                 let key = changesEntry.key;
 
-                if (heading === "general" && key === "language") {
-                    let newLang = settings[heading][key];
-                    SettingsSchemaSingleton.getInstance().setLanguage(newLang);
-                } else if (heading === "hinting" && key === "enableHinting") {
+                if (heading === "hinting" && key === "enableHinting") {
                     let visible = settings[heading][key];
                     document.getElementById("hintButton").style.visibility = visible ? "visible" : "hidden";
                 } else if (heading === "prefilling" && key === "enablePrefilling") {

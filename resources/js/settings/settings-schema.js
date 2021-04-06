@@ -25,22 +25,14 @@ const SettingsSchemaSingleton = (function () {
 class SettingsSchema {
     constructor() {
         this._language = baseConfigs.defaultLanguage;
-        this._dirty = true;
-    }
-
-    setLanguage(language) {
-        if (!(this._language === language)) {
-            this._dirty = true;
-        }
-
-        this._language = language;
+        this._schema = this.createSchema();
     }
 
     getSettingsSchema() {
-        if (this._dirty === false) {
+        if (this._language === SettingsSingleton.getInstance().getSettings().general.language) {
             return this._schema;
         } else {
-            this._dirty = false;
+            this._language = SettingsSingleton.getInstance().getSettings().general.language;
             return this.createSchema();
         }
     }

@@ -22,7 +22,7 @@ class Settings {
 
     createEmptySettingsObject() {
         let settings = {};
-        let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+        let schema = SettingsSchemaSingleton.getInstance().createSchema();
         for (let heading in schema) {
             let subSettings = schema[heading].properties;
             settings[heading] = {};
