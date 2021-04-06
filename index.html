@@ -346,9 +346,9 @@
             let selectedLanguage = settings.general.language;
             let selectedLanguageNum;
             if (selectedLanguage === "en") {
-                selectedLanguageNum = languages.ENGLISH;
+                selectedLanguageNum = baseConfigs.languages.ENGLISH;
             } else if (selectedLanguage === "de") {
-                selectedLanguageNum = languages.GERMAN;
+                selectedLanguageNum = baseConfigs.languages.GERMAN;
             } else {
                 throw new Error("Unknown language: " + selectedLanguage);
             }
@@ -375,19 +375,16 @@
 
         function updateSettingSchemaDefaultFromSettings(settingsSchema, settings) {
             //change default values according to current schema
-            if (Object.keys(settings).length === 0){
-                //Do nothing and load blank settingsSchema
-            } else {
-                for (let key in settings) {
-                    //console.log(settings[key]);
-                    for (let subkey in settings[key]){
-                        //console.log(settings[key][subkey]);
+            for (let key in settings) {
+                //console.log(settings[key]);
+                for (let subkey in settings[key]){
+                    //console.log(settings[key][subkey]);
+                    if (!(settings[key][subkey] === null))
                         settingsSchema[key]["properties"][subkey]["default"] = settings[key][subkey];
-                    }
                 }
-                let currentLanguage = settings.general.language;
-                settingsSchema["general"]["properties"]["language"]["default"] = currentLanguage === languages.ENGLISH ? "en" : "de";
             }
+            let currentLanguage = settings.general.language;
+            settingsSchema["general"]["properties"]["language"]["default"] = currentLanguage === baseConfigs.languages.ENGLISH ? "en" : "de";
         }
 
         function selectSettings(){

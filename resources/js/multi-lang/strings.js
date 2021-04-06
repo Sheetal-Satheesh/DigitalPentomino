@@ -1,8 +1,3 @@
-const languages = {
-    ENGLISH: 0,
-    GERMAN: 1
-};
-
 const strings = {
     settings: {
         header: ["Game settings", "Spieleinstellungen"],
