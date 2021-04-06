@@ -317,6 +317,23 @@
             settingsSchema["general"]["properties"]["language"]["default"] = currentLanguage === baseConfigs.languages.ENGLISH ? "en" : "de";
         }
 
+        function handleJsonFormErrors(errors, formElt) {
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+            for (let i=0; i<errors.length; i++) {
+                let error = errors[i];
+
+                switch (error.attribute) {
+                    case "maximum":
+                        error.message = strings.settings.errors.higherThanMax[lang] + " (" + error.details + ")";
+                        break;
+                    case "minimum":
+                        error.message = strings.settings.errors.lowerThanMin[lang] + " (" + error.details + ")";
+                        break;
+                }
+            }
+            $(formElt).jsonFormErrors(errors, $('form'));
+        }
+
         function selectSettings(){
             let formElement = $('form')[0];
             formElement.innerHTML = '';
@@ -327,7 +344,8 @@
 
             $('form').jsonForm({
                 schema: SettingsSchemaSingleton.getInstance().getSettingsSchema(),
-                onSubmit: this.handleJsonFormSubmit
+                onSubmit: this.handleJsonFormSubmit,
+                displayErrors: handleJsonFormErrors
             });
 
             document.getElementById("settings_form").style.display = "block";

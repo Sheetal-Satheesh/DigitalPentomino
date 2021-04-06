@@ -31,6 +31,10 @@ const strings = {
                 enumTitles: [["Distance"], ["Distanz"]]
             },
             distanceValue: ["Distance value", "Distanz Wert"]
+        },
+        errors: {
+            lowerThanMin: ["The value is lower than the minimum", "Der Eintrag ist kleiner als der minimale Wert"],
+            higherThanMax: ["The value is higher than the maximum", "Der Eintrag ist größer als der maximale Wert"]
         }
     }
 };
