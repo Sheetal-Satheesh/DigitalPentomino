@@ -258,7 +258,7 @@
 
             postProcessSettings(values);
 
-            if (errors.length === 0) {
+            if (errors === false) {
                 event.preventDefault();
                 console.log("JsonForm: Submitted values:");
                 console.log(values);
