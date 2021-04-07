@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#009578">
     <title>Digital Pentomino v5</title>
     <link rel="manifest" href="manifest.json">
@@ -230,6 +230,21 @@
                  document.getElementById("myHint").style.visibility = "hidden";
         });
         
+     
+        // disapper function
+
+   //disappear game settings when mouse pointer clicks outside
+   $(document).mouseup(function(e){
+       var settingsForm = document.getElementById('settings-form');
+    var container = $("#settingsForm");
+    console.log('in this');
+    // If the target of the click isn't the container
+    if(!container.is(e.target) && container.has(e.target).length === 0){
+        closeSettings();
+    }
+});
+
+
 
         function rotateClkWise(){
             pd.rotateClkWise();

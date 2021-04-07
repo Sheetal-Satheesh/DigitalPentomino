@@ -174,13 +174,17 @@ border-radius: 10%;
 border: 0;
 }
 
-.CMenuTB div:hover{
-box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
-}
+  .CMenuTB div:active{
+    box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
+    }
 
-.cActionBtn:hover {
-box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
-}
+  .cActionBtn:active {
+    box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
+   }
+
+
+
+
 
 .cGame {
 position: absolute;
@@ -280,9 +284,15 @@ table
       padding: 0px;
    }
 
-  table tr td button:hover {
-    box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
-   }
+
+
+    table tr td button:active {
+      box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
+     }
+
+     table tr td div:active {
+      box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
+     }  
    
 
   table tr td button{
@@ -306,9 +316,7 @@ table
     padding: 0px;
    }
 
-   table tr td div:hover {
-   box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
-  }
+ 
 
   #logo{
   height:7vw!important;
