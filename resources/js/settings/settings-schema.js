@@ -3,6 +3,8 @@
  *  - number entries only with minimum and maximum specified
  *  - Only depth of one supported
  *  - Numbers must contain an entry 'decimals', which specifies the number of decimals
+ *  - Default attribute is mandatory
+ *  - Texts of enums can be defined with the enumText attribute
  */
 
 const SettingsSchemaSingleton = (function () {

@@ -12,7 +12,7 @@ class HintAI {
     }
 
     loadSolutions(game) {
-        if (this._game === null || !(game.getName() === this._game.getName)) {
+        if (!(this._game === game)) {
             this._solutions = GameLoader.getGamesFromSolutionsConfig(game.getName());
         }
         this._game = game;

@@ -17,17 +17,17 @@ const SettingsSingleton = (function () {
 
 class Settings {
     constructor() {
-        this._settings = this.createEmptySettingsObject();
+        this._settings = this.createDefaultSettingsObject();
     }
 
-    createEmptySettingsObject() {
+    createDefaultSettingsObject() {
         let settings = {};
         let schema = SettingsSchemaSingleton.getInstance().createSchema();
         for (let heading in schema) {
             let subSettings = schema[heading].properties;
             settings[heading] = {};
             for (let key in subSettings) {
-                settings[heading][key] = null;
+                settings[heading][key] = schema[heading].properties[key].default;
             }
         }
         settings.general.language = baseConfigs.defaultLanguage;
