@@ -57,6 +57,17 @@ class SettingsSchema {
                     }
                 }
             },
+            ui: {
+                "type": "object",
+                "title": titles.ui.title[lang],
+                "properties": {
+                    enablePentominoButtonsOnLeftPanel: {
+                        "type": "boolean",
+                        "title": titles.ui.enablePentominoButtonsOnLeftPanel[lang],
+                        "default": true
+                    }
+                }
+            },
             hinting: {
                 "type": "object",
                 "title": titles.hinting.title[lang],

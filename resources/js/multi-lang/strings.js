@@ -5,6 +5,10 @@ const strings = {
             apply: ["Apply", "Bestätigen"],
             cancel: ["Cancel", "Abbrechen"]
         },
+        ui: {
+            title: ["User Interface", "Benutzeroberfläche"],
+            enablePentominoButtonsOnLeftPanel: ["Enable pentomino buttons on left panel", "Pentomino-Buttons auf linker Seite einschalten?"]
+        },
         general: {
             title: ["General", "Allgemein"],
             language: {

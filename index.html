@@ -305,6 +305,12 @@
                 } else if (heading === "prefilling" && key === "enablePrefilling") {
                     let visible = settings[heading][key];
                     document.getElementById("prefillBoard").style.visibility = visible ? "visible" : "hidden";
+                } else if (heading === "ui" && key === "enablePentominoButtonsOnLeftPanel") {
+                    let visible = settings[heading][key];
+                    document.getElementById("btnRotateLeft").style.visibility = visible ? "visible" : "hidden";
+                    document.getElementById("btnRotateRight").style.visibility = visible ? "visible" : "hidden";
+                    document.getElementById("btnFlipH").style.visibility = visible ? "visible" : "hidden";
+                    document.getElementById("btnFlipV").style.visibility = visible ? "visible" : "hidden";
                 }
             });
         }
