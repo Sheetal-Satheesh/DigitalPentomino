@@ -10,6 +10,7 @@
     <link rel="apple-touch-icon" href="resources/images/icons/dp_192.png">
     <link rel="stylesheet" href="resources/css/style.css">
 	<link rel="stylesheet" href="resources/css/board_selection.css">
+    <link rel="stylesheet" href="resources/css/modal.css">
     <link rel="stylesheet" href="resources/css/settings_form.css">
     <link rel="stylesheet" style="text/css" href="resources/jsonform/bootstrap.css" />
     <script src="resources/index.js"></script>
@@ -162,6 +163,18 @@
         <div id="tray"></div> <!-- tray -->
         <div id="field"></div> <!-- field -->
         <div id="piecearea"></div> <!-- piecearea -->
+        <div id="modalTop" class="modal">
+            <span onclick="document.getElementById('modalTop').style.display='none'" class="close" title="Close Modal">x</span>
+            <form class="modalContent">
+              <div class="modalContainer">
+                <h3 id="modalText"></h3>
+                <div class="clearfix">
+                  <button type="button" onclick="document.getElementById('modalTop').style.display='none'" class="cancelbtn">No</button>
+                  <button type="button" onclick="document.getElementById('modalTop').style.display='none'" class="deletebtn">Yes</button>
+                </div>
+              </div>
+            </form>
+          </div> <!--modal end-->
     </div> 
     
     <div class = "cPieceManipulation" id ="pieceManipulation" >
@@ -211,13 +224,19 @@
 			for (var i=0; i< board_list.length; i++){
 				out += input_element.replaceAll("$$", board_list[i]) +'\n'+ label.replaceAll("$$", board_list[i]) + '<br><br>\n';
 			}
-			
-			<!-- console.log(out); -->
+
 			board_container.innerHTML = out + action_btn;
 		}
 
         function resetGame(){
-            pd.reset();
+            var modal = document.getElementById('modalTop');
+            let modalText = document.getElementById("modalText");
+            modalText.innerHTML = 'Do you want to reset?';
+            modal.style.display="block";
+            let dltBtn = document.querySelector(".deletebtn");
+            dltBtn.addEventListener("click", () => {
+                pd.reset();
+            });
         }
 
         function callHintAI() {
