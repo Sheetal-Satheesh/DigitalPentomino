@@ -93,16 +93,6 @@ class Visual {
         this.renderPieces();
     }
 
-    callHintAI() {
-                let hint = document.getElementById("myHint");
-                hint.classList.toggle("show");
-                let popupText = document.getElementById("myHint");
-                let penHint = this.gameController.getHint();
-                let hintinPen = penHint.getCommand()._pentomino;
-                popupText.textContent = this.penHint.getText();
-            }
-
-
     renderBoard() {
         //TODO: Check whether in the innerHTML approach is good here!
 
@@ -569,18 +559,51 @@ class Visual {
     }
 
     callHintAI(){
-        let hint = document.getElementById("myHint");
-        hint.classList.toggle("show");
-        hint.style.visibility = "visible";
+        let hintElement = document.getElementById("myHint");
+        hintElement.classList.toggle("show");
+        hintElement.style.visibility = "visible";
         let popupText = document.getElementById("myHint");
-        popupText.textContent = pd.gameController.getHint().getText();
-        //call indication of hint
-        this.indicateHint(500);
+        let hint = pd.gameController.getHint();
+        popupText.textContent = this.generateHintText(hint);
+        this.indicateHint(hint);
     }
 
+    generateHintText(hint) {
+        let text = "";
 
-
-
+        if (hint.getPossibleSolutions().length === 0) {
+            text += "This doesn't look right. The pentominoes on your board aren't part of a solution."
+        }
+        let command = hint.getCommands()[0];
+        let cmdValues = command.ExecValues();
+        switch (command.Name()) {
+            case "Remove":
+                text += "This doesn't look right. Why don't you remove " + command._pentomino.name;
+                break;
+            case "MoveToPosition":
+                text += "Maybe try to move " + command._pentomino.name + " to position [" + cmdValues.PosX + "," + cmdValues.PosY + "]";
+                break;
+            case "Place":
+                text += "Why don't you place " + command._pentomino.name + " at position [" + cmdValues.PosX + "," + cmdValues.PosY + "]";
+                break;
+            case "RotateClkWise":
+                text += "Why don't you try to rotate " + command._pentomino.name + " clock-wise";
+                break;
+            case "RotateAntiClkWise":
+                text += "Why don't you try to rotate " + command._pentomino.name + " anti-clock-wise";
+                break;
+            case "MirrorH":
+                text += "Why don't you try to mirror " + command._pentomino.name + " horizontal";
+                break;
+            case "MirrorV":
+                text += "Why don't you try to mirror " + command._pentomino.name + " vertical";
+                break;
+            default:
+                text += "Error - unknown command with name '" + command.Name() + "'";
+                throw new Error("Error: unknown command with name " + command.Name());
+        }
+        return text;
+    }
 
     blinkCells(cells, bgColor, blinkColor) {
         let menu = [];
@@ -608,12 +631,11 @@ class Visual {
         }, 100);
     }
 
-    indicateHint(timeoutFrame){
+    indicateHint(hint){
+        let timeoutFrame = 500;
         //possible command names (place, remove, moveToPosition, rotateClkWise, rotateAntiClkWise, mirrorH, mirrorV)
-        let hintCommand = pd.gameController.getHint().getCommand();
-        let hintSkill = pd.gameController.getHint()._skill;
-        console.log(pd.gameController.getHint());
-        console.log("Skill: " + hintSkill);
+        let hintCommand = hint.getCommands()[0];
+        let hintSkill = hint._skill;
         let hintName = hintCommand._name;
         let hintinPen = hintCommand._pentomino;
         let pentominoColor = hintinPen.color;
