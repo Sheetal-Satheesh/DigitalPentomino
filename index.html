@@ -129,7 +129,7 @@
                   </tr>
           </table>
 
-          <p>
+          <p id="labelNumberSolutionsContainer">
               Number of solutions: <label id="labelNumberSolutions">?</label>
           </p>
 
@@ -296,6 +296,7 @@
                 if (heading === "hinting" && key === "enableHinting") {
                     let hintingEnabled = settings[heading][key];
                     document.getElementById("hintButton").style.visibility = hintingEnabled ? "visible" : "hidden";
+                    document.getElementById("labelNumberSolutionsContainer").style.visibility = hintingEnabled ? "visible" : "hidden";
 
                     let fController = new FrontController();
                     if (hintingEnabled) {
