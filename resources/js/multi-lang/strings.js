@@ -5,6 +5,10 @@ const strings = {
             apply: ["Apply", "Bestätigen"],
             cancel: ["Cancel", "Abbrechen"]
         },
+        ui: {
+            title: ["User Interface", "Benutzeroberfläche"],
+            enablePentominoButtonsOnLeftPanel: ["Enable pentomino buttons on left panel", "Pentomino-Buttons auf linker Seite einschalten?"]
+        },
         general: {
             title: ["General", "Allgemein"],
             language: {
@@ -31,6 +35,10 @@ const strings = {
                 enumTitles: [["Distance"], ["Distanz"]]
             },
             distanceValue: ["Distance value", "Distanz Wert"]
+        },
+        errors: {
+            lowerThanMin: ["The value is lower than the minimum", "Der Eintrag ist kleiner als der minimale Wert"],
+            higherThanMax: ["The value is higher than the maximum", "Der Eintrag ist größer als der maximale Wert"]
         }
     }
 };

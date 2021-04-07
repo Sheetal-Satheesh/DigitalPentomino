@@ -129,7 +129,7 @@
                   </tr>
           </table>
 
-          <p>
+          <p id="labelNumberSolutionsContainer">
               Number of solutions: <label id="labelNumberSolutions">?</label>
           </p>
 
@@ -258,19 +258,21 @@
 
             postProcessSettings(values);
 
-            event.preventDefault();
-            console.log("JsonForm: Submitted values:");
-            console.log(values);
-            closeSettings();
+            if (errors === false) {
+                event.preventDefault();
+                console.log("JsonForm: Submitted values:");
+                console.log(values);
+                closeSettings();
 
-            let oldSettings = SettingsSingleton.getInstance().getSettings();
-            let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
-            let changesToSettings = SettingsParser.compareSettings(schema, oldSettings, values);
+                let oldSettings = SettingsSingleton.getInstance().getSettings();
+                let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+                let changesToSettings = SettingsParser.compareSettings(schema, oldSettings, values);
 
-            SettingsSingleton.getInstance().setSettings(values);
+                SettingsSingleton.getInstance().setSettings(values);
 
-            processChangesToSettings(changesToSettings, values);
-            updateSettingSchemaDefaultFromSettings(schema, values);
+                processChangesToSettings(changesToSettings, values);
+                updateSettingSchemaDefaultFromSettings(schema, values);
+            }
         }
 
         function postProcessSettings(settings) {
@@ -292,11 +294,23 @@
                 let key = changesEntry.key;
 
                 if (heading === "hinting" && key === "enableHinting") {
-                    let visible = settings[heading][key];
-                    document.getElementById("hintButton").style.visibility = visible ? "visible" : "hidden";
+                    let hintingEnabled = settings[heading][key];
+                    document.getElementById("hintButton").style.visibility = hintingEnabled ? "visible" : "hidden";
+                    document.getElementById("labelNumberSolutionsContainer").style.visibility = hintingEnabled ? "visible" : "hidden";
+
+                    let fController = new FrontController();
+                    if (hintingEnabled) {
+                        fController.controller.loadSolutionsOfCurrentGame();
+                    }
                 } else if (heading === "prefilling" && key === "enablePrefilling") {
                     let visible = settings[heading][key];
                     document.getElementById("prefillBoard").style.visibility = visible ? "visible" : "hidden";
+                } else if (heading === "ui" && key === "enablePentominoButtonsOnLeftPanel") {
+                    let visible = settings[heading][key];
+                    document.getElementById("btnRotateLeft").style.visibility = visible ? "visible" : "hidden";
+                    document.getElementById("btnRotateRight").style.visibility = visible ? "visible" : "hidden";
+                    document.getElementById("btnFlipH").style.visibility = visible ? "visible" : "hidden";
+                    document.getElementById("btnFlipV").style.visibility = visible ? "visible" : "hidden";
                 }
             });
         }
@@ -307,12 +321,28 @@
                 //console.log(settings[key]);
                 for (let subkey in settings[key]){
                     //console.log(settings[key][subkey]);
-                    if (!(settings[key][subkey] === null))
-                        settingsSchema[key]["properties"][subkey]["default"] = settings[key][subkey];
+                    settingsSchema[key]["properties"][subkey]["default"] = settings[key][subkey];
                 }
             }
             let currentLanguage = settings.general.language;
             settingsSchema["general"]["properties"]["language"]["default"] = currentLanguage === baseConfigs.languages.ENGLISH ? "en" : "de";
+        }
+
+        function handleJsonFormErrors(errors, formElt) {
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+            for (let i=0; i<errors.length; i++) {
+                let error = errors[i];
+
+                switch (error.attribute) {
+                    case "maximum":
+                        error.message = strings.settings.errors.higherThanMax[lang] + " (" + error.details + ")";
+                        break;
+                    case "minimum":
+                        error.message = strings.settings.errors.lowerThanMin[lang] + " (" + error.details + ")";
+                        break;
+                }
+            }
+            $(formElt).jsonFormErrors(errors, $('form'));
         }
 
         function selectSettings(){
@@ -325,7 +355,8 @@
 
             $('form').jsonForm({
                 schema: SettingsSchemaSingleton.getInstance().getSettingsSchema(),
-                onSubmit: this.handleJsonFormSubmit
+                onSubmit: this.handleJsonFormSubmit,
+                displayErrors: handleJsonFormErrors
             });
 
             document.getElementById("settings_form").style.display = "block";
