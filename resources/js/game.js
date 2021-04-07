@@ -20,6 +20,7 @@ class Game {
         this._pentominosOutside = [];
         this._pentominoOutsidePositions = [];
         this._collisions = [];
+        this._solutions = new Solutions(solutionsConfig);
     }
 
     reset(){
@@ -354,6 +355,13 @@ class Game {
 
         return [...new Set(pentominos)];
     }
+
+    /** ---------------  Solutions-------------*/
+
+    getSolutions(){
+        return this._solutions.getGamesFromSolutionsConfig(this.getName());
+    }
+
 
     // --- --- --- Helper Pentomino Operations --- --- ---
     _doLocalOperation(pentomino, operation, boardOperation) {

@@ -807,7 +807,7 @@ class Visual {
         let allSolutions = [];
         // Get all the games and filter solutions
         if(this.allSolutions == undefined) {
-            this.gameController.getCurrGameSolution().forEach(game =>
+            this.gameController.getSolutions().forEach(game =>
                 allSolutions.push([game._board._pentominoPositions, game._board._pentominoes]));
             this.allSolutions = allSolutions;
         }

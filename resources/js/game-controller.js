@@ -174,8 +174,8 @@ class GameController {
         this._hintAI.loadSolutions(this._game);
     }
 
-    getCurrGameSolution(){
-        return this._hintAI.getSolutions();
+    getSolutions(){
+        return this._game.getSolutions();
     }
 
     // --- --- --- History --- --- ---
