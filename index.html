@@ -230,9 +230,7 @@
                  document.getElementById("myHint").style.visibility = "hidden";
         });
         
-     
-        // disapper function
-
+    /* 
    //disappear game settings when mouse pointer clicks outside
    $(document).mouseup(function(e){
        var settingsForm = document.getElementById('settings-form');
@@ -244,6 +242,19 @@
     }
 });
 
+
+
+   //disappear game settings when mouse pointer clicks outside
+   $(document).mouseup(function(e){
+    var boardSelectionForm = document.getElementById('board_selection_form');
+    var container = $("#boardSelectionForm");
+    console.log('in this');
+    // If the target of the click isn't the container
+    if(!container.is(e.target) && container.has(e.target).length === 0){
+        closeBoardSelector();
+    }
+});
+*/
 
 
         function rotateClkWise(){
@@ -378,6 +389,10 @@
 
         function closeSettings(){
 			document.getElementById("settings_form").style.display = "none";
+        }
+
+        function closeBoardSelector(){
+            document.getElementById('board_selection_form').style.display = "none";
         }
 
         function selectSeeding(){
