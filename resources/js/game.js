@@ -20,7 +20,7 @@ class Game {
         this._pentominosOutside = [];
         this._pentominoOutsidePositions = [];
         this._collisions = [];
-        this._solutions = new Solutions(solutionsConfig);
+        this._solutions = Solutions.getGamesFromSolutionsConfig(this._name);
     }
 
     reset(){
@@ -359,7 +359,7 @@ class Game {
     /** ---------------  Solutions-------------*/
 
     getSolutions(){
-        return this._solutions.getGamesFromSolutionsConfig(this.getName());
+        return this._solutions;
     }
 
 

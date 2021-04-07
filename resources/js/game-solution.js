@@ -1,18 +1,18 @@
 class Solutions {
 
-    constructor (solutionConfig){
-        this.solnConfig = solutionConfig;
+    constructor(){
+
     }
 
-    getGamesFromSolutionsConfig(boardname){
+    static getGamesFromSolutionsConfig(boardname){
         let gameArray = [];
 
         //loop over solutionsConfig to find currently active Board
         let tempArray = [];
-        for (let boardType in this.solnConfig){
+        for (let boardType in solutionsConfig){
             //check which board has active status
             if (boardType == boardname){
-                tempArray = this.solnConfig[boardType]["solutionsArray"];
+                tempArray = solutionsConfig[boardType]["solutionsArray"];
             }
         }
 
@@ -28,7 +28,7 @@ class Solutions {
 
 
     /*TODO: Move to gameLoader class */
-    getGameFromString(gameString) {
+    static getGameFromString(gameString) {
             
         let rows = gameString.split(" ");
         let height = rows.length;
@@ -84,7 +84,7 @@ class Solutions {
     }
 
 
-    doNextOperationOnPento(pentomino, x){
+    static doNextOperationOnPento(pentomino, x){
         
         switch (x) {
             case 0:
@@ -144,7 +144,7 @@ class Solutions {
     }
 
 
-    findInParent(smallMatrix, bigMatrix){
+    static findInParent(smallMatrix, bigMatrix){
         let centerPosition = [0,0];
 
         let a = bigMatrix;
@@ -174,7 +174,7 @@ class Solutions {
     }
 
 
-    normalizeBoard(gameString, element){
+    static normalizeBoard(gameString, element){
         let rows = gameString.split(" ");
         let height = rows.length;
         let width = rows[0].length;
@@ -194,7 +194,7 @@ class Solutions {
     }
 
 
-    transform(someString, element){
+    static transform(someString, element){
         //e.g. take "FFIIIIILFFPPUULFXPPPULXXXYUULLXYYYY" and "X" as input
         let resultString='';
         
