@@ -95,6 +95,19 @@ class Pentomino {
         ];
     }
 
+    /**
+     * Gets anchor position if pentomino is the specified relative position is located at the specified coordinate position.
+     * @param coordinateRow
+     * @param coordinateCol
+     * @param relRow
+     * @param relCol
+     * @returns {*[]}
+     */
+    getAnchorPosition([coordinateRow, coordinateCol], [relRow, relCol]) {
+        let [rowDiff, colDiff] = [this.rowAnchor - relRow, this.colAnchor - relCol];
+        return [coordinateRow + rowDiff, coordinateCol + colDiff];
+    }
+
     matrixPositionIsValid(row, col) {
         return !(row < 0
             || row >= this.iRows
@@ -189,7 +202,40 @@ class Pentomino {
       	    return this;
         }
 
+    getRelPentominoPositions() {
+        let positions = [];
+        for (let row = 0; row < this.iRows; row++) {
+            for (let col = 0; col < this.iCols; col++) {
+                if (this.getCharAtMatrixPosition(row, col) === '1') {
+                    positions.push([row, col]);
+                }
+            }
+        }
+        return positions;
+    }
 
+    static getDistinctPentominoStates(pentomino) {
+        let pentominoStates = [];
+        let generatorPentomino = new Pentomino(pentomino.name);
+        Pentomino.addRotationPentominoStates(generatorPentomino, pentominoStates);
+        generatorPentomino.mirrorV();
+        Pentomino.addRotationPentominoStates(generatorPentomino, pentominoStates);
+        return pentominoStates;
+    }
+
+    static addRotationPentominoStates(pentomino, pentominoStates) {
+        for (let i = 0; i < 4; i++) {
+            if (pentominoStates.find(p => p.sRepr === pentomino.sRepr) === undefined) {
+                let p1 = new Pentomino(pentomino.name);
+                Object.assign(p1, pentomino);
+                pentominoStates.push(p1);
+            }
+
+            if (i < 3) {
+                pentomino.rotateClkWise();
+            }
+        }
+    }
 }
 
 
