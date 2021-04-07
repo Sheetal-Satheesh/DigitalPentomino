@@ -579,20 +579,11 @@ class Visual {
         let hint = pd.gameController.getHint();
         let hintCommand = hint.getCommands()[0];
         let hintinPen = hintCommand._pentomino;
-        let currentPenHintNaame = hintinPen.name;
-            console.log("currentPenHintNaame:",currentPenHintNaame, "\n lastpentName : ",lastpentName);
-         if(!(currentPenHintNaame === lastpentName)){
-            let randomCell = Math.floor(Math.random() * (4)) + 1;
-            this.lastpentName = currentPenHintNaame;
-        }
-
-
-        console.log("call hint AI pento name",hintinPen.name);
-        //lastpentName = currentPenHintNaame;
+       
         popupText.textContent = this.generateHintText(hint);
         this.indicateHint(hint);
-        pentNames.push(currentPenHintNaame);
-        console.log("pentNames",pentNames);
+        //pentNames.push(currentPenHintNaame);
+       // console.log("pentNames",pentNames);
     }
 
     generateHintText(hint) {
@@ -668,11 +659,17 @@ class Visual {
         let pentominoColor = hintinPen.color;
         let clientRect = document.getElementById("piece_" + hintinPen.name).getBoundingClientRect();
         let [posX, posY] = [clientRect.x + clientRect.width/2, clientRect.y + clientRect.height/2];
-        let currentPenHintNaame = hintinPen.name;
+        let currentPenHintNaame = this.selected.name;
         console.log("currentPenHintNaame",currentPenHintNaame);
         console.log("lastpentName",lastpentName);
 
        
+        //let currentPenHintNaame = this.selected.name;
+        console.log("currentPenHintNaame:",currentPenHintNaame, "\n lastpentName : ",lastpentName);
+         if(!(currentPenHintNaame === lastpentName)){
+            let randomCell = Math.floor(Math.random() * (4)) + 1;
+            this.lastpentName = currentPenHintNaame;
+        }
 
         //random variable that selects
 
