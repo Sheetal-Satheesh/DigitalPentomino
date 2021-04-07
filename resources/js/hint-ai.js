@@ -7,16 +7,18 @@ if(typeof require != 'undefined') {
 
 class HintAI {
 
-    loadGameForHinting(game) {
+    constructor() {
+        this._game = null;
+    }
+
+    loadSolutions(game) {
+        if (this._game === null || !(game.getName() === this._game.getName)) {
+            this._solutions = GameLoader.getGamesFromSolutionsConfig(game.getName());
+        }
         this._game = game;
-        this._solutions = GameLoader.getGamesFromSolutionsConfig(game.getName());
     }
 
     getHint() {
-        if (this._game === null || this._game === undefined) {
-            throw new Error("No build set (call loadGameForHinting)");
-        }
-
         let game = this._game;
         let possibleSolutions = this._getPossibleSolutions(game, this._solutions);
 

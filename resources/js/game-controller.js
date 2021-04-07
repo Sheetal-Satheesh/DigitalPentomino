@@ -36,8 +36,8 @@ var FrontController = (function() {
 class GameController {
     constructor() {
         this._game = null;
-        this._hintAI = new HintAI();
         this._commandManager = null;
+        this._hintAI = null;
     }
 
     game(){
@@ -155,7 +155,23 @@ class GameController {
             throw new Error("Game is not set");
         }
 
+        if (this._hintAI === null) {
+            throw new Error("Forgot to load solutions of current game (call gameController.loadSolutionsOfCurrentGame() before)");
+        }
+
         return this._hintAI.getHint();
+    }
+
+    loadSolutionsOfCurrentGame() {
+        if (this._game === null) {
+            throw new Error("Game is not set");
+        }
+
+        if (this._hintAI === null) {
+            this._hintAI = new HintAI();
+        }
+
+        this._hintAI.loadSolutions(this._game);
     }
 
     // --- --- --- History --- --- ---
@@ -235,7 +251,6 @@ class GameController {
     // --- --- --- Set Game --- --- ---
     setGame(game) {
         this._game = game;
-        this._hintAI.loadGameForHinting(game);
     };
 
     resetGame(){

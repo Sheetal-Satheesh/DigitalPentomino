@@ -18,27 +18,37 @@ class PD {
 
     rotateClkWise(){
         this.visual.rotateClkWise();
-        this.visual.showNumberOfPossibleSolutions();
+        if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
+            this.visual.showNumberOfPossibleSolutions();
+        }
     }
 
     rotateAntiClkWise() {
         this.visual.rotateAntiClkWise();
-        this.visual.showNumberOfPossibleSolutions();
+        if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
+            this.visual.showNumberOfPossibleSolutions();
+        }
     }
 
     flipH(){
         this.visual.flipH();
-        this.visual.showNumberOfPossibleSolutions();
+        if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
+            this.visual.showNumberOfPossibleSolutions();
+        }
     }
 
     flipV(){
         this.visual.flipV();
-        this.visual.showNumberOfPossibleSolutions();
+        if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
+            this.visual.showNumberOfPossibleSolutions();
+        }
     }
 
     reset(){
        this.visual.clear();
-       this.visual.showNumberOfPossibleSolutions();
+       if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
+           this.visual.showNumberOfPossibleSolutions();
+       }
     }
 
     loadBoard(board){
@@ -57,9 +67,14 @@ class PD {
                                     this.boardSize,
                                     this.boardShape,
                                     board);
+        if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
+            this.gameController.loadSolutionsOfCurrentGame();
+        }
 
         this.visual = new Visual(this);
-        this.visual.showNumberOfPossibleSolutions();
+        if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
+            this.visual.showNumberOfPossibleSolutions();
+        }
     }
 
     hints(){
