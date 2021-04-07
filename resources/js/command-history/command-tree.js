@@ -111,9 +111,9 @@ class CommandTree {
                 return [currNode._key] ;
             }
         }
-
+        let cmdKeySeq = [];
         for(let indx=0; indx < currNode.Children().length; ++indx){
-            let cmdKeySeq = [];
+           
             let childs = currNode.Children();
             let commandKeys= this.CollectCmdKeySequences(
                                             childs[indx],
@@ -122,7 +122,7 @@ class CommandTree {
                                             searchType
                                             );
 
-            if((commandKeys != undefined) &&
+            if((commandKeys.length != 0) &&
                 (((SearchStrategy.Top2Bottom & searchType) != 0) ||
                 ((SearchStrategy.BottomUp & searchType) != 0))){
 
@@ -132,9 +132,8 @@ class CommandTree {
                 });
 
             }
-
-            return cmdKeySeq;
         }
+        return cmdKeySeq;
     }
 
 
@@ -286,7 +285,7 @@ class CommandTree {
                 return this._currentCmdNode.Command();
             }
         }
-      
+
         if((this._operationStatus & REDO) !=REDO){
             console.error("Redo not Possible");
              return undefined;
@@ -327,7 +326,6 @@ class CommandTree {
                                             endNode);
         
         return cmdSequences;
-
     }
 
     isEmpty() {
@@ -341,7 +339,6 @@ class CommandTree {
     isAtLeaf() {
         return this._currentCmd.getChildren().length === 0;
     }
-
 
     Root(){
         return this._rootCmdNode;
