@@ -9,13 +9,19 @@ class HintAI {
 
     constructor() {
         this._game = null;
+        this._gameSolution = new Solutions(solutionsConfig);
     }
 
     loadSolutions(game) {
         if (!(this._game === game)) {
-            this._solutions = GameLoader.getGamesFromSolutionsConfig(game.getName());
+            this._solutions = this._gameSolution.getGamesFromSolutionsConfig(game.getName());
         }
         this._game = game;
+    }
+
+
+    getSolutions(){
+        return this._solutions;
     }
 
     getHint() {

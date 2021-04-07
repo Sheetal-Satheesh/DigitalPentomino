@@ -807,7 +807,7 @@ class Visual {
         let allSolutions = [];
         // Get all the games and filter solutions
         if(this.allSolutions == undefined) {
-            GameLoader.getGamesFromSolutionsConfig(this.pd.boardName).forEach(game =>
+            this.gameController.getCurrGameSolution().forEach(game =>
                 allSolutions.push([game._board._pentominoPositions, game._board._pentominoes]));
             this.allSolutions = allSolutions;
         }
