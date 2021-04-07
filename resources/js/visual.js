@@ -14,7 +14,8 @@ Object.freeze(CommandTypes);
 const RedoStrategy = {"TOP":1, "BOTTOM":2};
 Object.freeze(RedoStrategy);
 let flag = true;
-
+let lastpentName = null;
+let randomCell;
 class Visual {
 
     constructor(pd) {
@@ -206,8 +207,10 @@ class Visual {
             htmlElement.style.setProperty("--rotationX", "0deg");
             htmlElement.style.setProperty("--rotationY", "0deg");
             htmlElement.style.setProperty("--rotationZ", "0deg");
+
         } 
         else {
+            console.log("position piece",piece);
             var bCellsFnd = this.isPentominoInBlockCells(piece);
             var collisonFnd = this.isCollision(piece);
             if(collisonFnd){
@@ -215,6 +218,7 @@ class Visual {
                 this.overlapBlock.add(piece,collisonPentomino);
             }
             else{
+                console.log("position piece overlap remove",piece);
                 this.overlapBlock.remove(piece);
             }
 
@@ -223,10 +227,12 @@ class Visual {
             let left = undefined;
             let top = undefined;
             if(offset){
+                console.log("offset position piece",piece);
                 left = UIProperty.FunctionWidth + width * (positionX - 2)+ (width/8);
                 top = UIProperty.TrayHeight + width * (positionY - 2)-(width/8);
             }
             else{
+                console.log("else position piece",piece);
                 left = UIProperty.FunctionWidth + width * (positionX - 2);
                 top = UIProperty.TrayHeight + width * (positionY - 2);
             }
@@ -240,6 +246,7 @@ class Visual {
             htmlElement.style.setProperty("--rotationX", "0deg");
             htmlElement.style.setProperty("--rotationY", "0deg");
             htmlElement.style.setProperty("--rotationZ", "0deg");
+
         }
 
         //making the element visible (see remark in renderPieces)
@@ -564,13 +571,28 @@ class Visual {
     }
 
     callHintAI(){
+        let pentNames = [];
         let hintElement = document.getElementById("myHint");
         hintElement.classList.toggle("show");
         hintElement.style.visibility = "visible";
         let popupText = document.getElementById("myHint");
         let hint = pd.gameController.getHint();
+        let hintCommand = hint.getCommands()[0];
+        let hintinPen = hintCommand._pentomino;
+        let currentPenHintNaame = hintinPen.name;
+            console.log("currentPenHintNaame:",currentPenHintNaame, "\n lastpentName : ",lastpentName);
+         if(!(currentPenHintNaame === lastpentName)){
+            let randomCell = Math.floor(Math.random() * (4)) + 1;
+            this.lastpentName = currentPenHintNaame;
+        }
+
+
+        console.log("call hint AI pento name",hintinPen.name);
+        //lastpentName = currentPenHintNaame;
         popupText.textContent = this.generateHintText(hint);
         this.indicateHint(hint);
+        pentNames.push(currentPenHintNaame);
+        console.log("pentNames",pentNames);
     }
 
     generateHintText(hint) {
@@ -646,12 +668,16 @@ class Visual {
         let pentominoColor = hintinPen.color;
         let clientRect = document.getElementById("piece_" + hintinPen.name).getBoundingClientRect();
         let [posX, posY] = [clientRect.x + clientRect.width/2, clientRect.y + clientRect.height/2];
+        let currentPenHintNaame = hintinPen.name;
+        console.log("currentPenHintNaame",currentPenHintNaame);
+        console.log("lastpentName",lastpentName);
 
+       
 
         //random variable that selects
 
         if(flag === true){
-            var randomCell = Math.floor(Math.random() * (4)) + 1;
+            let randomCell = Math.floor(Math.random() * (4)) + 1;
             flag = false;
         }
         else{
@@ -763,6 +789,9 @@ class Visual {
         }
 
     }
+
+    lastpentName = currentPenHintNaame;
+    console.log("lastpentName",lastpentName);
 }
 
 
@@ -776,7 +805,7 @@ class Visual {
                     //TODO: replace with proper fadeOut animation
                     fvalue.style.background = prevBackground[j];
             }
-        }, 200);
+        }, 70);
     }
 
 
