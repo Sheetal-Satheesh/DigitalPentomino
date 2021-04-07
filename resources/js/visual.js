@@ -233,6 +233,7 @@ class Visual {
             htmlElement.style.zIndex = this.overlapBlock.getZIndex(piece);
             htmlElement.style.left = left + 'vw';
             htmlElement.style.top = top + 'vw';
+            htmlElement.style.transformOrigin='center';
             htmlElement.style.setProperty("--magnification", 1);
         }
         if (htmlElement.style.getPropertyValue("--rotationX") === "") {
