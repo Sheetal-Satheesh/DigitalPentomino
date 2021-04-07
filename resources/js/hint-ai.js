@@ -7,20 +7,13 @@ if(typeof require != 'undefined') {
 
 class HintAI {
 
-    constructor() {
-        this._game = null;
-    }
-
-    loadSolutions(game) {
-        if (!(this._game === game)) {
-            this._solutions = game.getSolutions();
-        }
+    constructor(game) {
         this._game = game;
     }
 
     getHint() {
         let game = this._game;
-        let possibleSolutions = this._getPossibleSolutions(game, this._solutions);
+        let possibleSolutions = this._getPossibleSolutions(game, game.getSolutions());
 
         if (possibleSolutions.length > 0) {
             let closestSolution = possibleSolutions[0];
@@ -29,7 +22,7 @@ class HintAI {
             return new Hint(commands, possibleSolutions);
         } else {
             // Pursue closest game state, which has at least one possible solution
-            let closestSolution = this._getClosesSolution(game, this._solutions);
+            let closestSolution = this._getClosesSolution(game, game.getSolutions());
 
             let unoccupiedCellSpaces = game._board.getUnoccupiedCellSpaces();
             let bestImpossibleCellSpace = this._calculateBestImpossibleUnoccupiedCellSpace(game, unoccupiedCellSpaces);

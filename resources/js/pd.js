@@ -67,9 +67,6 @@ class PD {
                                     this.boardSize,
                                     this.boardShape,
                                     board);
-        if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
-            this.gameController.loadSolutionsOfCurrentGame();
-        }
 
         this.visual = new Visual(this);
         if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {

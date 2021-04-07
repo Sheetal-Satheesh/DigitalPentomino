@@ -156,22 +156,10 @@ class GameController {
         }
 
         if (this._hintAI === null) {
-            throw new Error("Forgot to load solutions of current game (call gameController.loadSolutionsOfCurrentGame() before)");
+            this._hintAI = new HintAI(this._game);
         }
 
         return this._hintAI.getHint();
-    }
-
-    loadSolutionsOfCurrentGame() {
-        if (this._game === null) {
-            throw new Error("Game is not set");
-        }
-
-        if (this._hintAI === null) {
-            this._hintAI = new HintAI();
-        }
-
-        this._hintAI.loadSolutions(this._game);
     }
 
     getSolutions(){

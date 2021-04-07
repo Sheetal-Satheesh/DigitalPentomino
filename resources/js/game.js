@@ -23,6 +23,8 @@ class Game {
         this._solutions = Solutions.getGamesFromSolutionsConfig(this._name);
     }
 
+  
+
     reset(){
         this._board.reset();
         this._tray=[];
