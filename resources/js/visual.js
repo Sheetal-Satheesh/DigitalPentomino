@@ -13,6 +13,7 @@ Object.freeze(CommandTypes);
 
 const RedoStrategy = {"TOP":1, "BOTTOM":2};
 Object.freeze(RedoStrategy);
+let flag = true;
 
 class Visual {
 
@@ -77,7 +78,7 @@ class Visual {
     }
 
     placePentomino(pentomino, posX, posY, cmdType=CommandTypes.Original){
-
+        flag = true;
         this.gameController.placePentomino(pentomino, posX, posY,cmdType);
         this.positionPiece(pentomino);
     }
@@ -497,6 +498,7 @@ class Visual {
 
     rotateClkWise(cmdType=CommandTypes.Original) {
         let piece = this.selected;
+        flag = true;
         if (piece) {
             let pieceDiv = document.getElementById("piece_" + piece.name);
             let flipped = pieceDiv.getAttribute("flipped") * 1;
@@ -511,6 +513,7 @@ class Visual {
 
     rotateAntiClkWise(cmdType=CommandTypes.Original) {
         let piece = this.selected;
+        flag = true;
         if (piece) {
             let pieceDiv = document.getElementById("piece_" + piece.name);
             let flipped = pieceDiv.getAttribute("flipped") * 1;
@@ -525,6 +528,7 @@ class Visual {
 
     flipH(cmdType=CommandTypes.Original) {
         let piece = this.selected;
+        flag = true;
         if (piece) {
             let pieceDiv = document.getElementById("piece_" + piece.name);
             let flipped = pieceDiv.getAttribute("flipped") * 1;
@@ -540,6 +544,7 @@ class Visual {
 
     flipV(cmdType=CommandTypes.Original) {
         let piece = this.selected;
+        flag = true;
         if (piece) {
             let pieceDiv = document.getElementById("piece_" + piece.name);
             let flipped = pieceDiv.getAttribute("flipped") * 1;
@@ -644,7 +649,15 @@ class Visual {
 
 
         //random variable that selects
-        var randomCell = Math.floor(Math.random() * (4)) + 1;
+
+        if(flag === true){
+            var randomCell = Math.floor(Math.random() * (4)) + 1;
+            flag = false;
+        }
+        else{
+            //do nothing
+        }
+        
 
        //indication of unoccupied cells
         if (!(hintSkill === null)) {
@@ -763,7 +776,7 @@ class Visual {
                     //TODO: replace with proper fadeOut animation
                     fvalue.style.background = prevBackground[j];
             }
-        }, 70);
+        }, 200);
     }
 
 
