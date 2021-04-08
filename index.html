@@ -251,10 +251,20 @@
 			document.getElementById("board_selection_form").style.display = "block";
         }
 
+        // From https://stackoverflow.com/questions/10970078/modifying-a-query-string-without-reloading-the-page (2nd answer)
+        function insertUrlParam(key, value) {
+            if (history.pushState) {
+                let searchParams = new URLSearchParams(window.location.search);
+                searchParams.set(key, value);
+                let newURL = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + searchParams.toString();
+                window.history.pushState({path: newURL}, '', newURL);
+            }
+        }
+
         function handleJsonFormSubmit (errors, values) {
             let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), values);
             // TODO: display seed somehow
-            console.log("Seed: " + seed);
+            insertUrlParam("seed", seed);
 
             postProcessSettings(values);
 
