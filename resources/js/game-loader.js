@@ -7,15 +7,39 @@ class GameLoader {
 
     constructor(){
         this._game = null;
-        this._commandManager = null;
-        this._hintAI = null;
+        /**
+         * 
+         * 
+         * [{
+         *  name: "",
+         *  game: game,
+         *  img: ,
+         *  key: 
+         * },....]
+         * 
+         */
         this._gameList = [];
     }
-      // --- --- --- Set Game --- --- ---
+
+    saveGame(game){
+
+    }
     
+    loadGame(game){
+        
+    }
+
+    loadGameFromJson(gmconfig){
+
+    }
+
     setGame(game) {
         this._game = game;
     };
+
+    getGame(game){
+        return this._game;
+    }
 
     resetGame(){
         this._game.reset();
@@ -43,18 +67,7 @@ class GameLoader {
                     name));
 
         this._game._fillUpTray();
-        this._commandManager = new CommandManager();
     }
-
-    loadGameFromJson(gmconfig){
-
-    }
-
-    loadGame(board){
-        
-    }
-
-
 }
 
 if(typeof module != 'undefined') {
