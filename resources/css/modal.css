@@ -26,7 +26,7 @@ button:hover {
     left: 10vw;
     right: 1vw;
     bottom: 10vw;
-    background-color:rgb(149, 172, 170);
+    background-color: transparent;
     border: 1px solid rgb(18, 122, 114);
 }
   
