@@ -659,28 +659,13 @@ class Visual {
         let pentominoColor = hintinPen.color;
         let clientRect = document.getElementById("piece_" + hintinPen.name).getBoundingClientRect();
         let [posX, posY] = [clientRect.x + clientRect.width/2, clientRect.y + clientRect.height/2];
-        let currentPenHintNaame = this.selected.name;
-        console.log("currentPenHintNaame",currentPenHintNaame);
-        console.log("lastpentName",lastpentName);
-
-       
+        let currentPenHintNaame = hintinPen.name;
         //let currentPenHintNaame = this.selected.name;
-        console.log("currentPenHintNaame:",currentPenHintNaame, "\n lastpentName : ",lastpentName);
-         if(!(currentPenHintNaame === lastpentName)){
-            let randomCell = Math.floor(Math.random() * (4)) + 1;
-            this.lastpentName = currentPenHintNaame;
+        if(!(currentPenHintNaame === lastpentName)){
+            randomCell = Math.floor(Math.random() * (4)) + 1;
+            lastpentName = currentPenHintNaame;
         }
 
-        //random variable that selects
-
-        if(flag === true){
-            let randomCell = Math.floor(Math.random() * (4)) + 1;
-            flag = false;
-        }
-        else{
-            //do nothing
-        }
-        
 
        //indication of unoccupied cells
         if (!(hintSkill === null)) {
@@ -786,9 +771,6 @@ class Visual {
         }
 
     }
-
-    lastpentName = currentPenHintNaame;
-    console.log("lastpentName",lastpentName);
 }
 
 
