@@ -44,6 +44,31 @@ class GameController {
         return this._gameLoader.getGame();
     }
 
+    // --- --- --- Set Game --- --- ---
+    setGame(game) {
+        this._gameLoader.setGame(game);
+    };
+
+    resetGame(){
+        this.game().reset();
+        this._commandManager.Reset();
+        return this.game();
+    }
+
+    createGame( boardStartXY, 
+                boardSizeXY, 
+                Boardshape, 
+                name) {
+        
+        this._gameLoader.createGame(boardStartXY,
+                                    boardSizeXY, 
+                                    Boardshape,
+                                    name);
+
+        this._commandManager = new CommandManager();
+    }
+
+
     exceptionHandler(pentomino){
         if (this.game() === null) {
             throw new Error("Game is not set");
@@ -231,30 +256,6 @@ class GameController {
         }
 
         return this.game().getPossibleRedoCommands();
-    }
-
-    // --- --- --- Set Game --- --- ---
-    setGame(game) {
-        this._gameLoader.setGame(game);
-    };
-
-    resetGame(){
-        this.game().reset();
-        this._commandManager.Reset();
-        return this.game();
-    }
-
-    createGame( boardStartXY, 
-                boardSizeXY, 
-                Boardshape, 
-                name) {
-        
-        this._gameLoader.createGame(boardStartXY,
-                                    boardSizeXY, 
-                                    Boardshape,
-                                    name);
-
-        this._commandManager = new CommandManager();
     }
 
     // --- --- --- Debugging --- --- ---
