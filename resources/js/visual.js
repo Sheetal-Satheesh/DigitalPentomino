@@ -692,7 +692,7 @@ class Visual {
         }
         else {
             console.log("Skill (else): " + hintSkill);
-              switch (hintName) {
+            switch (hintName) {
             case "Place":
                 // handle place hint
                 let hintRow = hintCommand._nextPosition[0];
