@@ -1,9 +1,5 @@
 class Solutions {
 
-    constructor(){
-
-    }
-
     static getGamesFromSolutionsConfig(boardname){
         let gameArray = [];
 
