@@ -266,8 +266,6 @@
             // TODO: display seed somehow
             insertUrlParam("seed", seed);
 
-            postProcessSettings(values);
-
             if (errors === false) {
                 event.preventDefault();
                 console.log("JsonForm: Submitted values:");
@@ -283,19 +281,6 @@
                 processChangesToSettings(changesToSettings, values);
                 updateSettingSchemaDefaultFromSettings(schema, values);
             }
-        }
-
-        function postProcessSettings(settings) {
-            let selectedLanguage = settings.general.language;
-            let selectedLanguageNum;
-            if (selectedLanguage === "en") {
-                selectedLanguageNum = baseConfigs.languages.ENGLISH;
-            } else if (selectedLanguage === "de") {
-                selectedLanguageNum = baseConfigs.languages.GERMAN;
-            } else {
-                throw new Error("Unknown language: " + selectedLanguage);
-            }
-            settings.general.language = selectedLanguageNum;
         }
 
         function processChangesToSettings(changes, settings) {
@@ -431,7 +416,6 @@
         function submitSeed(){
             let seedValue = document.getElementById("seedBar").value;
             let settings = SettingsParser.parseSettingsFromSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), seedValue);
-            postProcessSettings(settings);
             SettingsSingleton.getInstance().setSettings(settings);
 
             console.log("Seedbar entered value: " + seedValue);

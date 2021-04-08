@@ -17,21 +17,14 @@ const SettingsSingleton = (function () {
 
 class Settings {
     constructor() {
-        this._settings = this.createDefaultSettingsObject();
-    }
-
-    createDefaultSettingsObject() {
-        let settings = {};
+        let urlParams = new URLSearchParams(window.location.search);
+        let querySeed = urlParams.get('seed');
         let schema = SettingsSchemaSingleton.getInstance().createSchema();
-        for (let heading in schema) {
-            let subSettings = schema[heading].properties;
-            settings[heading] = {};
-            for (let key in subSettings) {
-                settings[heading][key] = schema[heading].properties[key].default;
-            }
+        if (querySeed === null) {
+            this._settings = SettingsParser.createDefaultSettingsObject(schema);
+        } else {
+            this._settings = SettingsParser.parseSettingsFromSeed(schema, querySeed);
         }
-        settings.general.language = baseConfigs.defaultLanguage;
-        return settings;
     }
 
     setSettings(settings) {

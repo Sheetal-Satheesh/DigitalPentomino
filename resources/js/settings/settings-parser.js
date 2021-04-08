@@ -42,6 +42,7 @@ class SettingsParser {
             }
         }
 
+        SettingsParser.postProcessSettings(settings);
         return settings;
     }
 
@@ -98,6 +99,8 @@ class SettingsParser {
      * @param settings
      */
     static parseSettingsToSeed(schema, settings) {
+        SettingsParser.reProcessSettings(settings);
+
         let seed = "";
 
         for (let heading in schema) {
@@ -126,6 +129,8 @@ class SettingsParser {
                 }
             }
         }
+
+        SettingsParser.postProcessSettings(settings);
 
         return seed;
     }
@@ -171,6 +176,44 @@ class SettingsParser {
 
     static parseBooleanToSeed(schemaEntry, settingsValue) {
         return settingsValue === true ? 1 : 0;
+    }
+
+    // --- --- --- Create Empty Settings Object --- --- ---
+    static createDefaultSettingsObject(schema) {
+        let settings = {};
+        for (let heading in schema) {
+            let subSettings = schema[heading].properties;
+            settings[heading] = {};
+            for (let key in subSettings) {
+                settings[heading][key] = schema[heading].properties[key].default;
+            }
+        }
+        SettingsParser.postProcessSettings(settings);
+        return settings;
+    }
+
+    // --- --- --- General Language Entry Transformation --- --- ---
+    static postProcessSettings(settings) {
+        let selectedLanguage = settings.general.language;
+        let selectedLanguageNum = null;
+        if (selectedLanguage === "en") {
+            selectedLanguageNum = baseConfigs.languages.ENGLISH;
+        } else if (selectedLanguage === "de") {
+            selectedLanguageNum = baseConfigs.languages.GERMAN;
+        }
+
+        if (!(selectedLanguageNum === null)) settings.general.language = selectedLanguageNum;
+    }
+
+    static reProcessSettings(settings) {
+        let selectedLangNum = settings.general.language;
+        let selectedLang = null;
+        if (selectedLangNum === baseConfigs.languages.ENGLISH) {
+            selectedLang = "en";
+        } else if (selectedLangNum === baseConfigs.languages.GERMAN) {
+            selectedLang = "de";
+        }
+        if (!(selectedLang === null)) settings.general.language = selectedLang;
     }
 
     // --- --- --- Compare Settings Object --- --- ---
