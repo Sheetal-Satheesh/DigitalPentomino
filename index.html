@@ -376,7 +376,30 @@
             $seedButton.appendTo(btnContainer);
 
             // Change select box to names of enums
-            // TODO
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
+            let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+            for (let heading in schema) {
+                let subSettings = schema[heading].properties;
+                for (let key in subSettings) {
+                    let settingsEntry = subSettings[key];
+                    if (settingsEntry.type === "string") {
+                        let selectName = heading + "." + key;
+                        let enumText = settingsEntry.enumText;
+                        if (enumText === undefined) {
+                            throw new Error("No enumText defined");
+                        }
+                        let selectElement = $("select[name='" + selectName + "']")[0];
+                        if (!(selectElement.options.length === enumText.length)) {
+                            throw new Error("Number of elements does not match number of texts specified in enumText");
+                        }
+                        for (let i = 0; i < selectElement.options.length; i++) {
+                            let option = selectElement.options[i];
+                            option.text = enumText[i];
+                        }
+                    }
+                }
+            }
 
             Translator.translateHeaders(SettingsSingleton.getInstance().getSettings().general.language);
         }
