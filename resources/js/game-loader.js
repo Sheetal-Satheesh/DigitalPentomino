@@ -7,6 +7,8 @@ class GameLoader {
 
     constructor(){
         this._game = null;
+        this._commandManager = null;
+        this._hintAI = null;
         /**
          * 
          * 
@@ -67,6 +69,16 @@ class GameLoader {
                     name));
 
         this._game._fillUpTray();
+        this._commandManager = new CommandManager();
+        this._hintAI = new HintAI(this._game);
+    }
+
+    cmdManager(){
+        return this._commandManager;
+    }
+
+    hintAI(){
+        return this._hintAI;
     }
 }
 

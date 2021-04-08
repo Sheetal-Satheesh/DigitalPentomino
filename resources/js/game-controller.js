@@ -36,8 +36,6 @@ var FrontController = (function() {
 class GameController {
     constructor() {
         this._gameLoader = new GameLoader();
-        this._commandManager = null;
-        this._hintAI = null;
     }
 
     game(){
@@ -50,24 +48,28 @@ class GameController {
     };
 
     resetGame(){
-        this.game().reset();
-        this._commandManager.Reset();
+        this._gameLoader.resetGame();
         return this.game();
     }
 
-    createGame( boardStartXY, 
-                boardSizeXY, 
-                Boardshape, 
+    createGame( boardStartXY,
+                boardSizeXY,
+                Boardshape,
                 name) {
-        
+
         this._gameLoader.createGame(boardStartXY,
-                                    boardSizeXY, 
+                                    boardSizeXY,
                                     Boardshape,
                                     name);
-
-        this._commandManager = new CommandManager();
     }
 
+    cmdManager(){
+        return this._gameLoader.cmdManager();
+    }
+
+    hintAI(){
+        return this._gameLoader.hintAI();
+    }
 
     exceptionHandler(pentomino){
         if (this.game() === null) {
@@ -96,7 +98,7 @@ class GameController {
         col=parseInt(col);
         this.exceptionHandler(pentomino);
 
-        return this._commandManager.ExecCommand(
+        return this.cmdManager().ExecCommand(
                                 new PlaceCommand(pentomino, 
                                         this.game().getPosition(pentomino), 
                                         [row,col]), 
@@ -113,7 +115,7 @@ class GameController {
         col=parseInt(col);
         this.exceptionHandler(pentomino); // TODO: Exception need to be handled properly       
         
-        return this._commandManager.ExecCommand(
+        return this.cmdManager().ExecCommand(
                                 new MoveToPositionCommand(pentomino, row, col),
                                 cmdType);
     }
@@ -124,7 +126,7 @@ class GameController {
 
         this.exceptionHandler(pentomino);
 
-        return this._commandManager.ExecCommand(
+        return this.cmdManager().ExecCommand(
                                     new RotateAntiClkWiseCommand(pentomino),
                                     cmdType);
     }
@@ -135,7 +137,7 @@ class GameController {
         
         this.exceptionHandler(pentomino);
         
-        return this._commandManager.ExecCommand(
+        return this.cmdManager().ExecCommand(
                                     new RotateClkWiseCommand(pentomino),
                                     cmdType);
     }
@@ -146,7 +148,7 @@ class GameController {
         
         this.exceptionHandler(pentomino);
         
-        return this._commandManager.ExecCommand(
+        return this.cmdManager().ExecCommand(
                                     new MirrorHCommand(pentomino),
                                     cmdType);
     }
@@ -157,7 +159,7 @@ class GameController {
         
         this.exceptionHandler(pentomino);
         
-        return this._commandManager.ExecCommand(
+        return this.cmdManager().ExecCommand(
                                     new MirrorVCommand(pentomino),
                                     cmdType);
     }
@@ -168,7 +170,7 @@ class GameController {
         
         this.exceptionHandler(pentomino);
         
-        return this._commandManager.ExecCommand(
+        return this.cmdManager().ExecCommand(
                                     new RemoveCommand(pentomino,
                                         this.game().getPosition(pentomino)
                                     ), cmdType);
@@ -180,11 +182,11 @@ class GameController {
             throw new Error("Game is not set");
         }
 
-        if (this._hintAI === null) {
-            this._hintAI = new HintAI(this.game());
+        if (this.hintAI() === null) {
+            console.error("HintAI not initialized");
         }
-
-        return this._hintAI.getHint();
+        
+        return this.hintAI().getHint();
     }
 
     getSolutions(){
@@ -229,7 +231,7 @@ class GameController {
             throw new Error("Game is not set");
         }
 
-        return this._commandManager.Undo();
+        return this.cmdManager().Undo();
     }
 
     redo(strategy = RedoStrategy.TOP) {
@@ -237,7 +239,7 @@ class GameController {
             throw new Error("Game is not set");
         }
 
-        return this._commandManager.Redo(strategy);
+        return this.cmdManager().Redo(strategy);
     }
 
     isUndoPossible() {
