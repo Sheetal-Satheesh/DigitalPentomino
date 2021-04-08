@@ -42,7 +42,7 @@ class SettingsParser {
             }
         }
 
-        SettingsParser.postProcessSettings(settings);
+        SettingsParser.applyNumericalLanguageRepr(settings);
         return settings;
     }
 
@@ -99,7 +99,7 @@ class SettingsParser {
      * @param settings
      */
     static parseSettingsToSeed(schema, settings) {
-        SettingsParser.reProcessSettings(settings);
+        SettingsParser.revertNumericalLanguageRepr(settings);
 
         let seed = "";
 
@@ -130,7 +130,7 @@ class SettingsParser {
             }
         }
 
-        SettingsParser.postProcessSettings(settings);
+        SettingsParser.applyNumericalLanguageRepr(settings);
 
         return seed;
     }
@@ -188,12 +188,12 @@ class SettingsParser {
                 settings[heading][key] = schema[heading].properties[key].default;
             }
         }
-        SettingsParser.postProcessSettings(settings);
+        SettingsParser.applyNumericalLanguageRepr(settings);
         return settings;
     }
 
-    // --- --- --- General Language Entry Transformation --- --- ---
-    static postProcessSettings(settings) {
+    // --- --- --- Language Representation Transformation --- --- ---
+    static applyNumericalLanguageRepr(settings) {
         let selectedLanguage = settings.general.language;
         let selectedLanguageNum = null;
         if (selectedLanguage === "en") {
@@ -205,7 +205,7 @@ class SettingsParser {
         if (!(selectedLanguageNum === null)) settings.general.language = selectedLanguageNum;
     }
 
-    static reProcessSettings(settings) {
+    static revertNumericalLanguageRepr(settings) {
         let selectedLangNum = settings.general.language;
         let selectedLang = null;
         if (selectedLangNum === baseConfigs.languages.ENGLISH) {
