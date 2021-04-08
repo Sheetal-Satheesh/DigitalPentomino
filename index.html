@@ -348,23 +348,25 @@
         function selectSettings(){
             let formElement = $('form')[0];
             formElement.innerHTML = '';
-
-            //console.log(SettingsSchemaSingleton.getInstance().getSettingsSchema());
-            //console.log(SettingsSingleton.getInstance().getSettings());
-            updateSettingSchemaDefaultFromSettings(SettingsSchemaSingleton.getInstance().getSettingsSchema(), SettingsSingleton.getInstance().getSettings());
+            this.updateSettingSchemaDefaultFromSettings(SettingsSchemaSingleton.getInstance().getSettingsSchema(), SettingsSingleton.getInstance().getSettings());
 
             $('form').jsonForm({
                 schema: SettingsSchemaSingleton.getInstance().getSettingsSchema(),
                 onSubmit: this.handleJsonFormSubmit,
-                displayErrors: handleJsonFormErrors
+                displayErrors: this.handleJsonFormErrors
             });
 
             document.getElementById("settings_form").style.display = "block";
+            this.postProcessSettingsForm();
+        }
 
-            //Removal of default jsonform submit button & inclusion of buttons
+        function postProcessSettingsForm() {
+            // Removal of default jsonform submit button & inclusion of buttons
             let btnContainer = $('form input[type=submit]').parent();
+
             // Remove default 'submit' button
             $('form input[type=submit]').remove();
+
             // Add own buttons
             let $submitButton = $('<input id="settings-submit-button" type="submit" value="Confirm""/>');
             $submitButton.appendTo(btnContainer);
@@ -373,23 +375,10 @@
             let $seedButton = $('<input id="btnSeed" class="button" type="button" value="Enter a seed..." onClick="selectSeeding()" />');
             $seedButton.appendTo(btnContainer);
 
+            // Change select box to names of enums
+            // TODO
 
             Translator.translateHeaders(SettingsSingleton.getInstance().getSettings().general.language);
-
-            // Adjust string enum values
-            /*let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
-            for (let heading in schema) {
-                for (let key in heading) {
-                    if (schema[heading][key].type === "string") {
-                        let enumText = schema[heading][key];
-                        let name = heading + "." + key;
-                        let selectElement = $(btnContainer).children('select[name=' + name + ']');
-                        for (let option in selectElement.children()) {
-                            console.log(option);
-                        }
-                    }
-                }
-            }*/
         }
 
         function closeSettings(){
