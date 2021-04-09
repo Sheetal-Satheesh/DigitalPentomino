@@ -210,7 +210,6 @@ class Visual {
 
         } 
         else {
-            console.log("position piece",piece);
             var bCellsFnd = this.isPentominoInBlockCells(piece);
             var collisonFnd = this.isCollision(piece);
             if(collisonFnd){
@@ -218,7 +217,6 @@ class Visual {
                 this.overlapBlock.add(piece,collisonPentomino);
             }
             else{
-                console.log("position piece overlap remove",piece);
                 this.overlapBlock.remove(piece);
             }
 
@@ -227,12 +225,10 @@ class Visual {
             let left = undefined;
             let top = undefined;
             if(offset){
-                console.log("offset position piece",piece);
                 left = UIProperty.FunctionWidth + width * (positionX - 2)+ (width/8);
                 top = UIProperty.TrayHeight + width * (positionY - 2)-(width/8);
             }
             else{
-                console.log("else position piece",piece);
                 left = UIProperty.FunctionWidth + width * (positionX - 2);
                 top = UIProperty.TrayHeight + width * (positionY - 2);
             }
@@ -676,7 +672,6 @@ class Visual {
             this.blinkCells(hintSkill, DEFAULT_BG_COLOR, RED_COLOR);
         }
         else {
-            console.log("Skill (else): " + hintSkill);
             switch (hintName) {
             case "Place":
                 // handle place hint
