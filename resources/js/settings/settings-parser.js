@@ -95,9 +95,22 @@ class SettingsParser {
         let minimum = schemaEntry.minimum;
         let maximum = schemaEntry.maximum;
         let numOfDigits = SettingsParser.getNumOfDigits(maximum - minimum);
+        if (remainingSeed.length < numOfDigits) {
+            console.warn("Parsing seed " + seed + " key '" + key + "' encountered too short seed. Expected length: " + numOfDigits);
+            return null;
+        }
         let subStr = remainingSeed.substr(0, numOfDigits);
         let seedValue = parseInt(subStr);
-        settings[key] = seedValue + minimum;
+        if (isNaN(seedValue) || seedValue < 0) {
+            console.warn("Parsing seed " + seed + " key '" + key + "' expected unsigned integer. Actual: " + subStr);
+            return null;
+        }
+        let actualValue = seedValue + minimum;
+        if (actualValue > maximum) {
+            console.warn("Parsing seed " + seed + " key '" + key + "' expected value below " + maximum + ". Actual: " + subStr);
+            return null;
+        }
+        settings[key] = actualValue;
         return numOfDigits - 1;
     }
 
