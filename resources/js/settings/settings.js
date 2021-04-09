@@ -25,6 +25,7 @@ class Settings {
         } else {
             this._settings = SettingsParser.parseSettingsFromSeed(schema, querySeed);
             if (this._settings === null) {
+                // TODO: Handle invalid seed
                 this._settings = SettingsParser.createDefaultSettingsObject(schema);
             }
         }
