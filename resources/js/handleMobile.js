@@ -1,7 +1,6 @@
 // Touch Handling for mobile devices
 //intialize the touch events
 function touchStartup(){
-    console.log('Initialize touch events for mobile devices');
     var touchElement = document.getElementById("piecearea");
     touchElement.addEventListener("touchstart", touchStartHandle, false);
     touchElement.addEventListener("touchend", touchEndhandle, false);
