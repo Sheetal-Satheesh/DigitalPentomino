@@ -20,25 +20,20 @@ class GameLoader {
          * },....]
          * 
          */
-        this._gameList = [];
+        this._gameList = {};
+        this._gameImages = {};
+
+        /**[ 
+         *  gameId : {
+         *              cmdManager: 
+         *              commandKey: []
+         *          },
+         * ]
+         * 
+         * 
+        */
     }
 
-    saveGame(){
-        let cmdKey = this._game.getCmdKey();
-        this._gameList.push(cmdKey);
-    }
-
-    getGames(){
-        return this._gameList;
-    }
-    
-    loadGame(game){
-        
-    }
-
-    loadGameFromJson(gmconfig){
-
-    }
 
     setGame(game) {
         this._game = game;
@@ -64,7 +59,7 @@ class GameLoader {
 
         boardSizeXY[0]=parseInt(boardSizeXY[0]);
         boardSizeXY[1]=parseInt(boardSizeXY[1]);
-
+        
         this.setGame(
                     new Game(
                         new Board(
@@ -77,6 +72,61 @@ class GameLoader {
         this._commandManager = new CommandManager();
         this._hintAI = new HintAI(this._game);
     }
+
+    saveGame(){
+        let cmdKey = this._game.getCmdKey();
+        let gameId = this._game._id;
+        if(cmdKey == undefined){
+            return;
+        }
+        if(!this._gameList.hasOwnProperty(gameId)){            
+            this._gameList[gameId]={
+                    "cmdManager": this._commandManager,
+                    "cmdKey": [cmdKey]
+                };
+        }
+        else{
+            this._gameList[gameId].cmdKey.push(cmdKey);
+        }       
+
+    }
+
+    saveGameImage(image){
+        let cmdKey = this._game.getCmdKey();
+        if(!this._gameImages.hasOwnProperty(cmdKey)){
+            this._gameImages[cmdKey] = image;
+            this.saveGame();
+        }
+    }
+    getGameImages(){
+        return this._gameImages;
+    }
+
+    getGames(){
+        return this._gameList;
+    }
+    
+    loadGame(cmdKey){
+
+        for(let gameKey in this._gameList){
+            if(this._gameList.hasOwnProperty(gameKey)){
+                for(let key in this._gameList[gameKey].cmdKey){
+                    if(this._gameList[gameKey].cmdKey[key] == cmdKey){
+                        this._commandManager = this._gameList[gameKey].cmdManager;
+                        this.setGame(this._commandManager._game);
+                        return;
+                    }
+                }
+            }
+        }
+    
+        console.error("commandKey not found");
+    }
+
+    loadGameFromJson(gmconfig){
+
+    }
+
 
     cmdManager(){
         return this._commandManager;

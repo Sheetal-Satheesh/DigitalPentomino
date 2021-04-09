@@ -33,6 +33,9 @@ class Visual {
         this.initalizeListeners();
     }
 
+    getBoard(){
+        return this.gameController.getName();
+    }
 
     isBlockCell(posX, posY){
         var bCellsFnd=false;
@@ -190,7 +193,7 @@ class Visual {
 
     }
 
-   positionPiece(piece) {
+    positionPiece(piece) {
 
         var width = UIProperty.WindowWidth / this.pd.gameWidth;
         var htmlElement = document.getElementById('piece_' + piece.name);
@@ -751,10 +754,7 @@ class Visual {
         }
 
     }
-}
-
-
-
+    }
 
     hide(piecePos, prevBackground){
 
@@ -766,7 +766,6 @@ class Visual {
             }
         }, 70);
     }
-
 
     getOccupiedPositions(piece,hintCommand){
 
@@ -935,15 +934,17 @@ class Visual {
         this.execShadowCmd(command,"Redo");
     }
 
-    saveGameImage(){
-        this.gameController.saveGame();
+    saveGameImage(image){
+        this.gameController.saveGameImage(image);
     }
 
     showGameImages(){
-        let GameImages = this.gameController.getGameImages();
-        GameImages.forEach((item) => {
-            console.log(item);
-        });
+        let gameImages = this.gameController.getGameImages();
+        return gameImages;
+    }
+
+    loadGame(key){
+        this.gameController.loadGame(key);
     }
 
 

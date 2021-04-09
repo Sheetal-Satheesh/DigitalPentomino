@@ -46,7 +46,9 @@ class GameController {
     setGame(game) {
         this._gameLoader.setGame(game);
     };
-
+    getName(){
+        return this.game().getName();
+    }
     resetGame(){
         this._gameLoader.resetGame();
         return this.game();
@@ -62,13 +64,17 @@ class GameController {
                                     Boardshape,
                                     name);
     }
-    saveGame(){
-        this._gameLoader.saveGame();
+    saveGameImage(image){
+        this._gameLoader.saveGameImage(image);
     }
 
     getGameImages(){
-        return this._gameLoader.getGames();
+        return this._gameLoader.getGameImages();
     }
+
+    loadGame(key){
+        this._gameLoader.loadGame(key);
+    }   
 
     cmdManager(){
         return this._gameLoader.cmdManager();

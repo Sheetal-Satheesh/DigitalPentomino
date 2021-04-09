@@ -474,38 +474,36 @@
             pd.visual.redo();
         }
 
-        let images = [];
         function saveGameImage(){
-            var container = document.getElementById('game');           
-			html2canvas(container).then(function(screeshot) {
+            let gameImage = undefined;
+            let gameElem = document.getElementById('game');
+
+			html2canvas(gameElem).then(function(screeshot) {
                 screeshot.setAttribute("class","screentshot");
-                // screeshot.width  = 400;
-                // screeshot.height = 200; 
                 screeshot.style.width  = '13vw';
                 screeshot.style.height = '12vw';
                 screeshot.style.border = "2px solid black";
-                images.push(screeshot);
+                gameImage = screeshot;
+                pd.visual.saveGameImage(gameImage);
             });
-           
-          //  pd.visual.saveGameImage();
+            
+            
         }
 
         function showGameImages(){
-           
-
-            // var modal = document.getElementById('modalTop');
-            // modal.style.display="block";
-
-            // var modalContainer = document.getElementById("modalContainer");
-            // modalContainer.style.display="grid";
-           
+            let imageList = pd.visual.showGameImages();
             document.getElementById('game').innerHTML="";
-            images.forEach((item) => {
-               
-                document.getElementById('game').appendChild(item);
-                
-            });
-          //  pd.visual.showGameImages();
+            for(let key in imageList){
+                if(imageList.hasOwnProperty(key)){
+                    let image = imageList[key];
+                    document.getElementById('game').appendChild(image);
+                }
+            }
+            // for(let key in imageList){
+            //     pd.visual.loadGame(key);
+            //     pd.setPD(pd.visual.getBoard());
+            //     break;
+            // }
         }
 
 

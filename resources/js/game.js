@@ -21,6 +21,7 @@ class Game {
         this._pentominoOutsidePositions = [];
         this._collisions = [];
         this._solutions = Solutions.getGamesFromSolutionsConfig(this._name);
+        this._id = Math.random().toString(36).slice(-10); 
     }
 
     reset(){
