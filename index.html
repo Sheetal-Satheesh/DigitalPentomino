@@ -41,6 +41,7 @@
     <script type="text/javascript" src="resources/jsonform/underscore.js"></script>
     <script type="text/javascript" src="resources/jsonform/jsonform.js"></script>
     <script type="text/javascript" src="resources/jsonform/jsv.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
 
     <script src="resources/js/hint.js"></script>
     <script src="resources/js/hint-ai.js"></script>
@@ -95,11 +96,11 @@
           <table>
                 <tr>
                     <td>
-                        <button type="button" id='undo' class = "cActionBtn" onclick="execUndo()" ><img src="resources/images/icons/screenshot.png">
+                        <button type="button" id='undo' class = "cActionBtn" onclick="saveGameImage()" ><img src="resources/images/icons/screenshot.png">
                         </button>
                     </td>
                     <td>
-                        <button type="button" id='redo' class = "cActionBtn" onclick="execRedo()" ><img src="resources/images/icons/gallery.png">
+                        <button type="button" id='redo' class = "cActionBtn" onclick="showGameImages()" ><img src="resources/images/icons/gallery.png">
                         </button>
                     </td>
                 
@@ -462,17 +463,50 @@
 		}
 
         function prefillBoard(){
-            pd.prefillBoard();
+            pd.visual.prefillBoard();
         }
 
         function execUndo(){
-            pd.undo();
+            pd.visual.undo();
         }
 
         function execRedo(){
-            pd.redo();
+            pd.visual.redo();
         }
 
+        let images = [];
+        function saveGameImage(){
+            var container = document.getElementById('game');           
+			html2canvas(container).then(function(screeshot) {
+                screeshot.setAttribute("class","screentshot");
+                // screeshot.width  = 400;
+                // screeshot.height = 200; 
+                screeshot.style.width  = '13vw';
+                screeshot.style.height = '12vw';
+                screeshot.style.border = "2px solid black";
+                images.push(screeshot);
+            });
+           
+          //  pd.visual.saveGameImage();
+        }
+
+        function showGameImages(){
+           
+
+            // var modal = document.getElementById('modalTop');
+            // modal.style.display="block";
+
+            // var modalContainer = document.getElementById("modalContainer");
+            // modalContainer.style.display="grid";
+           
+            document.getElementById('game').innerHTML="";
+            images.forEach((item) => {
+               
+                document.getElementById('game').appendChild(item);
+                
+            });
+          //  pd.visual.showGameImages();
+        }
 
 
     </script>

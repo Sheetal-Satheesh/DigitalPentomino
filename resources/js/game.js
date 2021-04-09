@@ -35,6 +35,10 @@ class Game {
     updateCmdKey(cmdKey){
         this._cmdKey = cmdKey;
     }
+
+    getCmdKey(){
+        return this._cmdKey;
+    }
     
     /**
      * Adds new pentomino to game

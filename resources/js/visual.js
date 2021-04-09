@@ -826,6 +826,7 @@ class Visual {
             this.disablePrefillButton(false);
             throw new Error("Solutions not found for current board!!!");
         }
+        
         if (randomSolution != undefined) {
             for(let i = 0; i < randomSolution[0].length; ++i) {
                 piecePosition = randomSolution[0][i];
@@ -932,6 +933,17 @@ class Visual {
             return;
         }
         this.execShadowCmd(command,"Redo");
+    }
+
+    saveGameImage(){
+        this.gameController.saveGame();
+    }
+
+    showGameImages(){
+        let GameImages = this.gameController.getGameImages();
+        GameImages.forEach((item) => {
+            console.log(item);
+        });
     }
 
 

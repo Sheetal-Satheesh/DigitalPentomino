@@ -62,6 +62,13 @@ class GameController {
                                     Boardshape,
                                     name);
     }
+    saveGame(){
+        this._gameLoader.saveGame();
+    }
+
+    getGameImages(){
+        return this._gameLoader.getGames();
+    }
 
     cmdManager(){
         return this._gameLoader.cmdManager();

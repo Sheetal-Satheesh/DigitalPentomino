@@ -23,8 +23,13 @@ class GameLoader {
         this._gameList = [];
     }
 
-    saveGame(game){
+    saveGame(){
+        let cmdKey = this._game.getCmdKey();
+        this._gameList.push(cmdKey);
+    }
 
+    getGames(){
+        return this._gameList;
     }
     
     loadGame(game){
