@@ -107,7 +107,7 @@ class SettingsParser {
         }
         let actualValue = seedValue + minimum;
         if (actualValue > maximum) {
-            console.warn("Parsing seed " + seed + " key '" + key + "' expected value below " + maximum + ". Actual: " + subStr);
+            console.warn("Parsing seed " + seed + " key '" + key + "' expected value below " + maximum + ". Actual: " + actualValue + " Raw data: " + subStr);
             return null;
         }
         settings[key] = actualValue;
@@ -120,15 +120,27 @@ class SettingsParser {
 
         let numOfPreDecimals = SettingsParser.getNumOfDigits(maximum - minimum);
         let numOfDecimals = schemaEntry.decimals;
-        let entryLength = numOfPreDecimals + numOfDecimals;
-        let subStr = remainingSeed.substr(0, entryLength);
-
-        if (numOfDecimals > 0) {
-            let valueStr = SettingsParser.insertCharAtPosition(subStr, ".", numOfPreDecimals);
-            settings[key] = parseFloat(valueStr) + minimum;
-        } else {
-            settings[key] = parseInt(subStr) + minimum;
+        if (numOfDecimals === 0) {
+            return SettingsParser.parseIntegerFromSeed(schemaEntry, remainingSeed, settings, key, seed);
         }
+        let entryLength = numOfPreDecimals + numOfDecimals;
+        if (remainingSeed.length < entryLength) {
+            console.warn("Parsing seed " + seed + " key '" + key + "' encountered too short seed. Expected length: " + entryLength);
+            return null;
+        }
+        let subStr = remainingSeed.substr(0, entryLength);
+        let valueStr = SettingsParser.insertCharAtPosition(subStr, ".", numOfPreDecimals);
+        let seedValue = parseFloat(valueStr);
+        if (isNaN(seedValue) || seedValue < 0) {
+            console.warn("Parsing seed " + seed + " key '" + key + "' expected unsigned number. Actual: " + valueStr + ". Raw data: " + subStr);
+            return null;
+        }
+        let actualValue = seedValue + minimum;
+        if (actualValue > maximum) {
+            console.warn("Parsing seed " + seed + " key '" + key + "' expected value below " + maximum + ". Actual: " + actualValue + " (Raw data: " + subStr + ")");
+            return null;
+        }
+        settings[key] = actualValue;
 
         return entryLength - 1;
     }
