@@ -24,6 +24,9 @@ class Settings {
             this._settings = SettingsParser.createDefaultSettingsObject(schema);
         } else {
             this._settings = SettingsParser.parseSettingsFromSeed(schema, querySeed);
+            if (this._settings === null) {
+                this._settings = SettingsParser.createDefaultSettingsObject(schema);
+            }
         }
     }
 

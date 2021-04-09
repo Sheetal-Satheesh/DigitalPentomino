@@ -416,13 +416,17 @@
         function submitSeed(){
             let seedValue = document.getElementById("seedBar").value;
             let settings = SettingsParser.parseSettingsFromSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), seedValue);
-            SettingsSingleton.getInstance().setSettings(settings);
+            if (!(settings === null)) {
+                SettingsSingleton.getInstance().setSettings(settings);
 
-            console.log("Seedbar entered value: " + seedValue);
-            document.getElementById("seedBar").value = "";
+                console.log("Seedbar entered value: " + seedValue);
+                document.getElementById("seedBar").value = "";
 
-            document.getElementById("seedingCover").style.visibility = "hidden";
-            document.getElementById("seeding").style.visibility = "hidden";
+                document.getElementById("seedingCover").style.visibility = "hidden";
+                document.getElementById("seeding").style.visibility = "hidden";
+            } else {
+                // TODO: handle error
+            }
         }
 
 		function loadBoard(){

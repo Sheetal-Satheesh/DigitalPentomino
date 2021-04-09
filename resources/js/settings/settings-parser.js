@@ -5,8 +5,10 @@ class SettingsParser {
      * Uses schema and seed to generate settings object
      * @param schema
      * @param seed
+     * @returns {object | null}
      */
     static parseSettingsFromSeed(schema, seed) {
+        let remainingSeed = String(seed);
         let settings = {};
 
         let lastElement;
@@ -20,16 +22,16 @@ class SettingsParser {
 
                 switch (schemaEntry.type) {
                     case "string":
-                        lastElement = SettingsParser.parseStringFromSeed(schemaEntry, seed, settingsEntry, key);
+                        lastElement = SettingsParser.parseStringFromSeed(schemaEntry, remainingSeed, settingsEntry, key, seed);
                         break;
                     case "number":
-                        lastElement = SettingsParser.parseNumberFromSeed(schemaEntry, seed, settingsEntry, key);
+                        lastElement = SettingsParser.parseNumberFromSeed(schemaEntry, remainingSeed, settingsEntry, key, seed);
                         break;
                     case "integer":
-                        lastElement = SettingsParser.parseIntegerFromSeed(schemaEntry, seed, settingsEntry, key);
+                        lastElement = SettingsParser.parseIntegerFromSeed(schemaEntry, remainingSeed, settingsEntry, key, seed);
                         break;
                     case "boolean":
-                        lastElement = SettingsParser.parseBooleanFromSeed(schemaEntry, seed, settingsEntry, key);
+                        lastElement = SettingsParser.parseBooleanFromSeed(schemaEntry, remainingSeed, settingsEntry, key, seed);
                         break;
                     case "array":
                     case "object":
@@ -38,7 +40,11 @@ class SettingsParser {
                         throw new Error("Unknown type: " + schemaEntry.type);
                 }
 
-                seed = seed.substr(lastElement + 1, seed.length);
+                if (lastElement === null) {
+                    return null;
+                }
+
+                remainingSeed = remainingSeed.substr(lastElement + 1, remainingSeed.length);
             }
         }
 
@@ -46,37 +52,63 @@ class SettingsParser {
         return settings;
     }
 
-    static parseBooleanFromSeed(schemaEntry, seed, settings, key) {
-        settings[key] = seed[0] === "1";
+    static parseBooleanFromSeed(schemaEntry, remainingSeed, settings, key, seed) {
+        if (remainingSeed.length < 1) {
+            console.warn("Parsing seed " + seed + " key '" + key + "' encountered empty seed");
+            return null;
+        }
+
+        if (remainingSeed[0] === "0") {
+            settings[key] = false;
+        } else if (remainingSeed[0] === "1") {
+            settings[key] = true;
+        } else {
+            console.warn("Parsing seed " + seed + ": Key '" + key + "' expected boolean value. Actual: " + remainingSeed[0]);
+            return null;
+        }
+
         return 0;
     }
 
-    static parseStringFromSeed(schemaEntry, seed, settings, key) {
+    static parseStringFromSeed(schemaEntry, remainingSeed, settings, key, seed) {
         let numOfDigits = SettingsParser.getNumOfDigits(schemaEntry.enum.length);
-        let subStr = seed.substr(0, numOfDigits);
-        let index = parseInt(subStr);
+        if (remainingSeed.length < numOfDigits) {
+            console.warn("Parsing seed " + seed + " key '" + key + "' encountered too short seed");
+            return null;
+        }
+
+        let subStr = remainingSeed.substr(0, numOfDigits);
+        let index = parseInt(subStr, 10);
+        if (isNaN(index) || index < 0) {
+            console.warn("Parsing seed " + seed + " key '" + key + "' expected string enum index. Actual: " + subStr);
+            return null;
+        }
+        if (index > schemaEntry.enum.length) {
+            console.warn("Parsing seed " + seed + " key '" + key + "' index " + index + " out of enum bound. enum: '" + schemaEntry.enum + "'");
+            return null;
+        }
         settings[key] = schemaEntry.enum[index];
         return numOfDigits - 1;
     }
 
-    static parseIntegerFromSeed(schemaEntry, seed, settings, key) {
+    static parseIntegerFromSeed(schemaEntry, remainingSeed, settings, key, seed) {
         let minimum = schemaEntry.minimum;
         let maximum = schemaEntry.maximum;
         let numOfDigits = SettingsParser.getNumOfDigits(maximum - minimum);
-        let subStr = seed.substr(0, numOfDigits);
+        let subStr = remainingSeed.substr(0, numOfDigits);
         let seedValue = parseInt(subStr);
         settings[key] = seedValue + minimum;
         return numOfDigits - 1;
     }
 
-    static parseNumberFromSeed(schemaEntry, seed, settings, key) {
+    static parseNumberFromSeed(schemaEntry, remainingSeed, settings, key, seed) {
         let minimum = schemaEntry.minimum;
         let maximum = schemaEntry.maximum;
 
         let numOfPreDecimals = SettingsParser.getNumOfDigits(maximum - minimum);
         let numOfDecimals = schemaEntry.decimals;
         let entryLength = numOfPreDecimals + numOfDecimals;
-        let subStr = seed.substr(0, entryLength);
+        let subStr = remainingSeed.substr(0, entryLength);
 
         if (numOfDecimals > 0) {
             let valueStr = SettingsParser.insertCharAtPosition(subStr, ".", numOfPreDecimals);
