@@ -527,7 +527,6 @@ class Visual {
 
     flipH(cmdType=CommandTypes.Original) {
         let piece = this.selected;
-        flag = true;
         if (piece) {
             let pieceDiv = document.getElementById("piece_" + piece.name);
             let flipped = pieceDiv.getAttribute("flipped") * 1;
