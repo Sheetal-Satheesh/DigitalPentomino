@@ -13,8 +13,7 @@ Object.freeze(CommandTypes);
 
 const RedoStrategy = {"TOP":1, "BOTTOM":2};
 Object.freeze(RedoStrategy);
-let flag = true;
-let lastpentName = null;
+let lastHintedPentName = null;
 let randomCell;
 class Visual {
 
@@ -79,7 +78,6 @@ class Visual {
     }
 
     placePentomino(pentomino, posX, posY, cmdType=CommandTypes.Original){
-        flag = true;
         this.gameController.placePentomino(pentomino, posX, posY,cmdType);
         this.positionPiece(pentomino);
     }
@@ -501,7 +499,6 @@ class Visual {
 
     rotateClkWise(cmdType=CommandTypes.Original) {
         let piece = this.selected;
-        flag = true;
         if (piece) {
             let pieceDiv = document.getElementById("piece_" + piece.name);
             let flipped = pieceDiv.getAttribute("flipped") * 1;
@@ -516,7 +513,6 @@ class Visual {
 
     rotateAntiClkWise(cmdType=CommandTypes.Original) {
         let piece = this.selected;
-        flag = true;
         if (piece) {
             let pieceDiv = document.getElementById("piece_" + piece.name);
             let flipped = pieceDiv.getAttribute("flipped") * 1;
@@ -547,7 +543,6 @@ class Visual {
 
     flipV(cmdType=CommandTypes.Original) {
         let piece = this.selected;
-        flag = true;
         if (piece) {
             let pieceDiv = document.getElementById("piece_" + piece.name);
             let flipped = pieceDiv.getAttribute("flipped") * 1;
@@ -567,7 +562,6 @@ class Visual {
     }
 
     callHintAI(){
-        let pentNames = [];
         let hintElement = document.getElementById("myHint");
         hintElement.classList.toggle("show");
         hintElement.style.visibility = "visible";
@@ -575,11 +569,8 @@ class Visual {
         let hint = pd.gameController.getHint();
         let hintCommand = hint.getCommands()[0];
         let hintinPen = hintCommand._pentomino;
-       
         popupText.textContent = this.generateHintText(hint);
         this.indicateHint(hint);
-        //pentNames.push(currentPenHintNaame);
-       // console.log("pentNames",pentNames);
     }
 
     generateHintText(hint) {
@@ -655,11 +646,11 @@ class Visual {
         let pentominoColor = hintinPen.color;
         let clientRect = document.getElementById("piece_" + hintinPen.name).getBoundingClientRect();
         let [posX, posY] = [clientRect.x + clientRect.width/2, clientRect.y + clientRect.height/2];
-        let currentPenHintNaame = hintinPen.name;
+        let currentPenHintName = hintinPen.name;
         //let currentPenHintNaame = this.selected.name;
-        if(!(currentPenHintNaame === lastpentName)){
+        if(!(currentPenHintName === lastHintedPentName)){
             randomCell = Math.floor(Math.random() * (4)) + 1;
-            lastpentName = currentPenHintNaame;
+            lastHintedPentName = currentPenHintName;
         }
 
 
