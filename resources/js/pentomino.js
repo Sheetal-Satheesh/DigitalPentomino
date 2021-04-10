@@ -187,20 +187,11 @@ class Pentomino {
             console.log(aTemp.concat('|'));
         }
     }
-
-    //Ashwini: remove pieces from the game grid and put it back into the tray
-    toTray(){
-        this.inTray=1;
-  	    // this.position=false;
-
+    
+    updateTrayValue(value){
+        this.inTray=value;
         return this;
     }
-
-    //Anurag: added following method so that else condition could work of positionPiece method in visual.js
-    removeFromTray(){
-            this.inTray=0;
-      	    return this;
-        }
 
     getRelPentominoPositions() {
         let positions = [];

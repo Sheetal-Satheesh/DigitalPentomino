@@ -464,6 +464,14 @@ class Game {
         },this);
 
     }
+
+    removeFromTray(pentomino){
+        this._tray = this._tray.filter(item => (item.name != pentomino.name));
+    }
+
+    addToTray(pentomino){
+        this._tray.push(pentomino);
+    }
     // --- --- --- History --- --- ---
     undo() {
         return this._commandManager.undo();
@@ -490,20 +498,8 @@ class Game {
     }
 
     getPentominoes() {
-        let pentominoes =  this._board.getPentominoes().concat(this._pentominosOutside);
-        if(pentominoes.length == 0){
-            pentominoes = this._tray;
-        }
-        return pentominoes;
-        //.concat(this._tray);
-        // let pentominoes=[];
-
-        // let boardPentominoes = this._board.getPentominoes();
-        // for(let indx=0; indx <boardPentominoes.length; ++indx){
-        //     for(let trayIndx=0; trayIndx < this._tray.len){
-
-        //     }
-        // }
+       return this._board.getPentominoes().concat(this._pentominosOutside).concat(this._tray);
+        
     }
 
     getPentominoesInGmArea(){

@@ -34,8 +34,8 @@ h1 {
 
 @media screen and (max-width: 800px) {
    .innerGrid {
-      flex: 100vw;
-      max-width: 100vw;
+      flex: 50vw;
+      max-width: 50vw;
    }
 }
 @media screen and (max-width: 600px) {

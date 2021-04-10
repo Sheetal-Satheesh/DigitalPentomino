@@ -193,6 +193,15 @@ class GameController {
                                     ), cmdType);
     }
 
+    removeFromTray(pentomino){
+        pentomino.updateTrayValue(0);
+        this.game().removeFromTray(pentomino);
+    }
+
+    addToTray(pentomino){
+        pentomino.updateTrayValue(1);
+        this.game().addToTray(pentomino);
+    }
     // --- --- --- Hints --- --- ---
     getHint() {
         if (this.game() === null) {

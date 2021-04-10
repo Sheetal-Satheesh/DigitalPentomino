@@ -86,10 +86,14 @@ class Visual {
     }
 
     removeFromTray(pentomino,cmdType=CommandTypes.Original){
-
+        if(pentomino.inTray == 0){
+            return;
+        }
+        this.gameController.removeFromTray(pentomino);
     }
+
     movePentominoToTray(pentomino,cmdType=CommandTypes.Original){
-        
+        this.gameController.addToTray(pentomino);
         this.gameController.removePentomino(pentomino, cmdType);
     }
 
@@ -471,7 +475,7 @@ class Visual {
                      * when piece is moved back to tray reset Pentomio inTray variable to 1 and place the 
                      * piece in Tray */
                     if (id == 'tray') {
-                        let piece = data[1].toTray();
+                        let piece = data[1];
                         that.positionPiece(piece);
                         that.movePentominoToTray(piece);
                         that.disableManipulations();
@@ -479,7 +483,7 @@ class Visual {
 
                     if (id.split('_')[0] == 'field') {
                         var coords = (id.split('_')[1].split(','));
-                        data[1].removeFromTray();
+                        that.removeFromTray(data[1]);
                         that.placePentomino(data[1], coords[0],coords[1] );
                         that.showNumberOfPossibleSolutions();
                         /**
@@ -855,7 +859,8 @@ class Visual {
                 }
                 prefillCandidates.push(piece);
                 positions.push(currentAnchor);
-                piece.removeFromTray();
+                this.removeFromTray(piece);
+                piece.updateTrayValue(0);
                 this.gameController.placePentomino(piece, currentAnchor[0], currentAnchor[1]);
             }
         } else {
@@ -886,7 +891,7 @@ class Visual {
                     if(command.Pentomino.inTray == 1){
                         break;
                     }
-                    command.Pentomino.toTray();
+                    command.Pentomino.updateTrayValue(1);
                     this.movePentominoToTray(command.Pentomino, CommandTypes.Shadow);
                     this.positionPiece(command.Pentomino);
                 }
