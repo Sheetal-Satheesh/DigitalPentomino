@@ -192,11 +192,17 @@
 <script type="text/javascript">
 
         let pd;
-		
         function initialize() {
             pd = new PD();
 			
 			loadBoardList();
+
+			let settings = SettingsSingleton.getInstance().getSettings();
+            let initialChanges = SettingsParser.compareSettings(
+                SettingsSchemaSingleton.getInstance().getSettingsSchema(),
+                settings,
+                null);
+            processChangesToSettings(initialChanges, settings);
         }
 
 		function loadBoardList() {

@@ -280,7 +280,7 @@ class SettingsParser {
         for (let heading in schema) {
             let subSettings = schema[heading].properties;
             for (let key in subSettings) {
-                if (!(settingsA[heading][key] === settingsB[heading][key])) {
+                if (settingsB === null || settingsA === null || !(settingsA[heading][key] === settingsB[heading][key])) {
                     result.push({
                         heading: heading,
                         key: key
