@@ -508,13 +508,22 @@
             let gameElem = document.getElementById('game');
 
 			html2canvas(gameElem).then(function(screeshot) {
-                screeshot.setAttribute("class","screentshot");
+                screeshot.setAttribute("class","screenshot");
                 screeshot.style.width  = '25vw';
                 screeshot.style.height = '15vw';
                 screeshot.style.border = "2px solid black";
                 gameImage = screeshot;
                 pd.visual.saveGameImage(gameImage);
             });
+        }
+
+        function loadGameImage(key){
+
+        }
+
+        function deleteGameImage(key){
+           pd.visual.deleteGameImage(key);
+           showGameImages();
         }
 
         function showGameImages(){
@@ -525,17 +534,48 @@
             document.querySelector(".innerGrid").style.display="block";
 
             let imageList = pd.visual.showGameImages();
+       
+           
             let imageGrid = document.getElementById('innerGrid');
             template.clearContent("innerGrid");
-            for(let key in imageList){
-                if(imageList.hasOwnProperty(key)){
-                    let image = imageList[key];
-                    let imageDiv = document.createElement("div");
-                    imageDiv.setAttribute("class","imageDiv");
-                    imageDiv.appendChild(image);
-                    imageGrid.appendChild(imageDiv);
-                }
-            }
+
+            imageList.forEach((item) => {
+                let imgKey = Object.keys(item)[0];
+                let image = item[imgKey];
+                let imageDiv = document.createElement("div");
+                imageDiv.setAttribute("class","imageDiv");
+                
+
+                let buttonDiv = document.createElement("div");
+                buttonDiv.setAttribute("class", "imageBtnDiv");
+                    
+                let loadBtn = document.createElement("button");
+                loadBtn.setAttribute("class", "imageButton imageLoadBtn");
+                loadBtn.textContent="Load";
+                loadBtn.addEventListener('click', function() {
+                    loadGameImage(imgKey);
+                }, false);
+
+
+                let deleteBtn = document.createElement("button");
+                deleteBtn.setAttribute("class", "imageButton imageDeleteBtn");
+                deleteBtn.textContent="Delete";
+                deleteBtn.addEventListener('click', function() {
+                    deleteGameImage(imgKey);
+                }, false);
+
+
+                buttonDiv.appendChild(loadBtn);
+                buttonDiv.appendChild(deleteBtn);
+
+                imageDiv.appendChild(image);
+                imageDiv.appendChild(buttonDiv);
+                imageGrid.appendChild(imageDiv);
+                
+            });
+              
+                    
+            
 
             // for(let key in imageList){
             //     pd.visual.loadGame(key);

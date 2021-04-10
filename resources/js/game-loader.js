@@ -3,6 +3,10 @@ if(typeof require != 'undefined') {
     Board = require('./board.js');
 }
 
+function isEmpty(obj) {
+    return Object.keys(obj).length === 0;
+}
+
 class GameLoader {
 
     constructor(){
@@ -21,11 +25,11 @@ class GameLoader {
          * 
          */
         this._gameList = {};
-        this._gameImages = {};
+        this._gameImages = [];
 
-        /**[ 
+        /**[
          *  gameId : {
-         *              cmdManager: 
+         *              cmdManager:
          *              commandKey: []
          *          },
          * ]
@@ -59,7 +63,7 @@ class GameLoader {
 
         boardSizeXY[0]=parseInt(boardSizeXY[0]);
         boardSizeXY[1]=parseInt(boardSizeXY[1]);
-        
+
         this.setGame(
                     new Game(
                         new Board(
@@ -79,7 +83,7 @@ class GameLoader {
         if(cmdKey == undefined){
             return;
         }
-        if(!this._gameList.hasOwnProperty(gameId)){            
+        if(isEmpty(this._gameList)){
             this._gameList[gameId]={
                     "cmdManager": this._commandManager,
                     "cmdKey": [cmdKey]
@@ -87,17 +91,29 @@ class GameLoader {
         }
         else{
             this._gameList[gameId].cmdKey.push(cmdKey);
-        }       
+        }
 
     }
 
     saveGameImage(image){
         let cmdKey = this._game.getCmdKey();
-        if(!this._gameImages.hasOwnProperty(cmdKey)){
-            this._gameImages[cmdKey] = image;
+        if(cmdKey == undefined){
+            return;
+        }
+        this._gameImages.push({
+            [cmdKey]:image
+        });
+
+        if(isEmpty(this._gameImages)){
             this.saveGame();
         }
     }
+
+    deleteGameImage(key){
+        this._gameImages = this._gameImages.filter((obj) => Object.keys(obj)[0] !== key);
+    }
+
+
     getGameImages(){
         return this._gameImages;
     }
@@ -105,7 +121,7 @@ class GameLoader {
     getGames(){
         return this._gameList;
     }
-    
+
     loadGame(cmdKey){
 
         for(let gameKey in this._gameList){
@@ -119,7 +135,7 @@ class GameLoader {
                 }
             }
         }
-    
+
         console.error("commandKey not found");
     }
 

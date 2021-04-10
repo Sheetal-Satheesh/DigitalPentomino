@@ -68,6 +68,10 @@ class GameController {
         this._gameLoader.saveGameImage(image);
     }
 
+    deleteGameImage(key){
+        this._gameLoader.deleteGameImage(key);
+    }
+
     getGameImages(){
         return this._gameLoader.getGameImages();
     }

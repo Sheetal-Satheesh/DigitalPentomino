@@ -943,9 +943,12 @@ class Visual {
         return gameImages;
     }
 
+    deleteGameImage(key){
+        this.gameController.deleteGameImage(key);
+    }
+
     loadGame(key){
         this.gameController.loadGame(key);
     }
-
 
 }
