@@ -83,7 +83,7 @@ class GameLoader {
         if(cmdKey == undefined){
             return;
         }
-        if(isEmpty(this._gameList)){
+        if(!this._gameList.hasOwnProperty(gameId)){
             this._gameList[gameId]={
                     "cmdManager": this._commandManager,
                     "cmdKey": [cmdKey]
@@ -95,22 +95,37 @@ class GameLoader {
 
     }
 
+    deleteGame(key){
+        if(key == undefined){
+            return;
+        }
+
+        let gameIds = Object.keys(this._gameList);
+        for(let id in gameIds){
+            let gmId = gameIds[id];
+            this._gameList[gmId].cmdKey= this._gameList[gmId].cmdKey.filter(item =>item !== key);
+            if(this._gameList[gmId].cmdKey.length == 0){
+                delete this._gameList[gmId];
+                break;
+            }
+        }
+    }
+
     saveGameImage(image){
         let cmdKey = this._game.getCmdKey();
         if(cmdKey == undefined){
             return;
         }
+
+        this.saveGame();
         this._gameImages.push({
             [cmdKey]:image
         });
-
-        if(isEmpty(this._gameImages)){
-            this.saveGame();
-        }
     }
 
     deleteGameImage(key){
         this._gameImages = this._gameImages.filter((obj) => Object.keys(obj)[0] !== key);
+        this.deleteGame(key);
     }
 
 
