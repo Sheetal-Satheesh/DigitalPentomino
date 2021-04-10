@@ -323,17 +323,11 @@
                     //console.log(settings[key][subkey]);
                     let schemaEntry = settingsSchema[key]["properties"][subkey];
                     switch (schemaEntry.type) {
-                        case "boolean":
+                        case "boolean": case "number": case "integer":
                             editInputSchemaEntry(key, subkey, settings[key][subkey]);
                             break;
                         case "string":
                             editStringSchemaEntry(key, subkey, schemaEntry, settings[key][subkey]);
-                            break;
-                        case "number":
-                            editInputSchemaEntry(key, subkey, settings[key][subkey]);
-                            break;
-                        case "integer":
-                            editInputSchemaEntry(key, subkey, settings[key][subkey]);
                             break;
                         default:
                             throw new Error("Schema Error: Unknown type: " + schemaEntry.type);
