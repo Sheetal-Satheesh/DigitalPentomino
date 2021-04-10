@@ -411,28 +411,3 @@ table
 #seedBar:focus {
 }
 
-#settings-submit-button{
-    color: white;
-    background-color: rgba(5, 112, 32, 0.925);
-    width: auto;
-    text-align: center;
-    font-size: 2 vw;
-    padding: 2 vw;
-    float: left;
-    font-family:Chairdrobe-regular;
-    margin-bottom: 10vw;
-    }
-
-    #settings-close-button{
-    color: white;
-    background-color: rgba(240, 20, 75, 0.925);
-    width: auto;
-    text-align: center;
-    font-size: 2 vw;
-    padding: 2 vw;
-    float: left;
-    font-family:Chairdrobe-regular;
-    margin-bottom: 10vw;
-    }
-
-   
