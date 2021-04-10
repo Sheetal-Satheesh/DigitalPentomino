@@ -285,7 +285,6 @@
                 SettingsSingleton.getInstance().setSettings(values);
 
                 processChangesToSettings(changesToSettings, values);
-                updateSettingSchemaDefaultFromSettings(schema, values);
             }
         }
 
@@ -322,11 +321,49 @@
                 //console.log(settings[key]);
                 for (let subkey in settings[key]){
                     //console.log(settings[key][subkey]);
-                    settingsSchema[key]["properties"][subkey]["default"] = settings[key][subkey];
+                    let schemaEntry = settingsSchema[key]["properties"][subkey];
+                    switch (schemaEntry.type) {
+                        case "boolean":
+                            break;
+                        case "string":
+                            editStringSchemaEntry(key, subkey, schemaEntry, settings[key][subkey]);
+                            break;
+                        case "number":
+                            break;
+                        case "integer":
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
             let currentLanguage = settings.general.language;
             settingsSchema["general"]["properties"]["language"]["default"] = currentLanguage === baseConfigs.languages.ENGLISH ? "en" : "de";
+        }
+
+        function editStringSchemaEntry(heading, key, schemaEntry, selectedValue) {
+            let selectName = heading + "." + key;
+            let enumText = schemaEntry.enumText;
+            if (enumText === undefined) {
+                throw new Error("No enumText defined");
+            }
+            let selectElement = $("select[name='" + selectName + "']")[0];
+            if (!(selectElement.options.length === enumText.length)) {
+                throw new Error("Number of elements does not match number of texts specified in enumText");
+            }
+
+            if (heading === "general" && key === "language") {
+                selectedValue = selectedValue === baseConfigs.languages.ENGLISH ? "en" : "de";
+            }
+
+            let selectedOption = null;
+            for (let i = 0; i < selectElement.options.length; i++) {
+                let option = selectElement.options[i];
+                if (option.value === selectedValue) {
+                    selectedOption = option;
+                }
+            }
+            selectedOption.selected = true;
         }
 
         function handleJsonFormErrors(errors, formElt) {
@@ -349,7 +386,6 @@
         function selectSettings(){
             let formElement = $('form')[0];
             formElement.innerHTML = '';
-            this.updateSettingSchemaDefaultFromSettings(SettingsSchemaSingleton.getInstance().getSettingsSchema(), SettingsSingleton.getInstance().getSettings());
 
             $('form').jsonForm({
                 schema: SettingsSchemaSingleton.getInstance().getSettingsSchema(),
@@ -358,10 +394,13 @@
             });
 
             document.getElementById("settings_form").style.display = "block";
-            this.postProcessSettingsForm();
+
+            this.postProcessSettingsForm(SettingsSingleton.getInstance().getSettings());
         }
 
-        function postProcessSettingsForm() {
+        function postProcessSettingsForm(settings) {
+            this.updateSettingSchemaDefaultFromSettings(SettingsSchemaSingleton.getInstance().getSettingsSchema(), settings);
+
             // Removal of default jsonform submit button & inclusion of buttons
             let btnContainer = $('form input[type=submit]').parent();
 
@@ -423,13 +462,13 @@
             let seedValue = document.getElementById("seedBar").value;
             let settings = SettingsParser.parseSettingsFromSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), seedValue);
             if (!(settings === null)) {
-                SettingsSingleton.getInstance().setSettings(settings);
-
                 console.log("Seedbar entered value: " + seedValue);
                 document.getElementById("seedBar").value = "";
 
                 document.getElementById("seedingCover").style.visibility = "hidden";
                 document.getElementById("seeding").style.visibility = "hidden";
+
+                this.postProcessSettingsForm(settings);
             } else {
                 // TODO: handle error
             }
