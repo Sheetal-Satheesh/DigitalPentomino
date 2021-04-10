@@ -4,19 +4,19 @@ button:hover {
 }
   
   /* Float cancel and delete buttons and add an equal width */
-.cancelbtn, .deletebtn {
+.cancelBtn, .deleteBtn {
     float: center;
     width: 10vw;
 }
   
 /* Add a color to the cancel button */
-.cancelbtn {
+.cancelBtn {
     background-color:rgb(149, 172, 170);
     color: black;
 }
   
 /* Add a color to the delete button */
-.deletebtn {
+.deleteBtn {
     background-color:rgb(149, 172, 170);
     color: black;
 }
@@ -26,8 +26,8 @@ button:hover {
     left: 10vw;
     right: 1vw;
     bottom: 10vw;
-    background-color: transparent;
     border: 1px solid rgb(18, 122, 114);
+    overflow: auto;
 }
 
   /* The Modal (background) */
@@ -39,11 +39,15 @@ button:hover {
     height: 38vw;
 }
   
- 
+.modalContainer {
+  top:1vw;
+  position: relative;
+
+}
   /* Modal Content/Box */
-.modalContent {
+.modalFormContent {
     position:relative;
-    top:7vw;
+    top:5vw;
     left: 28vw;
     width: 30vw;
     padding-bottom: 2vw;;
@@ -53,7 +57,7 @@ button:hover {
 }
 
 /* Add padding and center-align text to the container */
-.modalContainer {
+.modalFormContainer {
     /* padding: 16px; */
     text-align: center;
     top:3vw;
@@ -64,12 +68,14 @@ button:hover {
   /* The Modal Close Button (x) */
  .modal .close {
     position: absolute;
-    right: 35px;
-    top: 15px;
+    right: 1vw;
+    top: 0vw;
     font-size: 50px;
     font-family: 'Courier New', Courier, monospace;
     font-weight: 900;
     color: #f30808;
+    background: solid rgb(2, 71, 62) ;
+    z-index: 100;
   }
   
   .close:hover,

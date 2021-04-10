@@ -11,9 +11,11 @@
     <link rel="stylesheet" href="resources/css/style.css">
 	<link rel="stylesheet" href="resources/css/board_selection.css">
     <link rel="stylesheet" href="resources/css/modal.css">
+    <link rel="stylesheet" href="resources/css/grid.css">
     <link rel="stylesheet" href="resources/css/settings_form.css">
-    <link rel="stylesheet" style="text/css" href="resources/jsonform/bootstrap.css" />
+    <link rel="stylesheet" href="resources/jsonform/bootstrap.css">
     <script src="resources/index.js"></script>
+    <script src="resources/js/ui-template.js"></script>
     <script src="resources/js/board.js"></script>
     <script src="resources/js/overlapping.js"></script>
     <script src="resources/js/pentomino.js"></script>
@@ -178,15 +180,17 @@
         <div id="piecearea"></div> <!-- piecearea -->
         <div id="modalTop" class="modal">
             <span onclick="document.getElementById('modalTop').style.display='none'" class="close" title="Close Modal">x</span>
-            <form class="modalContent">
-              <div class="modalContainer">
-                <h3 id="modalText"></h3>
-                <div class="clearfix">
-                  <button type="button" onclick="document.getElementById('modalTop').style.display='none'" class="cancelbtn">No</button>
-                  <button type="button" onclick="document.getElementById('modalTop').style.display='none'" class="deletebtn">Yes</button>
+            <div class ="modalContainer" id="modalContainerID">
+                <div class="outerGrid">
+                    <div class="innerGrid" id="innerGrid"></div>
                 </div>
-              </div>
-            </form>
+                <form class="modalFormContent">
+                    <div class="modalFormContainer" id="modalFormContainerID">
+                        <h3 id="modalTextID"></h3>
+                        <div class="modalButtons" id="modalButtonsID"></div>
+                    </div>
+                </form>
+            </div>
           </div> <!--modal end-->
     </div> 
     
@@ -214,14 +218,13 @@
     </div>  <!-- cPieceManipulation -->
 </div>
 
-
 <script type="text/javascript">
 
         let pd;
-		
+		let template;
         function initialize() {
             pd = new PD();
-			
+			template = new Template();
 			loadGameList();
         }
 
@@ -243,10 +246,36 @@
 
         function resetGame(){
             var modal = document.getElementById('modalTop');
-            let modalText = document.getElementById("modalText");
-            modalText.innerHTML = 'Do you want to reset?';
             modal.style.display="block";
-            let dltBtn = document.querySelector(".deletebtn");
+            modal.style.background="transparent";
+
+            document.querySelector(".modalFormContent").style.display="block";
+            document.querySelector(".innerGrid").style.display="none";
+            template.clearContent("modalButtonsID");
+            template.clearContent("modalTextID");
+
+            let textNode={
+                name: "modalText",
+                text: "Do you want to reset",
+            }
+            template.attachText("modalTextID",textNode );
+
+            let cancelBtn={
+                name: "cancelBtn",
+                onclick: "document.getElementById('modalTop').style.display='none'",
+                content: "No"
+            }
+            template.attachBtn("modalButtonsID", cancelBtn);
+
+            let deleteBtn = {
+                name: "deleteBtn",
+                onclick: "document.getElementById('modalTop').style.display='none'",
+                content: "Yes"
+            }
+
+            template.attachBtn("modalButtonsID", deleteBtn);
+
+            let dltBtn = document.querySelector(".deleteBtn");
             dltBtn.addEventListener("click", () => {
                 pd.reset();
             });
@@ -321,7 +350,7 @@
         }
 
         function processChangesToSettings(changes, settings) {
-            changes.forEach(changesEntry => {
+            changes.forEach(changesEntry => {deleteBtn
                 let heading = changesEntry.heading;
                 let key = changesEntry.key;
 
@@ -480,8 +509,8 @@
 
 			html2canvas(gameElem).then(function(screeshot) {
                 screeshot.setAttribute("class","screentshot");
-                screeshot.style.width  = '13vw';
-                screeshot.style.height = '12vw';
+                screeshot.style.width  = '28vw';
+                screeshot.style.height = '15vw';
                 screeshot.style.border = "2px solid black";
                 gameImage = screeshot;
                 pd.visual.saveGameImage(gameImage);
@@ -491,14 +520,22 @@
         }
 
         function showGameImages(){
+            var modal = document.getElementById('modalTop');
+            modal.style.background=" rgb(220, 240, 237)";
+            modal.style.display="block";
+            document.querySelector(".modalFormContent").style.display="none";
+            document.querySelector(".innerGrid").style.display="block";
+
             let imageList = pd.visual.showGameImages();
-            document.getElementById('game').innerHTML="";
+            let imageGrid = document.getElementById('innerGrid');
+
             for(let key in imageList){
                 if(imageList.hasOwnProperty(key)){
                     let image = imageList[key];
-                    document.getElementById('game').appendChild(image);
+                    imageGrid.appendChild(image);
                 }
             }
+
             // for(let key in imageList){
             //     pd.visual.loadGame(key);
             //     pd.setPD(pd.visual.getBoard());
