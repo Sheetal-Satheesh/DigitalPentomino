@@ -537,14 +537,13 @@
        
            
             let imageGrid = document.getElementById('innerGrid');
-            template.clearContent("innerGrid");
+            template.clearContent(".innerGrid");
 
             imageList.forEach((item) => {
                 let imgKey = Object.keys(item)[0];
                 let image = item[imgKey];
                 let imageDiv = document.createElement("div");
                 imageDiv.setAttribute("class","imageDiv");
-                
 
                 let buttonDiv = document.createElement("div");
                 buttonDiv.setAttribute("class", "imageBtnDiv");

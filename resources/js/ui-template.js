@@ -16,7 +16,7 @@ class Template{
 
     attachBtn(parentElement,childAttribute){
         if(typeof parentElement === "string"){
-            parentElement = document.getElementById(parentElement);
+            parentElement = document.querySelector(parentElement);
         }
         let childElement = this.createBtn(childAttribute);;
         parentElement.appendChild(childElement);
@@ -30,16 +30,31 @@ class Template{
     attachText(parentElement, childAttribute){
         
         if(typeof parentElement === "string"){
-            parentElement = document.getElementById(parentElement);
+            parentElement = document.querySelector(parentElement);
         }
         let child = this.createText(childAttribute);
         parentElement.appendChild(child);
     }
     clearContent(element){
         if(typeof element === "string"){
-            element = document.getElementById(element);
+            element = document.querySelector(element);
         }
         element.innerHTML='';
+    }
+
+    createDiv(attribute){
+        let divElem = document.createElement('div');
+        divElem.setAttribute('class', attribute.name);
+        return divElem;
+    }
+
+    attachDiv(parentElement, childAttribute){
+        if(typeof parentElement === "string"){
+            parentElement = document.querySelector(parentElement);
+        }
+
+        let child = this.createDiv(childAttribute);
+        parentElement.appendChild(child);
     }
 
 }
