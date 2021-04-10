@@ -21,7 +21,7 @@ class Game {
         this._pentominoOutsidePositions = [];
         this._collisions = [];
         this._solutions = Solutions.getGamesFromSolutionsConfig(this._name);
-        this._id = Math.random().toString(36).slice(-10); 
+        this._id = Math.random().toString(36).slice(-10);
     }
 
     reset(){
@@ -490,7 +490,20 @@ class Game {
     }
 
     getPentominoes() {
-        return this._board.getPentominoes().concat(this._pentominosOutside).concat(this._tray);
+        let pentominoes =  this._board.getPentominoes().concat(this._pentominosOutside);
+        if(pentominoes.length == 0){
+            pentominoes = this._tray;
+        }
+        return pentominoes;
+        //.concat(this._tray);
+        // let pentominoes=[];
+
+        // let boardPentominoes = this._board.getPentominoes();
+        // for(let indx=0; indx <boardPentominoes.length; ++indx){
+        //     for(let trayIndx=0; trayIndx < this._tray.len){
+
+        //     }
+        // }
     }
 
     getPentominoesInGmArea(){

@@ -85,7 +85,11 @@ class Visual {
         this.positionPiece(pentomino);
     }
 
+    removeFromTray(pentomino,cmdType=CommandTypes.Original){
+
+    }
     movePentominoToTray(pentomino,cmdType=CommandTypes.Original){
+        
         this.gameController.removePentomino(pentomino, cmdType);
     }
 
@@ -463,7 +467,9 @@ class Visual {
                 for (var i in elements) {
                     var element = elements[i];
                     var id = element.id;
-                    //Ashwini: when piece is moved back to tray reset Pentomio inTray variable to 1 and place the piece in Tray
+                    /**
+                     * when piece is moved back to tray reset Pentomio inTray variable to 1 and place the 
+                     * piece in Tray */
                     if (id == 'tray') {
                         let piece = data[1].toTray();
                         that.positionPiece(piece);

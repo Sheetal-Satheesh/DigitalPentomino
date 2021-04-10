@@ -251,21 +251,21 @@
 
             document.querySelector(".modalFormContent").style.display="block";
             document.querySelector(".innerGrid").style.display="none";
-            template.clearContent("modalButtonsID");
-            template.clearContent("modalTextID");
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTextID");
 
             let textNode={
                 name: "modalText",
                 text: "Do you want to reset",
             }
-            template.attachText("modalTextID",textNode );
+            template.attachText("#modalTextID",textNode );
 
             let cancelBtn={
                 name: "cancelBtn",
                 onclick: "document.getElementById('modalTop').style.display='none'",
                 content: "No"
             }
-            template.attachBtn("modalButtonsID", cancelBtn);
+            template.attachBtn("#modalButtonsID", cancelBtn);
 
             let deleteBtn = {
                 name: "deleteBtn",
@@ -273,7 +273,7 @@
                 content: "Yes"
             }
 
-            template.attachBtn("modalButtonsID", deleteBtn);
+            template.attachBtn("#modalButtonsID", deleteBtn);
 
             let dltBtn = document.querySelector(".deleteBtn");
             dltBtn.addEventListener("click", () => {
@@ -518,6 +518,10 @@
         }
 
         function loadGameImage(key){
+            pd.visual.loadGame(key);
+            pd.loadGame(pd.visual.getBoard(),"Snapshot");
+            var modal = document.getElementById('modalTop');
+            modal.style.display="none";
 
         }
 

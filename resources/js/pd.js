@@ -85,6 +85,7 @@ class PD {
         return boardsWithConfig;
     }
 
+
     loadGame(board, type){
         let gameObject = this.getGameUISettings(board);
         this.boardName = board; // HACK: To be changed later. This needs to be obtained from the backend. 
@@ -97,7 +98,7 @@ class PD {
         this.boardStartX = Math.floor((this.gameHeight - this.boardSize[0]) / 2);
         this.boardStartY = Math.floor((this.gameWidth - this.boardSize[1]) / 2);
 
-        if(type != "Load"){
+        if(type != "Snapshot"){
             this.gameController.createGame(
                 [this.boardStartX, this.boardStartY],
                 this.boardSize,
