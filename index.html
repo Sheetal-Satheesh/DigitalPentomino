@@ -324,21 +324,30 @@
                     let schemaEntry = settingsSchema[key]["properties"][subkey];
                     switch (schemaEntry.type) {
                         case "boolean":
+                            editInputSchemaEntry(key, subkey, settings[key][subkey]);
                             break;
                         case "string":
                             editStringSchemaEntry(key, subkey, schemaEntry, settings[key][subkey]);
                             break;
                         case "number":
+                            editInputSchemaEntry(key, subkey, settings[key][subkey]);
                             break;
                         case "integer":
+                            editInputSchemaEntry(key, subkey, settings[key][subkey]);
                             break;
                         default:
-                            break;
+                            throw new Error("Schema Error: Unknown type: " + schemaEntry.type);
                     }
                 }
             }
             let currentLanguage = settings.general.language;
             settingsSchema["general"]["properties"]["language"]["default"] = currentLanguage === baseConfigs.languages.ENGLISH ? "en" : "de";
+        }
+
+        function editInputSchemaEntry(heading, key, value) {
+            let name = heading + "." + key;
+            let inputElement = $("input[name='" + name + "']")[0];
+            inputElement.value = value;
         }
 
         function editStringSchemaEntry(heading, key, schemaEntry, selectedValue) {
