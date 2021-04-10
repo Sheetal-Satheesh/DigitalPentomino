@@ -227,7 +227,7 @@
 			template = new Template();
 			loadGameList();
         }
-
+        
 		function loadGameList() {
 			var board_container = document.getElementById('container');
 			var board_list = pd.getAllBoards();
@@ -502,7 +502,7 @@
         function execRedo(){
             pd.visual.redo();
         }
-
+ 
         function saveGameImage(){
             let gameImage = undefined;
             let gameElem = document.getElementById('game');
@@ -526,11 +526,14 @@
 
             let imageList = pd.visual.showGameImages();
             let imageGrid = document.getElementById('innerGrid');
-
+            template.clearContent("innerGrid");
             for(let key in imageList){
                 if(imageList.hasOwnProperty(key)){
                     let image = imageList[key];
-                    imageGrid.appendChild(image);
+                    let imageDiv = document.createElement("div");
+                    imageDiv.setAttribute("class","imageDiv");
+                    imageDiv.appendChild(image);
+                    imageGrid.appendChild(imageDiv);
                 }
             }
 
