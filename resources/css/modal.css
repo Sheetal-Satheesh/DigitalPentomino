@@ -67,14 +67,16 @@ button:hover {
 }  
   /* The Modal Close Button (x) */
  .modal .close {
-    position: absolute;
+    position: relative;
     right: 1vw;
     top: 0vw;
-    font-size: 50px;
+    font-size: 4vw;
     font-family: 'Courier New', Courier, monospace;
     font-weight: 900;
+    border-style: double;
+    border-color: #f30808;
     color: #f30808;
-    background: solid rgb(2, 71, 62) ;
+    background: solid rgb(1, 26, 22) ;
     z-index: 100;
   }
   
