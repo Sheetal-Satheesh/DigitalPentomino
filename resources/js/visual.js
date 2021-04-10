@@ -13,7 +13,8 @@ Object.freeze(CommandTypes);
 
 const RedoStrategy = {"TOP":1, "BOTTOM":2};
 Object.freeze(RedoStrategy);
-
+let lastHintedPentName = null;
+let randomCell;
 class Visual {
 
     constructor(pd) {
@@ -77,7 +78,6 @@ class Visual {
     }
 
     placePentomino(pentomino, posX, posY, cmdType=CommandTypes.Original){
-
         this.gameController.placePentomino(pentomino, posX, posY,cmdType);
         this.positionPiece(pentomino);
     }
@@ -92,16 +92,6 @@ class Visual {
         this.pd.visual.disableManipulations();
         this.renderPieces();
     }
-
-    callHintAI() {
-                let hint = document.getElementById("myHint");
-                hint.classList.toggle("show");
-                let popupText = document.getElementById("myHint");
-                let penHint = this.gameController.getHint();
-                let hintinPen = penHint.getCommand()._pentomino;
-                popupText.textContent = this.penHint.getText();
-            }
-
 
     renderBoard() {
         //TODO: Check whether in the innerHTML approach is good here!
@@ -215,6 +205,7 @@ class Visual {
             htmlElement.style.setProperty("--rotationX", "0deg");
             htmlElement.style.setProperty("--rotationY", "0deg");
             htmlElement.style.setProperty("--rotationZ", "0deg");
+
         } 
         else {
             var bCellsFnd = this.isPentominoInBlockCells(piece);
@@ -243,12 +234,14 @@ class Visual {
             htmlElement.style.zIndex = this.overlapBlock.getZIndex(piece);
             htmlElement.style.left = left + 'vw';
             htmlElement.style.top = top + 'vw';
+            htmlElement.style.transformOrigin='center';
             htmlElement.style.setProperty("--magnification", 1);
         }
         if (htmlElement.style.getPropertyValue("--rotationX") === "") {
             htmlElement.style.setProperty("--rotationX", "0deg");
             htmlElement.style.setProperty("--rotationY", "0deg");
             htmlElement.style.setProperty("--rotationZ", "0deg");
+
         }
 
         //making the element visible (see remark in renderPieces)
@@ -569,18 +562,53 @@ class Visual {
     }
 
     callHintAI(){
-        let hint = document.getElementById("myHint");
-        hint.classList.toggle("show");
-        hint.style.visibility = "visible";
+        let hintElement = document.getElementById("myHint");
+        hintElement.classList.toggle("show");
+        hintElement.style.visibility = "visible";
         let popupText = document.getElementById("myHint");
-        popupText.textContent = pd.gameController.getHint().getText();
-        //call indication of hint
-        this.indicateHint(500);
+        let hint = pd.gameController.getHint();
+        let hintCommand = hint.getCommands()[0];
+        let hintinPen = hintCommand._pentomino;
+        popupText.textContent = this.generateHintText(hint);
+        this.indicateHint(hint);
     }
 
+    generateHintText(hint) {
+        let text = "";
 
-
-
+        if (hint.getPossibleSolutions().length === 0) {
+            text += "This doesn't look right. The pentominoes on your board aren't part of a solution."
+        }
+        let command = hint.getCommands()[0];
+        let cmdValues = command.ExecValues();
+        switch (command.Name()) {
+            case "Remove":
+                text += "This doesn't look right. Why don't you remove " + command._pentomino.name;
+                break;
+            case "MoveToPosition":
+                text += "Maybe try to move " + command._pentomino.name + " to position [" + cmdValues.PosX + "," + cmdValues.PosY + "]";
+                break;
+            case "Place":
+                text += "Why don't you place " + command._pentomino.name + " at position [" + cmdValues.PosX + "," + cmdValues.PosY + "]";
+                break;
+            case "RotateClkWise":
+                text += "Why don't you try to rotate " + command._pentomino.name + " clock-wise";
+                break;
+            case "RotateAntiClkWise":
+                text += "Why don't you try to rotate " + command._pentomino.name + " anti-clock-wise";
+                break;
+            case "MirrorH":
+                text += "Why don't you try to mirror " + command._pentomino.name + " horizontal";
+                break;
+            case "MirrorV":
+                text += "Why don't you try to mirror " + command._pentomino.name + " vertical";
+                break;
+            default:
+                text += "Error - unknown command with name '" + command.Name() + "'";
+                throw new Error("Error: unknown command with name " + command.Name());
+        }
+        return text;
+    }
 
     blinkCells(cells, bgColor, blinkColor) {
         let menu = [];
@@ -608,21 +636,23 @@ class Visual {
         }, 100);
     }
 
-    indicateHint(timeoutFrame){
+    indicateHint(hint){
+        let timeoutFrame = 500;
         //possible command names (place, remove, moveToPosition, rotateClkWise, rotateAntiClkWise, mirrorH, mirrorV)
-        let hintCommand = pd.gameController.getHint().getCommand();
-        let hintSkill = pd.gameController.getHint()._skill;
-        console.log(pd.gameController.getHint());
-        console.log("Skill: " + hintSkill);
+        let hintCommand = hint.getCommands()[0];
+        let hintSkill = hint._skill;
         let hintName = hintCommand._name;
         let hintinPen = hintCommand._pentomino;
         let pentominoColor = hintinPen.color;
         let clientRect = document.getElementById("piece_" + hintinPen.name).getBoundingClientRect();
         let [posX, posY] = [clientRect.x + clientRect.width/2, clientRect.y + clientRect.height/2];
+        let currentPenHintName = hintinPen.name;
+        //let currentPenHintNaame = this.selected.name;
+        if(!(currentPenHintName === lastHintedPentName)){
+            randomCell = Math.floor(Math.random() * (4)) + 1;
+            lastHintedPentName = currentPenHintName;
+        }
 
-
-        //random variable that selects
-        var randomCell = Math.floor(Math.random() * (4)) + 1;
 
        //indication of unoccupied cells
         if (!(hintSkill === null)) {
@@ -633,8 +663,7 @@ class Visual {
             this.blinkCells(hintSkill, DEFAULT_BG_COLOR, RED_COLOR);
         }
         else {
-            console.log("Skill (else): " + hintSkill);
-              switch (hintName) {
+            switch (hintName) {
             case "Place":
                 // handle place hint
                 let hintRow = hintCommand._nextPosition[0];
@@ -785,7 +814,7 @@ class Visual {
         let allSolutions = [];
         // Get all the games and filter solutions
         if(this.allSolutions == undefined) {
-            GameLoader.getGamesFromSolutionsConfig(this.pd.boardName).forEach(game =>
+            this.gameController.getSolutions().forEach(game =>
                 allSolutions.push([game._board._pentominoPositions, game._board._pentominoes]));
             this.allSolutions = allSolutions;
         }

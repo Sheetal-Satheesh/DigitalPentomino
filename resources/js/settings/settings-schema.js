@@ -3,6 +3,8 @@
  *  - number entries only with minimum and maximum specified
  *  - Only depth of one supported
  *  - Numbers must contain an entry 'decimals', which specifies the number of decimals
+ *  - Default attribute is mandatory
+ *  - Texts of enums can be defined with the enumText attribute
  */
 
 const SettingsSchemaSingleton = (function () {
@@ -52,6 +54,17 @@ class SettingsSchema {
                         "enum": ["en", "de"],
                         "enumText": titles.general.language.enumTitles[lang],
                         "default": "en"
+                    }
+                }
+            },
+            ui: {
+                "type": "object",
+                "title": titles.ui.title[lang],
+                "properties": {
+                    enablePentominoButtonsOnLeftPanel: {
+                        "type": "boolean",
+                        "title": titles.ui.enablePentominoButtonsOnLeftPanel[lang],
+                        "default": true
                     }
                 }
             },

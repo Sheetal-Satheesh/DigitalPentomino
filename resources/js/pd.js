@@ -12,37 +12,81 @@ class PD {
          */
         var fController = new FrontController();
         this.gameController = fController.controller;
-        this.loadBoard("board_6x10");
+        this.loadGame("board_6x10");
         
     }
 
     rotateClkWise(){
         this.visual.rotateClkWise();
-        this.visual.showNumberOfPossibleSolutions();
+        if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
+            this.visual.showNumberOfPossibleSolutions();
+        }
     }
 
     rotateAntiClkWise() {
         this.visual.rotateAntiClkWise();
-        this.visual.showNumberOfPossibleSolutions();
+        if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
+            this.visual.showNumberOfPossibleSolutions();
+        }
     }
 
     flipH(){
         this.visual.flipH();
-        this.visual.showNumberOfPossibleSolutions();
+        if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
+            this.visual.showNumberOfPossibleSolutions();
+        }
     }
 
     flipV(){
         this.visual.flipV();
-        this.visual.showNumberOfPossibleSolutions();
+        if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
+            this.visual.showNumberOfPossibleSolutions();
+        }
     }
 
     reset(){
        this.visual.clear();
-       this.visual.showNumberOfPossibleSolutions();
+       if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
+           this.visual.showNumberOfPossibleSolutions();
+       }
     }
 
-    loadBoard(board){
-        let gameObject = GameLoader.getGameObject(board);
+        /**
+     * Returns a game object of the selected/default game that can be used to draw the board
+     */
+    getGameUISettings(board){
+        return {
+                gameHeight: boardConfigs[board].gameHeight || baseConfigs.gameHeight,
+                gameWidth: boardConfigs[board].gameWidth || baseConfigs.gameWidth,
+                boardSize: boardConfigs[board].boardSize,
+                blockedCells: boardConfigs[board].blockedCells || undefined,
+                boardShape: boardConfigs[board].boardShape || baseConfigs.boardShape
+        };
+    }
+
+     /**
+     * Returns all boards with configurations and solutions
+     */
+      getAllBoards(){
+        let boardsWithConfig = [];
+        if(baseConfigs != undefined && boardConfigs != undefined){
+            if(baseConfigs.hasOwnProperty("boards")){
+                baseConfigs.boards.forEach(board => {
+                    if(boardConfigs.hasOwnProperty(board)){
+                        boardsWithConfig.push(board);
+                    }
+                });
+            }else{
+                throw new Error("Error in configuration: Could not find any boards");    
+            }
+        } else{
+            throw new Error("Error in configuration: Could not find basic game configurations");
+        }
+        return boardsWithConfig;
+    }
+
+    loadGame(board){
+        let gameObject = this.getGameUISettings(board);
         this.boardName = board; // HACK: To be changed later. This needs to be obtained from the backend. 
         this.boardSize = gameObject.boardSize;
         this.boardShape = gameObject.boardShape;
@@ -59,7 +103,9 @@ class PD {
                                     board);
 
         this.visual = new Visual(this);
-        this.visual.showNumberOfPossibleSolutions();
+        if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
+            this.visual.showNumberOfPossibleSolutions();
+        }
     }
 
     hints(){

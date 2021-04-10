@@ -27,6 +27,7 @@
     <script src="resources/js/configs/baseConfigs.js"></script>
     <script src="resources/js/configs/boardConfigs.js"></script>
     <script src="resources/js/configs/solutionsConfig.js"></script>
+    <script src="resources/js/game-solution.js"></script>
     <script src="resources/js/settings/settings-schema.js"></script>
     <script src="resources/js/settings/settings.js"></script>
     <script src="resources/js/settings/settings-parser.js"></script>
@@ -119,19 +120,19 @@
                 <td>
                     <button type="button" id='btnSettingsForm' class="cActionBtn" onclick="selectSettings()"> <img src="resources/images/icons/settings.png">
                         </button>
-                </td>
-                <td>
-                </td>
-            </tr>
-            <tr>
-                <button style="display:none" onclick="pd.ui.save()">Save</button>
-                <button style="display:none" onclick="pd.ui.load()">Load</button>
-            </tr>
-        </table>
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+                  <tr>
+                    <button style="display:none" onclick="pd.ui.save()">Save</button>
+                    <button style="display:none" onclick="pd.ui.load()">Load</button>
+                  </tr>
+          </table>
 
-        <p id="possibleSolutions">
-            Number of solutions: <label id="labelNumberSolutions">?</label>
-        </p>
+          <p id="labelNumberSolutionsContainer">
+              Number of solutions: <label id="labelNumberSolutions">?</label>
+          </p>
 
         <div class="settings-popup" id="settings_form">
 
@@ -140,35 +141,43 @@
                 <form></form>
             </div>
         </div>
+            
+		<div class="form-popup" id="board_selection_form">
 
-        <div class="form-popup" id="board_selection_form">
-
-            <div class="container" id="container">
-
-                <!-- Board List is loaded dynamically from Board Config -->
-
-                <div class="action_btn">
-                    <button type="button" class="btnLoadboard" onclick="loadBoard()">Load Board</button>
-                    <button type="button" class="btnCancel" onclick="closeForm()">Cancel</button>
-                </div>
-            </div>
+			<div class="container" id="container">
+				
+				<!-- Board List is loaded dynamically from Board Config -->
+				
+				<div class="action_btn">
+					<button type="button" class="btnLoadGame" onclick="loadGame()">Load Board</button>
+					<button type="button" class="btnCancel" onclick="closeForm()">Cancel</button>
+				</div>
+			</div>
 
 
-        </div>
-    </div>
-    <!-- operation -->
+		</div>
+        </div>  <!-- operation -->
     </div>
 
     <div id="game">
-        <div id="tray"></div>
-        <!-- tray -->
-        <div id="field"></div>
-        <!-- field -->
-        <div id="piecearea"></div>
-        <!-- piecearea -->
-    </div>
-
-    <div class="cPieceManipulation" id="pieceManipulation">
+        <div id="tray"></div> <!-- tray -->
+        <div id="field"></div> <!-- field -->
+        <div id="piecearea"></div> <!-- piecearea -->
+        <div id="modalTop" class="modal">
+            <span onclick="document.getElementById('modalTop').style.display='none'" class="close" title="Close Modal">x</span>
+            <form class="modalContent">
+              <div class="modalContainer">
+                <h3 id="modalText"></h3>
+                <div class="clearfix">
+                  <button type="button" onclick="document.getElementById('modalTop').style.display='none'" class="cancelbtn">No</button>
+                  <button type="button" onclick="document.getElementById('modalTop').style.display='none'" class="deletebtn">Yes</button>
+                </div>
+              </div>
+            </form>
+          </div> <!--modal end-->
+    </div> 
+    
+    <div class = "cPieceManipulation" id ="pieceManipulation" >
         <table>
             <tr>
                 <td>
@@ -200,29 +209,35 @@
 
         function initialize() {
             pd = new PD();
-
-            loadBoardList();
+			
+			loadGameList();
         }
 
-        function loadBoardList() {
-            var board_container = document.getElementById('container');
-            var board_list = GameLoader.getAllBoards();
-            var out = '';
+		function loadGameList() {
+			var board_container = document.getElementById('container');
+			var board_list = pd.getAllBoards();
+			var out = '';
+			
+			var input_element = '<input type="radio" name="board_list" class="input-hidden" id="$$" value="$$" >';
+			var label = '<label for="$$"> $$ <img src="resources/images/boards/$$.png" alt="$$" style="width:50%; height:50%;"/></label>';
+			var action_btn = '\n<div class="action_btn">\n<button type="button" class="btnLoadGame" onclick="loadGame()">Load Board</button>\n<button type="button" class="btnCancel" onclick="closeForm()">Cancel</button>\n</div>'
+			
+			for (var i=0; i< board_list.length; i++){
+				out += input_element.replaceAll("$$", board_list[i]) +'\n'+ label.replaceAll("$$", board_list[i]) + '<br><br>\n';
+			}
 
-            var input_element = '<input type="radio" name="board_list" class="input-hidden" id="$$" value="$$" >';
-            var label = '<label for="$$"> $$ <img src="resources/images/boards/$$.png" alt="$$" style="width:50%; height:50%;"/></label>';
-            var action_btn = '\n<div class="action_btn">\n<button type="button" class="btnLoadboard" onclick="loadBoard()">Load Board</button>\n<button type="button" class="btnCancel" onclick="closeForm()">Cancel</button>\n</div>'
+			board_container.innerHTML = out + action_btn;
+		}
 
-            for (var i = 0; i < board_list.length; i++) {
-                out += input_element.replaceAll("$$", board_list[i]) + '\n' + label.replaceAll("$$", board_list[i]) + '<br><br>\n';
-            }
-
-            <!-- console.log(out); -->
-            board_container.innerHTML = out + action_btn;
-        }
-
-        function resetGame() {
-            pd.reset();
+        function resetGame(){
+            var modal = document.getElementById('modalTop');
+            let modalText = document.getElementById("modalText");
+            modalText.innerHTML = 'Do you want to reset?';
+            modal.style.display="block";
+            let dltBtn = document.querySelector(".deletebtn");
+            dltBtn.addEventListener("click", () => {
+                pd.reset();
+            });
         }
 
         function callHintAI() {
@@ -279,19 +294,21 @@
 
             postProcessSettings(values);
 
-            event.preventDefault();
-            console.log("JsonForm: Submitted values:");
-            console.log(values);
-            closeSettings();
+            if (errors === false) {
+                event.preventDefault();
+                console.log("JsonForm: Submitted values:");
+                console.log(values);
+                closeSettings();
 
-            let oldSettings = SettingsSingleton.getInstance().getSettings();
-            let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
-            let changesToSettings = SettingsParser.compareSettings(schema, oldSettings, values);
+                let oldSettings = SettingsSingleton.getInstance().getSettings();
+                let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+                let changesToSettings = SettingsParser.compareSettings(schema, oldSettings, values);
 
-            SettingsSingleton.getInstance().setSettings(values);
+                SettingsSingleton.getInstance().setSettings(values);
 
-            processChangesToSettings(changesToSettings, values);
-            updateSettingSchemaDefaultFromSettings(schema, values);
+                processChangesToSettings(changesToSettings, values);
+                updateSettingSchemaDefaultFromSettings(schema, values);
+            }
         }
 
         function postProcessSettings(settings) {
@@ -313,11 +330,23 @@
                 let key = changesEntry.key;
 
                 if (heading === "hinting" && key === "enableHinting") {
-                    let visible = settings[heading][key];
-                    document.getElementById("hintButton").style.visibility = visible ? "visible" : "hidden";
+                    let hintingEnabled = settings[heading][key];
+                    document.getElementById("hintButton").style.visibility = hintingEnabled ? "visible" : "hidden";
+                    document.getElementById("labelNumberSolutionsContainer").style.visibility = hintingEnabled ? "visible" : "hidden";
+
+                    let fController = new FrontController();
+                    if (hintingEnabled) {
+                        fController.controller.loadSolutionsOfCurrentGame();
+                    }
                 } else if (heading === "prefilling" && key === "enablePrefilling") {
                     let visible = settings[heading][key];
                     document.getElementById("prefillBoard").style.visibility = visible ? "visible" : "hidden";
+                } else if (heading === "ui" && key === "enablePentominoButtonsOnLeftPanel") {
+                    let visible = settings[heading][key];
+                    document.getElementById("btnRotateLeft").style.visibility = visible ? "visible" : "hidden";
+                    document.getElementById("btnRotateRight").style.visibility = visible ? "visible" : "hidden";
+                    document.getElementById("btnFlipH").style.visibility = visible ? "visible" : "hidden";
+                    document.getElementById("btnFlipV").style.visibility = visible ? "visible" : "hidden";
                 }
             });
         }
@@ -328,15 +357,31 @@
                 //console.log(settings[key]);
                 for (let subkey in settings[key]) {
                     //console.log(settings[key][subkey]);
-                    if (!(settings[key][subkey] === null))
-                        settingsSchema[key]["properties"][subkey]["default"] = settings[key][subkey];
+                    settingsSchema[key]["properties"][subkey]["default"] = settings[key][subkey];
                 }
             }
             let currentLanguage = settings.general.language;
             settingsSchema["general"]["properties"]["language"]["default"] = currentLanguage === baseConfigs.languages.ENGLISH ? "en" : "de";
         }
 
-        function selectSettings() {
+        function handleJsonFormErrors(errors, formElt) {
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+            for (let i=0; i<errors.length; i++) {
+                let error = errors[i];
+
+                switch (error.attribute) {
+                    case "maximum":
+                        error.message = strings.settings.errors.higherThanMax[lang] + " (" + error.details + ")";
+                        break;
+                    case "minimum":
+                        error.message = strings.settings.errors.lowerThanMin[lang] + " (" + error.details + ")";
+                        break;
+                }
+            }
+            $(formElt).jsonFormErrors(errors, $('form'));
+        }
+
+        function selectSettings(){
             let formElement = $('form')[0];
             formElement.innerHTML = '';
 
@@ -346,7 +391,8 @@
 
             $('form').jsonForm({
                 schema: SettingsSchemaSingleton.getInstance().getSettingsSchema(),
-                onSubmit: this.handleJsonFormSubmit
+                onSubmit: this.handleJsonFormSubmit,
+                displayErrors: handleJsonFormErrors
             });
 
             document.getElementById("settings_form").style.display = "block";
