@@ -95,6 +95,7 @@ class Visual {
     movePentominoToTray(pentomino,cmdType=CommandTypes.Original){
         this.gameController.addToTray(pentomino);
         this.gameController.removePentomino(pentomino, cmdType);
+        this.positionPiece(pentomino);
     }
 
     clear(){
@@ -210,8 +211,8 @@ class Visual {
             var widthVW = UIProperty.TrayCSSLeft + (piece.trayPosition) * 7;
             var magnification = 6 / (5 * width);
             htmlElement.style.left = widthVW + 'vw';
-            htmlElement.style.top = '.7vw';
-            htmlElement.style.transformOrigin = 'top';
+            htmlElement.style.top = '-5.5vw';
+            // htmlElement.style.transformOrigin = 'top';
             htmlElement.style.setProperty("--magnification", magnification);
             htmlElement.style.setProperty("--rotationX", "0deg");
             htmlElement.style.setProperty("--rotationY", "0deg");
@@ -257,7 +258,6 @@ class Visual {
 
         //making the element visible (see remark in renderPieces)
         htmlElement.style.display = 'block';
-
     }
 
     select(piece,xPosition,yPosition) {
@@ -903,7 +903,11 @@ class Visual {
                 }
                 else{
                     command.Pentomino.inTray=0;
-                    this.placePentomino(command.Pentomino, command.PosX,command.PosY,CommandTypes.Shadow);
+                    this.placePentomino(
+                                command.Pentomino,
+                                command.PosX,
+                                command.PosY,
+                                CommandTypes.Shadow);
                 }
 
                 break;
@@ -934,6 +938,21 @@ class Visual {
 
         }
     }
+
+    getCmdState(stateType){
+        if(stateType == "start"){
+            return this.gameController.getStartCmdKey();
+        }
+        else{
+            return this.gameController.getCurrentCmdKey()
+        }
+    }
+
+    getGameStates(){
+        let cmdKeySequences = this.gameController.getCmdKeySequences();
+        return cmdKeySequences;
+    }
+
 
     undo(){
         let command = this.gameController.undo();
@@ -966,6 +985,63 @@ class Visual {
 
     loadGame(key){
         this.gameController.loadGame(key);
+    }
+
+    loadGameState(targetStateKey){
+        let currGame = this.gameController.game();
+        let currentCmdKey = this.gameController.getCurrentCmdKey();
+        //this.gameController.saveGame(currGame);
+        let cmdSequences = this.gameController.getCmdSequences(currentCmdKey, targetStateKey);
+
+        for (let indx = 0; indx < cmdSequences.length; indx++) {
+            this.execShadowCmd(cmdSequences[indx]);
+        }        
+    }
+
+    replay(startKey, targetKey){
+        console.log("Start Cmd Key: "+this.gameController.getStartCmdKey());
+        console.log("Current Cmd Key: "+this.gameController.getCurrentCmdKey());
+        console.log("Last Cmd Key: "+this.gameController.getLastCmdKey());
+        
+        if(startKey.length == 0){
+            startKey = this.gameController.getStartCmdKey();
+            if(startKey == undefined){
+                console.error("Game is not Started yet");
+                return;
+            }
+        }
+
+        if(targetKey.length == 0){
+            targetKey = this.gameController.getLastCmdKey();
+            if(targetKey == undefined){
+                console.error("Game is not Started yet");
+                return;
+            }
+        }
+
+        let cmdSequences = this.gameController.getCmdSequences(startKey,targetKey);
+        let ldGame = this.loadGameState(startKey);
+        if(ldGame != undefined){
+            this.pieces = this.gameController.getPentominoes();
+            this.pieces = this.pieces.map((pentomino)=>{
+                let inGameArea = this.gameController.isPlacedInGame(pentomino);
+                if(inGameArea == false){
+                    pentomino.toTray();
+                }         
+                return pentomino;
+            },this);
+            this.renderPieces();
+        }
+
+        let timeInterval=100;
+        for (let indx = 0; indx < cmdSequences.length; indx++) {
+            let command = cmdSequences[indx];
+            var that = this;
+
+            setTimeout(function (that, command) {
+                that.execShadowCmd(command);
+            }, timeInterval+=500, that, command);
+        }   
     }
 
 }

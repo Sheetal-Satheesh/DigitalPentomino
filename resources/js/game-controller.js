@@ -87,6 +87,34 @@ class GameController {
         return this._gameLoader.hintAI();
     }
 
+    getStartCmdKey(){
+        return this.cmdManager().StartCmdKey();
+    }
+
+    getLastCmdKey(){
+        return this.cmdManager().LastCmdKey();
+    }
+
+    getCurrentCmdKey(){
+        return this.cmdManager().CurrentCmdKey();
+    }
+
+    getCmdSequences(startKey, endKey){
+        if( this.cmdManager().IsKeyFound(startKey) == false){
+            throw new Error("Selected Game State Not Found :(");
+        }
+        
+        if( this.cmdManager().IsKeyFound(endKey) == false){
+            throw new Error("Selected Game State Not Found :(");
+        }
+
+        return this.cmdManager().CmdSequences(startKey, endKey);
+    }
+
+    getCmdKeySequences() {
+        return this.cmdManager().CmdKeySequences();
+    }
+
     exceptionHandler(pentomino){
         if (this.game() === null) {
             throw new Error("Game is not set");

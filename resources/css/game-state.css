@@ -1,0 +1,50 @@
+.replayPopup{
+    display: none;
+    position: fixed;
+    top:7vw;
+    height: 15vw;
+    width: 50vw;
+    bottom: 30%;
+    left: 10vw;
+    border: 3px solid #062144;
+    background-color: rgb(197, 207, 203);;
+    
+}
+
+#replayContainer{
+    /* Center vertically and horizontally */
+    
+    position: absolute;
+    top: 5vw;
+    left: 13vw;
+}
+
+#replayContainer h1{
+    padding-left: 3vw;
+}
+
+
+
+#startStateOptions{
+    text-align: center;
+    padding-left: 5vw;
+    width: 10vw;
+   
+   
+}
+#targetStateOptions{
+    padding-left: 5vw;
+    text-align: center;
+    width: 10vw;
+   
+}
+
+.StateSelect .selected {
+    background-color: rgb(85, 202, 114);
+}
+
+.submitReplay {
+    background-color: rgb(119, 145, 145);
+    border: 1px solid rgb(26, 24, 24);
+
+}

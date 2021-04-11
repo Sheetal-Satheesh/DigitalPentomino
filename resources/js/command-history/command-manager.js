@@ -74,6 +74,63 @@ class CommandManager {
         return command;
     }
 
+    StartCmdKey(){
+        return this._cmdTree.RootCmdKey();
+    }
+
+    LastCmdKey(){
+        return this._cmdTree.LeafCmdKey();
+    }
+
+    CurrentCmdKey(){
+        return this._cmdTree.CurrentCmdKey();
+    }
+
+    IsKeyFound(key){
+        let retNode = this._cmdTree.SearchCmdNode(
+                                        this._cmdTree.Root(), key);
+        if(retNode != undefined){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    CmdKeySequences(){
+
+        let startKey = this._cmdTree.RootCmdKey();
+        let endKey = this._cmdTree.LeafCmdKey();
+        let cmdKeySeq =  this._cmdTree.CollectCmdKeySequences(
+                                            this._cmdTree.Root(),
+                                            startKey,
+                                            endKey,0);
+
+        return cmdKeySeq;
+    }
+
+    CmdSequences(startKey, endKey){
+        let cmdObj =  this._cmdTree.CollectCmdSequences(
+                                                        this._cmdTree.Root(),
+                                                        startKey, 
+                                                        endKey,0);
+
+        console.log(cmdObj); 
+        if(cmdObj.seqType == 2){
+            cmdObj.commands = cmdObj.commands.reverse();                                                       
+        }
+        
+        let cmdSequences = [];
+        cmdObj.commands.forEach((command) => {
+            if(cmdObj.seqType == 1){
+                cmdSequences.push(command.ExecValues());
+
+            }else{
+                cmdSequences.push(command.ExecUndoValues());
+            }
+        },this);
+        return cmdSequences;
+    }
+
     JumpToRoot() {
         let cmdSequences = [];
         while (!this._cmdTree.isAtRoot()) {
