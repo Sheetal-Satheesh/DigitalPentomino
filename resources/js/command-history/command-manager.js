@@ -5,8 +5,6 @@ if(typeof require != 'undefined') {
 class CommandManager {
     constructor() {
         this._cmdTree = new CommandTree();
-        var fController = new FrontController(); 
-        this._game = fController.controller.game();
     }
 
     Reset(){
@@ -18,6 +16,9 @@ class CommandManager {
     }
 
     ExecCommand(command, cmdTypes=CommandTypes.Original) {
+
+        var fController = new FrontController();
+        let game = fController.controller.game();
 
         let isSuccess = true; // Get return value of success or error from
         let currNode=undefined;
@@ -31,27 +32,27 @@ class CommandManager {
        let cmdVal = command.ExecValues();
        switch(command.Name()){
            case "Place":
-                this._game.placePentomino(cmdVal.Pentomino, cmdVal.PosX,cmdVal.PosY);
+                game.placePentomino(cmdVal.Pentomino, cmdVal.PosX,cmdVal.PosY);
                 break;
             
             case "Remove":
-                this._game.removePentomino(cmdVal.Pentomino);
+                game.removePentomino(cmdVal.Pentomino);
                 break;
             
             case "RotateClkWise":
-                this._game.rotatePentominoClkWise(cmdVal.Pentomino);
+                game.rotatePentominoClkWise(cmdVal.Pentomino);
                 break;
             
             case "RotateAntiClkWise":
-                this._game.rotatePentominoAntiClkWise(cmdVal.Pentomino);
+                game.rotatePentominoAntiClkWise(cmdVal.Pentomino);
                 break;
             
             case "MirrorH":
-                this._game.mirrorPentominoH(cmdVal.Pentomino);
+                game.mirrorPentominoH(cmdVal.Pentomino);
                 break;
             
             case "MirrorV":
-                this._game.mirrorPentominoV(cmdVal.Pentomino);
+                game.mirrorPentominoV(cmdVal.Pentomino);
                 break;
             
             default:
@@ -63,7 +64,7 @@ class CommandManager {
        }
 
        if(isSuccess && (currNode != undefined)) {
-            this._game.updateCmdKey(currNode.Key());
+            game.updateCmdKey(currNode.Key());
             /*
                 console.info("Root Key: "+ this._cmdTree.RootKey());
                 console.info("Current Key: "+ this._cmdTree.CurrentKey());

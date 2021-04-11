@@ -51,7 +51,6 @@ class GameController {
     }
     resetGame(){
         this._gameLoader.resetGame();
-        return this.game();
     }
 
     createGame( boardStartXY,

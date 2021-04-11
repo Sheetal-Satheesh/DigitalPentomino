@@ -50,7 +50,6 @@ class GameLoader {
     resetGame(){
         this._game.reset();
         this._commandManager.Reset();
-        return this._game;
     }
 
     createGame( boardStartXY, 
