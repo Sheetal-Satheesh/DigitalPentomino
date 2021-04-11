@@ -10,6 +10,7 @@
     <link rel="apple-touch-icon" href="resources/images/icons/dp_192.png">
     <link rel="stylesheet" href="resources/css/style.css">
     <link rel="stylesheet" href="resources/css/board_selection.css">
+    <link rel="stylesheet" href="resources/css/modal.css">
     <link rel="stylesheet" href="resources/css/settings_form.css">
     <link rel="stylesheet" style="text/css" href="resources/jsonform/bootstrap.css" />
     <script src="resources/index.js"></script>
@@ -426,6 +427,10 @@
                     }
                 }
             }*/
+        }
+
+        function closeModalContainer(){
+            document.getElementById('modalTop').style.display = "none";
         }
 
         function closeSettings() {
