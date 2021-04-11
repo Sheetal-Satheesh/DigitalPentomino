@@ -1,0 +1,83 @@
+
+button:hover {
+    opacity:1;
+}
+  
+  /* Float cancel and delete buttons and add an equal width */
+.cancelbtn, .deletebtn {
+    float: center;
+    width: 10vw;
+}
+  
+/* Add a color to the cancel button */
+.cancelbtn {
+    background-color:rgb(149, 172, 170);
+    color: black;
+}
+  
+/* Add a color to the delete button */
+.deletebtn {
+    background-color:rgb(149, 172, 170);
+    color: black;
+}
+
+#modalTop {
+    top: 6.9vw;
+    left: 10vw;
+    right: 1vw;
+    bottom: 10vw;
+    background-color: transparent;
+    border: 1px solid rgb(18, 122, 114);
+}
+  
+
+  /* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    width: 89vw;
+    height: 38vw;
+}
+  
+ 
+  /* Modal Content/Box */
+.modalContent {
+    position:relative;
+    top:7vw;
+    left: 28vw;
+    width: 30vw;
+    padding-bottom: 2vw;;
+    background-color: rgb(220, 240, 237);
+    border: .2vw solid rgb(2, 71, 62) ;
+ 
+
+}
+
+/* Add padding and center-align text to the container */
+.modalContainer {
+    /* padding: 16px; */
+    text-align: center;
+    top:3vw;
+   
+    overflow:hidden;
+
+}  
+  /* The Modal Close Button (x) */
+ .modal .close {
+    position: absolute;
+    right: 35px;
+    top: 15px;
+    font-size: 50px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 900;
+    color: #f30808;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: #f44336;
+    cursor: pointer;
+  }
+
+/*    */

@@ -1,4 +1,3 @@
-
 const UIProperty = {
     "TrayCSSLeft":7,
     "TrayHeight":7,
@@ -14,7 +13,8 @@ Object.freeze(CommandTypes);
 
 const RedoStrategy = {"TOP":1, "BOTTOM":2};
 Object.freeze(RedoStrategy);
-
+let lastHintedPentName = null;
+let randomCell;
 class Visual {
 
     constructor(pd) {
@@ -78,7 +78,6 @@ class Visual {
     }
 
     placePentomino(pentomino, posX, posY, cmdType=CommandTypes.Original){
-
         this.gameController.placePentomino(pentomino, posX, posY,cmdType);
         this.positionPiece(pentomino);
     }
@@ -94,16 +93,6 @@ class Visual {
         this.pd.visual.disableManipulations();
         this.renderPieces();
     }
-
-    callHintAI() {
-                let hint = document.getElementById("myHint");
-                hint.classList.toggle("show");
-                let popupText = document.getElementById("myHint");
-                let penHint = this.gameController.getHint();
-                let hintinPen = penHint.getCommand()._pentomino;
-                popupText.textContent = this.penHint.getText();
-            }
-
 
     renderBoard() {
         //TODO: Check whether in the innerHTML approach is good here!
@@ -217,6 +206,7 @@ class Visual {
             htmlElement.style.setProperty("--rotationX", "0deg");
             htmlElement.style.setProperty("--rotationY", "0deg");
             htmlElement.style.setProperty("--rotationZ", "0deg");
+
         } 
         else {
             var bCellsFnd = this.isPentominoInBlockCells(piece);
@@ -245,12 +235,14 @@ class Visual {
             htmlElement.style.zIndex = this.overlapBlock.getZIndex(piece);
             htmlElement.style.left = left + 'vw';
             htmlElement.style.top = top + 'vw';
+            htmlElement.style.transformOrigin='center';
             htmlElement.style.setProperty("--magnification", 1);
         }
         if (htmlElement.style.getPropertyValue("--rotationX") === "") {
             htmlElement.style.setProperty("--rotationX", "0deg");
             htmlElement.style.setProperty("--rotationY", "0deg");
             htmlElement.style.setProperty("--rotationZ", "0deg");
+
         }
 
         //making the element visible (see remark in renderPieces)
@@ -361,12 +353,21 @@ class Visual {
         onpointerdownX = event.clientX;
         onpointerdownY = event.clientY;
 
+        //close seedbar
+        if (!event.target.matches('.seed') && !event.target.matches('.cSeedBtn')) {
+            closeSeeding();
+          }
+
         //check if a button is clicked
         let buttonOverPiece = false;
+        let settingsEnabled = false;
         for (let j in elements){
             let precheck = elements[j].className;
             if (precheck == 'controlButton'){
                 buttonOverPiece = true;
+            }
+            if (precheck == 'settings-popup'){
+                settingsEnabled = true;
             }
         }
 
@@ -377,6 +378,8 @@ class Visual {
             if (check !== 'bmPoint') continue;
 
             if (buttonOverPiece) continue;
+
+            if (settingsEnabled) continue;
 
             /**
              * As soon as we have a bmPoint(an element of a piece),we determine the bounding box
@@ -463,6 +466,7 @@ class Visual {
                     if (id == 'tray') {
                         let piece = data[1].toTray();
                         that.movePentominoToTray(piece);
+                        that.disableManipulations();
                     }
 
                     if (id.split('_')[0] == 'field') {
@@ -557,18 +561,53 @@ class Visual {
     }
 
     callHintAI(){
-        let hint = document.getElementById("myHint");
-        hint.classList.toggle("show");
-        hint.style.visibility = "visible";
+        let hintElement = document.getElementById("myHint");
+        hintElement.classList.toggle("show");
+        hintElement.style.visibility = "visible";
         let popupText = document.getElementById("myHint");
-        popupText.textContent = pd.gameController.getHint().getText();
-        //call indication of hint
-        this.indicateHint(500);
+        let hint = pd.gameController.getHint();
+        let hintCommand = hint.getCommands()[0];
+        let hintinPen = hintCommand._pentomino;
+        popupText.textContent = this.generateHintText(hint);
+        this.indicateHint(hint);
     }
 
+    generateHintText(hint) {
+        let text = "";
 
-
-
+        if (hint.getPossibleSolutions().length === 0) {
+            text += "This doesn't look right. The pentominoes on your board aren't part of a solution."
+        }
+        let command = hint.getCommands()[0];
+        let cmdValues = command.ExecValues();
+        switch (command.Name()) {
+            case "Remove":
+                text += "This doesn't look right. Why don't you remove " + command._pentomino.name;
+                break;
+            case "MoveToPosition":
+                text += "Maybe try to move " + command._pentomino.name + " to position [" + cmdValues.PosX + "," + cmdValues.PosY + "]";
+                break;
+            case "Place":
+                text += "Why don't you place " + command._pentomino.name + " at position [" + cmdValues.PosX + "," + cmdValues.PosY + "]";
+                break;
+            case "RotateClkWise":
+                text += "Why don't you try to rotate " + command._pentomino.name + " clock-wise";
+                break;
+            case "RotateAntiClkWise":
+                text += "Why don't you try to rotate " + command._pentomino.name + " anti-clock-wise";
+                break;
+            case "MirrorH":
+                text += "Why don't you try to mirror " + command._pentomino.name + " horizontal";
+                break;
+            case "MirrorV":
+                text += "Why don't you try to mirror " + command._pentomino.name + " vertical";
+                break;
+            default:
+                text += "Error - unknown command with name '" + command.Name() + "'";
+                throw new Error("Error: unknown command with name " + command.Name());
+        }
+        return text;
+    }
 
     blinkCells(cells, bgColor, blinkColor) {
         let menu = [];
@@ -596,29 +635,34 @@ class Visual {
         }, 100);
     }
 
-    indicateHint(timeoutFrame){
+    indicateHint(hint){
+        let timeoutFrame = 500;
         //possible command names (place, remove, moveToPosition, rotateClkWise, rotateAntiClkWise, mirrorH, mirrorV)
-        let hintCommand = pd.gameController.getHint().getCommand();
-        let hintSkill = pd.gameController.getHint()._skill;
+        let hintCommand = hint.getCommands()[0];
+        let hintSkill = hint._skill;
         let hintName = hintCommand._name;
         let hintinPen = hintCommand._pentomino;
         let pentominoColor = hintinPen.color;
         let clientRect = document.getElementById("piece_" + hintinPen.name).getBoundingClientRect();
         let [posX, posY] = [clientRect.x + clientRect.width/2, clientRect.y + clientRect.height/2];
+        let currentPenHintName = hintinPen.name;
+        //let currentPenHintNaame = this.selected.name;
+        if(!(currentPenHintName === lastHintedPentName)){
+            randomCell = Math.floor(Math.random() * (4)) + 1;
+            lastHintedPentName = currentPenHintName;
+        }
 
-
-        //random variable that selects
-        var randomCell = Math.floor(Math.random() * (4)) + 1;
 
        //indication of unoccupied cells
         if (!(hintSkill === null)) {
+            console.log("Skill (inside loop): " + hintSkill);
             const DEFAULT_BG_COLOR = "#adc0b9";
             const RED_COLOR = "red";
             //blink unoccupied cells
             this.blinkCells(hintSkill, DEFAULT_BG_COLOR, RED_COLOR);
         }
         else {
-              switch (hintName) {
+            switch (hintName) {
             case "Place":
                 // handle place hint
                 let hintRow = hintCommand._nextPosition[0];
@@ -769,7 +813,7 @@ class Visual {
         let allSolutions = [];
         // Get all the games and filter solutions
         if(this.allSolutions == undefined) {
-            GameLoader.getGamesFromSolutionsConfig(this.pd.boardName).forEach(game =>
+            this.gameController.getSolutions().forEach(game =>
                 allSolutions.push([game._board._pentominoPositions, game._board._pentominoes]));
             this.allSolutions = allSolutions;
         }

@@ -7,27 +7,22 @@ if(typeof require != 'undefined') {
 
 class HintAI {
 
-    loadGameForHinting(game) {
+    constructor(game) {
         this._game = game;
-        this._solutions = GameLoader.getGamesFromSolutionsConfig(game.getName());
     }
 
     getHint() {
-        if (this._game === null || this._game === undefined) {
-            throw new Error("No build set (call loadGameForHinting)");
-        }
-
         let game = this._game;
-        let possibleSolutions = this._getPossibleSolutions(game, this._solutions);
+        let possibleSolutions = this._getPossibleSolutions(game, game.getSolutions());
 
         if (possibleSolutions.length > 0) {
             let closestSolution = possibleSolutions[0];
             let commandSequenceList = this._getCommandSequenceListToSolution(game, closestSolution);
             let commands = this._getBestNextCommandsMaxOccupiedNeighbors(game, closestSolution, commandSequenceList);
-            return new Hint(commands[0], possibleSolutions);
+            return new Hint(commands, possibleSolutions);
         } else {
             // Pursue closest game state, which has at least one possible solution
-            let closestSolution = this._getClosesSolution(game, this._solutions);
+            let closestSolution = this._getClosesSolution(game, game.getSolutions());
 
             let unoccupiedCellSpaces = game._board.getUnoccupiedCellSpaces();
             let bestImpossibleCellSpace = this._calculateBestImpossibleUnoccupiedCellSpace(game, unoccupiedCellSpaces);
@@ -38,15 +33,14 @@ class HintAI {
                 if (bestUnreachableCellSpace === null) {
                     let commandSequenceList = this._getCommandSequenceListToSolution(game, closestSolution);
                     let commands = this._getBestNextCommandsMaxOccupiedNeighbors(game, closestSolution, commandSequenceList);
-                    return new Hint(commands[0], possibleSolutions);
+                    return new Hint(commands, possibleSolutions);
                 } else {
-                    // FIXME: Implement different hints
                     let command = this._getCommandBasedOnUnoccupiedCellsSkill(game, closestSolution, bestUnreachableCellSpace);
-                    return new Hint(command, possibleSolutions, bestUnreachableCellSpace);
+                    return new Hint([command], possibleSolutions, bestUnreachableCellSpace);
                 }
             } else {
                 let command = this._getCommandBasedOnUnoccupiedCellsSkill(game, closestSolution, bestImpossibleCellSpace);
-                return new Hint(command, possibleSolutions, bestImpossibleCellSpace);
+                return new Hint([command], possibleSolutions, bestImpossibleCellSpace);
             }
         }
     }

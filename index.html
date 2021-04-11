@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="resources/css/style.css">
 	<link rel="stylesheet" href="resources/css/board_selection.css">
     <link rel="stylesheet" href="resources/css/game-state.css">
+    <link rel="stylesheet" href="resources/css/modal.css">
+    <link rel="stylesheet" href="resources/css/settings_form.css">
+    <link rel="stylesheet" style="text/css" href="resources/jsonform/bootstrap.css" />
     <script src="resources/index.js"></script>
     <script src="resources/js/board.js"></script>
     <script src="resources/js/overlapping.js"></script>
@@ -23,12 +26,22 @@
     <script src="resources/js/command-history/command-manager.js"></script>
     <script src="resources/js/command-history/command-path.js"></script>
     <script src="resources/js/command-history/command-tree.js"></script>
-    <script src="resources/js/config.js"></script>
     <script src="resources/js/configs/baseConfigs.js"></script>
     <script src="resources/js/configs/boardConfigs.js"></script>
     <script src="resources/js/configs/solutionsConfig.js"></script>
+    <script src="resources/js/game-solution.js"></script>
+    <script src="resources/js/settings/settings-schema.js"></script>
+    <script src="resources/js/settings/settings.js"></script>
+    <script src="resources/js/settings/settings-parser.js"></script>
+    <script src="resources/js/settings/translator.js"></script>
+    <script src="resources/js/multi-lang/strings.js"></script>
     <script src="resources/js/pd.js"></script>
     <script src="resources/js/visual.js"></script>
+    <script src="resources/js/handleMobile.js"></script>
+    <script type="text/javascript" src="resources/jsonform/jquery.min.js"></script>
+    <script type="text/javascript" src="resources/jsonform/underscore.js"></script>
+    <script type="text/javascript" src="resources/jsonform/jsonform.js"></script>
+    <script type="text/javascript" src="resources/jsonform/jsv.js"></script>
 
     <script src="resources/js/hint.js"></script>
     <script src="resources/js/hint-ai.js"></script>
@@ -37,9 +50,12 @@
 </head>
 
 <body onload="touchStartup(); initialize()">
-
-<div class = "cGame">
-    
+  <div id="seedingCover"></div>
+  <div id="seeding" class="seed">
+    <input type="search" id="seedBar" class="seed" placeholder="Input seed...">
+    <button type="button" id='seedSubmit' class = "cActionBtn" onclick="submitSeed()"><img class="cSeedBtn" src="resources/images/icons/seed.png">
+  </div>
+  <div class = "cGame">
     <div id="functions">
         <img id = "logo" src="resources/images/icons/pentomino.png" alt="Pentomino" class="cLogo">
     
@@ -108,21 +124,38 @@
                         </div>
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        <button type="button" id='btnSettingsForm' class = "cActionBtn" onclick="selectSettings()"> <img src="resources/images/icons/settings.png">
+                        </button>
+                    </td>
+                    <td>
+                    </td>
+                </tr>
                   <tr>
                     <button style="display:none" onclick="pd.ui.save()">Save</button>
                     <button style="display:none" onclick="pd.ui.load()">Load</button>
                   </tr>
           </table>
 
-          <p>
+          <p id="labelNumberSolutionsContainer">
               Number of solutions: <label id="labelNumberSolutions">?</label>
           </p>
+
+        <div class="settings-popup" id="settings_form">
+
+            <div class="settings-container">
+                <h2 id="header-game-settings">Game settings</h2>
+                <form></form>
+            </div>
+        </div>
+            
 		<div class="form-popup" id="board_selection_form">
 			<div class="container" id="container">
 				<!-- Board List is loaded dynamically from Board Config -->
 				
 				<div class="action_btn">
-					<button type="button" class="btnLoadboard" onclick="loadBoard()">Load Board</button>
+					<button type="button" class="btnLoadGame" onclick="loadGame()">Load Board</button>
 					<button type="button" class="btnCancel" onclick="closeForm()">Cancel</button>
 				</div>
 			</div>
@@ -140,6 +173,18 @@
         <div id="tray"></div> <!-- tray -->
         <div id="field"></div> <!-- field -->
         <div id="piecearea"></div> <!-- piecearea -->
+        <div id="modalTop" class="modal">
+            <span onclick="document.getElementById('modalTop').style.display='none'" class="close" title="Close Modal">x</span>
+            <form class="modalContent">
+              <div class="modalContainer">
+                <h3 id="modalText"></h3>
+                <div class="clearfix">
+                  <button type="button" onclick="document.getElementById('modalTop').style.display='none'" class="cancelbtn">No</button>
+                  <button type="button" onclick="document.getElementById('modalTop').style.display='none'" class="deletebtn">Yes</button>
+                </div>
+              </div>
+            </form>
+          </div> <!--modal end-->
     </div> 
     
     <div class = "cPieceManipulation" id ="pieceManipulation" >
@@ -183,32 +228,32 @@ let replayContainerElem = document.getElementById("replayContainer");
 
 // Touch Handling for mobile devices
 //intialize the touch events
-    function touchStartup(){
-        console.log('Initialize touch events for mobile devices');
-        var touchElement = document.getElementById("piecearea");
-        touchElement.addEventListener("touchstart", touchStartHandle, false);
-        touchElement.addEventListener("touchend", touchEndhandle, false);
-        touchElement.addEventListener("touchcancel", touchCancelhandle, false);
-        touchElement.addEventListener("touchmove", touchMoveHandle, false);
-    }
+function touchStartup(){
+    console.log('Initialize touch events for mobile devices');
+    var touchElement = document.getElementById("piecearea");
+    touchElement.addEventListener("touchstart", touchStartHandle, false);
+    touchElement.addEventListener("touchend", touchEndhandle, false);
+    touchElement.addEventListener("touchcancel", touchCancelhandle, false);
+    touchElement.addEventListener("touchmove", touchMoveHandle, false);
+}
 
 //when touch starts handle start function is called
-    function touchStartHandle(evt) {
-        evt.preventDefault();
-        //putting the ID of the HTML entity where touch controls we need to implement
-        var touchElement = document.getElementById("piecearea");
-        var ctx = touchElement.getContext("2d");
-        var touches = evt.changedTouches;
+function touchStartHandle(evt) {
+    evt.preventDefault();
+    //putting the ID of the HTML entity where touch controls we need to implement
+    var touchElement = document.getElementById("piecearea");
+    var ctx = touchElement.getContext("2d");
+    var touches = evt.changedTouches;
     
-        for (var i = 0; i < touches.length; i++) {
-            currentTouches.push(copyTouch(touches[i]));
-            var color = colorForTouch(touches[i]);
-            ctx.beginPath();
-            ctx.arc(touches[i].pageX, touches[i].pageY, 4, 0, 2 * Math.PI, false);  
-            ctx.fillStyle = color;
-            ctx.fill();
-        }
+    for (var i = 0; i < touches.length; i++) {
+        currentTouches.push(copyTouch(touches[i]));
+        var color = colorForTouch(touches[i]);
+        ctx.beginPath();
+        ctx.arc(touches[i].pageX, touches[i].pageY, 4, 0, 2 * Math.PI, false);  
+        ctx.fillStyle = color;
+        ctx.fill();
     }
+}
 
     function touchMoveHandle(evt) {
         evt.preventDefault();
@@ -286,30 +331,26 @@ let replayContainerElem = document.getElementById("replayContainer");
         }
     }//end touch events
 
-        
-		
+
     function initialize() {
         pd = new PD();
+		loadGameList();
     }
 
-	function loadBoardList() {
+	function loadGameList() {
 		var board_container = document.getElementById('container');
-		var board_list = GameLoader.getAllBoards();
+		var board_list = pd.getAllBoards();
 		var out = '';
 			
 		var input_element = '<input type="radio" name="board_list" class="input-hidden" id="$$" value="$$" >';
 		var label = '<label for="$$"> $$ <img src="resources/images/boards/$$.png" alt="$$" style="width:50%; height:50%;"/></label>';
-		var action_btn = '\n<div class="action_btn">\n<button type="button" class="btnLoadboard" onclick="loadBoard()">Load Board</button>\n<button type="button" class="btnCancel" onclick="closeForm()">Cancel</button>\n</div>'
+		var action_btn = '\n<div class="action_btn">\n<button type="button" class="btnLoadGame" onclick="loadGame()">Load Board</button>\n<button type="button" class="btnCancel" onclick="closeForm()">Cancel</button>\n</div>'
 			
 		for (var i=0; i< board_list.length; i++){
 			out += input_element.replaceAll("$$", board_list[i]) +'\n'+ label.replaceAll("$$", board_list[i]) + '<br><br>\n';
 		}
-		board_container.innerHTML = out + action_btn;
-	}
-
-    function resetGame(){
-        pd.reset();
-    }
+    board_container.innerHTML = out + action_btn;
+	}   
 
     function callHintAI() {
         pd.visual.callHintAI();
@@ -323,6 +364,16 @@ let replayContainerElem = document.getElementById("replayContainer");
     function rotateClkWise(){
         pd.rotateClkWise();
     }
+        function resetGame(){
+            var modal = document.getElementById('modalTop');
+            let modalText = document.getElementById("modalText");
+            modalText.innerHTML = 'Do you want to reset?';
+            modal.style.display="block";
+            let dltBtn = document.querySelector(".deletebtn");
+            dltBtn.addEventListener("click", () => {
+                pd.reset();
+            });
+        }
 
     function rotateAntiClkWise() {
         pd.rotateAntiClkWise();
@@ -362,6 +413,184 @@ let replayContainerElem = document.getElementById("replayContainer");
     function execRedo(){
         pd.redo();
     }
+        function handleJsonFormSubmit (errors, values) {
+            let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), values);
+            // TODO: display seed somehow
+            console.log("Seed: " + seed);
+
+            postProcessSettings(values);
+
+            if (errors === false) {
+                event.preventDefault();
+                console.log("JsonForm: Submitted values:");
+                console.log(values);
+                closeSettings();
+
+                let oldSettings = SettingsSingleton.getInstance().getSettings();
+                let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+                let changesToSettings = SettingsParser.compareSettings(schema, oldSettings, values);
+
+                SettingsSingleton.getInstance().setSettings(values);
+
+                processChangesToSettings(changesToSettings, values);
+                updateSettingSchemaDefaultFromSettings(schema, values);
+            }
+        }
+
+        function postProcessSettings(settings) {
+            let selectedLanguage = settings.general.language;
+            let selectedLanguageNum;
+            if (selectedLanguage === "en") {
+                selectedLanguageNum = baseConfigs.languages.ENGLISH;
+            } else if (selectedLanguage === "de") {
+                selectedLanguageNum = baseConfigs.languages.GERMAN;
+            } else {
+                throw new Error("Unknown language: " + selectedLanguage);
+            }
+            settings.general.language = selectedLanguageNum;
+        }
+
+        function processChangesToSettings(changes, settings) {
+            changes.forEach(changesEntry => {
+                let heading = changesEntry.heading;
+                let key = changesEntry.key;
+
+                if (heading === "hinting" && key === "enableHinting") {
+                    let hintingEnabled = settings[heading][key];
+                    document.getElementById("hintButton").style.visibility = hintingEnabled ? "visible" : "hidden";
+                    document.getElementById("labelNumberSolutionsContainer").style.visibility = hintingEnabled ? "visible" : "hidden";
+
+                    let fController = new FrontController();
+                    if (hintingEnabled) {
+                        fController.controller.loadSolutionsOfCurrentGame();
+                    }
+                } else if (heading === "prefilling" && key === "enablePrefilling") {
+                    let visible = settings[heading][key];
+                    document.getElementById("prefillBoard").style.visibility = visible ? "visible" : "hidden";
+                } else if (heading === "ui" && key === "enablePentominoButtonsOnLeftPanel") {
+                    let visible = settings[heading][key];
+                    document.getElementById("btnRotateLeft").style.visibility = visible ? "visible" : "hidden";
+                    document.getElementById("btnRotateRight").style.visibility = visible ? "visible" : "hidden";
+                    document.getElementById("btnFlipH").style.visibility = visible ? "visible" : "hidden";
+                    document.getElementById("btnFlipV").style.visibility = visible ? "visible" : "hidden";
+                }
+            });
+        }
+
+        function updateSettingSchemaDefaultFromSettings(settingsSchema, settings) {
+            //change default values according to current schema
+            for (let key in settings) {
+                //console.log(settings[key]);
+                for (let subkey in settings[key]){
+                    //console.log(settings[key][subkey]);
+                    settingsSchema[key]["properties"][subkey]["default"] = settings[key][subkey];
+                }
+            }
+            let currentLanguage = settings.general.language;
+            settingsSchema["general"]["properties"]["language"]["default"] = currentLanguage === baseConfigs.languages.ENGLISH ? "en" : "de";
+        }
+
+        function handleJsonFormErrors(errors, formElt) {
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+            for (let i=0; i<errors.length; i++) {
+                let error = errors[i];
+
+                switch (error.attribute) {
+                    case "maximum":
+                        error.message = strings.settings.errors.higherThanMax[lang] + " (" + error.details + ")";
+                        break;
+                    case "minimum":
+                        error.message = strings.settings.errors.lowerThanMin[lang] + " (" + error.details + ")";
+                        break;
+                }
+            }
+            $(formElt).jsonFormErrors(errors, $('form'));
+        }
+
+        function selectSettings(){
+            let formElement = $('form')[0];
+            formElement.innerHTML = '';
+
+            //console.log(SettingsSchemaSingleton.getInstance().getSettingsSchema());
+            //console.log(SettingsSingleton.getInstance().getSettings());
+            updateSettingSchemaDefaultFromSettings(SettingsSchemaSingleton.getInstance().getSettingsSchema(), SettingsSingleton.getInstance().getSettings());
+
+            $('form').jsonForm({
+                schema: SettingsSchemaSingleton.getInstance().getSettingsSchema(),
+                onSubmit: this.handleJsonFormSubmit,
+                displayErrors: handleJsonFormErrors
+            });
+
+            document.getElementById("settings_form").style.display = "block";
+
+            //Removal of default jsonform submit button & inclusion of buttons
+            let btnContainer = $('form input[type=submit]').parent();
+            // Remove default 'submit' button
+            $('form input[type=submit]').remove();
+            // Add own buttons
+            let $submitButton = $('<input id="settings-submit-button" type="submit" value="Confirm""/>');
+            $submitButton.appendTo(btnContainer);
+            let $closeButton = $('<input id="settings-close-button" type="button" value="Abort" onClick="closeSettings()" />');
+            $closeButton.appendTo(btnContainer);
+            let $seedButton = $('<input id="btnSeed" class="button" type="button" value="Enter a seed..." onClick="selectSeeding()" />');
+            $seedButton.appendTo(btnContainer);
+
+
+            Translator.translateHeaders(SettingsSingleton.getInstance().getSettings().general.language);
+
+            // Adjust string enum values
+            /*let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+            for (let heading in schema) {
+                for (let key in heading) {
+                    if (schema[heading][key].type === "string") {
+                        let enumText = schema[heading][key];
+                        let name = heading + "." + key;
+                        let selectElement = $(btnContainer).children('select[name=' + name + ']');
+                        for (let option in selectElement.children()) {
+                            console.log(option);
+                        }
+                    }
+                }
+            }*/
+        }
+
+        function closeSettings(){
+			document.getElementById("settings_form").style.display = "none";
+        }
+
+        function selectSeeding(){
+			document.getElementById("seedingCover").style.visibility = "visible";
+            document.getElementById("seeding").style.visibility = "visible";
+        }
+
+        function closeSeeding(){
+			document.getElementById("seedingCover").style.visibility = "hidden";
+            document.getElementById("seeding").style.visibility = "hidden";
+        }
+
+        function submitSeed(){
+            let seedValue = document.getElementById("seedBar").value;
+            let settings = SettingsParser.parseSettingsFromSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), seedValue);
+            postProcessSettings(settings);
+            SettingsSingleton.getInstance().setSettings(settings);
+
+            console.log("Seedbar entered value: " + seedValue);
+            document.getElementById("seedBar").value = "";
+
+            document.getElementById("seedingCover").style.visibility = "hidden";
+            document.getElementById("seeding").style.visibility = "hidden";
+        }
+
+		function loadGame(){
+			var selectedBoard = document.querySelector("input[name=board_list]:checked").value;
+			document.getElementById("board_selection_form").style.display = "none";
+            pd.loadGame(selectedBoard);
+			
+        }
+		
+		function closeForm() {
+			document.getElementById("board_selection_form").style.display = "none";
+		}
 
     function disappearReplayWindow(){
         replayWindowElem.style.display = "none";
@@ -446,7 +675,7 @@ let replayContainerElem = document.getElementById("replayContainer");
 
 
     </script>
-    <script src="./registerSW.js"></script>
+   <script src="./registerSW.js"></script>
 
 </body>
 </html>
