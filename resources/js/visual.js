@@ -962,7 +962,7 @@ class Visual {
     loadGameState(targetStateKey){
         let currGame = this.gameController.game();
         let currentCmdKey = this.gameController.getCurrentCmdKey();
-        this.gameController.saveGame(currGame);
+        //this.gameController.saveGame(currGame);
         let cmdSequences = this.gameController.getCmdSequences(currentCmdKey, targetStateKey);
 
         for (let indx = 0; indx < cmdSequences.length; indx++) {
