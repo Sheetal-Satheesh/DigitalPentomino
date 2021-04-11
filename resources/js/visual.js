@@ -646,7 +646,6 @@ class Visual {
 
     checkHintCommandsForPlaceCommand(hintCommands){
         for (let i = 0; i < hintCommands.length; i++){
-            console.log(hintCommands[i]);
             if (hintCommands[i].Name() == "Place"){
                 return [true,i];
             }
@@ -672,12 +671,8 @@ class Visual {
             lastHintedPentName = currentPenHintName;
         }
 
-        console.log(hint);
-
-
        //indication of unoccupied cells
         if (!(hintSkill === null)) {
-            console.log("Skill (inside loop): " + hintSkill);
             const DEFAULT_BG_COLOR = "#adc0b9";
             const RED_COLOR = "red";
             //blink unoccupied cells
@@ -702,7 +697,6 @@ class Visual {
 
                 //show destination position (and fade away)
                 let piecePos = this.getOccupiedPositions(hintinPen,hintCommand);
-                //console.log("hintingPen",hintinPen, piecePos);
                 //usage of random cell variable to indicate hinting
                     for(let i=0;i<randomCell;i++){
                             fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
@@ -774,7 +768,7 @@ class Visual {
                 break;
 
             default:
-                console.log("Unknown piece action detected!");
+                console.error("Unknown piece action detected!");
         }
 
     }
