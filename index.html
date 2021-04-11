@@ -308,6 +308,21 @@
             });
         }
 
+        function callHintAI() {
+            pd.visual.callHintAI();
+        }
+
+        /**
+         * hinting popup disappears when mouse pointer is away
+        */
+        document.getElementById("hintButton").addEventListener("mouseleave", function() {
+                 document.getElementById("myHint").style.visibility = "hidden";
+        });
+
+        function rotateClkWise(){
+            pd.rotateClkWise();
+        }
+
         function rotateAntiClkWise() {
             pd.rotateAntiClkWise();
         }
@@ -320,32 +335,34 @@
             pd.flipV();
         }
 
+        function execUndo() {
+            pd.visual.undo();
+        }
+
+        function execRedo() {
+            pd.visual.redo();
+        }
+
+        function prefillBoard() {
+            pd.visual.prefillBoard();
+        }
+
         function selectBoard() {
             loadGameList();
             document.getElementById("board_selection_form").style.display = "block";
         }
 
-        function load() {
+        function loadGame() {
             var selectedBoard = document.querySelector("input[name=board_list]:checked").value;
             document.getElementById("board_selection_form").style.display = "none";
-            pd.loadBoard(selectedBoard);
+            pd.loadGame(selectedBoard);
+
         }
 
         function closeForm() {
             document.getElementById("board_selection_form").style.display = "none";
         }
 
-        function prefillBoard() {
-            pd.prefillBoard();
-        }
-
-        function execUndo() {
-            pd.undo();
-        }
-
-        function execRedo() {
-            pd.redo();
-        }
         function handleJsonFormSubmit(errors, values) {
             let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), values);
             // TODO: display seed somehow
@@ -515,29 +532,6 @@
             document.getElementById("seeding").style.visibility = "hidden";
         }
 
-        function loadGame() {
-            var selectedBoard = document.querySelector("input[name=board_list]:checked").value;
-            document.getElementById("board_selection_form").style.display = "none";
-            pd.loadGame(selectedBoard);
-
-        }
-
-        function closeForm() {
-            document.getElementById("board_selection_form").style.display = "none";
-        }
-
-        function prefillBoard() {
-            pd.visual.prefillBoard();
-        }
-
-        function execUndo() {
-            pd.visual.undo();
-        }
-
-        function execRedo() {
-            pd.visual.redo();
-        }
-
         function saveGameImage() {
             let gameImage = undefined;
             let gameElem = document.getElementById('game');
@@ -691,9 +685,6 @@
             }
             document.getElementById("modalBodyID").appendChild(submit);
         }
-
-
-
 
     </script>
     <script src="./registerSW.js"></script>
