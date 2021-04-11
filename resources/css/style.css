@@ -66,7 +66,6 @@
 #operations  img{
   width:4vw;
   height:4vw;
-
 }
 
 #operations table tr td div{
@@ -76,7 +75,7 @@
 
 
 #operations button{
-margin:20%;
+margin: 0.4vw;
 margin-top: 2%;
 width: 4vw;
 height: 4vw;
@@ -306,7 +305,8 @@ table
     background:rgb(141, 160, 157);
     border-radius: 10%;
     border: 0;
-    padding: 0px;
+    padding: 0.1vw;
+    margin: 0.1vw;
   }
 
    table tr td div{
@@ -336,7 +336,7 @@ table
 
 
       #operations button{
-        margin:10px;
+        margin:0.5vw;
         margin-top: 1px;
         width: 4vw;
         height: 4vw;
