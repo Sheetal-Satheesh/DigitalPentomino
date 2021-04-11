@@ -567,19 +567,27 @@ class Visual {
         hintElement.style.visibility = "visible";
         let popupText = document.getElementById("myHint");
         let hint = pd.gameController.getHint();
-        let hintCommand = hint.getCommands()[0];
+        //Always show place command in case of non-exact hints:
+        let commandNumber = 0;
+        if (!SettingsSingleton.getInstance().getSettings().hinting.exactHints){
+            let hasPlaceCommand = this.checkHintCommandsForPlaceCommand(hint.getCommands());
+            if (hasPlaceCommand[0]){
+                commandNumber = hasPlaceCommand[1];
+            }
+        }
+        let hintCommand = hint.getCommands()[commandNumber];
         let hintinPen = hintCommand._pentomino;
-        popupText.textContent = this.generateHintText(hint);
-        this.indicateHint(hint);
+        popupText.textContent = this.generateHintText(hint,commandNumber);
+        this.indicateHint(hint,commandNumber);
     }
 
-    generateHintText(hint) {
+    generateHintText(hint,commandNumber) {
         let text = "";
 
         if (hint.getPossibleSolutions().length === 0) {
             text += "This doesn't look right. The pentominoes on your board aren't part of a solution."
         }
-        let command = hint.getCommands()[0];
+        let command = hint.getCommands()[commandNumber];
         let cmdValues = command.ExecValues();
         switch (command.Name()) {
             case "Remove":
@@ -636,10 +644,21 @@ class Visual {
         }, 100);
     }
 
-    indicateHint(hint){
+    checkHintCommandsForPlaceCommand(hintCommands){
+        for (let i = 0; i < hintCommands.length; i++){
+            console.log(hintCommands[i]);
+            if (hintCommands[i].Name() == "Place"){
+                return [true,i];
+            }
+        }
+
+        return [false, null];
+    }
+
+    indicateHint(hint,commandNumber){
         let timeoutFrame = 500;
         //possible command names (place, remove, moveToPosition, rotateClkWise, rotateAntiClkWise, mirrorH, mirrorV)
-        let hintCommand = hint.getCommands()[0];
+        let hintCommand = hint.getCommands()[commandNumber];
         let hintSkill = hint._skill;
         let hintName = hintCommand._name;
         let hintinPen = hintCommand._pentomino;
@@ -652,6 +671,8 @@ class Visual {
             randomCell = Math.floor(Math.random() * (4)) + 1;
             lastHintedPentName = currentPenHintName;
         }
+
+        console.log(hint);
 
 
        //indication of unoccupied cells
@@ -894,7 +915,6 @@ class Visual {
                     command.Pentomino.inTray=0;
                     this.placePentomino(command.Pentomino, command.PosX,command.PosY,CommandTypes.Shadow);
                 }
-
                 break;
 
             case "RotateClkWise":

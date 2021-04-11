@@ -89,6 +89,11 @@ class SettingsSchema {
                         "title": titles.hinting.skillTeaching[lang],
                         "default": true
                     },
+                    exactHints: {
+                        "type": "boolean",
+                        "title": titles.hinting.exactHints[lang],
+                        "default": true
+                    },
                     indicateDestinationPosition: {
                         "type": "boolean",
                         "title": titles.hinting.indicateDestinationPosition[lang],
