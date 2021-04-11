@@ -667,8 +667,27 @@ class Visual {
         let currentPenHintName = hintinPen.name;
         //let currentPenHintNaame = this.selected.name;
         if(!(currentPenHintName === lastHintedPentName)){
-            randomCell = Math.floor(Math.random() * (4)) + 1;
+            //randomCell = Math.floor(Math.random() * (4)) + 1;
+            randomCell = 5;
             lastHintedPentName = currentPenHintName;
+        }
+
+        let tempHintinPen = hintinPen;
+        if (!SettingsSingleton.getInstance().getSettings().hinting.exactHints){
+            tempHintinPen = new Pentomino(hintinPen.name);
+            //do actions on pentomino copy to prepare for place hint
+            for (let hintnr = 0; hintnr < commandNumber; hintnr++){
+                console.log(hint.getCommands()[hintnr]._name);
+                switch (hint.getCommands()[hintnr]._name){
+                    case "Remove": break;
+                    case "Place": break;
+                    case "RotateClkWise": tempHintinPen.rotateClkWise(); break;
+                    case "RotateAntiClkWise": tempHintinPen.rotateAntiClkWise(); break;
+                    case "MirrorH": tempHintinPen.mirrorH(); break;
+                    case "MirrorV": tempHintinPen.mirrorV(); break;
+                    default: throw new Error("Error on commands on pentomino copy.");
+                }
+            }
         }
 
        //indication of unoccupied cells
@@ -696,14 +715,15 @@ class Visual {
                 });
 
                 //show destination position (and fade away)
-                let piecePos = this.getOccupiedPositions(hintinPen,hintCommand);
+                let piecePos = this.getOccupiedPositions(tempHintinPen,hintCommand);
+                console.log(piecePos);
                 //usage of random cell variable to indicate hinting
-                    for(let i=0;i<randomCell;i++){
-                            fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
-                            prevBackground[i] = fieldvalue.style.background;
-                            fieldvalue.style.background = pentominoColor;
-                            this.hide(piecePos, prevBackground);
-                    }
+                for(let i=0;i<randomCell;i++){
+                        fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
+                        prevBackground[i] = fieldvalue.style.background;
+                        fieldvalue.style.background = pentominoColor;
+                        this.hide(piecePos, prevBackground);
+                }
 
                 break;
 

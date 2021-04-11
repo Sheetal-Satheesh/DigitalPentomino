@@ -92,7 +92,7 @@ class SettingsSchema {
                     exactHints: {
                         "type": "boolean",
                         "title": titles.hinting.exactHints[lang],
-                        "default": true
+                        "default": false
                     },
                     indicateDestinationPosition: {
                         "type": "boolean",
