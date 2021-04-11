@@ -13,7 +13,8 @@ Object.freeze(CommandTypes);
 
 const RedoStrategy = {"TOP":1, "BOTTOM":2};
 Object.freeze(RedoStrategy);
-
+let lastHintedPentName = null;
+let randomCell;
 class Visual {
 
     constructor(pd) {
@@ -80,7 +81,6 @@ class Visual {
     }
 
     placePentomino(pentomino, posX, posY, cmdType=CommandTypes.Original){
-
         this.gameController.placePentomino(pentomino, posX, posY,cmdType);
         this.positionPiece(pentomino);
     }
@@ -216,6 +216,7 @@ class Visual {
             htmlElement.style.setProperty("--rotationX", "0deg");
             htmlElement.style.setProperty("--rotationY", "0deg");
             htmlElement.style.setProperty("--rotationZ", "0deg");
+
         } 
         else {
             var bCellsFnd = this.isPentominoInBlockCells(piece);
@@ -251,6 +252,7 @@ class Visual {
             htmlElement.style.setProperty("--rotationX", "0deg");
             htmlElement.style.setProperty("--rotationY", "0deg");
             htmlElement.style.setProperty("--rotationZ", "0deg");
+
         }
 
         //making the element visible (see remark in renderPieces)
@@ -578,6 +580,8 @@ class Visual {
         hintElement.style.visibility = "visible";
         let popupText = document.getElementById("myHint");
         let hint = pd.gameController.getHint();
+        let hintCommand = hint.getCommands()[0];
+        let hintinPen = hintCommand._pentomino;
         popupText.textContent = this.generateHintText(hint);
         this.indicateHint(hint);
     }
@@ -655,10 +659,13 @@ class Visual {
         let pentominoColor = hintinPen.color;
         let clientRect = document.getElementById("piece_" + hintinPen.name).getBoundingClientRect();
         let [posX, posY] = [clientRect.x + clientRect.width/2, clientRect.y + clientRect.height/2];
+        let currentPenHintName = hintinPen.name;
+        //let currentPenHintNaame = this.selected.name;
+        if(!(currentPenHintName === lastHintedPentName)){
+            randomCell = Math.floor(Math.random() * (4)) + 1;
+            lastHintedPentName = currentPenHintName;
+        }
 
-
-        //random variable that selects
-        var randomCell = Math.floor(Math.random() * (4)) + 1;
 
        //indication of unoccupied cells
         if (!(hintSkill === null)) {
@@ -669,8 +676,7 @@ class Visual {
             this.blinkCells(hintSkill, DEFAULT_BG_COLOR, RED_COLOR);
         }
         else {
-            console.log("Skill (else): " + hintSkill);
-              switch (hintName) {
+            switch (hintName) {
             case "Place":
                 // handle place hint
                 let hintRow = hintCommand._nextPosition[0];
