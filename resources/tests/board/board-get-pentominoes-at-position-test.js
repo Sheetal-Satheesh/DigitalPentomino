@@ -15,9 +15,9 @@ board.placePentomino(T, 1, 3);
 board.placePentomino(X, 5, 1);
 board.placePentomino(I, 4, 2);
 
-describe('Board.getPentominoesAtPosition(row, col)', function() {
+describe('Board.getPentominoesAtPosition(row, col)', function () {
 
-    it('should return piece at occupied cells', function() {
+    it('should return piece at occupied cells', function () {
         assert.equal(board.getPentominoesAtPosition(0, 2)[0].name, 'T');
         assert.equal(board.getPentominoesAtPosition(0, 3)[0].name, 'T');
         assert.equal(board.getPentominoesAtPosition(0, 4)[0].name, 'T');
@@ -25,7 +25,7 @@ describe('Board.getPentominoesAtPosition(row, col)', function() {
         assert.equal(board.getPentominoesAtPosition(2, 3)[0].name, 'T');
     });
 
-    it('should return array of overlapping pieces', function() {
+    it('should return array of overlapping pieces', function () {
         assert.equal(board.getPentominoesAtPosition(4, 1)[0].name, 'X');
         assert.equal(board.getPentominoesAtPosition(5, 1)[0].name, 'X');
         assert.equal(board.getPentominoesAtPosition(6, 1)[0].name, 'X');

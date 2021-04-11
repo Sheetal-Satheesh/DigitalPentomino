@@ -180,16 +180,16 @@ class Pentomino {
 
     display() {
         let aTemp = '';
-        for(let i = 0; i < this.iRows; ++i){
+        for (let i = 0; i < this.iRows; ++i) {
             aTemp = '|';
-            for(let j = 0; j < this.iCols; ++j)
-                aTemp = aTemp.concat(   this.sRepr[i*this.iCols+j]);
+            for (let j = 0; j < this.iCols; ++j)
+                aTemp = aTemp.concat(this.sRepr[i * this.iCols + j]);
             console.log(aTemp.concat('|'));
         }
     }
-    
-    updateTrayValue(value){
-        this.inTray=value;
+
+    updateTrayValue(value) {
+        this.inTray = value;
         return this;
     }
 
@@ -229,8 +229,6 @@ class Pentomino {
     }
 }
 
-
-
-if(typeof module != 'undefined') {
+if (typeof module != 'undefined') {
     module.exports = Pentomino;
 }

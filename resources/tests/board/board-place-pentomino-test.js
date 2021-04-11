@@ -17,13 +17,13 @@ board.placePentomino(T, 3, 1);
 board.placePentomino(X, 1, 5);
 board.placePentomino(I, 2, 6);
 
-describe('Board.placePentomino(pentomino, row, col)', function() {
+describe('Board.placePentomino(pentomino, row, col)', function () {
 
-    it('should save piece at position', function() {
+    it('should save piece at position', function () {
         assert.deepEqual(board.getPosition(T), [3, 1]);
     });
 
-    it('should allow overlapping of pieces', function() {
+    it('should allow overlapping of pieces', function () {
         assert.deepEqual(board.getPosition(X), [1, 5]);
         assert.deepEqual(board.getPosition(I), [2, 6]);
     });

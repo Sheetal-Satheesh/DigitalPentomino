@@ -1,5 +1,5 @@
 
-if(typeof require != 'undefined') {
+if (typeof require != 'undefined') {
     Pentomino = require('./pentomino.js');
     CommandPath = require('./command-history/command-path.js');
     CommandManager = require('./command-history/command-manager.js');
@@ -17,7 +17,7 @@ if(typeof require != 'undefined') {
  *
  */
 
-var FrontController = (function() {
+var FrontController = (function () {
     var instance;
     function getController() {
         if (instance) {
@@ -38,7 +38,7 @@ class GameController {
         this._gameLoader = new GameLoader();
     }
 
-    game(){
+    game() {
         return this._gameLoader.getGame();
     }
 
@@ -46,65 +46,65 @@ class GameController {
     setGame(game) {
         this._gameLoader.setGame(game);
     };
-    getName(){
+    getName() {
         return this.game().getName();
     }
-    resetGame(){
+    resetGame() {
         this._gameLoader.resetGame();
     }
 
-    createGame( boardStartXY,
-                boardSizeXY,
-                Boardshape,
-                name) {
+    createGame(boardStartXY,
+        boardSizeXY,
+        Boardshape,
+        name) {
 
         this._gameLoader.createGame(boardStartXY,
-                                    boardSizeXY,
-                                    Boardshape,
-                                    name);
+            boardSizeXY,
+            Boardshape,
+            name);
     }
-    saveGameImage(image){
+    saveGameImage(image) {
         this._gameLoader.saveGameImage(image);
     }
 
-    deleteGameImage(key){
+    deleteGameImage(key) {
         this._gameLoader.deleteGameImage(key);
     }
 
-    getGameImages(){
+    getGameImages() {
         return this._gameLoader.getGameImages();
     }
 
-    loadGame(key){
+    loadGame(key) {
         this._gameLoader.loadGame(key);
-    }   
+    }
 
-    cmdManager(){
+    cmdManager() {
         return this._gameLoader.cmdManager();
     }
 
-    hintAI(){
+    hintAI() {
         return this._gameLoader.hintAI();
     }
 
-    getStartCmdKey(){
+    getStartCmdKey() {
         return this.cmdManager().StartCmdKey();
     }
 
-    getLastCmdKey(){
+    getLastCmdKey() {
         return this.cmdManager().LastCmdKey();
     }
 
-    getCurrentCmdKey(){
+    getCurrentCmdKey() {
         return this.cmdManager().CurrentCmdKey();
     }
 
-    getCmdSequences(startKey, endKey){
-        if( this.cmdManager().IsKeyFound(startKey) == false){
+    getCmdSequences(startKey, endKey) {
+        if (this.cmdManager().IsKeyFound(startKey) == false) {
             throw new Error("Selected Game State Not Found :(");
         }
-        
-        if( this.cmdManager().IsKeyFound(endKey) == false){
+
+        if (this.cmdManager().IsKeyFound(endKey) == false) {
             throw new Error("Selected Game State Not Found :(");
         }
 
@@ -115,117 +115,117 @@ class GameController {
         return this.cmdManager().CmdKeySequences();
     }
 
-    exceptionHandler(pentomino){
+    exceptionHandler(pentomino) {
         if (this.game() === null) {
             throw new Error("Game is not set");
         }
-       
-        if ( (pentomino === null) || 
-             (pentomino === undefined)) {
-                
+
+        if ((pentomino === null) ||
+            (pentomino === undefined)) {
+
             throw new Error("Type Error: Pentomino is null or undefined");
         }
-        
-        if(!this._isOfTypePentomino(pentomino)) {
+
+        if (!this._isOfTypePentomino(pentomino)) {
             throw new Error(
                 "Type Error: Pentomino isn't an instance of the Pentomino class.");
         }
     }
 
     placePentomino(
-            pentomino,
-            row,
-            col,
-            cmdType = CommandTypes.Original) {
-        
-        row=parseInt(row);
-        col=parseInt(col);
+        pentomino,
+        row,
+        col,
+        cmdType = CommandTypes.Original) {
+
+        row = parseInt(row);
+        col = parseInt(col);
         this.exceptionHandler(pentomino);
 
         return this.cmdManager().ExecCommand(
-                                new PlaceCommand(pentomino, 
-                                        this.game().getPosition(pentomino), 
-                                        [row,col]), 
-                                cmdType);
+            new PlaceCommand(pentomino,
+                this.game().getPosition(pentomino),
+                [row, col]),
+            cmdType);
     }
 
     movePentominoToPosition(
-            pentomino, 
-            row, 
-            col,
-            cmdType = CommandTypes.Original) {
+        pentomino,
+        row,
+        col,
+        cmdType = CommandTypes.Original) {
 
-        row=parseInt(row);
-        col=parseInt(col);
+        row = parseInt(row);
+        col = parseInt(col);
         this.exceptionHandler(pentomino); // TODO: Exception need to be handled properly       
-        
+
         return this.cmdManager().ExecCommand(
-                                new MoveToPositionCommand(pentomino, row, col),
-                                cmdType);
+            new MoveToPositionCommand(pentomino, row, col),
+            cmdType);
     }
 
     rotatePentominoAntiClkWise(
-            pentomino,
-            cmdType = CommandTypes.Original) {
+        pentomino,
+        cmdType = CommandTypes.Original) {
 
         this.exceptionHandler(pentomino);
 
         return this.cmdManager().ExecCommand(
-                                    new RotateAntiClkWiseCommand(pentomino),
-                                    cmdType);
+            new RotateAntiClkWiseCommand(pentomino),
+            cmdType);
     }
 
     rotatePentominoClkWise(
-            pentomino, 
-            cmdType = CommandTypes.Original) {
-        
+        pentomino,
+        cmdType = CommandTypes.Original) {
+
         this.exceptionHandler(pentomino);
-        
+
         return this.cmdManager().ExecCommand(
-                                    new RotateClkWiseCommand(pentomino),
-                                    cmdType);
+            new RotateClkWiseCommand(pentomino),
+            cmdType);
     }
 
     mirrorPentominoH(
-            pentomino, 
-            cmdType = CommandTypes.Original) {
-        
+        pentomino,
+        cmdType = CommandTypes.Original) {
+
         this.exceptionHandler(pentomino);
-        
+
         return this.cmdManager().ExecCommand(
-                                    new MirrorHCommand(pentomino),
-                                    cmdType);
+            new MirrorHCommand(pentomino),
+            cmdType);
     }
 
     mirrorPentominoV(
-            pentomino, 
-            cmdType = CommandTypes.Original) {
-        
+        pentomino,
+        cmdType = CommandTypes.Original) {
+
         this.exceptionHandler(pentomino);
-        
+
         return this.cmdManager().ExecCommand(
-                                    new MirrorVCommand(pentomino),
-                                    cmdType);
+            new MirrorVCommand(pentomino),
+            cmdType);
     }
 
     removePentomino(
-            pentomino, 
-            cmdType = CommandTypes.Original) {
-        
+        pentomino,
+        cmdType = CommandTypes.Original) {
+
         this.exceptionHandler(pentomino);
-        
+
         return this.cmdManager().ExecCommand(
-                                    new RemoveCommand(pentomino,
-                                        this.game().getPosition(pentomino)
-                                    ), cmdType);
+            new RemoveCommand(pentomino,
+                this.game().getPosition(pentomino)
+            ), cmdType);
     }
 
-    removeFromTray(pentomino){
+    removeFromTray(pentomino) {
         pentomino.updateTrayValue(0);
         this.game().removeFromTray(pentomino);
     }
 
-    addToTray(pentomino){
+    addToTray(pentomino) {
         pentomino.updateTrayValue(1);
         this.game().addToTray(pentomino);
     }
@@ -238,11 +238,11 @@ class GameController {
         if (this.hintAI() === null) {
             console.error("HintAI not initialized");
         }
-        
+
         return this.hintAI().getHint();
     }
 
-    getSolutions(){
+    getSolutions() {
         return this.game().getSolutions();
     }
 
@@ -267,15 +267,15 @@ class GameController {
         if (this.game() === null) {
             throw new Error("Game is not set");
         }
-        if ( (commandPath === null) || 
-             (commandPath === undefined)){
-                throw new Error("Reference error: commandPath is null or undefined");
-            } 
+        if ((commandPath === null) ||
+            (commandPath === undefined)) {
+            throw new Error("Reference error: commandPath is null or undefined");
+        }
 
         this.game()._commandManager.executeCommandPath(
-                                                commandPath, 
-                                                onUndo, 
-                                                onRedo);
+            commandPath,
+            onUndo,
+            onRedo);
     }
 
 
@@ -303,7 +303,7 @@ class GameController {
         return this.game().isUndoPossible();
     }
 
-   
+
 
     getPossibleRedoCommands() {
         if (this.game() === null) {
@@ -371,7 +371,7 @@ class GameController {
      * Returns an array list of all colliding cells on the board
      * @returns {*}
      */
-    getCollisionCells(){
+    getCollisionCells() {
         if (this.game() === null) {
             throw new Error("Game is not set");
         }
@@ -409,23 +409,23 @@ class GameController {
     // --- --- --- Helper --- --- ---
     _isOfTypePentomino(pentomino) {
         return JSON.stringify(
-                        Object.getPrototypeOf(pentomino)) === JSON.stringify(Pentomino.prototype);
+            Object.getPrototypeOf(pentomino)) === JSON.stringify(Pentomino.prototype);
     }
 
     _isOfTypeCommandPath(commandPath) {
         return JSON.stringify(
-                        Object.getPrototypeOf(commandPath)) === JSON.stringify(CommandPath.prototype);
+            Object.getPrototypeOf(commandPath)) === JSON.stringify(CommandPath.prototype);
     }
 }
 
 
-function debug_mode(boardStartXY, boardSizeXY){
+function debug_mode(boardStartXY, boardSizeXY) {
     let gc = new GameController();
     let game = new GameLoader('Level 2');
     game.display();
 }
 
 
-if(typeof module != 'undefined') {
+if (typeof module != 'undefined') {
     module.exports = GameController;
 }

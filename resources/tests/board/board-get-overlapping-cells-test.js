@@ -14,9 +14,9 @@ board.placePentomino(T, 2, 3);
 board.placePentomino(I, 3, 1);
 board.placePentomino(F, 4, 2);
 
-describe('Board.getOverlappingCells()', function() {
+describe('Board.getOverlappingCells()', function () {
 
-    it('should return a list of all overlapping cells', function() {
+    it('should return a list of all overlapping cells', function () {
         let overlappingCells = board.getOverlappingCells(2, 3, T, F);
         assert.deepEqual(overlappingCells,
             [
@@ -27,7 +27,7 @@ describe('Board.getOverlappingCells()', function() {
         );
     });
 
-    it('should return an empty list if no collision occurred', function() {
+    it('should return an empty list if no collision occurred', function () {
         // TODO
     });
 });

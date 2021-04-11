@@ -1,4 +1,4 @@
-if(typeof require != 'undefined') {
+if (typeof require != 'undefined') {
     Game = require('./game.js');
     Board = require('./board.js');
 }
@@ -9,7 +9,7 @@ function isEmpty(obj) {
 
 class GameLoader {
 
-    constructor(){
+    constructor() {
         this._game = null;
         this._commandManager = null;
         this._hintAI = null;
@@ -43,118 +43,118 @@ class GameLoader {
         this._game = game;
     };
 
-    getGame(game){
+    getGame(game) {
         return this._game;
     }
 
-    isCmdManagerInGameList(){
+    isCmdManagerInGameList() {
         let gameId = this._game._id;
-        if(this._gameList.hasOwnProperty(gameId)){
+        if (this._gameList.hasOwnProperty(gameId)) {
             return true;
         }
-        else{
+        else {
             return false;
         }
 
     }
 
-    resetGame(){
+    resetGame() {
         this._game.reset();
-        if(!this.isCmdManagerInGameList()){
+        if (!this.isCmdManagerInGameList()) {
             this._commandManager.Reset();
         }
     }
 
-    createGame( boardStartXY, 
-                boardSizeXY, 
-                Boardshape, 
-                name) {
-        
+    createGame(boardStartXY,
+        boardSizeXY,
+        Boardshape,
+        name) {
+
         boardStartXY[0] = parseInt(boardStartXY[0]);
         boardStartXY[1] = parseInt(boardStartXY[1]);
 
-        boardSizeXY[0]=parseInt(boardSizeXY[0]);
-        boardSizeXY[1]=parseInt(boardSizeXY[1]);
+        boardSizeXY[0] = parseInt(boardSizeXY[0]);
+        boardSizeXY[1] = parseInt(boardSizeXY[1]);
 
         this.setGame(
-                    new Game(
-                        new Board(
-                                boardStartXY,
-                                boardSizeXY,
-                                Boardshape), 
-                    name));
+            new Game(
+                new Board(
+                    boardStartXY,
+                    boardSizeXY,
+                    Boardshape),
+                name));
 
         this._game._fillUpTray();
         this._commandManager = new CommandManager();
         this._hintAI = new HintAI(this._game);
     }
 
-    saveGame(){
+    saveGame() {
         let cmdKey = this._game.getCmdKey();
         let gameId = this._game._id;
-        if(cmdKey == undefined){
+        if (cmdKey == undefined) {
             return;
         }
-        if(!this._gameList.hasOwnProperty(gameId)){
-            this._gameList[gameId]={
-                    "cmdManager": this._commandManager,
-                    "cmdKey": [cmdKey]
-                };
+        if (!this._gameList.hasOwnProperty(gameId)) {
+            this._gameList[gameId] = {
+                "cmdManager": this._commandManager,
+                "cmdKey": [cmdKey]
+            };
         }
-        else{
+        else {
             this._gameList[gameId].cmdKey.push(cmdKey);
         }
 
     }
 
-    deleteGame(key){
-        if(key == undefined){
+    deleteGame(key) {
+        if (key == undefined) {
             return;
         }
 
         let gameIds = Object.keys(this._gameList);
-        for(let id in gameIds){
+        for (let id in gameIds) {
             let gmId = gameIds[id];
-            this._gameList[gmId].cmdKey= this._gameList[gmId].cmdKey.filter(item =>item !== key);
-            if(this._gameList[gmId].cmdKey.length == 0){
+            this._gameList[gmId].cmdKey = this._gameList[gmId].cmdKey.filter(item => item !== key);
+            if (this._gameList[gmId].cmdKey.length == 0) {
                 delete this._gameList[gmId];
                 break;
             }
         }
     }
 
-    saveGameImage(image){
+    saveGameImage(image) {
         let cmdKey = this._game.getCmdKey();
-        if(cmdKey == undefined){
+        if (cmdKey == undefined) {
             return;
         }
 
         this.saveGame();
         this._gameImages.push({
-            [cmdKey]:image
+            [cmdKey]: image
         });
     }
 
-    deleteGameImage(key){
+    deleteGameImage(key) {
         this._gameImages = this._gameImages.filter((obj) => Object.keys(obj)[0] !== key);
         this.deleteGame(key);
     }
 
 
-    getGameImages(){
+    getGameImages() {
         return this._gameImages;
     }
 
-    getGames(){
+    getGames() {
         return this._gameList;
     }
 
-    loadGame(cmdKey){
+    loadGame(cmdKey) {
 
-        for(let gameKey in this._gameList){
-            if(this._gameList.hasOwnProperty(gameKey)){
-                for(let key in this._gameList[gameKey].cmdKey){
-                    if(this._gameList[gameKey].cmdKey[key] == cmdKey){
+        for (let gameKey in this._gameList) {
+            if (this._gameList.hasOwnProperty(gameKey)) {
+                for (let key in this._gameList[gameKey].cmdKey) {
+                    if (this._gameList[gameKey].cmdKey[key] == cmdKey) {
                         this._commandManager = this._gameList[gameKey].cmdManager;
                         this.setGame(this._commandManager._game); // Error: need to handle properly
                         return;
@@ -166,20 +166,20 @@ class GameLoader {
         console.error("commandKey not found");
     }
 
-    loadGameFromJson(gmconfig){
+    loadGameFromJson(gmconfig) {
 
     }
 
 
-    cmdManager(){
+    cmdManager() {
         return this._commandManager;
     }
 
-    hintAI(){
+    hintAI() {
         return this._hintAI;
     }
 
-    static loadGameState(cmdKey){
+    static loadGameState(cmdKey) {
         var fController = new FrontController();
         let gmController = fController.controller;
         let currGame = gmController.game();
@@ -188,8 +188,8 @@ class GameLoader {
         let cmdSequences = gmController.getCmdSequences(currentCmdKey, cmdKey);
         return cmdSequences;
 
-       // cmdSequences = cmdSequences.reverse();
-        
+        // cmdSequences = cmdSequences.reverse();
+
         // cmdSequences.forEach((command) => {
         //     switch(command.name){
         //         case "Place":
@@ -206,36 +206,36 @@ class GameLoader {
         //                             command.PosY,
         //                             CommandTypes.Shadow);
         //             }
-    
+
         //             break;
-    
+
         //         case "Remove":
         //             break;
-                
+
         //         case "RotateClkWise":
         //             gmController.rotatePentominoClkWise(command.Pentomino,
         //                                                 CommandTypes.Shadow);
         //             break;
-                
+
         //         case "RotateAntiClkWise":
         //             gmController.rotatePentominoAntiClkWise(command.Pentomino,
         //                                                     CommandTypes.Shadow);
         //             break;
-                
+
         //         case "MirrorH":
         //             gmController.mirrorPentominoH(command.Pentomino,
         //                                          CommandTypes.Shadow);
         //             break;
-                
+
         //         case "MirrorV":
         //             gmController.mirrorPentominoV( command.Pentomino,
         //                                            CommandTypes.Shadow);
         //             break;
-                
+
         //         default:
         //             //TODO: add commund related flag variable
         //             throw new Error("Can not undo");
-                    
+
         //     }
         // },this);
 
@@ -243,6 +243,6 @@ class GameLoader {
     }
 }
 
-if(typeof module != 'undefined') {
+if (typeof module != 'undefined') {
     module.exports = GameLoader;
 }

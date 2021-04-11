@@ -1,7 +1,7 @@
-if(typeof require != 'undefined') {
-                         Pentomino = require('./pentomino.js');
-                         Config = require('./config.js');
-                     }
+if (typeof require != 'undefined') {
+    Pentomino = require('./pentomino.js');
+    Config = require('./config.js');
+}
 
 
 class PD {
@@ -13,10 +13,10 @@ class PD {
         var fController = new FrontController();
         this.gameController = fController.controller;
         this.loadGame("board_6x10");
-        
+
     }
 
-    rotateClkWise(){
+    rotateClkWise() {
         this.visual.rotateClkWise();
         if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
             this.visual.showNumberOfPossibleSolutions();
@@ -30,63 +30,63 @@ class PD {
         }
     }
 
-    flipH(){
+    flipH() {
         this.visual.flipH();
         if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
             this.visual.showNumberOfPossibleSolutions();
         }
     }
 
-    flipV(){
+    flipV() {
         this.visual.flipV();
         if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
             this.visual.showNumberOfPossibleSolutions();
         }
     }
 
-    reset(){
-       this.visual.clear();
-       if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
-           this.visual.showNumberOfPossibleSolutions();
-       }
+    reset() {
+        this.visual.clear();
+        if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
+            this.visual.showNumberOfPossibleSolutions();
+        }
     }
 
-        /**
-     * Returns a game object of the selected/default game that can be used to draw the board
-     */
-    getGameUISettings(board){
+    /**
+ * Returns a game object of the selected/default game that can be used to draw the board
+ */
+    getGameUISettings(board) {
         return {
-                gameHeight: boardConfigs[board].gameHeight || baseConfigs.gameHeight,
-                gameWidth: boardConfigs[board].gameWidth || baseConfigs.gameWidth,
-                boardSize: boardConfigs[board].boardSize,
-                blockedCells: boardConfigs[board].blockedCells || undefined,
-                boardShape: boardConfigs[board].boardShape || baseConfigs.boardShape
+            gameHeight: boardConfigs[board].gameHeight || baseConfigs.gameHeight,
+            gameWidth: boardConfigs[board].gameWidth || baseConfigs.gameWidth,
+            boardSize: boardConfigs[board].boardSize,
+            blockedCells: boardConfigs[board].blockedCells || undefined,
+            boardShape: boardConfigs[board].boardShape || baseConfigs.boardShape
         };
     }
 
-     /**
-     * Returns all boards with configurations and solutions
-     */
-      getAllBoards(){
+    /**
+    * Returns all boards with configurations and solutions
+    */
+    getAllBoards() {
         let boardsWithConfig = [];
-        if(baseConfigs != undefined && boardConfigs != undefined){
-            if(baseConfigs.hasOwnProperty("boards")){
+        if (baseConfigs != undefined && boardConfigs != undefined) {
+            if (baseConfigs.hasOwnProperty("boards")) {
                 baseConfigs.boards.forEach(board => {
-                    if(boardConfigs.hasOwnProperty(board)){
+                    if (boardConfigs.hasOwnProperty(board)) {
                         boardsWithConfig.push(board);
                     }
                 });
-            }else{
-                throw new Error("Error in configuration: Could not find any boards");    
+            } else {
+                throw new Error("Error in configuration: Could not find any boards");
             }
-        } else{
+        } else {
             throw new Error("Error in configuration: Could not find basic game configurations");
         }
         return boardsWithConfig;
     }
 
 
-    loadGame(board, type){
+    loadGame(board, type) {
         let gameObject = this.getGameUISettings(board);
         this.boardName = board; // HACK: To be changed later. This needs to be obtained from the backend. 
         this.boardSize = gameObject.boardSize;
@@ -98,7 +98,7 @@ class PD {
         this.boardStartX = Math.floor((this.gameHeight - this.boardSize[0]) / 2);
         this.boardStartY = Math.floor((this.gameWidth - this.boardSize[1]) / 2);
 
-        if(type != "Snapshot"){
+        if (type != "Snapshot") {
             this.gameController.createGame(
                 [this.boardStartX, this.boardStartY],
                 this.boardSize,
@@ -113,40 +113,39 @@ class PD {
         }
     }
 
-    hints(){
-       return this.gameController.getHint();
+    hints() {
+        return this.gameController.getHint();
     }
 
-     callHintAI(){
+    callHintAI() {
         this.visual.callHintAI();
     }
 
-    prefillBoard(){
+    prefillBoard() {
         this.visual.prefillBoard();
     }
-    
-    undo(){
+
+    undo() {
         this.visual.undo();
     }
 
-    redo(){
+    redo() {
         this.visual.redo();
     }
 
-    replay(startState, targetState){
-        this.visual.replay(startState,targetState);
+    replay(startState, targetState) {
+        this.visual.replay(startState, targetState);
     }
 
-    getGameState(type){
+    getGameState(type) {
         return this.visual.getCmdState(type);
     }
 
-    getAllGameStates(){
+    getAllGameStates() {
         return this.visual.getGameStates();
     }
 
 }
-
 
 
 // this.ui.load();

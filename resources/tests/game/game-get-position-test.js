@@ -14,9 +14,9 @@ game.placePentomino(T, 1, 3);
 game.placePentomino(I, 6, 3);
 game.placePentomino(X, -1, -1);
 
-describe('Game.getPosition(pentomino)', function() {
+describe('Game.getPosition(pentomino)', function () {
 
-    it('should return position of pentominoes on the board', function() {
+    it('should return position of pentominoes on the board', function () {
         assert.deepEqual(game.getPosition(T), [1, 3]);
         assert.deepEqual(game.getPosition(I), [6, 3]);
     });
