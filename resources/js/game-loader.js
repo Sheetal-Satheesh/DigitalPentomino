@@ -47,9 +47,22 @@ class GameLoader {
         return this._game;
     }
 
+    isCmdManagerInGameList(){
+        let gameId = this._game._id;
+        if(this._gameList.hasOwnProperty(gameId)){
+            return true;
+        }
+        else{
+            return false;
+        }
+
+    }
+
     resetGame(){
         this._game.reset();
-        this._commandManager.Reset();
+        if(!this.isCmdManagerInGameList()){
+            this._commandManager.Reset();
+        }
     }
 
     createGame( boardStartXY, 
@@ -143,7 +156,7 @@ class GameLoader {
                 for(let key in this._gameList[gameKey].cmdKey){
                     if(this._gameList[gameKey].cmdKey[key] == cmdKey){
                         this._commandManager = this._gameList[gameKey].cmdManager;
-                        this.setGame(this._commandManager._game);
+                        this.setGame(this._commandManager._game); // Error: need to handle properly
                         return;
                     }
                 }
