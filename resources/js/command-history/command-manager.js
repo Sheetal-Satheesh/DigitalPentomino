@@ -170,19 +170,6 @@ class CommandManager {
         return !(this._cmdTree.isAtRoot());
     }
 
-    /* 
-       Undo() {
-            if (this._cmdTree.isAtRoot()) {
-                throw new Error("There exists no command to undo");
-            }
-    
-            let undoCommand = this._cmdTree.getLastCommand();
-            undoCommand.undo();
-            this._cmdTree.moveUp();
-            return undoCommand;
-        }
-    */
-
     Undo() {
         let command = this._cmdTree.MoveUp();
         if (command == undefined) {
@@ -200,13 +187,6 @@ class CommandManager {
         return command.ExecValues();
     }
 
-    /*
-        Redo(command) {
-            command.execute();
-            this._cmdTree.moveDown(command);
-            return command;
-        }
-    */
     RedoCommandsAll() {
         return this._cmdTree.getLastCommand().getChildren();
     }
