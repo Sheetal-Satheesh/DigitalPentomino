@@ -9,12 +9,11 @@
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="resources/images/icons/dp_192.png">
     <link rel="stylesheet" href="resources/css/style.css">
-	<link rel="stylesheet" href="resources/css/board_selection.css">
-    <link rel="stylesheet" href="resources/css/game-state.css">
+    <link rel="stylesheet" href="resources/css/board_selection.css">
     <link rel="stylesheet" href="resources/css/modal.css">
     <link rel="stylesheet" href="resources/css/grid.css">
     <link rel="stylesheet" href="resources/css/settings_form.css">
-    <link rel="stylesheet" style="text/css" href="resources/jsonform/bootstrap.css" />
+    <link rel="stylesheet" href="resources/jsonform/bootstrap.css">
     <script src="resources/index.js"></script>
     <script src="resources/js/ui-template.js"></script>
     <script src="resources/js/board.js"></script>
@@ -53,227 +52,242 @@
 </head>
 
 <body onload="touchStartup(); initialize()">
-  <div id="seedingCover"></div>
-  <div id="seeding" class="seed">
-    <input type="search" id="seedBar" class="seed" placeholder="Input seed...">
-    <button type="button" id='seedSubmit' class = "cActionBtn" onclick="submitSeed()"><img class="cSeedBtn" src="resources/images/icons/seed.png">
-  </div>
-  <div class = "cGame">
-    <div id="functions">
-        <img id = "logo" src="resources/images/icons/pentomino.png" alt="Pentomino" class="cLogo">
-    
-        <div id="operations">
-          <table>
-                <tr>
-                    <td>
-                        <button type="button" id='btnRotateLeft' class = "cActionBtn" onclick="rotateAntiClkWise()" disabled><img src="resources/images/icons/rotate_left.png">
+    <div id="seedingCover"></div>
+    <div id="seeding" class="seed">
+        <input type="search" id="seedBar" class="seed" placeholder="Input seed...">
+        <button type="button" id='seedSubmit' class="cActionBtn" onclick="submitSeed()"><img class="cSeedBtn"
+                src="resources/images/icons/seed.png">
+    </div>
+    <div class="cGame">
+        <div id="functions">
+            <img id="logo" src="resources/images/icons/pentomino.png" alt="Pentomino" class="cLogo">
 
-                        </button>
-                    </td>
-                    <td>
-                        <button type="button" id='btnRotateRight' class = "cActionBtn" onclick="rotateClkWise()" disabled> <img src="resources/images/icons/rotate_right.png">
-                        </button>
-                    </td>
-                </tr>
+            <div id="operations">
+                <table>
+                    <tr>
+                        <td>
+                            <button type="button" id='btnRotateLeft' class="cActionBtn" onclick="rotateAntiClkWise()"
+                                disabled><img src="resources/images/icons/rotate_left.png">
 
-                <tr>
-                    <td>
-                        <button type="button" id='btnFlipH' class = "cActionBtn" onclick="flipH()" disabled><img src="resources/images/icons/flip_horizontally.png">
-                        </button>
-                    </td>
-                    <td>
-                        <button type="button" id='btnFlipV' class = "cActionBtn" onclick="flipV()" disabled><img src="resources/images/icons/flip_vertically.png">
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <button type="button" id='reset' class = "cActionBtn" onclick="resetGame()"><img src="resources/images/icons/tidy_up.png"></button>
-                    </td>
-                    <td>
-                        <button type="button" id='prefillBoard' class = "cActionBtn" onclick="prefillBoard()" disabled><img src="resources/images/icons/prefill.png"></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <button type="button" id='replay' class = "cActionBtn" onclick="execReplay()">
-                            <img src="resources/images/icons/replay.svg"></button>
-                    </td>
-                </tr>
-          </table>
+                            </button>
+                        </td>
+                        <td>
+                            <button type="button" id='btnRotateRight' class="cActionBtn" onclick="rotateClkWise()"
+                                disabled> <img src="resources/images/icons/rotate_right.png">
+                            </button>
+                        </td>
+                    </tr>
 
-          <table>
-                <tr>
-                    <td>
-                        <button type="button" id='undo' class = "cActionBtn" onclick="saveGameImage()" ><img src="resources/images/icons/screenshot.png">
-                        </button>
-                    </td>
-                    <td>
-                        <button type="button" id='redo' class = "cActionBtn" onclick="showGameImages()" ><img src="resources/images/icons/gallery.png">
-                        </button>
-                    </td>
-                
-                </tr>
-                <tr>
-                    <td>
-                        <button type="button" id='undo' class = "cActionBtn" onclick="execUndo()" ><img src="resources/images/icons/undo.png">
-                        </button>
-                    </td>
-                    <td>
-                        <button type="button" id='redo' class = "cActionBtn" onclick="execRedo()" ><img src="resources/images/icons/redo.png">
-                        </button>
-                    </td>
-                   
-                </tr>
-                <tr>
-                    <td>
-                        <button type="button" id='btnBoardSelect' class = "cActionBtn" onclick="selectBoard()"> <img src="resources/images/icons/board.png">
-                        </button>
-                    </td>
-                    <td>
-                        <div class="hintPopup" id="hintButton" onclick="callHintAI()">
-                            <img src="resources/images/UI_images/hint.png">
-                            <span class="hintPopupText" id="myHint">Move the pieces ! then ask me the hint
-                            </span>
+                    <tr>
+                        <td>
+                            <button type="button" id='btnFlipH' class="cActionBtn" onclick="flipH()" disabled><img
+                                    src="resources/images/icons/flip_horizontally.png">
+                            </button>
+                        </td>
+                        <td>
+                            <button type="button" id='btnFlipV' class="cActionBtn" onclick="flipV()" disabled><img
+                                    src="resources/images/icons/flip_vertically.png">
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" id='reset' class="cActionBtn" onclick="resetGame()"><img
+                                    src="resources/images/icons/tidy_up.png"></button>
+                        </td>
+                        <td>
+                            <button type="button" id='prefillBoard' class="cActionBtn" onclick="prefillBoard()"
+                                disabled><img src="resources/images/icons/prefill.png"></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" id='replay' class="cActionBtn" onclick="execReplay()">
+                                <img src="resources/images/icons/replay.svg"></button>
+                        </td>
+                    </tr>
+                </table>
+
+                <table>
+                    <tr>
+                        <td>
+                            <button type="button" id='undo' class="cActionBtn" onclick="saveGameImage()"><img
+                                    src="resources/images/icons/screenshot.png">
+                            </button>
+                        </td>
+                        <td>
+                            <button type="button" id='redo' class="cActionBtn" onclick="showGameImages()"><img
+                                    src="resources/images/icons/gallery.png">
+                            </button>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" id='undo' class="cActionBtn" onclick="execUndo()"><img
+                                    src="resources/images/icons/undo.png">
+                            </button>
+                        </td>
+                        <td>
+                            <button type="button" id='redo' class="cActionBtn" onclick="execRedo()"><img
+                                    src="resources/images/icons/redo.png">
+                            </button>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" id='btnBoardSelect' class="cActionBtn" onclick="selectBoard()"> <img
+                                    src="resources/images/icons/board.png">
+                            </button>
+                        </td>
+                        <td>
+                            <div class="hintPopup" id="hintButton" onclick="callHintAI()">
+                                <img src="resources/images/UI_images/hint.png">
+                                <span class="hintPopupText" id="myHint">Move the pieces ! then ask me the hint
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" id='btnSettingsForm' class="cActionBtn" onclick="selectSettings()">
+                                <img src="resources/images/icons/settings.png">
+                            </button>
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+                    <tr>
+                        <button style="display:none" onclick="pd.ui.save()">Save</button>
+                        <button style="display:none" onclick="pd.ui.load()">Load</button>
+                    </tr>
+                </table>
+
+                <p id="labelNumberSolutionsContainer">
+                    Number of solutions: <label id="labelNumberSolutions">?</label>
+                </p>
+
+                <div class="settings-popup" id="settings_form">
+
+                    <div class="settings-container">
+                        <h2 id="header-game-settings">Game settings</h2>
+                        <form></form>
+                    </div>
+                </div>
+
+                <div class="form-popup" id="board_selection_form">
+                    <div class="container" id="container">
+                        <!-- Board List is loaded dynamically from Board Config -->
+
+                        <div class="action_btn">
+                            <button type="button" class="btnLoadGame" onclick="loadGame()">Load Board</button>
+                            <button type="button" class="btnCancel" onclick="closeForm()">Cancel</button>
                         </div>
-                    </td>
-                </tr>
+                    </div>
+                </div>
+                <!--form-popup-->
+
+            </div> <!-- operation -->
+        </div>
+
+        <div id="game">
+            <div id="tray"></div> <!-- tray -->
+            <div id="field"></div> <!-- field -->
+            <div id="piecearea"></div> <!-- piecearea -->
+            <div id="modalTop" class="modal">
+                <span onclick="document.getElementById('modalTop').style.display='none'" class="close"
+                    title="Close Modal">x</span>
+                <div class="modalContainer" id="modalContainerID">
+                    <div class="outerGrid">
+                        <div class="innerGrid" id="innerGrid"></div>
+                    </div>
+                    <form class="modalFormContent">
+                        <div class="modalFormContainer" id="modalFormContainerID">
+                            <h3 id="modalTitleID"></h3>
+                            <div class="modalButtons" id="modalButtonsID"></div>
+                            <div class="modalBody" id="modalBodyID">
+                            </div>
+                    </form>
+                </div>
+            </div>
+            <!--modal end-->
+        </div>
+
+        <div class="cPieceManipulation" id="pieceManipulation">
+            <table>
                 <tr>
                     <td>
-                        <button type="button" id='btnSettingsForm' class = "cActionBtn" onclick="selectSettings()"> <img src="resources/images/icons/settings.png">
+                        <button type="button" class="controlButton" id='OpRotateLeft' onclick="rotateAntiClkWise()"><img
+                                src="resources/images/icons/rotate_left.png">
                         </button>
                     </td>
                     <td>
+                        <button type="button" class="controlButton" id='OpRotateRight' onclick="rotateClkWise()"><img
+                                src="resources/images/icons/rotate_right.png">
+                        </button>
+                    </td>
+                    <td>
+                        <button type="button" class="controlButton" id='OpflipH' onclick="flipV()"><img
+                                src="resources/images/icons/flip_vertically.png">
+                        </button>
+                    </td>
+                    <td>
+                        <button type="button" class="controlButton" id='OpflipH' onclick="flipH()"><img
+                                src="resources/images/icons/flip_horizontally.png">
+                        </button>
                     </td>
                 </tr>
-                  <tr>
-                    <button style="display:none" onclick="pd.ui.save()">Save</button>
-                    <button style="display:none" onclick="pd.ui.load()">Load</button>
-                  </tr>
-          </table>
-
-          <p id="labelNumberSolutionsContainer">
-              Number of solutions: <label id="labelNumberSolutions">?</label>
-          </p>
-
-        <div class="settings-popup" id="settings_form">
-
-            <div class="settings-container">
-                <h2 id="header-game-settings">Game settings</h2>
-                <form></form>
-            </div>
-        </div>
-            
-		<div class="form-popup" id="board_selection_form">
-			<div class="container" id="container">
-				<!-- Board List is loaded dynamically from Board Config -->
-				
-				<div class="action_btn">
-					<button type="button" class="btnLoadGame" onclick="loadGame()">Load Board</button>
-					<button type="button" class="btnCancel" onclick="closeForm()">Cancel</button>
-				</div>
-			</div>
-		</div> <!--form-popup-->
-
-        <div class="replayPopup" id="replayWindow">
-			<div class="replaySelectWrapper" id="replayContainer"></div>
-			</div>
-		</div> <!--replayWindow-->
-
-        </div>  <!-- operation -->
+            </table>
+        </div> <!-- cPieceManipulation -->
     </div>
 
-    <div id="game">
-        <div id="tray"></div> <!-- tray -->
-        <div id="field"></div> <!-- field -->
-        <div id="piecearea"></div> <!-- piecearea -->
-        <div id="modalTop" class="modal">
-            <span onclick="document.getElementById('modalTop').style.display='none'" class="close" title="Close Modal">x</span>
-            <div class ="modalContainer" id="modalContainerID">
-                <div class="outerGrid">
-                    <div class="innerGrid" id="innerGrid"></div>
-                </div>
-                <form class="modalFormContent">
-                    <div class="modalFormContainer" id="modalFormContainerID">
-                        <h3 id="modalTextID"></h3>
-                        <div class="modalButtons" id="modalButtonsID"></div>
-                    </div>
-                </form>
-            </div>
-          </div> <!--modal end-->
-    </div> 
-    
-    <div class = "cPieceManipulation" id ="pieceManipulation" >
-        <table>
-      <tr>
-          <td>
-              <button type="button" class="controlButton"  id='OpRotateLeft' onclick="rotateAntiClkWise()"><img src="resources/images/icons/rotate_left.png">
-              </button>
-          </td>
-          <td>
-              <button type="button" class="controlButton" id='OpRotateRight' onclick="rotateClkWise()"><img src="resources/images/icons/rotate_right.png">
-              </button>
-          </td>
-          <td>
-              <button type="button" class="controlButton" id='OpflipH' onclick="flipV()"><img src="resources/images/icons/flip_vertically.png">
-              </button>
-          </td>
-          <td>
-              <button type="button" class="controlButton" id='OpflipH' onclick="flipH()"><img src="resources/images/icons/flip_horizontally.png">
-              </button>
-          </td>
-      </tr>
-        </table>
-    </div>  <!-- cPieceManipulation -->
-</div>
+    <script type="text/javascript">
 
-<script type="text/javascript">
-
-	    let pd;
-		let template;
-		let IsReplayButtonClicked = false;
-		let replayWindowElem =  document.getElementById("replayWindow");
-		let replayContainerElem = document.getElementById("replayContainer");
+        let pd;
+        let IsReplayButtonClicked = false;
+        let template;
 
         function initialize() {
             pd = new PD();
-			template = new Template();
-			loadGameList();
+            template = new Template();
+            loadGameList();
         }
-        
-		function loadGameList() {
-			var board_container = document.getElementById('container');
-			var board_list = pd.getAllBoards();
-			var out = '';
-			
-			var input_element = '<input type="radio" name="board_list" class="input-hidden" id="$$" value="$$" >';
-			var label = '<label for="$$"> $$ <img src="resources/images/boards/$$.png" alt="$$" style="width:50%; height:50%;"/></label>';
-			var action_btn = '\n<div class="action_btn">\n<button type="button" class="btnLoadGame" onclick="loadGame()">Load Board</button>\n<button type="button" class="btnCancel" onclick="closeForm()">Cancel</button>\n</div>'
-			
-			for (var i=0; i< board_list.length; i++){
-				out += input_element.replaceAll("$$", board_list[i]) +'\n'+ label.replaceAll("$$", board_list[i]) + '<br><br>\n';
-			}
 
-			board_container.innerHTML = out + action_btn;
-		}
+        function loadGameList() {
+            var board_container = document.getElementById('container');
+            var board_list = pd.getAllBoards();
+            var out = '';
 
-        function resetGame(){
-            var modal = document.getElementById('modalTop');
-            modal.style.display="block";
-            modal.style.background="transparent";
+            var input_element = '<input type="radio" name="board_list" class="input-hidden" id="$$" value="$$" >';
+            var label = '<label for="$$"> $$ <img src="resources/images/boards/$$.png" alt="$$" style="width:50%; height:50%;"/></label>';
+            var action_btn = '\n<div class="action_btn">\n<button type="button" class="btnLoadGame" onclick="loadGame()">Load Board</button>\n<button type="button" class="btnCancel" onclick="closeForm()">Cancel</button>\n</div>'
 
-            document.querySelector(".modalFormContent").style.display="block";
-            document.querySelector(".innerGrid").style.display="none";
-            template.clearContent("#modalButtonsID");
-            template.clearContent("#modalTextID");
-
-            let textNode={
-                name: "modalText",
-                text: "Do you want to reset",
+            for (var i = 0; i < board_list.length; i++) {
+                out += input_element.replaceAll("$$", board_list[i]) + '\n' + label.replaceAll("$$", board_list[i]) + '<br><br>\n';
             }
-            template.attachText("#modalTextID",textNode );
 
-            let cancelBtn={
+            board_container.innerHTML = out + action_btn;
+        }
+
+        function resetGame() {
+            var modal = document.getElementById('modalTop');
+            modal.style.display = "block";
+            modal.style.background = "transparent";
+
+            document.querySelector(".modalFormContent").style.display = "block";
+            document.querySelector(".innerGrid").style.display = "none";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+
+            let textNode = {
+                name: "modalText",
+                text: "Do You Want To Reset ",
+            }
+            template.attachText("#modalTitleID", textNode);
+
+            let cancelBtn = {
                 name: "cancelBtn",
                 onclick: "document.getElementById('modalTop').style.display='none'",
                 content: "No"
@@ -294,38 +308,45 @@
             });
         }
 
-        function callHintAI() {
-            pd.visual.callHintAI();
-            
-        }
-
-        //hinting popup disappears when mouse pointer is away
-        document.getElementById("hintButton").addEventListener("mouseleave", function() {
-                 document.getElementById("myHint").style.visibility = "hidden";
-        });
-        
-
-        function rotateClkWise(){
-            pd.rotateClkWise();
-        }
-
         function rotateAntiClkWise() {
             pd.rotateAntiClkWise();
         }
 
-        function flipH(){
+        function flipH() {
             pd.flipH();
         }
 
-        function flipV(){
+        function flipV() {
             pd.flipV();
         }
 
-        function selectBoard(){
-			document.getElementById("board_selection_form").style.display = "block";
+        function selectBoard() {
+            loadGameList();
+            document.getElementById("board_selection_form").style.display = "block";
         }
 
-        function handleJsonFormSubmit (errors, values) {
+        function load() {
+            var selectedBoard = document.querySelector("input[name=board_list]:checked").value;
+            document.getElementById("board_selection_form").style.display = "none";
+            pd.loadBoard(selectedBoard);
+        }
+
+        function closeForm() {
+            document.getElementById("board_selection_form").style.display = "none";
+        }
+
+        function prefillBoard() {
+            pd.prefillBoard();
+        }
+
+        function execUndo() {
+            pd.undo();
+        }
+
+        function execRedo() {
+            pd.redo();
+        }
+        function handleJsonFormSubmit(errors, values) {
             let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), values);
             // TODO: display seed somehow
             console.log("Seed: " + seed);
@@ -363,7 +384,8 @@
         }
 
         function processChangesToSettings(changes, settings) {
-            changes.forEach(changesEntry => {deleteBtn
+            changes.forEach(changesEntry => {
+                deleteBtn
                 let heading = changesEntry.heading;
                 let key = changesEntry.key;
 
@@ -393,7 +415,7 @@
             //change default values according to current schema
             for (let key in settings) {
                 //console.log(settings[key]);
-                for (let subkey in settings[key]){
+                for (let subkey in settings[key]) {
                     //console.log(settings[key][subkey]);
                     settingsSchema[key]["properties"][subkey]["default"] = settings[key][subkey];
                 }
@@ -404,7 +426,7 @@
 
         function handleJsonFormErrors(errors, formElt) {
             let lang = SettingsSingleton.getInstance().getSettings().general.language;
-            for (let i=0; i<errors.length; i++) {
+            for (let i = 0; i < errors.length; i++) {
                 let error = errors[i];
 
                 switch (error.attribute) {
@@ -419,7 +441,7 @@
             $(formElt).jsonFormErrors(errors, $('form'));
         }
 
-        function selectSettings(){
+        function selectSettings() {
             let formElement = $('form')[0];
             formElement.innerHTML = '';
 
@@ -466,21 +488,21 @@
             }*/
         }
 
-        function closeSettings(){
-			document.getElementById("settings_form").style.display = "none";
+        function closeSettings() {
+            document.getElementById("settings_form").style.display = "none";
         }
 
-        function selectSeeding(){
-			document.getElementById("seedingCover").style.visibility = "visible";
+        function selectSeeding() {
+            document.getElementById("seedingCover").style.visibility = "visible";
             document.getElementById("seeding").style.visibility = "visible";
         }
 
-        function closeSeeding(){
-			document.getElementById("seedingCover").style.visibility = "hidden";
+        function closeSeeding() {
+            document.getElementById("seedingCover").style.visibility = "hidden";
             document.getElementById("seeding").style.visibility = "hidden";
         }
 
-        function submitSeed(){
+        function submitSeed() {
             let seedValue = document.getElementById("seedBar").value;
             let settings = SettingsParser.parseSettingsFromSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), seedValue);
             postProcessSettings(settings);
@@ -493,36 +515,36 @@
             document.getElementById("seeding").style.visibility = "hidden";
         }
 
-		function loadGame(){
-			var selectedBoard = document.querySelector("input[name=board_list]:checked").value;
-			document.getElementById("board_selection_form").style.display = "none";
+        function loadGame() {
+            var selectedBoard = document.querySelector("input[name=board_list]:checked").value;
+            document.getElementById("board_selection_form").style.display = "none";
             pd.loadGame(selectedBoard);
-			
-        }
-		
-		function closeForm() {
-			document.getElementById("board_selection_form").style.display = "none";
-		}
 
-        function prefillBoard(){
+        }
+
+        function closeForm() {
+            document.getElementById("board_selection_form").style.display = "none";
+        }
+
+        function prefillBoard() {
             pd.visual.prefillBoard();
         }
 
-        function execUndo(){
+        function execUndo() {
             pd.visual.undo();
         }
 
-        function execRedo(){
+        function execRedo() {
             pd.visual.redo();
         }
- 
-        function saveGameImage(){
+
+        function saveGameImage() {
             let gameImage = undefined;
             let gameElem = document.getElementById('game');
 
-			html2canvas(gameElem).then(function(screeshot) {
-                screeshot.setAttribute("class","screenshot");
-                screeshot.style.width  = '25vw';
+            html2canvas(gameElem).then(function (screeshot) {
+                screeshot.setAttribute("class", "screenshot");
+                screeshot.style.width = '25vw';
                 screeshot.style.height = '15vw';
                 screeshot.style.border = "2px solid black";
                 gameImage = screeshot;
@@ -530,29 +552,29 @@
             });
         }
 
-        function loadGameImage(key){
+        function loadGameImage(key) {
             pd.visual.loadGame(key);
-            pd.loadGame(pd.visual.getBoard(),"Snapshot");
+            pd.loadGame(pd.visual.getBoard(), "Snapshot");
             var modal = document.getElementById('modalTop');
-            modal.style.display="none";
+            modal.style.display = "none";
 
         }
 
-        function deleteGameImage(key){
-           pd.visual.deleteGameImage(key);
-           showGameImages();
+        function deleteGameImage(key) {
+            pd.visual.deleteGameImage(key);
+            showGameImages();
         }
 
-        function showGameImages(){
+        function showGameImages() {
             var modal = document.getElementById('modalTop');
-            modal.style.background=" rgb(220, 240, 237)";
-            modal.style.display="block";
-            document.querySelector(".modalFormContent").style.display="none";
-            document.querySelector(".innerGrid").style.display="block";
+            modal.style.background = " rgb(220, 240, 237)";
+            modal.style.display = "block";
+            document.querySelector(".modalFormContent").style.display = "none";
+            document.querySelector(".innerGrid").style.display = "block";
 
             let imageList = pd.visual.showGameImages();
-       
-           
+
+
             let imageGrid = document.getElementById('innerGrid');
             template.clearContent(".innerGrid");
 
@@ -560,23 +582,23 @@
                 let imgKey = Object.keys(item)[0];
                 let image = item[imgKey];
                 let imageDiv = document.createElement("div");
-                imageDiv.setAttribute("class","imageDiv");
+                imageDiv.setAttribute("class", "imageDiv");
 
                 let buttonDiv = document.createElement("div");
                 buttonDiv.setAttribute("class", "imageBtnDiv");
-                    
+
                 let loadBtn = document.createElement("button");
                 loadBtn.setAttribute("class", "imageButton imageLoadBtn");
-                loadBtn.textContent="Load";
-                loadBtn.addEventListener('click', function() {
+                loadBtn.textContent = "Load";
+                loadBtn.addEventListener('click', function () {
                     loadGameImage(imgKey);
                 }, false);
 
 
                 let deleteBtn = document.createElement("button");
                 deleteBtn.setAttribute("class", "imageButton imageDeleteBtn");
-                deleteBtn.textContent="Delete";
-                deleteBtn.addEventListener('click', function() {
+                deleteBtn.textContent = "Delete";
+                deleteBtn.addEventListener('click', function () {
                     deleteGameImage(imgKey);
                 }, false);
 
@@ -587,101 +609,95 @@
                 imageDiv.appendChild(image);
                 imageDiv.appendChild(buttonDiv);
                 imageGrid.appendChild(imageDiv);
-                
-            });
-              
-                    
-            
 
-            // for(let key in imageList){
-            //     pd.visual.loadGame(key);
-            //     pd.setPD(pd.visual.getBoard());
-            //     break;
-            // }
+            });
         }
 
-        function disappearReplayWindow(){
-	        replayWindowElem.style.display = "none";
-	        replayContainerElem.innerHTML = "";
-	        IsReplayButtonClicked = false;
-    	}
+        function execReplay() {
 
-    	function execReplay(){
+            var modal = document.getElementById('modalTop');
+            modal.style.display = "block";
+            modal.style.background = "transparent";
 
-	        if(IsReplayButtonClicked){
-	            disappearReplayWindow();
-	            return;
-	        }
+            document.querySelector(".modalFormContent").style.display = "block";
+            document.querySelector(".innerGrid").style.display = "none";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
 
-	        IsReplayButtonClicked = true;
-	        replayWindowElem.style.display = "block";
-	            
-	        let startGameState = pd.getGameState("start");
-	        let currGameState = pd.getGameState("current");
+            let startGameState = pd.getGameState("start");
+            let currGameState = pd.getGameState("current");
 
-	        if(startGameState == undefined){
-	            let errorMsg= document.createElement('h1');
-	            errorMsg.setAttribute("align","center");
-	            errorMsg.setAttribute("style","color:red");
-	            errorMsg.innerText="Game is not started Yet";
-	            replayContainerElem.appendChild(errorMsg);
-	            
-	            return;
-	        }
+            if (startGameState == undefined) {
+                let textNode = {
+                    name: "modalText",
+                    text: "Game Not Started Yet ",
+                }
 
-	        let allGameState = pd.getAllGameStates();
+                template.attachText("#modalTitleID", textNode);
+                return;
+            }
 
-	        let selectStartElem = document.createElement("select");
-	        selectStartElem.setAttribute("class", "StateSelect");
-	        selectStartElem.setAttribute("id", "startStateOptions");
+            let allGameState = pd.getAllGameStates();
 
-	        let selectTargetElem = document.createElement("select");
-	        selectTargetElem.setAttribute("class", "StateSelect");
-	        selectTargetElem.setAttribute("id", "targetStateOptions");
+            let selectStartElem = document.createElement("select");
+            selectStartElem.setAttribute("class", "StateSelect");
+            selectStartElem.setAttribute("id", "startStateOptions");
+            selectStartElem.setAttribute("style", "margin: 0 .5vw;");
 
-	        for(let index=0; index < allGameState.length; ++index){
-	            let optStart = document.createElement('option');
-	            let optTarget = document.createElement('option');
-	            optStart.value = allGameState[index];
-	            optTarget.value = allGameState[index];
-	            optStart.innerHTML = allGameState[index];
-	            optTarget.innerHTML = allGameState[index];
+            let selectTargetElem = document.createElement("select");
+            selectTargetElem.setAttribute("class", "StateSelect");
+            selectTargetElem.setAttribute("id", "targetStateOptions");
+            selectTargetElem.setAttribute("style", "margin: 0 .5vw;");
 
-	            if(allGameState[index] == startGameState){
-	                optStart.selected="selected";
-	                optStart.setAttribute("class","selected");
-	            }
-	            else if(allGameState[index] == currGameState){
-	                optTarget.selected="selected";
-	                optTarget.setAttribute("class","selected");
+            for (let index = 0; index < allGameState.length; ++index) {
+                let optStart = document.createElement('option');
+                let optTarget = document.createElement('option');
+                optStart.value = allGameState[index];
+                optTarget.value = allGameState[index];
+                optStart.innerHTML = allGameState[index];
+                optTarget.innerHTML = allGameState[index];
 
-	            }
+                if (allGameState[index] == startGameState) {
+                    optStart.selected = "selected";
+                    optStart.setAttribute("class", "selected");
+                }
+                else if (allGameState[index] == currGameState) {
+                    optTarget.selected = "selected";
+                    optTarget.setAttribute("class", "selected");
 
-	            selectStartElem.appendChild(optStart);
-	            selectTargetElem.appendChild(optTarget);
-	        }
-	 
-	        replayContainerElem.appendChild(selectStartElem);
-	        replayContainerElem.appendChild(selectTargetElem);
+                }
 
-	        var submit = document.createElement("input");
-	        submit.setAttribute("type", "button");
-	        submit.setAttribute("value", "Submit");
-	        submit.setAttribute("class","submitReplay");
+                selectStartElem.appendChild(optStart);
+                selectTargetElem.appendChild(optTarget);
+            }
 
-	        submit.onclick = function(){
-	            let sValue = document.getElementById("startStateOptions").value;
-	            let eValue = document.getElementById("targetStateOptions").value;
-	            console.log(sValue);
-	            console.log(eValue);
-	            disappearReplayWindow();
-	            pd.replay(sValue, eValue);
-	        }
-	        replayContainerElem.appendChild(submit);
-    }
+            document.getElementById("modalBodyID").appendChild(selectStartElem);
+            document.getElementById("modalBodyID").appendChild(selectTargetElem);
+
+            var submit = document.createElement("input");
+            submit.setAttribute("type", "button");
+            submit.setAttribute("value", "Submit");
+            submit.setAttribute("class", "submitReplay");
+            submit.setAttribute("style", "margin: 0 .5vw;background-color:rgb(149, 172, 170);");
+            submit.onclick = function () {
+                let sValue = document.getElementById("startStateOptions").value;
+                let eValue = document.getElementById("targetStateOptions").value;
+                console.log(sValue);
+                console.log(eValue);
+                pd.replay(sValue, eValue);
+                modal.style.display = "none";
+
+            }
+            document.getElementById("modalBodyID").appendChild(submit);
+        }
+
+
+
 
     </script>
-   <script src="./registerSW.js"></script>
+    <script src="./registerSW.js"></script>
 
 </body>
+
 </html>

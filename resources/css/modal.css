@@ -7,6 +7,7 @@ button:hover {
 .cancelBtn, .deleteBtn {
     float: center;
     width: 10vw;
+    margin-left: .5vw;
 }
   
 /* Add a color to the cancel button */
@@ -22,7 +23,7 @@ button:hover {
 }
 
 #modalTop {
-    top: 6vw;
+    top: 6.8vw;
     left: 10vw;
     right: 1vw;
     bottom: 10vw;
@@ -49,7 +50,7 @@ button:hover {
     position:relative;
     top:5vw;
     left: 28vw;
-    width: 30vw;
+    width: 35vw;
     padding-bottom: 2vw;;
     background-color: rgb(220, 240, 237);
     border: .2vw solid rgb(2, 71, 62) ;
@@ -61,7 +62,6 @@ button:hover {
     /* padding: 16px; */
     text-align: center;
     top:2vw;
-   
     overflow:hidden;
 
 }  
@@ -71,7 +71,7 @@ button:hover {
     right: 1vw;
     top: 0vw;
     font-size: 4vw;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: 'Times New Roman', Times, serif;
     font-weight: 900;
     border-style: double;
     border-color: #f30808;
