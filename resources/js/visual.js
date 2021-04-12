@@ -716,12 +716,45 @@ class Visual {
                 //show destination position (and fade away)
                 let piecePos = this.getOccupiedPositions(tempHintinPen,hintCommand);
                 //usage of random cell variable to indicate hinting
-                for(let i=0;i<randomCell;i++){
+
+                 if(SettingsSingleton.getInstance().getSettings().hinting.hintingStrategy  == "partial"){
+                    for(let i=0;i<randomCell;i++){
                         fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
                         prevBackground[i] = fieldvalue.style.background;
                         fieldvalue.style.background = pentominoColor;
                         this.hide(piecePos, prevBackground);
-                }
+                    }
+                 }
+
+
+
+                  if(SettingsSingleton.getInstance().getSettings().hinting.hintingStrategy  == "full"){
+                    for(let i=0;i<5;i++){
+                        fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
+                        prevBackground[i] = fieldvalue.style.background;
+                        fieldvalue.style.background = pentominoColor;
+                        this.hide(piecePos, prevBackground);
+                    }
+                 }
+
+
+                 if(SettingsSingleton.getInstance().getSettings().hinting.hintingStrategy  == "area"){
+                        for(let i=0;i<20;i++){
+                            let areaPos = this.indicateAreaCells(hintinPen,hintCommand)[0];
+                            let b = this.gameController.game()._board.positionIsValid(areaPos[i][0], areaPos[i][1]);
+                            if(b){
+                            let areaPos = this.indicateAreaCells(hintinPen,hintCommand)[0];
+                            fieldvalue = document.getElementById("field_" + areaPos[i][0] + "," + areaPos[i][1]);
+                            prevBackground[i] = fieldvalue.style.background;
+                            fieldvalue.style.background = pentominoColor;
+                            this.hideArea(areaPos, prevBackground);
+                            }  
+                        }
+                    }
+
+
+
+
 
                 break;
 

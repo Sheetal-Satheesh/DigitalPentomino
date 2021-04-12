@@ -80,7 +80,7 @@ class SettingsSchema {
                     hintingStrategy: {
                         "type": "string",
                         "title": titles.hinting.hintingStrategy.title[lang],
-                        "enum": ["full","partial"],
+                        "enum": ["full","partial","area"],
                         "enumText": titles.hinting.hintingStrategy.enumTitles[lang],
                         "default": "full"
                     },
