@@ -818,6 +818,20 @@ class Visual {
 
 
 
+       hideArea(areaPos, prevBackground){
+
+        setTimeout(function(){
+            for (let j=0;j<areaPos.length;j++){
+                    let fvalue = document.getElementById("field_" + areaPos[j][0] + "," + areaPos[j][1]);
+                    //TODO: replace with proper fadeOut animation
+                    fvalue.style.background = prevBackground[j];
+            }
+        }, 70);
+    }
+
+
+
+
 
 
     hide(piecePos, prevBackground){
