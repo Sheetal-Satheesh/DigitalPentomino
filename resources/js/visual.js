@@ -567,19 +567,27 @@ class Visual {
         hintElement.style.visibility = "visible";
         let popupText = document.getElementById("myHint");
         let hint = pd.gameController.getHint();
-        let hintCommand = hint.getCommands()[0];
+        //Always show place command in case of non-exact hints:
+        let commandNumber = 0;
+        if (!SettingsSingleton.getInstance().getSettings().hinting.exactHints){
+            let hasPlaceCommand = this.checkHintCommandsForPlaceCommand(hint.getCommands());
+            if (hasPlaceCommand[0]){
+                commandNumber = hasPlaceCommand[1];
+            }
+        }
+        let hintCommand = hint.getCommands()[commandNumber];
         let hintinPen = hintCommand._pentomino;
-        popupText.textContent = this.generateHintText(hint);
-        this.indicateHint(hint);
+        popupText.textContent = this.generateHintText(hint,commandNumber);
+        this.indicateHint(hint,commandNumber);
     }
 
-    generateHintText(hint) {
+    generateHintText(hint,commandNumber) {
         let text = "";
 
         if (hint.getPossibleSolutions().length === 0) {
             text += "This doesn't look right. The pentominoes on your board aren't part of a solution."
         }
-        let command = hint.getCommands()[0];
+        let command = hint.getCommands()[commandNumber];
         let cmdValues = command.ExecValues();
         switch (command.Name()) {
             case "Remove":
@@ -636,10 +644,20 @@ class Visual {
         }, 100);
     }
 
-    indicateHint(hint){
+    checkHintCommandsForPlaceCommand(hintCommands){
+        for (let i = 0; i < hintCommands.length; i++){
+            if (hintCommands[i].Name() == "Place"){
+                return [true,i];
+            }
+        }
+
+        return [false, null];
+    }
+
+    indicateHint(hint,commandNumber){
         let timeoutFrame = 500;
         //possible command names (place, remove, moveToPosition, rotateClkWise, rotateAntiClkWise, mirrorH, mirrorV)
-        let hintCommand = hint.getCommands()[0];
+        let hintCommand = hint.getCommands()[commandNumber];
         let hintSkill = hint._skill;
         let hintName = hintCommand._name;
         let hintinPen = hintCommand._pentomino;
@@ -653,10 +671,26 @@ class Visual {
             lastHintedPentName = currentPenHintName;
         }
 
+        let tempHintinPen = hintinPen;
+        if (!SettingsSingleton.getInstance().getSettings().hinting.exactHints){
+            //tempHintinPen = new Pentomino(hintinPen.name);
+            tempHintinPen = Object.assign(Object.create(Object.getPrototypeOf(hintinPen)), hintinPen);
+            //do actions on pentomino copy to prepare for place hint
+            for (let hintnr = 0; hintnr < commandNumber; hintnr++){
+                switch (hint.getCommands()[hintnr]._name){
+                    case "Remove": break;
+                    case "Place": break;
+                    case "RotateClkWise": tempHintinPen.rotateClkWise(); break;
+                    case "RotateAntiClkWise": tempHintinPen.rotateAntiClkWise(); break;
+                    case "MirrorH": tempHintinPen.mirrorH(); break;
+                    case "MirrorV": tempHintinPen.mirrorV(); break;
+                    default: throw new Error("Error on commands on pentomino copy.");
+                }
+            }
+        }
 
        //indication of unoccupied cells
         if (!(hintSkill === null)) {
-            console.log("Skill (inside loop): " + hintSkill);
             const DEFAULT_BG_COLOR = "#adc0b9";
             const RED_COLOR = "red";
             //blink unoccupied cells
@@ -680,15 +714,14 @@ class Visual {
                 });
 
                 //show destination position (and fade away)
-                let piecePos = this.getOccupiedPositions(hintinPen,hintCommand);
-                //console.log("hintingPen",hintinPen, piecePos);
+                let piecePos = this.getOccupiedPositions(tempHintinPen,hintCommand);
                 //usage of random cell variable to indicate hinting
-                    for(let i=0;i<randomCell;i++){
-                            fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
-                            prevBackground[i] = fieldvalue.style.background;
-                            fieldvalue.style.background = pentominoColor;
-                            this.hide(piecePos, prevBackground);
-                    }
+                for(let i=0;i<randomCell;i++){
+                        fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
+                        prevBackground[i] = fieldvalue.style.background;
+                        fieldvalue.style.background = pentominoColor;
+                        this.hide(piecePos, prevBackground);
+                }
 
                 break;
 
@@ -753,7 +786,7 @@ class Visual {
                 break;
 
             default:
-                console.log("Unknown piece action detected!");
+                console.error("Unknown piece action detected!");
         }
 
     }
@@ -894,7 +927,6 @@ class Visual {
                     command.Pentomino.inTray=0;
                     this.placePentomino(command.Pentomino, command.PosX,command.PosY,CommandTypes.Shadow);
                 }
-
                 break;
 
             case "RotateClkWise":
