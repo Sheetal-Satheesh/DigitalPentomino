@@ -173,11 +173,11 @@ border-radius: 10%;
 border: 0;
 }
 
-  .CMenuTB div:hover{
+  .CMenuTB div:active{
     box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
     }
 
-  .cActionBtn:hover {
+  .cActionBtn:active {
     box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
    }
 
@@ -285,11 +285,11 @@ table
 
 
 
-    table tr td button:hover {
+    table tr td button:active {
       box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
      }
 
-     table tr td div:hover {
+     table tr td div:active {
       box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
      }  
    
