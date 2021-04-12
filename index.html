@@ -325,7 +325,10 @@
                     //console.log(settings[key][subkey]);
                     let schemaEntry = settingsSchema[key]["properties"][subkey];
                     switch (schemaEntry.type) {
-                        case "boolean": case "number": case "integer":
+                        case "boolean":
+                            editBooleanSchemaEntry(key, subkey, settings[key][subkey], formElement);
+                            break;
+                        case "number": case "integer":
                             editInputSchemaEntry(key, subkey, settings[key][subkey], formElement);
                             break;
                         case "string":
@@ -338,6 +341,12 @@
             }
             let currentLanguage = settings.general.language;
             settingsSchema["general"]["properties"]["language"]["default"] = currentLanguage === baseConfigs.languages.ENGLISH ? "en" : "de";
+        }
+
+        function editBooleanSchemaEntry(heading, key, value, formElement) {
+            let name = heading + "." + key;
+            let inputElement = formElement.find("input[name='" + name + "']")[0];
+            inputElement.checked = value;
         }
 
         function editInputSchemaEntry(heading, key, value, formElement) {
