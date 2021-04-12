@@ -667,17 +667,16 @@ class Visual {
         let currentPenHintName = hintinPen.name;
         //let currentPenHintNaame = this.selected.name;
         if(!(currentPenHintName === lastHintedPentName)){
-            //randomCell = Math.floor(Math.random() * (4)) + 1;
-            randomCell = 5;
+            randomCell = Math.floor(Math.random() * (4)) + 1;
             lastHintedPentName = currentPenHintName;
         }
 
         let tempHintinPen = hintinPen;
         if (!SettingsSingleton.getInstance().getSettings().hinting.exactHints){
-            tempHintinPen = new Pentomino(hintinPen.name);
+            //tempHintinPen = new Pentomino(hintinPen.name);
+            tempHintinPen = Object.assign(Object.create(Object.getPrototypeOf(hintinPen)), hintinPen);
             //do actions on pentomino copy to prepare for place hint
             for (let hintnr = 0; hintnr < commandNumber; hintnr++){
-                console.log(hint.getCommands()[hintnr]._name);
                 switch (hint.getCommands()[hintnr]._name){
                     case "Remove": break;
                     case "Place": break;
@@ -716,7 +715,6 @@ class Visual {
 
                 //show destination position (and fade away)
                 let piecePos = this.getOccupiedPositions(tempHintinPen,hintCommand);
-                console.log(piecePos);
                 //usage of random cell variable to indicate hinting
                 for(let i=0;i<randomCell;i++){
                         fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
