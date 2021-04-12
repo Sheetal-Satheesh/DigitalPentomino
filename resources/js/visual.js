@@ -716,13 +716,41 @@ class Visual {
                 //show destination position (and fade away)
                 let piecePos = this.getOccupiedPositions(tempHintinPen,hintCommand);
                 //usage of random cell variable to indicate hinting
-                for(let i=0;i<randomCell;i++){
-                        fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
-                        prevBackground[i] = fieldvalue.style.background;
-                        fieldvalue.style.background = pentominoColor;
-                        this.hide(piecePos, prevBackground);
-                }
 
+                switch (SettingsSingleton.getInstance().getSettings().hinting.hintingStrategy){
+                    case "partial":
+                        for(let i=0;i<randomCell;i++){
+                            fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
+                            prevBackground[i] = fieldvalue.style.background;
+                            fieldvalue.style.background = pentominoColor;
+                            this.hide(piecePos, prevBackground);
+                        }
+                        break;
+                    case "full":
+                        for(let i=0;i<5;i++){
+                            fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
+                            prevBackground[i] = fieldvalue.style.background;
+                            fieldvalue.style.background = pentominoColor;
+                            this.hide(piecePos, prevBackground);
+                        }
+                        break;
+                    case "area":
+                        for(let i=0;i<25;i++){
+                            let areaPos = this.indicateAreaCells(hintinPen,hintCommand)[0];
+                            let b = this.gameController.game()._board.positionIsValid(areaPos[i][0], areaPos[i][1]);
+                            if(b){
+                            let areaPos = this.indicateAreaCells(hintinPen,hintCommand)[0];
+                            fieldvalue = document.getElementById("field_" + areaPos[i][0] + "," + areaPos[i][1]);
+                            prevBackground[i] = fieldvalue.style.background;
+                            fieldvalue.style.background = pentominoColor;
+                            this.hideArea(areaPos, prevBackground);
+                            }  
+                        }
+                        break;
+                    default:
+                        console.error("Hinting strategy unknown!");
+
+                }
                 break;
 
             case "Remove":
@@ -791,6 +819,45 @@ class Visual {
 
     }
 }
+
+
+
+
+    indicateAreaCells(piece, hintCommand){
+        let hintRow = hintCommand._nextPosition[0];
+        let hintColumn = hintCommand._nextPosition[1];
+        let midRow = hintRow;
+        let midColumn = hintColumn;
+        let startR = hintRow-2;
+        let startCol = hintColumn-2;
+        let areaPosArray = [];
+        let k=0;
+        for(let j=0;j<5;j++){
+            for(let l=0;l<5;l++){
+                    let areaPos = [];
+                    areaPos[0] = j+startR;
+                    areaPos[1] = l+startCol;
+                    areaPosArray[k] = areaPos;
+                    k++;
+            }
+        }
+        return [areaPosArray,null];
+    }
+
+
+
+       hideArea(areaPos, prevBackground){
+
+        setTimeout(function(){
+            for (let j=0;j<areaPos.length;j++){
+                    let fvalue = document.getElementById("field_" + areaPos[j][0] + "," + areaPos[j][1]);
+                    //TODO: replace with proper fadeOut animation
+                    fvalue.style.background = prevBackground[j];
+            }
+        }, 70);
+    }
+
+
 
 
 
