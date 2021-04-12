@@ -795,6 +795,31 @@ class Visual {
 
 
 
+    indicateAreaCells(piece, hintCommand){
+        let hintRow = hintCommand._nextPosition[0];
+        let hintColumn = hintCommand._nextPosition[1];
+        let midRow = hintRow;
+        let midColumn = hintColumn;
+        let startR = hintRow-2;
+        let startCol = hintColumn-2;
+        let areaPosArray = [];
+        let k=0;
+        for(let j=0;j<5;j++){
+            for(let l=0;l<5;l++){
+                    let areaPos = [];
+                    areaPos[0] = j+startR;
+                    areaPos[1] = l+startCol;
+                    areaPosArray[k] = areaPos;
+                    k++;
+            }
+        }
+        return [areaPosArray,null];
+    }
+
+
+
+
+
     hide(piecePos, prevBackground){
 
         setTimeout(function(){
