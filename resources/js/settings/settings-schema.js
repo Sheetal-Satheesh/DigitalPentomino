@@ -118,7 +118,7 @@ class SettingsSchema {
                     prefillingStrategy: {
                         "type": "string",
                         "title": titles.prefilling.prefillingStrategy.title[lang],
-                        "enum": ["distance"],
+                        "enum": ["distance", "pieces"],
                         "enumText": titles.prefilling.prefillingStrategy.enumTitles[lang],
                         "default": "distance"
                     },

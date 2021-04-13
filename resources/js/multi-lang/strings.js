@@ -33,7 +33,7 @@ const strings = {
             enablePrefilling: ["Enable Prefilling?", "Automatisches Füllen einschalten"],
             prefillingStrategy: {
                 title: ["Prefill-Strategy", "Automatisches Füllen-Stragie"],
-                enumTitles: [["Distance"], ["Distanz"]]
+                enumTitles: [["Distance", "Pieces"], ["Distanz", "Teil"]]
             },
             distanceValue: ["Distance value", "Distanz Wert"]
         },

@@ -908,56 +908,23 @@ class Visual {
     }
 
     prefillBoard() {
-        this.clear();
-        // Prevent clicking of button while previous prefilling is going on
-        this.disablePrefillButton(true);
-        let allSolutions = [];
-        // Get all the games and filter solutions
-        if(this.allSolutions == undefined) {
-            this.gameController.getSolutions().forEach(game =>
-                allSolutions.push([game._board._pentominoPositions, game._board._pentominoes]));
-            this.allSolutions = allSolutions;
-        }
+        this.readyForPrefilling();
+        let randomSolution = this.fetchRandomSolution();
+
         let prefillCandidates = [];
-        let randomSolution = undefined;
-        let positions = [];
-        let currentAnchor = [];
-        let candidateAnchor = [];
-        let piece = undefined;
-        let piecePosition = undefined;
-        let bOverlap = false;
-        if (this.allSolutions.length > 0) {
-            randomSolution = this._getRandomElementFromArray(this.allSolutions);
-        } else {
-            this.disablePrefillButton(false);
-            throw new Error("Solutions not found for current board!!!");
-        }
+        let threshold = SettingsSingleton.getInstance().getSettings().prefilling.distanceValue;
+        let scheme = SettingsSingleton.getInstance().getSettings().prefilling.prefillingStrategy;
+        
         if (randomSolution != undefined) {
-            for(let i = 0; i < randomSolution[0].length; ++i) {
-                piecePosition = randomSolution[0][i];
-                piece = randomSolution[1][i];
-                currentAnchor = [piecePosition.boardPosition[0] + this.boardX,
-                                piecePosition.boardPosition[1] + this.boardY];
-                for (let j = 0; j < positions.length; ++j) {
-                    bOverlap = false;
-                    candidateAnchor = [positions[j][0], positions[j][1]];
-                    if(Math.sqrt(
-                        Math.pow((currentAnchor[0]-candidateAnchor[0]),2) +
-                        Math.pow((currentAnchor[1]-candidateAnchor[1]),2)) < 2.2) {
-                            bOverlap = true;
-                            break;
-                    }
-                }
-                if(bOverlap) {
-                    piece = new Pentomino(piece.name);
-                    prefillCandidates.push(piece);
-                    continue;
-                }
-                prefillCandidates.push(piece);
-                positions.push(currentAnchor);
-                piece.removeFromTray();
-                this.gameController.placePentomino(piece, currentAnchor[0], currentAnchor[1]);
+            switch(scheme) {
+                case "distance":
+                    prefillCandidates = this.prefillBasedOnDistance(randomSolution, threshold);
+                    break;
+                case "pieces":
+                    prefillCandidates = this.prefillBasedOnAdjacentPieces(randomSolution, threshold);
+                    break;
             }
+            
         } else {
             this.disablePrefillButton(false);
             throw new Error("Could not find a random solution!!!"); //TODO: Need more meaningful error message here
@@ -970,12 +937,146 @@ class Visual {
         }, 100, this);
     }
 
-    _getRandomElementFromArray(arrayObject) {
+    getRandomElementFromArray(arrayObject) {
         if (Array.isArray(arrayObject)) {
             return arrayObject[Math.floor(Math.random() * arrayObject.length)];
         }
         return undefined;
     }
+
+    readyForPrefilling() {
+        this.clear();
+        // Prevent clicking of button while previous prefilling is going on
+        this.disablePrefillButton(true);
+    }
+
+    fetchRandomSolution() {
+        let allSolutions = [];
+        // Get all the games and filter solutions
+        if(this.allSolutions == undefined) {
+            this.gameController.getSolutions().forEach(game =>
+                allSolutions.push([game._board._pentominoPositions, game._board._pentominoes]));
+            this.allSolutions = allSolutions;
+        }
+        if (this.allSolutions.length > 0) {
+            return this.getRandomElementFromArray(this.allSolutions);
+        } else {
+            this.disablePrefillButton(false);
+            throw new Error("Solutions not found for current board!!!");
+        }
+    }
+
+    prefillBasedOnAdjacentPieces(randomSolution, threshold) {
+        let currentAnchor = [];
+        let piece = undefined;
+        let piecePosition = undefined;
+        let bOverlap = false;
+        let prefillCandidates = [];
+        let blockedCells = {};
+        let bNearPentomino = false;
+        let blockedCellsTemp = {}; 
+        let x = 0, y = 0; 
+        
+        for(let i = 0; i < randomSolution[0].length; ++i) {
+            piecePosition = randomSolution[0][i]; //Return and remove the first element of the array
+            
+            currentAnchor = [piecePosition.boardPosition[0] + this.boardX,
+                            piecePosition.boardPosition[1] + this.boardY];
+            piece = randomSolution[1][i];
+            let matrix = piece.getMatrixRepresentation();
+
+            blockedCellsTemp = {};
+            blockedCellsTemp = JSON.parse(JSON.stringify(blockedCells));
+            blockedCellsTemp[piece.name] = {};
+            blockedCellsTemp[piece.name].coordinates = [];
+            blockedCellsTemp[piece.name].nearbyPentominos = 0;
+
+            bOverlap = false;
+            Object.keys(blockedCells).forEach(blockedPieceName => {
+                bNearPentomino = false;
+                for(let i = 0; i < 5; ++i) {
+                    for(let j = 0; j < 5; ++j) {
+                        if(matrix[i][j] == 0) continue;
+                        x = i + currentAnchor[0] - 2;
+                        y = j + currentAnchor[1] - 2;
+                        blockedCells[blockedPieceName].coordinates.forEach(coordinates => {
+                            if(coordinates[0] == x+1 && coordinates[1] == y) bNearPentomino = true;
+                            else if(coordinates[0] == x-1 && coordinates[1] == y) bNearPentomino = true;
+                            else if(coordinates[0] == x && coordinates[1] == y+1) bNearPentomino = true;
+                            else if(coordinates[0] == x && coordinates[1] == y-1) bNearPentomino = true;
+                        });                            
+                    }
+                }
+                if(bNearPentomino) {
+                    blockedCellsTemp[piece.name].nearbyPentominos += 1;
+                    blockedCellsTemp[blockedPieceName].nearbyPentominos += 1;
+                }
+            });
+
+            bOverlap = false;
+            Object.keys(blockedCellsTemp).forEach(pieceName => {
+                if(blockedCellsTemp[pieceName].nearbyPentominos > threshold) bOverlap = true;
+            });
+
+            if(!bOverlap) {
+                for(let i = 0; i < 5; ++i) {
+                    for(let j = 0; j < 5; ++j) {
+                        if(matrix[i][j] == 0) continue;
+                        blockedCellsTemp[piece.name].coordinates.push([i + currentAnchor[0] - 2, j + currentAnchor[1] - 2]);
+                    }
+                }
+                blockedCells = JSON.parse(JSON.stringify(blockedCellsTemp));
+                prefillCandidates.push(piece);
+                piece.removeFromTray();
+                this.gameController.placePentomino(piece, currentAnchor[0], currentAnchor[1]);
+                
+            } else {
+                piece = new Pentomino(piece.name);
+                prefillCandidates.push(piece);
+            }
+        }
+        
+        return prefillCandidates; 
+    }
+
+    prefillBasedOnDistance(randomSolution, threshold){
+        let positions = [];
+        let currentAnchor = [];
+        let candidateAnchor = [];
+        let piece = undefined;
+        let piecePosition = undefined;
+        let bOverlap = false;
+        let prefillCandidates = [];
+        for(let i = 0; i < randomSolution[0].length; ++i) {
+            piecePosition = randomSolution[0][i];
+            piece = randomSolution[1][i];
+            currentAnchor = [piecePosition.boardPosition[0] + this.boardX,
+                            piecePosition.boardPosition[1] + this.boardY];
+            for (let j = 0; j < positions.length; ++j) {
+                bOverlap = false;
+                candidateAnchor = [positions[j][0], positions[j][1]];
+                if(Math.sqrt(
+                    Math.pow((currentAnchor[0]-candidateAnchor[0]),2) +
+                    Math.pow((currentAnchor[1]-candidateAnchor[1]),2)) < threshold) {
+                        bOverlap = true;
+                        break;
+                }
+            }
+            if(bOverlap) {
+                piece = new Pentomino(piece.name);
+                prefillCandidates.push(piece);
+                continue;   
+            }
+            prefillCandidates.push(piece);
+            positions.push(currentAnchor);
+            piece.removeFromTray();
+            this.gameController.placePentomino(piece, currentAnchor[0], currentAnchor[1]);
+        }
+
+        return prefillCandidates;
+    }
+
+
 
     execShadowCmd(command){
         switch(command.name){
