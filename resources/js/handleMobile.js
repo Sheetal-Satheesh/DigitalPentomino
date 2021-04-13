@@ -14,6 +14,8 @@ var currentTouches = [];
 //when touch starts handle start function is called
 function touchStartHandle(evt) {
     //console.log('In handle start function');
+    evt.stopPropagation();
+   // console.log('called evt stop propagation');
     evt.preventDefault();
     //console.log("touchstart.");
     //putting the ID of the HTML entity where touch controls we need to implement
@@ -34,6 +36,7 @@ function touchStartHandle(evt) {
 }
 
 function touchMoveHandle(evt) {
+    evt.stopPropagation();
 evt.preventDefault();
 var touchElement = document.getElementById("canvas");
 var ctx = touchElement.getContext("2d");
@@ -63,6 +66,7 @@ for (var i = 0; i < touches.length; i++) {
 }
 
 function touchEndhandle(evt) {
+    evt.stopPropagation();
     evt.preventDefault();
     //console.log("touchend");
     var touchElement = document.getElementById("canvas");
@@ -105,6 +109,7 @@ return -1;    // not found
 }
 
 function touchCancelhandle(evt) {
+    evt.stopPropagation();
     evt.preventDefault();
     //console.log("touchcancel.");
     var touches = evt.changedTouches;
