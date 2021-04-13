@@ -49,6 +49,7 @@
 </head>
 
 <body onload="touchStartup(); initialize()">
+    <canvas id="canvas" width="auto" height="auto"></canvas>
     <div id="seedingCover"></div>
     <div id="seeding" class="seed">
         <input type="search" id="seedBar" class="seed" placeholder="Input seed...">
@@ -160,23 +161,28 @@
         </div>  <!-- operation -->
     </div>
 
-    <div id="game">
-        <div id="tray"></div> <!-- tray -->
-        <div id="field"></div> <!-- field -->
-        <div id="piecearea"></div> <!-- piecearea -->
-        <div id="modalTop" class="modal">
-            <span onclick="document.getElementById('modalTop').style.display='none'" class="close" title="Close Modal">x</span>
-            <form class="modalContent">
-              <div class="modalContainer">
-                <h3 id="modalText"></h3>
-                <div class="clearfix">
-                  <button type="button" onclick="document.getElementById('modalTop').style.display='none'" class="cancelbtn">No</button>
-                  <button type="button" onclick="document.getElementById('modalTop').style.display='none'" class="deletebtn">Yes</button>
-                </div>
-              </div>
-            </form>
-          </div> <!--modal end-->
-    </div> 
+    <!-- <canvas id="canvas" width="auto" height="auto" style="border: solid black 1px;"> -->
+
+        <div id="game">
+            <div id="tray"></div> <!-- tray -->
+            <div id="field"></div> <!-- field -->
+            <div id="piecearea"></div> <!-- piecearea -->
+            <div id="modalTop" class="modal">
+                <span onclick="document.getElementById('modalTop').style.display='none'" class="close" title="Close Modal">x</span>
+                <form class="modalContent">
+                  <div class="modalContainer">
+                    <h3 id="modalText"></h3>
+                    <div class="clearfix">
+                      <button type="button" onclick="document.getElementById('modalTop').style.display='none'" class="cancelbtn">No</button>
+                      <button type="button" onclick="document.getElementById('modalTop').style.display='none'" class="deletebtn">Yes</button>
+                    </div>
+                  </div>
+                </form>
+              </div> <!--modal end-->
+        </div> 
+
+    <!-- </canvas> -->
+    
     
     <div class = "cPieceManipulation" id ="pieceManipulation" >
         <table>
@@ -205,7 +211,7 @@
 
 
     <script type="text/javascript">
-    screen.orientation.lock('landscape');
+    // screen.orientation.lock('landscape');
         let pd;
 
         function initialize() {
@@ -489,6 +495,7 @@
     </script>
     <script src="./registerSW.js"></script>
 
+</canvas>
 </body>
 
 </html>
