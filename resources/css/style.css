@@ -33,7 +33,7 @@
   position: fixed;
   bottom: 0;
   top: 0.1vw;
-  left: 10vw; 
+  left: 10vw;
   border-bottom: solid rgb(2, 71, 62) 0.2vw;
   background :rgb(149, 172, 170);
   height: 6.7vw;
@@ -44,7 +44,7 @@
 
 #field {
   position: fixed;
-  top: 7vw;  
+  top: 7vw;
   background: white;
   width: 89vw;
   height: 39.32vw;
@@ -354,9 +354,9 @@ table
     body {
       /* Disables pull-to-refresh but allows overscroll flow effects. TODO: Need to check on different screen sizes*/
       overscroll-behavior-y: contain;
-    } 
+    }
 
-    
+
     #blink {
   text-align: center;
   background: #c6c6c6;
@@ -395,6 +395,217 @@ table
   width: 10em;
   transition: width 0.5s ease-in-out;
 }
- 
+
 #seedBar:focus {
+}
+
+/* Style for Button Manipulation */
+
+.icon-plus {
+  color: #fff;
+  font-size: 34px;
+}
+
+.button-inside .icon-plus {
+  font-size: 16px;
+}
+
+.main-wrapper {
+  width: 200px;
+  height: 200px;
+  position: relative;
+  /* border-radius: 50%; */
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  /* box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); */
+}
+
+.main-wrapper-inside {
+  width: 10px;
+  height: 10px;
+  position: relative;
+}
+
+.button {
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  background-color: blue;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: 6;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  cursor: pointer;
+  -webkit-transition: all 500ms cubic-bezier(0.19, 1, 0.22, 1);
+          transition: all 500ms cubic-bezier(0.19, 1, 0.22, 1);
+  box-shadow: -1px 2px 12px rgba(0, 0, 0, 0.4);
+  will-change: transform;
+}
+
+.button .icon-plus{
+  -webkit-transition: transform 200ms cubic-bezier(0.19, 1, 0.22, 1);
+          transition: transform 200ms cubic-bezier(0.19, 1, 0.22, 1);
+  will-change: transform;
+  transform-origin: center center;
+}
+
+.button.animation {
+  background-color: #ff0029;
+}
+
+.button.animation .icon-plus {
+  -webkit-transform: rotate(-45deg) translateZ(0);
+          transform: rotate(-45deg) translateZ(0);
+}
+
+.button-wrapper {
+  width: 200px;
+  height: 200px;
+  position: absolute;
+  border-radius: 50%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-transition: transform 400ms cubic-bezier(0.07, 1.1, 0.28, 1.01);
+          transition: transform 400ms cubic-bezier(0.07, 1.1, 0.28, 1.01);
+  will-change: transform;
+}
+
+.button-wrapper.animation {
+  -webkit-transition: transform 500ms cubic-bezier(0.19, 1, 0.22, 1);
+          transition: transform 500ms cubic-bezier(0.19, 1, 0.22, 1);
+  will-change: transform;
+}
+
+.button-wrapper.first.animation {
+  transform: rotate(-36deg) translateZ(0);
+}
+
+.button-wrapper.second.animation {
+  transform: rotate(-68deg) translateZ(0);
+}
+
+.button-wrapper.third.animation {
+  transform: rotate(-100deg) translateZ(0);
+}
+
+.button-wrapper.fourth.animation {
+  transform: rotate(-136deg) translateZ(0);
+}
+
+.button-inside {
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  color: #fff;
+  cursor: pointer;
+}
+
+.button-inside.first {
+  background-color: #ff0033;
+  transform: rotate(36deg);
+}
+
+.button-inside.second {
+  background-color: #ff0033;
+  transform: rotate(68deg);
+}
+
+.button-inside.third {
+  background-color: #ff0033;
+  transform: rotate(100deg);
+}
+
+.button-inside.fourth {
+  background-color: #ff0033;
+  transform: rotate(136deg);
+}
+
+@font-face {
+  font-family: 'icomoon';
+  src:  url('fonts/icomoon.eot?fg31j2');
+  src:  url('fonts/icomoon.eot?fg31j2#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?fg31j2') format('truetype'),
+    url('fonts/icomoon.woff?fg31j2') format('woff'),
+    url('fonts/icomoon.svg?fg31j2#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-rotateLeft:before {
+  content: "\61";
+}
+.icon-rotateRight:before {
+  content: "\62";
+}
+.icon-flipHorizontally:before {
+  content: "\63";
+}
+.icon-flipVertically:before {
+  content: "\64";
+}
+.icon-plus:before {
+  content: "\65";
 }

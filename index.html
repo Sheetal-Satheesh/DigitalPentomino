@@ -48,7 +48,7 @@
 
 </head>
 
-<body onload="touchStartup(); initialize()">
+<body onload="buttonManipulation();touchStartup(); initialize()">
   <div id="seedingCover"></div>
   <div id="seeding" class="seed">
     <input type="search" id="seedBar" class="seed" placeholder="Input seed...">
@@ -57,7 +57,7 @@
   <div class = "cGame">
     <div id="functions">
         <img id = "logo" src="resources/images/icons/pentomino.png" alt="Pentomino" class="cLogo">
-    
+
         <div id="operations">
           <table>
                 <tr>
@@ -102,7 +102,7 @@
                         <button type="button" id='redo' class = "cActionBtn" onclick="execRedo()" ><img src="resources/images/icons/redo.png">
                         </button>
                     </td>
-                   
+
                 </tr>
                 <tr>
                     <td>
@@ -142,13 +142,13 @@
                 <form></form>
             </div>
         </div>
-            
+
 		<div class="form-popup" id="board_selection_form">
 
 			<div class="container" id="container">
-				
+
 				<!-- Board List is loaded dynamically from Board Config -->
-				
+
 				<div class="action_btn">
 					<button type="button" class="btnLoadGame" onclick="loadGame()">Load Board</button>
 					<button type="button" class="btnCancel" onclick="closeForm()">Cancel</button>
@@ -176,52 +176,74 @@
               </div>
             </form>
           </div> <!--modal end-->
-    </div> 
-    
-    <div class = "cPieceManipulation" id ="pieceManipulation" >
-        <table>
-      <tr>
-          <td>
-              <button type="button" class="controlButton"  id='OpRotateLeft' onclick="rotateAntiClkWise()"><img src="resources/images/icons/rotate_left.png">
-              </button>
-          </td>
-          <td>
-              <button type="button" class="controlButton" id='OpRotateRight' onclick="rotateClkWise()"><img src="resources/images/icons/rotate_right.png">
-              </button>
-          </td>
-          <td>
-              <button type="button" class="controlButton" id='OpflipH' onclick="flipV()"><img src="resources/images/icons/flip_vertically.png">
-              </button>
-          </td>
-          <td>
-              <button type="button" class="controlButton" id='OpflipH' onclick="flipH()"><img src="resources/images/icons/flip_horizontally.png">
-              </button>
-          </td>
-      </tr>
-        </table>
-    </div>  <!-- cPieceManipulation -->
+    </div>
+
+    <div class="main-wrapper" id ="pieceManipulation">
+        <div class="button">
+          <span class="icon-plus"></span>
+        </div>
+        <div class="button-wrapper first">
+          <div class="button-inside second" id="OpRotateLeft" onclick="rotateAntiClkWise()">
+            <span class="icon-rotateLeft"></span>
+          </div>
+        </div>
+        <div class="button-wrapper second">
+          <div class="button-inside first" id="OpflipH" onclick="flipH()">
+            <span class="icon-flipHorizontally"></span>
+          </div>
+        </div>
+        <div class="button-wrapper third">
+          <div class="button-inside third" id="OpRotateRight" onclick="rotateClkWise()">
+            <span class="icon-rotateRight"></span>
+          </div>
+        </div>
+        <div class="button-wrapper fourth">
+          <div class="button-inside fourth" id="OpflipV" onclick="flipV()">
+            <span class="icon-flipVertically"></span>
+          </div>
+        </div>
+    </div> <!-- cPieceManipulation -->
 </div>
 
 
 <script type="text/javascript">
 
         let pd;
-		
+
         function initialize() {
             pd = new PD();
-			
-			loadGameList();
+            loadGameList();
+        }
+        function buttonManipulation(){
+          var btn = document.querySelector('.button');
+          var buttonWrapper = document.querySelectorAll('.button-wrapper');
+
+          btn.addEventListener('click', function(){
+
+            if(btn.classList.contains('animation')) {
+              btn.classList.remove('animation');
+            } else {
+              btn.classList.add('animation');
+            }
+            for (i = 0; i < buttonWrapper.length; i++ ) {
+              if(buttonWrapper[i].classList.contains('animation')){
+                 buttonWrapper[i].classList.remove('animation');
+              } else {
+                buttonWrapper[i].classList.add('animation');
+              }
+            }
+          });
         }
 
 		function loadGameList() {
 			var board_container = document.getElementById('container');
 			var board_list = pd.getAllBoards();
 			var out = '';
-			
+
 			var input_element = '<input type="radio" name="board_list" class="input-hidden" id="$$" value="$$" >';
 			var label = '<label for="$$"> $$ <img src="resources/images/boards/$$.png" alt="$$" style="width:50%; height:50%;"/></label>';
 			var action_btn = '\n<div class="action_btn">\n<button type="button" class="btnLoadGame" onclick="loadGame()">Load Board</button>\n<button type="button" class="btnCancel" onclick="closeForm()">Cancel</button>\n</div>'
-			
+
 			for (var i=0; i< board_list.length; i++){
 				out += input_element.replaceAll("$$", board_list[i]) +'\n'+ label.replaceAll("$$", board_list[i]) + '<br><br>\n';
 			}
@@ -242,14 +264,14 @@
 
         function callHintAI() {
             pd.visual.callHintAI();
-            
+
         }
 
         //hinting popup disappears when mouse pointer is away
         document.getElementById("hintButton").addEventListener("mouseleave", function() {
                  document.getElementById("myHint").style.visibility = "hidden";
         });
-        
+
 
         function rotateClkWise(){
             pd.rotateClkWise();
@@ -443,9 +465,9 @@
 			var selectedBoard = document.querySelector("input[name=board_list]:checked").value;
 			document.getElementById("board_selection_form").style.display = "none";
             pd.loadGame(selectedBoard);
-			
+
         }
-		
+
 		function closeForm() {
 			document.getElementById("board_selection_form").style.display = "none";
 		}

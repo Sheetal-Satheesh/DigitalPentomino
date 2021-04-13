@@ -206,7 +206,7 @@ class Visual {
             htmlElement.style.setProperty("--rotationY", "0deg");
             htmlElement.style.setProperty("--rotationZ", "0deg");
 
-        } 
+        }
         else {
             var bCellsFnd = this.isPentominoInBlockCells(piece);
             var collisonFnd = this.isCollision(piece);
@@ -277,17 +277,6 @@ class Visual {
     //Enable or Disable manipulation buttons
 
     showManipulations(xPosition,yPosition) {
-        var pieceMan = document.getElementById('pieceManipulation').firstElementChild;
-        var pieceManip = pieceMan.firstElementChild;
-        var pieceManipul = pieceManip.firstElementChild;
-        var clr = pieceManipul.children;
-        for(let i=0;i< clr.length ;i++){
-            var btnClr = clr[i].firstElementChild;
-            var colorR = this.hexToRgb(this.selected.color).r;
-            var colorG = this.hexToRgb(this.selected.color).g;
-            var colorB = this.hexToRgb(this.selected.color).b;
-           btnClr.style.background =  "rgba(" + [colorR,colorG,colorB,0.5].join(',') +")";
-        }
         document.getElementById("btnRotateRight").disabled = false;
         document.getElementById("btnRotateLeft").disabled = false;
         document.getElementById("btnFlipH").disabled = false;
@@ -305,8 +294,8 @@ class Visual {
           }
         } else {
                 document.getElementById('pieceManipulation').style.display = 'block';
-                document.getElementById('pieceManipulation').style.left = xPosition + 'px';
-                document.getElementById('pieceManipulation').style.top = 'calc(' + yPosition + 'px - ' + (width * 2.5) + 'vw)';
+                document.getElementById('pieceManipulation').style.left = 'calc(' + xPosition + 'px - '+ (width * 2) + 'vw)';
+                document.getElementById('pieceManipulation').style.top = 'calc(' + yPosition + 'px - ' + (width * 2) + 'vw)';
                 }
 
     }
@@ -490,7 +479,8 @@ class Visual {
                 for (var i in elements) {
                     var element = elements[i];
                     if (element.id == 'functions' || element.id == 'pieceManipulation') return; //do not unselect if operations have been applied to the functions panel
-                }
+                    else if (element.querySelectorAll("[id^='.button-inside']"))   return;
+                  }
 
                 that.deleteSelection();
             }
@@ -744,7 +734,7 @@ class Visual {
                             prevBackground[i] = fieldvalue.style.background;
                             fieldvalue.style.background = pentominoColor;
                             this.hideArea(areaPos, prevBackground);
-                            }  
+                            }
                         }
                         break;
                     default:
