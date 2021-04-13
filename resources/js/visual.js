@@ -908,8 +908,8 @@ class Visual {
     }
 
     prefillBoard() {
-        this._readyForPrefilling();
-        let randomSolution = this._fetchRandomSolution();
+        this.readyForPrefilling();
+        let randomSolution = this.fetchRandomSolution();
 
         let prefillCandidates = [];
         let threshold = SettingsSingleton.getInstance().getSettings().prefilling.distanceValue;
@@ -918,10 +918,10 @@ class Visual {
         if (randomSolution != undefined) {
             switch(scheme) {
                 case "distance":
-                    prefillCandidates = this._prefillBasedOnDistance(randomSolution, threshold);
+                    prefillCandidates = this.prefillBasedOnDistance(randomSolution, threshold);
                     break;
                 case "pieces":
-                    prefillCandidates = this._prefillBasedOnAdjacentPieces(randomSolution, threshold);
+                    prefillCandidates = this.prefillBasedOnAdjacentPieces(randomSolution, threshold);
                     break;
             }
             
@@ -937,20 +937,20 @@ class Visual {
         }, 100, this);
     }
 
-    _getRandomElementFromArray(arrayObject) {
+    getRandomElementFromArray(arrayObject) {
         if (Array.isArray(arrayObject)) {
             return arrayObject[Math.floor(Math.random() * arrayObject.length)];
         }
         return undefined;
     }
 
-    _readyForPrefilling() {
+    readyForPrefilling() {
         this.clear();
         // Prevent clicking of button while previous prefilling is going on
         this.disablePrefillButton(true);
     }
 
-    _fetchRandomSolution() {
+    fetchRandomSolution() {
         let allSolutions = [];
         // Get all the games and filter solutions
         if(this.allSolutions == undefined) {
@@ -959,14 +959,14 @@ class Visual {
             this.allSolutions = allSolutions;
         }
         if (this.allSolutions.length > 0) {
-            return this._getRandomElementFromArray(this.allSolutions);
+            return this.getRandomElementFromArray(this.allSolutions);
         } else {
             this.disablePrefillButton(false);
             throw new Error("Solutions not found for current board!!!");
         }
     }
 
-    _prefillBasedOnAdjacentPieces(randomSolution, threshold) {
+    prefillBasedOnAdjacentPieces(randomSolution, threshold) {
         let currentAnchor = [];
         let piece = undefined;
         let piecePosition = undefined;
@@ -977,12 +977,12 @@ class Visual {
         let blockedCellsTemp = {}; 
         let x = 0, y = 0; 
         
-        while(randomSolution[0].length != 0) {
-            piecePosition = randomSolution[0].shift(); //Return and remove the first element of the array
+        for(let i = 0; i < randomSolution[0].length; ++i) {
+            piecePosition = randomSolution[0][i]; //Return and remove the first element of the array
             
             currentAnchor = [piecePosition.boardPosition[0] + this.boardX,
                             piecePosition.boardPosition[1] + this.boardY];
-            piece = randomSolution[1].shift();
+            piece = randomSolution[1][i];
             let matrix = piece.getMatrixRepresentation();
 
             blockedCellsTemp = {};
@@ -1039,7 +1039,7 @@ class Visual {
         return prefillCandidates; 
     }
 
-    _prefillBasedOnDistance(randomSolution, threshold){
+    prefillBasedOnDistance(randomSolution, threshold){
         let positions = [];
         let currentAnchor = [];
         let candidateAnchor = [];
