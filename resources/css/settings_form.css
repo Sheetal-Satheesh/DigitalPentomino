@@ -25,6 +25,22 @@
   z-index: 9;
 }
 
+/* The popup form - hidden by default */
+.settings-popup {
+  display: none;
+  position: fixed;
+  height: 80%;
+  width: 50%;
+  bottom: 0;
+  left: 15px;
+  border: 3px solid #f1f1f1;
+  z-index: 9;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: auto !important;
+}
+
+
+
 /* Add styles to the form container */
 .form-container {
   width: 100%;
@@ -32,6 +48,12 @@
   background-color: white;
 }
 
+/* Add styles to the form container */
+.settings-container {
+  width: 100%;
+  padding: 10px;
+  background-color: white;
+}
 
 .action_btn {
   display: inline-block;
@@ -44,7 +66,7 @@
 }
 
 /* Set a style for the Load button */
-.btnLoadGame {
+.btnLoadboard {
   background-color: #4CAF50;
   color: white;
   padding: 16px 20px;
@@ -75,36 +97,8 @@
   height: 100%;
   width: 100%;
   padding: 10px;
-  background-color: rgb(197, 207, 203);
-  overflow: scroll;
+  background-color: white;
 }
-
-.input-hidden {
-  position: absolute;
-  left: -9999px;
-}
-
-input[type=radio]:checked + label>img {
-  border: 1px solid #fff;
-  box-shadow: 0 0 3px 3px #090;
-}
-
-/* Stuff after this is only to make things more pretty */
-input[type=radio] + label>img {
-  
-  width: 150px;
-  height: 150px;
-  transition: 500ms all;
-}
-
-input[type=radio]:checked + label>img {
-  transform: 
-    rotateZ(-10deg) 
-    rotateX(10deg);
-}
-
-
-
 
 /* Hide the images by default */
 .board_list {

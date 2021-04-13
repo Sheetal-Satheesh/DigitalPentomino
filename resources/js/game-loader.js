@@ -1,340 +1,84 @@
 if(typeof require != 'undefined') {
     Game = require('./game.js');
     Board = require('./board.js');
-    SolConfig = require('./configs/solutionsConfig.js');
 }
 
 class GameLoader {
 
-    static loadByName(name) {
-        let game;
-
-        // create pentamino pieces
-        let penX = new Pentomino('X');
-        let penT = new Pentomino('T');
-        let penL = new Pentomino('L');
-        let penU = new Pentomino('U');
-        let penN = new Pentomino('N');
-        let penF = new Pentomino('F');
-        let penI = new Pentomino('I');
-        let penP = new Pentomino('P');
-        let penZ = new Pentomino('Z');
-        let penV = new Pentomino('V');
-        let penW = new Pentomino('W');
-        let penY = new Pentomino('Y');
-
-        switch (name) {
-            case "Level 1":
-                // Create a board
-                game = new Game(new Board([0,0],[7,5]));
-                // add pieces to board
-                game.placePentomino(penL, 1, 3);
-                game.placePentomino(penX, -1, -5);
- //               document.write("Starting level 1.."+ "<br>");
-                break;
-                
-            case "Level 2":
-                // Create a board
-                game = new Game(new Board([0,0],[7,7]));
-                // add pieces to board
-                game.placePentomino(penT, 0, 1);
-                game.placePentomino(penX, 4, 0);
-                game.placePentomino(penU, 0, 4);
-                game.placePentomino(penL, 3, 3);
-                game.placePentomino(penF, 10, 3);
-                game.placePentomino(penP, 5, 8);
-                game.placePentomino(penZ, 5, -3);
-                game.placePentomino(penN, 12, -6);
-                game.placePentomino(penY, 19, 7);
-                game.placePentomino(penI, 25, 9);
-                game.placePentomino(penW, 17, 3);
-                game.placePentomino(penV, 13, 3);
-     //           document.write("Starting level 2.."+ "<br>");
-                break;
-
-            case "Level 3":
-                // Create a board
-                game = new Game(new Board([0,0],[8,9]));
-                // add pieces to board
-                game.placePentomino(penT, 3, 0);
-                game.placePentomino(penX, 0, 5);
-                game.placePentomino(penU, 3, 3);
-                game.placePentomino(penP, 3, 6);
-  //              document.write("Starting level 3.."+ "<br>");
-                break;
-
-            case "Level 4":
-                // Create a board
-                game = new Game(new Board([0,0],[6,10]));
-                // add pieces to board
-                game.placePentomino(penT, 1, 1);
-                game.placePentomino(penX, 1, 0);
-                game.placePentomino(penU, 0, 0);
-                game.placePentomino(penP, 0, 0);
-//                document.write("Starting level 4.."+ "<br>");
-                break;
-            case "Level 5":
-                // Create a board
-                game = new Game(new Board([3,7],[6,10]));
-                // add pieces to board
-                game.placePentomino(penT, 4, 9);
-                game.placePentomino(penX, 4, 15);
-                game.placePentomino(penU, 4, 15);
-                game.placePentomino(penL, 5, 12);
-                game.placePentomino(penF, 5, 12);
-                game.placePentomino(penN, 4, 15);
-                game.placePentomino(penY, 19, 7);
-                game.placePentomino(penI, 5, 7);
-                game.placePentomino(penW, 17, 3);
-                game.placePentomino(penV, 6, 8);
-     //           document.write("Starting level 2.."+ "<br>");
-                break;
-
-
-            default:
-                throw new Error("No game found with the name '" + name + "'");
-        }
-
-        return game;
+    constructor(){
+        this._game = null;
+        this._commandManager = null;
+        this._hintAI = null;
+        /**
+         * 
+         * 
+         * [{
+         *  name: "",
+         *  game: game,
+         *  img: ,
+         *  key: 
+         * },....]
+         * 
+         */
+        this._gameList = [];
     }
 
-    static getGamesFromSolutionsConfig(boardname){
-        let gameArray = [];
+    saveGame(game){
 
-        //loop over solutionsConfig to find currently active Board
-        let tempArray = [];
-        for (let boardType in solutionsConfig){
-            //check which board has active status
-            if (boardType == boardname){
-                tempArray = solutionsConfig[boardType]["solutionsArray"];
-            }
-        }
-
-        for (let i = 0; i < tempArray.length; i++) {
-            let line = tempArray[i];
-            
-            let game = this.getGameFromString(line);
-            gameArray.push(game);
-        }
-
-        return gameArray;
     }
-
-    /*TODO: Move to gameLoader class */
-    static getGameFromString(gameString) {
-            
-        let rows = gameString.split(" ");
-        let height = rows.length;
-        let width = rows[0].length;
-        //console.log("Initialize game with height: " + height + " and width: " + width);
-        let game = new Game(new Board([0, 0], [height, width]));
-
-        //prepare pentominos for the board
-        let X = new Pentomino('X');
-        let T = new Pentomino('T');
-        let L = new Pentomino('L');
-        let U = new Pentomino('U');
-        let N = new Pentomino('N');
-        let F = new Pentomino('F');
-        let I = new Pentomino('I');
-        let P = new Pentomino('P');
-        let Z = new Pentomino('Z');
-        let V = new Pentomino('V');
-        let W = new Pentomino('W');
-        let Y = new Pentomino('Y');
-
-        let pentos = [X,T,L,U,N,F,I,P,Z,V,W,Y];
-
-        pentos.forEach(pento => {
-
-            let hasNextOp = true;
-            let opsAmount = 0;
-
-            while (hasNextOp){
-                //getMatrixRep for current element
-                let matrixRep = pento.getMatrixRepresentation();
-                //console.log(matrixRep);
-
-                let boardRep = this.normalizeBoard(gameString, pento.name);
-                //console.log(boardRep);
-
-                let position = this.findInParent(matrixRep, boardRep);
-                if (position != null){
-                    //console.log("Center of piece " + pento.name + " found: " + position);
-                    //console.log("Placing element" + pento.name + " on board...");
-                    game.placePentomino(pento, position[0], position[1]);
-                    hasNextOp = false;
-                } else {
-                    //try with different rotate/flip of same pento until all 10 possibilites are reached
-                    hasNextOp = this.doNextOperationOnPento(pento, opsAmount);
-                    opsAmount = opsAmount+1;
-                }
-            }
-            
-        });
-
-        return game;
-    }
-
-
-    static doNextOperationOnPento(pentomino, x){
+    
+    loadGame(game){
         
-        switch (x) {
-            case 0:
-                pentomino.rotateClkWise();
-                return true;
-                break;
-            case 1:
-                pentomino.mirrorV();
-                return true;
-                break;
-            case 2:
-                pentomino.mirrorV();
-                return true;
-                break;
-            case 3:
-                pentomino.rotateClkWise();
-                return true;
-                break;
-            case 4:
-                pentomino.mirrorV();
-                return true;
-                break;
-            case 5:
-                pentomino.mirrorV();
-                return true;
-                break;
-            case 6:
-                pentomino.rotateClkWise();
-                return true;
-                break;
-            case 7:
-                pentomino.mirrorV();
-                return true;
-                break;
-            case 8:
-                pentomino.mirrorV();
-                return true;
-                break;
-            case 9:
-                pentomino.rotateClkWise();
-                return true;
-                break;
-            case 10:
-                pentomino.mirrorV();
-                return true;
-                break;
-            case 11:
-                pentomino.mirrorV();
-                return false;
-                break;
-            default:
-                // console.log("Strange behavior in findingNextOp...");
-                return false;
-                break;
-        }
+    }
+
+    loadGameFromJson(gmconfig){
 
     }
 
+    setGame(game) {
+        this._game = game;
+    };
 
-    static findInParent(smallMatrix, bigMatrix){
-        let centerPosition = [0,0];
-
-        let a = bigMatrix;
-        let b = smallMatrix;
-
-        //iterate over bigger matrix
-        for (let i = 0; i < a.length - b.length + 1; i++) {
-            for (let j = 0; j < a[0].length - b[0].length + 1; j++) {
-                if (a[i][j] == b[0][0]) {
-                    let flag = true;
-                    for (let k = 0; k < b.length; k++) {
-                        for (let l = 0; l < b[0].length; l++) {
-                            if (a[i + k][j + l] != b[k][l]) {
-                                flag = false;
-                                break;
-                            }
-                        }
-                    }
-                    if (flag) {
-                        centerPosition = [i, j];
-                        return centerPosition;
-                    }
-                }
-            }
-        }
-        return null;
+    getGame(game){
+        return this._game;
     }
 
-
-    static normalizeBoard(gameString, element){
-        let rows = gameString.split(" ");
-        let height = rows.length;
-        let width = rows[0].length;
-
-        // IMPORTANT: normalized board will have +2 height and +2 width to include borders for check
-        let nBoard = Array(height+4).fill(0).map(() => new Array(width+4).fill(0));
-        for (let i = 0; i < height; i++) {
-            for (let j = 0; j < width; j++) {
-                let stringElement = rows[i][j];
-                if (stringElement == element){
-                    nBoard[i+2][j+2] = 1;
-                }   
-            }
-        }    
-
-        return nBoard;
+    resetGame(){
+        this._game.reset();
+        this._commandManager.Reset();
+        return this._game;
     }
 
-
-    static transform(someString, element){
-        //e.g. take "FFIIIIILFFPPUULFXPPPULXXXYUULLXYYYY" and "X" as input
-        let resultString='';
+    createGame( boardStartXY, 
+                boardSizeXY, 
+                Boardshape, 
+                name) {
         
-        for (var i = 0; i < someString.length; i++) {
-            let stringElement = someString[i];
-            if (stringElement == element){
-                resultString += '1'
-            } else {
-                resultString += '0'
-            }
-        }
-        
-        return resultString;
+        boardStartXY[0] = parseInt(boardStartXY[0]);
+        boardStartXY[1] = parseInt(boardStartXY[1]);
+
+        boardSizeXY[0]=parseInt(boardSizeXY[0]);
+        boardSizeXY[1]=parseInt(boardSizeXY[1]);
+
+        this.setGame(
+                    new Game(
+                        new Board(
+                                boardStartXY,
+                                boardSizeXY,
+                                Boardshape), 
+                    name));
+
+        this._game._fillUpTray();
+        this._commandManager = new CommandManager();
+        this._hintAI = new HintAI(this._game);
     }
 
-    /**
-     * Returns all boards with configurations and solutions
-     */
-    static getAllBoards(){
-        let boardsWithConfig = [];
-        if(baseConfigs != undefined && boardConfigs != undefined){
-            if(baseConfigs.hasOwnProperty("boards")){
-                baseConfigs.boards.forEach(board => {
-                    if(boardConfigs.hasOwnProperty(board)){
-                        boardsWithConfig.push(board);
-                    }
-                });
-            }else{
-                throw new Error("Error in configuration: Could not find any boards");    
-            }
-        } else{
-            throw new Error("Error in configuration: Could not find basic game configurations");
-        }
-        return boardsWithConfig;
+    cmdManager(){
+        return this._commandManager;
     }
 
-    /**
-     * Returns a game object of the selected/default game that can be used to draw the board
-     */
-    static getGameObject(board){
-        return {
-            gameHeight: boardConfigs[board].gameHeight || baseConfigs.gameHeight,
-            gameWidth: boardConfigs[board].gameWidth || baseConfigs.gameWidth,
-            boardSize: boardConfigs[board].boardSize,
-            blockedCells: boardConfigs[board].blockedCells || undefined,
-            boardShape: boardConfigs[board].boardShape || baseConfigs.boardShape
-        };
+    hintAI(){
+        return this._hintAI;
     }
 }
 
