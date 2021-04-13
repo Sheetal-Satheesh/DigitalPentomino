@@ -24,6 +24,7 @@ const strings = {
                 enumTitles: [["Full", "Partial"], ["Voll", "Partiell"]]
             },
             skillTeaching: ["Enable Skill-Teaching?", "Fähigkeits-lehrende Hinweise einschalten?"],
+            exactHints: ["Enable exact Hints?", "Exakte Hinweise aktivieren?"],
             indicateDestinationPosition: ["Enable indication of pentomino position?", "Anzeigen der Pentomino-Position einschalten"],
             indicateDestination: ["Enable indication of pentomino piece?", "Anzeigen des Pentominos einschalten?"]
         },
