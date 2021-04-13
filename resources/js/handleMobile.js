@@ -4,8 +4,8 @@ function touchStartup(){
     var touchElement = document.getElementById("piecearea");
     touchElement.addEventListener("touchstart", touchStartHandle, false);
     touchElement.addEventListener("touchend", touchEndhandle, false);
-    touchElement.addEventListener("touchcancel", touchCancelhandle, false);
     touchElement.addEventListener("touchmove", touchMoveHandle, false);
+    touchElement.addEventListener("touchcancel", touchCancelhandle, false);
 }
 
 document.addEventListener("Mouse controls initialized ", touchStartup);
@@ -28,7 +28,7 @@ function touchStartHandle(evt) {
         ctx.beginPath();
         ctx.arc(touches[i].pageX, touches[i].pageY, 4, 0, 2 * Math.PI, false);  
       //  ctx.fillStyle = color;
-        ctx.fill();
+        //ctx.fill();
         //console.log("touchstart:" + i + ".");
     }
 }
@@ -52,7 +52,7 @@ for (var i = 0; i < touches.length; i++) {
     ctx.lineTo(touches[i].pageX, touches[i].pageY);
     ctx.lineWidth = 4;
    // ctx.strokeStyle = color;
-    ctx.stroke();
+   // ctx.stroke();
 
     currentTouches.splice(idx, 1, copyTouch(touches[i])); 
     //console.log(".");
