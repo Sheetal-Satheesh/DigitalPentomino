@@ -415,19 +415,21 @@
         function postProcessSettingsForm(settings) {
             this.updateSettingSchemaDefaultFromSettings(SettingsSchemaSingleton.getInstance().getSettingsSchema(), settings);
 
-            // Removal of default jsonform submit button & inclusion of buttons
-            let btnContainer = $('form input[type=submit]').parent();
-
             // Remove default 'submit' button
-            $('form input[type=submit]').remove();
+            let submitButton = $('form input[type=submit]')[0];
+            if (submitButton.id.length === 0) {
+                submitButton.id = "settings-submit-button";
+                submitButton.value = "Confirm";
 
-            // Add own buttons
-            let $submitButton = $('<input id="settings-submit-button" type="submit" value="Confirm""/>');
-            $submitButton.appendTo(btnContainer);
-            let $closeButton = $('<input id="settings-close-button" type="button" value="Abort" onClick="closeSettings()" />');
-            $closeButton.appendTo(btnContainer);
-            let $seedButton = $('<input id="btnSeed" class="button" type="button" value="Enter a seed..." onClick="selectSeeding()" />');
-            $seedButton.appendTo(btnContainer);
+                // Removal of default jsonform submit button & inclusion of buttons
+                let btnContainer = $('form input[type=submit]').parent();
+
+                // Add own buttons
+                let $closeButton = $('<input id="settings-close-button" type="button" value="Abort" onClick="closeSettings()" />');
+                $closeButton.appendTo(btnContainer);
+                let $seedButton = $('<input id="btnSeed" class="button" type="button" value="Enter a seed..." onClick="selectSeeding()" />');
+                $seedButton.appendTo(btnContainer);
+            }
 
             // Change select box to names of enums
             let lang = SettingsSingleton.getInstance().getSettings().general.language;
