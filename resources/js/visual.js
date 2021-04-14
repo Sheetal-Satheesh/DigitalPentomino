@@ -577,46 +577,10 @@ class Visual {
         }
         let hintCommand = hint.getCommands()[commandNumber];
         let hintinPen = hintCommand._pentomino;
-        popupText.textContent = this.generateHintText(hint,commandNumber);
         this.indicateHint(hint,commandNumber);
     }
 
-    generateHintText(hint,commandNumber) {
-        let text = "";
-
-        if (hint.getPossibleSolutions().length === 0) {
-            text += "This doesn't look right. The pentominoes on your board aren't part of a solution."
-        }
-        let command = hint.getCommands()[commandNumber];
-        let cmdValues = command.ExecValues();
-        switch (command.Name()) {
-            case "Remove":
-                text += "This doesn't look right. Why don't you remove " + command._pentomino.name;
-                break;
-            case "MoveToPosition":
-                text += "Maybe try to move " + command._pentomino.name + " to position [" + cmdValues.PosX + "," + cmdValues.PosY + "]";
-                break;
-            case "Place":
-                text += "Why don't you place " + command._pentomino.name + " at position [" + cmdValues.PosX + "," + cmdValues.PosY + "]";
-                break;
-            case "RotateClkWise":
-                text += "Why don't you try to rotate " + command._pentomino.name + " clock-wise";
-                break;
-            case "RotateAntiClkWise":
-                text += "Why don't you try to rotate " + command._pentomino.name + " anti-clock-wise";
-                break;
-            case "MirrorH":
-                text += "Why don't you try to mirror " + command._pentomino.name + " horizontal";
-                break;
-            case "MirrorV":
-                text += "Why don't you try to mirror " + command._pentomino.name + " vertical";
-                break;
-            default:
-                text += "Error - unknown command with name '" + command.Name() + "'";
-                throw new Error("Error: unknown command with name " + command.Name());
-        }
-        return text;
-    }
+   
 
     blinkCells(cells, bgColor, blinkColor) {
         let menu = [];
