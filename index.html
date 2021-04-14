@@ -166,17 +166,20 @@
         <div id="piecearea"></div> <!-- piecearea -->
         <div id="modalTop" class="modal">
             <span onclick="document.getElementById('modalTop').style.display='none'" class="close" title="Close Modal">x</span>
-            <form class="modalContent">
-              <div class="modalContainer">
-                <h3 id="modalText"></h3>
-                <div class="clearfix">
-                  <button type="button" onclick="document.getElementById('modalTop').style.display='none'" class="cancelbtn">No</button>
-                  <button type="button" onclick="document.getElementById('modalTop').style.display='none'" class="deletebtn">Yes</button>
+            <div class="modalContainer" id="modalContainerID">
+                <div class="outerGrid">
+                    <div class="innerGrid" id="innerGrid"></div>
                 </div>
-              </div>
-            </form>
-          </div> <!--modal end-->
-    </div> 
+                <form class="modalFormContent">
+                    <div class="modalFormContainer" id="modalFormContainerID">
+                        <h3 id="modalTitleID"></h3>
+                        <div class="modalButtons" id="modalButtonsID"></div>
+                        <div class="modalBody" id="modalBodyID"></div>
+                </form>
+            </div>
+        </div>
+        <!--modal end-->
+    </div>
     
     <div class = "cPieceManipulation" id ="pieceManipulation" >
         <table>
