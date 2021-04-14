@@ -56,7 +56,7 @@
 
 #operations {
   display: inline-block;
-  margin-top: 10vw;
+  margin-top: 8vw;
 }
 
 #operations {
@@ -64,20 +64,21 @@
 }
 
 #operations  img{
-  width:3vw;
-  height:3vw;
-
+  width:4vw;
+  height:4vw;
 }
 
 #operations table tr td div{
-  margin:14px;
-margin-top: 2px;
+  margin:20%;
+  margin-top: 2%;
 }
 
 
 #operations button{
-margin:14px;
-margin-top: 2px;
+margin: 0.4vw;
+margin-top: 2%;
+width: 4vw;
+height: 4vw;
 }
 
 #pieceManipulation table tr td div{
@@ -86,8 +87,8 @@ margin-top: 2px;
 }
 
 #pieceManipulation  img{
-  width:3vw;
-  height:3vw;
+  width:5vw;
+  height:5vw;
 
 }
 #pieceManipulation{
@@ -159,8 +160,8 @@ border: 0;
 
 .CMenuTB img{
   float: center;
-  width:  3vw;
-  height: 3vw;
+  width:  4vw;
+  height: 4vw;
   object-fit: cover;
   background: rgb(193, 199, 201);
   border-radius: 25%;
@@ -172,13 +173,17 @@ border-radius: 10%;
 border: 0;
 }
 
-.CMenuTB div:hover{
-box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
-}
+  .CMenuTB div:active{
+    box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
+    }
 
-.cActionBtn:hover {
-box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
-}
+  .cActionBtn:active {
+    box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
+   }
+
+
+
+
 
 .cGame {
 position: absolute;
@@ -263,7 +268,7 @@ background: rgb(197, 207, 203);
 table
   {
    position: relative;
-    margin-top: 50px;
+    margin-top: 30px;
     width: -10px!important;
      border-spacing: 0px;
      border-collapse:collapse;
@@ -278,9 +283,16 @@ table
       padding: 0px;
    }
 
-   table tr td button:hover {
-   box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
-  }
+
+
+    table tr td button:active {
+      box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
+     }
+
+     table tr td div:active {
+      box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
+     }  
+   
 
   table tr td button{
     background:rgb(141, 160, 157);
@@ -293,7 +305,8 @@ table
     background:rgb(141, 160, 157);
     border-radius: 10%;
     border: 0;
-    padding: 0px;
+    padding: 0.1vw;
+    margin: 0.1vw;
   }
 
    table tr td div{
@@ -303,9 +316,7 @@ table
     padding: 0px;
    }
 
-   table tr td div:hover {
-   box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
-  }
+ 
 
   #logo{
   height:7vw!important;
@@ -315,37 +326,38 @@ table
 
 @media only screen and (max-width: 1137px) {
     #operations  img{
-          width:2.5vw;
-          height:2.5vw;
+          width:4vw;
+          height:4vw;
       }
 
       #operations table tr td div{
           margin:10px;
-        margin-top: 1px;
       }
 
 
       #operations button{
-        margin:10px;
+        margin:0.5vw;
         margin-top: 1px;
+        width: 4vw;
+        height: 4vw;
       }
 
   }
 
   @media only screen and (max-width: 1137px) {
     #operations  img{
-          width:2vw;
-          height:2vw;
+          width:4vw;
+          height:4vw;
       }
 
       #operations table tr td div{
-          margin:10px;
+          margin:3px;
         margin-top: 1px;
       }
 
 
       #operations button{
-        margin:10px;
+        margin:3px;
         margin-top: 1px;
       }
 
@@ -398,3 +410,4 @@ table
  
 #seedBar:focus {
 }
+

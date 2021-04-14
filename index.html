@@ -3,13 +3,13 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#009578">
     <title>Digital Pentomino v5</title>
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="resources/images/icons/dp_192.png">
     <link rel="stylesheet" href="resources/css/style.css">
-	<link rel="stylesheet" href="resources/css/board_selection.css">
+    <link rel="stylesheet" href="resources/css/board_selection.css">
     <link rel="stylesheet" href="resources/css/modal.css">
     <link rel="stylesheet" href="resources/css/settings_form.css">
     <link rel="stylesheet" style="text/css" href="resources/jsonform/bootstrap.css" />
@@ -49,10 +49,11 @@
 </head>
 
 <body onload="touchStartup(); initialize()">
-  <div id="seedingCover"></div>
-  <div id="seeding" class="seed">
-    <input type="search" id="seedBar" class="seed" placeholder="Input seed...">
-    <button type="button" id='seedSubmit' class = "cActionBtn" onclick="submitSeed()"><img class="cSeedBtn" src="resources/images/icons/seed.png">
+    <canvas id="canvas" width="auto" height="auto"></canvas>
+    <div id="seedingCover"></div>
+    <div id="seeding" class="seed">
+        <input type="search" id="seedBar" class="seed" placeholder="Input seed...">
+        <button type="button" id='seedSubmit' class="cActionBtn" onclick="submitSeed()"><img class="cSeedBtn" src="resources/images/icons/seed.png">
   </div>
   <div class = "cGame">
     <div id="functions">
@@ -65,48 +66,48 @@
                         <button type="button" id='btnRotateLeft' class = "cActionBtn" onclick="rotateAntiClkWise()" disabled><img src="resources/images/icons/rotate_left.png">
 
                         </button>
-                    </td>
-                    <td>
-                        <button type="button" id='btnRotateRight' class = "cActionBtn" onclick="rotateClkWise()" disabled> <img src="resources/images/icons/rotate_right.png">
+        </td>
+        <td>
+            <button type="button" id='btnRotateRight' class="cActionBtn" onclick="rotateClkWise()" disabled> <img src="resources/images/icons/rotate_right.png">
                         </button>
-                    </td>
-                </tr>
+        </td>
+        </tr>
 
-                <tr>
-                    <td>
-                        <button type="button" id='btnFlipH' class = "cActionBtn" onclick="flipH()" disabled><img src="resources/images/icons/flip_horizontally.png">
+        <tr>
+            <td>
+                <button type="button" id='btnFlipH' class="cActionBtn" onclick="flipH()" disabled><img src="resources/images/icons/flip_horizontally.png">
                         </button>
-                    </td>
-                    <td>
-                        <button type="button" id='btnFlipV' class = "cActionBtn" onclick="flipV()" disabled><img src="resources/images/icons/flip_vertically.png">
+            </td>
+            <td>
+                <button type="button" id='btnFlipV' class="cActionBtn" onclick="flipV()" disabled><img src="resources/images/icons/flip_vertically.png">
                         </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <button type="button" id='reset' class = "cActionBtn" onclick="resetGame()"><img src="resources/images/icons/tidy_up.png"></button>
-                    </td>
-                    <td>
-                        <button type="button" id='prefillBoard' class = "cActionBtn" onclick="prefillBoard()" disabled><img src="resources/images/icons/prefill.png"></button>
-                    </td>
-                </tr>
-          </table>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button type="button" id='reset' class="cActionBtn" onclick="resetGame()"><img src="resources/images/icons/tidy_up.png"></button>
+            </td>
+            <td>
+                <button type="button" id='prefillBoard' class="cActionBtn" onclick="prefillBoard()" disabled><img src="resources/images/icons/prefill.png"></button>
+            </td>
+        </tr>
+        </table>
 
-          <table>
-                <tr>
-                    <td>
-                        <button type="button" id='undo' class = "cActionBtn" onclick="execUndo()" ><img src="resources/images/icons/undo.png">
+        <table>
+            <tr>
+                <td>
+                    <button type="button" id='undo' class="cActionBtn" onclick="execUndo()"><img src="resources/images/icons/undo.png">
                         </button>
-                    </td>
-                    <td>
-                        <button type="button" id='redo' class = "cActionBtn" onclick="execRedo()" ><img src="resources/images/icons/redo.png">
+                </td>
+                <td>
+                    <button type="button" id='redo' class="cActionBtn" onclick="execRedo()"><img src="resources/images/icons/redo.png">
                         </button>
-                    </td>
-                   
-                </tr>
-                <tr>
-                    <td>
-                        <button type="button" id='btnBoardSelect' class = "cActionBtn" onclick="selectBoard()"> <img src="resources/images/icons/board.png">
+                </td>
+
+            </tr>
+            <tr>
+                <td>
+                    <button type="button" id='btnBoardSelect' class="cActionBtn" onclick="selectBoard()"> <img src="resources/images/icons/board.png">
                         </button>
                     </td>
                     <td>
@@ -114,12 +115,12 @@
                             <img src="resources/images/UI_images/hint.png">
                             <span class="hintPopupText" id="myHint">RECOGNISE THE HINTS ON THE BOARD!!
                             </span>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <button type="button" id='btnSettingsForm' class = "cActionBtn" onclick="selectSettings()"> <img src="resources/images/icons/settings.png">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button type="button" id='btnSettingsForm' class="cActionBtn" onclick="selectSettings()"> <img src="resources/images/icons/settings.png">
                         </button>
                     </td>
                     <td>
@@ -160,51 +161,57 @@
         </div>  <!-- operation -->
     </div>
 
-    <div id="game">
-        <div id="tray"></div> <!-- tray -->
-        <div id="field"></div> <!-- field -->
-        <div id="piecearea"></div> <!-- piecearea -->
-        <div id="modalTop" class="modal">
-            <span onclick="document.getElementById('modalTop').style.display='none'" class="close" title="Close Modal">x</span>
-            <form class="modalContent">
-              <div class="modalContainer">
-                <h3 id="modalText"></h3>
-                <div class="clearfix">
-                  <button type="button" onclick="document.getElementById('modalTop').style.display='none'" class="cancelbtn">No</button>
-                  <button type="button" onclick="document.getElementById('modalTop').style.display='none'" class="deletebtn">Yes</button>
-                </div>
-              </div>
-            </form>
-          </div> <!--modal end-->
-    </div> 
+    <!-- <canvas id="canvas" width="auto" height="auto" style="border: solid black 1px;"> -->
+
+        <div id="game">
+            <div id="tray"></div> <!-- tray -->
+            <div id="field"></div> <!-- field -->
+            <div id="piecearea"></div> <!-- piecearea -->
+            <div id="modalTop" class="modal">
+                <span onclick="document.getElementById('modalTop').style.display='none'" class="close" title="Close Modal">x</span>
+                <form class="modalContent">
+                  <div class="modalContainer">
+                    <h3 id="modalText"></h3>
+                    <div class="clearfix">
+                      <button type="button" onclick="document.getElementById('modalTop').style.display='none'" class="cancelbtn">No</button>
+                      <button type="button" onclick="document.getElementById('modalTop').style.display='none'" class="deletebtn">Yes</button>
+                    </div>
+                  </div>
+                </form>
+              </div> <!--modal end-->
+        </div> 
+
+    <!-- </canvas> -->
+    
     
     <div class = "cPieceManipulation" id ="pieceManipulation" >
         <table>
-      <tr>
-          <td>
-              <button type="button" class="controlButton"  id='OpRotateLeft' onclick="rotateAntiClkWise()"><img src="resources/images/icons/rotate_left.png">
+            <tr>
+                <td>
+                    <button type="button" class="controlButton" id='OpRotateLeft' onclick="rotateAntiClkWise()"><img src="resources/images/icons/rotate_left.png">
               </button>
-          </td>
-          <td>
-              <button type="button" class="controlButton" id='OpRotateRight' onclick="rotateClkWise()"><img src="resources/images/icons/rotate_right.png">
+                </td>
+                <td>
+                    <button type="button" class="controlButton" id='OpRotateRight' onclick="rotateClkWise()"><img src="resources/images/icons/rotate_right.png">
               </button>
-          </td>
-          <td>
-              <button type="button" class="controlButton" id='OpflipH' onclick="flipV()"><img src="resources/images/icons/flip_vertically.png">
+                </td>
+                <td>
+                    <button type="button" class="controlButton" id='OpflipH' onclick="flipV()"><img src="resources/images/icons/flip_vertically.png">
               </button>
-          </td>
-          <td>
-              <button type="button" class="controlButton" id='OpflipH' onclick="flipH()"><img src="resources/images/icons/flip_horizontally.png">
+                </td>
+                <td>
+                    <button type="button" class="controlButton" id='OpflipH' onclick="flipH()"><img src="resources/images/icons/flip_horizontally.png">
               </button>
-          </td>
-      </tr>
+                </td>
+            </tr>
         </table>
-    </div>  <!-- cPieceManipulation -->
-</div>
+    </div>
+    <!-- cPieceManipulation -->
+    </div>
 
 
-<script type="text/javascript">
-
+    <script type="text/javascript">
+    // screen.orientation.lock('landscape');
         let pd;
         function initialize() {
             pd = new PD();
@@ -248,16 +255,32 @@
 
         function callHintAI() {
             pd.visual.callHintAI();
-            
+
         }
 
         //hinting popup disappears when mouse pointer is away
         document.getElementById("hintButton").addEventListener("mouseleave", function() {
-                 document.getElementById("myHint").style.visibility = "hidden";
+            document.getElementById("myHint").style.visibility = "hidden";
         });
-        
 
-        function rotateClkWise(){
+
+        //game setings disappear after clicking outside
+        document.addEventListener('mouseup', function(e) {
+            var settingsContainer = document.getElementById('settings_form');
+            if (!settingsContainer.contains(e.target)) {
+                closeSettings();
+            }
+        });
+
+        //board selection  setings disappear after clicking outside
+        document.addEventListener('mouseup', function(e) {
+            var boardContainer = document.getElementById('board_selection_form');
+            if (!boardContainer.contains(e.target)) {
+                closeBoardSelector();
+            }
+        });
+
+        function rotateClkWise() {
             pd.rotateClkWise();
         }
 
@@ -265,16 +288,16 @@
             pd.rotateAntiClkWise();
         }
 
-        function flipH(){
+        function flipH() {
             pd.flipH();
         }
 
-        function flipV(){
+        function flipV() {
             pd.flipV();
         }
 
-        function selectBoard(){
-			document.getElementById("board_selection_form").style.display = "block";
+        function selectBoard() {
+            document.getElementById("board_selection_form").style.display = "block";
         }
 
         // From https://stackoverflow.com/questions/10970078/modifying-a-query-string-without-reloading-the-page (2nd answer)
@@ -336,7 +359,7 @@
             //change default values according to current schema
             for (let key in settings) {
                 //console.log(settings[key]);
-                for (let subkey in settings[key]){
+                for (let subkey in settings[key]) {
                     //console.log(settings[key][subkey]);
                     let schemaEntry = settingsSchema[key]["properties"][subkey];
                     switch (schemaEntry.type) {
@@ -475,21 +498,29 @@
             Translator.translateHeaders(SettingsSingleton.getInstance().getSettings().general.language);
         }
 
-        function closeSettings(){
-			document.getElementById("settings_form").style.display = "none";
+        function closeModalContainer(){
+            document.getElementById('modalTop').style.display = "none";
         }
 
-        function selectSeeding(){
-			document.getElementById("seedingCover").style.visibility = "visible";
+        function closeSettings() {
+            document.getElementById("settings_form").style.display = "none";
+        }
+
+        function closeBoardSelector() {
+            document.getElementById('board_selection_form').style.display = "none";
+        }
+
+        function selectSeeding() {
+            document.getElementById("seedingCover").style.visibility = "visible";
             document.getElementById("seeding").style.visibility = "visible";
         }
 
-        function closeSeeding(){
-			document.getElementById("seedingCover").style.visibility = "hidden";
+        function closeSeeding() {
+            document.getElementById("seedingCover").style.visibility = "hidden";
             document.getElementById("seeding").style.visibility = "hidden";
         }
 
-        function submitSeed(){
+        function submitSeed() {
             let seedValue = document.getElementById("seedBar").value;
             let settings = SettingsParser.parseSettingsFromSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), seedValue);
             if (!(settings === null)) {
@@ -505,33 +536,32 @@
             }
         }
 
-		function loadGame(){
-			var selectedBoard = document.querySelector("input[name=board_list]:checked").value;
-			document.getElementById("board_selection_form").style.display = "none";
+        function loadGame() {
+            var selectedBoard = document.querySelector("input[name=board_list]:checked").value;
+            document.getElementById("board_selection_form").style.display = "none";
             pd.loadGame(selectedBoard);
-			
-        }
-		
-		function closeForm() {
-			document.getElementById("board_selection_form").style.display = "none";
-		}
 
-        function prefillBoard(){
+        }
+
+        function closeForm() {
+            document.getElementById("board_selection_form").style.display = "none";
+        }
+
+        function prefillBoard() {
             pd.prefillBoard();
         }
 
-        function execUndo(){
+        function execUndo() {
             pd.undo();
         }
 
-        function execRedo(){
+        function execRedo() {
             pd.redo();
         }
-
-
-
     </script>
-   <script src="./registerSW.js"></script>
+    <script src="./registerSW.js"></script>
 
+</canvas>
 </body>
+
 </html>
