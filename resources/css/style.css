@@ -398,3 +398,10 @@ table
  
 #seedBar:focus {
 }
+
+.FlashOn {
+  display: block;
+  visibility: visible;
+  filter: alpha(opacity=65);
+  opacity: .6;
+}

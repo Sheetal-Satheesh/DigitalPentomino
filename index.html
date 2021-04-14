@@ -188,9 +188,9 @@
             </div> <!-- operation -->
         </div>
 
-        <div id="game">
+        <div id="game" class="FlashOff">
             <div id="tray"></div> <!-- tray -->
-            <div id="field"></div> <!-- field -->
+            <div id="field" ></div> <!-- field -->
             <div id="piecearea"></div> <!-- piecearea -->
             <div id="modalTop" class="modal">
                 <span onclick="document.getElementById('modalTop').style.display='none'" class="close"
@@ -529,7 +529,18 @@
             document.getElementById("seeding").style.visibility = "hidden";
         }
 
+
+        function addFlash(elementId){
+            let element = document.querySelector("#"+elementId);
+            element.classList.add('FlashOn');
+            var millisecondsToWait = 100;
+                setTimeout(function() {
+                    element.classList.remove('FlashOn');
+            }, millisecondsToWait);
+        }
+
         function saveGameImage() {
+            addFlash("game");
             let gameImage = undefined;
             let gameElem = document.getElementById('game');
 
@@ -554,7 +565,7 @@
         function deleteGameImage(key) {
             pd.visual.deleteGameImage(key);
             showGameImages();
-        }
+        }        
 
         function showGameImages() {
             var modal = document.getElementById('modalTop');
