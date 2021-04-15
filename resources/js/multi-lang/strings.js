@@ -39,7 +39,7 @@ const strings = {
                 title: ["Prefill-Constraint", "Automatisches Füllen-Einschränkung"],
                 enumTitles: [["Distance", "Pieces"], ["Distanz", "Nachbar"]],
                 description: ["The selected constraint is applied when the pentominoes are placed on the board: <ul><li><b>Distance-Constraint:</b> Pieces are not closer than the value specified in <i>Distance value</i>.</li><li><b>Pieces-Constraint:</b> Pieces are not touching more pieces than specified in <i>Distance value</i>.</li></ul>",
-                    "Die Einschränkung muss eingehalten werden, wenn die Pentominoes auf dem Spielfeld platziert werden: <ul><li><b>Distanz-Einschränkung:</b> Distanz zwischen Pentominoes ist größer als <i>Distanz-Wert</i>.</li><li><b>Nachbar-Einschränkung:</b> Ein Pentomino hat weniger benachbarte Pentominoes als <i>Distanz-Wert</i>.</li></ul>"]
+                    "Die Einschränkung muss eingehalten werden, wenn die Pentominoes auf dem Spielfeld platziert werden: <ul><li><b>Distanz-Einschränkung:</b> Distanz zweier Pentominoes ist maximal der Wert spezifiziert in <i>Distanz-Wert</i>.</li><li><b>Nachbar-Einschränkung:</b> Ein Pentomino hat maximal so viele benachbarte Pentominoes wie spezifiziert in <i>Distanz-Wert</i>.</li></ul>"]
             },
             distanceValue: ["Distance value", "Distanz-Wert"]
         },
