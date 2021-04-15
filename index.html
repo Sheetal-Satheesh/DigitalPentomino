@@ -108,14 +108,11 @@
             <tr>
                 <td>
                     <button type="button" id='btnBoardSelect' class="cActionBtn" onclick="selectBoard()"> <img src="resources/images/icons/board.png">
-                        </button>
-                    </td>
-                    <td>
-                        <div class="hintPopup" id="hintButton" onclick="callHintAI()">
-                            <img src="resources/images/UI_images/hint.png">
-                            <span class="hintPopupText" id="myHint">RECOGNISE THE HINTS ON THE BOARD!!
-                            </span>
-                    </div>
+                    </button>
+                </td>
+                <td>
+                    <button type="button" id='hintButton' class="cActionBtn" onclick="callHintAI()"> <img src="resources/images/icons/help.png">
+                    </button>
                 </td>
             </tr>
             <tr>
@@ -257,11 +254,6 @@
             pd.visual.callHintAI();
 
         }
-
-        //hinting popup disappears when mouse pointer is away
-        document.getElementById("hintButton").addEventListener("mouseleave", function() {
-            document.getElementById("myHint").style.visibility = "hidden";
-        });
 
 
         //game setings disappear after clicking outside

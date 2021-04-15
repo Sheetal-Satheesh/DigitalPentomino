@@ -562,10 +562,6 @@ class Visual {
     }
 
     callHintAI(){
-        let hintElement = document.getElementById("myHint");
-        hintElement.classList.toggle("show");
-        hintElement.style.visibility = "visible";
-        let popupText = document.getElementById("myHint");
         let hint = pd.gameController.getHint();
         //Always show place command in case of non-exact hints:
         let commandNumber = 0;
@@ -581,7 +577,6 @@ class Visual {
     }
 
    
-
     blinkCells(cells, bgColor, blinkColor) {
         let menu = [];
 
@@ -670,12 +665,7 @@ class Visual {
                 let prevBackground = [];
 
                 //indicate piece to be moved (and fade away)
-                Array.prototype.forEach.call(document.getElementById("piece_" + hintinPen.name).getElementsByClassName("bmPoint"), function(element) {
-                    element.style["box-shadow"] = "0 0 20px " + pentominoColor;
-                    setTimeout(function(){
-                        element.style.removeProperty("box-shadow");
-                    }, timeoutFrame*4);
-                });
+                this.indicatePentomino(hintinPen,timeoutFrame);
 
                 //show destination position (and fade away)
                 let piecePos = this.getOccupiedPositions(tempHintinPen,hintCommand);
@@ -738,6 +728,8 @@ class Visual {
                     setTimeout(function(){
                     rotateAntiClkWise();
                     },timeoutFrame);
+                } else {
+                    this.indicatePentomino(hintinPen,timeoutFrame);
                 }
 
 
@@ -751,6 +743,8 @@ class Visual {
                     setTimeout(function(){
                     rotateClkWise();
                     },timeoutFrame);
+                } else {
+                    this.indicatePentomino(hintinPen,timeoutFrame);
                 }
                 break;
 
@@ -763,6 +757,8 @@ class Visual {
                     setTimeout(function(){
                     flipH();
                     },timeoutFrame);
+                } else {
+                    this.indicatePentomino(hintinPen,timeoutFrame);
                 }
                 break;
 
@@ -774,18 +770,25 @@ class Visual {
                     setTimeout(function(){
                     flipV();
                     },timeoutFrame);
+                } else {
+                    this.indicatePentomino(hintinPen,timeoutFrame);
                 }
                 break;
 
             default:
                 console.error("Unknown piece action detected!");
+            }
         }
-
     }
-}
 
-
-
+    indicatePentomino(pentomino, timeframe){
+        Array.prototype.forEach.call(document.getElementById("piece_" + pentomino.name).getElementsByClassName("bmPoint"), function(element) {
+            element.style["box-shadow"] = "0 0 20px " + pentomino.color;
+            setTimeout(function(){
+                element.style.removeProperty("box-shadow");
+            }, timeframe*4);
+        });
+    }
 
     indicateAreaCells(piece, hintCommand){
         let hintRow = hintCommand._nextPosition[0];
