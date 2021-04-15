@@ -653,8 +653,10 @@ class Visual {
             }
         }
 
+        console.log(hintSkill);
+
        //indication of unoccupied cells
-        if (!(hintSkill === null)) {
+        if (!(hintSkill === null) && (SettingsSingleton.getInstance().getSettings().hinting.skillTeaching)) {
             const DEFAULT_BG_COLOR = "#adc0b9";
             const RED_COLOR = "red";
             //blink unoccupied cells
@@ -723,10 +725,10 @@ class Visual {
                 var pen = document.getElementById("piece_" + hintinPen.name);
                 //console.log("pent",hintinPen,this.selected);
                 if (!this.selected.inTray){
-                    pen.style.display = 'none';
+                    pen.style.opacity = '0.2';
                     setTimeout(function(){
-                    pen.style.display = 'block';
-                    },2000);
+                    pen.style.opacity = '1';
+                    },1000);
                 }
                 break;
 
