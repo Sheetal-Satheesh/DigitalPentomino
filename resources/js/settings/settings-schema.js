@@ -80,7 +80,7 @@ class SettingsSchema {
                     hintingStrategy: {
                         "type": "string",
                         "title": titles.hinting.hintingStrategy.title[lang],
-                        "enum": ["full","partial"],
+                        "enum": ["full","partial","area"],
                         "enumText": titles.hinting.hintingStrategy.enumTitles[lang],
                         "default": "full"
                     },
@@ -118,7 +118,7 @@ class SettingsSchema {
                     prefillingStrategy: {
                         "type": "string",
                         "title": titles.prefilling.prefillingStrategy.title[lang],
-                        "enum": ["distance"],
+                        "enum": ["distance", "pieces"],
                         "enumText": titles.prefilling.prefillingStrategy.enumTitles[lang],
                         "default": "distance"
                     },

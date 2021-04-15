@@ -21,7 +21,7 @@ const strings = {
             enableHinting: ["Enable hints", "Hinweise einschalten"],
             hintingStrategy: {
                 title: ["Hint-Strategy", "Strategie der Hinweise"],
-                enumTitles: [["Full", "Partial"], ["Voll", "Partiell"]]
+                enumTitles: [["Full", "Partial", "Area"], ["Voll", "Partiell", "Bereich"]]
             },
             skillTeaching: ["Enable Skill-Teaching?", "Fähigkeits-lehrende Hinweise einschalten?"],
             exactHints: ["Enable exact Hints?", "Exakte Hinweise aktivieren?"],
@@ -33,7 +33,7 @@ const strings = {
             enablePrefilling: ["Enable Prefilling?", "Automatisches Füllen einschalten"],
             prefillingStrategy: {
                 title: ["Prefill-Strategy", "Automatisches Füllen-Stragie"],
-                enumTitles: [["Distance"], ["Distanz"]]
+                enumTitles: [["Distance", "Pieces"], ["Distanz", "Teil"]]
             },
             distanceValue: ["Distance value", "Distanz Wert"]
         },
