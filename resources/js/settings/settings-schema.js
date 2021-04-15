@@ -136,13 +136,3 @@ class SettingsSchema {
         };
     }
 }
-
-
-//Multilanguage via variable:
-//let language = "de";
-//
-//title = {
-//    "en": "Hinting Strategy",
-//    "de": "Hinting Strategie"
-//}
-//title[language],
