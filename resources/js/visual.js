@@ -577,7 +577,6 @@ class Visual {
     }
 
    
-
     blinkCells(cells, bgColor, blinkColor) {
         let menu = [];
 
@@ -778,11 +777,9 @@ class Visual {
 
             default:
                 console.error("Unknown piece action detected!");
+            }
         }
-
     }
-}
-
 
     indicatePentomino(pentomino, timeframe){
         Array.prototype.forEach.call(document.getElementById("piece_" + pentomino.name).getElementsByClassName("bmPoint"), function(element) {
