@@ -74,12 +74,14 @@ class SettingsSchema {
                 "properties": {
                     enableHinting: {
                         "type": "boolean",
-                        "title": titles.hinting.enableHinting[lang],
+                        "title": titles.hinting.enableHinting.title[lang],
+                        "description": titles.hinting.enableHinting.description[lang],
                         "default": true
                     },
                     hintingStrategy: {
                         "type": "string",
                         "title": titles.hinting.hintingStrategy.title[lang],
+                        "description": titles.hinting.hintingStrategy.description[lang],
                         "enum": ["full","partial","area"],
                         "enumText": titles.hinting.hintingStrategy.enumTitles[lang],
                         "default": "full"

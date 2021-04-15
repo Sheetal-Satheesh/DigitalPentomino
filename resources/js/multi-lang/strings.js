@@ -18,10 +18,15 @@ const strings = {
         },
         hinting: {
             title: ["Hints", "Hinweise"],
-            enableHinting: ["Enable hints", "Hinweise einschalten"],
+            enableHinting: {
+                title: ["Enable hints", "Hinweise einschalten"],
+                description: ["Hints suggest pentomino-actions to the user, which bring the board closer to a solution.",
+                    "Hinweise schlagen dem Spieler Züge vor, die ihn/sie näher zur Lösung bringen."]
+            },
             hintingStrategy: {
                 title: ["Hint-Strategy", "Strategie der Hinweise"],
-                enumTitles: [["Full", "Partial", "Area"], ["Voll", "Partiell", "Bereich"]]
+                enumTitles: [["Full", "Partial", "Area"], ["Voll", "Partiell", "Bereich"]],
+                description: ["TODO", "TODO"]
             },
             skillTeaching: ["Enable Skill-Teaching?", "Fähigkeits-lehrende Hinweise einschalten?"],
             exactHints: ["Enable exact Hints?", "Exakte Hinweise aktivieren?"],
@@ -32,14 +37,23 @@ const strings = {
             title: ["Prefilling", "Automatisches Füllen"],
             enablePrefilling: {
                 title: ["Enable Prefilling?", "Automatisches Füllen einschalten"],
-                description: ["Prefilling fills the board randomly with pentominoes.>",
+                description: ["Prefilling fills the board randomly with pentominoes.",
                     "Automatisches Füllen platziert zufällig Pentominoes auf das Spielfeld."]
             },
             prefillingStrategy: {
                 title: ["Prefill-Constraint", "Automatisches Füllen-Einschränkung"],
                 enumTitles: [["Distance", "Pieces"], ["Distanz", "Nachbar"]],
-                description: ["The selected constraint is applied when the pentominoes are placed on the board: <ul><li><b>Distance-Constraint:</b> Pieces are not closer than the value specified in <i>Distance value</i>.</li><li><b>Pieces-Constraint:</b> Pieces are not touching more pieces than specified in <i>Distance value</i>.</li></ul>",
-                    "Die Einschränkung muss eingehalten werden, wenn die Pentominoes auf dem Spielfeld platziert werden: <ul><li><b>Distanz-Einschränkung:</b> Distanz zweier Pentominoes ist maximal der Wert spezifiziert in <i>Distanz-Wert</i>.</li><li><b>Nachbar-Einschränkung:</b> Ein Pentomino hat maximal so viele benachbarte Pentominoes wie spezifiziert in <i>Distanz-Wert</i>.</li></ul>"]
+                description: [
+                    "The selected constraint is applied when the pentominoes are placed on the board:" +
+                        "<ul>" +
+                            "<li><b>Distance-Constraint:</b> Pieces are not closer than the value specified in <i>Distance value</i>.</li>" +
+                            "<li><b>Pieces-Constraint:</b> Pieces are not touching more pieces than specified in <i>Distance value</i>.</li>" +
+                        "</ul>",
+                    "Die Einschränkung muss eingehalten werden, wenn die Pentominoes auf dem Spielfeld platziert werden:" +
+                        "<ul>" +
+                            "<li><b>Distanz-Einschränkung:</b> Distanz zweier Pentominoes ist maximal der Wert spezifiziert in <i>Distanz-Wert</i>.</li>" +
+                            "<li><b>Nachbar-Einschränkung:</b> Ein Pentomino hat maximal so viele benachbarte Pentominoes wie spezifiziert in <i>Distanz-Wert</i>.</li>" +
+                        "</ul>"]
             },
             distanceValue: ["Distance value", "Distanz-Wert"]
         },
