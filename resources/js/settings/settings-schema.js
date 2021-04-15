@@ -128,7 +128,7 @@ class SettingsSchema {
                         "title": titles.prefilling.distanceValue[lang],
                         "default": 2,
                         "minimum": 1,
-                        "exclusiveMinimum": true,
+                        "exclusiveMinimum": false,
                         "maximum": 10
                     }
                 }
