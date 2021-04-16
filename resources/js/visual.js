@@ -567,7 +567,7 @@ class Visual {
         labelPossibleSolutions.innerText = this.gameController.getHint().getPossibleSolutions().length;
     }
 
-    callHintAI(){
+   callHintAI(){
         let hintElement = document.getElementById("myHint");
         hintElement.classList.toggle("show");
         hintElement.style.visibility = "visible";
