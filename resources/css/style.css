@@ -440,7 +440,7 @@ table
   border-radius: 50%;
   width: 48px;
   height: 48px;
-  background-color: blue;
+  background-color: #ff0029;
   position: absolute;
   bottom: 0;
   right: 0;
@@ -469,6 +469,7 @@ table
           transition: transform 200ms cubic-bezier(0.19, 1, 0.22, 1);
   will-change: transform;
   transform-origin: center center;
+
 }
 
 .button.animation {
@@ -550,30 +551,33 @@ table
 .button-inside.first {
   background-color: #ff0033;
   transform: rotate(36deg);
+
 }
 
 .button-inside.second {
   background-color: #ff0033;
   transform: rotate(68deg);
+
 }
 
 .button-inside.third {
   background-color: #ff0033;
   transform: rotate(100deg);
+
 }
 
 .button-inside.fourth {
   background-color: #ff0033;
   transform: rotate(136deg);
-}
 
+}
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?fg31j2');
-  src:  url('fonts/icomoon.eot?fg31j2#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?fg31j2') format('truetype'),
-    url('fonts/icomoon.woff?fg31j2') format('woff'),
-    url('fonts/icomoon.svg?fg31j2#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?1wy5es');
+  src:  url('fonts/icomoon.eot?1wy5es#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?1wy5es') format('truetype'),
+    url('fonts/icomoon.woff?1wy5es') format('woff'),
+    url('fonts/icomoon.svg?1wy5es#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -594,17 +598,23 @@ table
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-rotateLeft:before {
+.icon-flipHorizontal:before {
   content: "\61";
 }
-.icon-rotateRight:before {
+.icon-flipVertical:before {
   content: "\62";
 }
-.icon-flipHorizontally:before {
+.icon-select:before {
+  content: "\67";
+}
+.icon-rotateClockwise:before {
   content: "\63";
 }
-.icon-flipVertically:before {
+.icon-rotateAntiClockwise:before {
   content: "\64";
+}
+.icon-setting:before {
+  content: "\66";
 }
 .icon-plus:before {
   content: "\65";

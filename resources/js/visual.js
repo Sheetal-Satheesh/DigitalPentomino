@@ -277,6 +277,19 @@ class Visual {
     //Enable or Disable manipulation buttons
 
     showManipulations(xPosition,yPosition) {
+      // let plusicon = document.getElementById('iconPlus');
+    //   let buttonWrapper = document.querySelectorAll('.button-wrapper');
+    //   for (var i = 0; i < buttonWrapper.length; i++ ) {
+    //     var colorR = this.hexToRgb(this.selected.color).r;
+    //     var colorG = this.hexToRgb(this.selected.color).g;
+    //     var colorB = this.hexToRgb(this.selected.color).b;
+    //     buttonWrapper[i].style.background =  "rgba(" + [colorR,colorG,colorB,0.1].join(',') +")";
+    // }
+    // plusicon.style.backgroundColor = "rgba(" + [colorR,colorG,colorB,0.9].join(',') +")";
+        // var result = this.selected.getRelPentominoPositions().map(relPos =>
+        // pentominoState.getCoordinatePosition(anchorPosition, relPos));
+
+
         document.getElementById("btnRotateRight").disabled = false;
         document.getElementById("btnRotateLeft").disabled = false;
         document.getElementById("btnFlipH").disabled = false;
@@ -294,8 +307,8 @@ class Visual {
           }
         } else {
                 document.getElementById('pieceManipulation').style.display = 'block';
-                document.getElementById('pieceManipulation').style.left = 'calc(' + xPosition + 'px - '+ (width * 2) + 'vw)';
-                document.getElementById('pieceManipulation').style.top = 'calc(' + yPosition + 'px - ' + (width * 2) + 'vw)';
+                document.getElementById('pieceManipulation').style.left = 'calc(' + xPosition + 'px - '+ (width * 1.5) + 'vw)';
+                document.getElementById('pieceManipulation').style.top = 'calc(' + yPosition + 'px - ' + (width * 1) + 'vw)';
                 }
 
     }
