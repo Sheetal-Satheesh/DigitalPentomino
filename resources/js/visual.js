@@ -567,7 +567,11 @@ class Visual {
         labelPossibleSolutions.innerText = this.gameController.getHint().getPossibleSolutions().length;
     }
 
-    callHintAI(){
+   callHintAI(){
+        let hintElement = document.getElementById("myHint");
+        hintElement.classList.toggle("show");
+        hintElement.style.visibility = "visible";
+        let popupText = document.getElementById("myHint");
         let hint = pd.gameController.getHint();
         //Always show place command in case of non-exact hints:
         let commandNumber = 0;
@@ -577,10 +581,17 @@ class Visual {
                 commandNumber = hasPlaceCommand[1];
             }
         }
+
+        if(hint.getCommands() == null){
+            return;
+        }
+
         let hintCommand = hint.getCommands()[commandNumber];
         let hintinPen = hintCommand._pentomino;
+        //popupText.textContent = this.generateHintText(hint,commandNumber);
         this.indicateHint(hint,commandNumber);
     }
+
 
    
     blinkCells(cells, bgColor, blinkColor) {
