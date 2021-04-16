@@ -597,6 +597,7 @@ class Visual {
         this.indicateHint(hint,commandNumber);
     }
 
+   
     blinkCells(cells, bgColor, blinkColor) {
         let menu = [];
 
@@ -753,6 +754,8 @@ class Visual {
                     setTimeout(function(){
                     rotateAntiClkWise();
                     },timeoutFrame);
+                } else {
+                    this.indicatePentomino(hintinPen,timeoutFrame);
                 }
 
 
@@ -766,6 +769,8 @@ class Visual {
                     setTimeout(function(){
                     rotateClkWise();
                     },timeoutFrame);
+                } else {
+                    this.indicatePentomino(hintinPen,timeoutFrame);
                 }
                 break;
 
@@ -778,6 +783,8 @@ class Visual {
                     setTimeout(function(){
                     flipH();
                     },timeoutFrame);
+                } else {
+                    this.indicatePentomino(hintinPen,timeoutFrame);
                 }
                 break;
 
@@ -789,15 +796,24 @@ class Visual {
                     setTimeout(function(){
                     flipV();
                     },timeoutFrame);
+                } else {
+                    this.indicatePentomino(hintinPen,timeoutFrame);
                 }
                 break;
 
             default:
                 console.error("Unknown piece action detected!");
+            }
         }
-
     }
-}
+
+    indicatePentomino(pentomino, timeframe){
+        Array.prototype.forEach.call(document.getElementById("piece_" + pentomino.name).getElementsByClassName("bmPoint"), function(element) {
+            element.style["box-shadow"] = "0 0 20px " + pentomino.color;
+            setTimeout(function(){
+                element.style.removeProperty("box-shadow");
+            }, timeframe*4);
+        });
 
     showGameSolved(){
         var modal = document.getElementById('modalTop');
