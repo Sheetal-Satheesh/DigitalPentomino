@@ -17,7 +17,7 @@ const strings = {
             }
         },
         hinting: {
-            title: ["Hints", "Hinweise"],
+            title: ["Hints (Experimental)", "Hinweise (Experimentell)"],
             enableHinting: {
                 title: ["Enable hints", "Hinweise einschalten"],
                 description: ["Hints suggest pentomino-actions to the user, which bring the board closer to a solution.",
