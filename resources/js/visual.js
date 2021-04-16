@@ -590,10 +590,8 @@ class Visual {
                 commandNumber = hasPlaceCommand[1];
             }
         }
-
         let hintCommand = hint.getCommands()[commandNumber];
         let hintinPen = hintCommand._pentomino;
-        //popupText.textContent = this.generateHintText(hint,commandNumber);
         this.indicateHint(hint,commandNumber);
     }
 
@@ -625,11 +623,11 @@ class Visual {
     }
 
     checkHintCommandsForPlaceCommand(hintCommands){
-            for (let i = 0; i < hintCommands.length; i++){
-                if (hintCommands[i].Name() == "Place"){
-                    return [true,i];
-                }
+        for (let i = 0; i < hintCommands.length; i++){
+            if (hintCommands[i].Name() == "Place"){
+                return [true,i];
             }
+        }
 
         return [false, null];
     }
@@ -686,12 +684,7 @@ class Visual {
                 let prevBackground = [];
 
                 //indicate piece to be moved (and fade away)
-                Array.prototype.forEach.call(document.getElementById("piece_" + hintinPen.name).getElementsByClassName("bmPoint"), function(element) {
-                    element.style["box-shadow"] = "0 0 20px " + pentominoColor;
-                    setTimeout(function(){
-                        element.style.removeProperty("box-shadow");
-                    }, timeoutFrame*4);
-                });
+                this.indicatePentomino(hintinPen,timeoutFrame);
 
                 //show destination position (and fade away)
                 let piecePos = this.getOccupiedPositions(tempHintinPen,hintCommand);
