@@ -48,37 +48,46 @@ class GameLoader {
         return this._game;
     }
 
-    isCmdManagerInGameList(game) {      
+    isGameStateSaved(game) {
         let gameId = game.getId();
+
         if (this._gameList.hasOwnProperty(gameId)) {
-            return true;
+            if (this._gameList[gameId].cmdKey.length == 0) {
+                return false;
+            }
+            else {
+                return true;
+            }
         }
         else {
             return false;
         }
     }
 
+    deleteGameImage() {
+
+    }
+
     resetGame() {
-        if(isEmpty(this._game)){
+        if (isEmpty(this._game)) {
             console.error("game object is not initialized");
             return;
         }
         let boardSettings = this._game._board.getBoardSettings();
         let boardStartXY = boardSettings.boardStartPos;
         let boardSize = boardSettings.boardSize;
-        
-        this._game.reset();
-        // this.createGame(
-        //     boardStartXY,
-        //     boardSize,
-        //     this._game.getName);
+        let gameId = this._game.getId();
 
-        // this._game.reset();
-        if (!this.isCmdManagerInGameList(this._game)) {
+        if (!this.isGameStateSaved(this._game)) {
+            delete this._gameList[gameId];
+            this._game.reset();
             this._commandManager.Reset();
         }
-            
-        // this._commandManager.Reset();
+
+        this.createGame(
+            boardStartXY,
+            boardSize,
+            this._game.getName);
     }
 
     createGame(boardStartXY,
@@ -110,10 +119,15 @@ class GameLoader {
         let cmdKey = this._game.getCmdKey();
         let gameId = this._game._id;
 
+        let gameClone = _.cloneDeep(this._game);
+        let cmdManagerClone = _.cloneDeep(this._commandManager);
+        let hintAIClone = _.cloneDeep(this._hintAI);
+
         if (!this._gameList.hasOwnProperty(gameId)) {
             this._gameList[gameId] = {
-                "game": this._game,
-                "cmdManager": this._commandManager,
+                "game": gameClone,
+                "cmdManager": cmdManagerClone,
+                "hintAI": hintAIClone,
                 "cmdKey": [cmdKey]
             };
 
@@ -122,6 +136,8 @@ class GameLoader {
         }
         else {
             this._gameList[gameId].cmdKey.push(cmdKey);
+            this._gameList[gameId].cmdManager = cmdManagerClone;
+            this._gameList[gameId].hintAI = hintAIClone;
         }
 
     }
@@ -129,6 +145,14 @@ class GameLoader {
     setGame(game) {
         this._game = game;
     };
+
+    setCmdManager(cmdManager) {
+        this._commandManager = cmdManager;
+    }
+
+    setHintAI(hintAI) {
+        this._hintAI = hintAI;
+    }
 
     deleteGame(key) {
         if (key == undefined) {
@@ -177,8 +201,9 @@ class GameLoader {
             if (this._gameList.hasOwnProperty(gameKey)) {
                 for (let key in this._gameList[gameKey].cmdKey) {
                     if (this._gameList[gameKey].cmdKey[key] == cmdKey) {
-                        this._commandManager = this._gameList[gameKey].cmdManager;
+                        this.setCmdManager(this._gameList[gameKey].cmdManager);
                         this.setGame(this._gameList[gameKey].game);
+                        this.setHintAI(this._gameList[gameKey].hintAI);
                         this.loadGameState(cmdKey);
                         return;
                     }
@@ -189,19 +214,27 @@ class GameLoader {
         console.error("commandKey not found");
     }
 
-    loadGameState(targetStateKey){
-        let currCmdKey = this._commandManager.CurrentCmdKey();
-        let [cmdSequences, seqType] = this._commandManager.CmdSequences(currCmdKey,targetStateKey);
+    loadGameState(targetStateKey) {
+
+        let startCmdKey;
+        if (this._game.getCmdKey() == undefined) {
+            startCmdKey = this._commandManager.StartCmdKey();
+        }
+        else {
+            startCmdKey = this._commandManager.CurrentCmdKey();
+        }
+
+        let [cmdSequences, seqType] = this._commandManager.CmdSequences(startCmdKey, targetStateKey);
         let cmdLength = cmdSequences.length;
-        if(seqType == 2){
+        if (seqType == 2) {
             --cmdLength;
         }
 
         for (let indx = 0; indx < cmdLength; indx++) {
-            if(seqType == 2){
+            if (seqType == 2) {
                 this._commandManager.CmdTree().MoveUp();
             }
-            else{
+            else {
                 this._commandManager.CmdTree().MoveDown();
             }
 
@@ -210,26 +243,26 @@ class GameLoader {
             let posX = command.PosX;
             let posY = command.PosY;
 
-            if(posX == undefined){
+            if (posX == undefined) {
                 pentomino.updateTrayValue(1);
                 this._game.addToTray(pentomino);
                 this._commandManager.ExecCommand(
                     new RemoveCommand(
                         pentomino,
                         this._game.getPosition(pentomino)
-                    ),CommandTypes.Shadow
+                    ), CommandTypes.Shadow
                 );
             }
-            else{
+            else {
 
-                if(command.Pentomino.inTray == 1){
+                if (command.Pentomino.inTray == 1) {
                     this._game.removeFromTray(pentomino);
                 }
                 this._commandManager.ExecCommand(
                     new PlaceCommand(
                         pentomino,
                         this._game.getPosition(pentomino),
-                        [posX,posY]
+                        [posX, posY]
                     ), CommandTypes.Shadow);
             }
         }
