@@ -80,6 +80,10 @@ class Visual {
     placePentomino(pentomino, posX, posY, cmdType=CommandTypes.Original){
         this.gameController.placePentomino(pentomino, posX, posY,cmdType);
         this.positionPiece(pentomino);
+        if(unoccupiedCells == 0){
+            //alert("congratulations, you completed");
+            this.gameIsWon();
+        }
     }
 
     movePentominoToTray(pentomino,cmdType=CommandTypes.Original){
