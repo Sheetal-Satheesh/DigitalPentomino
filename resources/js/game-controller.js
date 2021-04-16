@@ -239,7 +239,7 @@ class GameController {
             console.error("HintAI not initialized");
         }
 
-        return this.hintAI().getHint();
+        return this.hintAI().getHint(this.game());
     }
 
     getSolutions() {

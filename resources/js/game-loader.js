@@ -119,6 +119,7 @@ class GameLoader {
         let boardSettings = this._game._board.getBoardSettings();
         let boardStartXY = boardSettings.boardStartPos;
         let boardSize = boardSettings.boardSize;
+        let gameName = this._game.getName();
         let gameId = this._game.getId();
 
         if (!this.isGameStateSaved(this._game)) {
@@ -130,7 +131,8 @@ class GameLoader {
         this.createGame(
             boardStartXY,
             boardSize,
-            this._game.getName);
+            "Block",
+            gameName);
     }
 
     saveGame() {

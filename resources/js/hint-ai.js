@@ -8,11 +8,11 @@ if (typeof require != 'undefined') {
 class HintAI {
 
     constructor(game) {
-        this._game = game;
+        //this._game = game;
     }
 
-    getHint() {
-        let game = this._game;
+    getHint(game) {
+        // let game = this._game;
         let possibleSolutions = this._getPossibleSolutions(game, game.getSolutions());
 
         if (possibleSolutions.length > 0) {

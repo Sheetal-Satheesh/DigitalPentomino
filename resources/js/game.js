@@ -30,7 +30,6 @@ class Game {
         this._pentominosOutside = [];
         this._pentominoOutsidePositions = [];
         this._collisions = [];
-        this._fillUpTray(); 
     }
 
     updateCmdKey(cmdKey) {
