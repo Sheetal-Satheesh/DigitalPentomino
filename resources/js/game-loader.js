@@ -28,7 +28,9 @@ class GameLoader {
 
         /**[
          *  gameId : {
-         *              cmdManager:
+         *              cmdManager: this._commandManager
+         *              hintAI: this._hintAI,
+         *              game: this._game,
          *              commandKey: []
          *          },
          * ]
@@ -48,46 +50,40 @@ class GameLoader {
         return this._game;
     }
 
+    getGameImages() {
+        return this._gameImages;
+    }
+
+    getGames() {
+        return this._gameList;
+    }
+
+
+    setGame(game) {
+        this._game = game;
+    };
+
+    setCmdManager(cmdManager) {
+        this._commandManager = cmdManager;
+    }
+
+    setHintAI(hintAI) {
+        this._hintAI = hintAI;
+    }
+
     isGameStateSaved(game) {
         let gameId = game.getId();
 
-        if (this._gameList.hasOwnProperty(gameId)) {
-            if (this._gameList[gameId].cmdKey.length == 0) {
-                return false;
-            }
-            else {
-                return true;
-            }
-        }
-        else {
+        if (!this._gameList.hasOwnProperty(gameId)) {
             return false;
         }
-    }
 
-    deleteGameImage() {
-
-    }
-
-    resetGame() {
-        if (isEmpty(this._game)) {
-            console.error("game object is not initialized");
-            return;
+        if (this._gameList[gameId].cmdKey.length == 0) {
+            return false;
         }
-        let boardSettings = this._game._board.getBoardSettings();
-        let boardStartXY = boardSettings.boardStartPos;
-        let boardSize = boardSettings.boardSize;
-        let gameId = this._game.getId();
-
-        if (!this.isGameStateSaved(this._game)) {
-            delete this._gameList[gameId];
-            this._game.reset();
-            this._commandManager.Reset();
+        else {
+            return true;
         }
-
-        this.createGame(
-            boardStartXY,
-            boardSize,
-            this._game.getName);
     }
 
     createGame(boardStartXY,
@@ -115,6 +111,28 @@ class GameLoader {
         this.saveGame();
     }
 
+    resetGame() {
+        if (isEmpty(this._game)) {
+            console.error("game object is not initialized");
+            return;
+        }
+        let boardSettings = this._game._board.getBoardSettings();
+        let boardStartXY = boardSettings.boardStartPos;
+        let boardSize = boardSettings.boardSize;
+        let gameId = this._game.getId();
+
+        if (!this.isGameStateSaved(this._game)) {
+            delete this._gameList[gameId];
+            this._game.reset();
+            this._commandManager.Reset();
+        }
+
+        this.createGame(
+            boardStartXY,
+            boardSize,
+            this._game.getName);
+    }
+
     saveGame() {
         let cmdKey = this._game.getCmdKey();
         let gameId = this._game._id;
@@ -139,19 +157,6 @@ class GameLoader {
             this._gameList[gameId].cmdManager = cmdManagerClone;
             this._gameList[gameId].hintAI = hintAIClone;
         }
-
-    }
-
-    setGame(game) {
-        this._game = game;
-    };
-
-    setCmdManager(cmdManager) {
-        this._commandManager = cmdManager;
-    }
-
-    setHintAI(hintAI) {
-        this._hintAI = hintAI;
     }
 
     deleteGame(key) {
@@ -186,14 +191,6 @@ class GameLoader {
         this._gameImages = this._gameImages.filter(
             (obj) => Object.keys(obj)[0] !== key);
         this.deleteGame(key);
-    }
-
-    getGameImages() {
-        return this._gameImages;
-    }
-
-    getGames() {
-        return this._gameList;
     }
 
     loadGame(cmdKey) {
