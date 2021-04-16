@@ -567,7 +567,7 @@ class Visual {
         labelPossibleSolutions.innerText = this.gameController.getHint().getPossibleSolutions().length;
     }
 
-   callHintAI(){
+    callHintAI(){
         let hintElement = document.getElementById("myHint");
         hintElement.classList.toggle("show");
         hintElement.style.visibility = "visible";
@@ -592,8 +592,6 @@ class Visual {
         this.indicateHint(hint,commandNumber);
     }
 
-
-   
     blinkCells(cells, bgColor, blinkColor) {
         let menu = [];
 
@@ -621,10 +619,19 @@ class Visual {
     }
 
     checkHintCommandsForPlaceCommand(hintCommands){
-        for (let i = 0; i < hintCommands.length; i++){
-            if (hintCommands[i].Name() == "Place"){
-                return [true,i];
+        if(hintCommands == null){
+            console.log("hint command is null");
+
+        }
+
+        else{
+
+            for (let i = 0; i < hintCommands.length; i++){
+                if (hintCommands[i].Name() == "Place"){
+                    return [true,i];
+                }
             }
+
         }
 
         return [false, null];
@@ -682,7 +689,12 @@ class Visual {
                 let prevBackground = [];
 
                 //indicate piece to be moved (and fade away)
-                this.indicatePentomino(hintinPen,timeoutFrame);
+                Array.prototype.forEach.call(document.getElementById("piece_" + hintinPen.name).getElementsByClassName("bmPoint"), function(element) {
+                    element.style["box-shadow"] = "0 0 20px " + pentominoColor;
+                    setTimeout(function(){
+                        element.style.removeProperty("box-shadow");
+                    }, timeoutFrame*4);
+                });
 
                 //show destination position (and fade away)
                 let piecePos = this.getOccupiedPositions(tempHintinPen,hintCommand);
@@ -745,8 +757,6 @@ class Visual {
                     setTimeout(function(){
                     rotateAntiClkWise();
                     },timeoutFrame);
-                } else {
-                    this.indicatePentomino(hintinPen,timeoutFrame);
                 }
 
 
@@ -760,8 +770,6 @@ class Visual {
                     setTimeout(function(){
                     rotateClkWise();
                     },timeoutFrame);
-                } else {
-                    this.indicatePentomino(hintinPen,timeoutFrame);
                 }
                 break;
 
@@ -774,8 +782,6 @@ class Visual {
                     setTimeout(function(){
                     flipH();
                     },timeoutFrame);
-                } else {
-                    this.indicatePentomino(hintinPen,timeoutFrame);
                 }
                 break;
 
@@ -787,32 +793,20 @@ class Visual {
                     setTimeout(function(){
                     flipV();
                     },timeoutFrame);
-                } else {
-                    this.indicatePentomino(hintinPen,timeoutFrame);
                 }
                 break;
 
             default:
                 console.error("Unknown piece action detected!");
-            }
         }
+
     }
+}
 
-    indicatePentomino(pentomino, timeframe){
-        Array.prototype.forEach.call(document.getElementById("piece_" + pentomino.name).getElementsByClassName("bmPoint"), function(element) {
-            element.style["box-shadow"] = "0 0 20px " + pentomino.color;
-            setTimeout(function(){
-                element.style.removeProperty("box-shadow");
-            }, timeframe*4);
-        });
-    }
-
-
-
-     gameIsWon(){
+    gameIsWon(){
         var modal = document.getElementById('modalTop');
         let modalText = document.getElementById("modalText");
-        modalText.innerHTML = "congratulations !!";
+        modalText.innerHTML = "Congratulations !!";
         modalText.innerHTML+= "<br/> <img src='resources/images/icons/jboy-2.ico'>";
         modalText.innerHTML += "<br /> play again ?";
         modal.style.display="block";
@@ -829,7 +823,8 @@ class Visual {
             }
     }
 
-    
+
+
 
     indicateAreaCells(piece, hintCommand){
         let hintRow = hintCommand._nextPosition[0];
