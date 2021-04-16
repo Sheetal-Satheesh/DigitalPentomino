@@ -591,10 +591,6 @@ class Visual {
             }
         }
 
-        if(hint.getCommands() == null){
-            return;
-        }
-
         let hintCommand = hint.getCommands()[commandNumber];
         let hintinPen = hintCommand._pentomino;
         //popupText.textContent = this.generateHintText(hint,commandNumber);
@@ -628,20 +624,11 @@ class Visual {
     }
 
     checkHintCommandsForPlaceCommand(hintCommands){
-        if(hintCommands == null){
-            console.log("hint command is null");
-            alert("congrats");
-        }
-
-        else{
-
             for (let i = 0; i < hintCommands.length; i++){
                 if (hintCommands[i].Name() == "Place"){
                     return [true,i];
                 }
             }
-
-        }
 
         return [false, null];
     }
