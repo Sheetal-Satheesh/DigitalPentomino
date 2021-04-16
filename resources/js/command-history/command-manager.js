@@ -109,6 +109,10 @@ class CommandManager {
     }
 
     CmdSequences(startKey, endKey) {
+        if(startKey == undefined){
+            startKey = this.StartCmdKey();
+        }
+
         let cmdObj = this._cmdTree.CollectCmdSequences(
             this._cmdTree.Root(),
             startKey,
@@ -128,15 +132,7 @@ class CommandManager {
                 cmdSequences.push(command.ExecUndoValues());
             }
         }, this);
-        return cmdSequences;
-    }
-
-    JumpToRoot() {
-        let cmdSequences = [];
-        while (!this._cmdTree.isAtRoot()) {
-            executedCommands.push(this.undo());
-        }
-        return cmdSequences;
+        return [cmdSequences, cmdObj.seqType];
     }
 
     ExecCmdSequence(cmdSequence, onUndo, onRedo) {
@@ -179,8 +175,8 @@ class CommandManager {
 
     }
 
-    Redo(strategy) {
-        let command = this._cmdTree.MoveDown(strategy);
+    Redo() {
+        let command = this._cmdTree.MoveDown();
         if (command == undefined) {
             return undefined;
         }

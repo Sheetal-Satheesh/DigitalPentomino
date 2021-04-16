@@ -79,11 +79,12 @@ class CommandTree {
             return current;
         }
 
+        let retNode=undefined;
         current.Children().forEach((node) => {
-            return this.SearchCmdNode(node, key);
+            retNode = this.SearchCmdNode(node, key);
         }, this);
 
-        return current;
+        return retNode;
     }
 
     CollectCmdKeySequences(
@@ -192,7 +193,7 @@ class CommandTree {
         return retObj;
     }
 
-    MoveUp(childSelection = RedoStrategy.TOP) {
+    MoveUp() {
         let current = undefined;
 
         if (this._currentCmdNode == undefined) {
@@ -266,7 +267,7 @@ class CommandTree {
      * @returns 
      */
 
-    MoveDown(childSelection = RedoStrategy.TOP) {
+    MoveDown() {
         let current = undefined;
         if (this._currentCmdNode == undefined) {
             if (this._rootCmdNode == undefined) {
@@ -347,6 +348,10 @@ class CommandTree {
 
     Current() {
         return this._currentCmdNode;
+    }
+
+    PositionCurrent(cmdKey){
+        this._currentCmdNode = this.SearchCmdNode(this._rootCmdNode, cmdKey);
     }
 
     CurrentCmdKey() {

@@ -190,7 +190,7 @@
 
         <div id="game" class="FlashOff">
             <div id="tray"></div> <!-- tray -->
-            <div id="field" ></div> <!-- field -->
+            <div id="field"></div> <!-- field -->
             <div id="piecearea"></div> <!-- piecearea -->
             <div id="modalTop" class="modal">
                 <span onclick="document.getElementById('modalTop').style.display='none'" class="close"
@@ -312,11 +312,11 @@
         /**
          * hinting popup disappears when mouse pointer is away
         */
-        document.getElementById("hintButton").addEventListener("mouseleave", function() {
-                 document.getElementById("myHint").style.visibility = "hidden";
+        document.getElementById("hintButton").addEventListener("mouseleave", function () {
+            document.getElementById("myHint").style.visibility = "hidden";
         });
 
-        function rotateClkWise(){
+        function rotateClkWise() {
             pd.rotateClkWise();
         }
 
@@ -530,12 +530,12 @@
         }
 
 
-        function addFlash(elementId){
-            let element = document.querySelector("#"+elementId);
+        function addFlash(elementId) {
+            let element = document.querySelector("#" + elementId);
             element.classList.add('FlashOn');
             var millisecondsToWait = 100;
-                setTimeout(function() {
-                    element.classList.remove('FlashOn');
+            setTimeout(function () {
+                element.classList.remove('FlashOn');
             }, millisecondsToWait);
         }
 
@@ -565,12 +565,13 @@
         function deleteGameImage(key) {
             pd.visual.deleteGameImage(key);
             showGameImages();
-        }        
+        }
 
         function showGameImages() {
             var modal = document.getElementById('modalTop');
             modal.style.background = " rgb(220, 240, 237)";
             modal.style.display = "block";
+
             document.querySelector(".modalFormContent").style.display = "none";
             document.querySelector(".innerGrid").style.display = "block";
 

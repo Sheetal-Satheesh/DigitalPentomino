@@ -36,12 +36,7 @@ class GameLoader {
          * 
          * 
         */
-    }
-
-
-    setGame(game) {
-        this._game = game;
-    };
+    } 
 
     getGame(game) {
         return this._game;
@@ -87,25 +82,32 @@ class GameLoader {
         this._game._fillUpTray();
         this._commandManager = new CommandManager();
         this._hintAI = new HintAI(this._game);
+        this.saveGame();
     }
 
     saveGame() {
         let cmdKey = this._game.getCmdKey();
         let gameId = this._game._id;
-        if (cmdKey == undefined) {
-            return;
-        }
+
         if (!this._gameList.hasOwnProperty(gameId)) {
             this._gameList[gameId] = {
+                "game": this._game,
                 "cmdManager": this._commandManager,
                 "cmdKey": [cmdKey]
             };
+
+            this._gameList[gameId].cmdKey = this._gameList[gameId].cmdKey.filter(
+                (cmdKey) => cmdKey !== undefined);
         }
         else {
             this._gameList[gameId].cmdKey.push(cmdKey);
         }
 
     }
+
+    setGame(game) {
+        this._game = game;
+    };
 
     deleteGame(key) {
         if (key == undefined) {
@@ -149,14 +151,15 @@ class GameLoader {
         return this._gameList;
     }
 
-    loadGame(cmdKey) {
 
+    loadGame(cmdKey) {
         for (let gameKey in this._gameList) {
             if (this._gameList.hasOwnProperty(gameKey)) {
                 for (let key in this._gameList[gameKey].cmdKey) {
                     if (this._gameList[gameKey].cmdKey[key] == cmdKey) {
                         this._commandManager = this._gameList[gameKey].cmdManager;
-                        this.setGame(this._commandManager._game); // Error: need to handle properly
+                        this.setGame(this._gameList[gameKey].game);
+                        this.loadGameState(cmdKey);
                         return;
                     }
                 }
@@ -179,7 +182,53 @@ class GameLoader {
         return this._hintAI;
     }
 
-    static loadGameState(cmdKey) {
+    loadGameState(targetStateKey){
+        let currCmdKey = this._commandManager.CurrentCmdKey();
+        let [cmdSequences, seqType] = this._commandManager.CmdSequences(currCmdKey,targetStateKey);
+        let cmdLength = cmdSequences.length;
+        if(seqType == 2){
+            --cmdLength;
+        }
+
+        for (let indx = 0; indx < cmdLength; indx++) {
+            if(seqType == 2){
+                this._commandManager.CmdTree().MoveUp();
+            }
+            else{
+                this._commandManager.CmdTree().MoveDown();
+            }
+
+            let command = cmdSequences[indx];
+            let pentomino = command.Pentomino;
+            let posX = command.PosX;
+            let posY = command.PosY;
+
+            if(posX == undefined){
+                pentomino.updateTrayValue(1);
+                this._game.addToTray(pentomino);
+                this._commandManager.ExecCommand(
+                    new RemoveCommand(
+                        pentomino,
+                        this._game.getPosition(pentomino)
+                    ),CommandTypes.Shadow
+                );
+            }
+            else{
+
+                if(command.Pentomino.inTray == 1){
+                    this._game.removeFromTray(pentomino);
+                }
+                this._commandManager.ExecCommand(
+                    new PlaceCommand(
+                        pentomino,
+                        this._game.getPosition(pentomino),
+                        [posX,posY]
+                    ), CommandTypes.Shadow);
+            }
+        }
+    }
+
+    static loadGadmeState(cmdKey) {
         var fController = new FrontController();
         let gmController = fController.controller;
         let currGame = gmController.game();

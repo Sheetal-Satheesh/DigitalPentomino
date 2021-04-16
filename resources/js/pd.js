@@ -86,7 +86,7 @@ class PD {
     }
 
 
-    loadGame(board, type) {
+    loadGame(board, loadType) {
         let gameObject = this.getGameUISettings(board);
         this.boardName = board; // HACK: To be changed later. This needs to be obtained from the backend. 
         this.boardSize = gameObject.boardSize;
@@ -98,16 +98,17 @@ class PD {
         this.boardStartX = Math.floor((this.gameHeight - this.boardSize[0]) / 2);
         this.boardStartY = Math.floor((this.gameWidth - this.boardSize[1]) / 2);
 
-        if (type != "Snapshot") {
+        if (loadType != "Snapshot") {
             this.gameController.createGame(
                 [this.boardStartX, this.boardStartY],
                 this.boardSize,
                 this.boardShape,
                 board);
-
+            this.visual = new Visual(this);
+        }else{
+            this.visual.reload(pd);
         }
 
-        this.visual = new Visual(this);
         if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
             this.visual.showNumberOfPossibleSolutions();
         }

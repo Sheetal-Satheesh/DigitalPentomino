@@ -11,13 +11,11 @@ Object.freeze(UIProperty);
 const CommandTypes = { "Original": 1, "Shadow": 2 };
 Object.freeze(CommandTypes);
 
-const RedoStrategy = { "TOP": 1, "BOTTOM": 2 };
-Object.freeze(RedoStrategy);
 let lastHintedPentName = null;
 let randomCell;
 class Visual {
 
-    constructor(pd) {
+    constructor(pd, type="reload") {
         this.pd = pd;
         this.gameController = pd.gameController;
         this.boardX = pd.boardStartX;
@@ -28,10 +26,26 @@ class Visual {
 
         this.renderBoard();
         this.renderPieces();
-
         this.disablePrefillButton(false);
+        this.initalizeListeners();   
+    }
 
-        this.initalizeListeners();
+    reload(pd){
+        this.boardX = pd.boardStartX;
+        this.boardY = pd.boardStartY;
+        this.pieces = this.gameController.getPentominoes();
+        this.selected = false;
+        this.overlapBlock = new OverlapBlock();
+
+        this.renderBoard();
+        this.renderPieces();
+        this.pieces.forEach((pentomino) => {
+            let inGameArea = this.gameController.isPlacedInGame(pentomino);
+            if (inGameArea == true) {
+                pentomino.updateTrayValue(0);
+                this.positionPiece(pentomino);
+            }
+        });
     }
 
     getBoard() {
@@ -52,7 +66,6 @@ class Visual {
     }
 
     isPentominoInBlockCells(pentomino) {
-
         var [pX, pY] = this.gameController.getPositionOfPentomino(pentomino);
         var pMatrix = pentomino.getMatrixRepresentation();
 
@@ -219,6 +232,7 @@ class Visual {
 
         }
         else {
+
             var bCellsFnd = this.isPentominoInBlockCells(piece);
             var collisonFnd = this.isCollision(piece);
             if (collisonFnd) {
@@ -958,15 +972,15 @@ class Visual {
         if (command == undefined) {
             return;
         }
-        this.execShadowCmd(command, "Undo");
+        this.execShadowCmd(command);
     }
 
     redo() {
-        let command = this.gameController.redo(RedoStrategy.TOP);
+        let command = this.gameController.redo();
         if (command == undefined) {
             return;
         }
-        this.execShadowCmd(command, "Redo");
+        this.execShadowCmd(command);
     }
 
     saveGameImage(image) {
@@ -987,11 +1001,8 @@ class Visual {
     }
 
     loadGameState(targetStateKey) {
-        let currGame = this.gameController.game();
         let currentCmdKey = this.gameController.getCurrentCmdKey();
-        //this.gameController.saveGame(currGame);
-        let cmdSequences = this.gameController.getCmdSequences(currentCmdKey, targetStateKey);
-
+        let [cmdSequences,swq] = this.gameController.getCmdSequences(currentCmdKey, targetStateKey);
         for (let indx = 0; indx < cmdSequences.length; indx++) {
             this.execShadowCmd(cmdSequences[indx]);
         }
@@ -1018,14 +1029,14 @@ class Visual {
             }
         }
 
-        let cmdSequences = this.gameController.getCmdSequences(startKey, targetKey);
+        let [cmdSequences,seq] = this.gameController.getCmdSequences(startKey, targetKey);
         let ldGame = this.loadGameState(startKey);
         if (ldGame != undefined) {
             this.pieces = this.gameController.getPentominoes();
             this.pieces = this.pieces.map((pentomino) => {
                 let inGameArea = this.gameController.isPlacedInGame(pentomino);
                 if (inGameArea == false) {
-                    pentomino.toTray();
+                    pentomino.updateTrayValue(0);
                 }
                 return pentomino;
             }, this);
