@@ -40,7 +40,7 @@ class Game {
         return this._cmdKey;
     }
 
-    getId(){
+    getId() {
         return this._id;
     }
 
@@ -468,6 +468,7 @@ class Game {
 
     }
 
+
     removeFromTray(pentomino) {
         this._tray = this._tray.filter(item => (item.name != pentomino.name));
     }
@@ -500,9 +501,12 @@ class Game {
         });
     }
 
-    getPentominoes() {
+    getAllPentominoes() {
         return this._board.getPentominoes().concat(this._pentominosOutside).concat(this._tray);
+    }
 
+    getPentominosInTray() {
+        return this._tray;
     }
 
     getPentominoesInGmArea() {

@@ -105,7 +105,11 @@ class GameLoader {
                     Boardshape),
                 name));
 
-        this._game._fillUpTray();
+        let piecesInTray = this._game.getPentominosInTray();
+
+        if (piecesInTray.length == 0) {
+            this._game._fillUpTray();
+        }
         this._commandManager = new CommandManager();
         this._hintAI = new HintAI(this._game);
         this.saveGame();
@@ -223,6 +227,7 @@ class GameLoader {
             startCmdKey = this._commandManager.CurrentCmdKey();
         }
 
+
         let [cmdSequences, seqType] = this._commandManager.CmdSequences(startCmdKey, targetStateKey);
         let cmdLength = cmdSequences.length;
         if (seqType == 2) {
@@ -254,9 +259,10 @@ class GameLoader {
             }
             else {
 
-                if (command.Pentomino.inTray == 1) {
-                    this._game.removeFromTray(pentomino);
-                }
+                // if (pentomino.inTray == 1) {
+                this._game.removeFromTray(pentomino);
+                pentomino.updateTrayValue(0);
+                // }
                 this._commandManager.ExecCommand(
                     new PlaceCommand(
                         pentomino,

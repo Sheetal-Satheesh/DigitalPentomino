@@ -15,36 +15,33 @@ let lastHintedPentName = null;
 let randomCell;
 class Visual {
 
-    constructor(pd, type="reload") {
+    constructor(pd, type = "reload") {
         this.pd = pd;
         this.gameController = pd.gameController;
         this.boardX = pd.boardStartX;
         this.boardY = pd.boardStartY;
-        this.pieces = this.gameController.getPentominoes();
+        this.pieces = this.gameController.getAllPentominoes();
         this.selected = false;
         this.overlapBlock = new OverlapBlock();
 
         this.renderBoard();
         this.renderPieces();
         this.disablePrefillButton(false);
-        this.initalizeListeners();   
+        this.initalizeListeners();
     }
 
-    reload(pd){
+    reload(pd) {
         this.boardX = pd.boardStartX;
         this.boardY = pd.boardStartY;
-        this.pieces = this.gameController.getPentominoes();
+        this.pieces = this.gameController.getAllPentominoes();
         this.selected = false;
         this.overlapBlock = new OverlapBlock();
 
         this.renderBoard();
         this.renderPieces();
-        this.pieces.forEach((pentomino) => {
-            let inGameArea = this.gameController.isPlacedInGame(pentomino);
-            if (inGameArea == true) {
-                pentomino.updateTrayValue(0);
-                this.positionPiece(pentomino);
-            }
+        let pentominosInGameArea = this.gameController.getPentominoesInGmArea();
+        pentominosInGameArea.forEach((pentomino) => {
+            this.positionPiece(pentomino);
         });
     }
 
@@ -98,7 +95,7 @@ class Visual {
         this.positionPiece(pentomino);
     }
 
-    removeFromTray(pentomino, cmdType = CommandTypes.Original) {
+    removeFromTray(pentomino) {
         if (pentomino.inTray == 0) {
             return;
         }
@@ -113,7 +110,7 @@ class Visual {
 
     clear() {
         this.gameController.resetGame();
-        this.pieces = this.gameController.getPentominoes();
+        this.pieces = this.gameController.getAllPentominoes();
         this.pd.visual.disableManipulations();
         this.renderPieces();
     }
@@ -1002,7 +999,7 @@ class Visual {
 
     loadGameState(targetStateKey) {
         let currentCmdKey = this.gameController.getCurrentCmdKey();
-        let [cmdSequences,swq] = this.gameController.getCmdSequences(currentCmdKey, targetStateKey);
+        let [cmdSequences, swq] = this.gameController.getCmdSequences(currentCmdKey, targetStateKey);
         for (let indx = 0; indx < cmdSequences.length; indx++) {
             this.execShadowCmd(cmdSequences[indx]);
         }
@@ -1029,10 +1026,10 @@ class Visual {
             }
         }
 
-        let [cmdSequences,seq] = this.gameController.getCmdSequences(startKey, targetKey);
+        let [cmdSequences, seq] = this.gameController.getCmdSequences(startKey, targetKey);
         let ldGame = this.loadGameState(startKey);
         if (ldGame != undefined) {
-            this.pieces = this.gameController.getPentominoes();
+            this.pieces = this.gameController.getAllPentominoes();
             this.pieces = this.pieces.map((pentomino) => {
                 let inGameArea = this.gameController.isPlacedInGame(pentomino);
                 if (inGameArea == false) {

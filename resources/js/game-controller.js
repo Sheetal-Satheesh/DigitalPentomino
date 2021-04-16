@@ -386,11 +386,19 @@ class GameController {
         return this.game().getBoardSize();
     }
 
-    getPentominoes() {
+    getAllPentominoes() {
         if (this.game() === null) {
             throw new Error("Game is not set");
         }
-        return this.game().getPentominoes();
+        return this.game().getAllPentominoes();
+    }
+
+    getPentominoesInGmArea() {
+        return this.game().getPentominoesInGmArea();
+    }
+
+    getPentominosInTray() {
+        return this.game().getPentominosInTray();
     }
 
     getPositionOfPentomino(pentomino) {
