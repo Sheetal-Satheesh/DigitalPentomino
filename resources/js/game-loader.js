@@ -14,8 +14,7 @@ class GameLoader {
         this._commandManager = null;
         this._hintAI = null;
         /**
-         * 
-         * 
+         *  
          * [{
          *  name: "",
          *  game: game,
@@ -34,30 +33,52 @@ class GameLoader {
          *          },
          * ]
          * 
-         * 
         */
-    } 
+    }
 
-    getGame(game) {
+    cmdManager() {
+        return this._commandManager;
+    }
+
+    hintAI() {
+        return this._hintAI;
+    }
+
+    getGame() {
         return this._game;
     }
 
-    isCmdManagerInGameList() {
-        let gameId = this._game._id;
+    isCmdManagerInGameList(game) {      
+        let gameId = game.getId();
         if (this._gameList.hasOwnProperty(gameId)) {
             return true;
         }
         else {
             return false;
         }
-
     }
 
     resetGame() {
+        if(isEmpty(this._game)){
+            console.error("game object is not initialized");
+            return;
+        }
+        let boardSettings = this._game._board.getBoardSettings();
+        let boardStartXY = boardSettings.boardStartPos;
+        let boardSize = boardSettings.boardSize;
+        
         this._game.reset();
-        if (!this.isCmdManagerInGameList()) {
+        // this.createGame(
+        //     boardStartXY,
+        //     boardSize,
+        //     this._game.getName);
+
+        // this._game.reset();
+        if (!this.isCmdManagerInGameList(this._game)) {
             this._commandManager.Reset();
         }
+            
+        // this._commandManager.Reset();
     }
 
     createGame(boardStartXY,
@@ -138,10 +159,10 @@ class GameLoader {
     }
 
     deleteGameImage(key) {
-        this._gameImages = this._gameImages.filter((obj) => Object.keys(obj)[0] !== key);
+        this._gameImages = this._gameImages.filter(
+            (obj) => Object.keys(obj)[0] !== key);
         this.deleteGame(key);
     }
-
 
     getGameImages() {
         return this._gameImages;
@@ -150,7 +171,6 @@ class GameLoader {
     getGames() {
         return this._gameList;
     }
-
 
     loadGame(cmdKey) {
         for (let gameKey in this._gameList) {
@@ -167,19 +187,6 @@ class GameLoader {
         }
 
         console.error("commandKey not found");
-    }
-
-    loadGameFromJson(gmconfig) {
-
-    }
-
-
-    cmdManager() {
-        return this._commandManager;
-    }
-
-    hintAI() {
-        return this._hintAI;
     }
 
     loadGameState(targetStateKey){

@@ -31,6 +31,13 @@ class Board {
         this._pentominoPositions = [];
     }
 
+    getBoardSettings(){
+        return {
+            "boardStartPos": [this._boardRows,this._boardSCols],
+            "boardSize": [this._boardRows,this._boardCols]
+        };
+    }
+
     placePentomino(pentomino, row, col) {
 
         /**

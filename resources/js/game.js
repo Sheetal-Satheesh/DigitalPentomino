@@ -27,10 +27,10 @@ class Game {
     reset() {
         this._board.reset();
         this._tray = [];
-        this._fillUpTray();
         this._pentominosOutside = [];
         this._pentominoOutsidePositions = [];
         this._collisions = [];
+        this._fillUpTray(); 
     }
 
     updateCmdKey(cmdKey) {
@@ -39,6 +39,10 @@ class Game {
 
     getCmdKey() {
         return this._cmdKey;
+    }
+
+    getId(){
+        return this._id;
     }
 
     /**
