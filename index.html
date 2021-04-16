@@ -164,18 +164,18 @@
             <div id="tray"></div> <!-- tray -->
             <div id="field"></div> <!-- field -->
             <div id="piecearea"></div> <!-- piecearea -->
-            <div id="modalTop" class="modal">
-                <span onclick="document.getElementById('modalTop').style.display='none'" class="close" title="Close Modal">x</span>
+            <div id="modalTop" class="modal" data-keyboard="false" >
                 <form class="modalContent">
                   <div class="modalContainer">
                     <h3 id="modalText"></h3>
+                    <span onclick="document.getElementById('modalTop').style.display='none'" class="close" title="Close Modal">&times;</span>
                     <div class="clearfix">
                       <button type="button" onclick="document.getElementById('modalTop').style.display='none'" class="cancelbtn">No</button>
                       <button type="button" onclick="document.getElementById('modalTop').style.display='none'" class="deletebtn">Yes</button>
                     </div>
                   </div>
                 </form>
-              </div> <!--modal end-->
+            </div> <!--modal end-->
         </div> 
 
     <!-- </canvas> -->
