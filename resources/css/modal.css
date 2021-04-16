@@ -50,6 +50,8 @@ button:hover {
     padding-bottom: 2vw;;
     background-color: rgb(220, 240, 237);
     border: .2vw solid rgb(2, 71, 62) ;
+ 
+
 }
 
 /* Add padding and center-align text to the container */
@@ -64,22 +66,21 @@ button:hover {
   /* The Modal Close Button (x) */
  .modal .close {
     position: absolute;
-    right: 1vw;
-    top: 0vw;
-    font-size: 28px;
+    right: 35px;
+    top: 15px;
+    font-size: 50px;
     font-family: 'Courier New', Courier, monospace;
-    font-weight: bold;
-    color: #000;
-    float:right;
+    font-weight: 900;
+    color: #f30808;
   }
   
   .close:hover,
   .close:focus {
-  color: #000;
-  text-decoration: none;
-  cursor: pointer;
+    color: #f44336;
+    cursor: pointer;
   }
 
+/*    */
 
 
 
