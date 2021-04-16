@@ -807,28 +807,27 @@ class Visual {
                 element.style.removeProperty("box-shadow");
             }, timeframe*4);
         });
+    }
 
-    showGameSolved(){
+    showGameSolved() {
         var modal = document.getElementById('modalTop');
         let modalText = document.getElementById("modalText");
         modalText.innerHTML = "congratulations !!";
-        modalText.innerHTML+= "<br/> <img src='resources/images/icons/jboy-2.ico'>";
+        modalText.innerHTML += "<br/> <img src='resources/images/icons/jboy-2.ico'>";
         modalText.innerHTML += "<br /> play again ?";
-        modal.style.display="block";
+        modal.style.display = "block";
         let dltBtn = document.querySelector(".deletebtn");
         dltBtn.addEventListener("click", () => {
             pd.reset();
         });
-            //document.getElementsByClassName("gamearea").style.pointerEvents = "none";
-            // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function(event) {
+        //document.getElementsByClassName("gamearea").style.pointerEvents = "none";
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
             if (event.target == modal) {
                 modal.style.display = "none";
-                }
             }
+        }
     }
-
-
 
 
     indicateAreaCells(piece, hintCommand){
