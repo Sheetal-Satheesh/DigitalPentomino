@@ -80,13 +80,22 @@ class Visual {
     placePentomino(pentomino, posX, posY, cmdType=CommandTypes.Original){
         this.gameController.placePentomino(pentomino, posX, posY,cmdType);
         this.positionPiece(pentomino);
+        this.checkIfGameWon();
+    }
+
+    checkIfGameWon(){
+       if(this.isGameWon()){
+            this.showGameSolved();
+       }
+    }
+
+
+    isGameWon(){
         let game = this.gameController.game()._board;
         let unoccupiedCells = game.getUnoccupiedPositions();
-        if(unoccupiedCells == 0){
-            //alert("congratulations, you completed");
-            this.gameIsWon();
-        }
+        return unoccupiedCells == 0;
     }
+
 
     movePentominoToTray(pentomino,cmdType=CommandTypes.Original){
         this.gameController.removePentomino(pentomino, cmdType);
@@ -515,6 +524,7 @@ class Visual {
             this.gameController.rotatePentominoClkWise(piece,cmdType);
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
+            this.checkIfGameWon();
         }
     }
 
@@ -529,6 +539,7 @@ class Visual {
             this.gameController.rotatePentominoAntiClkWise(piece,cmdType);
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
+            this.checkIfGameWon();
         }
     }
 
@@ -544,6 +555,7 @@ class Visual {
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationX", newRot.toString() + "deg");
             pieceDiv.setAttribute("flipped", 1 - flipped);
+            this.checkIfGameWon();
         }
     }
 
@@ -559,6 +571,7 @@ class Visual {
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationY", newRot.toString() + "deg");
             pieceDiv.setAttribute("flipped", 1 - flipped);
+            this.checkIfGameWon();
         }
     }
 
@@ -568,10 +581,6 @@ class Visual {
     }
 
     callHintAI(){
-        let hintElement = document.getElementById("myHint");
-        hintElement.classList.toggle("show");
-        hintElement.style.visibility = "visible";
-        let popupText = document.getElementById("myHint");
         let hint = pd.gameController.getHint();
         //Always show place command in case of non-exact hints:
         let commandNumber = 0;
@@ -803,7 +812,7 @@ class Visual {
     }
 }
 
-    gameIsWon(){
+    showGameSolved(){
         var modal = document.getElementById('modalTop');
         let modalText = document.getElementById("modalText");
         modalText.innerHTML = "congratulations !!";
