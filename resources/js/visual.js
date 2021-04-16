@@ -80,6 +80,8 @@ class Visual {
     placePentomino(pentomino, posX, posY, cmdType=CommandTypes.Original){
         this.gameController.placePentomino(pentomino, posX, posY,cmdType);
         this.positionPiece(pentomino);
+        let game = this.gameController.game()._board;
+        let unoccupiedCells = game.getUnoccupiedPositions();
         if(unoccupiedCells == 0){
             //alert("congratulations, you completed");
             this.gameIsWon();
