@@ -58,39 +58,17 @@
   <div class = "cGame">
     <div id="functions">
         <img id = "logo" src="resources/images/icons/pentomino.png" alt="Pentomino" class="cLogo">
-    
+
         <div id="operations">
           <table>
-                <tr>
-                    <td>
-                        <button type="button" id='btnRotateLeft' class = "cActionBtn" onclick="rotateAntiClkWise()" disabled><img src="resources/images/icons/rotate_left.png">
-
-                        </button>
-        </td>
-        <td>
-            <button type="button" id='btnRotateRight' class="cActionBtn" onclick="rotateClkWise()" disabled> <img src="resources/images/icons/rotate_right.png">
-                        </button>
-        </td>
-        </tr>
-
-        <tr>
-            <td>
-                <button type="button" id='btnFlipH' class="cActionBtn" onclick="flipH()" disabled><img src="resources/images/icons/flip_horizontally.png">
-                        </button>
-            </td>
-            <td>
-                <button type="button" id='btnFlipV' class="cActionBtn" onclick="flipV()" disabled><img src="resources/images/icons/flip_vertically.png">
-                        </button>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <button type="button" id='reset' class="cActionBtn" onclick="resetGame()"><img src="resources/images/icons/tidy_up.png"></button>
-            </td>
-            <td>
-                <button type="button" id='prefillBoard' class="cActionBtn" onclick="prefillBoard()" disabled><img src="resources/images/icons/prefill.png"></button>
-            </td>
-        </tr>
+            <tr>
+                <td>
+                    <button type="button" id='reset' class="cActionBtn" onclick="resetGame()"><img src="resources/images/icons/tidy_up.png"></button>
+                </td>
+                <td>
+                    <button type="button" id='prefillBoard' class="cActionBtn" onclick="prefillBoard()" disabled><img src="resources/images/icons/prefill.png"></button>
+                </td>
+            </tr>
         </table>
 
         <table>
@@ -140,13 +118,13 @@
                 <form></form>
             </div>
         </div>
-            
+
 		<div class="form-popup" id="board_selection_form">
 
 			<div class="container" id="container">
-				
+
 				<!-- Board List is loaded dynamically from Board Config -->
-				
+
 				<div class="action_btn">
 					<button type="button" class="btnLoadGame" onclick="loadGame()">Load Board</button>
 					<button type="button" class="btnCancel" onclick="closeForm()">Cancel</button>
@@ -176,11 +154,11 @@
                   </div>
                 </form>
               </div> <!--modal end-->
-        </div> 
+        </div>
 
     <!-- </canvas> -->
-    
-    
+
+
     <div class = "cPieceManipulation" id ="pieceManipulation" >
         <table>
             <tr>
@@ -193,7 +171,7 @@
               </button>
                 </td>
                 <td>
-                    <button type="button" class="controlButton" id='OpflipH' onclick="flipV()"><img src="resources/images/icons/flip_vertically.png">
+                    <button type="button" class="controlButton" id='OpflipV' onclick="flipV()"><img src="resources/images/icons/flip_vertically.png">
               </button>
                 </td>
                 <td>
@@ -227,11 +205,11 @@
 			var board_container = document.getElementById('container');
 			var board_list = pd.getAllBoards();
 			var out = '';
-			
+
 			var input_element = '<input type="radio" name="board_list" class="input-hidden" id="$$" value="$$" >';
 			var label = '<label for="$$"> $$ <img src="resources/images/boards/$$.png" alt="$$" style="width:50%; height:50%;"/></label>';
 			var action_btn = '\n<div class="action_btn">\n<button type="button" class="btnLoadGame" onclick="loadGame()">Load Board</button>\n<button type="button" class="btnCancel" onclick="closeForm()">Cancel</button>\n</div>'
-			
+
 			for (var i=0; i< board_list.length; i++){
 				out += input_element.replaceAll("$$", board_list[i]) +'\n'+ label.replaceAll("$$", board_list[i]) + '<br><br>\n';
 			}
@@ -335,14 +313,8 @@
                 } else if (heading === "prefilling" && key === "enablePrefilling") {
                     let visible = settings[heading][key];
                     document.getElementById("prefillBoard").style.visibility = visible ? "visible" : "hidden";
-                } else if (heading === "ui" && key === "enablePentominoButtonsOnLeftPanel") {
-                    let visible = settings[heading][key];
-                    document.getElementById("btnRotateLeft").style.visibility = visible ? "visible" : "hidden";
-                    document.getElementById("btnRotateRight").style.visibility = visible ? "visible" : "hidden";
-                    document.getElementById("btnFlipH").style.visibility = visible ? "visible" : "hidden";
-                    document.getElementById("btnFlipV").style.visibility = visible ? "visible" : "hidden";
                 }
-            });
+              });
         }
 
         function updateSettingSchemaDefaultFromSettings(settingsSchema, settings) {

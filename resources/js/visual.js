@@ -206,7 +206,7 @@ class Visual {
             htmlElement.style.setProperty("--rotationY", "0deg");
             htmlElement.style.setProperty("--rotationZ", "0deg");
 
-        } 
+        }
         else {
             var bCellsFnd = this.isPentominoInBlockCells(piece);
             var collisonFnd = this.isCollision(piece);
@@ -288,10 +288,6 @@ class Visual {
             var colorB = this.hexToRgb(this.selected.color).b;
            btnClr.style.background =  "rgba(" + [colorR,colorG,colorB,0.5].join(',') +")";
         }
-        document.getElementById("btnRotateRight").disabled = false;
-        document.getElementById("btnRotateLeft").disabled = false;
-        document.getElementById("btnFlipH").disabled = false;
-        document.getElementById("btnFlipV").disabled = false;
 
         //set style for left and top value of element, but do not cross borders
         var width = UIProperty.WindowWidth / this.pd.gameWidth;
@@ -312,13 +308,7 @@ class Visual {
     }
 
     disableManipulations() {
-
-        document.getElementById("btnRotateRight").disabled = true;
-        document.getElementById("btnRotateLeft").disabled = true;
-        document.getElementById("btnFlipH").disabled = true;
-        document.getElementById("btnFlipV").disabled = true;
         document.getElementById('pieceManipulation').style.display = 'none';
-
     }
     // 	save(piece) {
     // 		console.log("insave::",piece)
@@ -576,7 +566,7 @@ class Visual {
         this.indicateHint(hint,commandNumber);
     }
 
-   
+
     blinkCells(cells, bgColor, blinkColor) {
         let menu = [];
 
@@ -698,7 +688,7 @@ class Visual {
                             prevBackground[i] = fieldvalue.style.background;
                             fieldvalue.style.background = pentominoColor;
                             this.hideArea(areaPos, prevBackground);
-                            }  
+                            }
                         }
                         break;
                     default:
@@ -881,7 +871,7 @@ class Visual {
         let prefillCandidates = [];
         let threshold = SettingsSingleton.getInstance().getSettings().prefilling.distanceValue;
         let scheme = SettingsSingleton.getInstance().getSettings().prefilling.prefillingStrategy;
-        
+
         if (randomSolution != undefined) {
             switch(scheme) {
                 case "distance":
@@ -891,7 +881,7 @@ class Visual {
                     prefillCandidates = this.prefillBasedOnAdjacentPieces(randomSolution, threshold);
                     break;
             }
-            
+
         } else {
             this.disablePrefillButton(false);
             throw new Error("Could not find a random solution!!!"); //TODO: Need more meaningful error message here
@@ -941,12 +931,12 @@ class Visual {
         let prefillCandidates = [];
         let blockedCells = {};
         let bNearPentomino = false;
-        let blockedCellsTemp = {}; 
-        let x = 0, y = 0; 
-        
+        let blockedCellsTemp = {};
+        let x = 0, y = 0;
+
         for(let i = 0; i < randomSolution[0].length; ++i) {
             piecePosition = randomSolution[0][i]; //Return and remove the first element of the array
-            
+
             currentAnchor = [piecePosition.boardPosition[0] + this.boardX,
                             piecePosition.boardPosition[1] + this.boardY];
             piece = randomSolution[1][i];
@@ -971,7 +961,7 @@ class Visual {
                             else if(coordinates[0] == x-1 && coordinates[1] == y) bNearPentomino = true;
                             else if(coordinates[0] == x && coordinates[1] == y+1) bNearPentomino = true;
                             else if(coordinates[0] == x && coordinates[1] == y-1) bNearPentomino = true;
-                        });                            
+                        });
                     }
                 }
                 if(bNearPentomino) {
@@ -996,14 +986,14 @@ class Visual {
                 prefillCandidates.push(piece);
                 piece.removeFromTray();
                 this.gameController.placePentomino(piece, currentAnchor[0], currentAnchor[1]);
-                
+
             } else {
                 piece = new Pentomino(piece.name);
                 prefillCandidates.push(piece);
             }
         }
-        
-        return prefillCandidates; 
+
+        return prefillCandidates;
     }
 
     prefillBasedOnDistance(randomSolution, threshold){
@@ -1032,7 +1022,7 @@ class Visual {
             if(bOverlap) {
                 piece = new Pentomino(piece.name);
                 prefillCandidates.push(piece);
-                continue;   
+                continue;
             }
             prefillCandidates.push(piece);
             positions.push(currentAnchor);
