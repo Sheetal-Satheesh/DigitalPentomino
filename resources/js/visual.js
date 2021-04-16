@@ -567,7 +567,7 @@ class Visual {
         labelPossibleSolutions.innerText = this.gameController.getHint().getPossibleSolutions().length;
     }
 
-   callHintAI(){
+    callHintAI(){
         let hintElement = document.getElementById("myHint");
         hintElement.classList.toggle("show");
         hintElement.style.visibility = "visible";
@@ -621,7 +621,7 @@ class Visual {
     checkHintCommandsForPlaceCommand(hintCommands){
         if(hintCommands == null){
             console.log("hint command is null");
-
+            alert("congrats");
         }
 
         else{
@@ -806,7 +806,7 @@ class Visual {
     gameIsWon(){
         var modal = document.getElementById('modalTop');
         let modalText = document.getElementById("modalText");
-        modalText.innerHTML = "Congratulations !!";
+        modalText.innerHTML = "congratulations !!";
         modalText.innerHTML+= "<br/> <img src='resources/images/icons/jboy-2.ico'>";
         modalText.innerHTML += "<br /> play again ?";
         modal.style.display="block";
