@@ -80,7 +80,22 @@ class Visual {
     placePentomino(pentomino, posX, posY, cmdType=CommandTypes.Original){
         this.gameController.placePentomino(pentomino, posX, posY,cmdType);
         this.positionPiece(pentomino);
+        this.checkIfGameWon();
     }
+
+    checkIfGameWon(){
+       if(this.isGameWon()){
+            this.showGameSolved();
+       }
+    }
+
+
+    isGameWon(){
+        let game = this.gameController.game()._board;
+        let unoccupiedCells = game.getUnoccupiedPositions();
+        return unoccupiedCells == 0;
+    }
+
 
     movePentominoToTray(pentomino,cmdType=CommandTypes.Original){
         this.gameController.removePentomino(pentomino, cmdType);
@@ -509,6 +524,7 @@ class Visual {
             this.gameController.rotatePentominoClkWise(piece,cmdType);
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
+            this.checkIfGameWon();
         }
     }
 
@@ -523,6 +539,7 @@ class Visual {
             this.gameController.rotatePentominoAntiClkWise(piece,cmdType);
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
+            this.checkIfGameWon();
         }
     }
 
@@ -538,6 +555,7 @@ class Visual {
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationX", newRot.toString() + "deg");
             pieceDiv.setAttribute("flipped", 1 - flipped);
+            this.checkIfGameWon();
         }
     }
 
@@ -553,6 +571,7 @@ class Visual {
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationY", newRot.toString() + "deg");
             pieceDiv.setAttribute("flipped", 1 - flipped);
+            this.checkIfGameWon();
         }
     }
 
@@ -789,6 +808,27 @@ class Visual {
             }, timeframe*4);
         });
     }
+
+    showGameSolved() {
+        var modal = document.getElementById('modalTop');
+        let modalText = document.getElementById("modalText");
+        modalText.innerHTML = "congratulations !!";
+        modalText.innerHTML += "<br/> <img src='resources/images/icons/jboy-2.ico'>";
+        modalText.innerHTML += "<br /> play again ?";
+        modal.style.display = "block";
+        let dltBtn = document.querySelector(".deletebtn");
+        dltBtn.addEventListener("click", () => {
+            pd.reset();
+        });
+        //document.getElementsByClassName("gamearea").style.pointerEvents = "none";
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    }
+
 
     indicateAreaCells(piece, hintCommand){
         let hintRow = hintCommand._nextPosition[0];
