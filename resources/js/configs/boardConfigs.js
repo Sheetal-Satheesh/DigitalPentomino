@@ -13,21 +13,25 @@ boardConfigs = {
     "board_3x21a": {
         gameWidth: 27,
         boardSize: [3,21],
+		gameCellPattern: "blockedCell",
         blockedCells: [[0,3], [1,10], [2,17]]
     },
     "board_3x21b": {
         gameWidth: 27,
         boardSize: [3,21],
+		gameCellPattern: "blockedCell",
         blockedCells: [[0,8], [1,10], [2,12]]
     },
     "board_3x21c": {
         gameWidth: 27,
         boardSize: [3,21],
+		gameCellPattern: "blockedCell",
         blockedCells: [[0,9], [1,10], [2,11]]
     },
     "board_3x21d": {
         gameWidth: 27,
         boardSize: [3,21],
+		gameCellPattern: "blockedCell",
         blockedCells: [[1,4], [1,10], [1,16]]
     },
     "board_6x10": {
@@ -37,16 +41,19 @@ boardConfigs = {
     "board_8x8a": {
         gameHeight: 11,
         boardSize: [8,8],
+		gameCellPattern: "blockedCell",
         blockedCells: [[3,3], [3,4], [4,3], [4,4]]
     },
     "board_4x15": {
         gameHeight: 12,
         boardSize: [4,15]
+		
     } ,
 	"board_12x20": {
         gameWidth: 40,
         gameHeight: 17,
         boardSize: [11,20],
+		gameCellPattern: "gamearea",
 		blockedCells: [[0,0],[0,1],[0,2],[0,3],[0,4],[0,5],[0,6],[0,7],[0,8],[0,9],[0,10],[0,11],[0,12],[0,13],[0,14],[0,15],[0,16],[0,19],
 		[1,0],[1,1],[1,2],[1,3],[1,4],[1,5],[1,6],[1,7],[1,8],[1,9],[1,10],[1,11],[1,12],[1,13],[1,14],
 		[2,0],[2,1],[2,2],[2,3],[2,4],[2,5],[2,6],[2,7],[2,8],[2,9],[2,10],[2,11],[2,12],[2,13],[2,16],[2,17],[2,18],[2,19],
