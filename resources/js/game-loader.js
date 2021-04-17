@@ -227,7 +227,6 @@ class GameLoader {
             startCmdKey = this._commandManager.CurrentCmdKey();
         }
 
-
         let [cmdSequences, seqType] = this._commandManager.CmdSequences(startCmdKey, targetStateKey);
         let cmdLength = cmdSequences.length;
         if (seqType == 2) {
@@ -247,29 +246,71 @@ class GameLoader {
             let posX = command.PosX;
             let posY = command.PosY;
 
-            if (posX == undefined) {
-                pentomino.updateTrayValue(1);
-                this._game.addToTray(pentomino);
-                this._commandManager.ExecCommand(
-                    new RemoveCommand(
-                        pentomino,
-                        this._game.getPosition(pentomino)
-                    ), CommandTypes.Shadow
-                );
-            }
-            else {
+            switch (command.name) {
+                case "Place":
+                    if ((command.PosX == undefined) &&
+                        (command.PosY == undefined)) {
+                        pentomino.updateTrayValue(1);
+                        this._game.addToTray(pentomino);
+                        this._commandManager.ExecCommand(
+                            new RemoveCommand(
+                                pentomino,
+                                this._game.getPosition(pentomino)
+                            ), CommandTypes.Shadow
+                        );
+                    }
+                    else {
+                        // if (pentomino.inTray == 1) {
+                        this._game.removeFromTray(pentomino);
+                        pentomino.updateTrayValue(0);
+                        // }
+                        this._commandManager.ExecCommand(
+                            new PlaceCommand(
+                                pentomino,
+                                this._game.getPosition(pentomino),
+                                [posX, posY]
+                            ), CommandTypes.Shadow);
+                    }
 
-                // if (pentomino.inTray == 1) {
-                this._game.removeFromTray(pentomino);
-                pentomino.updateTrayValue(0);
-                // }
-                this._commandManager.ExecCommand(
-                    new PlaceCommand(
-                        pentomino,
-                        this._game.getPosition(pentomino),
-                        [posX, posY]
-                    ), CommandTypes.Shadow);
+                    break;
+
+                case "Remove":
+                    this._commandManager.ExecCommand(
+                        new RemoveCommand(pentomino,
+                            this.game().getPosition(pentomino)
+                        ), CommandTypes.Shadow);
+                    break;
+
+                case "RotateClkWise":
+                    this._commandManager.ExecCommand(
+                        new RotateClkWiseCommand(pentomino),
+                        CommandTypes.Shadow);
+                    break;
+
+                case "RotateAntiClkWise":
+                    this._commandManager.ExecCommand(
+                        new RotateAntiClkWiseCommand(pentomino),
+                        CommandTypes.Shadow);
+                    break;
+
+                case "MirrorH":
+                    this._commandManager.ExecCommand(
+                        new MirrorHCommand(pentomino),
+                        CommandTypes.Shadow);
+                    break;
+
+                case "MirrorV":
+                    this._commandManager.ExecCommand(
+                        new MirrorVCommand(pentomino),
+                        CommandTypes.Shadow);
+                    break;
+
+                default:
+                    //TODO: add commund related flag variable
+                    throw new Error("Can not undo");
             }
+
+
         }
     }
 
