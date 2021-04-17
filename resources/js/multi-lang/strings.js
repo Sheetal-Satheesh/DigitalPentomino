@@ -40,10 +40,22 @@ const strings = {
                             "<li><b>Bereich-Hinweise:</b> Die Aktion wird nur angedeutet, indem ein Bereich angezeigt wird, der die Zielposition des Pentominoes enthält.</li>" +
                         "</ul>"]
             },
-            skillTeaching: ["Enable Skill-Teaching?", "Fähigkeits-lehrende Hinweise einschalten?"],
-            exactHints: ["Enable exact Hints?", "Exakte Hinweise aktivieren?"],
-            indicateDestinationPosition: ["Enable indication of pentomino's destination position?", "Anzeigen der Pentomino-Zielposition einschalten"],
-            indicatePentomino: ["Enable indication of pentomino piece?", "Anzeigen des Pentominos einschalten?"]
+            skillTeaching: {
+                title: ["Enable Skill-Teaching?", "Fähigkeits-lehrende Hinweise einschalten?"],
+                description: ["TODO", "TODO"]
+            },
+            exactHints: {
+                title: ["Enable exact Hints?", "Exakte Hinweise aktivieren?"],
+                description: ["TODO", "TODO"]
+            },
+            indicateDestinationPosition: {
+                title: ["Enable indication of pentomino's destination position?", "Anzeigen der Pentomino-Zielposition einschalten"],
+                description: ["TODO", "TODO"]
+            },
+            indicatePentomino: {
+                title: ["Enable indication of pentomino piece?", "Anzeigen des Pentominos einschalten?"],
+                description: ["TODO", "TODO"]
+            }
         },
         prefilling: {
             title: ["Prefilling", "Automatisches Füllen"],
