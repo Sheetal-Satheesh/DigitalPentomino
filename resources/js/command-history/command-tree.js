@@ -183,26 +183,27 @@ class CommandTree {
             commands: []
         };
 
-
+        let searchValue = searchType;
         for (let indx = 0; indx < currNode.Children().length; ++indx) {
             let childs = currNode.Children();
             let cmdObj = this.CollectCmdSequences(
                 childs[indx],
                 startKey,
                 endKey,
-                searchType
+                searchValue
             );
 
             if (searchType) {
-                retObj.seqType = cmdObj.seqType;
-
                 if (!retObj.commands.find(cmd => cmd._pentomino === currNode.Command()._pentomino)) {
                     retObj.commands.push(currNode.Command());
                 }
-                retObj.commands = [...retObj.commands, ...cmdObj.commands];
             } else {
-                retObj = cmdObj;
+                searchValue = cmdObj.seqType;
             }
+
+            retObj.seqType = cmdObj.seqType;
+            retObj.commands = [...retObj.commands, ...cmdObj.commands];
+
 
         }
 
