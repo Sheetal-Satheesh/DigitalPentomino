@@ -80,9 +80,17 @@ class CommandTree {
         }
 
         let retNode = undefined;
-        current.Children().forEach((node) => {
-            retNode = this.SearchCmdNode(node, key);
-        }, this);
+        for (let indx = 0; indx < current.Children().length; ++indx) {
+
+            let childs = current.Children();
+            retNode = this.SearchCmdNode(
+                childs[indx],
+                key);
+
+            if (retNode != undefined) {
+                return retNode;
+            }
+        }
 
         return retNode;
     }
@@ -174,16 +182,20 @@ class CommandTree {
 
         let retObj = {};
         let cmdSeq = [];
+        let cmdObj = {};
         for (let indx = 0; indx < currNode.Children().length; ++indx) {
             let childs = currNode.Children();
-            let cmdObj = this.CollectCmdSequences(
+            cmdObj = this.CollectCmdSequences(
                 childs[indx],
                 startKey,
                 endKey,
                 searchType
             );
 
-            if ((cmdObj.commands.length != 0)) {
+            if (
+                (Object.keys(cmdObj).length != 0) &&
+                (cmdObj.commands.length != 0)) {
+
                 retObj.seqType = cmdObj.seqType;
                 if (!cmdSeq.find(cmd => cmd._pentomino === currNode.Command()._pentomino)) {
                     cmdSeq.push(currNode.Command());
@@ -194,14 +206,19 @@ class CommandTree {
             }
         }
 
-        if (Object.keys(retObj).length === 0) {
+        if (searchType == 0) {
+            return cmdObj;
+        }
+
+        if (searchType && Object.keys(retObj).length === 0) {
             retObj["seqType"] = searchType;
             cmdSeq.push(currNode.Command());
             retObj["commands"] = cmdSeq;
         }
-        else {
+        else if (cmdSeq.length) {
             retObj.commands = cmdSeq;
         }
+
 
         return retObj;
     }

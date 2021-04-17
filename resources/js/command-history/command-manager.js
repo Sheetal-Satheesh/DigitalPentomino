@@ -109,7 +109,7 @@ class CommandManager {
     }
 
     CmdSequences(startKey, endKey) {
-        if(startKey == undefined){
+        if (startKey == undefined) {
             startKey = this.StartCmdKey();
         }
 
