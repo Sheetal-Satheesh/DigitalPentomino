@@ -42,19 +42,13 @@ const strings = {
             },
             skillTeaching: {
                 title: ["Enable Skill-Teaching?", "Fähigkeits-lehrende Hinweise einschalten?"],
-                description: ["TODO", "TODO"]
+                description: ["If skill-teaching is enabled, some hints are providing additional information to teach certain skills.",
+                    "Wenn Fähigkeits-lehrende Hinweise eingeschaltet sind, werden manche bei manchen Hinweisen versucht, zusätzliche Fähigkeiten zu vermitteln."]
             },
             exactHints: {
                 title: ["Enable exact Hints?", "Exakte Hinweise aktivieren?"],
-                description: ["TODO", "TODO"]
-            },
-            indicateDestinationPosition: {
-                title: ["Enable indication of pentomino's destination position?", "Anzeigen der Pentomino-Zielposition einschalten"],
-                description: ["TODO", "TODO"]
-            },
-            indicatePentomino: {
-                title: ["Enable indication of pentomino piece?", "Anzeigen des Pentominos einschalten?"],
-                description: ["TODO", "TODO"]
+                description: ["If enabled, Rotate, Flip and Move-actions that should be performed on one pentomino are three separate hints. Otherwise these actions are combined into one hint.",
+                    "Aktiviert: Drehen, Spiegeln und Bewege-Aktionen, die auf ein Pentomino angewandt werden müssen sind drei separate Hinweise. Deaktiviert: Aktionen werden in einem Hinweis zusammengefasst."]
             }
         },
         prefilling: {

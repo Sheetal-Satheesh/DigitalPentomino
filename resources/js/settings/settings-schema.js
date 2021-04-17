@@ -97,18 +97,6 @@ class SettingsSchema {
                         "title": titles.hinting.exactHints.title[lang],
                         "description": titles.hinting.exactHints.description[lang],
                         "default": false
-                    },
-                    indicateDestinationPosition: {
-                        "type": "boolean",
-                        "title": titles.hinting.indicateDestinationPosition.title[lang],
-                        "description": titles.hinting.indicateDestinationPosition.description[lang],
-                        "default": true
-                    },
-                    indicatePentomino: {
-                        "type": "boolean",
-                        "title": titles.hinting.indicatePentomino.title[lang],
-                        "description": titles.hinting.indicatePentomino.description[lang],
-                        "default": true
                     }
                 }
             },
