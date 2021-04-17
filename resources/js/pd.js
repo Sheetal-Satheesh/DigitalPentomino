@@ -12,7 +12,7 @@ class PD {
          */
         var fController = new FrontController();
         this.gameController = fController.controller;
-        this.loadGame("board_6x10");
+        this.loadBoard("board_6x10");
         
     }
 
@@ -85,7 +85,7 @@ class PD {
         return boardsWithConfig;
     }
 
-    loadGame(board){
+    loadBoard(board){
         let gameObject = this.getGameUISettings(board);
         this.boardName = board; // HACK: To be changed later. This needs to be obtained from the backend. 
         this.boardSize = gameObject.boardSize;
