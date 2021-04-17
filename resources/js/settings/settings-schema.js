@@ -88,9 +88,9 @@ class SettingsSchema {
                         "title": titles.hinting.indicateDestinationPosition[lang],
                         "default": true
                     },
-                    indicateDestination: {
+                    indicatePentomino: {
                         "type": "boolean",
-                        "title": titles.hinting.indicateDestination[lang],
+                        "title": titles.hinting.indicatePentomino[lang],
                         "default": true
                     }
                 }

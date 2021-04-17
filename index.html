@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="resources/css/style.css">
     <link rel="stylesheet" href="resources/css/board_selection.css">
     <link rel="stylesheet" href="resources/css/modal.css">
+    <link rel="stylesheet" href="resources/css/grid.css">
     <link rel="stylesheet" href="resources/css/settings_form.css">
     <link rel="stylesheet" style="text/css" href="resources/jsonform/bootstrap.css" />
     <script src="resources/index.js"></script>
@@ -20,6 +21,7 @@
     <script src="resources/js/game-controller.js"></script>
     <script src="resources/js/game-loader.js"></script>
     <script src="resources/js/game.js"></script>
+    <script src="resources/js/ui-template.js"></script>
     <script src="resources/js/command-history/command-node.js"></script>
     <script src="resources/js/command-history/commands.js"></script>
     <script src="resources/js/command-history/command-manager.js"></script>
@@ -136,28 +138,26 @@
         </div>  <!-- operation -->
     </div>
 
-    <!-- <canvas id="canvas" width="auto" height="auto" style="border: solid black 1px;"> -->
-
-        <div id="game">
-            <div id="tray"></div> <!-- tray -->
-            <div id="field"></div> <!-- field -->
-            <div id="piecearea"></div> <!-- piecearea -->
-            <div id="modalTop" class="modal">
-                <span onclick="document.getElementById('modalTop').style.display='none'" class="close" title="Close Modal">x</span>
-                <form class="modalContent">
-                  <div class="modalContainer">
-                    <h3 id="modalText"></h3>
-                    <div class="clearfix">
-                      <button type="button" onclick="document.getElementById('modalTop').style.display='none'" class="cancelbtn">No</button>
-                      <button type="button" onclick="document.getElementById('modalTop').style.display='none'" class="deletebtn">Yes</button>
+    <div id="game">
+        <div id="tray"></div> <!-- tray -->
+        <div id="field"></div> <!-- field -->
+        <div id="piecearea"></div> <!-- piecearea -->
+        <div id="modalTop" class="modal">
+            <span onclick="document.getElementById('modalTop').style.display='none'" class="close" title="Close Modal">x</span>
+            <div class="modalContainer" id="modalContainerID">
+                <div class="outerGrid">
+                    <div class="innerGrid" id="innerGrid"></div>
+                </div>
+                <form class="modalFormContent">
+                    <div class="modalFormContainer" id="modalFormContainerID">
+                        <h3 id="modalTitleID"></h3>
+                        <div class="modalButtons" id="modalButtonsID"></div>
+                        <div class="modalBody" id="modalBodyID"></div>
                     </div>
-                  </div>
                 </form>
               </div> <!--modal end-->
         </div>
-
-    <!-- </canvas> -->
-
+   </div>
 
     <div class = "cPieceManipulation" id ="pieceManipulation" >
         <table>
@@ -188,8 +188,11 @@
     <script type="text/javascript">
     // screen.orientation.lock('landscape');
         let pd;
+        let template
+
         function initialize() {
             pd = new PD();
+            template = new Template();
 
 			let settings = SettingsSingleton.getInstance().getSettings();
             let initialChanges = SettingsParser.compareSettings(
@@ -197,7 +200,6 @@
                 settings,
                 null);
             processChangesToSettings(initialChanges, settings);
-
 			loadGameList();
         }
 
@@ -217,16 +219,45 @@
 			board_container.innerHTML = out + action_btn;
 		}
 
-        function resetGame(){
-            var modal = document.getElementById('modalTop');
-            let modalText = document.getElementById("modalText");
-            modalText.innerHTML = 'Do you want to reset?';
-            modal.style.display="block";
-            let dltBtn = document.querySelector(".deletebtn");
-            dltBtn.addEventListener("click", () => {
-                pd.reset();
-            });
-        }
+        function resetGame() {
+                var modal = document.getElementById('modalTop');
+                modal.style.display = "block";
+                modal.style.background = "transparent";
+
+                document.querySelector(".modalFormContent").style.display = "block";
+                document.querySelector(".innerGrid").style.display = "none";
+                template.clearContent("#modalButtonsID");
+                template.clearContent("#modalTitleID");
+                template.clearContent("#modalBodyID");
+
+                let textNode = {
+                    class: "modalText",
+                    text: "Do You Want To Reset "
+                }
+                template.attachText("#modalTitleID", textNode);
+
+                let cancelBtn = {
+                    class: "cancelBtn",
+                    onclick: "document.getElementById('modalTop').style.display='none'",
+                    textContent: "No"
+                }
+                template.attachBtn("#modalButtonsID", cancelBtn);
+
+                let deleteBtn = {
+                    class: "deleteBtn",
+                    onclick: "document.getElementById('modalTop').style.display='none'",
+                    textContent: "Yes"
+                }
+
+                template.attachBtn("#modalButtonsID", deleteBtn);
+
+                let dltBtn = document.querySelector(".deleteBtn");
+                dltBtn.addEventListener("click", () => {
+                    pd.reset();
+                });
+            }
+
+
 
         function callHintAI() {
             pd.visual.callHintAI();

@@ -80,7 +80,22 @@ class Visual {
     placePentomino(pentomino, posX, posY, cmdType=CommandTypes.Original){
         this.gameController.placePentomino(pentomino, posX, posY,cmdType);
         this.positionPiece(pentomino);
+        this.checkIfGameWon();
     }
+
+    checkIfGameWon(){
+       if(this.isGameWon()){
+            this.showGameSolved();
+       }
+    }
+
+
+    isGameWon(){
+        let game = this.gameController.game()._board;
+        let unoccupiedCells = game.getUnoccupiedPositions();
+        return unoccupiedCells == 0;
+    }
+
 
     movePentominoToTray(pentomino,cmdType=CommandTypes.Original){
         this.gameController.removePentomino(pentomino, cmdType);
@@ -499,6 +514,7 @@ class Visual {
             this.gameController.rotatePentominoClkWise(piece,cmdType);
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
+            this.checkIfGameWon();
         }
     }
 
@@ -513,6 +529,7 @@ class Visual {
             this.gameController.rotatePentominoAntiClkWise(piece,cmdType);
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
+            this.checkIfGameWon();
         }
     }
 
@@ -528,6 +545,7 @@ class Visual {
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationX", newRot.toString() + "deg");
             pieceDiv.setAttribute("flipped", 1 - flipped);
+            this.checkIfGameWon();
         }
     }
 
@@ -543,6 +561,7 @@ class Visual {
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationY", newRot.toString() + "deg");
             pieceDiv.setAttribute("flipped", 1 - flipped);
+            this.checkIfGameWon();
         }
     }
 
@@ -639,13 +658,19 @@ class Visual {
         }
 
        //indication of unoccupied cells
-        if (!(hintSkill === null)) {
+        if (!(hintSkill === null) && (SettingsSingleton.getInstance().getSettings().hinting.skillTeaching)) {
             const DEFAULT_BG_COLOR = "#adc0b9";
             const RED_COLOR = "red";
             //blink unoccupied cells
             this.blinkCells(hintSkill, DEFAULT_BG_COLOR, RED_COLOR);
         }
         else {
+
+            //indicate piece to be changed (and fade away)
+            if (SettingsSingleton.getInstance().getSettings().hinting.indicatePentomino){
+                this.indicatePentomino(hintinPen,timeoutFrame);
+            }
+
             switch (hintName) {
             case "Place":
                 // handle place hint
@@ -654,47 +679,46 @@ class Visual {
                 let fieldvalue;
                 let prevBackground = [];
 
-                //indicate piece to be moved (and fade away)
-                this.indicatePentomino(hintinPen,timeoutFrame);
-
                 //show destination position (and fade away)
                 let piecePos = this.getOccupiedPositions(tempHintinPen,hintCommand);
                 //usage of random cell variable to indicate hinting
 
-                switch (SettingsSingleton.getInstance().getSettings().hinting.hintingStrategy){
-                    case "partial":
-                        for(let i=0;i<randomCell;i++){
-                            fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
-                            prevBackground[i] = fieldvalue.style.background;
-                            fieldvalue.style.background = pentominoColor;
-                            this.hide(piecePos, prevBackground);
-                        }
-                        break;
-                    case "full":
-                        for(let i=0;i<5;i++){
-                            fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
-                            prevBackground[i] = fieldvalue.style.background;
-                            fieldvalue.style.background = pentominoColor;
-                            this.hide(piecePos, prevBackground);
-                        }
-                        break;
-                    case "area":
-                        for(let i=0;i<25;i++){
-                            let areaPos = this.indicateAreaCells(hintinPen,hintCommand)[0];
-                            let b = this.gameController.game()._board.positionIsValid(areaPos[i][0], areaPos[i][1]);
-                            if(b){
-                            let areaPos = this.indicateAreaCells(hintinPen,hintCommand)[0];
-                            fieldvalue = document.getElementById("field_" + areaPos[i][0] + "," + areaPos[i][1]);
-                            prevBackground[i] = fieldvalue.style.background;
-                            fieldvalue.style.background = pentominoColor;
-                            this.hideArea(areaPos, prevBackground);
+                if (SettingsSingleton.getInstance().getSettings().hinting.indicateDestinationPosition){
+                    switch (SettingsSingleton.getInstance().getSettings().hinting.hintingStrategy){
+                        case "partial":
+                            for(let i=0;i<randomCell;i++){
+                                fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
+                                prevBackground[i] = fieldvalue.style.background;
+                                fieldvalue.style.background = pentominoColor;
+                                this.hide(piecePos, prevBackground);
                             }
-                        }
-                        break;
-                    default:
-                        console.error("Hinting strategy unknown!");
-
+                            break;
+                        case "full":
+                            for(let i=0;i<5;i++){
+                                fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
+                                prevBackground[i] = fieldvalue.style.background;
+                                fieldvalue.style.background = pentominoColor;
+                                this.hide(piecePos, prevBackground);
+                            }
+                            break;
+                        case "area":
+                            for(let i=0;i<25;i++){
+                                let areaPos = this.indicateAreaCells(hintinPen,hintCommand)[0];
+                                let b = this.gameController.game()._board.positionIsValid(areaPos[i][0], areaPos[i][1]);
+                                if(b){
+                                let areaPos = this.indicateAreaCells(hintinPen,hintCommand)[0];
+                                fieldvalue = document.getElementById("field_" + areaPos[i][0] + "," + areaPos[i][1]);
+                                prevBackground[i] = fieldvalue.style.background;
+                                fieldvalue.style.background = pentominoColor;
+                                this.hideArea(areaPos, prevBackground);
+                                }
+                            }
+                            break;
+                        default:
+                            console.error("Hinting strategy unknown!");
+                    }
                 }
+
                 break;
 
             case "Remove":
@@ -703,10 +727,10 @@ class Visual {
                 var pen = document.getElementById("piece_" + hintinPen.name);
                 //console.log("pent",hintinPen,this.selected);
                 if (!this.selected.inTray){
-                    pen.style.display = 'none';
+                    pen.style.opacity = '0.2';
                     setTimeout(function(){
-                    pen.style.display = 'block';
-                    },2000);
+                    pen.style.opacity = '1';
+                    },1000);
                 }
                 break;
 
@@ -718,11 +742,7 @@ class Visual {
                     setTimeout(function(){
                     rotateAntiClkWise();
                     },timeoutFrame);
-                } else {
-                    this.indicatePentomino(hintinPen,timeoutFrame);
                 }
-
-
                 break;
 
             case "RotateAntiClkWise":
@@ -733,8 +753,6 @@ class Visual {
                     setTimeout(function(){
                     rotateClkWise();
                     },timeoutFrame);
-                } else {
-                    this.indicatePentomino(hintinPen,timeoutFrame);
                 }
                 break;
 
@@ -747,8 +765,6 @@ class Visual {
                     setTimeout(function(){
                     flipH();
                     },timeoutFrame);
-                } else {
-                    this.indicatePentomino(hintinPen,timeoutFrame);
                 }
                 break;
 
@@ -760,8 +776,6 @@ class Visual {
                     setTimeout(function(){
                     flipV();
                     },timeoutFrame);
-                } else {
-                    this.indicatePentomino(hintinPen,timeoutFrame);
                 }
                 break;
 
@@ -779,6 +793,27 @@ class Visual {
             }, timeframe*4);
         });
     }
+
+    showGameSolved() {
+        var modal = document.getElementById('modalTop');
+        let modalText = document.getElementById("modalText");
+        modalText.innerHTML = "congratulations !!";
+        modalText.innerHTML += "<br/> <img src='resources/images/icons/jboy-2.ico'>";
+        modalText.innerHTML += "<br /> play again ?";
+        modal.style.display = "block";
+        let dltBtn = document.querySelector(".deletebtn");
+        dltBtn.addEventListener("click", () => {
+            pd.reset();
+        });
+        //document.getElementsByClassName("gamearea").style.pointerEvents = "none";
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    }
+
 
     indicateAreaCells(piece, hintCommand){
         let hintRow = hintCommand._nextPosition[0];
