@@ -101,56 +101,10 @@
 				<tr>
 					<td>
 						<button type="button" id='btnSettingsForm' class="cActionBtn" onclick="selectSettings()"> <img src="resources/images/icons/settings.png">
-							 
-							
-																																												  
-							 
-						 
-					  
-
-					 
-						
-							
 																																							 
-							</button>
-						</td>
-						<td>
-																																						   
-									 
-						</td>
-					
-					</tr>
-						
-							
-																																				  
-									 
-							 
-							
-																																				  
-									 
-							 
-					   
-						 
-						
-							
-																																								
-									 
-							 
-							
-																						  
-																			   
-																											  
-									   
-								  
-							 
-						 
-						
-							
-																																									   
-									 
-							 
-							
-							 
+						</button>
+					</td>
+					</tr>																										 
 						 
 					  <tr>
 						<button style="display:none" onclick="pd.ui.save()">Save</button>
@@ -172,27 +126,22 @@
         </div>
         
 		<div id="boardmodalTop" class="boardmodal" style="background: rgb(220, 240, 237) none repeat scroll 0% 0%; display: none;">
-
-		   
-
-				  
-
-            <span onclick="document.getElementById('boardmodalTop').style.display='none'" class="boardclose" title="Close Modal">x</span>
+		<span onclick="document.getElementById('boardmodalTop').style.display='none'" class="boardclose" title="Close Modal">x</span>
             <div class ="boardmodalContainer" id="boardmodalContainerID">
                 <div class="boardouterGrid">
                     <div class="boardinnerGrid" id="boardinnerGrid"style="display: block;">
 					
-                </div>
+                    </div>
                 <form class="boardmodalFormContent" style="display: none;">
-                    <div class="boardmodalFormContainer" id="boardmodalFormContainerID">
+                <div class="boardmodalFormContainer" id="boardmodalFormContainerID">
                         <h3 id="boardmodalTextID"></h3>
                         <div class="boardmodalButtons" id="boardmodalButtonsID"></div>
-                    </div>
+               </div>
                 </form>
             </div>
 
 
-          </div> <!--board modal end-->
+        </div> <!--board modal end-->
 		  
 		   
       
@@ -265,35 +214,33 @@
                 settings,
                 null);
             processChangesToSettings(initialChanges, settings);
-														
-																														   
-			
+																																						
         }
         
 		
 		
 		function loadBoardList() {
 
-			let boardimageGrid = document.getElementById('boardinnerGrid');
-            template.clearContent(".boardinnerGrid");
-			
-			var board_list = pd.getAllBoards();
-			for (var i=0; i< board_list.length; i++){
-				let boardimageDiv = document.createElement("div");
-				boardimageDiv.setAttribute("class","boardimageDiv");
-			
-				var imageElement = document.createElement("img");
-				imageElement.setAttribute("class","boardimage");
-				imageElement.setAttribute("width","1710");
-				imageElement.setAttribute("height","883");
-				imageElement.setAttribute("style","width: 25vw; height: 15vw; border: 2px solid black;");
-				imageElement.setAttribute("class","boardimage");
-			
-				var img_src = "resources/images/boards/" + board_list[i] + ".png";
-				imageElement.setAttribute("src", img_src);
-				imageElement.setAttribute("onclick", "loadBoard('" + board_list[i] + "')");
-				boardimageDiv.appendChild(imageElement);
-				boardimageGrid.appendChild(boardimageDiv);
+		    let boardimageGrid = document.getElementById('boardinnerGrid');
+		    template.clearContent(".boardinnerGrid");
+		
+		    var board_list = pd.getAllBoards();
+		    for (var i=0; i< board_list.length; i++){
+			let boardimageDiv = document.createElement("div");
+			boardimageDiv.setAttribute("class","boardimageDiv");
+		
+			var imageElement = document.createElement("img");
+			imageElement.setAttribute("class","boardimage");
+			imageElement.setAttribute("width","1710");
+			imageElement.setAttribute("height","883");
+			imageElement.setAttribute("style","width: 25vw; height: 15vw; border: 2px solid black;");
+			imageElement.setAttribute("class","boardimage");
+		
+			var img_src = "resources/images/boards/" + board_list[i] + ".png";
+			imageElement.setAttribute("src", img_src);
+			imageElement.setAttribute("onclick", "loadBoard('" + board_list[i] + "')");
+			boardimageDiv.appendChild(imageElement);
+			boardimageGrid.appendChild(boardimageDiv);
 				
 			}
 			
