@@ -85,7 +85,7 @@ class PD {
         return boardsWithConfig;
     }
 
-    loadBoard(board){
+    loadBoard(board, type){
         let gameObject = this.getGameUISettings(board);
         this.boardName = board; // HACK: To be changed later. This needs to be obtained from the backend. 
         this.boardSize = gameObject.boardSize;
@@ -93,6 +93,7 @@ class PD {
         this.gameHeight = gameObject.gameHeight;
         this.gameWidth = gameObject.gameWidth;
         this.blockedCells = gameObject.blockedCells;
+		this.gameCellPattern = boardConfigs[board].gameCellPattern;										 
 
         this.boardStartX = Math.floor((this.gameHeight - this.boardSize[0]) / 2);
         this.boardStartY = Math.floor((this.gameWidth - this.boardSize[1]) / 2);
