@@ -79,7 +79,7 @@ class CommandTree {
             return current;
         }
 
-        let retNode=undefined;
+        let retNode = undefined;
         current.Children().forEach((node) => {
             retNode = this.SearchCmdNode(node, key);
         }, this);
@@ -92,6 +92,7 @@ class CommandTree {
         startKey,
         endKey,
         searchType) {
+
 
         if (currNode == undefined) {
             return undefined;
@@ -121,26 +122,31 @@ class CommandTree {
                 searchType
             );
 
-            if ((commandKeys.length != 0) &&
-                (((SearchStrategy.Top2Bottom & searchType) != 0) ||
-                    ((SearchStrategy.BottomUp & searchType) != 0))) {
-
-                cmdKeySeq.push(currNode._key);
+            if (commandKeys.length != 0) {
+                if (!cmdKeySeq.find(key => key === currNode._key)) {
+                    cmdKeySeq.push(currNode._key);
+                }
                 commandKeys.forEach(cmdKey => {
                     cmdKeySeq.push(cmdKey);
                 });
-
             }
+        }
+
+        if (cmdKeySeq.length == 0) {
+            cmdKeySeq.push(currNode._key);
         }
 
         return cmdKeySeq;
     }
+
+
 
     CollectCmdSequences(
         currNode,
         startKey,
         endKey,
         searchType) {
+
 
         if (currNode == undefined) {
             return undefined;
@@ -167,29 +173,36 @@ class CommandTree {
         }
 
         let retObj = {};
+        let cmdSeq = [];
         for (let indx = 0; indx < currNode.Children().length; ++indx) {
-            let cmdSeq = [];
             let childs = currNode.Children();
-            retObj = this.CollectCmdSequences(
+            let cmdObj = this.CollectCmdSequences(
                 childs[indx],
                 startKey,
                 endKey,
                 searchType
             );
 
-            if ((retObj.commands != undefined) &&
-                (((SearchStrategy.Top2Bottom & searchType) != 0) ||
-                    ((SearchStrategy.BottomUp & searchType) != 0))) {
-
-                cmdSeq.push(currNode.Command());
-                retObj.commands.forEach(cmd => {
+            if ((cmdObj.commands.length != 0)) {
+                retObj.seqType = cmdObj.seqType;
+                if (!cmdSeq.find(cmd => cmd._pentomino === currNode.Command()._pentomino)) {
+                    cmdSeq.push(currNode.Command());
+                }
+                cmdObj.commands.forEach(cmd => {
                     cmdSeq.push(cmd);
                 });
-
-                retObj.commands = cmdSeq;
-
             }
         }
+
+        if (Object.keys(retObj).length === 0) {
+            retObj["seqType"] = searchType;
+            cmdSeq.push(currNode.Command());
+            retObj["commands"] = cmdSeq;
+        }
+        else {
+            retObj.commands = cmdSeq;
+        }
+
         return retObj;
     }
 
@@ -350,7 +363,7 @@ class CommandTree {
         return this._currentCmdNode;
     }
 
-    PositionCurrent(cmdKey){
+    PositionCurrent(cmdKey) {
         this._currentCmdNode = this.SearchCmdNode(this._rootCmdNode, cmdKey);
     }
 
