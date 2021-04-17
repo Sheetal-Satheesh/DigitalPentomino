@@ -42,8 +42,8 @@ const strings = {
             },
             skillTeaching: ["Enable Skill-Teaching?", "Fähigkeits-lehrende Hinweise einschalten?"],
             exactHints: ["Enable exact Hints?", "Exakte Hinweise aktivieren?"],
-            indicateDestinationPosition: ["Enable indication of pentomino position?", "Anzeigen der Pentomino-Position einschalten"],
-            indicateDestination: ["Enable indication of pentomino piece?", "Anzeigen des Pentominos einschalten?"]
+            indicateDestinationPosition: ["Enable indication of pentomino's destination position?", "Anzeigen der Pentomino-Zielposition einschalten"],
+            indicatePentomino: ["Enable indication of pentomino piece?", "Anzeigen des Pentominos einschalten?"]
         },
         prefilling: {
             title: ["Prefilling", "Automatisches Füllen"],
