@@ -147,8 +147,6 @@ class CommandTree {
         return cmdKeySeq;
     }
 
-
-
     CollectCmdSequences(
         currNode,
         startKey,
@@ -180,43 +178,38 @@ class CommandTree {
             }
         }
 
-        let retObj = {};
-        let cmdSeq = [];
-        let cmdObj = {};
+        let retObj = {
+            seqType: 0,
+            commands: []
+        };
+
+
         for (let indx = 0; indx < currNode.Children().length; ++indx) {
             let childs = currNode.Children();
-            cmdObj = this.CollectCmdSequences(
+            let cmdObj = this.CollectCmdSequences(
                 childs[indx],
                 startKey,
                 endKey,
                 searchType
             );
 
-            if (
-                (Object.keys(cmdObj).length != 0) &&
-                (cmdObj.commands.length != 0)) {
-
+            if (searchType) {
                 retObj.seqType = cmdObj.seqType;
-                if (!cmdSeq.find(cmd => cmd._pentomino === currNode.Command()._pentomino)) {
-                    cmdSeq.push(currNode.Command());
+
+                if (!retObj.commands.find(cmd => cmd._pentomino === currNode.Command()._pentomino)) {
+                    retObj.commands.push(currNode.Command());
                 }
-                cmdObj.commands.forEach(cmd => {
-                    cmdSeq.push(cmd);
-                });
+                retObj.commands = [...retObj.commands, ...cmdObj.commands];
+            } else {
+                retObj = cmdObj;
             }
+
         }
 
-        if (searchType == 0) {
-            return cmdObj;
-        }
-
-        if (searchType && Object.keys(retObj).length === 0) {
-            retObj["seqType"] = searchType;
-            cmdSeq.push(currNode.Command());
-            retObj["commands"] = cmdSeq;
-        }
-        else if (cmdSeq.length) {
-            retObj.commands = cmdSeq;
+        if (searchType &&
+            retObj.seqType == 0) {
+            retObj.seqType = searchType;
+            retObj.commands.push(currNode.Command());
         }
 
 

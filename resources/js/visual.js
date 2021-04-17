@@ -963,7 +963,6 @@ class Visual {
         return cmdKeySequences;
     }
 
-
     undo() {
         let command = this.gameController.undo();
         if (command == undefined) {
