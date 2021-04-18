@@ -474,7 +474,18 @@ class Game {
     }
 
     addToTray(pentomino) {
-        this._tray.push(pentomino);
+        if(!this._tray.find(p => p.name === pentomino.name)){
+            this._tray.push(pentomino);
+        }
+    }
+
+    isPentominiInTray(pentomino){
+        if(this._tray.find(p => p.name === pentomino.name)){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
     // --- --- --- History --- --- ---
     undo() {

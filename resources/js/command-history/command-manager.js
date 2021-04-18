@@ -198,6 +198,10 @@ class CommandManager {
     CmdTree() {
         return this._cmdTree;
     }
+
+    AdjustCurrCmd(key){
+        this._cmdTree.PositionCurrent(key);
+    }
 }
 
 if (typeof module != 'undefined') {

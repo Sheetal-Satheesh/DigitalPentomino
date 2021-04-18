@@ -226,8 +226,8 @@ class CommandTree {
                 console.error("Command Tree is Emty: Game is not Started");
                 return undefined;
             }
-
         }
+        
         if ((this._operationStatus & UNDO) != UNDO) {
             console.error("Undo not Possible");
             return undefined;

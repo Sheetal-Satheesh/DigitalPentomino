@@ -216,38 +216,23 @@ class GameLoader {
         console.error("commandKey not found");
     }
 
-    loadGameState(targetStateKey) {
-
-        let startCmdKey;
-        if (this._game.getCmdKey() == undefined) {
-            startCmdKey = this._commandManager.StartCmdKey();
-        }
-        else {
-            startCmdKey = this._commandManager.CurrentCmdKey();
-        }
-
-        let [cmdSequences, seqType] = this._commandManager.CmdSequences(startCmdKey, targetStateKey);
-        let cmdLength = cmdSequences.length;
-        // if (seqType == 2) {
-        //     --cmdLength;
-        // }
+    jumpToGameState(cmdSequences, seqType){
 
         let cmdProperty = updateCommandAttr(CommandTypes.Shadow, seqType);
+        let cmdSeqLength =  cmdSequences.length;
+        if(seqType == CommandSeq.Backward){
+            --cmdSeqLength;
+        }
 
-        for (let indx = 0; indx < cmdLength; indx++) {
-            // if (seqType == 2) {
-            //     this._commandManager.CmdTree().MoveUp();
-            // }
-            // else {
-            //     this._commandManager.CmdTree().MoveDown();
-            // }
-
+        for (let indx = 0; indx < cmdSeqLength; indx++) {
+            
             let command = cmdSequences[indx];
             let pentomino = command.Pentomino;
             let posX = command.PosX;
             let posY = command.PosY;
 
             switch (command.name) {
+                case "Remove":
                 case "Place":
                     if ((command.PosX == undefined) &&
                         (command.PosY == undefined)) {
@@ -261,10 +246,10 @@ class GameLoader {
                         );
                     }
                     else {
-                        // if (pentomino.inTray == 1) {
-                        this._game.removeFromTray(pentomino);
-                        pentomino.updateTrayValue(0);
-                        // }
+                        if (this._game.isPentominiInTray(pentomino)) {
+                            this._game.removeFromTray(pentomino);
+                            pentomino.updateTrayValue(0);
+                        }
                         this._commandManager.ExecCommand(
                             new PlaceCommand(
                                 pentomino,
@@ -273,13 +258,6 @@ class GameLoader {
                             ), cmdProperty);
                     }
 
-                    break;
-
-                case "Remove":
-                    this._commandManager.ExecCommand(
-                        new RemoveCommand(pentomino,
-                            this.game().getPosition(pentomino)
-                        ), cmdProperty);
                     break;
 
                 case "RotateClkWise":
@@ -311,6 +289,24 @@ class GameLoader {
                     throw new Error("Can not undo");
             }
         }
+    }
+    
+    loadGameState(targetStateKey) {
+
+        let currCmddKey = this._commandManager.CurrentCmdKey();
+        if(this._game.getCmdKey() == undefined){
+            let startCmdKey = this._commandManager.StartCmdKey();
+            let [cmdSequences, seqType] = this._commandManager.CmdSequences(currCmddKey, startCmdKey);
+            this.jumpToGameState(cmdSequences, seqType );
+        }
+
+        currCmddKey = this._commandManager.CurrentCmdKey();
+        let [cmdSequences, seqType] = this._commandManager.CmdSequences(currCmddKey, targetStateKey);
+        this.jumpToGameState(cmdSequences, seqType);
+        if(seqType == CommandSeq.Forward){
+            this._commandManager.CmdTree().MoveUp();
+        }
+     
     }
 
 }
