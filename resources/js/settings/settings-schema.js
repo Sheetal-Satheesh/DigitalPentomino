@@ -63,35 +63,29 @@ class SettingsSchema {
                 "properties": {
                     enableHinting: {
                         "type": "boolean",
-                        "title": titles.hinting.enableHinting[lang],
+                        "title": titles.hinting.enableHinting.title[lang],
+                        "description": titles.hinting.enableHinting.description[lang],
                         "default": true
                     },
                     hintingStrategy: {
                         "type": "string",
                         "title": titles.hinting.hintingStrategy.title[lang],
+                        "description": titles.hinting.hintingStrategy.description[lang],
                         "enum": ["full","partial","area"],
                         "enumText": titles.hinting.hintingStrategy.enumTitles[lang],
-                        "default": "full"
+                        "default": "partial"
                     },
                     skillTeaching: {
                         "type": "boolean",
-                        "title": titles.hinting.skillTeaching[lang],
+                        "title": titles.hinting.skillTeaching.title[lang],
+                        "description": titles.hinting.skillTeaching.description[lang],
                         "default": true
                     },
                     exactHints: {
                         "type": "boolean",
-                        "title": titles.hinting.exactHints[lang],
+                        "title": titles.hinting.exactHints.title[lang],
+                        "description": titles.hinting.exactHints.description[lang],
                         "default": false
-                    },
-                    indicateDestinationPosition: {
-                        "type": "boolean",
-                        "title": titles.hinting.indicateDestinationPosition[lang],
-                        "default": true
-                    },
-                    indicatePentomino: {
-                        "type": "boolean",
-                        "title": titles.hinting.indicatePentomino[lang],
-                        "default": true
                     }
                 }
             },
@@ -101,12 +95,14 @@ class SettingsSchema {
                 "properties": {
                     enablePrefilling: {
                         "type": "boolean",
-                        "title": titles.prefilling.enablePrefilling[lang],
+                        "title": titles.prefilling.enablePrefilling.title[lang],
+                        "description": titles.prefilling.enablePrefilling.description[lang],
                         "default": true
                     },
                     prefillingStrategy: {
                         "type": "string",
                         "title": titles.prefilling.prefillingStrategy.title[lang],
+                        "description": titles.prefilling.prefillingStrategy.description[lang],
                         "enum": ["distance", "pieces"],
                         "enumText": titles.prefilling.prefillingStrategy.enumTitles[lang],
                         "default": "distance"
@@ -115,9 +111,9 @@ class SettingsSchema {
                         "step": 1,
                         "type": "integer",
                         "title": titles.prefilling.distanceValue[lang],
-                        "default": 2,
+                        "default": 3,
                         "minimum": 1,
-                        "exclusiveMinimum": true,
+                        "exclusiveMinimum": false,
                         "maximum": 10
                     }
                 }
@@ -125,13 +121,3 @@ class SettingsSchema {
         };
     }
 }
-
-
-//Multilanguage via variable:
-//let language = "de";
-//
-//title = {
-//    "en": "Hinting Strategy",
-//    "de": "Hinting Strategie"
-//}
-//title[language],

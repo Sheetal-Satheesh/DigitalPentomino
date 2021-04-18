@@ -482,10 +482,10 @@
 
                 switch (error.attribute) {
                     case "maximum":
-                        error.message = strings.settings.errors.higherThanMax[lang] + " (" + error.details + ")";
+                        error.message = "<p style=\"color:red\"><b>" + strings.settings.errors.higherThanMax[lang] + " (" + error.details + ")</b></p>";
                         break;
                     case "minimum":
-                        error.message = strings.settings.errors.lowerThanMin[lang] + " (" + error.details + ")";
+                        error.message = "<p style=\"color:red\"><b>" + strings.settings.errors.lowerThanMin[lang] + " (" + error.details + ")</b></p>";
                         break;
                 }
             }

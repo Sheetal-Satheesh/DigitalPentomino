@@ -672,10 +672,7 @@ class Visual {
         }
         else {
 
-            //indicate piece to be changed (and fade away)
-            if (SettingsSingleton.getInstance().getSettings().hinting.indicatePentomino){
-                this.indicatePentomino(hintinPen,timeoutFrame);
-            }
+            this.indicatePentomino(hintinPen,timeoutFrame);
 
             switch (hintName) {
             case "Place":
@@ -689,42 +686,39 @@ class Visual {
                 let piecePos = this.getOccupiedPositions(tempHintinPen,hintCommand);
                 //usage of random cell variable to indicate hinting
 
-                if (SettingsSingleton.getInstance().getSettings().hinting.indicateDestinationPosition){
-                    switch (SettingsSingleton.getInstance().getSettings().hinting.hintingStrategy){
-                        case "partial":
-                            for(let i=0;i<randomCell;i++){
-                                fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
-                                prevBackground[i] = fieldvalue.style.background;
-                                fieldvalue.style.background = pentominoColor;
-                                this.hide(piecePos, prevBackground);
-                            }
-                            break;
-                        case "full":
-                            for(let i=0;i<5;i++){
-                                fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
-                                prevBackground[i] = fieldvalue.style.background;
-                                fieldvalue.style.background = pentominoColor;
-                                this.hide(piecePos, prevBackground);
-                            }
-                            break;
-                        case "area":
-                            for(let i=0;i<25;i++){
-                                let areaPos = this.indicateAreaCells(hintinPen,hintCommand)[0];
-                                let b = this.gameController.game()._board.positionIsValid(areaPos[i][0], areaPos[i][1]);
-                                if(b){
-                                let areaPos = this.indicateAreaCells(hintinPen,hintCommand)[0];
+                switch (SettingsSingleton.getInstance().getSettings().hinting.hintingStrategy) {
+                    case "partial":
+                        for (let i = 0; i < randomCell; i++) {
+                            fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
+                            prevBackground[i] = fieldvalue.style.background;
+                            fieldvalue.style.background = pentominoColor;
+                            this.hide(piecePos, prevBackground);
+                        }
+                        break;
+                    case "full":
+                        for (let i = 0; i < 5; i++) {
+                            fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
+                            prevBackground[i] = fieldvalue.style.background;
+                            fieldvalue.style.background = pentominoColor;
+                            this.hide(piecePos, prevBackground);
+                        }
+                        break;
+                    case "area":
+                        for (let i = 0; i < 25; i++) {
+                            let areaPos = this.indicateAreaCells(hintinPen, hintCommand)[0];
+                            let b = this.gameController.game()._board.positionIsValid(areaPos[i][0], areaPos[i][1]);
+                            if (b) {
+                                let areaPos = this.indicateAreaCells(hintinPen, hintCommand)[0];
                                 fieldvalue = document.getElementById("field_" + areaPos[i][0] + "," + areaPos[i][1]);
                                 prevBackground[i] = fieldvalue.style.background;
                                 fieldvalue.style.background = pentominoColor;
                                 this.hideArea(areaPos, prevBackground);
-                                }
                             }
-                            break;
-                        default:
-                            console.error("Hinting strategy unknown!");
-                    }
+                        }
+                        break;
+                    default:
+                        console.error("Hinting strategy unknown!");
                 }
-
                 break;
 
             case "Remove":
