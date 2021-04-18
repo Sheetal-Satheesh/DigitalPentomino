@@ -48,6 +48,7 @@
   background: white;
   width: 89vw;
   height: 39.32vw;
+  -webkit-transform: translate3d(0,0,0);
 }
 
 #piecearea {

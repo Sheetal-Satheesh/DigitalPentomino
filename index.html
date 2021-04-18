@@ -53,7 +53,7 @@
 </head>
 
 <body onload="touchStartup(); initialize()">
-															
+    <canvas id="canvas" width="auto" height="auto"></canvas>															
   <div id="seedingCover"></div>
   <div id="seeding" class="seed">
     <input type="search" id="seedBar" class="seed" placeholder="Input seed...">
@@ -142,10 +142,7 @@
 
 
         </div> <!--board modal end-->
-		  
-		   
-      
-		
+
         </div>  <!-- operation -->
     </div>
 
@@ -197,10 +194,7 @@
     </div>  <!-- cPieceManipulation -->
 </div>
 
-<script type="text/javascript">
-
-								   
-											
+<script type="text/javascript">								
         let pd;
 		let template;
 
@@ -217,8 +211,6 @@
 																																						
         }
         
-		
-		
 		function loadBoardList() {
 
 		    let boardimageGrid = document.getElementById('boardinnerGrid');
@@ -246,17 +238,6 @@
 			
 			
 		}
-		
-																
-											  
-													   
-
-																					
-																			
-														 
-													   
-													  
-
        function resetGame() {
                 var modal = document.getElementById('modalTop');
                 modal.style.display = "block";
@@ -288,12 +269,6 @@
                     textContent: "Yes"
                 }
 														  
-
-						   
-								  
-																					
-							 
-			 
                 template.attachBtn("#modalButtonsID", deleteBtn);
 
                 let dltBtn = document.querySelector(".deleteBtn");
@@ -315,8 +290,6 @@
             }
         });
 
-       
-
         function rotateClkWise(){
             pd.rotateClkWise();
         }
@@ -333,15 +306,9 @@
             pd.flipV();
         }
 
-								
-																			 
-		 
-
-																															 
+																													 
         function selectBoard(){
-			document.getElementById("boardmodalTop").style.display = "block";
-																			   																																  															 
-			 
+			document.getElementById("boardmodalTop").style.display = "block";	 
         }
 		
 		 // From https://stackoverflow.com/questions/10970078/modifying-a-query-string-without-reloading-the-page (2nd answer)
@@ -377,12 +344,6 @@
             }
         }
 
-												
-															 
-									
-											
-								
-
          function processChangesToSettings(changes, settings) {
             changes.forEach(changesEntry => {
                 let heading = changesEntry.heading;
@@ -392,20 +353,11 @@
                     let hintingEnabled = settings[heading][key];
                     document.getElementById("hintButton").style.visibility = hintingEnabled ? "visible" : "hidden";
                     document.getElementById("labelNumberSolutionsContainer").style.visibility = hintingEnabled ? "visible" : "hidden";
-
-															
-										 
-																			
-					 
+	 
                 } else if (heading === "prefilling" && key === "enablePrefilling") {
                     let visible = settings[heading][key];
                     document.getElementById("prefillBoard").style.visibility = visible ? "visible" : "hidden";
-																							 
-														 
-																											   
-																												
-																										  
-																										  
+																							 																		  
                 }
               });
         }
@@ -496,10 +448,7 @@
             let formElement = $('form')[0];
             formElement.innerHTML = '';
 
-																					 
-																		 
-																																							 
-
+	
             $('form').jsonForm({
                 schema: SettingsSchemaSingleton.getInstance().getSettingsSchema(),
                 onSubmit: this.handleJsonFormSubmit,
@@ -623,14 +572,9 @@
             pd.visual.redo();
         }
  
-       
-
-
-
     </script>
    <script src="./registerSW.js"></script>
 
-		 
 </body>
 
 </html>
