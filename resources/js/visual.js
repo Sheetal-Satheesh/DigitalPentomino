@@ -34,6 +34,9 @@ class Visual {
         this.initalizeListeners();
     }
 
+	 getBoard(){
+        return this.gameController.getName();
+    }										 
 
     isBlockCell(posX, posY){
         var bCellsFnd=false;
@@ -130,6 +133,7 @@ class Visual {
               //Ashwini: For Blocking the cells
 				if (this.pd.blockedCells != undefined)
 				{
+					var gameCellPattern = this.pd.gameCellPattern;							   
 					for (var arr = 0; arr < this.pd.blockedCells.length; arr++) {
 						if(row == this.pd.blockedCells[arr][0] + this.pd.boardStartX &&
                                 col == this.pd.blockedCells[arr][1] + this.pd.boardStartY) {
@@ -138,8 +142,10 @@ class Visual {
 						}
 					}
 
-                    if(blockedCell)
+                    if(blockedCell && gameCellPattern == 'blockedCell' )
 						out += '<div class="gamearea ' + ((isBoard) ? 'boardarea blockedcell' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';
+					else if(blockedCell && gameCellPattern == 'gamearea')
+						out += '<div class="gamearea" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';
 					else
 						out += '<div class="gamearea ' + ((isBoard) ? 'boardarea' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';
 				}
