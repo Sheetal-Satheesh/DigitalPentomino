@@ -227,7 +227,7 @@ class CommandTree {
                 return undefined;
             }
         }
-        
+
         if ((this._operationStatus & UNDO) != UNDO) {
             console.error("Undo not Possible");
             return undefined;

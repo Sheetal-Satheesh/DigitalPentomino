@@ -28,10 +28,10 @@ class CommandManager {
             currNode = this._cmdTree.Insert(command);
         }
         else {
-            if(cmdSeq == CommandSeq.Forward){
+            if (cmdSeq == CommandSeq.Forward) {
                 this._cmdTree.MoveDown();
             }
-            else if(cmdSeq == CommandSeq.Backward){
+            else if (cmdSeq == CommandSeq.Backward) {
                 this._cmdTree.MoveUp();
             }
         }
@@ -199,7 +199,7 @@ class CommandManager {
         return this._cmdTree;
     }
 
-    AdjustCurrCmd(key){
+    AdjustCurrCmd(key) {
         this._cmdTree.PositionCurrent(key);
     }
 }

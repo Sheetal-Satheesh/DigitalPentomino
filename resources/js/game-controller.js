@@ -115,7 +115,7 @@ class GameController {
         return this.cmdManager().CmdKeySequences();
     }
 
-    getGameIdByKey(key){
+    getGameIdByKey(key) {
         return this._gameLoader.getGameIdByKey(key);
     }
 

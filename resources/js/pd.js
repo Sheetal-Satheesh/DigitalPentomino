@@ -105,7 +105,7 @@ class PD {
                 this.boardShape,
                 board);
             this.visual = new Visual(this);
-        }else{
+        } else {
             this.visual.reload(pd);
         }
 

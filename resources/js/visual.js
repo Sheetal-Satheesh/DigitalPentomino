@@ -994,7 +994,7 @@ class Visual {
         this.execShadowCmd(command);
     }
 
-    getGameIdByKey(key){
+    getGameIdByKey(key) {
         return this.gameController.getGameIdByKey(key);
     }
     saveGameImage(image) {
@@ -1016,7 +1016,7 @@ class Visual {
 
     loadGameState(targetStateKey) {
         let currentCmdKey = this.gameController.getCurrentCmdKey();
-        if(currentCmdKey == undefined){
+        if (currentCmdKey == undefined) {
             currentCmdKey = this.gameController.getStartCmdKey();
         }
         let [cmdSequences, seqType] = this.gameController.getCmdSequences(currentCmdKey, targetStateKey);

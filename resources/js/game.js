@@ -474,16 +474,16 @@ class Game {
     }
 
     addToTray(pentomino) {
-        if(!this._tray.find(p => p.name === pentomino.name)){
+        if (!this._tray.find(p => p.name === pentomino.name)) {
             this._tray.push(pentomino);
         }
     }
 
-    isPentominiInTray(pentomino){
-        if(this._tray.find(p => p.name === pentomino.name)){
+    isPentominiInTray(pentomino) {
+        if (this._tray.find(p => p.name === pentomino.name)) {
             return true;
         }
-        else{
+        else {
             return false;
         }
     }
