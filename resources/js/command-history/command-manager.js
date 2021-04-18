@@ -15,18 +15,25 @@ class CommandManager {
         this._cmdTree.search(this._cmdTree.Root(), key);
     }
 
-    ExecCommand(command, cmdTypes = CommandTypes.Original) {
+    ExecCommand(command, cmdProperty = cmdAttrDefault) {
 
         var fController = new FrontController();
         let game = fController.controller.game();
 
+        let cmdType = cmdProperty.cmdType;
+        let cmdSeq = cmdProperty.cmdSeq;
         let isSuccess = true; // Get return value of success or error from
         let currNode = undefined;
-        if (cmdTypes == CommandTypes.Original) {
+        if (cmdType == CommandTypes.Original) {
             currNode = this._cmdTree.Insert(command);
         }
         else {
-            currNode = this._cmdTree.Current();
+            if(cmdSeq == CommandSeq.Forward){
+                this._cmdTree.MoveDown();
+            }
+            else if(cmdSeq == CommandSeq.Backward){
+                this._cmdTree.MoveUp();
+            }
         }
 
         let cmdVal = command.ExecValues();
@@ -63,6 +70,7 @@ class CommandManager {
 
         }
 
+        currNode = this._cmdTree.Current();
         if (isSuccess && (currNode != undefined)) {
             game.updateCmdKey(currNode.Key());
             /*

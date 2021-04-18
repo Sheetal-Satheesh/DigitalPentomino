@@ -228,17 +228,19 @@ class GameLoader {
 
         let [cmdSequences, seqType] = this._commandManager.CmdSequences(startCmdKey, targetStateKey);
         let cmdLength = cmdSequences.length;
-        if (seqType == 2) {
-            --cmdLength;
-        }
+        // if (seqType == 2) {
+        //     --cmdLength;
+        // }
+
+        let cmdProperty = updateCommandAttr(CommandTypes.Shadow, seqType);
 
         for (let indx = 0; indx < cmdLength; indx++) {
-            if (seqType == 2) {
-                this._commandManager.CmdTree().MoveUp();
-            }
-            else {
-                this._commandManager.CmdTree().MoveDown();
-            }
+            // if (seqType == 2) {
+            //     this._commandManager.CmdTree().MoveUp();
+            // }
+            // else {
+            //     this._commandManager.CmdTree().MoveDown();
+            // }
 
             let command = cmdSequences[indx];
             let pentomino = command.Pentomino;
@@ -255,7 +257,7 @@ class GameLoader {
                             new RemoveCommand(
                                 pentomino,
                                 this._game.getPosition(pentomino)
-                            ), CommandTypes.Shadow
+                            ), cmdProperty
                         );
                     }
                     else {
@@ -268,7 +270,7 @@ class GameLoader {
                                 pentomino,
                                 this._game.getPosition(pentomino),
                                 [posX, posY]
-                            ), CommandTypes.Shadow);
+                            ), cmdProperty);
                     }
 
                     break;
@@ -277,39 +279,37 @@ class GameLoader {
                     this._commandManager.ExecCommand(
                         new RemoveCommand(pentomino,
                             this.game().getPosition(pentomino)
-                        ), CommandTypes.Shadow);
+                        ), cmdProperty);
                     break;
 
                 case "RotateClkWise":
                     this._commandManager.ExecCommand(
                         new RotateClkWiseCommand(pentomino),
-                        CommandTypes.Shadow);
+                        cmdProperty);
                     break;
 
                 case "RotateAntiClkWise":
                     this._commandManager.ExecCommand(
                         new RotateAntiClkWiseCommand(pentomino),
-                        CommandTypes.Shadow);
+                        cmdProperty);
                     break;
 
                 case "MirrorH":
                     this._commandManager.ExecCommand(
                         new MirrorHCommand(pentomino),
-                        CommandTypes.Shadow);
+                        cmdProperty);
                     break;
 
                 case "MirrorV":
                     this._commandManager.ExecCommand(
                         new MirrorVCommand(pentomino),
-                        CommandTypes.Shadow);
+                        cmdProperty);
                     break;
 
                 default:
                     //TODO: add commund related flag variable
                     throw new Error("Can not undo");
             }
-
-
         }
     }
 

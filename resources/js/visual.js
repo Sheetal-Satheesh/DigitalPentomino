@@ -11,6 +11,18 @@ Object.freeze(UIProperty);
 const CommandTypes = { "Original": 1, "Shadow": 2 };
 Object.freeze(CommandTypes);
 
+const CommandSeq = { "Forward": 1, "Backward": 2 };
+Object.freeze(CommandSeq);
+
+function updateCommandAttr(cmdType, cmdSeq){
+    return {
+        "cmdType": cmdType,
+        "cmdSeq": cmdSeq
+    }
+}
+
+const cmdAttrDefault = updateCommandAttr(CommandTypes.Original, CommandSeq.Forward);
+
 let lastHintedPentName = null;
 let randomCell;
 class Visual {
@@ -90,8 +102,8 @@ class Visual {
         }
     }
 
-    placePentomino(pentomino, posX, posY, cmdType = CommandTypes.Original) {
-        this.gameController.placePentomino(pentomino, posX, posY, cmdType);
+    placePentomino(pentomino, posX, posY, cmdProperty = cmdAttrDefault) {
+        this.gameController.placePentomino(pentomino, posX, posY, cmdProperty);
         this.positionPiece(pentomino);
     }
 
@@ -102,9 +114,9 @@ class Visual {
         this.gameController.removeFromTray(pentomino);
     }
 
-    movePentominoToTray(pentomino, cmdType = CommandTypes.Original) {
+    movePentominoToTray(pentomino, cmdProperty = cmdAttrDefault) {
         this.gameController.addToTray(pentomino);
-        this.gameController.removePentomino(pentomino, cmdType);
+        this.gameController.removePentomino(pentomino, cmdProperty);
         this.positionPiece(pentomino);
     }
 
@@ -521,7 +533,7 @@ class Visual {
 
     }
 
-    rotateClkWise(cmdType = CommandTypes.Original) {
+    rotateClkWise(cmdProperty = cmdAttrDefault) {
         let piece = this.selected;
         if (piece) {
             let pieceDiv = document.getElementById("piece_" + piece.name);
@@ -529,13 +541,13 @@ class Visual {
             let currentRot = pieceDiv.style.getPropertyValue("--rotationZ").split(/(-?\d+)/)[1] * 1; //converts string value to int
             let newRot = flipped ? currentRot - 90 : currentRot + 90;
             // Update the backend
-            this.gameController.rotatePentominoClkWise(piece, cmdType);
+            this.gameController.rotatePentominoClkWise(piece, cmdProperty);
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
         }
     }
 
-    rotateAntiClkWise(cmdType = CommandTypes.Original) {
+    rotateAntiClkWise(cmdProperty = cmdAttrDefault) {
         let piece = this.selected;
         if (piece) {
             let pieceDiv = document.getElementById("piece_" + piece.name);
@@ -543,13 +555,13 @@ class Visual {
             let currentRot = pieceDiv.style.getPropertyValue("--rotationZ").split(/(-?\d+)/)[1] * 1; //converts string value to int
             let newRot = flipped ? currentRot + 90 : currentRot - 90;
             // Update the backend
-            this.gameController.rotatePentominoAntiClkWise(piece, cmdType);
+            this.gameController.rotatePentominoAntiClkWise(piece, cmdProperty);
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
         }
     }
 
-    flipH(cmdType = CommandTypes.Original) {
+    flipH(cmdProperty = cmdAttrDefault) {
         let piece = this.selected;
         if (piece) {
             let pieceDiv = document.getElementById("piece_" + piece.name);
@@ -557,14 +569,14 @@ class Visual {
             let currentRot = pieceDiv.style.getPropertyValue("--rotationX").split(/(-?\d+)/)[1] * 1; //converts string value to int
             let newRot = currentRot + 180;
             // Update the backend
-            this.gameController.mirrorPentominoH(piece, cmdType);
+            this.gameController.mirrorPentominoH(piece, cmdProperty);
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationX", newRot.toString() + "deg");
             pieceDiv.setAttribute("flipped", 1 - flipped);
         }
     }
 
-    flipV(cmdType = CommandTypes.Original) {
+    flipV(cmdProperty = cmdAttrDefault) {
         let piece = this.selected;
         if (piece) {
             let pieceDiv = document.getElementById("piece_" + piece.name);
@@ -572,7 +584,7 @@ class Visual {
             let currentRot = pieceDiv.style.getPropertyValue("--rotationY").split(/(-?\d+)/)[1] * 1; //converts string value to int
             let newRot = currentRot + 180;
             // Update the backend
-            this.gameController.mirrorPentominoV(piece, cmdType);
+            this.gameController.mirrorPentominoV(piece, cmdProperty);
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationY", newRot.toString() + "deg");
             pieceDiv.setAttribute("flipped", 1 - flipped);
@@ -898,7 +910,8 @@ class Visual {
         return undefined;
     }
 
-    execShadowCmd(command) {
+    execShadowCmd(command,seqType) {
+        let cmdProperty = updateCommandAttr(CommandTypes.Shadow, seqType);
         switch (command.name) {
             case "Remove":
             case "Place":
@@ -908,7 +921,9 @@ class Visual {
                         break;
                     }
                     command.Pentomino.updateTrayValue(1);
-                    this.movePentominoToTray(command.Pentomino, CommandTypes.Shadow);
+                    this.movePentominoToTray(
+                        command.Pentomino,
+                        cmdProperty);
                     this.positionPiece(command.Pentomino);
                 }
                 else {
@@ -917,29 +932,29 @@ class Visual {
                         command.Pentomino,
                         command.PosX,
                         command.PosY,
-                        CommandTypes.Shadow);
+                        cmdProperty);
                 }
 
                 break;
 
             case "RotateClkWise":
                 this.selected = command.Pentomino;
-                this.rotateClkWise(CommandTypes.Shadow);
+                this.rotateClkWise(cmdProperty);
                 break;
 
             case "RotateAntiClkWise":
                 this.selected = command.Pentomino;
-                this.rotateAntiClkWise(CommandTypes.Shadow);
+                this.rotateAntiClkWise(cmdProperty);
                 break;
 
             case "MirrorH":
                 this.selected = command.Pentomino;
-                this.flipH(CommandTypes.Shadow);
+                this.flipH(cmdProperty);
                 break;
 
             case "MirrorV":
                 this.selected = command.Pentomino;
-                this.flipV(CommandTypes.Shadow);
+                this.flipV(cmdProperty);
                 break;
 
             default:
@@ -998,10 +1013,20 @@ class Visual {
 
     loadGameState(targetStateKey) {
         let currentCmdKey = this.gameController.getCurrentCmdKey();
-        let [cmdSequences, swq] = this.gameController.getCmdSequences(currentCmdKey, targetStateKey);
+        let [cmdSequences, seqType] = this.gameController.getCmdSequences(currentCmdKey, targetStateKey);
         for (let indx = 0; indx < cmdSequences.length; indx++) {
-            this.execShadowCmd(cmdSequences[indx]);
+            this.execShadowCmd(cmdSequences[indx],seqType);
         }
+
+        // this.pieces = this.gameController.getAllPentominoes();
+        // this.pieces = this.pieces.map((pentomino) => {
+        //     let inGameArea = this.gameController.isPlacedInGame(pentomino);
+        //     if (inGameArea == false) {
+        //         pentomino.updateTrayValue(0);
+        //     }
+        //     return pentomino;
+        // }, this);
+        // this.renderPieces();
     }
 
     replay(startKey, targetKey) {
@@ -1025,19 +1050,9 @@ class Visual {
             }
         }
 
-        let [cmdSequences, seq] = this.gameController.getCmdSequences(startKey, targetKey);
-        let ldGame = this.loadGameState(startKey);
-        if (ldGame != undefined) {
-            this.pieces = this.gameController.getAllPentominoes();
-            this.pieces = this.pieces.map((pentomino) => {
-                let inGameArea = this.gameController.isPlacedInGame(pentomino);
-                if (inGameArea == false) {
-                    pentomino.updateTrayValue(0);
-                }
-                return pentomino;
-            }, this);
-            this.renderPieces();
-        }
+        let [cmdSequences, seqType] = this.gameController.getCmdSequences(startKey, targetKey);
+        this.loadGameState(startKey);
+
 
         let timeInterval = 100;
         for (let indx = 0; indx < cmdSequences.length; indx++) {
@@ -1045,7 +1060,7 @@ class Visual {
             var that = this;
 
             setTimeout(function (that, command) {
-                that.execShadowCmd(command);
+                that.execShadowCmd(command, seqType);
             }, timeInterval += 500, that, command);
         }
     }

@@ -136,7 +136,7 @@ class GameController {
         pentomino,
         row,
         col,
-        cmdType = CommandTypes.Original) {
+        cmdProperty = cmdAttrDefault) {
 
         row = parseInt(row);
         col = parseInt(col);
@@ -146,14 +146,14 @@ class GameController {
             new PlaceCommand(pentomino,
                 this.game().getPosition(pentomino),
                 [row, col]),
-            cmdType);
+            cmdProperty);
     }
 
     movePentominoToPosition(
         pentomino,
         row,
         col,
-        cmdType = CommandTypes.Original) {
+        cmdProperty = cmdAttrDefault) {
 
         row = parseInt(row);
         col = parseInt(col);
@@ -161,63 +161,63 @@ class GameController {
 
         return this.cmdManager().ExecCommand(
             new MoveToPositionCommand(pentomino, row, col),
-            cmdType);
+            cmdProperty);
     }
 
     rotatePentominoAntiClkWise(
         pentomino,
-        cmdType = CommandTypes.Original) {
+        cmdProperty = cmdAttrDefault) {
 
         this.exceptionHandler(pentomino);
 
         return this.cmdManager().ExecCommand(
             new RotateAntiClkWiseCommand(pentomino),
-            cmdType);
+            cmdProperty);
     }
 
     rotatePentominoClkWise(
         pentomino,
-        cmdType = CommandTypes.Original) {
+        cmdProperty = cmdAttrDefault) {
 
         this.exceptionHandler(pentomino);
 
         return this.cmdManager().ExecCommand(
             new RotateClkWiseCommand(pentomino),
-            cmdType);
+            cmdProperty);
     }
 
     mirrorPentominoH(
         pentomino,
-        cmdType = CommandTypes.Original) {
+        cmdProperty = cmdAttrDefault) {
 
         this.exceptionHandler(pentomino);
 
         return this.cmdManager().ExecCommand(
             new MirrorHCommand(pentomino),
-            cmdType);
+            cmdProperty);
     }
 
     mirrorPentominoV(
         pentomino,
-        cmdType = CommandTypes.Original) {
+        cmdProperty = cmdAttrDefault) {
 
         this.exceptionHandler(pentomino);
 
         return this.cmdManager().ExecCommand(
             new MirrorVCommand(pentomino),
-            cmdType);
+            cmdProperty);
     }
 
     removePentomino(
         pentomino,
-        cmdType = CommandTypes.Original) {
+        cmdProperty = cmdAttrDefault) {
 
         this.exceptionHandler(pentomino);
 
         return this.cmdManager().ExecCommand(
             new RemoveCommand(pentomino,
                 this.game().getPosition(pentomino)
-            ), cmdType);
+            ), cmdProperty);
     }
 
     removeFromTray(pentomino) {
