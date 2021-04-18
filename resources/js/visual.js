@@ -1013,20 +1013,13 @@ class Visual {
 
     loadGameState(targetStateKey) {
         let currentCmdKey = this.gameController.getCurrentCmdKey();
+        if(currentCmdKey == undefined){
+            currentCmdKey = this.gameController.getStartCmdKey();
+        }
         let [cmdSequences, seqType] = this.gameController.getCmdSequences(currentCmdKey, targetStateKey);
         for (let indx = 0; indx < cmdSequences.length; indx++) {
             this.execShadowCmd(cmdSequences[indx], seqType);
         }
-
-        // this.pieces = this.gameController.getAllPentominoes();
-        // this.pieces = this.pieces.map((pentomino) => {
-        //     let inGameArea = this.gameController.isPlacedInGame(pentomino);
-        //     if (inGameArea == false) {
-        //         pentomino.updateTrayValue(0);
-        //     }
-        //     return pentomino;
-        // }, this);
-        // this.renderPieces();
     }
 
     replay(startKey, targetKey) {
