@@ -115,6 +115,10 @@ class GameController {
         return this.cmdManager().CmdKeySequences();
     }
 
+    getGameIdByKey(key){
+        return this._gameLoader.getGameIdByKey(key);
+    }
+
     exceptionHandler(pentomino) {
         if (this.game() === null) {
             throw new Error("Game is not set");

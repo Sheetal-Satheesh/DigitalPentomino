@@ -994,6 +994,9 @@ class Visual {
         this.execShadowCmd(command);
     }
 
+    getGameIdByKey(key){
+        return this.gameController.getGameIdByKey(key);
+    }
     saveGameImage(image) {
         this.gameController.saveGameImage(image);
     }

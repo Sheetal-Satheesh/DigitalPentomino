@@ -567,6 +567,16 @@
             showGameImages();
         }
 
+        function generateRandomColor() {
+            /**
+             * https://stackoverflow.com/questions/1152024/
+             * best-way-to-generate-a-random-color-in-javascript/1152508
+            */
+
+            return '#' + (0x1000000 + Math.random() * 0xffffff).toString(16).substr(1, 6);
+
+        }
+
         function showGameImages() {
             var modal = document.getElementById('modalTop');
             modal.style.background = " rgb(220, 240, 237)";
@@ -576,16 +586,23 @@
             document.querySelector(".innerGrid").style.display = "block";
 
             let imageList = pd.visual.showGameImages();
-
-
             let imageGrid = document.getElementById('innerGrid');
             template.clearContent(".innerGrid");
+            let gameId = undefined;
+            let borderColor = generateRandomColor();
 
             imageList.forEach((item) => {
                 let imgKey = Object.keys(item)[0];
                 let image = item[imgKey];
                 let imageDiv = document.createElement("div");
                 imageDiv.setAttribute("class", "imageDiv");
+
+                if (gameId != pd.visual.getGameIdByKey(imgKey)) {
+                    gameId = pd.visual.getGameIdByKey(imgKey);
+                    borderColor = generateRandomColor();
+                }
+                imageDiv.style.borderWidth = "3px";
+                imageDiv.style.borderColor = borderColor;
 
                 let buttonDiv = document.createElement("div");
                 buttonDiv.setAttribute("class", "imageBtnDiv");

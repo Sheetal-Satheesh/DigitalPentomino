@@ -85,6 +85,15 @@ class GameLoader {
         }
     }
 
+    getGameIdByKey(key) {
+        for (let gameEntry in this._gameList) {
+            if (this._gameList[gameEntry].cmdKey.find(cmdKey => cmdKey === key)) {
+                return gameEntry;
+            }
+        }
+        return undefined;
+    }
+
     createGame(boardStartXY,
         boardSizeXY,
         Boardshape,
@@ -216,16 +225,16 @@ class GameLoader {
         console.error("commandKey not found");
     }
 
-    jumpToGameState(cmdSequences, seqType){
+    jumpToGameState(cmdSequences, seqType) {
 
         let cmdProperty = updateCommandAttr(CommandTypes.Shadow, seqType);
-        let cmdSeqLength =  cmdSequences.length;
-        if(seqType == CommandSeq.Backward){
+        let cmdSeqLength = cmdSequences.length;
+        if (seqType == CommandSeq.Backward) {
             --cmdSeqLength;
         }
 
         for (let indx = 0; indx < cmdSeqLength; indx++) {
-            
+
             let command = cmdSequences[indx];
             let pentomino = command.Pentomino;
             let posX = command.PosX;
@@ -290,14 +299,14 @@ class GameLoader {
             }
         }
     }
-    
+
     loadGameState(targetStateKey) {
 
         let currCmddKey = this._commandManager.CurrentCmdKey();
-        if(this._game.getCmdKey() == undefined){
+        if (this._game.getCmdKey() == undefined) {
             let startCmdKey = this._commandManager.StartCmdKey();
-            let [cmdSequences, seqType] = this._commandManager.CmdSequences(startCmdKey,currCmddKey);
-            this.jumpToGameState(cmdSequences, seqType );
+            let [cmdSequences, seqType] = this._commandManager.CmdSequences(startCmdKey, currCmddKey);
+            this.jumpToGameState(cmdSequences, seqType);
         }
 
         currCmddKey = this._commandManager.CurrentCmdKey();
