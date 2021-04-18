@@ -1128,6 +1128,9 @@ class Visual {
             return;
         }
         this.execShadowCmd(command, "Undo");
+        if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
+            this.showNumberOfPossibleSolutions();
+        }
     }
 
     redo(){
@@ -1136,6 +1139,9 @@ class Visual {
             return;
         }
         this.execShadowCmd(command,"Redo");
+        if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
+            this.showNumberOfPossibleSolutions();
+        }
     }
 
 
