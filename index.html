@@ -488,6 +488,7 @@
             // Remove default 'submit' button
             let submitButton = $('#innerGrid input[type=submit]')[0];
             if (submitButton.id.length === 0) {
+                console.log(submitButton);
                 submitButton.id = "settings-submit-button";
                 submitButton.value = "Confirm";
 
