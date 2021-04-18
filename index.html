@@ -114,7 +114,7 @@
 
 
           <p id="labelNumberSolutionsContainer">
-              Number of solutions: <label id="labelNumberSolutions">?</label>
+              <label id="labelNumberOfSolutionsText">Number of solutions</label>: <label id="labelNumberSolutions">?</label>
           </p>
 
         <div class="settings-popup" id="settings_form">
@@ -382,7 +382,10 @@
                 let heading = changesEntry.heading;
                 let key = changesEntry.key;
 
-                if (heading === "hinting" && key === "enableHinting") {
+                if (heading === "general" && key === "language") {
+                    let lang = settings[heading][key];
+                    document.getElementById("labelNumberOfSolutionsText").textContent = strings.numberOfPossibleSolutions[lang];
+                } else if (heading === "hinting" && key === "enableHinting") {
                     let hintingEnabled = settings[heading][key];
                     document.getElementById("hintButton").style.visibility = hintingEnabled ? "visible" : "hidden";
                 } else if (heading === "hinting" && key === "showNumberOfPossibleSolutions") {

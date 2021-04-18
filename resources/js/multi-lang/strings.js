@@ -1,4 +1,5 @@
 const strings = {
+    numberOfPossibleSolutions: ["Number of solutions", "Anzahl Lösungen"],
     settings: {
         header: ["Game settings", "Spieleinstellungen"],
         buttons: {
