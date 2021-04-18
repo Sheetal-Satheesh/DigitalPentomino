@@ -116,14 +116,6 @@
           <p id="labelNumberSolutionsContainer">
               Number of solutions: <label id="labelNumberSolutions">?</label>
           </p>
-
-        <div class="settings-popup" id="settings_form">
-
-            <div class="settings-container">
-                <h2 id="header-game-settings">Game settings</h2>
-                <form></form>
-            </div>
-        </div>
         
 		<div id="boardmodalTop" class="boardmodal" style="background: rgb(220, 240, 237) none repeat scroll 0% 0%; display: none;">
 		<span onclick="document.getElementById('boardmodalTop').style.display='none'" class="boardclose" title="Close Modal">x</span>
@@ -133,6 +125,7 @@
 					
                     </div>
                 <form class="boardmodalFormContent" style="display: none;">
+                <form></form>
                 <div class="boardmodalFormContainer" id="boardmodalFormContainerID">
                         <h3 id="boardmodalTextID"></h3>
                         <div class="boardmodalButtons" id="boardmodalButtonsID"></div>
@@ -247,16 +240,6 @@
 			
 		}
 		
-																
-											  
-													   
-
-																					
-																			
-														 
-													   
-													  
-
        function resetGame() {
                 var modal = document.getElementById('modalTop');
                 modal.style.display = "block";
@@ -287,13 +270,7 @@
                     onclick: "document.getElementById('modalTop').style.display='none'",
                     textContent: "Yes"
                 }
-														  
 
-						   
-								  
-																					
-							 
-			 
                 template.attachBtn("#modalButtonsID", deleteBtn);
 
                 let dltBtn = document.querySelector(".deleteBtn");
@@ -305,17 +282,7 @@
         function callHintAI() {
             pd.visual.callHintAI();
             
-        }
-
-        //game setings disappear after clicking outside
-        document.addEventListener('mouseup', function(e) {
-            var settingsContainer = document.getElementById('settings_form');
-            if (!settingsContainer.contains(e.target)) {
-                closeSettings();
-            }
-        });
-
-       
+        }       
 
         function rotateClkWise(){
             pd.rotateClkWise();
@@ -411,7 +378,7 @@
         }
 
         function updateSettingSchemaDefaultFromSettings(settingsSchema, settings) {
-            let formElement = $('form');
+            let formElement = $('#innerGrid');
 
             //change default values according to current schema
             for (let key in settings) {
@@ -489,24 +456,28 @@
                         break;
                 }
             }
-            $(formElt).jsonFormErrors(errors, $('form'));
+            $(formElt).jsonFormErrors(errors, $('#innerGrid'));
         }
 
         function selectSettings(){
-            let formElement = $('form')[0];
-            formElement.innerHTML = '';
 
-																					 
-																		 
-																																							 
+            var modal = document.getElementById('modalTop');
+            modal.style.display = "block";
+            modal.style.background = "white";
 
-            $('form').jsonForm({
+            document.querySelector(".modalFormContent").style.display = "none";
+            document.querySelector(".innerGrid").style.display = "block";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent("#innerGrid");
+            
+            //add form to attach settings to
+            $('#innerGrid').jsonForm({
                 schema: SettingsSchemaSingleton.getInstance().getSettingsSchema(),
                 onSubmit: this.handleJsonFormSubmit,
                 displayErrors: this.handleJsonFormErrors
             });
-
-            document.getElementById("settings_form").style.display = "block";
 
             this.postProcessSettingsForm(SettingsSingleton.getInstance().getSettings());
         }
@@ -515,20 +486,19 @@
             this.updateSettingSchemaDefaultFromSettings(SettingsSchemaSingleton.getInstance().getSettingsSchema(), settings);
 
             // Remove default 'submit' button
-            let submitButton = $('form input[type=submit]')[0];
+            let submitButton = $('#innerGrid input[type=submit]')[0];
             if (submitButton.id.length === 0) {
                 submitButton.id = "settings-submit-button";
                 submitButton.value = "Confirm";
 
                 // Removal of default jsonform submit button & inclusion of buttons
-                let btnContainer = $('form input[type=submit]').parent();
-											   
+                let btnContainer = $('#innerGrid input[type=submit]').parent();			   
 
                 // Add own buttons
                 let $closeButton = $('<input id="settings-close-button" type="button" value="Abort" onClick="closeSettings()" />');
                 $closeButton.appendTo(btnContainer);
-                let $seedButton = $('<input id="btnSeed" class="button" type="button" value="Enter a seed..." onClick="selectSeeding()" />');
-                $seedButton.appendTo(btnContainer);
+                /*let $seedButton = $('<input id="btnSeed" class="button" type="button" value="Enter a seed..." onClick="selectSeeding()" />');
+                $seedButton.appendTo(btnContainer);*/
             }
 
             // Change select box to names of enums
@@ -566,7 +536,7 @@
         }
 
         function closeSettings() {
-            document.getElementById("settings_form").style.display = "none";
+            document.getElementById("modalTop").style.display = "none";
         }
 
         function closeBoardSelector() {
