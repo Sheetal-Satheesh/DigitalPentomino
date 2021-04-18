@@ -14,7 +14,7 @@ Object.freeze(CommandTypes);
 const CommandSeq = { "Forward": 1, "Backward": 2 };
 Object.freeze(CommandSeq);
 
-function updateCommandAttr(cmdType, cmdSeq){
+function updateCommandAttr(cmdType, cmdSeq) {
     return {
         "cmdType": cmdType,
         "cmdSeq": cmdSeq
@@ -910,7 +910,7 @@ class Visual {
         return undefined;
     }
 
-    execShadowCmd(command,seqType) {
+    execShadowCmd(command, seqType) {
         let cmdProperty = updateCommandAttr(CommandTypes.Shadow, seqType);
         switch (command.name) {
             case "Remove":
@@ -1015,7 +1015,7 @@ class Visual {
         let currentCmdKey = this.gameController.getCurrentCmdKey();
         let [cmdSequences, seqType] = this.gameController.getCmdSequences(currentCmdKey, targetStateKey);
         for (let indx = 0; indx < cmdSequences.length; indx++) {
-            this.execShadowCmd(cmdSequences[indx],seqType);
+            this.execShadowCmd(cmdSequences[indx], seqType);
         }
 
         // this.pieces = this.gameController.getAllPentominoes();
@@ -1063,6 +1063,14 @@ class Visual {
                 that.execShadowCmd(command, seqType);
             }, timeInterval += 500, that, command);
         }
+
+        const pause = function () {
+            let replayId = document.getElementById("replay");
+            let replayImg = replayId.children[0];
+            replayImg.setAttribute('src', 'resources/images/icons/replay.svg');
+        };
+        setTimeout(pause, timeInterval);
+
     }
 
 }

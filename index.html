@@ -684,6 +684,9 @@
             submit.setAttribute("class", "submitReplay");
             submit.setAttribute("style", "margin: 0 .5vw;background-color:rgb(149, 172, 170);");
             submit.onclick = function () {
+                let replayId = document.getElementById("replay");
+                let replayImg = replayId.children[0];
+                replayImg.setAttribute('src', 'resources/images/icons/pause.png');
                 let sValue = document.getElementById("startStateOptions").value;
                 let eValue = document.getElementById("targetStateOptions").value;
                 console.log(sValue);
