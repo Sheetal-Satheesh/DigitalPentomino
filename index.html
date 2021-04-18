@@ -315,14 +315,7 @@
             }
         });
 
-        //board selection  setings disappear after clicking outside
-        document.addEventListener('mouseup', function(e) {
-            var boardContainer = document.getElementById('board_selection_form');
-            if (!boardContainer.contains(e.target)) {
-                closeBoardSelector();
-            }
-        });
-		
+       
 
         function rotateClkWise(){
             pd.rotateClkWise();
