@@ -48,11 +48,11 @@
   background: white;
   width: 89vw;
   height: 39.32vw;
-  -webkit-transform: translate3d(0,0,0);
 }
 
 #piecearea {
   user-select: none;
+
 }
 
 #operations {
@@ -187,12 +187,13 @@ border: 0;
 
 
 .cGame {
-position: absolute;
+position: fixed;
 top: 0;
 right: 0;
 bottom: 0;
 left: 0;
-overflow: auto;
+overflow:none;
+-webkit-transform: translate3d(0,0,0);
 }
 
 img#logo{
