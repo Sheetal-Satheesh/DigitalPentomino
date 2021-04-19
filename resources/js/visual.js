@@ -485,7 +485,9 @@ class Visual {
                         var coords = (id.split('_')[1].split(','));
                         data[1].removeFromTray();
                         that.placePentomino(data[1], coords[0],coords[1] );
-                        that.showNumberOfPossibleSolutions();
+                        if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
+                            that.showNumberOfPossibleSolutions();
+                        }
                         /**
                          * make this the selected element which activates manipulation GUI data[1].select();
                          *
@@ -928,6 +930,10 @@ class Visual {
         setTimeout(function(that) {
             that.disablePrefillButton(false);
         }, 100, this);
+
+        if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
+            this.showNumberOfPossibleSolutions();
+        }
     }
 
     getRandomElementFromArray(arrayObject) {
@@ -1123,6 +1129,9 @@ class Visual {
             return;
         }
         this.execShadowCmd(command, "Undo");
+        if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
+            this.showNumberOfPossibleSolutions();
+        }
     }
 
     redo(){
@@ -1131,6 +1140,9 @@ class Visual {
             return;
         }
         this.execShadowCmd(command,"Redo");
+        if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
+            this.showNumberOfPossibleSolutions();
+        }
     }
 
 

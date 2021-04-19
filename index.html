@@ -114,7 +114,7 @@
 
 
           <p id="labelNumberSolutionsContainer">
-              Number of solutions: <label id="labelNumberSolutions">?</label>
+              <label id="labelNumberOfSolutionsText">Number of solutions</label>: <label id="labelNumberSolutions">?</label>
           </p>
         
 		<div id="boardmodalTop" class="boardmodal" style="background: rgb(220, 240, 237) none repeat scroll 0% 0%; display: none;">
@@ -253,25 +253,28 @@
                 template.clearContent("#modalBodyID");
                 template.clearContent("#innerGridForm");
 
+                let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
                 let textNode = {
                     class: "modalText",
-                    text: "Do You Want To Reset "
-                }
+                    text: strings.reset[lang]
+                };
                 template.attachText("#modalTitleID", textNode);
 
                 let cancelBtn = {
                     class: "cancelBtn",
                     onclick: "document.getElementById('modalTop').style.display='none'",
-                    textContent: "No"
-                }
+                    textContent: strings.general.no[lang]
+                };
                 template.attachBtn("#modalButtonsID", cancelBtn);
 												  
 
                 let deleteBtn = {
                     class: "deleteBtn",
                     onclick: "document.getElementById('modalTop').style.display='none'",
-                    textContent: "Yes"
-                }
+                    textContent: strings.general.yes[lang]
+                };
+														  
 
                 template.attachBtn("#modalButtonsID", deleteBtn);
 
@@ -346,35 +349,23 @@
             }
         }
 
-												
-															 
-									
-											
-								
-
          function processChangesToSettings(changes, settings) {
             changes.forEach(changesEntry => {
                 let heading = changesEntry.heading;
                 let key = changesEntry.key;
 
-                if (heading === "hinting" && key === "enableHinting") {
+                if (heading === "general" && key === "language") {
+                    let lang = settings[heading][key];
+                    document.getElementById("labelNumberOfSolutionsText").textContent = strings.numberOfPossibleSolutions[lang];
+                } else if (heading === "hinting" && key === "enableHinting") {
                     let hintingEnabled = settings[heading][key];
                     document.getElementById("hintButton").style.visibility = hintingEnabled ? "visible" : "hidden";
-                    document.getElementById("labelNumberSolutionsContainer").style.visibility = hintingEnabled ? "visible" : "hidden";
-
-															
-										 
-																			
-					 
+                } else if (heading === "hinting" && key === "showNumberOfPossibleSolutions") {
+                    let showNumberOfPossibleSolutions = settings[heading][key];
+                    document.getElementById("labelNumberSolutionsContainer").style.visibility = showNumberOfPossibleSolutions ? "visible" : "hidden";
                 } else if (heading === "prefilling" && key === "enablePrefilling") {
                     let visible = settings[heading][key];
                     document.getElementById("prefillBoard").style.visibility = visible ? "visible" : "hidden";
-																							 
-														 
-																											   
-																												
-																										  
-																										  
                 }
               });
         }
