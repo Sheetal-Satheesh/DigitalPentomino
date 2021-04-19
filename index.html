@@ -151,6 +151,7 @@
             <div class ="modalContainer" id="modalContainerID">
                 <div class="outerGrid">
                     <div class="innerGrid" id="innerGrid"></div>
+                    <form id="innerGridForm"></form>
                 </div>
                 <form class="modalFormContent">
                     <div class="modalFormContainer" id="modalFormContainerID">
@@ -250,6 +251,7 @@
                 template.clearContent("#modalButtonsID");
                 template.clearContent("#modalTitleID");
                 template.clearContent("#modalBodyID");
+                template.clearContent("#innerGridForm");
 
                 let textNode = {
                     class: "modalText",
@@ -378,7 +380,7 @@
         }
 
         function updateSettingSchemaDefaultFromSettings(settingsSchema, settings) {
-            let formElement = $('#innerGrid');
+            let formElement = $('#innerGridForm');
 
             //change default values according to current schema
             for (let key in settings) {
@@ -456,24 +458,24 @@
                         break;
                 }
             }
-            $(formElt).jsonFormErrors(errors, $('#innerGrid'));
+            $(formElt).jsonFormErrors(errors, $('#innerGridForm'));
         }
 
         function selectSettings(){
 
             var modal = document.getElementById('modalTop');
             modal.style.display = "block";
-            modal.style.background = "white";
+            modal.style.background = "rgb(220, 240, 237)";
 
             document.querySelector(".modalFormContent").style.display = "none";
             document.querySelector(".innerGrid").style.display = "block";
             template.clearContent("#modalButtonsID");
             template.clearContent("#modalTitleID");
             template.clearContent("#modalBodyID");
-            template.clearContent("#innerGrid");
+            template.clearContent("#innerGridForm");
             
             //add form to attach settings to
-            $('#innerGrid').jsonForm({
+            $('#innerGridForm').jsonForm({
                 schema: SettingsSchemaSingleton.getInstance().getSettingsSchema(),
                 onSubmit: this.handleJsonFormSubmit,
                 displayErrors: this.handleJsonFormErrors
@@ -485,15 +487,15 @@
         function postProcessSettingsForm(settings) {
             this.updateSettingSchemaDefaultFromSettings(SettingsSchemaSingleton.getInstance().getSettingsSchema(), settings);
 
-            // Remove default 'submit' button
-            let submitButton = $('#innerGrid input[type=submit]')[0];
+            // Overwrite default 'submit' button
+            let submitButton = $('#innerGridForm input[type=submit]')[0];
             if (submitButton.id.length === 0) {
-                console.log(submitButton);
-                submitButton.id = "submit-button-settings";
-                submitButton.value = "Confirm";
+                submitButton.id = "settings-submit-button";
+                submitButton.value = "Apply";
+                submitButton.form = "innerGrid"
 
-                // Removal of default jsonform submit button & inclusion of buttons
-                let btnContainer = $('#innerGrid input[type=submit]').parent();			   
+                // Find parent of default jsonform submit button & inclusion of other buttons
+                let btnContainer = $('#innerGridForm input[type=submit]').parent();			   
 
                 // Add own buttons
                 let $closeButton = $('<input id="settings-close-button" type="button" value="Abort" onClick="closeSettings()" />');
