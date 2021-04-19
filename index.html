@@ -268,25 +268,27 @@
                 template.clearContent("#modalTitleID");
                 template.clearContent("#modalBodyID");
 
+                let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
                 let textNode = {
                     class: "modalText",
-                    text: "Do You Want To Reset "
-                }
+                    text: strings.reset[lang]
+                };
                 template.attachText("#modalTitleID", textNode);
 
                 let cancelBtn = {
                     class: "cancelBtn",
                     onclick: "document.getElementById('modalTop').style.display='none'",
-                    textContent: "No"
-                }
+                    textContent: strings.general.no[lang]
+                };
                 template.attachBtn("#modalButtonsID", cancelBtn);
 												  
 
                 let deleteBtn = {
                     class: "deleteBtn",
                     onclick: "document.getElementById('modalTop').style.display='none'",
-                    textContent: "Yes"
-                }
+                    textContent: strings.general.yes[lang]
+                };
 														  
 
 						   

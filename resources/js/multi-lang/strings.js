@@ -1,4 +1,9 @@
 const strings = {
+    general: {
+        no: ["No", "Nein"],
+        yes: ["Yes", "Ja"]
+    },
+    reset: ["Do You Want To Reset?", "Willst du deinen Spielstand wirklich löschen?"],
     numberOfPossibleSolutions: ["Number of solutions", "Anzahl Lösungen"],
     settings: {
         header: ["Game settings", "Spieleinstellungen"],
