@@ -290,6 +290,14 @@
             }
         });
 
+        // !important. Resolves the issue on safair- ipad. Please do not remove.
+        document.addEventListener('mouseup', function(e) {
+            var manipulationButtonsRow = document.getElementById('pieceManipulation');
+            if (!manipulationButtonsRow.contains(e.target)) {
+                manipulationButtonsRow.style.display = "none";
+            }
+        });
+
         function rotateClkWise(){
             pd.rotateClkWise();
         }
