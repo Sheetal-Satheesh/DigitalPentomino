@@ -36,7 +36,7 @@
   left: 10vw; 
   border-bottom: solid rgb(2, 71, 62) 0.2vw;
   background :rgb(149, 172, 170);
-  height: 6.7vw;
+  height: 6.85vw;
   width: 89vw;
   z-index: 0;
 
@@ -44,10 +44,10 @@
 
 #field {
   position: fixed;
-  top: 7.04vw;  
+  top: 7.15vw;  
   background: white;
   width: 89vw;
-  height: 39.32vw;
+  height: 39.35vw;
 }
 
 #piecearea {

@@ -60,7 +60,7 @@
     <button type="button" id='seedSubmit' class = "cActionBtn" onclick="submitSeed()"><img class="cSeedBtn" src="resources/images/icons/seed.png">
   </div>
   <div class = "cGame">
-    <div id="functions">
+    <div id="functions" onclick="hideManipulationButtons">
         <img id = "logo" src="resources/images/icons/pentomino.png" alt="Pentomino" class="cLogo">
     
         <div id="operations">
@@ -239,6 +239,7 @@
 			
 		}
        function resetGame() {
+                this.hideManipulationButtons();
                 var modal = document.getElementById('modalTop');
                 modal.style.display = "block";
                 modal.style.background = "transparent";
@@ -290,13 +291,17 @@
             }
         });
 
-        // !important. Resolves the issue on safair- ipad. Please do not remove.
-        document.addEventListener('mouseup', function(e) {
-            var manipulationButtonsRow = document.getElementById('pieceManipulation');
-            if (!manipulationButtonsRow.contains(e.target)) {
-                manipulationButtonsRow.style.display = "none";
-            }
-        });
+        // // !important. Resolves the issue on safair- ipad. Please do not remove.
+        // document.addEventListener('mouseup', function(e) {
+        //     var manipulationButtonsRow = document.getElementById('pieceManipulation');
+        //     if (!manipulationButtonsRow.contains(e.target)) {
+        //         manipulationButtonsRow.style.display = "none";
+        //     }
+        // });
+
+     function hideManipulationButtons(){
+         document.getElementById('pieceManipulation').style.display = "none";
+     }
 
         function rotateClkWise(){
             pd.rotateClkWise();
@@ -316,7 +321,8 @@
 
 																													 
         function selectBoard(){
-			document.getElementById("boardmodalTop").style.display = "block";	 
+			document.getElementById("boardmodalTop").style.display = "block";
+            this.hideManipulationButtons();
         }
 		
 		 // From https://stackoverflow.com/questions/10970078/modifying-a-query-string-without-reloading-the-page (2nd answer)
@@ -453,6 +459,7 @@
         }
 
         function selectSettings(){
+            this.hideManipulationButtons();
             let formElement = $('form')[0];
             formElement.innerHTML = '';
 
@@ -573,6 +580,7 @@
         }
 
         function execUndo(){
+            this.hideManipulationButtons();
             pd.visual.undo();
         }
 
