@@ -799,7 +799,7 @@ class Visual {
             element.style["box-shadow"] = "0 0 20px " + pentomino.color;
             setTimeout(function(){
                 element.style.removeProperty("box-shadow");
-            }, timeframe*4);
+            }, timeframe);
         });
     }
 
