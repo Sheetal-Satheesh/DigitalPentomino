@@ -114,16 +114,8 @@
 
 
           <p id="labelNumberSolutionsContainer">
-              Number of solutions: <label id="labelNumberSolutions">?</label>
+              <label id="labelNumberOfSolutionsText">Number of solutions</label>: <label id="labelNumberSolutions">?</label>
           </p>
-
-        <div class="settings-popup" id="settings_form">
-
-            <div class="settings-container">
-                <h2 id="header-game-settings">Game settings</h2>
-                <form></form>
-            </div>
-        </div>
         
 		<div id="boardmodalTop" class="boardmodal" style="background: rgb(220, 240, 237) none repeat scroll 0% 0%; display: none;">
 		<span onclick="document.getElementById('boardmodalTop').style.display='none'" class="boardclose" title="Close Modal">x</span>
@@ -133,6 +125,7 @@
 					
                     </div>
                 <form class="boardmodalFormContent" style="display: none;">
+                <form></form>
                 <div class="boardmodalFormContainer" id="boardmodalFormContainerID">
                         <h3 id="boardmodalTextID"></h3>
                         <div class="boardmodalButtons" id="boardmodalButtonsID"></div>
@@ -155,6 +148,7 @@
             <div class ="modalContainer" id="modalContainerID">
                 <div class="outerGrid">
                     <div class="innerGrid" id="innerGrid"></div>
+                    <form id="innerGridForm"></form>
                 </div>
                 <form class="modalFormContent">
                     <div class="modalFormContainer" id="modalFormContainerID">
@@ -238,6 +232,7 @@
 			
 			
 		}
+		
        function resetGame() {
                 this.hideManipulationButtons();
                 var modal = document.getElementById('modalTop');
@@ -249,26 +244,29 @@
                 template.clearContent("#modalButtonsID");
                 template.clearContent("#modalTitleID");
                 template.clearContent("#modalBodyID");
+                template.clearContent("#innerGridForm");
+
+                let lang = SettingsSingleton.getInstance().getSettings().general.language;
 
                 let textNode = {
                     class: "modalText",
-                    text: "Do You Want To Reset "
-                }
+                    text: strings.reset[lang]
+                };
                 template.attachText("#modalTitleID", textNode);
 
                 let cancelBtn = {
                     class: "cancelBtn",
                     onclick: "document.getElementById('modalTop').style.display='none'",
-                    textContent: "No"
-                }
+                    textContent: strings.general.no[lang]
+                };
                 template.attachBtn("#modalButtonsID", cancelBtn);
 												  
 
                 let deleteBtn = {
                     class: "deleteBtn",
                     onclick: "document.getElementById('modalTop').style.display='none'",
-                    textContent: "Yes"
-                }
+                    textContent: strings.general.yes[lang]
+                };
 														  
                 template.attachBtn("#modalButtonsID", deleteBtn);
 
@@ -281,27 +279,7 @@
         function callHintAI() {
             pd.visual.callHintAI();
             
-        }
-
-        //game setings disappear after clicking outside
-        document.addEventListener('mouseup', function(e) {
-            var settingsContainer = document.getElementById('settings_form');
-            if (!settingsContainer.contains(e.target)) {
-                closeSettings();
-            }
-        });
-
-        // // !important. Resolves the issue on safair- ipad. Please do not remove.
-        // document.addEventListener('mouseup', function(e) {
-        //     var manipulationButtonsRow = document.getElementById('pieceManipulation');
-        //     if (!manipulationButtonsRow.contains(e.target)) {
-        //         manipulationButtonsRow.style.display = "none";
-        //     }
-        // });
-
-     function hideManipulationButtons(){
-         document.getElementById('pieceManipulation').style.display = "none";
-     }
+        }       
 
         function rotateClkWise(){
             pd.rotateClkWise();
@@ -323,6 +301,7 @@
         function selectBoard(){
 			document.getElementById("boardmodalTop").style.display = "block";
             this.hideManipulationButtons();
+            this.closeSettings();
         }
 		
 		 // From https://stackoverflow.com/questions/10970078/modifying-a-query-string-without-reloading-the-page (2nd answer)
@@ -363,21 +342,24 @@
                 let heading = changesEntry.heading;
                 let key = changesEntry.key;
 
-                if (heading === "hinting" && key === "enableHinting") {
+                if (heading === "general" && key === "language") {
+                    let lang = settings[heading][key];
+                    document.getElementById("labelNumberOfSolutionsText").textContent = strings.numberOfPossibleSolutions[lang];
+                } else if (heading === "hinting" && key === "enableHinting") {
                     let hintingEnabled = settings[heading][key];
                     document.getElementById("hintButton").style.visibility = hintingEnabled ? "visible" : "hidden";
-                    document.getElementById("labelNumberSolutionsContainer").style.visibility = hintingEnabled ? "visible" : "hidden";
-	 
+                } else if (heading === "hinting" && key === "showNumberOfPossibleSolutions") {
+                    let showNumberOfPossibleSolutions = settings[heading][key];
+                    document.getElementById("labelNumberSolutionsContainer").style.visibility = showNumberOfPossibleSolutions ? "visible" : "hidden";
                 } else if (heading === "prefilling" && key === "enablePrefilling") {
                     let visible = settings[heading][key];
                     document.getElementById("prefillBoard").style.visibility = visible ? "visible" : "hidden";
-																							 																		  
                 }
               });
         }
 
         function updateSettingSchemaDefaultFromSettings(settingsSchema, settings) {
-            let formElement = $('form');
+            let formElement = $('#innerGridForm');
 
             //change default values according to current schema
             for (let key in settings) {
@@ -455,22 +437,29 @@
                         break;
                 }
             }
-            $(formElt).jsonFormErrors(errors, $('form'));
+            $(formElt).jsonFormErrors(errors, $('#innerGridForm'));
         }
 
         function selectSettings(){
             this.hideManipulationButtons();
-            let formElement = $('form')[0];
-            formElement.innerHTML = '';
+            this.closeBoardSelector();
+            var modal = document.getElementById('modalTop');
+            modal.style.display = "block";
+            modal.style.background = "rgb(220, 240, 237)";
 
-	
-            $('form').jsonForm({
+            document.querySelector(".modalFormContent").style.display = "none";
+            document.querySelector(".innerGrid").style.display = "block";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent("#innerGridForm");
+            
+            //add form to attach settings to
+            $('#innerGridForm').jsonForm({
                 schema: SettingsSchemaSingleton.getInstance().getSettingsSchema(),
                 onSubmit: this.handleJsonFormSubmit,
                 displayErrors: this.handleJsonFormErrors
             });
-
-            document.getElementById("settings_form").style.display = "block";
 
             this.postProcessSettingsForm(SettingsSingleton.getInstance().getSettings());
         }
@@ -478,21 +467,21 @@
         function postProcessSettingsForm(settings) {
             this.updateSettingSchemaDefaultFromSettings(SettingsSchemaSingleton.getInstance().getSettingsSchema(), settings);
 
-            // Remove default 'submit' button
-            let submitButton = $('form input[type=submit]')[0];
+            // Overwrite default 'submit' button
+            let submitButton = $('#innerGridForm input[type=submit]')[0];
             if (submitButton.id.length === 0) {
                 submitButton.id = "settings-submit-button";
-                submitButton.value = "Confirm";
+                submitButton.value = "Apply";
+                submitButton.form = "innerGrid"
 
-                // Removal of default jsonform submit button & inclusion of buttons
-                let btnContainer = $('form input[type=submit]').parent();
-											   
+                // Find parent of default jsonform submit button & inclusion of other buttons
+                let btnContainer = $('#innerGridForm input[type=submit]').parent();			   
 
                 // Add own buttons
                 let $closeButton = $('<input id="settings-close-button" type="button" value="Abort" onClick="closeSettings()" />');
                 $closeButton.appendTo(btnContainer);
-                let $seedButton = $('<input id="btnSeed" class="button" type="button" value="Enter a seed..." onClick="selectSeeding()" />');
-                $seedButton.appendTo(btnContainer);
+                /*let $seedButton = $('<input id="btnSeed" class="button" type="button" value="Enter a seed..." onClick="selectSeeding()" />');
+                $seedButton.appendTo(btnContainer);*/
             }
 
             // Change select box to names of enums
@@ -530,11 +519,11 @@
         }
 
         function closeSettings() {
-            document.getElementById("settings_form").style.display = "none";
+            document.getElementById("modalTop").style.display = "none";
         }
 
         function closeBoardSelector() {
-            document.getElementById('board_selection_form').style.display = "none";
+            document.getElementById('boardmodalTop').style.display = "none";
         }
 
         function selectSeeding() {
@@ -545,6 +534,10 @@
         function closeSeeding() {
             document.getElementById("seedingCover").style.visibility = "hidden";
             document.getElementById("seeding").style.visibility = "hidden";
+        }
+
+        function hideManipulationButtons(){
+            document.getElementById('pieceManipulation').style.display = 'none';
         }
 
         function submitSeed() {

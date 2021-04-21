@@ -61,6 +61,12 @@ class SettingsSchema {
                 "type": "object",
                 "title": titles.hinting.title[lang],
                 "properties": {
+                    showNumberOfPossibleSolutions: {
+                        "type": "boolean",
+                        "title": titles.hinting.showNumberOfPossibleSolutions.title[lang],
+                        "description": titles.hinting.showNumberOfPossibleSolutions.description[lang],
+                        "default": true
+                    },
                     enableHinting: {
                         "type": "boolean",
                         "title": titles.hinting.enableHinting.title[lang],

@@ -18,35 +18,35 @@ class PD {
 
     rotateClkWise(){
         this.visual.rotateClkWise();
-        if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
+        if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.visual.showNumberOfPossibleSolutions();
         }
     }
 
     rotateAntiClkWise() {
         this.visual.rotateAntiClkWise();
-        if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
+        if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.visual.showNumberOfPossibleSolutions();
         }
     }
 
     flipH(){
         this.visual.flipH();
-        if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
+        if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.visual.showNumberOfPossibleSolutions();
         }
     }
 
     flipV(){
         this.visual.flipV();
-        if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
+        if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.visual.showNumberOfPossibleSolutions();
         }
     }
 
     reset(){
        this.visual.clear();
-       if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
+       if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
            this.visual.showNumberOfPossibleSolutions();
        }
     }
@@ -104,7 +104,7 @@ class PD {
                                     board);
 
         this.visual = new Visual(this);
-        if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
+        if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.visual.showNumberOfPossibleSolutions();
         }
     }
@@ -119,14 +119,23 @@ class PD {
 
     prefillBoard(){
         this.visual.prefillBoard();
+        if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
+            this.visual.showNumberOfPossibleSolutions();
+        }
     }
     
     undo(){
         this.visual.undo();
+        if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
+            this.visual.showNumberOfPossibleSolutions();
+        }
     }
 
     redo(){
         this.visual.redo();
+        if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
+            this.visual.showNumberOfPossibleSolutions();
+        }
     }
 
 }

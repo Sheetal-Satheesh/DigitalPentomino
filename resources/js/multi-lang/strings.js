@@ -1,4 +1,10 @@
 const strings = {
+    general: {
+        no: ["No", "Nein"],
+        yes: ["Yes", "Ja"]
+    },
+    reset: ["Do You Want To Reset?", "Willst du deinen Spielstand wirklich löschen?"],
+    numberOfPossibleSolutions: ["Number of solutions", "Anzahl Lösungen"],
     settings: {
         header: ["Game settings", "Spieleinstellungen"],
         buttons: {
@@ -18,6 +24,11 @@ const strings = {
                 title: ["Enable hints", "Hinweise einschalten"],
                 description: ["Hints suggest pentomino-actions to the user, which bring the board closer to a solution.",
                     "Hinweise schlagen dem Spieler Züge vor, die ihn/sie näher zur Lösung bringen."]
+            },
+            showNumberOfPossibleSolutions: {
+                title: ["Show number of possible solutions", "Zeige Anzahl der möglichen Lösungen an"],
+                description: ["Shows the number of solutions that contain the current pentominoes on the board.",
+                    "Zeigt die Anzahl der Lösungen an, die mit den Pentominoes wie sie zu diesem Zeitpunkt auf dem Spielbrett liegen, möglich sind."]
             },
             hintingStrategy: {
                 title: ["Hint Type", "Art der Hinweise"],
