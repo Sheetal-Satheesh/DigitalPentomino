@@ -580,6 +580,9 @@ class Visual {
 
     callHintAI(){
         let hint = pd.gameController.getHint();
+        //disable hint button until hint is finished
+        let hintButton = document.getElementById('hintButton');
+        hintButton.disabled = true;
         //Always show place command in case of non-exact hints:
         let commandNumber = 0;
         if (!SettingsSingleton.getInstance().getSettings().hinting.exactHints){
@@ -591,6 +594,9 @@ class Visual {
         let hintCommand = hint.getCommands()[commandNumber];
         let hintinPen = hintCommand._pentomino;
         this.indicateHint(hint,commandNumber);
+        setTimeout( function() {
+            hintButton.disabled = false;
+        }, 1000);
     }
 
 
