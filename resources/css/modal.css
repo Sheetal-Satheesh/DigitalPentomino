@@ -36,12 +36,14 @@ button:hover {
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
     width: 89vw;
-    height: 38vw;
+    height: 90%;
 }
   
 .modalContainer {
   top:1vw;
   position: relative;
+  overflow-x: hidden;
+  margin-bottom: 3vw;
 
 }
   /* Modal Content/Box */
