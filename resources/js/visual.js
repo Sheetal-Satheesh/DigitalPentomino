@@ -633,7 +633,7 @@ class Visual {
     }
 
     indicateHint(hint,commandNumber){
-        let timeoutFrame = 500;
+        let timeoutFrame = 1000;
         //possible command names (place, remove, moveToPosition, rotateClkWise, rotateAntiClkWise, mirrorH, mirrorV)
         let hintCommand = hint.getCommands()[commandNumber];
         let hintSkill = hint._skill;
@@ -695,7 +695,7 @@ class Visual {
                             fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
                             prevBackground[i] = fieldvalue.style.background;
                             fieldvalue.style.background = pentominoColor;
-                            this.hide(piecePos, prevBackground);
+                            this.hide(piecePos, prevBackground, timeoutFrame);
                         }
                         break;
                     case "full":
@@ -703,7 +703,7 @@ class Visual {
                             fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
                             prevBackground[i] = fieldvalue.style.background;
                             fieldvalue.style.background = pentominoColor;
-                            this.hide(piecePos, prevBackground);
+                            this.hide(piecePos, prevBackground, timeoutFrame);
                         }
                         break;
                     case "area":
@@ -715,7 +715,7 @@ class Visual {
                                 fieldvalue = document.getElementById("field_" + areaPos[i][0] + "," + areaPos[i][1]);
                                 prevBackground[i] = fieldvalue.style.background;
                                 fieldvalue.style.background = pentominoColor;
-                                this.hideArea(areaPos, prevBackground);
+                                this.hideArea(areaPos, prevBackground, timeoutFrame);
                             }
                         }
                         break;
@@ -733,7 +733,7 @@ class Visual {
                     pen.style.opacity = '0.2';
                     setTimeout(function(){
                     pen.style.opacity = '1';
-                    },1000);
+                    },timeoutFrame);
                 }
                 break;
 
@@ -841,7 +841,7 @@ class Visual {
 
 
 
-       hideArea(areaPos, prevBackground){
+       hideArea(areaPos, prevBackground, timeoutFrame){
 
         setTimeout(function(){
             for (let j=0;j<areaPos.length;j++){
@@ -849,7 +849,7 @@ class Visual {
                     //TODO: replace with proper fadeOut animation
                     fvalue.style.background = prevBackground[j];
             }
-        }, 70);
+        }, timeoutFrame);
     }
 
 
@@ -857,7 +857,7 @@ class Visual {
 
 
 
-    hide(piecePos, prevBackground){
+    hide(piecePos, prevBackground, timeoutFrame){
 
         setTimeout(function(){
             for (let j=0;j<5;j++){
@@ -865,7 +865,7 @@ class Visual {
                     //TODO: replace with proper fadeOut animation
                     fvalue.style.background = prevBackground[j];
             }
-        }, 70);
+        }, timeoutFrame);
     }
 
 
