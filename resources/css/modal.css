@@ -42,7 +42,7 @@ button:hover {
 .modalContainer {
   top:1vw;
   position: relative;
-  /* overflow-x: hidden; */
+  overflow-x: hidden;
   margin-bottom: 3vw;
 
 }

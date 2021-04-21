@@ -235,6 +235,7 @@
 		
        function resetGame() {
                 this.hideManipulationButtons();
+                this.closeBoardSelector();
                 var modal = document.getElementById('modalTop');
                 modal.style.display = "block";
                 modal.style.background = "transparent";
@@ -478,7 +479,7 @@
                 let btnContainer = $('#innerGridForm input[type=submit]').parent();			   
 
                 // Add own buttons
-                let $closeButton = $('<input id="settings-close-button" type="button" value="Abort" onClick="closeSettings()" />');
+                let $closeButton = $('<input id="settings-close-button" class="btn btn-primary" type="button" value="Abort" onClick="closeSettings()" />');
                 $closeButton.appendTo(btnContainer);
                 /*let $seedButton = $('<input id="btnSeed" class="button" type="button" value="Enter a seed..." onClick="selectSeeding()" />');
                 $seedButton.appendTo(btnContainer);*/
