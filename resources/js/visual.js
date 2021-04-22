@@ -606,8 +606,8 @@ class Visual {
         for(let i=0;i<cells.length;i++) {
             let fv = document.getElementById("field_" + cells[i][0] + "," + cells[i][1]);
             bgColor = fv.style.background;
-            fv.style.background = "url(resources/images/icons/warning.png)";
-            fv.style.backgroundSize = "25px";
+            fv.style.background = "url(resources/images/icons/warning.png) center center";
+            fv.style.backgroundSize = "cover";
             menu.push(fv);
         }
         let blinkInterval;
@@ -618,8 +618,8 @@ class Visual {
                 if (counter % 2 === 0) {
                     menu[j].style.background = bgColor;
                 } else {
-                    menu[j].style.background = "url(resources/images/icons/warning.png)";
-                     menu[j].style.backgroundSize = "25px";
+                    menu[j].style.background = "url(resources/images/icons/warning.png) center center";
+                     menu[j].style.backgroundSize = "cover";
                 }
             }
             counter++;
