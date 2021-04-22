@@ -47,6 +47,11 @@ const strings = {
                             "<li><b>Bereich-Hinweise:</b> Die Aktion wird nur angedeutet, indem ein Bereich angezeigt wird, der die Zielposition des Pentominoes enthält.</li>" +
                         "</ul>"]
             },
+            maxPartialHintingCells: {
+                title: ["Max Partial Hinting Cells", "Maximale Anzahl Zellen bei partiellen Hinweisen"],
+                description: ["If Partial hinting is enabled, the number of cells is randomly determined between 1 and the specified value.",
+                    "Die Anzahl der Zellen, die bei partiellen Hinweisen angezeigt werden, ist zufällig zwischen 1 und er eingestellten Zahl."]
+            },
             skillTeaching: {
                 title: ["Enable Skill-Teaching?", "Fähigkeits-lehrende Hinweise einschalten?"],
                 description: ["If skill-teaching is enabled, some hints are providing additional information to teach certain skills.",

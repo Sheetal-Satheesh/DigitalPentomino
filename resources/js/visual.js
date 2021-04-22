@@ -651,7 +651,8 @@ class Visual {
         let currentPenHintName = hintinPen.name;
         //let currentPenHintNaame = this.selected.name;
         if(!(currentPenHintName === lastHintedPentName)){
-            randomCell = Math.floor(Math.random() * (4)) + 1;
+            let maxPartialHintingCells = SettingsSingleton.getInstance().getSettings().hinting.maxPartialHintingCells;
+            randomCell = Math.floor(Math.random() * (maxPartialHintingCells)) + 1;
             lastHintedPentName = currentPenHintName;
         }
 
