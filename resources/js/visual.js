@@ -619,7 +619,7 @@ class Visual {
                     menu[j].style.background = bgColor;
                 } else {
                     menu[j].style.background = "url(resources/images/icons/warning.png) center center";
-                     menu[j].style.backgroundSize = "cover";
+                    menu[j].style.backgroundSize = "cover";
                 }
             }
             counter++;
