@@ -600,14 +600,14 @@ class Visual {
     }
 
 
-    blinkCells(cells, blinkColor) {
+    blinkCells(cells) {
         let menu = [];
         let bgColor;
         for(let i=0;i<cells.length;i++) {
             let fv = document.getElementById("field_" + cells[i][0] + "," + cells[i][1]);
-            console.log("this",fv.style.background);
             bgColor = fv.style.background;
-            fv.style.background = blinkColor;
+            fv.style.background = "url(resources/images/icons/warning.png) center center";
+            fv.style.backgroundSize = "cover";
             menu.push(fv);
         }
         let blinkInterval;
@@ -618,7 +618,8 @@ class Visual {
                 if (counter % 2 === 0) {
                     menu[j].style.background = bgColor;
                 } else {
-                    menu[j].style.background = blinkColor;
+                    menu[j].style.background = "url(resources/images/icons/warning.png) center center";
+                    menu[j].style.backgroundSize = "cover";
                 }
             }
             counter++;
@@ -676,9 +677,8 @@ class Visual {
 
        //indication of unoccupied cells
         if (!(hintSkill === null) && (SettingsSingleton.getInstance().getSettings().hinting.skillTeaching)) {
-            const RED_COLOR = "red";
             //blink unoccupied cells
-            this.blinkCells(hintSkill, RED_COLOR);
+            this.blinkCells(hintSkill);
         }
         else {
 
