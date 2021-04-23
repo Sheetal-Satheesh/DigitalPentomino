@@ -236,7 +236,7 @@
        function resetGame() {
                 this.hideManipulationButtons();
                 this.closeBoardSelector();
-                this.disablePoniterEventsOnPieces();
+                this.disablePointerEventsOnPieces();
                 var modal = document.getElementById('modalTop');
                 modal.style.display = "block";
                 modal.style.background = "transparent";
@@ -310,7 +310,7 @@
 			document.getElementById("boardmodalTop").style.display = "block";
             this.hideManipulationButtons();
             //this.closeSettings();
-            this.disablePoniterEventsOnPieces();
+            this.disablePointerEventsOnPieces();
         }
 		
 		 // From https://stackoverflow.com/questions/10970078/modifying-a-query-string-without-reloading-the-page (2nd answer)
@@ -450,7 +450,7 @@
         }
 
         function selectSettings(){
-            this.disablePoniterEventsOnPieces();
+            this.disablePointerEventsOnPieces();
             this.hideManipulationButtons();
             //this.closeBoardSelector();
             var modal = document.getElementById('modalTop');
@@ -523,16 +523,15 @@
 
             Translator.translateHeaders(SettingsSingleton.getInstance().getSettings().general.language);
         }
-
-        function disablePoniterEventsOnPieces(){
-            var piecesIdArray = ['piece_X', 'piece_Y', 'piece_F', 'piece_I', 'piece_L', 'piece_N', 'piece_P', 'piece_T', 'piece_U', 'piece_V', 'piece_W', 'piece_Z'];
+        
+        let  piecesIdArray = ['piece_X', 'piece_Y', 'piece_F', 'piece_I', 'piece_L', 'piece_N', 'piece_P', 'piece_T', 'piece_U', 'piece_V', 'piece_W', 'piece_Z'];
+        function disablePointerEventsOnPieces(){
             piecesIdArray.forEach(function(piece){
                 document.getElementById(piece).style.pointerEvents = "none";
             });
         }
 
         function enablePointerEventsOnPiece(){
-            var piecesIdArray = ['piece_X', 'piece_Y', 'piece_F', 'piece_I', 'piece_L', 'piece_N', 'piece_P', 'piece_T', 'piece_U', 'piece_V', 'piece_W', 'piece_Z'];
             piecesIdArray.forEach(function(piece){
                 document.getElementById(piece).style.pointerEvents = "auto";
             });
