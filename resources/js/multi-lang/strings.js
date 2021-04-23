@@ -4,6 +4,11 @@ const strings = {
         yes: ["Yes", "Ja"]
     },
     reset: ["Do You Want To Reset?", "Willst du deinen Spielstand wirklich löschen?"],
+     showSolved: {
+        congrats : ["Congratulations!", "Glückwunsch !"],
+        play : ["Play Again?","Nochmals spielen ?"]
+    },
+    
     numberOfPossibleSolutions: ["Number of solutions", "Anzahl Lösungen"],
     settings: {
         header: ["Game settings", "Spieleinstellungen"],
