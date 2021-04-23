@@ -118,7 +118,7 @@
           </p>
         
 		<div id="boardmodalTop" class="boardmodal" style="background: rgb(220, 240, 237) none repeat scroll 0% 0%; display: none;">
-		<span onclick="document.getElementById('boardmodalTop').style.display='none'" class="boardclose" title="Close Modal">x</span>
+		<span onclick="closeModal()" class="boardclose" title="Close Modal">x</span>
             <div class ="boardmodalContainer" id="boardmodalContainerID">
                 <div class="boardouterGrid">
                     <div class="boardinnerGrid" id="boardinnerGrid"style="display: block;">
@@ -144,7 +144,7 @@
         <div id="field"></div> <!-- field -->
         <div id="piecearea"></div> <!-- piecearea -->
         <div id="modalTop" class="modal">
-            <span onclick="document.getElementById('modalTop').style.display='none'" class="close" title="Close Modal">x</span>
+            <span onclick="closeModal()" class="close" title="Close Modal">x</span>
             <div class ="modalContainer" id="modalContainerID">
                 <div class="outerGrid">
                     <div class="innerGrid" id="innerGrid"></div>
@@ -236,6 +236,7 @@
        function resetGame() {
                 this.hideManipulationButtons();
                 this.closeBoardSelector();
+                this.disablePoniterEventsOnPieces();
                 var modal = document.getElementById('modalTop');
                 modal.style.display = "block";
                 modal.style.background = "transparent";
@@ -257,7 +258,7 @@
 
                 let cancelBtn = {
                     class: "cancelBtn",
-                    onclick: "document.getElementById('modalTop').style.display='none'",
+                    onclick: "closeModalContainer()",
                     textContent: strings.general.no[lang]
                 };
                 template.attachBtn("#modalButtonsID", cancelBtn);
@@ -265,7 +266,7 @@
 
                 let deleteBtn = {
                     class: "deleteBtn",
-                    onclick: "document.getElementById('modalTop').style.display='none'",
+                    onclick: "closeModalContainer()",
                     textContent: strings.general.yes[lang]
                 };
 														  
@@ -276,6 +277,12 @@
                     pd.reset();
                 });
             }
+
+        function closeModal(){
+            document.getElementById('boardmodalTop').style.display='none';
+            document.getElementById('modalTop').style.display='none';
+            this.enablePointerEventsOnPiece();
+        }    
 
         function callHintAI() {
             pd.visual.callHintAI();
@@ -302,7 +309,8 @@
         function selectBoard(){
 			document.getElementById("boardmodalTop").style.display = "block";
             this.hideManipulationButtons();
-            this.closeSettings();
+            //this.closeSettings();
+            this.disablePoniterEventsOnPieces();
         }
 		
 		 // From https://stackoverflow.com/questions/10970078/modifying-a-query-string-without-reloading-the-page (2nd answer)
@@ -442,8 +450,9 @@
         }
 
         function selectSettings(){
+            this.disablePoniterEventsOnPieces();
             this.hideManipulationButtons();
-            this.closeBoardSelector();
+            //this.closeBoardSelector();
             var modal = document.getElementById('modalTop');
             modal.style.display = "block";
             modal.style.background = "rgb(220, 240, 237)";
@@ -515,16 +524,33 @@
             Translator.translateHeaders(SettingsSingleton.getInstance().getSettings().general.language);
         }
 
+        function disablePoniterEventsOnPieces(){
+            var piecesIdArray = ['piece_X', 'piece_Y', 'piece_F', 'piece_I', 'piece_L', 'piece_N', 'piece_P', 'piece_T', 'piece_U', 'piece_V', 'piece_W', 'piece_Z'];
+            piecesIdArray.forEach(function(piece){
+                document.getElementById(piece).style.pointerEvents = "none";
+            });
+        }
+
+        function enablePointerEventsOnPiece(){
+            var piecesIdArray = ['piece_X', 'piece_Y', 'piece_F', 'piece_I', 'piece_L', 'piece_N', 'piece_P', 'piece_T', 'piece_U', 'piece_V', 'piece_W', 'piece_Z'];
+            piecesIdArray.forEach(function(piece){
+                document.getElementById(piece).style.pointerEvents = "auto";
+            });
+        }
+
         function closeModalContainer(){
             document.getElementById('modalTop').style.display = "none";
+            this.enablePointerEventsOnPiece();
         }
 
         function closeSettings() {
             document.getElementById("modalTop").style.display = "none";
+            this.enablePointerEventsOnPiece();
         }
 
         function closeBoardSelector() {
             document.getElementById('boardmodalTop').style.display = "none";
+            this.enablePointerEventsOnPiece()
         }
 
         function selectSeeding() {
