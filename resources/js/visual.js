@@ -805,22 +805,53 @@ class Visual {
 
     showGameSolved() {
         var modal = document.getElementById('modalTop');
-        let modalText = document.getElementById("modalText");
-        modalText.innerHTML = "congratulations !!";
-        modalText.innerHTML += "<br/> <img src='resources/images/icons/jboy-2.ico'>";
-        modalText.innerHTML += "<br /> play again ?";
         modal.style.display = "block";
-        let dltBtn = document.querySelector(".deletebtn");
+        modal.style.background = "transparent";
+        let modalFormContent =document.querySelector(".modalFormContent");
+        modalFormContent.style.display = "block";
+        let modalFormContainerID = document.querySelector("#modalFormContainerID")
+        modalFormContainerID.style.display = "block";
+        let modalBodyID = document.querySelector("#modalBodyID");
+        modalBodyID.style.display = "block";
+        document.querySelector(".innerGrid").style.display = "none";
+        template.clearContent("#modalButtonsID");
+        template.clearContent("#modalTitleID");
+        template.clearContent("#modalBodyID");
+        template.clearContent("#innerGridForm");
+        let lang = SettingsSingleton.getInstance().getSettings().general.language;
+        //create div for image
+        let div = document.createElement("div");
+        let img = document.createElement("img");
+        img.src = "resources/images/icons/jboy-2.ico";   
+        div.appendChild(img);
+        //attach div 
+        modalBodyID.appendChild(div);
+        let textNode1 = {
+            class: "modalText",
+            text: strings.showSolved.congrats[lang]
+        };
+        template.attachText("#modalTitleID", textNode1);
+        let textNode2 = {
+            class: "modalText",
+            text: strings.showSolved.play[lang]
+        };
+        template.attachText("#modalTitleID", textNode2);
+        let cancelBtn = {
+            class: "cancelBtn",
+            onclick: "document.getElementById('modalTop').style.display='none'",
+            textContent: strings.general.no[lang]
+        };
+        template.attachBtn("#modalButtonsID", cancelBtn);
+        let deleteBtn = {
+            class: "deleteBtn",
+            onclick: "document.getElementById('modalTop').style.display='none'",
+            textContent: strings.general.yes[lang]
+        };                                          
+        template.attachBtn("#modalButtonsID", deleteBtn);
+        let dltBtn = document.querySelector(".deleteBtn");
         dltBtn.addEventListener("click", () => {
             pd.reset();
         });
-        //document.getElementsByClassName("gamearea").style.pointerEvents = "none";
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function (event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
     }
 
 
