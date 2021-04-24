@@ -4,7 +4,7 @@ const strings = {
         yes: ["Yes", "Ja"]
     },
     reset: ["Do You Want To Reset?", "Willst du deinen Spielstand wirklich löschen?"],
-     showSolved: {
+    showSolved: {
         congrats : ["Congratulations!", "Glückwunsch!"],
         play : ["Play Again?","Nochmal spielen?"]
     },
