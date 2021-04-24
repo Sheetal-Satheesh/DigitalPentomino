@@ -849,14 +849,14 @@ class Visual {
             textContent: strings.general.no[lang]
         };
         template.attachBtn("#modalBodyID", cancelBtn);
-        let deleteBtn = {
+        let playAgnBtnAttributes = {
             class: "deleteBtn",
             onclick: "document.getElementById('modalTop').style.display='none'",
             textContent: strings.general.yes[lang]
         };                                          
-        template.attachBtn("#modalBodyID", deleteBtn);
-        let dltBtn = document.querySelector(".deleteBtn");
-        dltBtn.addEventListener("click", () => {
+        template.attachBtn("#modalBodyID", playAgnBtnAttributes);
+        let playAgainBtn = document.querySelector(".deleteBtn");
+        playAgainBtn.addEventListener("click", () => {
             pd.reset();
         });
     }
