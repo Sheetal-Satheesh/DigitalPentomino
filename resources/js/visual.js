@@ -798,8 +798,15 @@ class Visual {
     indicatePentomino(pentomino, timeframe){
         Array.prototype.forEach.call(document.getElementById("piece_" + pentomino.name).getElementsByClassName("bmPoint"), function(element) {
             element.style["box-shadow"] = "0 0 20px " + pentomino.color;
+             if(pentomino.inTray){
+                element.classList.add('horizTranslate');
+                //element.style.transform = "scale(2) rotate(0.1deg)";
+             }
+            
             setTimeout(function(){
                 element.style.removeProperty("box-shadow");
+                //element.style.transform = "none";
+                element.classList.remove('horizTranslate');
             }, timeframe);
         });
     }
