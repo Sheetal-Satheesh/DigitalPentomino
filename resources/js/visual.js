@@ -473,7 +473,7 @@ class Visual {
                 for (var i in elements) {
                     var element = elements[i];
                     var id = element.id;
-                    //Ashwini: when piece is moved back to tray reset Pentomio inTray variable to 1 and place the piece in Tray
+                    //when piece is moved back to tray reset Pentomio inTray variable to 1 and place the piece in Tray
                     if (id == 'tray') {
                         let piece = data[1].toTray();
                         that.positionPiece(piece);
@@ -580,6 +580,9 @@ class Visual {
 
     callHintAI(){
         let hint = pd.gameController.getHint();
+        //disable hint button until hint is finished
+        let hintButton = document.getElementById('hintButton');
+        hintButton.disabled = true;
         //Always show place command in case of non-exact hints:
         let commandNumber = 0;
         if (!SettingsSingleton.getInstance().getSettings().hinting.exactHints){
@@ -591,17 +594,20 @@ class Visual {
         let hintCommand = hint.getCommands()[commandNumber];
         let hintinPen = hintCommand._pentomino;
         this.indicateHint(hint,commandNumber);
+        setTimeout( function() {
+            hintButton.disabled = false;
+        }, 1000);
     }
 
 
-    blinkCells(cells, blinkColor) {
+    blinkCells(cells) {
         let menu = [];
         let bgColor;
         for(let i=0;i<cells.length;i++) {
             let fv = document.getElementById("field_" + cells[i][0] + "," + cells[i][1]);
-            console.log("this",fv.style.background);
             bgColor = fv.style.background;
-            fv.style.background = blinkColor;
+            fv.style.background = "url(resources/images/icons/warning.png) center center";
+            fv.style.backgroundSize = "cover";
             menu.push(fv);
         }
         let blinkInterval;
@@ -612,7 +618,8 @@ class Visual {
                 if (counter % 2 === 0) {
                     menu[j].style.background = bgColor;
                 } else {
-                    menu[j].style.background = blinkColor;
+                    menu[j].style.background = "url(resources/images/icons/warning.png) center center";
+                    menu[j].style.backgroundSize = "cover";
                 }
             }
             counter++;
@@ -633,7 +640,7 @@ class Visual {
     }
 
     indicateHint(hint,commandNumber){
-        let timeoutFrame = 500;
+        let timeoutFrame = 1000;
         //possible command names (place, remove, moveToPosition, rotateClkWise, rotateAntiClkWise, mirrorH, mirrorV)
         let hintCommand = hint.getCommands()[commandNumber];
         let hintSkill = hint._skill;
@@ -645,7 +652,8 @@ class Visual {
         let currentPenHintName = hintinPen.name;
         //let currentPenHintNaame = this.selected.name;
         if(!(currentPenHintName === lastHintedPentName)){
-            randomCell = Math.floor(Math.random() * (4)) + 1;
+            let maxPartialHintingCells = SettingsSingleton.getInstance().getSettings().hinting.maxPartialHintingCells;
+            randomCell = Math.floor(Math.random() * (maxPartialHintingCells)) + 1;
             lastHintedPentName = currentPenHintName;
         }
 
@@ -669,9 +677,8 @@ class Visual {
 
        //indication of unoccupied cells
         if (!(hintSkill === null) && (SettingsSingleton.getInstance().getSettings().hinting.skillTeaching)) {
-            const RED_COLOR = "red";
             //blink unoccupied cells
-            this.blinkCells(hintSkill, RED_COLOR);
+            this.blinkCells(hintSkill);
         }
         else {
 
@@ -695,7 +702,7 @@ class Visual {
                             fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
                             prevBackground[i] = fieldvalue.style.background;
                             fieldvalue.style.background = pentominoColor;
-                            this.hide(piecePos, prevBackground);
+                            this.hide(piecePos, prevBackground, timeoutFrame);
                         }
                         break;
                     case "full":
@@ -703,7 +710,7 @@ class Visual {
                             fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
                             prevBackground[i] = fieldvalue.style.background;
                             fieldvalue.style.background = pentominoColor;
-                            this.hide(piecePos, prevBackground);
+                            this.hide(piecePos, prevBackground, timeoutFrame);
                         }
                         break;
                     case "area":
@@ -715,7 +722,7 @@ class Visual {
                                 fieldvalue = document.getElementById("field_" + areaPos[i][0] + "," + areaPos[i][1]);
                                 prevBackground[i] = fieldvalue.style.background;
                                 fieldvalue.style.background = pentominoColor;
-                                this.hideArea(areaPos, prevBackground);
+                                this.hideArea(areaPos, prevBackground, timeoutFrame);
                             }
                         }
                         break;
@@ -733,7 +740,7 @@ class Visual {
                     pen.style.opacity = '0.2';
                     setTimeout(function(){
                     pen.style.opacity = '1';
-                    },1000);
+                    },timeoutFrame);
                 }
                 break;
 
@@ -793,28 +800,66 @@ class Visual {
             element.style["box-shadow"] = "0 0 20px " + pentomino.color;
             setTimeout(function(){
                 element.style.removeProperty("box-shadow");
-            }, timeframe*4);
+            }, timeframe);
         });
     }
 
     showGameSolved() {
         var modal = document.getElementById('modalTop');
-        let modalText = document.getElementById("modalText");
-        modalText.innerHTML = "congratulations !!";
-        modalText.innerHTML += "<br/> <img src='resources/images/icons/jboy-2.ico'>";
-        modalText.innerHTML += "<br /> play again ?";
         modal.style.display = "block";
-        let dltBtn = document.querySelector(".deletebtn");
-        dltBtn.addEventListener("click", () => {
+        modal.style.background = "transparent";
+        let modalFormContent =document.querySelector(".modalFormContent");
+        modalFormContent.style.display = "block";
+        let modalFormContainerID = document.querySelector("#modalFormContainerID")
+        modalFormContainerID.style.display = "block";
+        let modalBodyID = document.querySelector("#modalBodyID");
+        modalBodyID.style.display = "block";
+        document.querySelector(".innerGrid").style.display = "none";
+        template.clearContent("#modalButtonsID");
+        template.clearContent("#modalTitleID");
+        template.clearContent("#modalBodyID");
+        template.clearContent("#innerGridForm");
+        let lang = SettingsSingleton.getInstance().getSettings().general.language;
+        //create div for image
+        let textNode1 = {
+            class: "modalText",
+            text: strings.showSolved.congrats[lang]
+        };
+        template.attachText("#modalBodyID", textNode1);
+        let div1 = document.createElement("div");
+        let img = document.createElement("img");
+        img.src = "resources/images/icons/jboy-2.ico";   
+        img.style.cursor = "none";
+        div1.appendChild(img);
+        //attach div 
+        modalBodyID.appendChild(div1);
+        let textNode2 = {
+            class: "modalText",
+            text: strings.showSolved.play[lang]
+        };
+        template.attachText("#modalBodyID", textNode2);
+        let div2 = document.createElement("div");
+        let text = document.createElement("h4");
+        text.innerHTML = "\n";  
+        div2.appendChild(text);
+        //attach div 
+        modalBodyID.appendChild(div2);
+        let cancelBtn = {
+            class: "cancelBtn",
+            onclick: "document.getElementById('modalTop').style.display='none'",
+            textContent: strings.general.no[lang]
+        };
+        template.attachBtn("#modalBodyID", cancelBtn);
+        let playAgnBtnAttributes = {
+            class: "deleteBtn",
+            onclick: "document.getElementById('modalTop').style.display='none'",
+            textContent: strings.general.yes[lang]
+        };                                          
+        template.attachBtn("#modalBodyID", playAgnBtnAttributes);
+        let playAgainBtn = document.querySelector(".deleteBtn");
+        playAgainBtn.addEventListener("click", () => {
             pd.reset();
         });
-        //document.getElementsByClassName("gamearea").style.pointerEvents = "none";
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function (event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
     }
 
 
@@ -841,7 +886,7 @@ class Visual {
 
 
 
-       hideArea(areaPos, prevBackground){
+       hideArea(areaPos, prevBackground, timeoutFrame){
 
         setTimeout(function(){
             for (let j=0;j<areaPos.length;j++){
@@ -849,7 +894,7 @@ class Visual {
                     //TODO: replace with proper fadeOut animation
                     fvalue.style.background = prevBackground[j];
             }
-        }, 70);
+        }, timeoutFrame);
     }
 
 
@@ -857,7 +902,7 @@ class Visual {
 
 
 
-    hide(piecePos, prevBackground){
+    hide(piecePos, prevBackground, timeoutFrame){
 
         setTimeout(function(){
             for (let j=0;j<5;j++){
@@ -865,7 +910,7 @@ class Visual {
                     //TODO: replace with proper fadeOut animation
                     fvalue.style.background = prevBackground[j];
             }
-        }, 70);
+        }, timeoutFrame);
     }
 
 

@@ -4,6 +4,11 @@ const strings = {
         yes: ["Yes", "Ja"]
     },
     reset: ["Do You Want To Reset?", "Willst du deinen Spielstand wirklich löschen?"],
+    showSolved: {
+        congrats : ["Congratulations!", "Glückwunsch!"],
+        play : ["Play Again?","Nochmal spielen?"]
+    },
+    
     numberOfPossibleSolutions: ["Number of solutions", "Anzahl Lösungen"],
     settings: {
         header: ["Game settings", "Spieleinstellungen"],
@@ -46,6 +51,11 @@ const strings = {
                             "<li><b>Partielle Hinweise:</b> Die Aktion wird nur angedeutet, indem Zellen des Pentominoes an dessen Zielposition angezeigt werden.</li>" +
                             "<li><b>Bereich-Hinweise:</b> Die Aktion wird nur angedeutet, indem ein Bereich angezeigt wird, der die Zielposition des Pentominoes enthält.</li>" +
                         "</ul>"]
+            },
+            maxPartialHintingCells: {
+                title: ["Max Partial Hinting Cells", "Maximale Anzahl Zellen bei partiellen Hinweisen"],
+                description: ["If Partial hinting is enabled, the number of cells is randomly determined between 1 and the specified value.",
+                    "Die Anzahl der Zellen, die bei partiellen Hinweisen angezeigt werden, ist zufällig zwischen 1 und er eingestellten Zahl."]
             },
             skillTeaching: {
                 title: ["Enable Skill-Teaching?", "Fähigkeits-lehrende Hinweise einschalten?"],

@@ -81,6 +81,16 @@ class SettingsSchema {
                         "enumText": titles.hinting.hintingStrategy.enumTitles[lang],
                         "default": "partial"
                     },
+                    maxPartialHintingCells: {
+                        "step": 1,
+                        "type": "integer",
+                        "title": titles.hinting.maxPartialHintingCells.title[lang],
+                        "description": titles.hinting.maxPartialHintingCells.description[lang],
+                        "default": 1,
+                        "minimum": 1,
+                        "exclusiveMinimum": false,
+                        "maximum": 4
+                    },
                     skillTeaching: {
                         "type": "boolean",
                         "title": titles.hinting.skillTeaching.title[lang],
