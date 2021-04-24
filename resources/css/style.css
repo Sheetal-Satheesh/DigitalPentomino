@@ -411,3 +411,25 @@ table
 #seedBar:focus {
 }
 
+
+
+/**shake animation reference : https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_image_shake **/
+.horizTranslate {
+  animation: shaking 0.2s;
+  animation-iteration-count: infinite;
+}
+
+
+@keyframes shaking {
+  0% { transform: translate(10px, 10px) rotate(0deg); }
+  10% { transform: translate(-10px, -11px) rotate(-1deg); }
+  20% { transform: translate(-12px, 9px) rotate(1deg); }
+  30% { transform: translate(12px, 11px) rotate(0deg); }
+  40% { transform: translate(10px, -10px) rotate(1deg); }
+  50% { transform: translate(-10px, 11px) rotate(-1deg); }
+  60% { transform: translate(-12px, 10px) rotate(0deg); }
+  70% { transform: translate(12px, 10px) rotate(-1deg); }
+  80% { transform: translate(-10px, -10px) rotate(1deg); }
+  90% { transform: translate(10px, 11px) rotate(0deg); }
+  100% { transform: translate(10px, -11px) rotate(-1deg); }
+}

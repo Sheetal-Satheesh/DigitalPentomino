@@ -798,8 +798,10 @@ class Visual {
     indicatePentomino(pentomino, timeframe){
         Array.prototype.forEach.call(document.getElementById("piece_" + pentomino.name).getElementsByClassName("bmPoint"), function(element) {
             element.style["box-shadow"] = "0 0 20px " + pentomino.color;
+            element.classList.add('horizTranslate');
             setTimeout(function(){
                 element.style.removeProperty("box-shadow");
+                element.classList.remove('horizTranslate');
             }, timeframe);
         });
     }
