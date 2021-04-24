@@ -825,7 +825,6 @@ class Visual {
             text: strings.showSolved.congrats[lang]
         };
         template.attachText("#modalBodyID", textNode1);
-
         let div1 = document.createElement("div");
         let img = document.createElement("img");
         img.src = "resources/images/icons/jboy-2.ico";   
@@ -833,20 +832,17 @@ class Visual {
         div1.appendChild(img);
         //attach div 
         modalBodyID.appendChild(div1);
-
         let textNode2 = {
             class: "modalText",
             text: strings.showSolved.play[lang]
         };
         template.attachText("#modalBodyID", textNode2);
-
         let div2 = document.createElement("div");
         let text = document.createElement("h4");
         text.innerHTML = "\n";  
         div2.appendChild(text);
         //attach div 
         modalBodyID.appendChild(div2);
-
         let cancelBtn = {
             class: "cancelBtn",
             onclick: "document.getElementById('modalTop').style.display='none'",
