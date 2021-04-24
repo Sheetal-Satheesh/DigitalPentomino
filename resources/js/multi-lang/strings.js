@@ -5,8 +5,8 @@ const strings = {
     },
     reset: ["Do You Want To Reset?", "Willst du deinen Spielstand wirklich löschen?"],
      showSolved: {
-        congrats : ["Congratulations!", "Glückwunsch !"],
-        play : ["Play Again?","Nochmals spielen ?"]
+        congrats : ["Congratulations!", "Glückwunsch!"],
+        play : ["Play Again?","Nochmal spielen?"]
     },
     
     numberOfPossibleSolutions: ["Number of solutions", "Anzahl Lösungen"],
