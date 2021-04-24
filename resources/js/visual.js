@@ -473,7 +473,7 @@ class Visual {
                 for (var i in elements) {
                     var element = elements[i];
                     var id = element.id;
-                    //Ashwini: when piece is moved back to tray reset Pentomio inTray variable to 1 and place the piece in Tray
+                    //when piece is moved back to tray reset Pentomio inTray variable to 1 and place the piece in Tray
                     if (id == 'tray') {
                         let piece = data[1].toTray();
                         that.positionPiece(piece);
@@ -820,34 +820,45 @@ class Visual {
         template.clearContent("#innerGridForm");
         let lang = SettingsSingleton.getInstance().getSettings().general.language;
         //create div for image
-        let div = document.createElement("div");
-        let img = document.createElement("img");
-        img.src = "resources/images/icons/jboy-2.ico";   
-        div.appendChild(img);
-        //attach div 
-        modalBodyID.appendChild(div);
         let textNode1 = {
             class: "modalText",
             text: strings.showSolved.congrats[lang]
         };
-        template.attachText("#modalTitleID", textNode1);
+        template.attachText("#modalBodyID", textNode1);
+
+        let div1 = document.createElement("div");
+        let img = document.createElement("img");
+        img.src = "resources/images/icons/jboy-2.ico";   
+        img.style.cursor = "none";
+        div1.appendChild(img);
+        //attach div 
+        modalBodyID.appendChild(div1);
+
         let textNode2 = {
             class: "modalText",
             text: strings.showSolved.play[lang]
         };
-        template.attachText("#modalTitleID", textNode2);
+        template.attachText("#modalBodyID", textNode2);
+
+        let div2 = document.createElement("div");
+        let text = document.createElement("h4");
+        text.innerHTML = "\n";  
+        div2.appendChild(text);
+        //attach div 
+        modalBodyID.appendChild(div2);
+
         let cancelBtn = {
             class: "cancelBtn",
             onclick: "document.getElementById('modalTop').style.display='none'",
             textContent: strings.general.no[lang]
         };
-        template.attachBtn("#modalButtonsID", cancelBtn);
+        template.attachBtn("#modalBodyID", cancelBtn);
         let deleteBtn = {
             class: "deleteBtn",
             onclick: "document.getElementById('modalTop').style.display='none'",
             textContent: strings.general.yes[lang]
         };                                          
-        template.attachBtn("#modalButtonsID", deleteBtn);
+        template.attachBtn("#modalBodyID", deleteBtn);
         let dltBtn = document.querySelector(".deleteBtn");
         dltBtn.addEventListener("click", () => {
             pd.reset();
