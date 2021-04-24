@@ -415,7 +415,7 @@ table
 
 /**shake animation reference : https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_image_shake **/
 .horizTranslate {
-  animation: shaking 0.2s;
+  animation: shaking 0.5s;
   animation-iteration-count: infinite;
 }
 
