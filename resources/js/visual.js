@@ -276,6 +276,7 @@ class Visual {
             this.disableManipulations();
         }
         else{
+            if(!this.isGameWon())
             this.showManipulations(xPosition,yPosition);
         }
     }
@@ -860,6 +861,8 @@ class Visual {
         playAgainBtn.addEventListener("click", () => {
             pd.reset();
         });
+        this.disableManipulations();
+        console.log('game solved popup visible');
     }
 
 

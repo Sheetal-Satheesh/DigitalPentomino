@@ -280,8 +280,10 @@
 
         function closeModal(){
             document.getElementById('boardmodalTop').style.display='none';
-            document.getElementById('modalTop').style.display='none';
-            this.enablePointerEventsOnPiece();
+            this.closeModalContainer();
+            // document.getElementById('modalTop').style.display='none';
+            // this.enablePointerEventsOnPiece();
+            // document.getElementById('prefillBoard').disabled = 'false';
         }    
 
         function callHintAI() {
@@ -452,6 +454,7 @@
         function selectSettings(){
             this.disablePointerEventsOnPieces();
             this.hideManipulationButtons();
+           // this.disablePrefillButton();
             //this.closeBoardSelector();
             var modal = document.getElementById('modalTop');
             modal.style.display = "block";
@@ -540,16 +543,18 @@
         function closeModalContainer(){
             document.getElementById('modalTop').style.display = "none";
             this.enablePointerEventsOnPiece();
+           // this.enablePrefillButton();
         }
 
         function closeSettings() {
-            document.getElementById("modalTop").style.display = "none";
-            this.enablePointerEventsOnPiece();
+            this.closeModalContainer();
+            // document.getElementById("modalTop").style.display = "none";
+            // this.enablePointerEventsOnPiece();
         }
 
         function closeBoardSelector() {
             document.getElementById('boardmodalTop').style.display = "none";
-            this.enablePointerEventsOnPiece()
+            this.enablePointerEventsOnPiece();
         }
 
         function selectSeeding() {
@@ -564,6 +569,14 @@
 
         function hideManipulationButtons(){
             document.getElementById('pieceManipulation').style.display = 'none';
+        }
+
+        function disablePrefillButton(){
+            document.getElementById('prefillBoard').disabled = 'true';
+        }
+
+        function enablePrefillButton(){
+            document.getElementById('prefillBoard').disabled = 'false';
         }
 
         function submitSeed() {
