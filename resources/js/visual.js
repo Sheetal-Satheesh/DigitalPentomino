@@ -495,11 +495,10 @@ class Visual {
                 for (var i in elements) {
                     var element = elements[i];
                     if (element.id == 'functions' || element.id == 'pieceManipulation') return; //do not unselect if operations have been applied to the functions panel
-
+                }
                 that.deleteSelection();
             }
         }
-
     }
 
     rotateClkWise(cmdType=CommandTypes.Original) {
