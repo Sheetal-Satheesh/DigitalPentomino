@@ -423,6 +423,21 @@ class Board {
         return unoccupiedPositions;
     }
 
+    hasUnoccupiedPosition() {
+        for (let row = this._boardSRows; row < this._boardSRows + this._boardRows; row++) {
+            for (let col = this._boardSCols; col < this._boardSCols + this._boardCols; col++) {
+                if (this.isOccupied(row, col) === null) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    isSolved() {
+        return !this.hasUnoccupiedPosition();
+    }
+
     isOccupied(row, col) {
         if (!this.positionIsValid(row, col)) {
             throw new Error("Position [" + row + "," + col + "] is outside the board");

@@ -87,18 +87,10 @@ class Visual {
     }
 
     checkIfGameWon(){
-       if(this.isGameWon()){
+       if(this.gameController.game()._board.isSolved()) {
             this.showGameSolved();
        }
     }
-
-
-    isGameWon(){
-        let game = this.gameController.game()._board;
-        let unoccupiedCells = game.getUnoccupiedPositions();
-        return unoccupiedCells == 0;
-    }
-
 
     movePentominoToTray(pentomino,cmdType=CommandTypes.Original){
         this.gameController.removePentomino(pentomino, cmdType);
