@@ -978,6 +978,7 @@ class Visual {
         if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.showNumberOfPossibleSolutions();
         }
+        this.checkIfGameWon();
     }
 
     getRandomElementFromArray(arrayObject) {
@@ -1176,6 +1177,7 @@ class Visual {
         if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.showNumberOfPossibleSolutions();
         }
+        this.checkIfGameWon();
     }
 
     redo(){
@@ -1187,6 +1189,7 @@ class Visual {
         if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.showNumberOfPossibleSolutions();
         }
+        this.checkIfGameWon();
     }
 
 
