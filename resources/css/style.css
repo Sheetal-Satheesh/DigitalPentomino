@@ -416,4 +416,23 @@ table
 html {
 	-webkit-text-size-adjust: none;
 	touch-action: manipulation;
+
+
+/**shake animation reference : https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_image_shake **/
+.horizTranslate {
+  animation: shaking 1.5s;
+  animation-iteration-count: infinite;
+}
+
+
+@keyframes shaking {
+   0% {
+        transform: scale(1,1);
+    }
+    50% {
+        transform: scale(1.5,1.5);
+    }
+    100% {
+        transform: scale(1,1);
+    }
 }

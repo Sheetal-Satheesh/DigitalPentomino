@@ -101,6 +101,7 @@ class PD {
                                     [this.boardStartX, this.boardStartY],
                                     this.boardSize,
                                     this.boardShape,
+                                    this.blockedCells,
                                     board);
 
         this.visual = new Visual(this);
