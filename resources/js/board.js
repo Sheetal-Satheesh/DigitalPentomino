@@ -15,12 +15,14 @@ class Board {
      * @param boardCols;
      * @param shape; shape of the block
      */
-    constructor(boardStartXY, boardSizeXY,boardShape='Block') {
+    constructor(boardStartXY, boardSizeXY,blockedCells, boardShape='Block') {
         this._boardSRows = boardStartXY[0];
         this._boardSCols = boardStartXY[1];
 
         this._boardRows = boardSizeXY[0];
         this._boardCols = boardSizeXY[1];
+
+        this._blockedCells = blockedCells === undefined ? [] : blockedCells;
 
         this._pentominoes = [];
         this._pentominoPositions = [];
@@ -415,12 +417,31 @@ class Board {
         let unoccupiedPositions = [];
         for (let row = this._boardSRows; row < this._boardSRows + this._boardRows; row++) {
             for (let col = this._boardSCols; col < this._boardSCols + this._boardCols; col++) {
-                if (this.isOccupied(row, col) === null) {
+                if (!this.isBlockedCell(row, col) && this.isOccupied(row, col) === null) {
                     unoccupiedPositions.push([row, col]);
                 }
             }
         }
         return unoccupiedPositions;
+    }
+
+    isBlockedCell(row, col) {
+        return this._blockedCells.some(pos => row - this._boardSRows === pos[0] && col - this._boardSCols === pos[1]);
+    }
+
+    hasUnoccupiedPosition() {
+        for (let row = this._boardSRows; row < this._boardSRows + this._boardRows; row++) {
+            for (let col = this._boardSCols; col < this._boardSCols + this._boardCols; col++) {
+                if (!this.isBlockedCell(row, col) && this.isOccupied(row, col) === null) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    isSolved() {
+        return !this.hasUnoccupiedPosition();
     }
 
     isOccupied(row, col) {

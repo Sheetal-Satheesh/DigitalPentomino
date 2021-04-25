@@ -285,9 +285,13 @@
             }
 
         function callHintAI() {
-            pd.visual.callHintAI();
-            
-        }       
+            if(!pd.gameController.game()._board.isSolved()) {
+                pd.visual.callHintAI();
+            } else {
+                // TODO - handle, e.g. shake hint button
+                console.log("Game is already solved. Cannot display hint");
+            }
+        }
 
         function rotateClkWise(){
             pd.rotateClkWise();

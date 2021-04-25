@@ -87,18 +87,10 @@ class Visual {
     }
 
     checkIfGameWon(){
-       if(this.isGameWon()){
+       if(this.gameController.game()._board.isSolved()) {
             this.showGameSolved();
        }
     }
-
-
-    isGameWon(){
-        let game = this.gameController.game()._board;
-        let unoccupiedCells = game.getUnoccupiedPositions();
-        return unoccupiedCells == 0;
-    }
-
 
     movePentominoToTray(pentomino,cmdType=CommandTypes.Original){
         this.gameController.removePentomino(pentomino, cmdType);
@@ -986,6 +978,7 @@ class Visual {
         if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.showNumberOfPossibleSolutions();
         }
+        this.checkIfGameWon();
     }
 
     getRandomElementFromArray(arrayObject) {
@@ -1184,6 +1177,7 @@ class Visual {
         if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.showNumberOfPossibleSolutions();
         }
+        this.checkIfGameWon();
     }
 
     redo(){
@@ -1195,6 +1189,7 @@ class Visual {
         if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.showNumberOfPossibleSolutions();
         }
+        this.checkIfGameWon();
     }
 
 
