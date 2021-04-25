@@ -268,7 +268,6 @@ class Visual {
             this.disableManipulations();
         }
         else{
-            if(!this.isGameWon())
             this.showManipulations(xPosition,yPosition);
         }
     }
@@ -496,7 +495,6 @@ class Visual {
                 for (var i in elements) {
                     var element = elements[i];
                     if (element.id == 'functions' || element.id == 'pieceManipulation') return; //do not unselect if operations have been applied to the functions panel
-                }
 
                 that.deleteSelection();
             }
@@ -805,6 +803,7 @@ class Visual {
     }
 
     showGameSolved() {
+        this.deleteSelection();
         var modal = document.getElementById('modalTop');
         modal.style.display = "block";
         modal.style.background = "transparent";
@@ -860,8 +859,6 @@ class Visual {
         playAgainBtn.addEventListener("click", () => {
             pd.reset();
         });
-        this.disableManipulations();
-        console.log('game solved popup visible');
     }
 
 
