@@ -267,6 +267,9 @@ class Visual {
         if(piece.inTray){
             this.disableManipulations();
         }
+        else if ($("#modalFormContainerID").is(":visible")){
+            this.disableManipulations();
+        }
         else{
             this.showManipulations(xPosition,yPosition);
         }
@@ -802,7 +805,7 @@ class Visual {
     }
 
     showGameSolved() {
-        this.deleteSelection();
+        this.disablePointerEventsOnPieces();
         var modal = document.getElementById('modalTop');
         modal.style.display = "block";
         modal.style.background = "transparent";
@@ -857,6 +860,12 @@ class Visual {
         let playAgainBtn = document.querySelector(".deleteBtn");
         playAgainBtn.addEventListener("click", () => {
             pd.reset();
+            this.enablePointerEventsOnPieces();
+        });
+
+        let dontPlayAgainBtn = document.querySelector(".cancelBtn");
+        dontPlayAgainBtn.addEventListener("click", () => {;
+            this.enablePointerEventsOnPieces();
         });
     }
 
@@ -1191,5 +1200,18 @@ class Visual {
         this.checkIfGameWon();
     }
 
+    disablePointerEventsOnPieces(){
+         let  piecesIdArray = ['piece_X', 'piece_Y', 'piece_F', 'piece_I', 'piece_L', 'piece_N', 'piece_P', 'piece_T', 'piece_U', 'piece_V', 'piece_W', 'piece_Z'];
+        piecesIdArray.forEach(function(piece){
+            document.getElementById(piece).style.pointerEvents = "none";
+        });
+    }
+
+    enablePointerEventsOnPieces(){
+        let  piecesIdArray = ['piece_X', 'piece_Y', 'piece_F', 'piece_I', 'piece_L', 'piece_N', 'piece_P', 'piece_T', 'piece_U', 'piece_V', 'piece_W', 'piece_Z'];
+       piecesIdArray.forEach(function(piece){
+           document.getElementById(piece).style.pointerEvents = "auto";
+       });
+   }
 
 }
