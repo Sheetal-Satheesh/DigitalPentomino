@@ -36,7 +36,7 @@
   left: 10vw; 
   border-bottom: solid rgb(2, 71, 62) 0.2vw;
   background :rgb(149, 172, 170);
-  height: 6.7vw;
+  height: 6.85vw;
   width: 89vw;
   z-index: 0;
 
@@ -44,14 +44,15 @@
 
 #field {
   position: fixed;
-  top: 7vw;  
+  top: 7.15vw;  
   background: white;
   width: 89vw;
-  height: 39.32vw;
+  height: 39.35vw;
 }
 
 #piecearea {
   user-select: none;
+
 }
 
 #operations {
@@ -186,12 +187,13 @@ border: 0;
 
 
 .cGame {
-position: absolute;
+position: fixed;
 top: 0;
 right: 0;
 bottom: 0;
 left: 0;
-overflow: auto;
+overflow:none;
+-webkit-transform: translate3d(0,0,0);
 }
 
 img#logo{
@@ -411,6 +413,9 @@ table
 #seedBar:focus {
 }
 
+html {
+	-webkit-text-size-adjust: none;
+	touch-action: manipulation;
 
 
 /**shake animation reference : https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_image_shake **/

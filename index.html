@@ -53,14 +53,14 @@
 </head>
 
 <body onload="touchStartup(); initialize()">
-															
+    <canvas id="canvas" width="auto" height="auto"></canvas>															
   <div id="seedingCover"></div>
   <div id="seeding" class="seed">
     <input type="search" id="seedBar" class="seed" placeholder="Input seed...">
     <button type="button" id='seedSubmit' class = "cActionBtn" onclick="submitSeed()"><img class="cSeedBtn" src="resources/images/icons/seed.png">
   </div>
   <div class = "cGame">
-    <div id="functions">
+    <div id="functions" onclick="hideManipulationButtons">
         <img id = "logo" src="resources/images/icons/pentomino.png" alt="Pentomino" class="cLogo">
     
         <div id="operations">
@@ -118,7 +118,7 @@
           </p>
         
 		<div id="boardmodalTop" class="boardmodal" style="background: rgb(220, 240, 237) none repeat scroll 0% 0%; display: none;">
-		<span onclick="document.getElementById('boardmodalTop').style.display='none'" class="boardclose" title="Close Modal">x</span>
+		<span onclick="closeModal()" class="boardclose" title="Close Modal">x</span>
             <div class ="boardmodalContainer" id="boardmodalContainerID">
                 <div class="boardouterGrid">
                     <div class="boardinnerGrid" id="boardinnerGrid"style="display: block;">
@@ -135,10 +135,7 @@
 
 
         </div> <!--board modal end-->
-		  
-		   
-      
-		
+
         </div>  <!-- operation -->
     </div>
 
@@ -147,7 +144,7 @@
         <div id="field"></div> <!-- field -->
         <div id="piecearea"></div> <!-- piecearea -->
         <div id="modalTop" class="modal">
-            <span onclick="document.getElementById('modalTop').style.display='none'" class="close" title="Close Modal">x</span>
+            <span onclick="closeModal()" class="close" title="Close Modal">x</span>
             <div class ="modalContainer" id="modalContainerID">
                 <div class="outerGrid">
                     <div class="innerGrid" id="innerGrid"></div>
@@ -191,10 +188,7 @@
     </div>  <!-- cPieceManipulation -->
 </div>
 
-<script type="text/javascript">
-
-								   
-											
+<script type="text/javascript">								
         let pd;
 		let template;
 
@@ -211,8 +205,6 @@
 																																						
         }
         
-		
-		
 		function loadBoardList() {
 
 		    let boardimageGrid = document.getElementById('boardinnerGrid');
@@ -242,6 +234,9 @@
 		}
 		
        function resetGame() {
+                this.hideManipulationButtons();
+                this.closeBoardSelector();
+                this.disablePointerEventsOnPieces();
                 var modal = document.getElementById('modalTop');
                 modal.style.display = "block";
                 modal.style.background = "transparent";
@@ -263,7 +258,7 @@
 
                 let cancelBtn = {
                     class: "cancelBtn",
-                    onclick: "document.getElementById('modalTop').style.display='none'",
+                    onclick: "closeModalContainer()",
                     textContent: strings.general.no[lang]
                 };
                 template.attachBtn("#modalButtonsID", cancelBtn);
@@ -271,11 +266,10 @@
 
                 let deleteBtn = {
                     class: "deleteBtn",
-                    onclick: "document.getElementById('modalTop').style.display='none'",
+                    onclick: "closeModalContainer()",
                     textContent: strings.general.yes[lang]
                 };
 														  
-
                 template.attachBtn("#modalButtonsID", deleteBtn);
 
                 let dltBtn = document.querySelector(".deleteBtn");
@@ -283,6 +277,14 @@
                     pd.reset();
                 });
             }
+
+        function closeModal(){
+            document.getElementById('boardmodalTop').style.display='none';
+            this.closeModalContainer();
+            // document.getElementById('modalTop').style.display='none';
+            // this.enablePointerEventsOnPiece();
+            // document.getElementById('prefillBoard').disabled = 'false';
+        }    
 
         function callHintAI() {
             if(!pd.gameController.game()._board.isSolved()) {
@@ -309,15 +311,12 @@
             pd.flipV();
         }
 
-								
-																			 
-		 
-
-																															 
+																													 
         function selectBoard(){
 			document.getElementById("boardmodalTop").style.display = "block";
-																			   																																  															 
-			 
+            this.hideManipulationButtons();
+            //this.closeSettings();
+            this.disablePointerEventsOnPieces();
         }
 		
 		 // From https://stackoverflow.com/questions/10970078/modifying-a-query-string-without-reloading-the-page (2nd answer)
@@ -457,7 +456,10 @@
         }
 
         function selectSettings(){
-
+            this.disablePointerEventsOnPieces();
+            this.hideManipulationButtons();
+           // this.disablePrefillButton();
+            //this.closeBoardSelector();
             var modal = document.getElementById('modalTop');
             modal.style.display = "block";
             modal.style.background = "rgb(220, 240, 237)";
@@ -493,7 +495,7 @@
                 let btnContainer = $('#innerGridForm input[type=submit]').parent();			   
 
                 // Add own buttons
-                let $closeButton = $('<input id="settings-close-button" type="button" value="Abort" onClick="closeSettings()" />');
+                let $closeButton = $('<input id="settings-close-button" class="btn btn-primary" type="button" value="Abort" onClick="closeSettings()" />');
                 $closeButton.appendTo(btnContainer);
                 /*let $seedButton = $('<input id="btnSeed" class="button" type="button" value="Enter a seed..." onClick="selectSeeding()" />');
                 $seedButton.appendTo(btnContainer);*/
@@ -528,17 +530,35 @@
 
             Translator.translateHeaders(SettingsSingleton.getInstance().getSettings().general.language);
         }
+        
+        let  piecesIdArray = ['piece_X', 'piece_Y', 'piece_F', 'piece_I', 'piece_L', 'piece_N', 'piece_P', 'piece_T', 'piece_U', 'piece_V', 'piece_W', 'piece_Z'];
+        function disablePointerEventsOnPieces(){
+            piecesIdArray.forEach(function(piece){
+                document.getElementById(piece).style.pointerEvents = "none";
+            });
+        }
+
+        function enablePointerEventsOnPiece(){
+            piecesIdArray.forEach(function(piece){
+                document.getElementById(piece).style.pointerEvents = "auto";
+            });
+        }
 
         function closeModalContainer(){
             document.getElementById('modalTop').style.display = "none";
+            this.enablePointerEventsOnPiece();
+           // this.enablePrefillButton();
         }
 
         function closeSettings() {
-            document.getElementById("modalTop").style.display = "none";
+            this.closeModalContainer();
+            // document.getElementById("modalTop").style.display = "none";
+            // this.enablePointerEventsOnPiece();
         }
 
         function closeBoardSelector() {
-            document.getElementById('board_selection_form').style.display = "none";
+            document.getElementById('boardmodalTop').style.display = "none";
+            this.enablePointerEventsOnPiece();
         }
 
         function selectSeeding() {
@@ -549,6 +569,18 @@
         function closeSeeding() {
             document.getElementById("seedingCover").style.visibility = "hidden";
             document.getElementById("seeding").style.visibility = "hidden";
+        }
+
+        function hideManipulationButtons(){
+            document.getElementById('pieceManipulation').style.display = 'none';
+        }
+
+        function disablePrefillButton(){
+            document.getElementById('prefillBoard').disabled = 'true';
+        }
+
+        function enablePrefillButton(){
+            document.getElementById('prefillBoard').disabled = 'false';
         }
 
         function submitSeed() {
@@ -572,7 +604,7 @@
 			//var selectedBoard = document.querySelector("input[name=board_list]:checked").value;
 			document.getElementById("boardmodalTop").style.display = "none";
            pd.loadBoard(selectedBoard);
-			
+           this.closeModalContainer();			
         }
 		
 		function closeForm() {
@@ -581,9 +613,12 @@
 
         function prefillBoard(){
             pd.visual.prefillBoard();
+            this.closeBoardSelector();
+            this.closeSettings();
         }
 
         function execUndo(){
+            this.hideManipulationButtons();
             pd.visual.undo();
         }
 
@@ -591,14 +626,9 @@
             pd.visual.redo();
         }
  
-       
-
-
-
     </script>
    <script src="./registerSW.js"></script>
 
-		 
 </body>
 
 </html>

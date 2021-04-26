@@ -1,3 +1,10 @@
+document.addEventListener('touchmove', function(event) {
+    event = event.originalEvent || event;
+    if (event.scale !== 1) {
+       event.preventDefault();
+    }
+}, {passive:false});
+
 // Touch Handling for mobile devices
 //intialize the touch events
 function touchStartup(){
