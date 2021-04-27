@@ -53,7 +53,7 @@ class SettingsSchema {
                         "title": titles.general.language.title[lang],
                         "enum": ["en", "de"],
                         "enumText": titles.general.language.enumTitles[lang],
-                        "default": "en"
+                        "default": "de"
                     }
                 }
             },
