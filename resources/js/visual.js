@@ -1011,7 +1011,10 @@ class Visual {
             this.allSolutions = allSolutions;
         }
         if (this.allSolutions.length > 0) {
-            return this.getRandomElementFromArray(this.allSolutions);
+            let solution = this.getRandomElementFromArray(this.allSolutions);
+            let ret = [];
+            solution[0].every((piece, index) => ret.push([piece, solution[1][index]]));
+            return ret;
         } else {
             this.disablePrefillButton(false);
             throw new Error("Solutions not found for current board!!!");
@@ -1028,13 +1031,13 @@ class Visual {
         let bNearPentomino = false;
         let blockedCellsTemp = {};
         let x = 0, y = 0;
+        let pickedPieces = {};
 
-        for(let i = 0; i < randomSolution[0].length; ++i) {
-            piecePosition = randomSolution[0][i]; //Return and remove the first element of the array
-
+        for(let i = 0; i < randomSolution.length; ++i) {
+            [piecePosition, piece] = this.getRandomPiece(randomSolution, pickedPieces);
+            pickedPieces[piece.name] = 1;            
             currentAnchor = [piecePosition.boardPosition[0] + this.boardX,
                             piecePosition.boardPosition[1] + this.boardY];
-            piece = randomSolution[1][i];
             let matrix = piece.getMatrixRepresentation();
 
             blockedCellsTemp = {};
@@ -1099,9 +1102,10 @@ class Visual {
         let piecePosition = undefined;
         let bOverlap = false;
         let prefillCandidates = [];
-        for(let i = 0; i < randomSolution[0].length; ++i) {
-            piecePosition = randomSolution[0][i];
-            piece = randomSolution[1][i];
+        let pickedPieces = {};
+        for(let i = 0; i < randomSolution.length; ++i) {
+            [piecePosition, piece] = this.getRandomPiece(randomSolution, pickedPieces);
+            pickedPieces[piece.name] = 1;
             currentAnchor = [piecePosition.boardPosition[0] + this.boardX,
                             piecePosition.boardPosition[1] + this.boardY];
             for (let j = 0; j < positions.length; ++j) {
@@ -1126,6 +1130,10 @@ class Visual {
         }
 
         return prefillCandidates;
+    }
+
+    getRandomPiece(solution, pickedPieces) {
+        return this.getRandomElementFromArray(solution.filter(piece => !(pickedPieces[piece[0].name] == 1)));
     }
 
 

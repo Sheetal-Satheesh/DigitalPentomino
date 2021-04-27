@@ -337,8 +337,8 @@
 
             if (errors === false) {
                 event.preventDefault();
-                console.log("JsonForm: Submitted values:");
-                console.log(values);
+                // console.log("JsonForm: Submitted values:");
+                // console.log(values);
                 closeSettings();
 
                 let oldSettings = SettingsSingleton.getInstance().getSettings();
@@ -587,7 +587,7 @@
             let seedValue = document.getElementById("seedBar").value;
             let settings = SettingsParser.parseSettingsFromSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), seedValue);
             if (!(settings === null)) {
-                console.log("Seedbar entered value: " + seedValue);
+                // console.log("Seedbar entered value: " + seedValue);
                 document.getElementById("seedBar").value = "";
 
                 document.getElementById("seedingCover").style.visibility = "hidden";
