@@ -1,13 +1,16 @@
 const strings = {
     general: {
         no: ["No", "Nein"],
-        yes: ["Yes", "Ja"]
+        yes: ["Yes", "Ja"],
+        cancel: ["cancel", "Abbrechen"]
     },
     reset: ["Do You Want To Reset?", "Willst du deinen Spielstand wirklich löschen?"],
     showSolved: {
         congrats : ["Congratulations!", "Glückwunsch!"],
         play : ["Play Again?","Nochmal spielen?"]
     },
+
+    license: ["URL=http://creativecommons.org/licenses/by-nc-nd/3.0/deed.en_GB" + "Modified=003689A678B6C8015C"],
     
     numberOfPossibleSolutions: ["Number of solutions", "Anzahl Lösungen"],
     settings: {

@@ -104,6 +104,11 @@
 																																							 
 						</button>
 					</td>
+                    <td>
+                        <button type="button" id='license' class="cActionBtn" onclick="openLicense()"> <img src="resources/images/icons/license.png">
+                                                                                                                                                             
+                        </button>
+                    </td>
 					</tr>																										 
 						 
 					  <tr>
@@ -232,6 +237,30 @@
 			
 			
 		}
+
+        function openLicense(){
+                this.hideManipulationButtons();
+                this.closeBoardSelector();
+                this.disablePointerEventsOnPieces();
+                var modal = document.getElementById('modalTop');
+                modal.style.display = "block";
+                modal.style.background = "transparent";
+
+                document.querySelector(".modalFormContent").style.display = "block";
+                document.querySelector(".innerGrid").style.display = "none";
+                template.clearContent("#modalButtonsID");
+                template.clearContent("#modalTitleID");
+                template.clearContent("#modalBodyID");
+                template.clearContent("#innerGridForm");
+
+                let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
+                let textNode = {
+                    class: "modalText",
+                    text: strings.license[lang]
+                };
+                template.attachText("#modalTitleID", textNode);
+        }
 		
        function resetGame() {
                 this.hideManipulationButtons();
