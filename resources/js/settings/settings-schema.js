@@ -79,7 +79,7 @@ class SettingsSchema {
                         "description": titles.hinting.hintingStrategy.description[lang],
                         "enum": ["full","partial","area"],
                         "enumText": titles.hinting.hintingStrategy.enumTitles[lang],
-                        "default": "partial"
+                        "default": "area"
                     },
                     maxPartialHintingCells: {
                         "step": 1,
