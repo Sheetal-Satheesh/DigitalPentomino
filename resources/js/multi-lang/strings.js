@@ -9,9 +9,7 @@ const strings = {
         congrats : ["Congratulations!", "Glückwunsch!"],
         play : ["Play Again?","Nochmal spielen?"]
     },
-
-    license: [" icon1 : https://www.deviantart.com/edicionesnaza/art/Boy-and-Girl-Icon-gif-By-alfreditha-394021423"],
-    
+    license: ["LICENSES", "LIZENZEN"],
     numberOfPossibleSolutions: ["Number of solutions", "Anzahl Lösungen"],
     settings: {
         header: ["Game settings", "Spieleinstellungen"],
