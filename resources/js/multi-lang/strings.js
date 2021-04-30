@@ -10,7 +10,7 @@ const strings = {
         play : ["Play Again?","Nochmal spielen?"]
     },
 
-    license: ["Icons : http://creativecommons.org/licenses/by-nc-nd/3.0/deed.en_GB" + "Modified=003689A678B6C8015C"],
+    license: [" icon1 : https://www.deviantart.com/edicionesnaza/art/Boy-and-Girl-Icon-gif-By-alfreditha-394021423"],
     
     numberOfPossibleSolutions: ["Number of solutions", "Anzahl Lösungen"],
     settings: {

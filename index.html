@@ -257,9 +257,10 @@
 
                 let textNode = {
                     class: "modalText",
-                    text: strings.license[lang]
+                    text: strings.license
                 };
                 template.attachText("#modalTitleID", textNode);
+                document.getElementsByClassName("modalText").style.fontSize = "10px";
         }
 		
        function resetGame() {
