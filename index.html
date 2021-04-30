@@ -253,14 +253,18 @@
                 template.clearContent("#modalBodyID");
                 template.clearContent("#innerGridForm");
 
-                let lang = SettingsSingleton.getInstance().getSettings().general.language;
+                let div1 = document.createElement("div");
+                let h5 = document.createElement("h5");
+                var t1 = document.createTextNode("LICENSES : "); 
+                h5.appendChild(t1);
+                let h6 = document.createElement("h6");
+                var t2 = document.createTextNode("icon1 : https://www.deviantart.com/edicionesnaza/art/Boy-and-Girl-Icon-gif-By-alfreditha-394021423"); 
+                h6.appendChild(t2);
+                 
 
-                let textNode = {
-                    class: "modalText",
-                    text: strings.license
-                };
-                template.attachText("#modalTitleID", textNode);
-                document.getElementsByClassName("modalText").style.fontSize = "10px";
+                div1.appendChild(h5);
+                div1.appendChild(h6);
+                modalBodyID.appendChild(div1);
         }
 		
        function resetGame() {
