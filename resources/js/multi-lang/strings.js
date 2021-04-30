@@ -1,13 +1,16 @@
 const strings = {
     general: {
         no: ["No", "Nein"],
-        yes: ["Yes", "Ja"]
+        yes: ["Yes", "Ja"],
+        cancel: ["cancel", "Abbrechen"]
     },
     reset: ["Do You Want To Reset?", "Willst du deinen Spielstand wirklich löschen?"],
     showSolved: {
         congrats : ["Congratulations!", "Glückwunsch!"],
         play : ["Play Again?","Nochmal spielen?"]
     },
+
+    license: [" icon1 : https://www.deviantart.com/edicionesnaza/art/Boy-and-Girl-Icon-gif-By-alfreditha-394021423"],
     
     numberOfPossibleSolutions: ["Number of solutions", "Anzahl Lösungen"],
     settings: {
