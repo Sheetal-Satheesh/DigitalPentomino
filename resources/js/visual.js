@@ -421,10 +421,13 @@ class Visual {
                 var functionsWidth = document.getElementById("functions").clientWidth;
                 var gameWidth = document.getElementById("game").clientWidth;
                 var gameHeight = document.getElementById("game").clientHeight;
+                var trayHeight = document.getElementById("tray").clientHeight;
+				var fieldHeight = document.getElementById("field").clientHeight;
 
+				var diff = gameHeight - (fieldHeight + trayHeight);
 
                 if ((x > functionsWidth) && (x < (gameWidth + functionsWidth))) {
-                    if ((y > 0) && (y < gameHeight)) {
+                    if ((y > 0) && (y < gameHeight - diff)) {
 
                         container.style.left = 'calc(' + x + 'px - ' + (width * 2.5) + 'vw)';
                         container.style.top = 'calc(' + y + 'px - ' + (width * 2.5) + 'vw)';
