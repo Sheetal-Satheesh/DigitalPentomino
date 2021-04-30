@@ -10,7 +10,7 @@ const strings = {
         play : ["Play Again?","Nochmal spielen?"]
     },
 
-    license: ["URL=http://creativecommons.org/licenses/by-nc-nd/3.0/deed.en_GB" + "Modified=003689A678B6C8015C"],
+    license: ["Icons : http://creativecommons.org/licenses/by-nc-nd/3.0/deed.en_GB" + "Modified=003689A678B6C8015C"],
     
     numberOfPossibleSolutions: ["Number of solutions", "Anzahl Lösungen"],
     settings: {
