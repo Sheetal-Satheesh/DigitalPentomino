@@ -22,11 +22,11 @@
   bottom: 0;
   left: 9.8vw;
   width: 89vw;
-  height: 46vw;
+  /*height: 46vw;*/
   border-top: solid rgb(2, 71, 62) 0.2vw;
-  border-bottom: solid rgb(2, 71, 62) 0.2vw;
+ /* border-bottom: solid rgb(2, 71, 62) 0.2vw;*/
   border-left: solid rgb(2, 71, 62) 0.2vw;
-  border-right: solid rgb(2, 71, 62) 0.2vw;
+  /*border-right: solid rgb(2, 71, 62) 0.2vw;*/
 }
 
 #tray {
@@ -44,10 +44,10 @@
 
 #field {
   position: fixed;
-  top: 7.15vw;  
+  top: 7.0vw;  
   background: white;
   width: 89vw;
-  height: 39.35vw;
+  /*height: 39.35vw;*/
 }
 
 #piecearea {
@@ -101,6 +101,7 @@ margin-top: 2px;
 .gamearea {
   display: block;
   float: left;
+  background:white;
   user-select: none;
   text-align: center;
   outline: 1px solid #eee;
