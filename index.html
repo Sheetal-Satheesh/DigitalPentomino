@@ -255,7 +255,8 @@
 
                 let div1 = document.createElement("div");
                 let h5 = document.createElement("h5");
-                var t1 = document.createTextNode("LICENSES : "); 
+                let lang = SettingsSingleton.getInstance().getSettings().general.language;
+                var t1 = document.createTextNode(strings.license[lang]);
                 h5.appendChild(t1);
                 let h6 = document.createElement("h6");
                 var t2 = document.createTextNode("icon1 : https://www.deviantart.com/edicionesnaza/art/Boy-and-Girl-Icon-gif-By-alfreditha-394021423"); 

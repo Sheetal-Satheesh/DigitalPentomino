@@ -864,7 +864,7 @@ class Visual {
         });
 
         let dontPlayAgainBtn = document.querySelector(".cancelBtn");
-        dontPlayAgainBtn.addEventListener("click", () => {;
+        dontPlayAgainBtn.addEventListener("click", () => {
             this.enablePointerEventsOnPieces();
         });
     }
