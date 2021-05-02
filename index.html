@@ -36,6 +36,7 @@
     <script src="resources/js/settings/settings.js"></script>
     <script src="resources/js/settings/settings-parser.js"></script>
     <script src="resources/js/settings/translator.js"></script>
+    <script src="resources/js/settings/settings-form.js"></script>
     <script src="resources/js/multi-lang/strings.js"></script>
     <script src="resources/js/pd.js"></script>
     <script src="resources/js/visual.js"></script>
@@ -507,13 +508,19 @@
             template.clearContent("#innerGridForm");
             
             //add form to attach settings to
-            $('#innerGridForm').jsonForm({
-                schema: SettingsSchemaSingleton.getInstance().getSettingsSchema(),
-                onSubmit: this.handleJsonFormSubmit,
-                displayErrors: this.handleJsonFormErrors
-            });
+            //$('#innerGridForm').jsonForm({
+            //    schema: SettingsSchemaSingleton.getInstance().getSettingsSchema(),
+            //    onSubmit: this.handleJsonFormSubmit,
+            //    displayErrors: this.handleJsonFormErrors
+            //});
 
-            this.postProcessSettingsForm(SettingsSingleton.getInstance().getSettings());
+            SettingsForm.generateForm(
+                $('#innerGridForm')[0],
+                SettingsSchemaSingleton.getInstance().getSettingsSchema(),
+                this.handleJsonFormSubmit
+            );
+
+            //this.postProcessSettingsForm(SettingsSingleton.getInstance().getSettings());
         }
 
         function postProcessSettingsForm(settings) {
@@ -527,7 +534,7 @@
                 submitButton.form = "innerGrid"
 
                 // Find parent of default jsonform submit button & inclusion of other buttons
-                let btnContainer = $('#innerGridForm input[type=submit]').parent();			   
+                let btnContainer = $('#innerGridForm input[type=submit]').parent();
 
                 // Add own buttons
                 let $closeButton = $('<input id="settings-close-button" class="btn btn-primary" type="button" value="Abort" onClick="closeSettings()" />');
