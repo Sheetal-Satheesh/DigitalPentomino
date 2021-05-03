@@ -38,7 +38,9 @@ class SettingsForm {
                     case "boolean":
                         let checkbox = SettingsForm.createInputElement("checkbox", elementName);
                         div.appendChild(checkbox);
-                        let label = SettingsForm.createLabel(settingsEntry.title, {"htmlFor": checkbox.id});
+                        let label = SettingsForm.createLabel(settingsEntry.title, {
+                            htmlFor:checkbox.id
+                        });
                         div.appendChild(label);
                         break;
                     case "string":
@@ -53,13 +55,19 @@ class SettingsForm {
                     case "integer":
                         let integerInputElementLabel = SettingsForm.createLabel(settingsEntry.title);
                         div.appendChild(integerInputElementLabel);
-                        let integerInputElement = SettingsForm.createInputElement("integer", elementName);
+                        let integerInputElement = SettingsForm.createInputElement("number", elementName, {
+                            step: 1,
+                            value: 3
+                        });
                         div.appendChild(integerInputElement);
                         break;
                     case "number":
                         let numberInputElementLabel = SettingsForm.createLabel(settingsEntry.title);
                         div.appendChild(numberInputElementLabel);
-                        let numberInputElement = SettingsForm.createInputElement("integer", elementName);
+                        let numberInputElement = SettingsForm.createInputElement("number", elementName, {
+                            step: 0.1,
+                            value: 1.5
+                        });
                         div.appendChild(numberInputElement);
                         break;
                     default:
@@ -82,11 +90,18 @@ class SettingsForm {
         return header;
     }
 
-    static createInputElement(type, name) {
+    static createInputElement(type, name, options) {
         let inputElement = document.createElement("input");
         inputElement.setAttribute("type", type);
         inputElement.name = name;
         inputElement.id = name;
+
+        if (!(options === undefined)) {
+            for (let [key, value] of Object.entries(options)) {
+                inputElement.setAttribute(key, value);
+            }
+        }
+
         return inputElement;
     }
 
@@ -95,8 +110,8 @@ class SettingsForm {
         labelElement.innerHTML = text;
 
         if (!(options === undefined)) {
-            if (!(options.htmlFor === undefined)) {
-                labelElement.htmlFor = options.htmlFor;
+            for (let [key, value] of Object.entries(options)) {
+                labelElement.setAttribute(key, value);
             }
         }
 
@@ -134,22 +149,25 @@ class SettingsForm {
             result[heading] = {};
             for (let key in subSettings) {
                 let name = heading + "." + key;
-                let htmlElement = $(formElement).find("input[name='" + name + "']")[0];
 
                 let settingsEntry = subSettings[key];
                 let settingsEntryType = settingsEntry.type;
                 switch (settingsEntryType) {
                     case "boolean":
-                        result[heading][key] = htmlElement.checked;
+                        let checkBoxElement = $(formElement).find("input[name='" + name + "']")[0];
+                        result[heading][key] = checkBoxElement.checked;
                         break;
                     case "string":
-                        // TODO
+                        let selectElement = $(formElement).find("select[name='" + name + "']")[0];
+                        result[heading][key] = selectElement.value;
                         break;
                     case "integer":
-                        // TODO
+                        let integerInputElement = $(formElement).find("input[name='" + name + "']")[0];
+                        result[heading][key] = parseInt(integerInputElement.value);
                         break;
                     case "number":
-                        // TODO
+                        let numberInputElement = $(formElement).find("input[name='" + name + "']")[0];
+                        result[heading][key] = parseFloat(numberInputElement.value);
                         break;
                     default:
                         throw new Error("Unknown type: " + settingsEntryType);
