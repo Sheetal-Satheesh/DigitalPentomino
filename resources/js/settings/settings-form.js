@@ -3,29 +3,7 @@ class SettingsForm {
     // === === === GENERATE FORM === === ===
     static generateForm(formElement, schema, onSubmit) {
 
-        for (let heading in schema) {
-            let subSettings = schema[heading].properties;
-            for (let key in subSettings) {
-                let settingsEntry = subSettings[key];
-                let settingsEntryType = settingsEntry.type;
-                switch (settingsEntryType) {
-                    case "boolean":
-                        SettingsForm.addBooleanEntry(formElement, settingsEntry, heading, key);
-                        break;
-                    case "string":
-                        SettingsForm.addStringEntry(formElement, settingsEntry);
-                        break;
-                    case "integer":
-                        SettingsForm.addIntegerEntry(formElement, settingsEntry);
-                        break;
-                    case "number":
-                        SettingsForm.addNumberEntry(formElement, settingsEntry);
-                        break;
-                    default:
-                        throw new Error("Unknown type: " + settingsEntryType);
-                }
-            }
-        }
+        SettingsForm.createForm(formElement, schema);
 
         formElement.appendChild(SettingsForm.createSubmitButton());
 
@@ -39,61 +17,69 @@ class SettingsForm {
         });
     }
 
-    static collectDataFromForm(formElement, schema) {
-        let result = {};
-
+    // --- --- --- Form Creation --- --- ---
+    static createForm(formElement, schema) {
         for (let heading in schema) {
             let subSettings = schema[heading].properties;
-            result[heading] = {};
             for (let key in subSettings) {
-                let name = heading + "." + key;
-                let htmlElement = $(formElement).find("input[name='" + name + "']")[0];
+                let elementName = heading + "." + key;
 
                 let settingsEntry = subSettings[key];
                 let settingsEntryType = settingsEntry.type;
+
+                let div = document.createElement("div");
+                formElement.appendChild(div);
+
                 switch (settingsEntryType) {
                     case "boolean":
-                        result[heading][key] = htmlElement.checked;
+                        let checkbox = SettingsForm.createInputElement("checkbox", elementName);
+                        div.appendChild(checkbox);
+                        let label = SettingsForm.createLabel(settingsEntry.title, {"htmlFor": checkbox.id});
+                        div.appendChild(label);
                         break;
                     case "string":
-                        SettingsForm.addStringEntry(formElement, settingsEntry);
+                        div.appendChild(SettingsForm.addStringEntry(formElement, settingsEntry));
                         break;
                     case "integer":
-                        SettingsForm.addIntegerEntry(formElement, settingsEntry);
+                        let integerInputElementLabel = SettingsForm.createLabel(settingsEntry.title, {"htmlFor": elementName});
+                        div.appendChild(integerInputElementLabel);
+                        let integerInputElement = SettingsForm.createInputElement("integer", elementName);
+                        div.appendChild(integerInputElement);
                         break;
                     case "number":
-                        SettingsForm.addNumberEntry(formElement, settingsEntry);
+                        let numberInputElementLabel = SettingsForm.createLabel(settingsEntry.title, {"htmlFor": elementName});
+                        div.appendChild(numberInputElementLabel);
+                        let numberInputElement = SettingsForm.createInputElement("integer", elementName);
+                        div.appendChild(numberInputElement);
                         break;
                     default:
                         throw new Error("Unknown type: " + settingsEntryType);
                 }
             }
         }
-
-        return result;
     }
 
-    static addBooleanEntry(formElement, settingsEntry, heading, key) {
+    static createInputElement(type, name) {
         let inputElement = document.createElement("input");
-        inputElement.setAttribute("type", "checkbox");
-        inputElement.name = heading + "." + key;
-        formElement.appendChild(inputElement);
+        inputElement.setAttribute("type", type);
+        inputElement.name = name;
+        inputElement.id = name;
+        return inputElement;
+    }
+
+    static createLabel(text, options) {
+        let labelElement = document.createElement("label");
+        labelElement.innerHTML = text;
+
+        if (!(options.htmlFor === undefined)) {
+            labelElement.htmlFor = options.htmlFor;
+        }
+
+        return labelElement;
     }
 
     static addStringEntry(formElement, settingsEntry) {
-        formElement.appendChild(SettingsForm.createStringFormElement(settingsEntry));
-    }
-
-    static addNumberEntry() {
-        // TODO
-    }
-
-    static addIntegerEntry() {
-        // TODO
-    }
-
-    static createBooleanFormElement(settingsEntry) {
-        // TODO
+        return SettingsForm.createStringFormElement(settingsEntry);
     }
 
     static createStringFormElement(settingsEntry) {
@@ -116,6 +102,41 @@ class SettingsForm {
         submitButton.setAttribute("type", "submit");
         submitButton.innerHTML = "Submit";
         return submitButton;
+    }
+
+    // --- --- --- Data collection --- --- ---
+    static collectDataFromForm(formElement, schema) {
+        let result = {};
+
+        for (let heading in schema) {
+            let subSettings = schema[heading].properties;
+            result[heading] = {};
+            for (let key in subSettings) {
+                let name = heading + "." + key;
+                let htmlElement = $(formElement).find("input[name='" + name + "']")[0];
+
+                let settingsEntry = subSettings[key];
+                let settingsEntryType = settingsEntry.type;
+                switch (settingsEntryType) {
+                    case "boolean":
+                        result[heading][key] = htmlElement.checked;
+                        break;
+                    case "string":
+                        // TODO
+                        break;
+                    case "integer":
+                        // TODO
+                        break;
+                    case "number":
+                        // TODO
+                        break;
+                    default:
+                        throw new Error("Unknown type: " + settingsEntryType);
+                }
+            }
+        }
+
+        return result;
     }
 
     // === === === UPDATE FORM === === ===
