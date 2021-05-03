@@ -38,16 +38,22 @@ class SettingsForm {
                         div.appendChild(label);
                         break;
                     case "string":
-                        div.appendChild(SettingsForm.addStringEntry(formElement, settingsEntry));
+                        let selectElementLabel = SettingsForm.createLabel(settingsEntry.title);
+                        div.appendChild(selectElementLabel);
+                        let selectElement = SettingsForm.createSelectElement(
+                            elementName,
+                            settingsEntry.enum,
+                            settingsEntry.enumText);
+                        div.appendChild(selectElement);
                         break;
                     case "integer":
-                        let integerInputElementLabel = SettingsForm.createLabel(settingsEntry.title, {"htmlFor": elementName});
+                        let integerInputElementLabel = SettingsForm.createLabel(settingsEntry.title);
                         div.appendChild(integerInputElementLabel);
                         let integerInputElement = SettingsForm.createInputElement("integer", elementName);
                         div.appendChild(integerInputElement);
                         break;
                     case "number":
-                        let numberInputElementLabel = SettingsForm.createLabel(settingsEntry.title, {"htmlFor": elementName});
+                        let numberInputElementLabel = SettingsForm.createLabel(settingsEntry.title);
                         div.appendChild(numberInputElementLabel);
                         let numberInputElement = SettingsForm.createInputElement("integer", elementName);
                         div.appendChild(numberInputElement);
@@ -71,27 +77,25 @@ class SettingsForm {
         let labelElement = document.createElement("label");
         labelElement.innerHTML = text;
 
-        if (!(options.htmlFor === undefined)) {
-            labelElement.htmlFor = options.htmlFor;
+        if (!(options === undefined)) {
+            if (!(options.htmlFor === undefined)) {
+                labelElement.htmlFor = options.htmlFor;
+            }
         }
 
         return labelElement;
     }
 
-    static addStringEntry(formElement, settingsEntry) {
-        return SettingsForm.createStringFormElement(settingsEntry);
-    }
-
-    static createStringFormElement(settingsEntry) {
+    static createSelectElement(name, enumElements, enumTexts) {
         let selectElement = document.createElement("select");
+        selectElement.name = name;
+        selectElement.id = name;
 
-        let i = 0;
-        for (let enumElement in settingsEntry.enum) {
+        for (let i = 0; i < enumElements.length; i++) {
             let optionElement = document.createElement("option");
-            optionElement.innerHTML = settingsEntry.enumText[i];
-            optionElement.value = enumElement;
+            optionElement.innerHTML = enumTexts[i];
+            optionElement.value = enumElements[i];
             selectElement.appendChild(optionElement);
-            i++;
         }
 
         return selectElement;
