@@ -21,6 +21,10 @@ class SettingsForm {
     static createForm(formElement, schema) {
         for (let heading in schema) {
             let subSettings = schema[heading].properties;
+
+            formElement.appendChild(SettingsForm.createHeader("h3", schema[heading].title));
+            formElement.appendChild(document.createElement("br"));
+
             for (let key in subSettings) {
                 let elementName = heading + "." + key;
 
@@ -61,8 +65,21 @@ class SettingsForm {
                     default:
                         throw new Error("Unknown type: " + settingsEntryType);
                 }
+
+                if (!(settingsEntry.description === undefined)) {
+                    div.appendChild(document.createElement("br"));
+                    let descriptionLabel = SettingsForm.createLabel(settingsEntry.description);
+                    div.appendChild(descriptionLabel);
+                }
+                div.appendChild(document.createElement("br"));
             }
         }
+    }
+
+    static createHeader(type, text) {
+        let header = document.createElement(type);
+        header.innerHTML = text;
+        return header;
     }
 
     static createInputElement(type, name) {
