@@ -30,7 +30,8 @@ class SettingsForm {
         formElement.appendChild(SettingsForm.createSubmitButton());
 
         $(formElement).submit(function(event) {
-            let data = SettingsForm.collectDataFromForm(formElement);
+            let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+            let data = SettingsForm.collectDataFromForm(formElement, schema);
             console.log(data);
             event.preventDefault();
             // FIXME
@@ -38,8 +39,38 @@ class SettingsForm {
         });
     }
 
-    static collectDataFromForm(formElement) {
-        return $(formElement).serializeArray();
+    static collectDataFromForm(formElement, schema) {
+        let result = {};
+
+        for (let heading in schema) {
+            let subSettings = schema[heading].properties;
+            result[heading] = {};
+            for (let key in subSettings) {
+                let name = heading + "." + key;
+                let htmlElement = $(formElement).find("input[name='" + name + "']")[0];
+
+                let settingsEntry = subSettings[key];
+                let settingsEntryType = settingsEntry.type;
+                switch (settingsEntryType) {
+                    case "boolean":
+                        result[heading][key] = htmlElement.checked;
+                        break;
+                    case "string":
+                        SettingsForm.addStringEntry(formElement, settingsEntry);
+                        break;
+                    case "integer":
+                        SettingsForm.addIntegerEntry(formElement, settingsEntry);
+                        break;
+                    case "number":
+                        SettingsForm.addNumberEntry(formElement, settingsEntry);
+                        break;
+                    default:
+                        throw new Error("Unknown type: " + settingsEntryType);
+                }
+            }
+        }
+
+        return result;
     }
 
     static addBooleanEntry(formElement, settingsEntry, heading, key) {
