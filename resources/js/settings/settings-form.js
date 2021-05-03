@@ -10,7 +10,7 @@ class SettingsForm {
                 let settingsEntryType = settingsEntry.type;
                 switch (settingsEntryType) {
                     case "boolean":
-                        SettingsForm.addBooleanEntry(formElement, settingsEntry);
+                        SettingsForm.addBooleanEntry(formElement, settingsEntry, heading, key);
                         break;
                     case "string":
                         SettingsForm.addStringEntry(formElement, settingsEntry);
@@ -22,24 +22,31 @@ class SettingsForm {
                         SettingsForm.addNumberEntry(formElement, settingsEntry);
                         break;
                     default:
-                        throw new Error("Unknown type: " + settingsEntryType)
+                        throw new Error("Unknown type: " + settingsEntryType);
                 }
             }
         }
 
         formElement.appendChild(SettingsForm.createSubmitButton());
-        formElement.onSubmit(function () {
-            let data = SettingsForm.collectDataFromForm();
-            onSubmit(data);
+
+        $(formElement).submit(function(event) {
+            let data = SettingsForm.collectDataFromForm(formElement);
+            console.log(data);
+            event.preventDefault();
+            // FIXME
+            // onSubmit(data);
         });
     }
 
-    static collectDataFromForm() {
-        return {};
+    static collectDataFromForm(formElement) {
+        return $(formElement).serializeArray();
     }
 
-    static addBooleanEntry() {
-        // TODO
+    static addBooleanEntry(formElement, settingsEntry, heading, key) {
+        let inputElement = document.createElement("input");
+        inputElement.setAttribute("type", "checkbox");
+        inputElement.name = heading + "." + key;
+        formElement.appendChild(inputElement);
     }
 
     static addStringEntry(formElement, settingsEntry) {
