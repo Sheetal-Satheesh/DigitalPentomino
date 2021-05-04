@@ -2831,5 +2831,10 @@ solutionsConfig = {
             "VVVPPPXWWFFTTTY VZZPPXXXWWFFTYY VZLLLLXNNWFUTUY ZZLIIIIINNNUUUY",
             "VVVPPPXWWTTTFFY VZZPPXXXWWTFFYY VZLLLLXNNWTUFUY ZZLIIIIINNNUUUY"
         ]
+    },
+    "board_12x20": {
+        solutionsArray: [
+            ".................PP. ...............WWPPP ..............WW.... .............XW..... ............XXX..... .......UUY.FFX...... ....NNNUYYYYFF...... ...NNLTUUVVVF....... IIIIILTTTVZZ........ .....LT..VZ......... .....LL..ZZ........."
+        ]
     }
 };

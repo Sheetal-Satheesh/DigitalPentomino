@@ -105,6 +105,13 @@ class Visual {
     placePentomino(pentomino, posX, posY, cmdProperty = cmdAttrDefault) {
         this.gameController.placePentomino(pentomino, posX, posY, cmdProperty);
         this.positionPiece(pentomino);
+        this.checkIfGameWon();
+    }
+
+    checkIfGameWon() {
+        if (this.gameController.game()._board.isSolved()) {
+            this.showGameSolved();
+        }
     }
 
     removeFromTray(pentomino) {
@@ -148,6 +155,7 @@ class Visual {
                 if (row >= this.boardX + this.gameController.getBoardSize()[0]) isBoard = false;
                 //Ashwini: For Blocking the cells
                 if (this.pd.blockedCells != undefined) {
+                    var gameCellPattern = this.pd.gameCellPattern;
                     for (var arr = 0; arr < this.pd.blockedCells.length; arr++) {
                         if (row == this.pd.blockedCells[arr][0] + this.pd.boardStartX &&
                             col == this.pd.blockedCells[arr][1] + this.pd.boardStartY) {
@@ -156,8 +164,10 @@ class Visual {
                         }
                     }
 
-                    if (blockedCell)
+                    if (blockedCell && gameCellPattern == 'blockedCell')
                         out += '<div class="gamearea ' + ((isBoard) ? 'boardarea blockedcell' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';
+                    else if (blockedCell && gameCellPattern == 'gamearea')
+                        out += '<div class="gamearea" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';
                     else
                         out += '<div class="gamearea ' + ((isBoard) ? 'boardarea' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';
                 }
@@ -287,6 +297,9 @@ class Visual {
         if (piece.inTray) {
             this.disableManipulations();
         }
+        else if ($("#modalFormContainerID").is(":visible")) {
+            this.disableManipulations();
+        }
         else {
             this.showManipulations(xPosition, yPosition);
         }
@@ -321,10 +334,6 @@ class Visual {
             var colorB = this.hexToRgb(this.selected.color).b;
             btnClr.style.background = "rgba(" + [colorR, colorG, colorB, 0.5].join(',') + ")";
         }
-        document.getElementById("btnRotateRight").disabled = false;
-        document.getElementById("btnRotateLeft").disabled = false;
-        document.getElementById("btnFlipH").disabled = false;
-        document.getElementById("btnFlipV").disabled = false;
 
         //set style for left and top value of element, but do not cross borders
         var width = UIProperty.WindowWidth / this.pd.gameWidth;
@@ -345,13 +354,7 @@ class Visual {
     }
 
     disableManipulations() {
-
-        document.getElementById("btnRotateRight").disabled = true;
-        document.getElementById("btnRotateLeft").disabled = true;
-        document.getElementById("btnFlipH").disabled = true;
-        document.getElementById("btnFlipV").disabled = true;
         document.getElementById('pieceManipulation').style.display = 'none';
-
     }
     // 	save(piece) {
     // 		console.log("insave::",piece)
@@ -448,10 +451,13 @@ class Visual {
                 var functionsWidth = document.getElementById("functions").clientWidth;
                 var gameWidth = document.getElementById("game").clientWidth;
                 var gameHeight = document.getElementById("game").clientHeight;
+                var trayHeight = document.getElementById("tray").clientHeight;
+                var fieldHeight = document.getElementById("field").clientHeight;
 
+                var diff = gameHeight - (fieldHeight + trayHeight);
 
                 if ((x > functionsWidth) && (x < (gameWidth + functionsWidth))) {
-                    if ((y > 0) && (y < gameHeight)) {
+                    if ((y > 0) && (y < gameHeight - diff)) {
 
                         container.style.left = 'calc(' + x + 'px - ' + (width * 2.5) + 'vw)';
                         container.style.top = 'calc(' + y + 'px - ' + (width * 2.5) + 'vw)';
@@ -509,7 +515,9 @@ class Visual {
                         var coords = (id.split('_')[1].split(','));
                         that.removeFromTray(data[1]);
                         that.placePentomino(data[1], coords[0], coords[1]);
-                        that.showNumberOfPossibleSolutions();
+                        if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
+                            that.showNumberOfPossibleSolutions();
+                        }
                         /**
                          * make this the selected element which activates manipulation GUI data[1].select();
                          *
@@ -526,11 +534,9 @@ class Visual {
                     var element = elements[i];
                     if (element.id == 'functions' || element.id == 'pieceManipulation') return; //do not unselect if operations have been applied to the functions panel
                 }
-
                 that.deleteSelection();
             }
         }
-
     }
 
     rotateClkWise(cmdProperty = cmdAttrDefault) {
@@ -544,6 +550,7 @@ class Visual {
             this.gameController.rotatePentominoClkWise(piece, cmdProperty);
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
+            this.checkIfGameWon();
         }
     }
 
@@ -558,6 +565,7 @@ class Visual {
             this.gameController.rotatePentominoAntiClkWise(piece, cmdProperty);
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
+            this.checkIfGameWon();
         }
     }
 
@@ -573,9 +581,10 @@ class Visual {
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationX", newRot.toString() + "deg");
             pieceDiv.setAttribute("flipped", 1 - flipped);
+            this.checkIfGameWon();
         }
     }
-
+    
     flipV(cmdProperty = cmdAttrDefault) {
         let piece = this.selected;
         if (piece) {
@@ -588,6 +597,7 @@ class Visual {
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationY", newRot.toString() + "deg");
             pieceDiv.setAttribute("flipped", 1 - flipped);
+            this.checkIfGameWon();
         }
     }
 
@@ -597,60 +607,35 @@ class Visual {
     }
 
     callHintAI() {
-        let hintElement = document.getElementById("myHint");
-        hintElement.classList.toggle("show");
-        hintElement.style.visibility = "visible";
-        let popupText = document.getElementById("myHint");
         let hint = pd.gameController.getHint();
-        let hintCommand = hint.getCommands()[0];
+        //disable hint button until hint is finished
+        let hintButton = document.getElementById('hintButton');
+        hintButton.disabled = true;
+        //Always show place command in case of non-exact hints:
+        let commandNumber = 0;
+        if (!SettingsSingleton.getInstance().getSettings().hinting.exactHints) {
+            let hasPlaceCommand = this.checkHintCommandsForPlaceCommand(hint.getCommands());
+            if (hasPlaceCommand[0]) {
+                commandNumber = hasPlaceCommand[1];
+            }
+        }
+        let hintCommand = hint.getCommands()[commandNumber];
         let hintinPen = hintCommand._pentomino;
-        popupText.textContent = this.generateHintText(hint);
-        this.indicateHint(hint);
+        this.indicateHint(hint, commandNumber);
+        setTimeout(function () {
+            hintButton.disabled = false;
+        }, 1000);
     }
 
-    generateHintText(hint) {
-        let text = "";
 
-        if (hint.getPossibleSolutions().length === 0) {
-            text += "This doesn't look right. The pentominoes on your board aren't part of a solution."
-        }
-        let command = hint.getCommands()[0];
-        let cmdValues = command.ExecValues();
-        switch (command.Name()) {
-            case "Remove":
-                text += "This doesn't look right. Why don't you remove " + command._pentomino.name;
-                break;
-            case "MoveToPosition":
-                text += "Maybe try to move " + command._pentomino.name + " to position [" + cmdValues.PosX + "," + cmdValues.PosY + "]";
-                break;
-            case "Place":
-                text += "Why don't you place " + command._pentomino.name + " at position [" + cmdValues.PosX + "," + cmdValues.PosY + "]";
-                break;
-            case "RotateClkWise":
-                text += "Why don't you try to rotate " + command._pentomino.name + " clock-wise";
-                break;
-            case "RotateAntiClkWise":
-                text += "Why don't you try to rotate " + command._pentomino.name + " anti-clock-wise";
-                break;
-            case "MirrorH":
-                text += "Why don't you try to mirror " + command._pentomino.name + " horizontal";
-                break;
-            case "MirrorV":
-                text += "Why don't you try to mirror " + command._pentomino.name + " vertical";
-                break;
-            default:
-                text += "Error - unknown command with name '" + command.Name() + "'";
-                throw new Error("Error: unknown command with name " + command.Name());
-        }
-        return text;
-    }
-
-    blinkCells(cells, bgColor, blinkColor) {
+    blinkCells(cells) {
         let menu = [];
-
+        let bgColor;
         for (let i = 0; i < cells.length; i++) {
             let fv = document.getElementById("field_" + cells[i][0] + "," + cells[i][1]);
-            fv.style.background = blinkColor;
+            bgColor = fv.style.background;
+            fv.style.background = "url(resources/images/icons/warning.png) center center";
+            fv.style.backgroundSize = "cover";
             menu.push(fv);
         }
         let blinkInterval;
@@ -661,7 +646,8 @@ class Visual {
                 if (counter % 2 === 0) {
                     menu[j].style.background = bgColor;
                 } else {
-                    menu[j].style.background = blinkColor;
+                    menu[j].style.background = "url(resources/images/icons/warning.png) center center";
+                    menu[j].style.backgroundSize = "cover";
                 }
             }
             counter++;
@@ -671,10 +657,20 @@ class Visual {
         }, 100);
     }
 
-    indicateHint(hint) {
-        let timeoutFrame = 500;
+    checkHintCommandsForPlaceCommand(hintCommands) {
+        for (let i = 0; i < hintCommands.length; i++) {
+            if (hintCommands[i].Name() == "Place") {
+                return [true, i];
+            }
+        }
+
+        return [false, null];
+    }
+
+    indicateHint(hint, commandNumber) {
+        let timeoutFrame = 1000;
         //possible command names (place, remove, moveToPosition, rotateClkWise, rotateAntiClkWise, mirrorH, mirrorV)
-        let hintCommand = hint.getCommands()[0];
+        let hintCommand = hint.getCommands()[commandNumber];
         let hintSkill = hint._skill;
         let hintName = hintCommand._name;
         let hintinPen = hintCommand._pentomino;
@@ -684,20 +680,38 @@ class Visual {
         let currentPenHintName = hintinPen.name;
         //let currentPenHintNaame = this.selected.name;
         if (!(currentPenHintName === lastHintedPentName)) {
-            randomCell = Math.floor(Math.random() * (4)) + 1;
+            let maxPartialHintingCells = SettingsSingleton.getInstance().getSettings().hinting.maxPartialHintingCells;
+            randomCell = Math.floor(Math.random() * (maxPartialHintingCells)) + 1;
             lastHintedPentName = currentPenHintName;
         }
 
+        let tempHintinPen = hintinPen;
+        if (!SettingsSingleton.getInstance().getSettings().hinting.exactHints) {
+            //tempHintinPen = new Pentomino(hintinPen.name);
+            tempHintinPen = Object.assign(Object.create(Object.getPrototypeOf(hintinPen)), hintinPen);
+            //do actions on pentomino copy to prepare for place hint
+            for (let hintnr = 0; hintnr < commandNumber; hintnr++) {
+                switch (hint.getCommands()[hintnr]._name) {
+                    case "Remove": break;
+                    case "Place": break;
+                    case "RotateClkWise": tempHintinPen.rotateClkWise(); break;
+                    case "RotateAntiClkWise": tempHintinPen.rotateAntiClkWise(); break;
+                    case "MirrorH": tempHintinPen.mirrorH(); break;
+                    case "MirrorV": tempHintinPen.mirrorV(); break;
+                    default: throw new Error("Error on commands on pentomino copy.");
+                }
+            }
+        }
 
         //indication of unoccupied cells
-        if (!(hintSkill === null)) {
-            console.log("Skill (inside loop): " + hintSkill);
-            const DEFAULT_BG_COLOR = "#adc0b9";
-            const RED_COLOR = "red";
+        if (!(hintSkill === null) && (SettingsSingleton.getInstance().getSettings().hinting.skillTeaching)) {
             //blink unoccupied cells
-            this.blinkCells(hintSkill, DEFAULT_BG_COLOR, RED_COLOR);
+            this.blinkCells(hintSkill);
         }
         else {
+
+            this.indicatePentomino(hintinPen, timeoutFrame);
+
             switch (hintName) {
                 case "Place":
                     // handle place hint
@@ -706,25 +720,43 @@ class Visual {
                     let fieldvalue;
                     let prevBackground = [];
 
-                    //indicate piece to be moved (and fade away)
-                    Array.prototype.forEach.call(document.getElementById("piece_" + hintinPen.name).getElementsByClassName("bmPoint"), function (element) {
-                        element.style["box-shadow"] = "0 0 20px " + pentominoColor;
-                        setTimeout(function () {
-                            element.style.removeProperty("box-shadow");
-                        }, timeoutFrame * 4);
-                    });
-
                     //show destination position (and fade away)
-                    let piecePos = this.getOccupiedPositions(hintinPen, hintCommand);
-                    //console.log("hintingPen",hintinPen, piecePos);
+                    let piecePos = this.getOccupiedPositions(tempHintinPen, hintCommand);
                     //usage of random cell variable to indicate hinting
-                    for (let i = 0; i < randomCell; i++) {
-                        fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
-                        prevBackground[i] = fieldvalue.style.background;
-                        fieldvalue.style.background = pentominoColor;
-                        this.hide(piecePos, prevBackground);
-                    }
 
+                    switch (SettingsSingleton.getInstance().getSettings().hinting.hintingStrategy) {
+                        case "partial":
+                            for (let i = 0; i < randomCell; i++) {
+                                fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
+                                prevBackground[i] = fieldvalue.style.background;
+                                fieldvalue.style.background = pentominoColor;
+                                this.hide(piecePos, prevBackground, timeoutFrame);
+                            }
+                            break;
+                        case "full":
+                            for (let i = 0; i < 5; i++) {
+                                fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
+                                prevBackground[i] = fieldvalue.style.background;
+                                fieldvalue.style.background = pentominoColor;
+                                this.hide(piecePos, prevBackground, timeoutFrame);
+                            }
+                            break;
+                        case "area":
+                            for (let i = 0; i < 25; i++) {
+                                let areaPos = this.indicateAreaCells(hintinPen, hintCommand)[0];
+                                let b = this.gameController.game()._board.positionIsValid(areaPos[i][0], areaPos[i][1]);
+                                if (b) {
+                                    let areaPos = this.indicateAreaCells(hintinPen, hintCommand)[0];
+                                    fieldvalue = document.getElementById("field_" + areaPos[i][0] + "," + areaPos[i][1]);
+                                    prevBackground[i] = fieldvalue.style.background;
+                                    fieldvalue.style.background = pentominoColor;
+                                    this.hideArea(areaPos, prevBackground, timeoutFrame);
+                                }
+                            }
+                            break;
+                        default:
+                            console.error("Hinting strategy unknown!");
+                    }
                     break;
 
                 case "Remove":
@@ -733,10 +765,10 @@ class Visual {
                     var pen = document.getElementById("piece_" + hintinPen.name);
                     //console.log("pent",hintinPen,this.selected);
                     if (!this.selected.inTray) {
-                        pen.style.display = 'none';
+                        pen.style.opacity = '0.2';
                         setTimeout(function () {
-                            pen.style.display = 'block';
-                        }, 2000);
+                            pen.style.opacity = '1';
+                        }, timeoutFrame);
                     }
                     break;
 
@@ -749,8 +781,6 @@ class Visual {
                             rotateAntiClkWise();
                         }, timeoutFrame);
                     }
-
-
                     break;
 
                 case "RotateAntiClkWise":
@@ -788,13 +818,133 @@ class Visual {
                     break;
 
                 default:
-                    console.log("Unknown piece action detected!");
+                    console.error("Unknown piece action detected!");
             }
-
         }
     }
 
-    hide(piecePos, prevBackground) {
+    indicatePentomino(pentomino, timeframe) {
+        Array.prototype.forEach.call(document.getElementById("piece_" + pentomino.name).getElementsByClassName("bmPoint"), function (element) {
+            element.style["box-shadow"] = "0 0 20px " + pentomino.color;
+            if (pentomino.inTray) {
+                element.classList.add('horizTranslate');
+                //element.style.transform = "scale(2) rotate(0.1deg)";
+            }
+
+            setTimeout(function () {
+                element.style.removeProperty("box-shadow");
+                //element.style.transform = "none";
+                element.classList.remove('horizTranslate');
+            }, timeframe);
+        });
+    }
+
+    showGameSolved() {
+        this.disablePointerEventsOnPieces();
+        var modal = document.getElementById('modalTop');
+        modal.style.display = "block";
+        modal.style.background = "transparent";
+        let modalFormContent = document.querySelector(".modalFormContent");
+        modalFormContent.style.display = "block";
+        let modalFormContainerID = document.querySelector("#modalFormContainerID")
+        modalFormContainerID.style.display = "block";
+        let modalBodyID = document.querySelector("#modalBodyID");
+        modalBodyID.style.display = "block";
+        document.querySelector(".innerGrid").style.display = "none";
+        template.clearContent("#modalButtonsID");
+        template.clearContent("#modalTitleID");
+        template.clearContent("#modalBodyID");
+        template.clearContent("#innerGridForm");
+        let lang = SettingsSingleton.getInstance().getSettings().general.language;
+        //create div for image
+        let textNode1 = {
+            class: "modalText",
+            text: strings.showSolved.congrats[lang]
+        };
+        template.attachText("#modalBodyID", textNode1);
+        let div1 = document.createElement("div");
+        let img = document.createElement("img");
+        img.src = "resources/images/icons/jboy-2.ico";
+        img.style.cursor = "none";
+        div1.appendChild(img);
+        //attach div 
+        modalBodyID.appendChild(div1);
+        let textNode2 = {
+            class: "modalText",
+            text: strings.showSolved.play[lang]
+        };
+        template.attachText("#modalBodyID", textNode2);
+        let div2 = document.createElement("div");
+        let text = document.createElement("h4");
+        text.innerHTML = "\n";
+        div2.appendChild(text);
+        //attach div 
+        modalBodyID.appendChild(div2);
+        let cancelBtn = {
+            class: "cancelBtn",
+            onclick: "document.getElementById('modalTop').style.display='none'",
+            textContent: strings.general.no[lang]
+        };
+        template.attachBtn("#modalBodyID", cancelBtn);
+        let playAgnBtnAttributes = {
+            class: "deleteBtn",
+            onclick: "document.getElementById('modalTop').style.display='none'",
+            textContent: strings.general.yes[lang]
+        };
+        template.attachBtn("#modalBodyID", playAgnBtnAttributes);
+        let playAgainBtn = document.querySelector(".deleteBtn");
+        playAgainBtn.addEventListener("click", () => {
+            pd.reset();
+            this.enablePointerEventsOnPieces();
+        });
+
+        let dontPlayAgainBtn = document.querySelector(".cancelBtn");
+        dontPlayAgainBtn.addEventListener("click", () => {
+            this.enablePointerEventsOnPieces();
+        });
+    }
+
+
+    indicateAreaCells(piece, hintCommand) {
+        let hintRow = hintCommand._nextPosition[0];
+        let hintColumn = hintCommand._nextPosition[1];
+        let midRow = hintRow;
+        let midColumn = hintColumn;
+        let startR = hintRow - 2;
+        let startCol = hintColumn - 2;
+        let areaPosArray = [];
+        let k = 0;
+        for (let j = 0; j < 5; j++) {
+            for (let l = 0; l < 5; l++) {
+                let areaPos = [];
+                areaPos[0] = j + startR;
+                areaPos[1] = l + startCol;
+                areaPosArray[k] = areaPos;
+                k++;
+            }
+        }
+        return [areaPosArray, null];
+    }
+
+
+
+    hideArea(areaPos, prevBackground, timeoutFrame) {
+
+        setTimeout(function () {
+            for (let j = 0; j < areaPos.length; j++) {
+                let fvalue = document.getElementById("field_" + areaPos[j][0] + "," + areaPos[j][1]);
+                //TODO: replace with proper fadeOut animation
+                fvalue.style.background = prevBackground[j];
+            }
+        }, timeoutFrame);
+    }
+
+
+
+
+
+
+    hide(piecePos, prevBackground, timeoutFrame) {
 
         setTimeout(function () {
             for (let j = 0; j < 5; j++) {
@@ -802,7 +952,7 @@ class Visual {
                 //TODO: replace with proper fadeOut animation
                 fvalue.style.background = prevBackground[j];
             }
-        }, 70);
+        }, timeoutFrame);
     }
 
     getOccupiedPositions(piece, hintCommand) {
@@ -839,58 +989,23 @@ class Visual {
     }
 
     prefillBoard() {
-        this.clear();
-        // Prevent clicking of button while previous prefilling is going on
-        this.disablePrefillButton(true);
-        let allSolutions = [];
-        // Get all the games and filter solutions
-        if (this.allSolutions == undefined) {
-            this.gameController.getSolutions().forEach(game =>
-                allSolutions.push([game._board._pentominoPositions, game._board._pentominoes]));
-            this.allSolutions = allSolutions;
-        }
+        this.readyForPrefilling();
+        let randomSolution = this.fetchRandomSolution();
+
         let prefillCandidates = [];
-        let randomSolution = undefined;
-        let positions = [];
-        let currentAnchor = [];
-        let candidateAnchor = [];
-        let piece = undefined;
-        let piecePosition = undefined;
-        let bOverlap = false;
-        if (this.allSolutions.length > 0) {
-            randomSolution = this._getRandomElementFromArray(this.allSolutions);
-        } else {
-            this.disablePrefillButton(false);
-            throw new Error("Solutions not found for current board!!!");
-        }
+        let threshold = SettingsSingleton.getInstance().getSettings().prefilling.distanceValue;
+        let scheme = SettingsSingleton.getInstance().getSettings().prefilling.prefillingStrategy;
 
         if (randomSolution != undefined) {
-            for (let i = 0; i < randomSolution[0].length; ++i) {
-                piecePosition = randomSolution[0][i];
-                piece = randomSolution[1][i];
-                currentAnchor = [piecePosition.boardPosition[0] + this.boardX,
-                piecePosition.boardPosition[1] + this.boardY];
-                for (let j = 0; j < positions.length; ++j) {
-                    bOverlap = false;
-                    candidateAnchor = [positions[j][0], positions[j][1]];
-                    if (Math.sqrt(
-                        Math.pow((currentAnchor[0] - candidateAnchor[0]), 2) +
-                        Math.pow((currentAnchor[1] - candidateAnchor[1]), 2)) < 2.2) {
-                        bOverlap = true;
-                        break;
-                    }
-                }
-                if (bOverlap) {
-                    piece = new Pentomino(piece.name);
-                    prefillCandidates.push(piece);
-                    continue;
-                }
-                prefillCandidates.push(piece);
-                positions.push(currentAnchor);
-                this.removeFromTray(piece);
-                piece.updateTrayValue(0);
-                this.gameController.placePentomino(piece, currentAnchor[0], currentAnchor[1]);
+            switch (scheme) {
+                case "distance":
+                    prefillCandidates = this.prefillBasedOnDistance(randomSolution, threshold);
+                    break;
+                case "pieces":
+                    prefillCandidates = this.prefillBasedOnAdjacentPieces(randomSolution, threshold);
+                    break;
             }
+
         } else {
             this.disablePrefillButton(false);
             throw new Error("Could not find a random solution!!!"); //TODO: Need more meaningful error message here
@@ -901,16 +1016,161 @@ class Visual {
         setTimeout(function (that) {
             that.disablePrefillButton(false);
         }, 100, this);
+
+        if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
+            this.showNumberOfPossibleSolutions();
+        }
+        this.checkIfGameWon();
     }
 
-    _getRandomElementFromArray(arrayObject) {
+    getRandomElementFromArray(arrayObject) {
         if (Array.isArray(arrayObject)) {
             return arrayObject[Math.floor(Math.random() * arrayObject.length)];
         }
         return undefined;
     }
 
-    execShadowCmd(command, seqType) {
+    readyForPrefilling() {
+        this.clear();
+        // Prevent clicking of button while previous prefilling is going on
+        this.disablePrefillButton(true);
+    }
+
+    fetchRandomSolution() {
+        let allSolutions = [];
+        // Get all the games and filter solutions
+        if (this.allSolutions == undefined) {
+            this.gameController.getSolutions().forEach(game =>
+                allSolutions.push([game._board._pentominoPositions, game._board._pentominoes]));
+            this.allSolutions = allSolutions;
+        }
+        if (this.allSolutions.length > 0) {
+            let solution = this.getRandomElementFromArray(this.allSolutions);
+            let ret = [];
+            solution[0].every((piece, index) => ret.push([piece, solution[1][index]]));
+            return ret;
+        } else {
+            this.disablePrefillButton(false);
+            throw new Error("Solutions not found for current board!!!");
+        }
+    }
+
+    prefillBasedOnAdjacentPieces(randomSolution, threshold) {
+        let currentAnchor = [];
+        let piece = undefined;
+        let piecePosition = undefined;
+        let bOverlap = false;
+        let prefillCandidates = [];
+        let blockedCells = {};
+        let bNearPentomino = false;
+        let blockedCellsTemp = {};
+        let x = 0, y = 0;
+        let pickedPieces = {};
+
+        for (let i = 0; i < randomSolution.length; ++i) {
+            [piecePosition, piece] = this.getRandomPiece(randomSolution, pickedPieces);
+            pickedPieces[piece.name] = 1;
+            currentAnchor = [piecePosition.boardPosition[0] + this.boardX,
+            piecePosition.boardPosition[1] + this.boardY];
+            let matrix = piece.getMatrixRepresentation();
+
+            blockedCellsTemp = {};
+            blockedCellsTemp = JSON.parse(JSON.stringify(blockedCells));
+            blockedCellsTemp[piece.name] = {};
+            blockedCellsTemp[piece.name].coordinates = [];
+            blockedCellsTemp[piece.name].nearbyPentominos = 0;
+
+            bOverlap = false;
+            Object.keys(blockedCells).forEach(blockedPieceName => {
+                bNearPentomino = false;
+                for (let i = 0; i < 5; ++i) {
+                    for (let j = 0; j < 5; ++j) {
+                        if (matrix[i][j] == 0) continue;
+                        x = i + currentAnchor[0] - 2;
+                        y = j + currentAnchor[1] - 2;
+                        blockedCells[blockedPieceName].coordinates.forEach(coordinates => {
+                            if (coordinates[0] == x + 1 && coordinates[1] == y) bNearPentomino = true;
+                            else if (coordinates[0] == x - 1 && coordinates[1] == y) bNearPentomino = true;
+                            else if (coordinates[0] == x && coordinates[1] == y + 1) bNearPentomino = true;
+                            else if (coordinates[0] == x && coordinates[1] == y - 1) bNearPentomino = true;
+                        });
+                    }
+                }
+                if (bNearPentomino) {
+                    blockedCellsTemp[piece.name].nearbyPentominos += 1;
+                    blockedCellsTemp[blockedPieceName].nearbyPentominos += 1;
+                }
+            });
+
+            bOverlap = false;
+            Object.keys(blockedCellsTemp).forEach(pieceName => {
+                if (blockedCellsTemp[pieceName].nearbyPentominos > threshold) bOverlap = true;
+            });
+
+            if (!bOverlap) {
+                for (let i = 0; i < 5; ++i) {
+                    for (let j = 0; j < 5; ++j) {
+                        if (matrix[i][j] == 0) continue;
+                        blockedCellsTemp[piece.name].coordinates.push([i + currentAnchor[0] - 2, j + currentAnchor[1] - 2]);
+                    }
+                }
+                blockedCells = JSON.parse(JSON.stringify(blockedCellsTemp));
+                prefillCandidates.push(piece);
+                piece.removeFromTray();
+                this.gameController.placePentomino(piece, currentAnchor[0], currentAnchor[1]);
+
+            } else {
+                piece = new Pentomino(piece.name);
+                prefillCandidates.push(piece);
+            }
+        }
+
+        return prefillCandidates;
+    }
+
+    prefillBasedOnDistance(randomSolution, threshold) {
+        let positions = [];
+        let currentAnchor = [];
+        let candidateAnchor = [];
+        let piece = undefined;
+        let piecePosition = undefined;
+        let bOverlap = false;
+        let prefillCandidates = [];
+        let pickedPieces = {};
+        for (let i = 0; i < randomSolution.length; ++i) {
+            [piecePosition, piece] = this.getRandomPiece(randomSolution, pickedPieces);
+            pickedPieces[piece.name] = 1;
+            currentAnchor = [piecePosition.boardPosition[0] + this.boardX,
+            piecePosition.boardPosition[1] + this.boardY];
+            for (let j = 0; j < positions.length; ++j) {
+                bOverlap = false;
+                candidateAnchor = [positions[j][0], positions[j][1]];
+                if (Math.sqrt(
+                    Math.pow((currentAnchor[0] - candidateAnchor[0]), 2) +
+                    Math.pow((currentAnchor[1] - candidateAnchor[1]), 2)) < threshold) {
+                    bOverlap = true;
+                    break;
+                }
+            }
+            if (bOverlap) {
+                piece = new Pentomino(piece.name);
+                prefillCandidates.push(piece);
+                continue;
+            }
+            prefillCandidates.push(piece);
+            positions.push(currentAnchor);
+            piece.removeFromTray();
+            this.gameController.placePentomino(piece, currentAnchor[0], currentAnchor[1]);
+        }
+
+        return prefillCandidates;
+    }
+
+    getRandomPiece(solution, pickedPieces) {
+        return this.getRandomElementFromArray(solution.filter(piece => !(pickedPieces[piece[0].name] == 1)));
+    }
+
+	execShadowCmd(command, seqType) {
         let cmdProperty = updateCommandAttr(CommandTypes.Shadow, seqType);
         switch (command.name) {
             case "Remove":
@@ -984,6 +1244,10 @@ class Visual {
             return;
         }
         this.execShadowCmd(command);
+        if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
+            this.showNumberOfPossibleSolutions();
+        }
+        this.checkIfGameWon();
     }
 
     redo() {
@@ -992,6 +1256,10 @@ class Visual {
             return;
         }
         this.execShadowCmd(command);
+        if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
+            this.showNumberOfPossibleSolutions();
+        }
+        this.checkIfGameWon();
     }
 
     getGameIdByKey(key) {
@@ -1067,6 +1335,20 @@ class Visual {
         };
         setTimeout(pause, timeInterval);
 
+    }
+
+    disablePointerEventsOnPieces() {
+        let piecesIdArray = ['piece_X', 'piece_Y', 'piece_F', 'piece_I', 'piece_L', 'piece_N', 'piece_P', 'piece_T', 'piece_U', 'piece_V', 'piece_W', 'piece_Z'];
+        piecesIdArray.forEach(function (piece) {
+            document.getElementById(piece).style.pointerEvents = "none";
+        });
+    }
+
+    enablePointerEventsOnPieces() {
+        let piecesIdArray = ['piece_X', 'piece_Y', 'piece_F', 'piece_I', 'piece_L', 'piece_N', 'piece_P', 'piece_T', 'piece_U', 'piece_V', 'piece_W', 'piece_Z'];
+        piecesIdArray.forEach(function (piece) {
+            document.getElementById(piece).style.pointerEvents = "auto";
+        });
     }
 
 }

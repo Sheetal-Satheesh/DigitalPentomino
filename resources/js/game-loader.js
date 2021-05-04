@@ -97,6 +97,7 @@ class GameLoader {
     createGame(boardStartXY,
         boardSizeXY,
         Boardshape,
+        blockedCells,
         name) {
 
         boardStartXY[0] = parseInt(boardStartXY[0]);
@@ -110,6 +111,7 @@ class GameLoader {
                 new Board(
                     boardStartXY,
                     boardSizeXY,
+                    blockedCells,
                     Boardshape),
                 name));
 

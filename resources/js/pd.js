@@ -12,41 +12,41 @@ class PD {
          */
         var fController = new FrontController();
         this.gameController = fController.controller;
-        this.loadGame("board_6x10");
+        this.loadBoard("board_6x10");
 
     }
 
     rotateClkWise() {
         this.visual.rotateClkWise();
-        if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
+        if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.visual.showNumberOfPossibleSolutions();
         }
     }
 
     rotateAntiClkWise() {
         this.visual.rotateAntiClkWise();
-        if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
+        if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.visual.showNumberOfPossibleSolutions();
         }
     }
 
     flipH() {
         this.visual.flipH();
-        if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
+        if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.visual.showNumberOfPossibleSolutions();
         }
     }
 
     flipV() {
         this.visual.flipV();
-        if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
+        if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.visual.showNumberOfPossibleSolutions();
         }
     }
 
     reset() {
         this.visual.clear();
-        if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
+        if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.visual.showNumberOfPossibleSolutions();
         }
     }
@@ -85,8 +85,7 @@ class PD {
         return boardsWithConfig;
     }
 
-
-    loadGame(board, loadType) {
+    loadBoard(board, loadType) {
         let gameObject = this.getGameUISettings(board);
         this.boardName = board; // HACK: To be changed later. This needs to be obtained from the backend. 
         this.boardSize = gameObject.boardSize;
@@ -94,6 +93,7 @@ class PD {
         this.gameHeight = gameObject.gameHeight;
         this.gameWidth = gameObject.gameWidth;
         this.blockedCells = gameObject.blockedCells;
+        this.gameCellPattern = boardConfigs[board].gameCellPattern;
 
         this.boardStartX = Math.floor((this.gameHeight - this.boardSize[0]) / 2);
         this.boardStartY = Math.floor((this.gameWidth - this.boardSize[1]) / 2);
@@ -103,13 +103,14 @@ class PD {
                 [this.boardStartX, this.boardStartY],
                 this.boardSize,
                 this.boardShape,
+                this.blockedCells,
                 board);
             this.visual = new Visual(this);
         } else {
             this.visual.reload(pd);
         }
 
-        if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
+         if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.visual.showNumberOfPossibleSolutions();
         }
     }
@@ -124,14 +125,24 @@ class PD {
 
     prefillBoard() {
         this.visual.prefillBoard();
+        if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
+            this.visual.showNumberOfPossibleSolutions();
+        }
     }
 
     undo() {
         this.visual.undo();
+        if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
+            this.visual.showNumberOfPossibleSolutions();
+        }
     }
 
     redo() {
         this.visual.redo();
+        if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
+            this.visual.showNumberOfPossibleSolutions();
+        }
+    }
     }
 
     replay(startState, targetState) {
@@ -150,4 +161,3 @@ class PD {
 
 
 // this.ui.load();
-// document.getElementById("btnBoardSelect").onclick = () => { this.loadBoard('board_6x10'); }; -->

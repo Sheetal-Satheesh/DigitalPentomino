@@ -56,11 +56,13 @@ class GameController {
     createGame(boardStartXY,
         boardSizeXY,
         Boardshape,
+        blockedCells,
         name) {
 
         this._gameLoader.createGame(boardStartXY,
             boardSizeXY,
             Boardshape,
+            blockedCells,
             name);
     }
     saveGameImage(image) {

@@ -1,4 +1,3 @@
-
 class Template {
 
     constructor(type) {
@@ -8,9 +7,13 @@ class Template {
     createBtn(attribute) {
         let btn = document.createElement("button");
         btn.setAttribute('type', 'button');
-        btn.setAttribute("class", attribute.name);
-        btn.setAttribute("onclick", attribute.onclick);
-        btn.textContent = attribute.content;
+        btn.textContent = attribute.textContent;
+
+        let property = Object.keys(attribute);
+        property = property.filter(item => item != "textContent");
+        property.forEach((item) => {
+            btn.setAttribute(item, attribute[item]);
+        });
         return btn;
     }
 
@@ -35,6 +38,7 @@ class Template {
         let child = this.createText(childAttribute);
         parentElement.appendChild(child);
     }
+
     clearContent(element) {
         if (typeof element === "string") {
             element = document.querySelector(element);
@@ -44,7 +48,13 @@ class Template {
 
     createDiv(attribute) {
         let divElem = document.createElement('div');
-        divElem.setAttribute('class', attribute.name);
+
+        let property = Object.keys(attribute);
+        property = property.filter(item => item != "textContent");
+        property.forEach((item) => {
+            divElem.setAttribute(item, attribute[item]);
+        });
+
         return divElem;
     }
 
