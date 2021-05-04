@@ -533,6 +533,7 @@
             template.clearContent("#modalButtonsID");
             template.clearContent("#modalTitleID");
             template.clearContent("#modalBodyID");
+            template.clearContent(".innerGrid")
             template.clearContent("#innerGridForm");
 
             //add form to attach settings to
@@ -718,6 +719,7 @@
             let imageList = pd.visual.showGameImages();
             let imageGrid = document.getElementById('innerGrid');
             template.clearContent(".innerGrid");
+            template.clearContent("#innerGridForm");
             let gameId = undefined;
             let borderColor = generateRandomColor();
 
@@ -774,6 +776,7 @@
             template.clearContent("#modalButtonsID");
             template.clearContent("#modalTitleID");
             template.clearContent("#modalBodyID");
+            template.clearContent("#innerGridForm");
 
             let startGameState = pd.getGameState("start");
             let currGameState = pd.getGameState("current");
