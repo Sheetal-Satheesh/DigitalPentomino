@@ -584,7 +584,7 @@ class Visual {
             this.checkIfGameWon();
         }
     }
-    
+
     flipV(cmdProperty = cmdAttrDefault) {
         let piece = this.selected;
         if (piece) {
@@ -1164,7 +1164,7 @@ class Visual {
         return this.getRandomElementFromArray(solution.filter(piece => !(pickedPieces[piece[0].name] == 1)));
     }
 
-	execShadowCmd(command, seqType) {
+    execShadowCmd(command, seqType) {
         let cmdProperty = updateCommandAttr(CommandTypes.Shadow, seqType);
         switch (command.name) {
             case "Remove":

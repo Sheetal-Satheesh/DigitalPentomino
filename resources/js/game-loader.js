@@ -105,7 +105,7 @@ class GameLoader {
 
         boardSizeXY[0] = parseInt(boardSizeXY[0]);
         boardSizeXY[1] = parseInt(boardSizeXY[1]);
-        let prevGameName = (this._game == null)?null:this._game.getName();
+        let prevGameName = (this._game == null) ? null : this._game.getName();
 
         this.setGame(
             new Game(
@@ -123,7 +123,7 @@ class GameLoader {
         }
         this._commandManager = new CommandManager();
 
-        if(prevGameName == null || prevGameName != this._game.getName()){
+        if (prevGameName == null || prevGameName != this._game.getName()) {
             this._hintAI = new HintAI(this._game, true);
         }
         this.saveGame();

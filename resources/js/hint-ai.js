@@ -6,18 +6,18 @@ if (typeof require != 'undefined') {
 }
 
 class HintAI {
-    static solutions=undefined;
-    constructor(game, loadSolutions=false) {
-        if(HintAI.solutions == undefined || loadSolutions == true){
+    static solutions = undefined;
+    constructor(game, loadSolutions = false) {
+        if (HintAI.solutions == undefined || loadSolutions == true) {
             HintAI.solutions = Solutions.getGamesFromSolutionsConfig(game.getName());
         }
     }
 
-     /** ---------------  Solutions-------------*/
-     getSolutions() {
-         if(HintAI.solutions == undefined){
-             console.error("Solution is not set");
-         }
+    /** ---------------  Solutions-------------*/
+    getSolutions() {
+        if (HintAI.solutions == undefined) {
+            console.error("Solution is not set");
+        }
         return HintAI.solutions;
     }
 

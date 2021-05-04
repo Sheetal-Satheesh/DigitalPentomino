@@ -125,7 +125,7 @@ class CommandManager {
             this._cmdTree.Root(),
             startKey,
             endKey, 0);
-            
+
         if (cmdObj.seqType == 2) {
             cmdObj.commands = cmdObj.commands.reverse();
         }

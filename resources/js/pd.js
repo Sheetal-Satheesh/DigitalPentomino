@@ -110,7 +110,7 @@ class PD {
             this.visual.reload(pd);
         }
 
-         if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
+        if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.visual.showNumberOfPossibleSolutions();
         }
     }

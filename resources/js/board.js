@@ -33,10 +33,10 @@ class Board {
         this._pentominoPositions = [];
     }
 
-    getBoardSettings(){
+    getBoardSettings() {
         return {
-            "boardStartPos": [this._boardRows,this._boardSCols],
-            "boardSize": [this._boardRows,this._boardCols],
+            "boardStartPos": [this._boardRows, this._boardSCols],
+            "boardSize": [this._boardRows, this._boardCols],
             "blockCells": this._blockedCells
         };
     }
