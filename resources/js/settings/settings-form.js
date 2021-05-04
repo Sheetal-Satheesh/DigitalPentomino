@@ -39,7 +39,7 @@ class SettingsForm {
                         let checkbox = SettingsForm.createInputElement("checkbox", elementName);
                         div.appendChild(checkbox);
                         let label = SettingsForm.createLabel(settingsEntry.title, {
-                            htmlFor:checkbox.id
+                            for: checkbox.id
                         });
                         div.appendChild(label);
                         break;
@@ -57,7 +57,9 @@ class SettingsForm {
                         div.appendChild(integerInputElementLabel);
                         let integerInputElement = SettingsForm.createInputElement("number", elementName, {
                             step: 1,
-                            value: 3
+                            value: 3,
+                            min: settingsEntry.minimum,
+                            max: settingsEntry.maximum
                         });
                         div.appendChild(integerInputElement);
                         break;
@@ -66,7 +68,9 @@ class SettingsForm {
                         div.appendChild(numberInputElementLabel);
                         let numberInputElement = SettingsForm.createInputElement("number", elementName, {
                             step: 0.1,
-                            value: 1.5
+                            value: 1.5,
+                            min: settingsEntry.minimum,
+                            max: settingsEntry.maximum
                         });
                         div.appendChild(numberInputElement);
                         break;
