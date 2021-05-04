@@ -12,8 +12,7 @@ class SettingsForm {
             let data = SettingsForm.collectDataFromForm(formElement, schema);
             console.log(data);
             event.preventDefault();
-            // FIXME
-            // onSubmit(data);
+            onSubmit(false, data);
         });
     }
 
@@ -183,7 +182,10 @@ class SettingsForm {
     }
 
     // === === === UPDATE FORM === === ===
-    static updateForm(formElement, schema, settings) {
+    static updateForm(formElement) {
+        let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+        let settings = SettingsSingleton.getInstance().getSettings();
+
         // TODO
     }
 }

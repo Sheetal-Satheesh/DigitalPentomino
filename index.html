@@ -520,7 +520,8 @@
                 this.handleJsonFormSubmit
             );
 
-            //this.postProcessSettingsForm(SettingsSingleton.getInstance().getSettings());
+            SettingsForm.updateForm($('#innerGridForm')[0]);
+            // this.postProcessSettingsForm(SettingsSingleton.getInstance().getSettings());
         }
 
         function postProcessSettingsForm(settings) {
@@ -635,7 +636,8 @@
                 document.getElementById("seedingCover").style.visibility = "hidden";
                 document.getElementById("seeding").style.visibility = "hidden";
 
-                this.postProcessSettingsForm(settings);
+                SettingsForm.updateForm($('#innerGridForm')[0]);
+                // this.postProcessSettingsForm(settings);
             } else {
                 // TODO: handle error
             }
