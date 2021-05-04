@@ -4,7 +4,7 @@ class Command {
         this._name = name;
     }
 
-    Name(){
+    Name() {
         return this._name;
     }
 }
@@ -19,7 +19,7 @@ class PlaceCommand extends Command {
 
     ExecValues() {
         return {
-            "name":this._name,
+            "name": this._name,
             "Pentomino": this._pentomino,
             "PosX": this._nextPosition[0],
             "PosY": this._nextPosition[1]
@@ -28,13 +28,13 @@ class PlaceCommand extends Command {
 
     ExecUndoValues() {
         return {
-            "name":this._name,
+            "name": this._name,
             "Pentomino": this._pentomino,
-            "PosX": (this._prevPosition != undefined)?
-                            this._prevPosition[0] : undefined,
-            "PosY": (this._prevPosition != undefined)?
-                            this._prevPosition[1] : undefined,
-          };
+            "PosX": (this._prevPosition != undefined) ?
+                this._prevPosition[0] : undefined,
+            "PosY": (this._prevPosition != undefined) ?
+                this._prevPosition[1] : undefined,
+        };
     }
 
 }
@@ -48,7 +48,7 @@ class RemoveCommand extends Command {
 
     ExecValues() {
         return {
-            "name":this._name,
+            "name": this._name,
             "Pentomino": this._pentomino,
             "PosX": undefined,
             "PosY": undefined
@@ -57,13 +57,13 @@ class RemoveCommand extends Command {
 
     ExecUndoValues() {
         return {
-            "name":this._name,
+            "name": this._name,
             "Pentomino": this._pentomino,
-            "PosX": (this._prevPosition != undefined)?
-                            this._prevPosition[0] : undefined,
-            "PosY": (this._prevPosition != undefined)?
-                            this._prevPosition[1] : undefined,
-          };
+            "PosX": (this._prevPosition != undefined) ?
+                this._prevPosition[0] : undefined,
+            "PosY": (this._prevPosition != undefined) ?
+                this._prevPosition[1] : undefined,
+        };
     }
 }
 
@@ -75,7 +75,7 @@ class RotateClkWiseCommand extends Command {
 
     ExecValues() {
         return {
-            "name":this._name,
+            "name": this._name,
             "Pentomino": this._pentomino,
             "PosX": undefined,
             "PosY": undefined
@@ -84,11 +84,11 @@ class RotateClkWiseCommand extends Command {
 
     ExecUndoValues() {
         return {
-            "name":"RotateAntiClkWise",
+            "name": "RotateAntiClkWise",
             "Pentomino": this._pentomino,
             "PosX": undefined,
             "PosY": undefined
-          };
+        };
     }
 
 }
@@ -101,7 +101,7 @@ class RotateAntiClkWiseCommand extends Command {
 
     ExecValues() {
         return {
-            "name":this._name,
+            "name": this._name,
             "Pentomino": this._pentomino,
             "PosX": undefined,
             "PosY": undefined
@@ -110,11 +110,11 @@ class RotateAntiClkWiseCommand extends Command {
 
     ExecUndoValues() {
         return {
-            "name":"RotateClkWise",
+            "name": "RotateClkWise",
             "Pentomino": this._pentomino,
             "PosX": undefined,
             "PosY": undefined
-          };
+        };
     }
 }
 
@@ -126,7 +126,7 @@ class MirrorHCommand extends Command {
 
     ExecValues() {
         return {
-            "name":this._name,
+            "name": this._name,
             "Pentomino": this._pentomino,
             "PosX": undefined,
             "PosY": undefined
@@ -135,11 +135,11 @@ class MirrorHCommand extends Command {
 
     ExecUndoValues() {
         return {
-            "name":this._name,
+            "name": this._name,
             "Pentomino": this._pentomino,
             "PosX": undefined,
             "PosY": undefined
-          };
+        };
     }
 }
 
@@ -151,7 +151,7 @@ class MirrorVCommand extends Command {
 
     ExecValues() {
         return {
-            "name":this._name,
+            "name": this._name,
             "Pentomino": this._pentomino,
             "PosX": undefined,
             "PosY": undefined
@@ -160,16 +160,16 @@ class MirrorVCommand extends Command {
 
     ExecUndoValues() {
         return {
-            "name":this._name,
+            "name": this._name,
             "Pentomino": this._pentomino,
             "PosX": undefined,
             "PosY": undefined
-          };
+        };
     }
 }
 
 
 
-if(typeof module != 'undefined') {
+if (typeof module != 'undefined') {
     module.exports = Command;
 }

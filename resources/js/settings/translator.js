@@ -1,6 +1,6 @@
-class Translator{
+class Translator {
 
-    static translateHeaders(language){
+    static translateHeaders(language) {
         //simple replacement of headers to language
         //document.getElementById("header-game-settings") ? document.getElementById("header-game-settings").textContent = strings.settings.header[language] : console.log("Translation element not found.");
         document.getElementById("settings-submit-button") ? document.getElementById("settings-submit-button").value = strings.settings.buttons.apply[language] : console.log("Translation element not found.");
@@ -9,6 +9,6 @@ class Translator{
 
 }
 
-if(typeof module != 'undefined') {
+if (typeof module != 'undefined') {
     module.exports = Translator;
 }

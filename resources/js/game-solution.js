@@ -1,20 +1,20 @@
 class Solutions {
 
-    static getGamesFromSolutionsConfig(boardname){
+    static getGamesFromSolutionsConfig(boardname) {
         let gameArray = [];
 
         //loop over solutionsConfig to find currently active Board
         let tempArray = [];
-        for (let boardType in solutionsConfig){
+        for (let boardType in solutionsConfig) {
             //check which board has active status
-            if (boardType == boardname){
+            if (boardType == boardname) {
                 tempArray = solutionsConfig[boardType]["solutionsArray"];
             }
         }
 
         for (let i = 0; i < tempArray.length; i++) {
             let line = tempArray[i];
-            
+
             let game = this.getGameFromString(line);
             gameArray.push(game);
         }
@@ -25,7 +25,7 @@ class Solutions {
 
     /*TODO: Move to gameLoader class */
     static getGameFromString(gameString) {
-            
+
         let rows = gameString.split(" ");
         let height = rows.length;
         let width = rows[0].length;
@@ -46,14 +46,14 @@ class Solutions {
         let W = new Pentomino('W');
         let Y = new Pentomino('Y');
 
-        let pentos = [X,T,L,U,N,F,I,P,Z,V,W,Y];
+        let pentos = [X, T, L, U, N, F, I, P, Z, V, W, Y];
 
         pentos.forEach(pento => {
 
             let hasNextOp = true;
             let opsAmount = 0;
 
-            while (hasNextOp){
+            while (hasNextOp) {
                 //getMatrixRep for current element
                 let matrixRep = pento.getMatrixRepresentation();
                 //console.log(matrixRep);
@@ -62,7 +62,7 @@ class Solutions {
                 //console.log(boardRep);
 
                 let position = this.findInParent(matrixRep, boardRep);
-                if (position != null){
+                if (position != null) {
                     //console.log("Center of piece " + pento.name + " found: " + position);
                     //console.log("Placing element" + pento.name + " on board...");
                     game.placePentomino(pento, position[0], position[1]);
@@ -70,18 +70,18 @@ class Solutions {
                 } else {
                     //try with different rotate/flip of same pento until all 10 possibilites are reached
                     hasNextOp = this.doNextOperationOnPento(pento, opsAmount);
-                    opsAmount = opsAmount+1;
+                    opsAmount = opsAmount + 1;
                 }
             }
-            
+
         });
 
         return game;
     }
 
 
-    static doNextOperationOnPento(pentomino, x){
-        
+    static doNextOperationOnPento(pentomino, x) {
+
         switch (x) {
             case 0:
                 pentomino.rotateClkWise();
@@ -140,8 +140,8 @@ class Solutions {
     }
 
 
-    static findInParent(smallMatrix, bigMatrix){
-        let centerPosition = [0,0];
+    static findInParent(smallMatrix, bigMatrix) {
+        let centerPosition = [0, 0];
 
         let a = bigMatrix;
         let b = smallMatrix;
@@ -170,39 +170,39 @@ class Solutions {
     }
 
 
-    static normalizeBoard(gameString, element){
+    static normalizeBoard(gameString, element) {
         let rows = gameString.split(" ");
         let height = rows.length;
         let width = rows[0].length;
 
         // IMPORTANT: normalized board will have +2 height and +2 width to include borders for check
-        let nBoard = Array(height+4).fill(0).map(() => new Array(width+4).fill(0));
+        let nBoard = Array(height + 4).fill(0).map(() => new Array(width + 4).fill(0));
         for (let i = 0; i < height; i++) {
             for (let j = 0; j < width; j++) {
                 let stringElement = rows[i][j];
-                if (stringElement == element){
-                    nBoard[i+2][j+2] = 1;
-                }   
+                if (stringElement == element) {
+                    nBoard[i + 2][j + 2] = 1;
+                }
             }
-        }    
+        }
 
         return nBoard;
     }
 
 
-    static transform(someString, element){
+    static transform(someString, element) {
         //e.g. take "FFIIIIILFFPPUULFXPPPULXXXYUULLXYYYY" and "X" as input
-        let resultString='';
-        
+        let resultString = '';
+
         for (var i = 0; i < someString.length; i++) {
             let stringElement = someString[i];
-            if (stringElement == element){
+            if (stringElement == element) {
                 resultString += '1'
             } else {
                 resultString += '0'
             }
         }
-        
+
         return resultString;
     }
 

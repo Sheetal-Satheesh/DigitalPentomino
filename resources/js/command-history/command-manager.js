@@ -1,68 +1,68 @@
-if(typeof require != 'undefined') {
+if (typeof require != 'undefined') {
     CommandHistoryTree = require('./command-tree.js');
 }
 
 class CommandManager {
     constructor() {
         this._cmdTree = new CommandTree();
-        var fController = new FrontController(); 
+        var fController = new FrontController();
         this._game = fController.controller.game();
     }
 
-    Reset(){
+    Reset() {
         this._cmdTree.Clean();
     }
 
     Seach(key) {
-        this._cmdTree.search(this._cmdTree.Root(),key);
+        this._cmdTree.search(this._cmdTree.Root(), key);
     }
 
-    ExecCommand(command, cmdTypes=CommandTypes.Original) {
+    ExecCommand(command, cmdTypes = CommandTypes.Original) {
 
         let isSuccess = true; // Get return value of success or error from
-        let currNode=undefined;
-        if(cmdTypes == CommandTypes.Original){
-           currNode = this._cmdTree.Insert(command);
+        let currNode = undefined;
+        if (cmdTypes == CommandTypes.Original) {
+            currNode = this._cmdTree.Insert(command);
         }
-        else{
+        else {
             currNode = this._cmdTree.Current();
         }
 
-       let cmdVal = command.ExecValues();
-       switch(command.Name()){
-           case "Place":
-                this._game.placePentomino(cmdVal.Pentomino, cmdVal.PosX,cmdVal.PosY);
+        let cmdVal = command.ExecValues();
+        switch (command.Name()) {
+            case "Place":
+                this._game.placePentomino(cmdVal.Pentomino, cmdVal.PosX, cmdVal.PosY);
                 break;
-            
+
             case "Remove":
                 this._game.removePentomino(cmdVal.Pentomino);
                 break;
-            
+
             case "RotateClkWise":
                 this._game.rotatePentominoClkWise(cmdVal.Pentomino);
                 break;
-            
+
             case "RotateAntiClkWise":
                 this._game.rotatePentominoAntiClkWise(cmdVal.Pentomino);
                 break;
-            
+
             case "MirrorH":
                 this._game.mirrorPentominoH(cmdVal.Pentomino);
                 break;
-            
+
             case "MirrorV":
                 this._game.mirrorPentominoV(cmdVal.Pentomino);
                 break;
-            
+
             default:
                 isSuccess = false;
-                throw new Error("Invalid Command Found: "+command.name);
+                throw new Error("Invalid Command Found: " + command.name);
                 //TODO: add commund related flag variable
                 break;
 
-       }
+        }
 
-       if(isSuccess && (currNode != undefined)) {
+        if (isSuccess && (currNode != undefined)) {
             this._game.updateCmdKey(currNode.Key());
             /*
                 console.info("Root Key: "+ this._cmdTree.RootKey());
@@ -84,8 +84,8 @@ class CommandManager {
     ExecCmdSequence(cmdSequence, onUndo, onRedo) {
         if (cmdSequence.getStart() != this._cmdTree.getLastCommand()) {
             throw new Error(
-                    "State Error:"+
-                    "Current state is not start state of cmdSequence");
+                "State Error:" +
+                "Current state is not start state of cmdSequence");
         }
 
         for (let index = 0; index < cmdSequence.getNumOfUndoCommands(); index++) {
@@ -112,43 +112,43 @@ class CommandManager {
         return !(this._cmdTree.isAtRoot());
     }
 
-/* 
-   Undo() {
-        if (this._cmdTree.isAtRoot()) {
-            throw new Error("There exists no command to undo");
+    /* 
+       Undo() {
+            if (this._cmdTree.isAtRoot()) {
+                throw new Error("There exists no command to undo");
+            }
+    
+            let undoCommand = this._cmdTree.getLastCommand();
+            undoCommand.undo();
+            this._cmdTree.moveUp();
+            return undoCommand;
         }
+    */
 
-        let undoCommand = this._cmdTree.getLastCommand();
-        undoCommand.undo();
-        this._cmdTree.moveUp();
-        return undoCommand;
-    }
-*/
-
-    Undo(){
-        let command =  this._cmdTree.MoveUp();
-        if(command == undefined){
+    Undo() {
+        let command = this._cmdTree.MoveUp();
+        if (command == undefined) {
             return undefined;
         }
         return command.ExecUndoValues();
 
     }
 
-    Redo(strategy){
-        let command =  this._cmdTree.MoveDown(strategy);
-        if(command == undefined){
+    Redo(strategy) {
+        let command = this._cmdTree.MoveDown(strategy);
+        if (command == undefined) {
             return undefined;
         }
         return command.ExecValues();
     }
 
-/*
-    Redo(command) {
-        command.execute();
-        this._cmdTree.moveDown(command);
-        return command;
-    }
-*/
+    /*
+        Redo(command) {
+            command.execute();
+            this._cmdTree.moveDown(command);
+            return command;
+        }
+    */
     RedoCommandsAll() {
         return this._cmdTree.getLastCommand().getChildren();
     }
@@ -158,6 +158,6 @@ class CommandManager {
     }
 }
 
-if(typeof module != 'undefined') {
+if (typeof module != 'undefined') {
     module.exports = CommandManager;
 }

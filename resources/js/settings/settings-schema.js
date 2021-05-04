@@ -77,7 +77,7 @@ class SettingsSchema {
                         "type": "string",
                         "title": titles.hinting.hintingStrategy.title[lang],
                         "description": titles.hinting.hintingStrategy.description[lang],
-                        "enum": ["full","partial","area"],
+                        "enum": ["full", "partial", "area"],
                         "enumText": titles.hinting.hintingStrategy.enumTitles[lang],
                         "default": "area"
                     },

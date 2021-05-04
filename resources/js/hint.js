@@ -1,5 +1,5 @@
 class Hint {
-    constructor(commands, possibleSolutions, skill=null) {
+    constructor(commands, possibleSolutions, skill = null) {
         this._commands = commands;
         this._possibleSolutions = possibleSolutions;
         this._skill = skill;
@@ -18,6 +18,6 @@ class Hint {
     }
 }
 
-if(typeof module != 'undefined') {
+if (typeof module != 'undefined') {
     module.exports = Hint;
 }

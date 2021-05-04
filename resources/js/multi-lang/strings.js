@@ -6,8 +6,8 @@ const strings = {
     },
     reset: ["Do You Want To Reset?", "Willst du deinen Spielstand wirklich löschen?"],
     showSolved: {
-        congrats : ["Congratulations!", "Glückwunsch!"],
-        play : ["Play Again?","Nochmal spielen?"]
+        congrats: ["Congratulations!", "Glückwunsch!"],
+        play: ["Play Again?", "Nochmal spielen?"]
     },
     license: ["LICENSES", "LIZENZEN"],
     numberOfPossibleSolutions: ["Number of solutions", "Anzahl Lösungen"],
@@ -41,17 +41,17 @@ const strings = {
                 enumTitles: [["Concrete", "Partial", "Area"], ["Konkret", "Partiell", "Bereich"]],
                 description: [
                     "Specifies what hints are given to the user:" +
-                        "<ul>" +
-                            "<li><b>Concrete Hints:</b> A hint suggests a specific action for a specific pentomino.</li>" +
-                            "<li><b>Partial Hints:</b> An action is indicated by displaying cells of the pentomino in the desired state.</li>" +
-                            "<li><b>Area Hints:</b> An action is indicated by displaying an area, where the pentomino should be placed.</li>" +
-                        "</ul>",
+                    "<ul>" +
+                    "<li><b>Concrete Hints:</b> A hint suggests a specific action for a specific pentomino.</li>" +
+                    "<li><b>Partial Hints:</b> An action is indicated by displaying cells of the pentomino in the desired state.</li>" +
+                    "<li><b>Area Hints:</b> An action is indicated by displaying an area, where the pentomino should be placed.</li>" +
+                    "</ul>",
                     "Spezifiziert, von welcher Art die Hinweise sind:" +
-                        "<ul>" +
-                            "<li><b>Konkrete Hinweise:</b> Der Hinweis empfiehlt direkt eine Aktion für ein bestimmtes Pentomino.</li>" +
-                            "<li><b>Partielle Hinweise:</b> Die Aktion wird nur angedeutet, indem Zellen des Pentominoes an dessen Zielposition angezeigt werden.</li>" +
-                            "<li><b>Bereich-Hinweise:</b> Die Aktion wird nur angedeutet, indem ein Bereich angezeigt wird, der die Zielposition des Pentominoes enthält.</li>" +
-                        "</ul>"]
+                    "<ul>" +
+                    "<li><b>Konkrete Hinweise:</b> Der Hinweis empfiehlt direkt eine Aktion für ein bestimmtes Pentomino.</li>" +
+                    "<li><b>Partielle Hinweise:</b> Die Aktion wird nur angedeutet, indem Zellen des Pentominoes an dessen Zielposition angezeigt werden.</li>" +
+                    "<li><b>Bereich-Hinweise:</b> Die Aktion wird nur angedeutet, indem ein Bereich angezeigt wird, der die Zielposition des Pentominoes enthält.</li>" +
+                    "</ul>"]
             },
             maxPartialHintingCells: {
                 title: ["Max Partial Hinting Cells", "Maximale Anzahl Zellen bei partiellen Hinweisen"],
@@ -81,15 +81,15 @@ const strings = {
                 enumTitles: [["Distance", "Pieces"], ["Distanz", "Nachbar"]],
                 description: [
                     "The selected constraint is applied when the pentominoes are placed on the board:" +
-                        "<ul>" +
-                            "<li><b>Distance-Constraint:</b> Pieces are not closer than the value specified in <i>Distance value</i>.</li>" +
-                            "<li><b>Pieces-Constraint:</b> Pieces are not touching more pieces than specified in <i>Distance value</i>.</li>" +
-                        "</ul>",
+                    "<ul>" +
+                    "<li><b>Distance-Constraint:</b> Pieces are not closer than the value specified in <i>Distance value</i>.</li>" +
+                    "<li><b>Pieces-Constraint:</b> Pieces are not touching more pieces than specified in <i>Distance value</i>.</li>" +
+                    "</ul>",
                     "Die Einschränkung muss eingehalten werden, wenn die Pentominoes auf dem Spielfeld platziert werden:" +
-                        "<ul>" +
-                            "<li><b>Distanz-Einschränkung:</b> Distanz zweier Pentominoes ist maximal der Wert spezifiziert in <i>Distanz-Wert</i>.</li>" +
-                            "<li><b>Nachbar-Einschränkung:</b> Ein Pentomino hat maximal so viele benachbarte Pentominoes wie spezifiziert in <i>Distanz-Wert</i>.</li>" +
-                        "</ul>"]
+                    "<ul>" +
+                    "<li><b>Distanz-Einschränkung:</b> Distanz zweier Pentominoes ist maximal der Wert spezifiziert in <i>Distanz-Wert</i>.</li>" +
+                    "<li><b>Nachbar-Einschränkung:</b> Ein Pentomino hat maximal so viele benachbarte Pentominoes wie spezifiziert in <i>Distanz-Wert</i>.</li>" +
+                    "</ul>"]
             },
             distanceValue: ["Distance value", "Distanz-Wert"]
         },
