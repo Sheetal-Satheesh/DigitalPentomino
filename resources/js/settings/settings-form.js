@@ -186,6 +186,65 @@ class SettingsForm {
         let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
         let settings = SettingsSingleton.getInstance().getSettings();
 
-        // TODO
+        //change default values according to current schema
+        for (let key in settings) {
+            //console.log(settings[key]);
+            for (let subkey in settings[key]) {
+                //console.log(settings[key][subkey]);
+                let schemaEntry = schema[key]["properties"][subkey];
+                switch (schemaEntry.type) {
+                    case "boolean":
+                        SettingsForm.editBooleanSchemaEntry(key, subkey, settings[key][subkey], formElement);
+                        break;
+                    case "number": case "integer":
+                        SettingsForm.editInputSchemaEntry(key, subkey, settings[key][subkey], formElement);
+                        break;
+                    case "string":
+                        SettingsForm.editStringSchemaEntry(key, subkey, schemaEntry, settings[key][subkey], formElement);
+                        break;
+                    default:
+                        throw new Error("Schema Error: Unknown type: " + schemaEntry.type);
+                }
+            }
+        }
+        let currentLanguage = settings.general.language;
+        schema["general"]["properties"]["language"]["default"] = currentLanguage === baseConfigs.languages.ENGLISH ? "en" : "de";
+    }
+
+    static editBooleanSchemaEntry(heading, key, value, formElement) {
+        let name = heading + "." + key;
+        let inputElement = $(formElement).find("input[name='" + name + "']")[0];
+        inputElement.checked = value;
+    }
+
+    static editInputSchemaEntry(heading, key, value, formElement) {
+        let name = heading + "." + key;
+        let inputElement = $(formElement).find("input[name='" + name + "']")[0];
+        inputElement.value = value;
+    }
+
+    static editStringSchemaEntry(heading, key, schemaEntry, selectedValue, formElement) {
+        let selectName = heading + "." + key;
+        let enumText = schemaEntry.enumText;
+        if (enumText === undefined) {
+            throw new Error("No enumText defined");
+        }
+        let selectElement = $(formElement).find("select[name='" + selectName + "']")[0];
+        if (!(selectElement.options.length === enumText.length)) {
+            throw new Error("Number of elements does not match number of texts specified in enumText");
+        }
+
+        if (heading === "general" && key === "language") {
+            selectedValue = selectedValue === baseConfigs.languages.ENGLISH ? "en" : "de";
+        }
+
+        let selectedOption = null;
+        for (let i = 0; i < selectElement.options.length; i++) {
+            let option = selectElement.options[i];
+            if (option.value === selectedValue) {
+                selectedOption = option;
+            }
+        }
+        selectedOption.selected = true;
     }
 }
