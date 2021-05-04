@@ -1,17 +1,17 @@
 const UIProperty = {
-    "TrayCSSLeft":7,
-    "TrayHeight":7,
-    "WindowWidth":89,
+    "TrayCSSLeft": 7,
+    "TrayHeight": 7,
+    "WindowWidth": 89,
     "PentominoX": 5,
     "PentominoY": 5,
     "FunctionWidth": 10
 }
 Object.freeze(UIProperty);
 
-const CommandTypes = {"Original":1, "Shadow":2};
+const CommandTypes = { "Original": 1, "Shadow": 2 };
 Object.freeze(CommandTypes);
 
-const RedoStrategy = {"TOP":1, "BOTTOM":2};
+const RedoStrategy = { "TOP": 1, "BOTTOM": 2 };
 Object.freeze(RedoStrategy);
 let lastHintedPentName = null;
 let randomCell;
@@ -34,34 +34,34 @@ class Visual {
         this.initalizeListeners();
     }
 
-	 getBoard(){
+    getBoard() {
         return this.gameController.getName();
-    }										 
-
-    isBlockCell(posX, posY){
-        var bCellsFnd=false;
-            if (this.pd.blockedCells != undefined){
-                this.pd.blockedCells.forEach(function(cells){
-                    if(cells[0] + this.boardX == posX && cells[1] + this.boardY == posY){
-                        bCellsFnd= true;
-                    }
-                },this);
-            }
-
-            return bCellsFnd ;
     }
 
-    isPentominoInBlockCells(pentomino){
+    isBlockCell(posX, posY) {
+        var bCellsFnd = false;
+        if (this.pd.blockedCells != undefined) {
+            this.pd.blockedCells.forEach(function (cells) {
+                if (cells[0] + this.boardX == posX && cells[1] + this.boardY == posY) {
+                    bCellsFnd = true;
+                }
+            }, this);
+        }
+
+        return bCellsFnd;
+    }
+
+    isPentominoInBlockCells(pentomino) {
 
         var [pX, pY] = this.gameController.getPositionOfPentomino(pentomino);
         var pMatrix = pentomino.getMatrixRepresentation();
 
-        for(let i=0; i <pentomino.iRows; ++i){
-            for(let j=0; j < pentomino.iCols; ++j){
-                if(pMatrix[i][j]===1){
-                    let px = (pX - 2)+i;
-                    let py = (pY - 2)+j;
-                    if(this.isBlockCell(px,py)){
+        for (let i = 0; i < pentomino.iRows; ++i) {
+            for (let j = 0; j < pentomino.iCols; ++j) {
+                if (pMatrix[i][j] === 1) {
+                    let px = (pX - 2) + i;
+                    let py = (pY - 2) + j;
+                    if (this.isBlockCell(px, py)) {
                         return true;
                     }
                 }
@@ -71,32 +71,32 @@ class Visual {
         return false;
     }
 
-    isCollision(pentomino){
+    isCollision(pentomino) {
         let collisionPentominoes = this.gameController.getCollisionOfPentominoes(pentomino);
-        if (collisionPentominoes.length != 0){
+        if (collisionPentominoes.length != 0) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
-    placePentomino(pentomino, posX, posY, cmdType=CommandTypes.Original){
-        this.gameController.placePentomino(pentomino, posX, posY,cmdType);
+    placePentomino(pentomino, posX, posY, cmdType = CommandTypes.Original) {
+        this.gameController.placePentomino(pentomino, posX, posY, cmdType);
         this.positionPiece(pentomino);
         this.checkIfGameWon();
     }
 
-    checkIfGameWon(){
-       if(this.gameController.game()._board.isSolved()) {
+    checkIfGameWon() {
+        if (this.gameController.game()._board.isSolved()) {
             this.showGameSolved();
-       }
+        }
     }
 
-    movePentominoToTray(pentomino,cmdType=CommandTypes.Original){
+    movePentominoToTray(pentomino, cmdType = CommandTypes.Original) {
         this.gameController.removePentomino(pentomino, cmdType);
     }
 
-    clear(){
+    clear() {
         this.gameController.resetGame();
         this.pieces = this.gameController.getPentominoes();
         this.pd.visual.disableManipulations();
@@ -116,33 +116,32 @@ class Visual {
             for (var col = 0; col < this.pd.gameWidth; col++) {
 
                 var isBoard = true;   //indicate where on the field the board is
-				var blockedCell = false;
+                var blockedCell = false;
                 //TODO: Implement blocked elements
                 if (col < this.boardY) isBoard = false;
                 if (col >= this.boardY + this.gameController.getBoardSize()[1]) isBoard = false;
                 if (row < this.boardX) isBoard = false;
                 if (row >= this.boardX + this.gameController.getBoardSize()[0]) isBoard = false;
-              //Ashwini: For Blocking the cells
-				if (this.pd.blockedCells != undefined)
-				{
-					var gameCellPattern = this.pd.gameCellPattern;							   
-					for (var arr = 0; arr < this.pd.blockedCells.length; arr++) {
-						if(row == this.pd.blockedCells[arr][0] + this.pd.boardStartX &&
-                                col == this.pd.blockedCells[arr][1] + this.pd.boardStartY) {
-							blockedCell = true;
-							break;
-						}
-					}
+                //Ashwini: For Blocking the cells
+                if (this.pd.blockedCells != undefined) {
+                    var gameCellPattern = this.pd.gameCellPattern;
+                    for (var arr = 0; arr < this.pd.blockedCells.length; arr++) {
+                        if (row == this.pd.blockedCells[arr][0] + this.pd.boardStartX &&
+                            col == this.pd.blockedCells[arr][1] + this.pd.boardStartY) {
+                            blockedCell = true;
+                            break;
+                        }
+                    }
 
-                    if(blockedCell && gameCellPattern == 'blockedCell' )
-						out += '<div class="gamearea ' + ((isBoard) ? 'boardarea blockedcell' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';
-					else if(blockedCell && gameCellPattern == 'gamearea')
-						out += '<div class="gamearea" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';
-					else
-						out += '<div class="gamearea ' + ((isBoard) ? 'boardarea' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';
-				}
-				else
-					out += '<div class="gamearea ' + ((isBoard) ? 'boardarea' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';   //'+col+','+row+'
+                    if (blockedCell && gameCellPattern == 'blockedCell')
+                        out += '<div class="gamearea ' + ((isBoard) ? 'boardarea blockedcell' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';
+                    else if (blockedCell && gameCellPattern == 'gamearea')
+                        out += '<div class="gamearea" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';
+                    else
+                        out += '<div class="gamearea ' + ((isBoard) ? 'boardarea' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';
+                }
+                else
+                    out += '<div class="gamearea ' + ((isBoard) ? 'boardarea' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';   //'+col+','+row+'
             }
         }
 
@@ -178,7 +177,7 @@ class Visual {
              *
             */
 
-           out += '<div class="piece" id="piece_' + piece.name + '" style="width:' + (5 * width) + 'vw;height:' + (5 * width) + 'vw;display:none;z-index:0;">';
+            out += '<div class="piece" id="piece_' + piece.name + '" style="width:' + (5 * width) + 'vw;height:' + (5 * width) + 'vw;display:none;z-index:0;">';
 
             //this "paints" the bitmap of the pice into the bounding box
             for (var i in bitMap) {
@@ -194,7 +193,7 @@ class Visual {
             //TODO: this is a disadvantage of chosing the innerHTML approach.
 
             setTimeout(function (that, piece) {
-                 that.positionPiece(piece);
+                that.positionPiece(piece);
             }, 0, this, piece);
 
         });
@@ -203,7 +202,7 @@ class Visual {
 
     }
 
-   positionPiece(piece) {
+    positionPiece(piece) {
 
         var width = UIProperty.WindowWidth / this.pd.gameWidth;
         var htmlElement = document.getElementById('piece_' + piece.name);
@@ -223,23 +222,23 @@ class Visual {
         else {
             var bCellsFnd = this.isPentominoInBlockCells(piece);
             var collisonFnd = this.isCollision(piece);
-            if(collisonFnd){
+            if (collisonFnd) {
                 let collisonPentomino = this.gameController.getCollisionOfPentominoes(piece).pop();
-                this.overlapBlock.add(piece,collisonPentomino);
+                this.overlapBlock.add(piece, collisonPentomino);
             }
-            else{
+            else {
                 this.overlapBlock.remove(piece);
             }
 
-            var offset = (bCellsFnd || collisonFnd)?true:false;
+            var offset = (bCellsFnd || collisonFnd) ? true : false;
             let [positionY, positionX] = this.gameController.getPositionOfPentomino(piece);
             let left = undefined;
             let top = undefined;
-            if(offset){
-                left = UIProperty.FunctionWidth + width * (positionX - 2)+ (width/8);
-                top = UIProperty.TrayHeight + width * (positionY - 2)-(width/8);
+            if (offset) {
+                left = UIProperty.FunctionWidth + width * (positionX - 2) + (width / 8);
+                top = UIProperty.TrayHeight + width * (positionY - 2) - (width / 8);
             }
-            else{
+            else {
                 left = UIProperty.FunctionWidth + width * (positionX - 2);
                 top = UIProperty.TrayHeight + width * (positionY - 2);
             }
@@ -247,7 +246,7 @@ class Visual {
             htmlElement.style.zIndex = this.overlapBlock.getZIndex(piece);
             htmlElement.style.left = left + 'vw';
             htmlElement.style.top = top + 'vw';
-            htmlElement.style.transformOrigin='center';
+            htmlElement.style.transformOrigin = 'center';
             htmlElement.style.setProperty("--magnification", 1);
         }
         if (htmlElement.style.getPropertyValue("--rotationX") === "") {
@@ -262,16 +261,16 @@ class Visual {
 
     }
 
-    select(piece,xPosition,yPosition) {
+    select(piece, xPosition, yPosition) {
         this.selected = piece;
-        if(piece.inTray){
+        if (piece.inTray) {
             this.disableManipulations();
         }
-        else if ($("#modalFormContainerID").is(":visible")){
+        else if ($("#modalFormContainerID").is(":visible")) {
             this.disableManipulations();
         }
-        else{
-            this.showManipulations(xPosition,yPosition);
+        else {
+            this.showManipulations(xPosition, yPosition);
         }
     }
 
@@ -283,43 +282,43 @@ class Visual {
 
 
     hexToRgb(hex) {
-      var rgbFormat = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-      return rgbFormat ? {
-        r: parseInt(rgbFormat[1], 16),
-        g: parseInt(rgbFormat[2], 16),
-        b: parseInt(rgbFormat[3], 16)
-      } : null;
+        var rgbFormat = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return rgbFormat ? {
+            r: parseInt(rgbFormat[1], 16),
+            g: parseInt(rgbFormat[2], 16),
+            b: parseInt(rgbFormat[3], 16)
+        } : null;
     }
     //Enable or Disable manipulation buttons
 
-    showManipulations(xPosition,yPosition) {
+    showManipulations(xPosition, yPosition) {
         var pieceMan = document.getElementById('pieceManipulation').firstElementChild;
         var pieceManip = pieceMan.firstElementChild;
         var pieceManipul = pieceManip.firstElementChild;
         var clr = pieceManipul.children;
-        for(let i=0;i< clr.length ;i++){
+        for (let i = 0; i < clr.length; i++) {
             var btnClr = clr[i].firstElementChild;
             var colorR = this.hexToRgb(this.selected.color).r;
             var colorG = this.hexToRgb(this.selected.color).g;
             var colorB = this.hexToRgb(this.selected.color).b;
-           btnClr.style.background =  "rgba(" + [colorR,colorG,colorB,0.5].join(',') +")";
+            btnClr.style.background = "rgba(" + [colorR, colorG, colorB, 0.5].join(',') + ")";
         }
 
         //set style for left and top value of element, but do not cross borders
         var width = UIProperty.WindowWidth / this.pd.gameWidth;
         var gameWidth = document.getElementById("game").clientWidth;
         var gameHeight = document.getElementById("game").clientHeight;
-        if ( (xPosition + 15 > gameWidth)) {
-          if ((yPosition > 0) && (yPosition < gameHeight)) {
-                document.getElementById('pieceManipulation').style.left = 'calc(' + xPosition + 'px - '+ (width * 3) + 'vw)';
+        if ((xPosition + 15 > gameWidth)) {
+            if ((yPosition > 0) && (yPosition < gameHeight)) {
+                document.getElementById('pieceManipulation').style.left = 'calc(' + xPosition + 'px - ' + (width * 3) + 'vw)';
                 document.getElementById('pieceManipulation').style.top = 'calc(' + yPosition + 'px - ' + (width * 1) + 'vw)';
                 document.getElementById('pieceManipulation').style.display = 'block';
-          }
+            }
         } else {
-                document.getElementById('pieceManipulation').style.display = 'block';
-                document.getElementById('pieceManipulation').style.left = xPosition + 'px';
-                document.getElementById('pieceManipulation').style.top = 'calc(' + yPosition + 'px - ' + (width * 2.5) + 'vw)';
-                }
+            document.getElementById('pieceManipulation').style.display = 'block';
+            document.getElementById('pieceManipulation').style.left = xPosition + 'px';
+            document.getElementById('pieceManipulation').style.top = 'calc(' + yPosition + 'px - ' + (width * 2.5) + 'vw)';
+        }
 
     }
 
@@ -355,43 +354,43 @@ class Visual {
          */
 
         document.onpointerdown = function (event) {//clicking or moving begins
-        var elements = document.elementsFromPoint(event.clientX, event.clientY);
-        onpointerdownX = event.clientX;
-        onpointerdownY = event.clientY;
+            var elements = document.elementsFromPoint(event.clientX, event.clientY);
+            onpointerdownX = event.clientX;
+            onpointerdownY = event.clientY;
 
-        //close seedbar
-        if (!event.target.matches('.seed') && !event.target.matches('.cSeedBtn')) {
-            closeSeeding();
-          }
-
-        //check if a button is clicked
-        let buttonOverPiece = false;
-        let settingsEnabled = false;
-        for (let j in elements){
-            let precheck = elements[j].className;
-            if (precheck == 'controlButton'){
-                buttonOverPiece = true;
+            //close seedbar
+            if (!event.target.matches('.seed') && !event.target.matches('.cSeedBtn')) {
+                closeSeeding();
             }
-            if (precheck == 'settings-popup'){
-                settingsEnabled = true;
+
+            //check if a button is clicked
+            let buttonOverPiece = false;
+            let settingsEnabled = false;
+            for (let j in elements) {
+                let precheck = elements[j].className;
+                if (precheck == 'controlButton') {
+                    buttonOverPiece = true;
+                }
+                if (precheck == 'settings-popup') {
+                    settingsEnabled = true;
+                }
             }
-        }
 
-        for (var i in elements) {
-            var check = elements[i].className;
-            //if button is clicked, forget the rest
+            for (var i in elements) {
+                var check = elements[i].className;
+                //if button is clicked, forget the rest
 
-            if (check !== 'bmPoint') continue;
+                if (check !== 'bmPoint') continue;
 
-            if (buttonOverPiece) continue;
+                if (buttonOverPiece) continue;
 
-            if (settingsEnabled) continue;
+                if (settingsEnabled) continue;
 
-            /**
-             * As soon as we have a bmPoint(an element of a piece),we determine the bounding box
-             * and the piece object itself and save those into a global variable "currentlyMoving"
-             * which we access during movement and at the end of movement.
-             */
+                /**
+                 * As soon as we have a bmPoint(an element of a piece),we determine the bounding box
+                 * and the piece object itself and save those into a global variable "currentlyMoving"
+                 * which we access during movement and at the end of movement.
+                 */
 
                 var piece = elements[i * 1 + 1].id.split('_')[1];
                 if (!piece) return;
@@ -399,7 +398,7 @@ class Visual {
                 var piece = that.pieces.find(p => { return p.name === piece; });
                 window.currentlyMoving = [container, piece];
                 break;
-        }
+            }
             return;
 
         }
@@ -422,16 +421,16 @@ class Visual {
                 var gameWidth = document.getElementById("game").clientWidth;
                 var gameHeight = document.getElementById("game").clientHeight;
                 var trayHeight = document.getElementById("tray").clientHeight;
-				var fieldHeight = document.getElementById("field").clientHeight;
+                var fieldHeight = document.getElementById("field").clientHeight;
 
-				var diff = gameHeight - (fieldHeight + trayHeight);
+                var diff = gameHeight - (fieldHeight + trayHeight);
 
                 if ((x > functionsWidth) && (x < (gameWidth + functionsWidth))) {
                     if ((y > 0) && (y < gameHeight - diff)) {
 
                         container.style.left = 'calc(' + x + 'px - ' + (width * 2.5) + 'vw)';
                         container.style.top = 'calc(' + y + 'px - ' + (width * 2.5) + 'vw)';
-                        container.style.transformOrigin='50% 50%';
+                        container.style.transformOrigin = '50% 50%';
                         container.style.zIndex = 100;
                         container.style.setProperty("--magnification", 1);
                     }
@@ -443,19 +442,19 @@ class Visual {
          * this is called when mouse key is released or fingers are removed from the screen
          */
         document.onpointerup = function (event) {
-        /**
-         * this is called when mouse key is released or fingers are removed from the screen
-         * in case of just a click operation (not move operation) piece should not move
-         */
+            /**
+             * this is called when mouse key is released or fingers are removed from the screen
+             * in case of just a click operation (not move operation) piece should not move
+             */
 
-            if( onpointerdownX == event.clientX &&
+            if (onpointerdownX == event.clientX &&
                 onpointerdownY == event.clientY &&
                 window.currentlyMoving) {
-                    let data_ = window.currentlyMoving;
-                    window.currentlyMoving = false;
-                    that.positionPiece(data_[1]);
-                    that.select(data_[1],event.clientX,event.clientY);
-                    return;
+                let data_ = window.currentlyMoving;
+                window.currentlyMoving = false;
+                that.positionPiece(data_[1]);
+                that.select(data_[1], event.clientX, event.clientY);
+                return;
             }
 
             if (window.currentlyMoving) {
@@ -482,7 +481,7 @@ class Visual {
                     if (id.split('_')[0] == 'field') {
                         var coords = (id.split('_')[1].split(','));
                         data[1].removeFromTray();
-                        that.placePentomino(data[1], coords[0],coords[1] );
+                        that.placePentomino(data[1], coords[0], coords[1]);
                         if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
                             that.showNumberOfPossibleSolutions();
                         }
@@ -491,7 +490,7 @@ class Visual {
                          *
                          * TODO: Make buttons disappear/appear if nothing/something is selected
                          */
-                        that.select(data[1],event.clientX,event.clientY);
+                        that.select(data[1], event.clientX, event.clientY);
                         return;
                     }
                 }
@@ -507,7 +506,7 @@ class Visual {
         }
     }
 
-    rotateClkWise(cmdType=CommandTypes.Original) {
+    rotateClkWise(cmdType = CommandTypes.Original) {
         let piece = this.selected;
         if (piece) {
             let pieceDiv = document.getElementById("piece_" + piece.name);
@@ -515,14 +514,14 @@ class Visual {
             let currentRot = pieceDiv.style.getPropertyValue("--rotationZ").split(/(-?\d+)/)[1] * 1; //converts string value to int
             let newRot = flipped ? currentRot - 90 : currentRot + 90;
             // Update the backend
-            this.gameController.rotatePentominoClkWise(piece,cmdType);
+            this.gameController.rotatePentominoClkWise(piece, cmdType);
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
             this.checkIfGameWon();
         }
     }
 
-    rotateAntiClkWise(cmdType=CommandTypes.Original) {
+    rotateAntiClkWise(cmdType = CommandTypes.Original) {
         let piece = this.selected;
         if (piece) {
             let pieceDiv = document.getElementById("piece_" + piece.name);
@@ -530,14 +529,14 @@ class Visual {
             let currentRot = pieceDiv.style.getPropertyValue("--rotationZ").split(/(-?\d+)/)[1] * 1; //converts string value to int
             let newRot = flipped ? currentRot + 90 : currentRot - 90;
             // Update the backend
-            this.gameController.rotatePentominoAntiClkWise(piece,cmdType);
+            this.gameController.rotatePentominoAntiClkWise(piece, cmdType);
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
             this.checkIfGameWon();
         }
     }
 
-    flipH(cmdType=CommandTypes.Original) {
+    flipH(cmdType = CommandTypes.Original) {
         let piece = this.selected;
         if (piece) {
             let pieceDiv = document.getElementById("piece_" + piece.name);
@@ -545,7 +544,7 @@ class Visual {
             let currentRot = pieceDiv.style.getPropertyValue("--rotationX").split(/(-?\d+)/)[1] * 1; //converts string value to int
             let newRot = currentRot + 180;
             // Update the backend
-            this.gameController.mirrorPentominoH(piece,cmdType);
+            this.gameController.mirrorPentominoH(piece, cmdType);
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationX", newRot.toString() + "deg");
             pieceDiv.setAttribute("flipped", 1 - flipped);
@@ -553,7 +552,7 @@ class Visual {
         }
     }
 
-    flipV(cmdType=CommandTypes.Original) {
+    flipV(cmdType = CommandTypes.Original) {
         let piece = this.selected;
         if (piece) {
             let pieceDiv = document.getElementById("piece_" + piece.name);
@@ -561,7 +560,7 @@ class Visual {
             let currentRot = pieceDiv.style.getPropertyValue("--rotationY").split(/(-?\d+)/)[1] * 1; //converts string value to int
             let newRot = currentRot + 180;
             // Update the backend
-            this.gameController.mirrorPentominoV(piece,cmdType);
+            this.gameController.mirrorPentominoV(piece, cmdType);
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationY", newRot.toString() + "deg");
             pieceDiv.setAttribute("flipped", 1 - flipped);
@@ -574,23 +573,23 @@ class Visual {
         labelPossibleSolutions.innerText = this.gameController.getHint().getPossibleSolutions().length;
     }
 
-    callHintAI(){
+    callHintAI() {
         let hint = pd.gameController.getHint();
         //disable hint button until hint is finished
         let hintButton = document.getElementById('hintButton');
         hintButton.disabled = true;
         //Always show place command in case of non-exact hints:
         let commandNumber = 0;
-        if (!SettingsSingleton.getInstance().getSettings().hinting.exactHints){
+        if (!SettingsSingleton.getInstance().getSettings().hinting.exactHints) {
             let hasPlaceCommand = this.checkHintCommandsForPlaceCommand(hint.getCommands());
-            if (hasPlaceCommand[0]){
+            if (hasPlaceCommand[0]) {
                 commandNumber = hasPlaceCommand[1];
             }
         }
         let hintCommand = hint.getCommands()[commandNumber];
         let hintinPen = hintCommand._pentomino;
-        this.indicateHint(hint,commandNumber);
-        setTimeout( function() {
+        this.indicateHint(hint, commandNumber);
+        setTimeout(function () {
             hintButton.disabled = false;
         }, 1000);
     }
@@ -599,7 +598,7 @@ class Visual {
     blinkCells(cells) {
         let menu = [];
         let bgColor;
-        for(let i=0;i<cells.length;i++) {
+        for (let i = 0; i < cells.length; i++) {
             let fv = document.getElementById("field_" + cells[i][0] + "," + cells[i][1]);
             bgColor = fv.style.background;
             fv.style.background = "url(resources/images/icons/warning.png) center center";
@@ -610,7 +609,7 @@ class Visual {
         let counter = 0;
         clearInterval(blinkInterval);
         blinkInterval = setInterval(function () {
-            for(let j=0; j < menu.length; j++){
+            for (let j = 0; j < menu.length; j++) {
                 if (counter % 2 === 0) {
                     menu[j].style.background = bgColor;
                 } else {
@@ -625,17 +624,17 @@ class Visual {
         }, 100);
     }
 
-    checkHintCommandsForPlaceCommand(hintCommands){
-        for (let i = 0; i < hintCommands.length; i++){
-            if (hintCommands[i].Name() == "Place"){
-                return [true,i];
+    checkHintCommandsForPlaceCommand(hintCommands) {
+        for (let i = 0; i < hintCommands.length; i++) {
+            if (hintCommands[i].Name() == "Place") {
+                return [true, i];
             }
         }
 
         return [false, null];
     }
 
-    indicateHint(hint,commandNumber){
+    indicateHint(hint, commandNumber) {
         let timeoutFrame = 1000;
         //possible command names (place, remove, moveToPosition, rotateClkWise, rotateAntiClkWise, mirrorH, mirrorV)
         let hintCommand = hint.getCommands()[commandNumber];
@@ -644,22 +643,22 @@ class Visual {
         let hintinPen = hintCommand._pentomino;
         let pentominoColor = hintinPen.color;
         let clientRect = document.getElementById("piece_" + hintinPen.name).getBoundingClientRect();
-        let [posX, posY] = [clientRect.x + clientRect.width/2, clientRect.y + clientRect.height/2];
+        let [posX, posY] = [clientRect.x + clientRect.width / 2, clientRect.y + clientRect.height / 2];
         let currentPenHintName = hintinPen.name;
         //let currentPenHintNaame = this.selected.name;
-        if(!(currentPenHintName === lastHintedPentName)){
+        if (!(currentPenHintName === lastHintedPentName)) {
             let maxPartialHintingCells = SettingsSingleton.getInstance().getSettings().hinting.maxPartialHintingCells;
             randomCell = Math.floor(Math.random() * (maxPartialHintingCells)) + 1;
             lastHintedPentName = currentPenHintName;
         }
 
         let tempHintinPen = hintinPen;
-        if (!SettingsSingleton.getInstance().getSettings().hinting.exactHints){
+        if (!SettingsSingleton.getInstance().getSettings().hinting.exactHints) {
             //tempHintinPen = new Pentomino(hintinPen.name);
             tempHintinPen = Object.assign(Object.create(Object.getPrototypeOf(hintinPen)), hintinPen);
             //do actions on pentomino copy to prepare for place hint
-            for (let hintnr = 0; hintnr < commandNumber; hintnr++){
-                switch (hint.getCommands()[hintnr]._name){
+            for (let hintnr = 0; hintnr < commandNumber; hintnr++) {
+                switch (hint.getCommands()[hintnr]._name) {
                     case "Remove": break;
                     case "Place": break;
                     case "RotateClkWise": tempHintinPen.rotateClkWise(); break;
@@ -671,135 +670,135 @@ class Visual {
             }
         }
 
-       //indication of unoccupied cells
+        //indication of unoccupied cells
         if (!(hintSkill === null) && (SettingsSingleton.getInstance().getSettings().hinting.skillTeaching)) {
             //blink unoccupied cells
             this.blinkCells(hintSkill);
         }
         else {
 
-            this.indicatePentomino(hintinPen,timeoutFrame);
+            this.indicatePentomino(hintinPen, timeoutFrame);
 
             switch (hintName) {
-            case "Place":
-                // handle place hint
-                let hintRow = hintCommand._nextPosition[0];
-                let hintColumn = hintCommand._nextPosition[1];
-                let fieldvalue;
-                let prevBackground = [];
+                case "Place":
+                    // handle place hint
+                    let hintRow = hintCommand._nextPosition[0];
+                    let hintColumn = hintCommand._nextPosition[1];
+                    let fieldvalue;
+                    let prevBackground = [];
 
-                //show destination position (and fade away)
-                let piecePos = this.getOccupiedPositions(tempHintinPen,hintCommand);
-                //usage of random cell variable to indicate hinting
+                    //show destination position (and fade away)
+                    let piecePos = this.getOccupiedPositions(tempHintinPen, hintCommand);
+                    //usage of random cell variable to indicate hinting
 
-                switch (SettingsSingleton.getInstance().getSettings().hinting.hintingStrategy) {
-                    case "partial":
-                        for (let i = 0; i < randomCell; i++) {
-                            fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
-                            prevBackground[i] = fieldvalue.style.background;
-                            fieldvalue.style.background = pentominoColor;
-                            this.hide(piecePos, prevBackground, timeoutFrame);
-                        }
-                        break;
-                    case "full":
-                        for (let i = 0; i < 5; i++) {
-                            fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
-                            prevBackground[i] = fieldvalue.style.background;
-                            fieldvalue.style.background = pentominoColor;
-                            this.hide(piecePos, prevBackground, timeoutFrame);
-                        }
-                        break;
-                    case "area":
-                        for (let i = 0; i < 25; i++) {
-                            let areaPos = this.indicateAreaCells(hintinPen, hintCommand)[0];
-                            let b = this.gameController.game()._board.positionIsValid(areaPos[i][0], areaPos[i][1]);
-                            if (b) {
-                                let areaPos = this.indicateAreaCells(hintinPen, hintCommand)[0];
-                                fieldvalue = document.getElementById("field_" + areaPos[i][0] + "," + areaPos[i][1]);
+                    switch (SettingsSingleton.getInstance().getSettings().hinting.hintingStrategy) {
+                        case "partial":
+                            for (let i = 0; i < randomCell; i++) {
+                                fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
                                 prevBackground[i] = fieldvalue.style.background;
                                 fieldvalue.style.background = pentominoColor;
-                                this.hideArea(areaPos, prevBackground, timeoutFrame);
+                                this.hide(piecePos, prevBackground, timeoutFrame);
                             }
-                        }
-                        break;
-                    default:
-                        console.error("Hinting strategy unknown!");
-                }
-                break;
+                            break;
+                        case "full":
+                            for (let i = 0; i < 5; i++) {
+                                fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
+                                prevBackground[i] = fieldvalue.style.background;
+                                fieldvalue.style.background = pentominoColor;
+                                this.hide(piecePos, prevBackground, timeoutFrame);
+                            }
+                            break;
+                        case "area":
+                            for (let i = 0; i < 25; i++) {
+                                let areaPos = this.indicateAreaCells(hintinPen, hintCommand)[0];
+                                let b = this.gameController.game()._board.positionIsValid(areaPos[i][0], areaPos[i][1]);
+                                if (b) {
+                                    let areaPos = this.indicateAreaCells(hintinPen, hintCommand)[0];
+                                    fieldvalue = document.getElementById("field_" + areaPos[i][0] + "," + areaPos[i][1]);
+                                    prevBackground[i] = fieldvalue.style.background;
+                                    fieldvalue.style.background = pentominoColor;
+                                    this.hideArea(areaPos, prevBackground, timeoutFrame);
+                                }
+                            }
+                            break;
+                        default:
+                            console.error("Hinting strategy unknown!");
+                    }
+                    break;
 
-            case "Remove":
-                // handle remove hint
-                this.select(hintinPen,posX,posY);
-                var pen = document.getElementById("piece_" + hintinPen.name);
-                //console.log("pent",hintinPen,this.selected);
-                if (!this.selected.inTray){
-                    pen.style.opacity = '0.2';
-                    setTimeout(function(){
-                    pen.style.opacity = '1';
-                    },timeoutFrame);
-                }
-                break;
+                case "Remove":
+                    // handle remove hint
+                    this.select(hintinPen, posX, posY);
+                    var pen = document.getElementById("piece_" + hintinPen.name);
+                    //console.log("pent",hintinPen,this.selected);
+                    if (!this.selected.inTray) {
+                        pen.style.opacity = '0.2';
+                        setTimeout(function () {
+                            pen.style.opacity = '1';
+                        }, timeoutFrame);
+                    }
+                    break;
 
-            case "RotateClkWise":
-                // handle rotateClkWise hint
-                this.select(hintinPen,posX,posY);
-                if (!this.selected.inTray){
-                    rotateClkWise();
-                    setTimeout(function(){
-                    rotateAntiClkWise();
-                    },timeoutFrame);
-                }
-                break;
+                case "RotateClkWise":
+                    // handle rotateClkWise hint
+                    this.select(hintinPen, posX, posY);
+                    if (!this.selected.inTray) {
+                        rotateClkWise();
+                        setTimeout(function () {
+                            rotateAntiClkWise();
+                        }, timeoutFrame);
+                    }
+                    break;
 
-            case "RotateAntiClkWise":
-                // handle rotateAntiClkWise hint
-                this.select(hintinPen,posX,posY);
-                if (!this.selected.inTray){
-                    rotateAntiClkWise();
-                    setTimeout(function(){
-                    rotateClkWise();
-                    },timeoutFrame);
-                }
-                break;
+                case "RotateAntiClkWise":
+                    // handle rotateAntiClkWise hint
+                    this.select(hintinPen, posX, posY);
+                    if (!this.selected.inTray) {
+                        rotateAntiClkWise();
+                        setTimeout(function () {
+                            rotateClkWise();
+                        }, timeoutFrame);
+                    }
+                    break;
 
-            case "MirrorH":
-                // handle mirrorH hint
-                //select piece in the UI to flip
-                this.select(hintinPen,posX,posY);
-                if (!this.selected.inTray){
-                    flipH();
-                    setTimeout(function(){
-                    flipH();
-                    },timeoutFrame);
-                }
-                break;
+                case "MirrorH":
+                    // handle mirrorH hint
+                    //select piece in the UI to flip
+                    this.select(hintinPen, posX, posY);
+                    if (!this.selected.inTray) {
+                        flipH();
+                        setTimeout(function () {
+                            flipH();
+                        }, timeoutFrame);
+                    }
+                    break;
 
-            case "MirrorV":
-                // handle mirrorV hint
-                this.select(hintinPen,posX,posY);
-                if (!this.selected.inTray){
-                    flipV();
-                    setTimeout(function(){
-                    flipV();
-                    },timeoutFrame);
-                }
-                break;
+                case "MirrorV":
+                    // handle mirrorV hint
+                    this.select(hintinPen, posX, posY);
+                    if (!this.selected.inTray) {
+                        flipV();
+                        setTimeout(function () {
+                            flipV();
+                        }, timeoutFrame);
+                    }
+                    break;
 
-            default:
-                console.error("Unknown piece action detected!");
+                default:
+                    console.error("Unknown piece action detected!");
             }
         }
     }
 
-    indicatePentomino(pentomino, timeframe){
-        Array.prototype.forEach.call(document.getElementById("piece_" + pentomino.name).getElementsByClassName("bmPoint"), function(element) {
+    indicatePentomino(pentomino, timeframe) {
+        Array.prototype.forEach.call(document.getElementById("piece_" + pentomino.name).getElementsByClassName("bmPoint"), function (element) {
             element.style["box-shadow"] = "0 0 20px " + pentomino.color;
-             if(pentomino.inTray){
+            if (pentomino.inTray) {
                 element.classList.add('horizTranslate');
                 //element.style.transform = "scale(2) rotate(0.1deg)";
-             }
-            
-            setTimeout(function(){
+            }
+
+            setTimeout(function () {
                 element.style.removeProperty("box-shadow");
                 //element.style.transform = "none";
                 element.classList.remove('horizTranslate');
@@ -812,7 +811,7 @@ class Visual {
         var modal = document.getElementById('modalTop');
         modal.style.display = "block";
         modal.style.background = "transparent";
-        let modalFormContent =document.querySelector(".modalFormContent");
+        let modalFormContent = document.querySelector(".modalFormContent");
         modalFormContent.style.display = "block";
         let modalFormContainerID = document.querySelector("#modalFormContainerID")
         modalFormContainerID.style.display = "block";
@@ -832,7 +831,7 @@ class Visual {
         template.attachText("#modalBodyID", textNode1);
         let div1 = document.createElement("div");
         let img = document.createElement("img");
-        img.src = "resources/images/icons/jboy-2.ico";   
+        img.src = "resources/images/icons/jboy-2.ico";
         img.style.cursor = "none";
         div1.appendChild(img);
         //attach div 
@@ -844,7 +843,7 @@ class Visual {
         template.attachText("#modalBodyID", textNode2);
         let div2 = document.createElement("div");
         let text = document.createElement("h4");
-        text.innerHTML = "\n";  
+        text.innerHTML = "\n";
         div2.appendChild(text);
         //attach div 
         modalBodyID.appendChild(div2);
@@ -858,7 +857,7 @@ class Visual {
             class: "deleteBtn",
             onclick: "document.getElementById('modalTop').style.display='none'",
             textContent: strings.general.yes[lang]
-        };                                          
+        };
         template.attachBtn("#modalBodyID", playAgnBtnAttributes);
         let playAgainBtn = document.querySelector(".deleteBtn");
         playAgainBtn.addEventListener("click", () => {
@@ -873,36 +872,36 @@ class Visual {
     }
 
 
-    indicateAreaCells(piece, hintCommand){
+    indicateAreaCells(piece, hintCommand) {
         let hintRow = hintCommand._nextPosition[0];
         let hintColumn = hintCommand._nextPosition[1];
         let midRow = hintRow;
         let midColumn = hintColumn;
-        let startR = hintRow-2;
-        let startCol = hintColumn-2;
+        let startR = hintRow - 2;
+        let startCol = hintColumn - 2;
         let areaPosArray = [];
-        let k=0;
-        for(let j=0;j<5;j++){
-            for(let l=0;l<5;l++){
-                    let areaPos = [];
-                    areaPos[0] = j+startR;
-                    areaPos[1] = l+startCol;
-                    areaPosArray[k] = areaPos;
-                    k++;
+        let k = 0;
+        for (let j = 0; j < 5; j++) {
+            for (let l = 0; l < 5; l++) {
+                let areaPos = [];
+                areaPos[0] = j + startR;
+                areaPos[1] = l + startCol;
+                areaPosArray[k] = areaPos;
+                k++;
             }
         }
-        return [areaPosArray,null];
+        return [areaPosArray, null];
     }
 
 
 
-       hideArea(areaPos, prevBackground, timeoutFrame){
+    hideArea(areaPos, prevBackground, timeoutFrame) {
 
-        setTimeout(function(){
-            for (let j=0;j<areaPos.length;j++){
-                    let fvalue = document.getElementById("field_" + areaPos[j][0] + "," + areaPos[j][1]);
-                    //TODO: replace with proper fadeOut animation
-                    fvalue.style.background = prevBackground[j];
+        setTimeout(function () {
+            for (let j = 0; j < areaPos.length; j++) {
+                let fvalue = document.getElementById("field_" + areaPos[j][0] + "," + areaPos[j][1]);
+                //TODO: replace with proper fadeOut animation
+                fvalue.style.background = prevBackground[j];
             }
         }, timeoutFrame);
     }
@@ -912,38 +911,38 @@ class Visual {
 
 
 
-    hide(piecePos, prevBackground, timeoutFrame){
+    hide(piecePos, prevBackground, timeoutFrame) {
 
-        setTimeout(function(){
-            for (let j=0;j<5;j++){
-                    let fvalue = document.getElementById("field_" + piecePos[j][0] + "," + piecePos[j][1]);
-                    //TODO: replace with proper fadeOut animation
-                    fvalue.style.background = prevBackground[j];
+        setTimeout(function () {
+            for (let j = 0; j < 5; j++) {
+                let fvalue = document.getElementById("field_" + piecePos[j][0] + "," + piecePos[j][1]);
+                //TODO: replace with proper fadeOut animation
+                fvalue.style.background = prevBackground[j];
             }
         }, timeoutFrame);
     }
 
 
-    getOccupiedPositions(piece,hintCommand){
+    getOccupiedPositions(piece, hintCommand) {
 
         let PiecePostions = [];
         let hintRow = hintCommand._nextPosition[0];
-        let startRow = hintRow-2;
+        let startRow = hintRow - 2;
         let hintColumn = hintCommand._nextPosition[1];
-        let startColumn = hintColumn-2;
-        let occupiedPosArray=[];
+        let startColumn = hintColumn - 2;
+        let occupiedPosArray = [];
 
         let pieceBitmap = piece.getMatrixRepresentation();
 
         //add all elements of current 5*5 overlay on board where piece matrix has 1's
-        let k=0;
-        for (let i = 0; i<5; i++){
-            for (let j = 0; j<5; j++){
+        let k = 0;
+        for (let i = 0; i < 5; i++) {
+            for (let j = 0; j < 5; j++) {
                 let piecePos = [];
-                if (pieceBitmap[i][j] == "1"){
+                if (pieceBitmap[i][j] == "1") {
                     //add to occupiedPosArray
-                    piecePos[0] = i+startRow;
-                    piecePos[1] = j+startColumn;
+                    piecePos[0] = i + startRow;
+                    piecePos[1] = j + startColumn;
                     occupiedPosArray[k] = piecePos;
                     k++;
                 }
@@ -966,7 +965,7 @@ class Visual {
         let scheme = SettingsSingleton.getInstance().getSettings().prefilling.prefillingStrategy;
 
         if (randomSolution != undefined) {
-            switch(scheme) {
+            switch (scheme) {
                 case "distance":
                     prefillCandidates = this.prefillBasedOnDistance(randomSolution, threshold);
                     break;
@@ -982,7 +981,7 @@ class Visual {
         this.pieces = prefillCandidates;
         this.renderPieces();
         // So that pieces are rendered before the button becomes enabled
-        setTimeout(function(that) {
+        setTimeout(function (that) {
             that.disablePrefillButton(false);
         }, 100, this);
 
@@ -1008,7 +1007,7 @@ class Visual {
     fetchRandomSolution() {
         let allSolutions = [];
         // Get all the games and filter solutions
-        if(this.allSolutions == undefined) {
+        if (this.allSolutions == undefined) {
             this.gameController.getSolutions().forEach(game =>
                 allSolutions.push([game._board._pentominoPositions, game._board._pentominoes]));
             this.allSolutions = allSolutions;
@@ -1036,11 +1035,11 @@ class Visual {
         let x = 0, y = 0;
         let pickedPieces = {};
 
-        for(let i = 0; i < randomSolution.length; ++i) {
+        for (let i = 0; i < randomSolution.length; ++i) {
             [piecePosition, piece] = this.getRandomPiece(randomSolution, pickedPieces);
-            pickedPieces[piece.name] = 1;            
+            pickedPieces[piece.name] = 1;
             currentAnchor = [piecePosition.boardPosition[0] + this.boardX,
-                            piecePosition.boardPosition[1] + this.boardY];
+            piecePosition.boardPosition[1] + this.boardY];
             let matrix = piece.getMatrixRepresentation();
 
             blockedCellsTemp = {};
@@ -1052,20 +1051,20 @@ class Visual {
             bOverlap = false;
             Object.keys(blockedCells).forEach(blockedPieceName => {
                 bNearPentomino = false;
-                for(let i = 0; i < 5; ++i) {
-                    for(let j = 0; j < 5; ++j) {
-                        if(matrix[i][j] == 0) continue;
+                for (let i = 0; i < 5; ++i) {
+                    for (let j = 0; j < 5; ++j) {
+                        if (matrix[i][j] == 0) continue;
                         x = i + currentAnchor[0] - 2;
                         y = j + currentAnchor[1] - 2;
                         blockedCells[blockedPieceName].coordinates.forEach(coordinates => {
-                            if(coordinates[0] == x+1 && coordinates[1] == y) bNearPentomino = true;
-                            else if(coordinates[0] == x-1 && coordinates[1] == y) bNearPentomino = true;
-                            else if(coordinates[0] == x && coordinates[1] == y+1) bNearPentomino = true;
-                            else if(coordinates[0] == x && coordinates[1] == y-1) bNearPentomino = true;
+                            if (coordinates[0] == x + 1 && coordinates[1] == y) bNearPentomino = true;
+                            else if (coordinates[0] == x - 1 && coordinates[1] == y) bNearPentomino = true;
+                            else if (coordinates[0] == x && coordinates[1] == y + 1) bNearPentomino = true;
+                            else if (coordinates[0] == x && coordinates[1] == y - 1) bNearPentomino = true;
                         });
                     }
                 }
-                if(bNearPentomino) {
+                if (bNearPentomino) {
                     blockedCellsTemp[piece.name].nearbyPentominos += 1;
                     blockedCellsTemp[blockedPieceName].nearbyPentominos += 1;
                 }
@@ -1073,13 +1072,13 @@ class Visual {
 
             bOverlap = false;
             Object.keys(blockedCellsTemp).forEach(pieceName => {
-                if(blockedCellsTemp[pieceName].nearbyPentominos > threshold) bOverlap = true;
+                if (blockedCellsTemp[pieceName].nearbyPentominos > threshold) bOverlap = true;
             });
 
-            if(!bOverlap) {
-                for(let i = 0; i < 5; ++i) {
-                    for(let j = 0; j < 5; ++j) {
-                        if(matrix[i][j] == 0) continue;
+            if (!bOverlap) {
+                for (let i = 0; i < 5; ++i) {
+                    for (let j = 0; j < 5; ++j) {
+                        if (matrix[i][j] == 0) continue;
                         blockedCellsTemp[piece.name].coordinates.push([i + currentAnchor[0] - 2, j + currentAnchor[1] - 2]);
                     }
                 }
@@ -1097,7 +1096,7 @@ class Visual {
         return prefillCandidates;
     }
 
-    prefillBasedOnDistance(randomSolution, threshold){
+    prefillBasedOnDistance(randomSolution, threshold) {
         let positions = [];
         let currentAnchor = [];
         let candidateAnchor = [];
@@ -1106,22 +1105,22 @@ class Visual {
         let bOverlap = false;
         let prefillCandidates = [];
         let pickedPieces = {};
-        for(let i = 0; i < randomSolution.length; ++i) {
+        for (let i = 0; i < randomSolution.length; ++i) {
             [piecePosition, piece] = this.getRandomPiece(randomSolution, pickedPieces);
             pickedPieces[piece.name] = 1;
             currentAnchor = [piecePosition.boardPosition[0] + this.boardX,
-                            piecePosition.boardPosition[1] + this.boardY];
+            piecePosition.boardPosition[1] + this.boardY];
             for (let j = 0; j < positions.length; ++j) {
                 bOverlap = false;
                 candidateAnchor = [positions[j][0], positions[j][1]];
-                if(Math.sqrt(
-                    Math.pow((currentAnchor[0]-candidateAnchor[0]),2) +
-                    Math.pow((currentAnchor[1]-candidateAnchor[1]),2)) < threshold) {
-                        bOverlap = true;
-                        break;
+                if (Math.sqrt(
+                    Math.pow((currentAnchor[0] - candidateAnchor[0]), 2) +
+                    Math.pow((currentAnchor[1] - candidateAnchor[1]), 2)) < threshold) {
+                    bOverlap = true;
+                    break;
                 }
             }
-            if(bOverlap) {
+            if (bOverlap) {
                 piece = new Pentomino(piece.name);
                 prefillCandidates.push(piece);
                 continue;
@@ -1141,22 +1140,22 @@ class Visual {
 
 
 
-    execShadowCmd(command){
-        switch(command.name){
+    execShadowCmd(command) {
+        switch (command.name) {
             case "Remove":
             case "Place":
-                if( (command.PosX == undefined) &&
+                if ((command.PosX == undefined) &&
                     (command.PosY == undefined)) {
-                    if(command.Pentomino.inTray == 1){
+                    if (command.Pentomino.inTray == 1) {
                         break;
                     }
                     command.Pentomino.toTray();
                     this.movePentominoToTray(command.Pentomino, CommandTypes.Shadow);
                     this.positionPiece(command.Pentomino);
                 }
-                else{
-                    command.Pentomino.inTray=0;
-                    this.placePentomino(command.Pentomino, command.PosX,command.PosY,CommandTypes.Shadow);
+                else {
+                    command.Pentomino.inTray = 0;
+                    this.placePentomino(command.Pentomino, command.PosX, command.PosY, CommandTypes.Shadow);
                 }
                 break;
 
@@ -1187,9 +1186,9 @@ class Visual {
         }
     }
 
-    undo(){
+    undo() {
         let command = this.gameController.undo();
-        if(command == undefined){
+        if (command == undefined) {
             return;
         }
         this.execShadowCmd(command, "Undo");
@@ -1199,30 +1198,30 @@ class Visual {
         this.checkIfGameWon();
     }
 
-    redo(){
+    redo() {
         let command = this.gameController.redo(RedoStrategy.TOP);
-        if(command == undefined){
+        if (command == undefined) {
             return;
         }
-        this.execShadowCmd(command,"Redo");
+        this.execShadowCmd(command, "Redo");
         if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.showNumberOfPossibleSolutions();
         }
         this.checkIfGameWon();
     }
 
-    disablePointerEventsOnPieces(){
-         let  piecesIdArray = ['piece_X', 'piece_Y', 'piece_F', 'piece_I', 'piece_L', 'piece_N', 'piece_P', 'piece_T', 'piece_U', 'piece_V', 'piece_W', 'piece_Z'];
-        piecesIdArray.forEach(function(piece){
+    disablePointerEventsOnPieces() {
+        let piecesIdArray = ['piece_X', 'piece_Y', 'piece_F', 'piece_I', 'piece_L', 'piece_N', 'piece_P', 'piece_T', 'piece_U', 'piece_V', 'piece_W', 'piece_Z'];
+        piecesIdArray.forEach(function (piece) {
             document.getElementById(piece).style.pointerEvents = "none";
         });
     }
 
-    enablePointerEventsOnPieces(){
-        let  piecesIdArray = ['piece_X', 'piece_Y', 'piece_F', 'piece_I', 'piece_L', 'piece_N', 'piece_P', 'piece_T', 'piece_U', 'piece_V', 'piece_W', 'piece_Z'];
-       piecesIdArray.forEach(function(piece){
-           document.getElementById(piece).style.pointerEvents = "auto";
-       });
-   }
+    enablePointerEventsOnPieces() {
+        let piecesIdArray = ['piece_X', 'piece_Y', 'piece_F', 'piece_I', 'piece_L', 'piece_N', 'piece_P', 'piece_T', 'piece_U', 'piece_V', 'piece_W', 'piece_Z'];
+        piecesIdArray.forEach(function (piece) {
+            document.getElementById(piece).style.pointerEvents = "auto";
+        });
+    }
 
 }

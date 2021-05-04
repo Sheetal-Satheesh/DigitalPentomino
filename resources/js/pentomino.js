@@ -180,27 +180,27 @@ class Pentomino {
 
     display() {
         let aTemp = '';
-        for(let i = 0; i < this.iRows; ++i){
+        for (let i = 0; i < this.iRows; ++i) {
             aTemp = '|';
-            for(let j = 0; j < this.iCols; ++j)
-                aTemp = aTemp.concat(   this.sRepr[i*this.iCols+j]);
+            for (let j = 0; j < this.iCols; ++j)
+                aTemp = aTemp.concat(this.sRepr[i * this.iCols + j]);
             console.log(aTemp.concat('|'));
         }
     }
 
     //Ashwini: remove pieces from the game grid and put it back into the tray
-    toTray(){
-        this.inTray=1;
-  	    // this.position=false;
+    toTray() {
+        this.inTray = 1;
+        // this.position=false;
 
         return this;
     }
 
     //Anurag: added following method so that else condition could work of positionPiece method in visual.js
-    removeFromTray(){
-            this.inTray=0;
-      	    return this;
-        }
+    removeFromTray() {
+        this.inTray = 0;
+        return this;
+    }
 
     getRelPentominoPositions() {
         let positions = [];
@@ -240,6 +240,6 @@ class Pentomino {
 
 
 
-if(typeof module != 'undefined') {
+if (typeof module != 'undefined') {
     module.exports = Pentomino;
 }

@@ -1,11 +1,11 @@
-if(typeof require != 'undefined') {
+if (typeof require != 'undefined') {
     Game = require('./game.js');
     Board = require('./board.js');
 }
 
 class GameLoader {
 
-    constructor(){
+    constructor() {
         this._game = null;
         this._commandManager = null;
         this._hintAI = null;
@@ -23,15 +23,15 @@ class GameLoader {
         this._gameList = [];
     }
 
-    saveGame(game){
+    saveGame(game) {
 
     }
-    
-    loadGame(game){
-        
+
+    loadGame(game) {
+
     }
 
-    loadGameFromJson(gmconfig){
+    loadGameFromJson(gmconfig) {
 
     }
 
@@ -39,51 +39,51 @@ class GameLoader {
         this._game = game;
     };
 
-    getGame(game){
+    getGame(game) {
         return this._game;
     }
 
-    resetGame(){
+    resetGame() {
         this._game.reset();
         this._commandManager.Reset();
         return this._game;
     }
 
-    createGame( boardStartXY, 
-                boardSizeXY, 
-                Boardshape,
-                blockedCells,
-                name) {
-        
+    createGame(boardStartXY,
+        boardSizeXY,
+        Boardshape,
+        blockedCells,
+        name) {
+
         boardStartXY[0] = parseInt(boardStartXY[0]);
         boardStartXY[1] = parseInt(boardStartXY[1]);
 
-        boardSizeXY[0]=parseInt(boardSizeXY[0]);
-        boardSizeXY[1]=parseInt(boardSizeXY[1]);
+        boardSizeXY[0] = parseInt(boardSizeXY[0]);
+        boardSizeXY[1] = parseInt(boardSizeXY[1]);
 
         this.setGame(
-                    new Game(
-                        new Board(
-                                boardStartXY,
-                                boardSizeXY,
-                                blockedCells,
-                                Boardshape), 
-                    name));
+            new Game(
+                new Board(
+                    boardStartXY,
+                    boardSizeXY,
+                    blockedCells,
+                    Boardshape),
+                name));
 
         this._game._fillUpTray();
         this._commandManager = new CommandManager();
         this._hintAI = new HintAI(this._game);
     }
 
-    cmdManager(){
+    cmdManager() {
         return this._commandManager;
     }
 
-    hintAI(){
+    hintAI() {
         return this._hintAI;
     }
 }
 
-if(typeof module != 'undefined') {
+if (typeof module != 'undefined') {
     module.exports = GameLoader;
 }
