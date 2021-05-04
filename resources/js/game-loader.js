@@ -146,6 +146,7 @@ class GameLoader {
             boardStartXY,
             boardSize,
             "Block",
+            undefined,
             gameName);
     }
 

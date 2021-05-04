@@ -823,6 +823,7 @@ class Visual {
         }
     }
 
+
     indicatePentomino(pentomino, timeframe) {
         Array.prototype.forEach.call(document.getElementById("piece_" + pentomino.name).getElementsByClassName("bmPoint"), function (element) {
             element.style["box-shadow"] = "0 0 20px " + pentomino.color;
@@ -904,7 +905,6 @@ class Visual {
         });
     }
 
-
     indicateAreaCells(piece, hintCommand) {
         let hintRow = hintCommand._nextPosition[0];
         let hintColumn = hintCommand._nextPosition[1];
@@ -926,8 +926,6 @@ class Visual {
         return [areaPosArray, null];
     }
 
-
-
     hideArea(areaPos, prevBackground, timeoutFrame) {
 
         setTimeout(function () {
@@ -938,11 +936,6 @@ class Visual {
             }
         }, timeoutFrame);
     }
-
-
-
-
-
 
     hide(piecePos, prevBackground, timeoutFrame) {
 
@@ -1159,7 +1152,8 @@ class Visual {
             }
             prefillCandidates.push(piece);
             positions.push(currentAnchor);
-            piece.removeFromTray();
+            this.removeFromTray(piece);
+            piece.updateTrayValue(0);
             this.gameController.placePentomino(piece, currentAnchor[0], currentAnchor[1]);
         }
 

@@ -143,7 +143,6 @@ class PD {
             this.visual.showNumberOfPossibleSolutions();
         }
     }
-    }
 
     replay(startState, targetState) {
         this.visual.replay(startState, targetState);

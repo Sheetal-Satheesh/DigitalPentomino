@@ -23,7 +23,6 @@
     <script src="resources/js/game-controller.js"></script>
     <script src="resources/js/game-loader.js"></script>
     <script src="resources/js/game.js"></script>
-    <script src="resources/js/ui-template.js"></script>
     <script src="resources/js/command-history/command-node.js"></script>
     <script src="resources/js/command-history/commands.js"></script>
     <script src="resources/js/command-history/command-manager.js"></script>
@@ -364,6 +363,21 @@
             pd.flipV();
         }
 
+        function prefillBoard() {
+            pd.visual.prefillBoard();
+            this.closeBoardSelector();
+            this.closeSettings();
+        }
+
+        function execUndo() {
+            this.hideManipulationButtons();
+            pd.visual.undo();
+        }
+
+        function execRedo() {
+            pd.visual.redo();
+        }
+
         function selectBoard() {
             document.getElementById("boardmodalTop").style.display = "block";
             this.hideManipulationButtons();
@@ -646,17 +660,6 @@
             }
         }
 
-            postProcessSettings(settings);
-            SettingsSingleton.getInstance().setSettings(settings);
-
-            console.log("Seedbar entered value: " + seedValue);
-            document.getElementById("seedBar").value = "";
-
-            document.getElementById("seedingCover").style.visibility = "hidden";
-            document.getElementById("seeding").style.visibility = "hidden";
-        }
-
-
         function addFlash(elementId) {
             let element = document.querySelector("#" + elementId);
             element.classList.add('FlashOn');
@@ -683,7 +686,7 @@
 
         function loadGameImage(key) {
             pd.visual.loadGame(key);
-            pd.loadGame(pd.visual.getBoard(), "Snapshot");
+            pd.loadBoard(pd.visual.getBoard(), "Snapshot");
             var modal = document.getElementById('modalTop');
             modal.style.display = "none";
 
@@ -850,21 +853,6 @@
 
         function closeForm() {
             document.getElementById("board_selection_form").style.display = "none";
-        }
-
-        function prefillBoard() {
-            pd.visual.prefillBoard();
-            this.closeBoardSelector();
-            this.closeSettings();
-        }
-
-        function execUndo() {
-            this.hideManipulationButtons();
-            pd.visual.undo();
-        }
-
-        function execRedo() {
-            pd.visual.redo();
         }
 
     </script>
