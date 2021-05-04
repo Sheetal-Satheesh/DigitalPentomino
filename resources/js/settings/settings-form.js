@@ -45,11 +45,21 @@ class SettingsForm {
                     case "string":
                         let selectElementLabel = SettingsForm.createLabel(settingsEntry.title);
                         div.appendChild(selectElementLabel);
-                        let selectElement = SettingsForm.createSelectElement(
-                            elementName,
-                            settingsEntry.enum,
-                            settingsEntry.enumText);
-                        div.appendChild(selectElement);
+                        if (settingsEntry.imgPaths === undefined) {
+                            let selectElement = SettingsForm.createSelectElement(
+                                elementName,
+                                settingsEntry.enum,
+                                settingsEntry.enumText);
+                            div.appendChild(selectElement);
+                        } else {
+                            let imgElement = SettingsForm.createImgSelectElement(
+                                elementName,
+                                settingsEntry.enum,
+                                settingsEntry.enumText,
+                                settingsEntry.imgPaths
+                            );
+                            div.appendChild(imgElement);
+                        }
                         break;
                     case "integer":
                         let integerInputElementLabel = SettingsForm.createLabel(settingsEntry.title);
@@ -136,6 +146,27 @@ class SettingsForm {
         return selectElement;
     }
 
+    static createImgSelectElement(name, enumElements, enumTexts, imgPaths) {
+        let div = document.createElement("div");
+        div.value = enumElements[0];
+        div.setAttribute("name", name);
+        div.id = name;
+
+        let i = 0;
+        imgPaths.forEach(imgPath => {
+            let imgElement = document.createElement("img");
+            imgElement.src =  imgPath;
+            let enumElement = enumElements[i];
+            imgElement.onclick = () => {
+                div.value = enumElement;
+            };
+            div.appendChild(imgElement);
+            i++;
+        });
+
+        return div;
+    }
+
     static createSubmitButton() {
         let submitButton = document.createElement("button");
         submitButton.setAttribute("type", "submit");
@@ -161,8 +192,13 @@ class SettingsForm {
                         result[heading][key] = checkBoxElement.checked;
                         break;
                     case "string":
-                        let selectElement = $(formElement).find("select[name='" + name + "']")[0];
-                        result[heading][key] = selectElement.value;
+                        if (settingsEntry.imgPaths === undefined) {
+                            let selectElement = $(formElement).find("select[name='" + name + "']")[0];
+                            result[heading][key] = selectElement.value;
+                        } else {
+                            let divElement = $(formElement).find("div[name='" + name + "']")[0];
+                            result[heading][key] = divElement.value;
+                        }
                         break;
                     case "integer":
                         let integerInputElement = $(formElement).find("input[name='" + name + "']")[0];
@@ -200,7 +236,11 @@ class SettingsForm {
                         SettingsForm.editInputSchemaEntry(key, subkey, settings[key][subkey], formElement);
                         break;
                     case "string":
-                        SettingsForm.editStringSchemaEntry(key, subkey, schemaEntry, settings[key][subkey], formElement);
+                        if (schemaEntry.imgPaths === undefined) {
+                            SettingsForm.editStringSchemaEntry(key, subkey, schemaEntry, settings[key][subkey], formElement);
+                        } else {
+                            SettingsForm.updateImgSelectElement(key, subkey, schemaEntry, settings[key][subkey], formElement);
+                        }
                         break;
                     default:
                         throw new Error("Schema Error: Unknown type: " + schemaEntry.type);
@@ -246,5 +286,23 @@ class SettingsForm {
             }
         }
         selectedOption.selected = true;
+    }
+
+    static updateImgSelectElement(heading, key, schemaEntry, selectedValue, formElement) {
+        let divName = heading + "." + key;
+        let enumText = schemaEntry.enumText;
+        if (enumText === undefined) {
+            throw new Error("No enumText defined");
+        }
+        let divElement = $(formElement).find("select[div='" + divName + "']")[0];
+        // if (!(divElement.chil.length === enumText.length)) {
+        //    throw new Error("Number of elements does not match number of texts specified in enumText");
+        //}
+
+        if (heading === "general" && key === "language") {
+            selectedValue = selectedValue === baseConfigs.languages.ENGLISH ? "en" : "de";
+        }
+
+        // TODO: select image
     }
 }
