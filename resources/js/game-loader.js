@@ -105,6 +105,7 @@ class GameLoader {
 
         boardSizeXY[0] = parseInt(boardSizeXY[0]);
         boardSizeXY[1] = parseInt(boardSizeXY[1]);
+        let prevGameName = (this._game == null)?null:this._game.getName();
 
         this.setGame(
             new Game(
@@ -121,7 +122,10 @@ class GameLoader {
             this._game._fillUpTray();
         }
         this._commandManager = new CommandManager();
-        this._hintAI = new HintAI(this._game);
+
+        if(prevGameName == null || prevGameName != this._game.getName()){
+            this._hintAI = new HintAI(this._game, true);
+        }
         this.saveGame();
     }
 
@@ -133,6 +137,7 @@ class GameLoader {
         let boardSettings = this._game._board.getBoardSettings();
         let boardStartXY = boardSettings.boardStartPos;
         let boardSize = boardSettings.boardSize;
+        let blockCells = boardSettings.blockCells;
         let gameName = this._game.getName();
         let gameId = this._game.getId();
 
@@ -146,7 +151,7 @@ class GameLoader {
             boardStartXY,
             boardSize,
             "Block",
-            undefined,
+            blockCells,
             gameName);
     }
 

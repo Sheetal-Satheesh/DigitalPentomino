@@ -6,14 +6,24 @@ if (typeof require != 'undefined') {
 }
 
 class HintAI {
+    static solutions=undefined;
+    constructor(game, loadSolutions=false) {
+        if(HintAI.solutions == undefined || loadSolutions == true){
+            HintAI.solutions = Solutions.getGamesFromSolutionsConfig(game.getName());
+        }
+    }
 
-    constructor(game) {
-        //this._game = game;
+     /** ---------------  Solutions-------------*/
+     getSolutions() {
+         if(HintAI.solutions == undefined){
+             console.error("Solution is not set");
+         }
+        return HintAI.solutions;
     }
 
     getHint(game) {
         // let game = this._game;
-        let possibleSolutions = this._getPossibleSolutions(game, game.getSolutions());
+        let possibleSolutions = this._getPossibleSolutions(game, HintAI.solutions);
 
         if (possibleSolutions.length > 0) {
             let closestSolution = possibleSolutions[0];
@@ -22,7 +32,7 @@ class HintAI {
             return new Hint(commands, possibleSolutions);
         } else {
             // Pursue closest game state, which has at least one possible solution
-            let closestSolution = this._getClosesSolution(game, game.getSolutions());
+            let closestSolution = this._getClosesSolution(game, HintAI.solutions);
 
             let unoccupiedCellSpaces = game._board.getUnoccupiedCellSpaces();
             let bestImpossibleCellSpace = this._calculateBestImpossibleUnoccupiedCellSpace(game, unoccupiedCellSpaces);

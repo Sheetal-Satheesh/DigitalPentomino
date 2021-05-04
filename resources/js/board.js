@@ -36,7 +36,8 @@ class Board {
     getBoardSettings(){
         return {
             "boardStartPos": [this._boardRows,this._boardSCols],
-            "boardSize": [this._boardRows,this._boardCols]
+            "boardSize": [this._boardRows,this._boardCols],
+            "blockCells": this._blockedCells
         };
     }
 

@@ -249,7 +249,7 @@ class GameController {
     }
 
     getSolutions() {
-        return this.game().getSolutions();
+        return this.hintAI().getSolutions();
     }
 
     // --- --- --- History --- --- ---
