@@ -795,13 +795,24 @@ class Visual {
             element.style["box-shadow"] = "0 0 20px " + pentomino.color;
             if (pentomino.inTray) {
                 element.classList.add('horizTranslate');
-                //element.style.transform = "scale(2) rotate(0.1deg)";
+                
+                //obtain and increase current scale of piece
+                let htmlPiece = document.getElementById("piece_" + pentomino.name);
+                let transformValue = $('#piece_' + pentomino.name).css('transform');
+                let values = transformValue.split('(')[1];
+                values = values.split(')')[0];
+                values = values.split(',');
+                let a = values[0];
+                let b = values[1];
+                let scale = Math.sqrt(a*a + b*b);
+                document.getElementById("piece_" + pentomino.name).style.transform = "scale(" + scale*2 + ")";
             }
 
             setTimeout(function () {
                 element.style.removeProperty("box-shadow");
                 //element.style.transform = "none";
                 element.classList.remove('horizTranslate');
+                document.getElementById("piece_" + pentomino.name).style.removeProperty("transform");
             }, timeframe);
         });
     }
