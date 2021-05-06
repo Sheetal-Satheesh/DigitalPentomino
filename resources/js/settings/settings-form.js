@@ -5,8 +5,6 @@ class SettingsForm {
 
         SettingsForm.createForm(formElement, schema);
 
-        formElement.appendChild(document.createElement("br"));
-
         formElement.appendChild(SettingsForm.createSubmitButton());
 
         $(formElement).submit(function(event) {
