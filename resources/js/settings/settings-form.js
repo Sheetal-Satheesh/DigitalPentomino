@@ -154,13 +154,17 @@ class SettingsForm {
 
         let i = 0;
         imgPaths.forEach(imgPath => {
-            let imgElement = document.createElement("img");
-            imgElement.src =  imgPath;
+            let buttonElement = document.createElement("button");
+            buttonElement.type = "button";
             let enumElement = enumElements[i];
-            imgElement.onclick = () => {
+            buttonElement.onclick = () => {
                 div.value = enumElement;
             };
-            div.appendChild(imgElement);
+            div.appendChild(buttonElement);
+
+            let imgElement = document.createElement("img");
+            imgElement.src =  imgPath;
+            buttonElement.appendChild(imgElement);
             i++;
         });
 
