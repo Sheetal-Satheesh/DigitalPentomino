@@ -32,6 +32,10 @@ class HintAI {
 
                 if (bestUnreachableCellSpace === null) {
                     let commandSequenceList = this._getCommandSequenceListToSolution(game, closestSolution);
+                    let misplacedPentominos = this._removeWronglyPlacedPentominos(game, closestSolution);
+                    if (misplacedPentominos){
+                        return new Hint([misplacedPentominos], possibleSolutions);
+                    }
                     let commands = this._getBestNextCommandsMaxOccupiedNeighbors(game, closestSolution, commandSequenceList);
                     return new Hint(commands, possibleSolutions);
                 } else {
@@ -42,6 +46,33 @@ class HintAI {
                 let command = this._getCommandBasedOnUnoccupiedCellsSkill(game, closestSolution, bestImpossibleCellSpace);
                 return new Hint([command], possibleSolutions, bestImpossibleCellSpace);
             }
+        }
+    }
+
+    /**
+     * Returns when a pentomino is placed in wrong position. Compared with the
+     * @param game
+     * @param closestSolution
+     */
+
+    _removeWronglyPlacedPentominos(game, closestSolution) {
+        let pentominoesOnBoard = game.getPentominoes().filter(p => game.isPlacedOnBoard(p));
+        for (var solPentominoes = 0; solPentominoes < closestSolution._board._pentominoes.length; solPentominoes++) {
+          let solPentominoName = closestSolution._board._pentominoes[solPentominoes].name;
+          let solPentominoPos = closestSolution._board._pentominoes[solPentominoes].sRepr;
+
+          for (var j = 0; j < pentominoesOnBoard.length; j++) {
+            let pentominoesOnBoardName = pentominoesOnBoard[j].name;
+            let pentominoesOnBoardPos = pentominoesOnBoard[j].sRepr;
+
+            if (solPentominoName === pentominoesOnBoardName ) {
+              if (solPentominoPos != pentominoesOnBoardPos) {
+
+                return new RemoveCommand( game.getPentominoByName(pentominoesOnBoardName),
+                                          game.getPosition(game.getPentominoByName(pentominoesOnBoardName)));
+              }
+            }
+          }
         }
     }
 
@@ -340,7 +371,7 @@ class HintAI {
         if (solutionPentomino === null) {
             if (game.isPlacedOnBoard(gamePentomino)) {
                 let gamePentominoPos = game.getPosition(gamePentomino);
-                return [new RemoveCommand(  gamePentomino, 
+                return [new RemoveCommand(  gamePentomino,
                                             [gamePentominoPos[0], gamePentominoPos[1]])];
             } else {
                 throw Error("Pentomino " + gamePentomino.name + " is already placed correct.");
@@ -387,7 +418,7 @@ class HintAI {
                         solutionPentominoPosition[1] + game._board._boardSCols
                     ];
 
-                    return [new PlaceCommand( gamePentomino, 
+                    return [new PlaceCommand( gamePentomino,
                                               game.getPosition(gamePentomino),
                                               [solutionPentominoRelPosition[0], solutionPentominoRelPosition[1]])];
                 }
@@ -432,7 +463,7 @@ class HintAI {
 
                 if (!(solutionPentominoRelPosition[0] === gamePentominoPosition[0])
                     || !(solutionPentominoRelPosition[1] === gamePentominoPosition[1])) {
-                    commands.push(new PlaceCommand( gamePentomino, 
+                    commands.push(new PlaceCommand( gamePentomino,
                                                     game.getPosition(gamePentomino),
                                                     [solutionPentominoRelPosition[0], solutionPentominoRelPosition[1]]));
                 }
@@ -442,7 +473,7 @@ class HintAI {
                     solutionPentominoPosition[0] + game._board._boardSRows,
                     solutionPentominoPosition[1] + game._board._boardSCols
                 ];
-                commands.push(new PlaceCommand( gamePentomino, 
+                commands.push(new PlaceCommand( gamePentomino,
                                                 game.getPosition(gamePentomino),
                                                 [solutionPentominoRelPosition[0], solutionPentominoRelPosition[1]]));
             }
