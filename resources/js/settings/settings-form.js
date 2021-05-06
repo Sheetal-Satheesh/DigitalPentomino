@@ -156,15 +156,12 @@ class SettingsForm {
         imgPaths.forEach(imgPath => {
             let buttonElement = document.createElement("button");
             buttonElement.type = "button";
+            buttonElement.style = "height:10vw;width:10vw;background:url(" + imgPath + ");background-size: 100%;";
             let enumElement = enumElements[i];
             buttonElement.onclick = () => {
                 div.value = enumElement;
             };
             div.appendChild(buttonElement);
-
-            let imgElement = document.createElement("img");
-            imgElement.src =  imgPath;
-            buttonElement.appendChild(imgElement);
             i++;
         });
 
