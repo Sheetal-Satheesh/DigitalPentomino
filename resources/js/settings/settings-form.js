@@ -5,6 +5,9 @@ class SettingsForm {
 
         SettingsForm.createForm(formElement, schema);
 
+        formElement.appendChild(document.createElement("br"));
+        formElement.appendChild(document.createElement("br"));
+
         formElement.appendChild(SettingsForm.createSubmitButton());
 
         $(formElement).submit(function(event) {
@@ -41,8 +44,10 @@ class SettingsForm {
                     let content = this.nextElementSibling;
                     if (content.style.display === "block") {
                         content.style.display = "none";
+                        button.innerHTML = "SHOW ADVANCED SETTINGS";
                     } else {
                         content.style.display = "block";
+                        button.innerHTML = "HIDE ADVANCED SETTINGS";
                     }
                 });
 
