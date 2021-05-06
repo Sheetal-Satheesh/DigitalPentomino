@@ -5,6 +5,8 @@ class SettingsForm {
 
         SettingsForm.createForm(formElement, schema);
 
+        formElement.appendChild(document.createElement("br"));
+
         formElement.appendChild(SettingsForm.createSubmitButton());
 
         $(formElement).submit(function(event) {
@@ -20,7 +22,7 @@ class SettingsForm {
     static createForm(formElement, schema) {
         let enteredAdvancedSettings = false;
         let advancedSettingsDiv = document.createElement("div");
-        advancedSettingsDiv.className = "content";
+        advancedSettingsDiv.style.display = "none";
 
         let htmlElement = formElement;
 
@@ -29,13 +31,11 @@ class SettingsForm {
 
             if (!enteredAdvancedSettings && schema[heading].advanced) {
                 enteredAdvancedSettings = true;
-
-                htmlElement.appendChild(SettingsForm.createHeader("h1", "Advanced"));
                 htmlElement = advancedSettingsDiv;
 
                 let button = document.createElement("button");
                 button.type = "button";
-                button.innerHTML = "Open Advanced Settings";
+                button.innerHTML = "SHOW ADVANCED SETTINGS";
                 button.className = "collapsible";
 
                 button.addEventListener("click", function() {
