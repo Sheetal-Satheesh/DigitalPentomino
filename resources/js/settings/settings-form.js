@@ -18,11 +18,41 @@ class SettingsForm {
 
     // --- --- --- Form Creation --- --- ---
     static createForm(formElement, schema) {
+        let enteredAdvancedSettings = false;
+        let advancedSettingsDiv = document.createElement("div");
+        advancedSettingsDiv.className = "content";
+
+        let htmlElement = formElement;
+
         for (let heading in schema) {
             let subSettings = schema[heading].properties;
 
-            formElement.appendChild(SettingsForm.createHeader("h3", schema[heading].title));
-            formElement.appendChild(document.createElement("br"));
+            if (!enteredAdvancedSettings && schema[heading].advanced) {
+                enteredAdvancedSettings = true;
+
+                htmlElement.appendChild(SettingsForm.createHeader("h1", "Advanced"));
+                htmlElement = advancedSettingsDiv;
+
+                let button = document.createElement("button");
+                button.type = "button";
+                button.innerHTML = "Open Advanced Settings";
+                button.className = "collapsible";
+
+                button.addEventListener("click", function() {
+                    this.classList.toggle("active");
+                    let content = this.nextElementSibling;
+                    if (content.style.display === "block") {
+                        content.style.display = "none";
+                    } else {
+                        content.style.display = "block";
+                    }
+                });
+
+                formElement.appendChild(button);
+            }
+
+            htmlElement.appendChild(SettingsForm.createHeader("h3", schema[heading].title));
+            htmlElement.appendChild(document.createElement("br"));
 
             for (let key in subSettings) {
                 let elementName = heading + "." + key;
@@ -31,7 +61,7 @@ class SettingsForm {
                 let settingsEntryType = settingsEntry.type;
 
                 let div = document.createElement("div");
-                formElement.appendChild(div);
+                htmlElement.appendChild(div);
 
                 switch (settingsEntryType) {
                     case "boolean":
@@ -95,6 +125,8 @@ class SettingsForm {
                 div.appendChild(document.createElement("br"));
             }
         }
+
+        formElement.appendChild(advancedSettingsDiv);
     }
 
     static createHeader(type, text) {

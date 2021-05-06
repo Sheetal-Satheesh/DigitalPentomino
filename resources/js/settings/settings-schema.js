@@ -47,6 +47,7 @@ class SettingsSchema {
             general: {
                 "type": "object",
                 "title": titles.general.title[lang],
+                "advanced": false,
                 "properties": {
                     language: {
                         "type": "string",
@@ -61,6 +62,7 @@ class SettingsSchema {
             hinting: {
                 "type": "object",
                 "title": titles.hinting.title[lang],
+                "advanced": true,
                 "properties": {
                     showNumberOfPossibleSolutions: {
                         "type": "boolean",
@@ -108,6 +110,7 @@ class SettingsSchema {
             },
             prefilling: {
                 "type": "object",
+                "advanced": true,
                 "title": titles.prefilling.title[lang],
                 "properties": {
                     enablePrefilling: {
