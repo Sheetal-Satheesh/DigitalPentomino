@@ -39,7 +39,7 @@ class HintAI {
                     let commands = this._getBestNextCommandsMaxOccupiedNeighbors(game, closestSolution, commandSequenceList);
                     return new Hint(commands, possibleSolutions);
                 } else {
-                    let command = this._getCommandBasedOnUnoccupiedCellsSkill(game, closestSolution, bestUnreachableCellSpace);
+                    let command = this._getCommandBasedOnUnreachableCellsSkill(game, closestSolution, bestUnreachableCellSpace);
                     return new Hint([command], possibleSolutions, bestUnreachableCellSpace);
                 }
             } else {
@@ -193,6 +193,28 @@ class HintAI {
         let pentomino = nonPerfectPentominoes[0];
         return new RemoveCommand( pentomino,
                                   game.getPosition(pentomino));
+    }
+
+    /**
+     * Tries find nonperfect pentomino neighboring unreachableCellSpace. If all neighboring pieces are perfect, it
+     * just suggest to remove a piece based on _removeWronglyPlacedPentominos.
+     * @param game
+     * @param closestSolution
+     * @param unreachableCellSpace
+     * @return {RemoveCommand}
+     * @private
+     */
+    _getCommandBasedOnUnreachableCellsSkill(game, closestSolution, unreachableCellSpace) {
+        let neighboringPentominoes = game._board.getNeighbPentominoesOfCellSpace(unreachableCellSpace);
+        let nonPerfectPentominoes = neighboringPentominoes.filter(p => !this._isPerfectPentomino(game, closestSolution, p.name));
+
+        if (!(nonPerfectPentominoes.length === 0)) {
+            let pentomino = nonPerfectPentominoes[0];
+            return new RemoveCommand( pentomino,
+                game.getPosition(pentomino));
+        } else {
+            return this._removeWronglyPlacedPentominos(game, closestSolution);
+        }
     }
 
     _getSeparateCellSpaces(cellSpace) {
