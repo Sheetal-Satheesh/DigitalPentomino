@@ -1109,10 +1109,9 @@ class Visual {
                 }
                 blockedCells = JSON.parse(JSON.stringify(blockedCellsTemp));
                 prefillCandidates.push(piece);
-                if(piece instanceof Pentomino){
-                    piece.updateTrayValue();
-                }
-                this.gameController.placePentomino(piece, currentAnchor[0], currentAnchor[1]);
+                this.removeFromTray(piece);
+                piece.updateTrayValue(0);
+                this.placePentomino(piece, currentAnchor[0], currentAnchor[1]);
 
             } else {
                 piece = new Pentomino(piece.name);
@@ -1156,7 +1155,7 @@ class Visual {
             positions.push(currentAnchor);
             this.removeFromTray(piece);
             piece.updateTrayValue(0);
-            this.gameController.placePentomino(piece, currentAnchor[0], currentAnchor[1]);
+            this.placePentomino(piece, currentAnchor[0], currentAnchor[1]);
         }
 
         return prefillCandidates;

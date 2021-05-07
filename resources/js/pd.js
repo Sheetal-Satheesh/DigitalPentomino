@@ -45,7 +45,7 @@ class PD {
     }
 
     reset() {
-        this.visual.clear();
+        this.visual.reset();
         if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.visual.showNumberOfPossibleSolutions();
         }
