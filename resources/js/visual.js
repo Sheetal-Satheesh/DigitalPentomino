@@ -127,7 +127,7 @@ class Visual {
         this.positionPiece(pentomino);
     }
 
-    clear() {
+    reset() {
         this.gameController.resetGame();
         this.pieces = this.gameController.getAllPentominoes();
         this.pd.visual.disableManipulations();
@@ -1024,7 +1024,7 @@ class Visual {
     }
 
     readyForPrefilling() {
-        this.clear();
+        this.reset();
         // Prevent clicking of button while previous prefilling is going on
         this.disablePrefillButton(true);
     }
@@ -1109,7 +1109,9 @@ class Visual {
                 }
                 blockedCells = JSON.parse(JSON.stringify(blockedCellsTemp));
                 prefillCandidates.push(piece);
-                piece.removeFromTray();
+                if(piece instanceof Pentomino){
+                    piece.updateTrayValue();
+                }
                 this.gameController.placePentomino(piece, currentAnchor[0], currentAnchor[1]);
 
             } else {
