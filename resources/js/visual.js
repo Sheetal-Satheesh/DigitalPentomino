@@ -105,7 +105,9 @@ class Visual {
     placePentomino(pentomino, posX, posY, cmdProperty = cmdAttrDefault) {
         this.gameController.placePentomino(pentomino, posX, posY, cmdProperty);
         this.positionPiece(pentomino);
-        this.checkIfGameWon();
+        if(cmdProperty.cmdType != CommandTypes.Shadow){
+            this.checkIfGameWon();
+        }
     }
 
     checkIfGameWon() {
@@ -550,7 +552,9 @@ class Visual {
             this.gameController.rotatePentominoClkWise(piece, cmdProperty);
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
-            this.checkIfGameWon();
+            if(cmdProperty.cmdType != CommandTypes.Shadow){
+                this.checkIfGameWon();
+            }
         }
     }
 
@@ -565,7 +569,9 @@ class Visual {
             this.gameController.rotatePentominoAntiClkWise(piece, cmdProperty);
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
-            this.checkIfGameWon();
+            if(cmdProperty.cmdType != CommandTypes.Shadow){
+                this.checkIfGameWon();
+            }
         }
     }
 
@@ -581,7 +587,9 @@ class Visual {
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationX", newRot.toString() + "deg");
             pieceDiv.setAttribute("flipped", 1 - flipped);
-            this.checkIfGameWon();
+            if(cmdProperty.cmdType != CommandTypes.Shadow){
+                this.checkIfGameWon();
+            }
         }
     }
 
@@ -597,7 +605,9 @@ class Visual {
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationY", newRot.toString() + "deg");
             pieceDiv.setAttribute("flipped", 1 - flipped);
-            this.checkIfGameWon();
+            if(cmdProperty.cmdType != CommandTypes.Shadow){
+                this.checkIfGameWon();
+            }
         }
     }
 
@@ -1289,10 +1299,7 @@ class Visual {
     }
 
     replay(startKey, targetKey) {
-        console.log("Start Cmd Key: " + this.gameController.getStartCmdKey());
-        console.log("Current Cmd Key: " + this.gameController.getCurrentCmdKey());
-        console.log("Last Cmd Key: " + this.gameController.getLastCmdKey());
-
+        
         if (startKey.length == 0) {
             startKey = this.gameController.getStartCmdKey();
             if (startKey == undefined) {
