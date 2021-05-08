@@ -54,7 +54,8 @@ class SettingsSchema {
                         "title": titles.general.language.title[lang],
                         "enum": ["en", "de"],
                         "enumText": titles.general.language.enumTitles[lang],
-                        "imgPaths": ["resources/images/icons/flip_horizontally.png", "resources/images/icons/help.png"],
+                        "imgPaths": ["resources/images/icons/flag_of_the_united_kingdom_200px.png",
+                            "resources/images/icons/flag_of_germany_200px.png"],
                         "default": "de"
                     }
                 }
