@@ -189,9 +189,17 @@ class SettingsForm {
 
         let i = 0;
         imgPaths.forEach(imgPath => {
-            let buttonElement = document.createElement("button");
-            buttonElement.type = "button";
-            buttonElement.style = "height:10vw;width:10vw;background:url(" + imgPath + ");background-size: 100%;";
+            let buttonElement = SettingsForm.createButton(undefined,{
+                type: "button",
+                style: "background:url(" + imgPath + ");background-size: 100%;",
+            });
+
+            // FIXME: quick fix
+            let image = new Image();
+            image.src = imgPath;
+            buttonElement.style.height = image.height + "px";
+            buttonElement.style.width = image.width + "px";
+
             let enumElement = enumElements[i];
             buttonElement.onclick = () => {
                 div.value = enumElement;
@@ -203,11 +211,23 @@ class SettingsForm {
         return div;
     }
 
+    static createButton(text, options) {
+        let buttonElement = document.createElement("button");
+        if (!(text === undefined)) buttonElement.innerHTML = text;
+
+        if (!(options === undefined)) {
+            for (let [key, value] of Object.entries(options)) {
+                buttonElement.setAttribute(key, value);
+            }
+        }
+
+        return buttonElement;
+    }
+
     static createSubmitButton() {
-        let submitButton = document.createElement("button");
-        submitButton.setAttribute("type", "submit");
-        submitButton.innerHTML = "Submit";
-        return submitButton;
+        return SettingsForm.createButton("Submit",{
+            type: "submit"
+        });
     }
 
     // --- --- --- Data collection --- --- ---
