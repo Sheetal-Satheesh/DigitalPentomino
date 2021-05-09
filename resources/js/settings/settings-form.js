@@ -202,7 +202,13 @@ class SettingsForm {
 
             let enumElement = enumElements[i];
             buttonElement.onclick = () => {
+                div.childNodes.forEach(childNode => childNode.classList.remove("selected"));
                 div.value = enumElement;
+                if (buttonElement.classList.contains("selected")) {
+                    buttonElement.classList.remove("selected");
+                } else {
+                    buttonElement.classList.add("selected");
+                }
             };
             div.appendChild(buttonElement);
             i++;
@@ -345,20 +351,32 @@ class SettingsForm {
     }
 
     static updateImgSelectElement(heading, key, schemaEntry, selectedValue, formElement) {
+        if (heading === "general" && key === "language") {
+            selectedValue = selectedValue === baseConfigs.languages.ENGLISH ? "en" : "de";
+        }
+
         let divName = heading + "." + key;
         let enumText = schemaEntry.enumText;
         if (enumText === undefined) {
             throw new Error("No enumText defined");
         }
-        let divElement = $(formElement).find("select[div='" + divName + "']")[0];
+        let divElement = $(formElement).find("div[name='" + divName + "']")[0];
+        // TODO: check for error in number of images
         // if (!(divElement.chil.length === enumText.length)) {
         //    throw new Error("Number of elements does not match number of texts specified in enumText");
         //}
 
-        if (heading === "general" && key === "language") {
-            selectedValue = selectedValue === baseConfigs.languages.ENGLISH ? "en" : "de";
-        }
+        divElement.value = selectedValue;
 
-        // TODO: select image
+        divElement.childNodes.forEach(childNode => childNode.classList.remove("selected"));
+
+        let selectedEnum = schemaEntry.enum.findIndex(enumEntry => enumEntry === selectedValue);
+        let selectedChild = divElement.childNodes[selectedEnum];
+
+        if (selectedChild.classList.contains("selected")) {
+            selectedChild.classList.remove("selected");
+        } else {
+            selectedChild.classList.add("selected");
+        }
     }
 }
