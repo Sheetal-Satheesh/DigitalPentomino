@@ -34,20 +34,23 @@ class SettingsForm {
                 enteredAdvancedSettings = true;
                 htmlElement = advancedSettingsDiv;
 
+                let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
                 let button = document.createElement("button");
                 button.type = "button";
-                button.innerHTML = "SHOW ADVANCED SETTINGS";
+                button.innerHTML = strings.settings.advanced.show[lang].toUpperCase();
                 button.className = "collapsible";
 
                 button.addEventListener("click", function() {
                     this.classList.toggle("active");
                     let content = this.nextElementSibling;
+                    let lang = SettingsSingleton.getInstance().getSettings().general.language;
                     if (content.style.display === "block") {
                         content.style.display = "none";
-                        button.innerHTML = "SHOW ADVANCED SETTINGS";
+                        button.innerHTML = strings.settings.advanced.show[lang].toUpperCase();
                     } else {
                         content.style.display = "block";
-                        button.innerHTML = "HIDE ADVANCED SETTINGS";
+                        button.innerHTML = strings.settings.advanced.hide[lang].toUpperCase();
                     }
                 });
 

@@ -13,6 +13,10 @@ const strings = {
     numberOfPossibleSolutions: ["Number of solutions", "Anzahl Lösungen"],
     settings: {
         header: ["Game settings", "Spieleinstellungen"],
+        advanced: {
+            show: ["Show advanced settings", "Öffne erweiterte Einstellungen"],
+            hide: ["Hide advanced settings", "Schließe erweiterte Einstellungen"]
+        },
         buttons: {
             apply: ["Apply", "Bestätigen"],
             cancel: ["Cancel", "Abbrechen"]
