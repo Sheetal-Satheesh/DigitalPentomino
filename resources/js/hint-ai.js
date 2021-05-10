@@ -6,7 +6,8 @@ if (typeof require != 'undefined') {
 }
 
 class HintAI {
-    static solutions = undefined;
+
+    solutions = undefined;
     constructor(game, loadSolutions = false) {
         if (HintAI.solutions == undefined || loadSolutions == true) {
             HintAI.solutions = Solutions.getGamesFromSolutionsConfig(game.getName());
