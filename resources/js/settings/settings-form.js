@@ -102,7 +102,7 @@ class SettingsForm {
                         div.appendChild(integerInputElementLabel);
                         let integerInputElement = SettingsForm.createInputElement("number", elementName, {
                             step: 1,
-                            value: 3,
+                            value: settingsEntry.defaultValue,
                             min: settingsEntry.minimum,
                             max: settingsEntry.maximum
                         });
@@ -113,7 +113,7 @@ class SettingsForm {
                         div.appendChild(numberInputElementLabel);
                         let numberInputElement = SettingsForm.createInputElement("number", elementName, {
                             step: 0.1,
-                            value: 1.5,
+                            value: settingsEntry.defaultValue,
                             min: settingsEntry.minimum,
                             max: settingsEntry.maximum
                         });
@@ -151,6 +151,25 @@ class SettingsForm {
             for (let [key, value] of Object.entries(options)) {
                 inputElement.setAttribute(key, value);
             }
+        }
+
+        // Custom error messages
+        if (type === "number") {
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
+            inputElement.addEventListener('invalid', (event) => {
+                if (event.target.validity.rangeUnderflow) {
+                    event.target.setCustomValidity(strings.settings.errors.lowerThanMin[lang] + " " + options.min);
+                } else if (event.target.validity.rangeOverflow) {
+                    event.target.setCustomValidity(strings.settings.errors.higherThanMax[lang] + " " + options.max);
+                } else if (event.target.validity.badInput) {
+                    event.target.setCustomValidity(strings.settings.errors.numberBadInput[lang]);
+                }
+            });
+
+            inputElement.addEventListener('change', (event) => {
+                event.target.setCustomValidity('');
+            });
         }
 
         return inputElement;

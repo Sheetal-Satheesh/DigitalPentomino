@@ -98,8 +98,9 @@ const strings = {
             distanceValue: ["Distance value", "Distanz-Wert"]
         },
         errors: {
-            lowerThanMin: ["The value is lower than the minimum", "Der Eintrag ist kleiner als der minimale Wert"],
-            higherThanMax: ["The value is higher than the maximum", "Der Eintrag ist größer als der maximale Wert"]
+            lowerThanMin: ["This shouldn't be smaller than", "Dieser Eintrag darf nicht kleiner sein als"],
+            higherThanMax: ["This shouldn't be greater than", "Dieser Eintrag darf nicht größer sein als"],
+            numberBadInput: ["Please enter a number", "Bitte geben Sie eine Zahl ein"]
         }
     }
 };
