@@ -200,8 +200,10 @@ class SettingsForm {
             // FIXME: quick fix
             let image = new Image();
             image.src = imgPath;
-            buttonElement.style.height = image.height + "px";
-            buttonElement.style.width = image.width + "px";
+            image.onload = () => {
+                buttonElement.style.height = image.height + "px";
+                buttonElement.style.width = image.width + "px";
+            };
 
             let enumElement = enumElements[i];
             buttonElement.onclick = () => {
