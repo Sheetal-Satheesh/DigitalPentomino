@@ -21,9 +21,9 @@ gameController.undo();
 let cm2 = gameController.movePentominoToPosition(T, 3, 5);
 gameController.undo();
 
-describe('GameController', function() {
-    describe('#redo()', function() {
-        it('should redo a specific command', function() {
+describe('GameController', function () {
+    describe('#redo()', function () {
+        it('should redo a specific command', function () {
             let redoCommands = gameController.getPossibleRedoCommands();
             let redoCommand = redoCommands.find(c => c._row === -1 && c._col === 50);
             assert.ok(!(redoCommand === undefined));

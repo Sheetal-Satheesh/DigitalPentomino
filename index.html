@@ -16,13 +16,13 @@
     <link rel="stylesheet" style="text/css" href="resources/jsonform/bootstrap.css" />
 
     <script src="resources/index.js"></script>
+    <script src="resources/js/ui-template.js"></script>
     <script src="resources/js/board.js"></script>
     <script src="resources/js/overlapping.js"></script>
     <script src="resources/js/pentomino.js"></script>
     <script src="resources/js/game-controller.js"></script>
     <script src="resources/js/game-loader.js"></script>
     <script src="resources/js/game.js"></script>
-    <script src="resources/js/ui-template.js"></script>
     <script src="resources/js/command-history/command-node.js"></script>
     <script src="resources/js/command-history/commands.js"></script>
     <script src="resources/js/command-history/command-manager.js"></script>
@@ -43,6 +43,8 @@
     <script type="text/javascript" src="resources/jsonform/underscore.js"></script>
     <script type="text/javascript" src="resources/jsonform/jsonform.js"></script>
     <script type="text/javascript" src="resources/jsonform/jsv.js"></script>
+    <script type="text/javascript" src="resources/jsonform/html2canvas.js"></script>
+    <script type="text/javascript" src="resources/jsonform/loadash.js"></script>
     <script src="resources/js/hint.js"></script>
     <script src="resources/js/hint-ai.js"></script>
     <script src="resources/js/help/hinting/command-sequence-list.js"></script>
@@ -72,9 +74,28 @@
                                 disabled><img src="resources/images/icons/prefill.png"></button>
                         </td>
                     </tr>
+                    <tr>
+                        <td>
+                            <button type="button" id='replay' class="cActionBtn" onclick="execReplay()">
+                                <img src="resources/images/icons/replay.svg"></button>
+                        </td>
+                    </tr>
                 </table>
 
                 <table>
+                    <tr>
+                        <td>
+                            <button type="button" id='undo' class="cActionBtn" onclick="saveGameImage()"><img
+                                    src="resources/images/icons/screenshot.png">
+                            </button>
+                        </td>
+                        <td>
+                            <button type="button" id='redo' class="cActionBtn" onclick="showGameImages()"><img
+                                    src="resources/images/icons/gallery.png">
+                            </button>
+                        </td>
+
+                    </tr>
                     <tr>
                         <td>
                             <button type="button" id='undo' class="cActionBtn" onclick="execUndo()"><img
@@ -86,7 +107,6 @@
                                     src="resources/images/icons/redo.png">
                             </button>
                         </td>
-
 
                     </tr>
                     <tr>
@@ -105,13 +125,11 @@
                         <td>
                             <button type="button" id='btnSettingsForm' class="cActionBtn" onclick="selectSettings()">
                                 <img src="resources/images/icons/settings.png">
-
                             </button>
                         </td>
                         <td>
                             <button type="button" id='license' class="cActionBtn" onclick="openLicense()"> <img
                                     src="resources/images/icons/license.png">
-
                             </button>
                         </td>
                     </tr>
@@ -129,11 +147,11 @@
             </div> <!-- operation -->
         </div>
 
-        <div id="game">
+        <div id="game" class="FlashOff">
             <div id="tray"></div> <!-- tray -->
             <div id="field"></div> <!-- field -->
             <div id="piecearea"></div> <!-- piecearea -->
-            
+
             <div id="boardmodalTop" class="boardmodal"
                 style="background: rgb(220, 240, 237) none repeat scroll 0% 0%; display: none;">
                 <span onclick="closeModal()" class="boardclose" title="Close Modal">x</span>
@@ -151,8 +169,9 @@
                         </form>
                     </div>
                 </div>
-            </div> <!--board modal end-->
-            
+            </div>
+            <!--board modal end-->
+
             <div id="modalTop" class="modal">
                 <span onclick="closeModal()" class="close" title="Close Modal">x</span>
                 <div class="modalContainer" id="modalContainerID">
@@ -220,7 +239,6 @@
         }
 
         function loadBoardList() {
-
             let boardimageGrid = document.getElementById('boardinnerGrid');
             template.clearContent(".boardinnerGrid");
 
@@ -302,7 +320,6 @@
             };
             template.attachBtn("#modalButtonsID", cancelBtn);
 
-
             let deleteBtn = {
                 class: "deleteBtn",
                 onclick: "closeModalContainer()",
@@ -345,6 +362,21 @@
 
         function flipV() {
             pd.flipV();
+        }
+
+        function prefillBoard() {
+            pd.visual.prefillBoard();
+            this.closeBoardSelector();
+            this.closeSettings();
+        }
+
+        function execUndo() {
+            this.hideManipulationButtons();
+            pd.visual.undo();
+        }
+
+        function execRedo() {
+            pd.visual.redo();
         }
 
         function selectBoard() {
@@ -502,6 +534,7 @@
             template.clearContent("#modalButtonsID");
             template.clearContent("#modalTitleID");
             template.clearContent("#modalBodyID");
+            template.clearContent(".innerGrid")
             template.clearContent("#innerGridForm");
 
             //add form to attach settings to
@@ -629,6 +662,193 @@
             }
         }
 
+        function addFlash(elementId) {
+            let element = document.querySelector("#" + elementId);
+            element.classList.add('FlashOn');
+            var millisecondsToWait = 100;
+            setTimeout(function () {
+                element.classList.remove('FlashOn');
+            }, millisecondsToWait);
+        }
+
+        function saveGameImage() {
+            addFlash("game");
+            let gameImage = undefined;
+            let gameElem = document.getElementById('game');
+
+            html2canvas(gameElem).then(function (screeshot) {
+                screeshot.setAttribute("class", "screenshot");
+                screeshot.style.width = '25vw';
+                screeshot.style.height = '15vw';
+                screeshot.style.border = "2px solid black";
+                gameImage = screeshot;
+                pd.visual.saveGameImage(gameImage);
+            });
+        }
+
+        function loadGameImage(key) {
+            pd.visual.loadGame(key);
+            pd.loadBoard(pd.visual.getBoard(), "Snapshot");
+            var modal = document.getElementById('modalTop');
+            modal.style.display = "none";
+
+        }
+
+        function deleteGameImage(key) {
+            pd.visual.deleteGameImage(key);
+            showGameImages();
+        }
+
+        function generateRandomColor() {
+            /**
+             * https://stackoverflow.com/questions/1152024/
+             * best-way-to-generate-a-random-color-in-javascript/1152508
+            */
+
+            return '#' + (0x1000000 + Math.random() * 0xffffff).toString(16).substr(1, 6);
+
+        }
+
+        function showGameImages() {
+            var modal = document.getElementById('modalTop');
+            modal.style.background = " rgb(220, 240, 237)";
+            modal.style.display = "block";
+
+            document.querySelector(".modalFormContent").style.display = "none";
+            document.querySelector(".innerGrid").style.display = "block";
+
+            let imageList = pd.visual.showGameImages();
+            let imageGrid = document.getElementById('innerGrid');
+            template.clearContent(".innerGrid");
+            template.clearContent("#innerGridForm");
+            let gameId = undefined;
+            let borderColor = generateRandomColor();
+
+            imageList.forEach((item) => {
+                let imgKey = Object.keys(item)[0];
+                let image = item[imgKey];
+                let imageDiv = document.createElement("div");
+                imageDiv.setAttribute("class", "imageDiv");
+
+                if (gameId != pd.visual.getGameIdByKey(imgKey)) {
+                    gameId = pd.visual.getGameIdByKey(imgKey);
+                    borderColor = generateRandomColor();
+                }
+                imageDiv.style.borderWidth = "3px";
+                imageDiv.style.borderColor = borderColor;
+
+                let buttonDiv = document.createElement("div");
+                buttonDiv.setAttribute("class", "imageBtnDiv");
+
+                let loadBtn = document.createElement("button");
+                loadBtn.setAttribute("class", "imageButton imageLoadBtn");
+                loadBtn.textContent = "Load";
+                loadBtn.addEventListener('click', function () {
+                    loadGameImage(imgKey);
+                }, false);
+
+
+                let deleteBtn = document.createElement("button");
+                deleteBtn.setAttribute("class", "imageButton imageDeleteBtn");
+                deleteBtn.textContent = "Delete";
+                deleteBtn.addEventListener('click', function () {
+                    deleteGameImage(imgKey);
+                }, false);
+
+
+                buttonDiv.appendChild(loadBtn);
+                buttonDiv.appendChild(deleteBtn);
+
+                imageDiv.appendChild(image);
+                imageDiv.appendChild(buttonDiv);
+                imageGrid.appendChild(imageDiv);
+
+            });
+        }
+
+        function execReplay() {
+
+            var modal = document.getElementById('modalTop');
+            modal.style.display = "block";
+            modal.style.background = "transparent";
+
+            document.querySelector(".modalFormContent").style.display = "block";
+            document.querySelector(".innerGrid").style.display = "none";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent("#innerGridForm");
+
+            let startGameState = pd.getGameState("start");
+            let currGameState = pd.getGameState("current");
+
+            if (startGameState == undefined) {
+                let textNode = {
+                    name: "modalText",
+                    text: "Game Not Started Yet ",
+                }
+
+                template.attachText("#modalTitleID", textNode);
+                return;
+            }
+
+            let allGameState = pd.getAllGameStates();
+
+            let selectStartElem = document.createElement("select");
+            selectStartElem.setAttribute("class", "StateSelect");
+            selectStartElem.setAttribute("id", "startStateOptions");
+            selectStartElem.setAttribute("style", "margin: 0 .5vw;");
+
+            let selectTargetElem = document.createElement("select");
+            selectTargetElem.setAttribute("class", "StateSelect");
+            selectTargetElem.setAttribute("id", "targetStateOptions");
+            selectTargetElem.setAttribute("style", "margin: 0 .5vw;");
+
+            for (let index = 0; index < allGameState.length; ++index) {
+                let optStart = document.createElement('option');
+                let optTarget = document.createElement('option');
+                optStart.value = allGameState[index];
+                optTarget.value = allGameState[index];
+                optStart.innerHTML = allGameState[index];
+                optTarget.innerHTML = allGameState[index];
+
+                if (allGameState[index] == startGameState) {
+                    optStart.selected = "selected";
+                    optStart.setAttribute("class", "selected");
+                }
+                else if (allGameState[index] == currGameState) {
+                    optTarget.selected = "selected";
+                    optTarget.setAttribute("class", "selected");
+
+                }
+
+                selectStartElem.appendChild(optStart);
+                selectTargetElem.appendChild(optTarget);
+            }
+
+            document.getElementById("modalBodyID").appendChild(selectStartElem);
+            document.getElementById("modalBodyID").appendChild(selectTargetElem);
+
+            var submit = document.createElement("input");
+            submit.setAttribute("type", "button");
+            submit.setAttribute("value", "Submit");
+            submit.setAttribute("class", "submitReplay");
+            submit.setAttribute("style", "margin: 0 .5vw;background-color:rgb(149, 172, 170);");
+            submit.onclick = function () {
+                let replayId = document.getElementById("replay");
+                let replayImg = replayId.children[0];
+                replayImg.setAttribute('src', 'resources/images/icons/pause.png');
+                let sValue = document.getElementById("startStateOptions").value;
+                let eValue = document.getElementById("targetStateOptions").value;
+                console.log(sValue);
+                console.log(eValue);
+                pd.replay(sValue, eValue);
+                modal.style.display = "none";
+
+            }
+            document.getElementById("modalBodyID").appendChild(submit);
+        }
+
         function loadBoard(selectedBoard) {
             document.getElementById("boardmodalTop").style.display = "none";
             pd.loadBoard(selectedBoard);
@@ -637,21 +857,6 @@
 
         function closeForm() {
             document.getElementById("board_selection_form").style.display = "none";
-        }
-
-        function prefillBoard() {
-            pd.visual.prefillBoard();
-            this.closeBoardSelector();
-            this.closeSettings();
-        }
-
-        function execUndo() {
-            this.hideManipulationButtons();
-            pd.visual.undo();
-        }
-
-        function execRedo() {
-            pd.visual.redo();
         }
 
     </script>

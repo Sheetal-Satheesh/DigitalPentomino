@@ -45,7 +45,7 @@ class PD {
     }
 
     reset() {
-        this.visual.clear();
+        this.visual.reset();
         if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.visual.showNumberOfPossibleSolutions();
         }
@@ -85,7 +85,7 @@ class PD {
         return boardsWithConfig;
     }
 
-    loadBoard(board, type) {
+    loadBoard(board, loadType) {
         let gameObject = this.getGameUISettings(board);
         this.boardName = board; // HACK: To be changed later. This needs to be obtained from the backend. 
         this.boardSize = gameObject.boardSize;
@@ -97,14 +97,19 @@ class PD {
 
         this.boardStartX = Math.floor((this.gameHeight - this.boardSize[0]) / 2);
         this.boardStartY = Math.floor((this.gameWidth - this.boardSize[1]) / 2);
-        this.gameController.createGame(
-            [this.boardStartX, this.boardStartY],
-            this.boardSize,
-            this.boardShape,
-            this.blockedCells,
-            board);
 
-        this.visual = new Visual(this);
+        if (loadType != "Snapshot") {
+            this.gameController.createGame(
+                [this.boardStartX, this.boardStartY],
+                this.boardSize,
+                this.boardShape,
+                this.blockedCells,
+                board);
+            this.visual = new Visual(this);
+        } else {
+            this.visual.reload(pd);
+        }
+
         if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.visual.showNumberOfPossibleSolutions();
         }
@@ -138,4 +143,20 @@ class PD {
             this.visual.showNumberOfPossibleSolutions();
         }
     }
+
+    replay(startState, targetState) {
+        this.visual.replay(startState, targetState);
+    }
+
+    getGameState(type) {
+        return this.visual.getCmdState(type);
+    }
+
+    getAllGameStates() {
+        return this.visual.getGameStates();
+    }
+
 }
+
+
+// this.ui.load();

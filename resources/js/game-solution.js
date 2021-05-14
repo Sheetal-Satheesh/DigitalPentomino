@@ -22,7 +22,7 @@ class Solutions {
         return gameArray;
     }
 
-
+    /*  */
     /*TODO: Move to gameLoader class */
     static getGameFromString(gameString) {
 
