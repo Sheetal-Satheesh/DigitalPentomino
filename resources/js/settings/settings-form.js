@@ -36,7 +36,7 @@ class SettingsForm {
 
                 let lang = SettingsSingleton.getInstance().getSettings().general.language;
 
-                let advancedSettingsButton = SettingsForm.createShowAdvancedSettingsButton(
+                let advancedSettingsButton = SettingsForm.createCollapsibleButton(
                     strings.settings.advanced.show[lang],
                     strings.settings.advanced.hide[lang]);
                 formElement.appendChild(advancedSettingsButton);
@@ -118,9 +118,18 @@ class SettingsForm {
         }
 
         formElement.appendChild(advancedSettingsDiv);
+
+        formElement.appendChild(document.createElement("br"));
+        formElement.appendChild(document.createElement("br"));
+
+        let advancedSettingsButton = SettingsForm.createCollapsibleButton(
+            "OPEN USE IN CLASS",
+            "CLOSE USE IN CLASS");
+        formElement.appendChild(advancedSettingsButton);
+        formElement.appendChild(SettingsForm.createUseInClassCollapsible(schema));
     }
 
-    static createShowAdvancedSettingsButton(showText, hideText) {
+    static createCollapsibleButton(showText, hideText) {
         let buttonElement = SettingsForm.createButton(showText.toUpperCase(), {
             "class": "collapsible"
         });
@@ -138,6 +147,34 @@ class SettingsForm {
         });
 
         return buttonElement;
+    }
+
+    static createUseInClassCollapsible(schema) {
+        let useInClassElement = document.createElement("div");
+        useInClassElement.style.display = "none";
+
+        for (let heading in schema) {
+            let subSettings = schema[heading].properties;
+
+            useInClassElement.appendChild(SettingsForm.createHeader("h4", heading));
+
+            for (let key in subSettings) {
+                let elementName = heading + "." + key;
+
+                let settingsEntry = subSettings[key];
+                let settingsEntryType = settingsEntry.type;
+
+                useInClassElement.appendChild(
+                    SettingsForm.createLabel(key)
+                );
+
+                useInClassElement.appendChild(
+                    SettingsForm.createInputElement("checkbox", elementName + "teachers"));
+                useInClassElement.appendChild(document.createElement("br"));
+            }
+        }
+
+        return useInClassElement;
     }
 
     static createHeader(type, text) {
