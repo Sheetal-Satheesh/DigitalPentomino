@@ -1,8 +1,8 @@
 class SettingsForm {
 
     // === === === GENERATE FORM === === ===
-    static generateForm(formElement, schema, onSubmit) {
-
+    static generateForm(formElement, onSubmit) {
+        let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
         SettingsForm.createForm(formElement, schema);
 
         formElement.appendChild(document.createElement("br"));
