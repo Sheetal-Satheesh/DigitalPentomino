@@ -113,6 +113,7 @@ class SettingsSchema {
                 "type": "object",
                 "advanced": true,
                 "title": titles.prefilling.title[lang],
+                "visible": false,
                 "properties": {
                     enablePrefilling: {
                         "type": "boolean",

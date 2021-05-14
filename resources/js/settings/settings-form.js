@@ -21,7 +21,7 @@ class SettingsForm {
 
     // --- --- --- Form Creation --- --- ---
     static createForm(formElement, schema) {
-        let enteredAdvancedSettings = false;
+        let creatingNormalSettings = true;
         let advancedSettingsDiv = document.createElement("div");
         advancedSettingsDiv.style.display = "none";
 
@@ -30,31 +30,16 @@ class SettingsForm {
         for (let heading in schema) {
             let subSettings = schema[heading].properties;
 
-            if (!enteredAdvancedSettings && schema[heading].advanced) {
-                enteredAdvancedSettings = true;
+            if (creatingNormalSettings && schema[heading].advanced) {
+                creatingNormalSettings = false;
                 htmlElement = advancedSettingsDiv;
 
                 let lang = SettingsSingleton.getInstance().getSettings().general.language;
 
-                let button = document.createElement("button");
-                button.type = "button";
-                button.innerHTML = strings.settings.advanced.show[lang].toUpperCase();
-                button.className = "collapsible";
-
-                button.addEventListener("click", function() {
-                    this.classList.toggle("active");
-                    let content = this.nextElementSibling;
-                    let lang = SettingsSingleton.getInstance().getSettings().general.language;
-                    if (content.style.display === "block") {
-                        content.style.display = "none";
-                        button.innerHTML = strings.settings.advanced.show[lang].toUpperCase();
-                    } else {
-                        content.style.display = "block";
-                        button.innerHTML = strings.settings.advanced.hide[lang].toUpperCase();
-                    }
-                });
-
-                formElement.appendChild(button);
+                let advancedSettingsButton = SettingsForm.createShowAdvancedSettingsButton(
+                    strings.settings.advanced.show[lang],
+                    strings.settings.advanced.hide[lang]);
+                formElement.appendChild(advancedSettingsButton);
             }
 
             htmlElement.appendChild(SettingsForm.createHeader("h3", schema[heading].title));
@@ -135,6 +120,26 @@ class SettingsForm {
         formElement.appendChild(advancedSettingsDiv);
     }
 
+    static createShowAdvancedSettingsButton(showText, hideText) {
+        let buttonElement = SettingsForm.createButton(showText.toUpperCase(), {
+            "class": "collapsible"
+        });
+
+        buttonElement.addEventListener("click", function() {
+            this.classList.toggle("active");
+            let content = this.nextElementSibling;
+            if (content.style.display === "block") {
+                content.style.display = "none";
+                buttonElement.innerHTML = showText.toUpperCase();
+            } else {
+                content.style.display = "block";
+                buttonElement.innerHTML = hideText.toUpperCase();
+            }
+        });
+
+        return buttonElement;
+    }
+
     static createHeader(type, text) {
         let header = document.createElement(type);
         header.innerHTML = text;
@@ -212,7 +217,6 @@ class SettingsForm {
         let i = 0;
         imgPaths.forEach(imgPath => {
             let buttonElement = SettingsForm.createButton(undefined,{
-                type: "button",
                 style: "background:url(" + imgPath + ");background-size: 100%;",
             });
 
@@ -243,6 +247,7 @@ class SettingsForm {
 
     static createButton(text, options) {
         let buttonElement = document.createElement("button");
+        buttonElement.type = "button";
         if (!(text === undefined)) buttonElement.innerHTML = text;
 
         if (!(options === undefined)) {
