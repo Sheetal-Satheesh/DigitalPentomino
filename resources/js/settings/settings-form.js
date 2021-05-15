@@ -8,6 +8,13 @@ class SettingsForm {
         formElement.appendChild(document.createElement("br"));
         formElement.appendChild(document.createElement("br"));
 
+        if (SettingsSingleton.getInstance().getSettings().teachersMode) {
+            formElement.appendChild(SettingsForm.createLabel("Teachers URL: TODO"));
+            formElement.appendChild(document.createElement("br"));
+            formElement.appendChild(SettingsForm.createLabel("Class URL: TODO"));
+            formElement.appendChild(document.createElement("br"));
+        }
+
         formElement.appendChild(SettingsForm.createSubmitButton());
 
         $(formElement).submit(function(event) {
@@ -119,18 +126,12 @@ class SettingsForm {
             }
         }
 
-        formElement.appendChild(advancedSettingsDiv);
-
         if (SettingsSingleton.getInstance().getSettings().teachersMode) {
-            formElement.appendChild(document.createElement("br"));
-            formElement.appendChild(document.createElement("br"));
-
-            let advancedSettingsButton = SettingsForm.createCollapsibleButton(
-                "OPEN USE IN CLASS",
-                "CLOSE USE IN CLASS");
-            formElement.appendChild(advancedSettingsButton);
-            formElement.appendChild(SettingsForm.createUseInClassCollapsible(schema));
+            htmlElement.appendChild(SettingsForm.createHeader("h3", "Displayed Settings in Pupil Mode"));
+            htmlElement.appendChild(SettingsForm.createTeachersAdvancedSettings(schema));
         }
+
+        formElement.appendChild(advancedSettingsDiv);
     }
 
     static createCollapsibleButton(showText, hideText) {
@@ -153,15 +154,8 @@ class SettingsForm {
         return buttonElement;
     }
 
-    static createUseInClassCollapsible(schema) {
+    static createTeachersAdvancedSettings(schema) {
         let useInClassElement = document.createElement("div");
-        useInClassElement.style.display = "none";
-
-        useInClassElement.appendChild(SettingsForm.createLabel("Teachers URL: TODO"));
-        useInClassElement.appendChild(document.createElement("br"));
-
-        useInClassElement.appendChild(SettingsForm.createLabel("Class URL: TODO"));
-        useInClassElement.appendChild(document.createElement("br"));
 
         for (let heading in schema) {
             let subSettings = schema[heading].properties;
