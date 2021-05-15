@@ -1091,6 +1091,19 @@ class Visual {
         }, timeoutFrame);
     }
 
+
+
+    hideMostOccupiedNeighbors(cellsToIndicate, prevBackground, timeoutFrame){
+
+        setTimeout(function(){
+            for (let j=0;j<cellsToIndicate.length;j++){
+                let fvalue = document.getElementById("field_" + cellsToIndicate[j][0] + "," + cellsToIndicate[j][1]);
+                    //TODO: replace with proper fadeOut animation
+                fvalue.style.background = prevBackground[j];
+            }
+        }, timeoutFrame);
+    }
+
     getOccupiedPositions(piece, hintCommand) {
 
         let PiecePostions = [];
