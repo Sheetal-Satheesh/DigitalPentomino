@@ -8,8 +8,11 @@ class SettingsParser {
      * @returns {object | null}
      */
     static parseSettingsFromSeed(schema, seed) {
-        let remainingSeed = String(seed);
         let settings = {};
+
+        settings.teachersMode = seed[0] === "1";
+
+        let remainingSeed = String(seed.substr(1, seed.length));
 
         let lastElement;
 
@@ -158,7 +161,7 @@ class SettingsParser {
     static parseSettingsToSeed(schema, settings) {
         SettingsParser.revertNumericalLanguageRepr(settings);
 
-        let seed = "";
+        let seed = (settings.teachersMode ? 1 : 2).toString();
 
         for (let heading in schema) {
             let subSettings = schema[heading].properties;
@@ -238,6 +241,7 @@ class SettingsParser {
     // --- --- --- Create Empty Settings Object --- --- ---
     static createDefaultSettingsObject(schema) {
         let settings = {};
+        settings.teachersMode = true;
         for (let heading in schema) {
             let subSettings = schema[heading].properties;
             settings[heading] = {};

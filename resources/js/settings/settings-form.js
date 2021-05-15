@@ -12,10 +12,12 @@ class SettingsForm {
 
         $(formElement).submit(function(event) {
             let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
-            let data = SettingsForm.collectDataFromForm(formElement, schema);
-            console.log(data);
+            let settings = SettingsSingleton.getInstance().getSettings();
+            let settingsClone = JSON.parse(JSON.stringify(settings));
+            SettingsForm.collectDataFromForm(formElement, schema, settingsClone);
+            console.log(settingsClone);
             event.preventDefault();
-            onSubmit(false, data);
+            onSubmit(false, settingsClone);
         });
     }
 
@@ -119,14 +121,16 @@ class SettingsForm {
 
         formElement.appendChild(advancedSettingsDiv);
 
-        formElement.appendChild(document.createElement("br"));
-        formElement.appendChild(document.createElement("br"));
+        if (SettingsSingleton.getInstance().getSettings().teachersMode) {
+            formElement.appendChild(document.createElement("br"));
+            formElement.appendChild(document.createElement("br"));
 
-        let advancedSettingsButton = SettingsForm.createCollapsibleButton(
-            "OPEN USE IN CLASS",
-            "CLOSE USE IN CLASS");
-        formElement.appendChild(advancedSettingsButton);
-        formElement.appendChild(SettingsForm.createUseInClassCollapsible(schema));
+            let advancedSettingsButton = SettingsForm.createCollapsibleButton(
+                "OPEN USE IN CLASS",
+                "CLOSE USE IN CLASS");
+            formElement.appendChild(advancedSettingsButton);
+            formElement.appendChild(SettingsForm.createUseInClassCollapsible(schema));
+        }
     }
 
     static createCollapsibleButton(showText, hideText) {
@@ -309,8 +313,7 @@ class SettingsForm {
     }
 
     // --- --- --- Data collection --- --- ---
-    static collectDataFromForm(formElement, schema) {
-        let result = {};
+    static collectDataFromForm(formElement, schema, result) {
 
         for (let heading in schema) {
             let subSettings = schema[heading].properties;
@@ -347,8 +350,6 @@ class SettingsForm {
                 }
             }
         }
-
-        return result;
     }
 
     // === === === UPDATE FORM === === ===
