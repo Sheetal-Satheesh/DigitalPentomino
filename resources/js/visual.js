@@ -944,6 +944,110 @@ class Visual {
         });
     }
 
+
+     cellsToIndicate(piecePos, mostCells, hintCommand){
+        let maxPartialHintingCells = SettingsSingleton.getInstance().getSettings().hinting.maxPartialHintingCells;
+        let randomCell = Math.floor(Math.random() * (maxPartialHintingCells)) + 1;
+        let game = this.gameController.game();
+        let board = game._board;
+        let cellsToIndicate = [];
+        let temp = [];
+        let temp2 = [];
+        cellsToIndicate.push(mostCells);
+        cellsToIndicate.forEach(function(element){
+            piecePos.forEach(function(ele){
+                if(!((element[0] == ele[0])&&(element[1] == ele[1]))){
+                    cellsToIndicate.push(ele);
+                }
+            });
+       });
+       let filtered = cellsToIndicate.splice(randomCell, cellsToIndicate.length);
+       return cellsToIndicate;
+    }
+
+    mostNeigh(hintinPen ,piecePos , hintCommand){
+        let game = this.gameController.game();
+        let board = game._board;
+        hintinPen = hintCommand._pentomino;
+        let maxNumOccupiedCells = 0;
+        //unoccupied cells
+        let bestCell;
+        let cellIsOccupied;
+        let ab;
+        for(let i=0; i<piecePos.length; i++){
+            let counter = 0;
+            ab = board._getNeighborPositions(piecePos[i][0], piecePos[i][1]);           
+            for(let j = 0; j<ab.length; j++){
+                if(board.positionIsValid(ab[j][0], ab[j][1])){
+                    cellIsOccupied = board.isOccupied(ab[j][0], ab[j][1]);
+                    if(!(cellIsOccupied === null) && !(cellIsOccupied === hintinPen)){
+                        counter += 1;
+                    }
+                }
+                else {
+                    counter += 1;
+                }
+                if(counter > maxNumOccupiedCells){
+                    maxNumOccupiedCells = counter;
+                    if(board.positionIsValid(ab[j][0], ab[j][1])){
+                        if(cellIsOccupied){
+                            bestCell = piecePos[i];
+                        }
+                    }
+                    else{
+                        bestCell = piecePos[i];
+                    } 
+                }
+            }
+        }
+        return bestCell;
+    }
+
+
+
+    calculateNeighbour(piecePos , hintCommand){
+        let game = this.gameController.game();
+        let board = game._board;
+        let neighb;
+        let randomCellPos = [];
+        let reduced = []
+        for(let i=0; i<piecePos.length; i++){
+            neighb = this.gameController.game()._board._getNeighborPositions(piecePos[i][0], piecePos[i][1]);
+            for(let j=0; j<neighb.length; j++){
+                if(board.positionIsValid(neighb[j][0], neighb[j][1])){
+                    if(board.isOccupied(neighb[j][0], neighb[j][1])){
+                        randomCellPos.push(piecePos[i]);
+                    }
+                }
+                else{
+                    randomCellPos.push(piecePos[i]);
+                }
+            }
+        }
+        //remove duplicate values
+        reduced = [...randomCellPos.reduce((p,c) => p.set(c,true),new Map()).keys()];
+        let filtered = reduced.splice(randomCell, reduced.length);
+        return reduced;
+    }
+
+
+   
+
+    //returns unique elements of an array : reference : https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-array
+        unique(arr) {
+        return arr.sort().filter(function(ele, posi, ary) {
+            return !posi || ele != ary[posi - 1];
+        });
+    }
+
+
+    calculateDistance(currentPoint,neighbourPoint){
+        return  Math.round(Math.sqrt(
+                Math.pow((currentPoint[0]-neighbourPoint[0]),2) +
+                Math.pow((currentPoint[1]-neighbourPoint[1]),2)));
+    }
+
+
     indicateAreaCells(piece, hintCommand) {
         let hintRow = hintCommand._nextPosition[0];
         let hintColumn = hintCommand._nextPosition[1];
