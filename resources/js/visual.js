@@ -11,27 +11,50 @@ Object.freeze(UIProperty);
 const CommandTypes = { "Original": 1, "Shadow": 2 };
 Object.freeze(CommandTypes);
 
-const RedoStrategy = { "TOP": 1, "BOTTOM": 2 };
-Object.freeze(RedoStrategy);
+const CommandSeq = { "Forward": 1, "Backward": 2 };
+Object.freeze(CommandSeq);
+
+function updateCommandAttr(cmdType, cmdSeq) {
+    return {
+        "cmdType": cmdType,
+        "cmdSeq": cmdSeq
+    }
+}
+
+const cmdAttrDefault = updateCommandAttr(CommandTypes.Original, CommandSeq.Forward);
+
 let lastHintedPentName = null;
 let randomCell;
 class Visual {
 
-    constructor(pd) {
+    constructor(pd, type = "reload") {
         this.pd = pd;
         this.gameController = pd.gameController;
         this.boardX = pd.boardStartX;
         this.boardY = pd.boardStartY;
-        this.pieces = this.gameController.getPentominoes();
+        this.pieces = this.gameController.getAllPentominoes();
         this.selected = false;
         this.overlapBlock = new OverlapBlock();
 
         this.renderBoard();
         this.renderPieces();
-
         this.disablePrefillButton(false);
-
         this.initalizeListeners();
+    }
+
+    reload(pd) {
+        this.boardX = pd.boardStartX;
+        this.boardY = pd.boardStartY;
+        this.pieces = this.gameController.getAllPentominoes();
+        this.selected = false;
+        this.overlapBlock = new OverlapBlock();
+
+        this.renderBoard();
+        this.renderPieces();
+        let pentominosInGameArea = this.gameController.getPentominoesInGmArea();
+        pentominosInGameArea.forEach((pentomino) => {
+            this.positionPiece(pentomino);
+        });
     }
 
     getBoard() {
@@ -52,7 +75,6 @@ class Visual {
     }
 
     isPentominoInBlockCells(pentomino) {
-
         var [pX, pY] = this.gameController.getPositionOfPentomino(pentomino);
         var pMatrix = pentomino.getMatrixRepresentation();
 
@@ -80,10 +102,12 @@ class Visual {
         }
     }
 
-    placePentomino(pentomino, posX, posY, cmdType = CommandTypes.Original) {
-        this.gameController.placePentomino(pentomino, posX, posY, cmdType);
+    placePentomino(pentomino, posX, posY, cmdProperty = cmdAttrDefault) {
+        this.gameController.placePentomino(pentomino, posX, posY, cmdProperty);
         this.positionPiece(pentomino);
-        this.checkIfGameWon();
+        if(cmdProperty.cmdType != CommandTypes.Shadow){
+            this.checkIfGameWon();
+        }
     }
 
     checkIfGameWon() {
@@ -92,13 +116,22 @@ class Visual {
         }
     }
 
-    movePentominoToTray(pentomino, cmdType = CommandTypes.Original) {
-        this.gameController.removePentomino(pentomino, cmdType);
+    removeFromTray(pentomino) {
+        if (pentomino.inTray == 0) {
+            return;
+        }
+        this.gameController.removeFromTray(pentomino);
     }
 
-    clear() {
+    movePentominoToTray(pentomino, cmdProperty = cmdAttrDefault) {
+        this.gameController.addToTray(pentomino);
+        this.gameController.removePentomino(pentomino, cmdProperty);
+        this.positionPiece(pentomino);
+    }
+
+    reset() {
         this.gameController.resetGame();
-        this.pieces = this.gameController.getPentominoes();
+        this.pieces = this.gameController.getAllPentominoes();
         this.pd.visual.disableManipulations();
         this.renderPieces();
     }
@@ -220,6 +253,7 @@ class Visual {
 
         }
         else {
+
             var bCellsFnd = this.isPentominoInBlockCells(piece);
             var collisonFnd = this.isCollision(piece);
             if (collisonFnd) {
@@ -258,7 +292,6 @@ class Visual {
 
         //making the element visible (see remark in renderPieces)
         htmlElement.style.display = 'block';
-
     }
 
     select(piece, xPosition, yPosition) {
@@ -470,9 +503,11 @@ class Visual {
                 for (var i in elements) {
                     var element = elements[i];
                     var id = element.id;
-                    //when piece is moved back to tray reset Pentomio inTray variable to 1 and place the piece in Tray
+                    /**
+                     * when piece is moved back to tray reset Pentomio inTray variable to 1 and place the 
+                     * piece in Tray */
                     if (id == 'tray') {
-                        let piece = data[1].toTray();
+                        let piece = data[1];
                         that.positionPiece(piece);
                         that.movePentominoToTray(piece);
                         that.disableManipulations();
@@ -480,7 +515,7 @@ class Visual {
 
                     if (id.split('_')[0] == 'field') {
                         var coords = (id.split('_')[1].split(','));
-                        data[1].removeFromTray();
+                        that.removeFromTray(data[1]);
                         that.placePentomino(data[1], coords[0], coords[1]);
                         if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
                             that.showNumberOfPossibleSolutions();
@@ -506,7 +541,7 @@ class Visual {
         }
     }
 
-    rotateClkWise(cmdType = CommandTypes.Original) {
+    rotateClkWise(cmdProperty = cmdAttrDefault) {
         let piece = this.selected;
         if (piece) {
             let pieceDiv = document.getElementById("piece_" + piece.name);
@@ -514,14 +549,16 @@ class Visual {
             let currentRot = pieceDiv.style.getPropertyValue("--rotationZ").split(/(-?\d+)/)[1] * 1; //converts string value to int
             let newRot = flipped ? currentRot - 90 : currentRot + 90;
             // Update the backend
-            this.gameController.rotatePentominoClkWise(piece, cmdType);
+            this.gameController.rotatePentominoClkWise(piece, cmdProperty);
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
-            this.checkIfGameWon();
+            if(cmdProperty.cmdType != CommandTypes.Shadow){
+                this.checkIfGameWon();
+            }
         }
     }
 
-    rotateAntiClkWise(cmdType = CommandTypes.Original) {
+    rotateAntiClkWise(cmdProperty = cmdAttrDefault) {
         let piece = this.selected;
         if (piece) {
             let pieceDiv = document.getElementById("piece_" + piece.name);
@@ -529,14 +566,16 @@ class Visual {
             let currentRot = pieceDiv.style.getPropertyValue("--rotationZ").split(/(-?\d+)/)[1] * 1; //converts string value to int
             let newRot = flipped ? currentRot + 90 : currentRot - 90;
             // Update the backend
-            this.gameController.rotatePentominoAntiClkWise(piece, cmdType);
+            this.gameController.rotatePentominoAntiClkWise(piece, cmdProperty);
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
-            this.checkIfGameWon();
+            if(cmdProperty.cmdType != CommandTypes.Shadow){
+                this.checkIfGameWon();
+            }
         }
     }
 
-    flipH(cmdType = CommandTypes.Original) {
+    flipH(cmdProperty = cmdAttrDefault) {
         let piece = this.selected;
         if (piece) {
             let pieceDiv = document.getElementById("piece_" + piece.name);
@@ -544,15 +583,17 @@ class Visual {
             let currentRot = pieceDiv.style.getPropertyValue("--rotationX").split(/(-?\d+)/)[1] * 1; //converts string value to int
             let newRot = currentRot + 180;
             // Update the backend
-            this.gameController.mirrorPentominoH(piece, cmdType);
+            this.gameController.mirrorPentominoH(piece, cmdProperty);
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationX", newRot.toString() + "deg");
             pieceDiv.setAttribute("flipped", 1 - flipped);
-            this.checkIfGameWon();
+            if(cmdProperty.cmdType != CommandTypes.Shadow){
+                this.checkIfGameWon();
+            }
         }
     }
 
-    flipV(cmdType = CommandTypes.Original) {
+    flipV(cmdProperty = cmdAttrDefault) {
         let piece = this.selected;
         if (piece) {
             let pieceDiv = document.getElementById("piece_" + piece.name);
@@ -560,11 +601,13 @@ class Visual {
             let currentRot = pieceDiv.style.getPropertyValue("--rotationY").split(/(-?\d+)/)[1] * 1; //converts string value to int
             let newRot = currentRot + 180;
             // Update the backend
-            this.gameController.mirrorPentominoV(piece, cmdType);
+            this.gameController.mirrorPentominoV(piece, cmdProperty);
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationY", newRot.toString() + "deg");
             pieceDiv.setAttribute("flipped", 1 - flipped);
-            this.checkIfGameWon();
+            if(cmdProperty.cmdType != CommandTypes.Shadow){
+                this.checkIfGameWon();
+            }
         }
     }
 
@@ -790,6 +833,7 @@ class Visual {
         }
     }
 
+
     indicatePentomino(pentomino, timeframe) {
         Array.prototype.forEach.call(document.getElementById("piece_" + pentomino.name).getElementsByClassName("bmPoint"), function (element) {
             element.style["box-shadow"] = "0 0 20px " + pentomino.color;
@@ -882,7 +926,6 @@ class Visual {
         });
     }
 
-
     indicateAreaCells(piece, hintCommand) {
         let hintRow = hintCommand._nextPosition[0];
         let hintColumn = hintCommand._nextPosition[1];
@@ -904,8 +947,6 @@ class Visual {
         return [areaPosArray, null];
     }
 
-
-
     hideArea(areaPos, prevBackground, timeoutFrame) {
 
         setTimeout(function () {
@@ -917,11 +958,6 @@ class Visual {
         }, timeoutFrame);
     }
 
-
-
-
-
-
     hide(piecePos, prevBackground, timeoutFrame) {
 
         setTimeout(function () {
@@ -932,7 +968,6 @@ class Visual {
             }
         }, timeoutFrame);
     }
-
 
     getOccupiedPositions(piece, hintCommand) {
 
@@ -1010,7 +1045,7 @@ class Visual {
     }
 
     readyForPrefilling() {
-        this.clear();
+        this.reset();
         // Prevent clicking of button while previous prefilling is going on
         this.disablePrefillButton(true);
     }
@@ -1095,8 +1130,9 @@ class Visual {
                 }
                 blockedCells = JSON.parse(JSON.stringify(blockedCellsTemp));
                 prefillCandidates.push(piece);
-                piece.removeFromTray();
-                this.gameController.placePentomino(piece, currentAnchor[0], currentAnchor[1]);
+                this.removeFromTray(piece);
+                piece.updateTrayValue(0);
+                this.placePentomino(piece, currentAnchor[0], currentAnchor[1]);
 
             } else {
                 piece = new Pentomino(piece.name);
@@ -1138,8 +1174,9 @@ class Visual {
             }
             prefillCandidates.push(piece);
             positions.push(currentAnchor);
-            piece.removeFromTray();
-            this.gameController.placePentomino(piece, currentAnchor[0], currentAnchor[1]);
+            this.removeFromTray(piece);
+            piece.updateTrayValue(0);
+            this.placePentomino(piece, currentAnchor[0], currentAnchor[1]);
         }
 
         return prefillCandidates;
@@ -1149,9 +1186,8 @@ class Visual {
         return this.getRandomElementFromArray(solution.filter(piece => !(pickedPieces[piece[0].name] == 1)));
     }
 
-
-
-    execShadowCmd(command) {
+    execShadowCmd(command, seqType) {
+        let cmdProperty = updateCommandAttr(CommandTypes.Shadow, seqType);
         switch (command.name) {
             case "Remove":
             case "Place":
@@ -1160,34 +1196,41 @@ class Visual {
                     if (command.Pentomino.inTray == 1) {
                         break;
                     }
-                    command.Pentomino.toTray();
-                    this.movePentominoToTray(command.Pentomino, CommandTypes.Shadow);
+                    command.Pentomino.updateTrayValue(1);
+                    this.movePentominoToTray(
+                        command.Pentomino,
+                        cmdProperty);
                     this.positionPiece(command.Pentomino);
                 }
                 else {
                     command.Pentomino.inTray = 0;
-                    this.placePentomino(command.Pentomino, command.PosX, command.PosY, CommandTypes.Shadow);
+                    this.placePentomino(
+                        command.Pentomino,
+                        command.PosX,
+                        command.PosY,
+                        cmdProperty);
                 }
+
                 break;
 
             case "RotateClkWise":
                 this.selected = command.Pentomino;
-                this.rotateClkWise(CommandTypes.Shadow);
+                this.rotateClkWise(cmdProperty);
                 break;
 
             case "RotateAntiClkWise":
                 this.selected = command.Pentomino;
-                this.rotateAntiClkWise(CommandTypes.Shadow);
+                this.rotateAntiClkWise(cmdProperty);
                 break;
 
             case "MirrorH":
                 this.selected = command.Pentomino;
-                this.flipH(CommandTypes.Shadow);
+                this.flipH(cmdProperty);
                 break;
 
             case "MirrorV":
                 this.selected = command.Pentomino;
-                this.flipV(CommandTypes.Shadow);
+                this.flipV(cmdProperty);
                 break;
 
             default:
@@ -1197,12 +1240,26 @@ class Visual {
         }
     }
 
+    getCmdState(stateType) {
+        if (stateType == "start") {
+            return this.gameController.getStartCmdKey();
+        }
+        else {
+            return this.gameController.getCurrentCmdKey()
+        }
+    }
+
+    getGameStates() {
+        let cmdKeySequences = this.gameController.getCmdKeySequences();
+        return cmdKeySequences;
+    }
+
     undo() {
         let command = this.gameController.undo();
         if (command == undefined) {
             return;
         }
-        this.execShadowCmd(command, "Undo");
+        this.execShadowCmd(command);
         if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.showNumberOfPossibleSolutions();
         }
@@ -1210,15 +1267,87 @@ class Visual {
     }
 
     redo() {
-        let command = this.gameController.redo(RedoStrategy.TOP);
+        let command = this.gameController.redo();
         if (command == undefined) {
             return;
         }
-        this.execShadowCmd(command, "Redo");
+        this.execShadowCmd(command);
         if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.showNumberOfPossibleSolutions();
         }
         this.checkIfGameWon();
+    }
+
+    getGameIdByKey(key) {
+        return this.gameController.getGameIdByKey(key);
+    }
+    saveGameImage(image) {
+        this.gameController.saveGameImage(image);
+    }
+
+    showGameImages() {
+        let gameImages = this.gameController.getGameImages();
+        return gameImages;
+    }
+
+    deleteGameImage(key) {
+        this.gameController.deleteGameImage(key);
+    }
+
+    loadGame(key) {
+        this.gameController.loadGame(key);
+    }
+
+    loadGameState(targetStateKey) {
+        let currentCmdKey = this.gameController.getCurrentCmdKey();
+        if (currentCmdKey == undefined) {
+            currentCmdKey = this.gameController.getStartCmdKey();
+        }
+        let [cmdSequences, seqType] = this.gameController.getCmdSequences(currentCmdKey, targetStateKey);
+        for (let indx = 0; indx < cmdSequences.length; indx++) {
+            this.execShadowCmd(cmdSequences[indx], seqType);
+        }
+    }
+
+    replay(startKey, targetKey) {
+        
+        if (startKey.length == 0) {
+            startKey = this.gameController.getStartCmdKey();
+            if (startKey == undefined) {
+                console.error("Game is not Started yet");
+                return;
+            }
+        }
+
+        if (targetKey.length == 0) {
+            targetKey = this.gameController.getLastCmdKey();
+            if (targetKey == undefined) {
+                console.error("Game is not Started yet");
+                return;
+            }
+        }
+
+        let [cmdSequences, seqType] = this.gameController.getCmdSequences(startKey, targetKey);
+        this.loadGameState(startKey);
+
+
+        let timeInterval = 100;
+        for (let indx = 0; indx < cmdSequences.length; indx++) {
+            let command = cmdSequences[indx];
+            var that = this;
+
+            setTimeout(function (that, command) {
+                that.execShadowCmd(command, seqType);
+            }, timeInterval += 500, that, command);
+        }
+
+        const pause = function () {
+            let replayId = document.getElementById("replay");
+            let replayImg = replayId.children[0];
+            replayImg.setAttribute('src', 'resources/images/icons/replay.svg');
+        };
+        setTimeout(pause, timeInterval);
+
     }
 
     disablePointerEventsOnPieces() {

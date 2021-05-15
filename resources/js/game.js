@@ -20,13 +20,12 @@ class Game {
         this._pentominosOutside = [];
         this._pentominoOutsidePositions = [];
         this._collisions = [];
-        this._solutions = Solutions.getGamesFromSolutionsConfig(this._name);
+        this._id = Math.random().toString(36).slice(-10);
     }
 
     reset() {
         this._board.reset();
         this._tray = [];
-        this._fillUpTray();
         this._pentominosOutside = [];
         this._pentominoOutsidePositions = [];
         this._collisions = [];
@@ -34,6 +33,14 @@ class Game {
 
     updateCmdKey(cmdKey) {
         this._cmdKey = cmdKey;
+    }
+
+    getCmdKey() {
+        return this._cmdKey;
+    }
+
+    getId() {
+        return this._id;
     }
 
     /**
@@ -356,13 +363,6 @@ class Game {
         return [...new Set(pentominos)];
     }
 
-    /** ---------------  Solutions-------------*/
-
-    getSolutions() {
-        return this._solutions;
-    }
-
-
     // --- --- --- Helper Pentomino Operations --- --- ---
     _doLocalOperation(pentomino, operation, boardOperation) {
         let tempPentomino = new Pentomino(pentomino.name);
@@ -459,6 +459,26 @@ class Game {
         }, this);
 
     }
+
+
+    removeFromTray(pentomino) {
+        this._tray = this._tray.filter(item => (item.name != pentomino.name));
+    }
+
+    addToTray(pentomino) {
+        if (!this._tray.find(p => p.name === pentomino.name)) {
+            this._tray.push(pentomino);
+        }
+    }
+
+    isPentominiInTray(pentomino) {
+        if (this._tray.find(p => p.name === pentomino.name)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
     // --- --- --- History --- --- ---
     undo() {
         return this._commandManager.undo();
@@ -484,8 +504,12 @@ class Game {
         });
     }
 
-    getPentominoes() {
+    getAllPentominoes() {
         return this._board.getPentominoes().concat(this._pentominosOutside).concat(this._tray);
+    }
+
+    getPentominosInTray() {
+        return this._tray;
     }
 
     getPentominoesInGmArea() {

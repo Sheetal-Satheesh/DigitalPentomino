@@ -1,5 +1,4 @@
 
-
 class CommandNode {
     constructor(command) {
         if (!(command instanceof Command)) {
@@ -44,8 +43,6 @@ class CommandNode {
         return this._parent;
     }
 }
-
-
 
 if (typeof module != 'undefined') {
     module.exports = Command;

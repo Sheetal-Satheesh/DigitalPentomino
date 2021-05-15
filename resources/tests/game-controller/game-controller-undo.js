@@ -19,8 +19,8 @@ gameController.movePentominoToPosition(T, 2, 4);
 gameController.movePentominoToPosition(T, -1, 50);
 
 describe('GameController', function () {
-    describe('#undo()', function() {
-        it('should undo moving a pentomino to another position', function() {
+    describe('#undo()', function () {
+        it('should undo moving a pentomino to another position', function () {
             assert.strictEqual(gameController.isUndoPossible(), true);
             gameController.undo();
             assert.deepEqual(gameController.getPositionOfPentomino(T), [2, 4]);

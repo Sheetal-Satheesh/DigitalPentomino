@@ -415,6 +415,12 @@ table
 #seedBar:focus {
 }
 
+.FlashOn {
+  display: block;
+  visibility: visible;
+  filter: alpha(opacity=65);
+  opacity: .6;
+
 html {
 	-webkit-text-size-adjust: none;
 	touch-action: manipulation;

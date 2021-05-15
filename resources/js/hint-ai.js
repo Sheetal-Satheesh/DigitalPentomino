@@ -6,14 +6,23 @@ if (typeof require != 'undefined') {
 }
 
 class HintAI {
-
-    constructor(game) {
-        this._game = game;
+    constructor(game, loadSolutions = false) {
+        if (loadSolutions == true) {
+            this._solutions = Solutions.getGamesFromSolutionsConfig(game.getName());
+        }
     }
 
-    getHint() {
-        let game = this._game;
-        let possibleSolutions = this._getPossibleSolutions(game, game.getSolutions());
+    /** ---------------  Solutions-------------*/
+    getSolutions() {
+        if (this._solutions == undefined) {
+            console.error("Solution is not set");
+        }
+        return this._solutions;
+    }
+
+    getHint(game) {
+        // let game = this._game;
+        let possibleSolutions = this._getPossibleSolutions(game, this._solutions);
 
         if (possibleSolutions.length > 0) {
             let closestSolution = possibleSolutions[0];
@@ -22,7 +31,7 @@ class HintAI {
             return new Hint(commands, possibleSolutions);
         } else {
             // Pursue closest game state, which has at least one possible solution
-            let closestSolution = this._getClosesSolution(game, game.getSolutions());
+            let closestSolution = this._getClosesSolution(game, this._solutions);
 
             let unoccupiedCellSpaces = game._board.getUnoccupiedCellSpaces();
             let bestImpossibleCellSpace = this._calculateBestImpossibleUnoccupiedCellSpace(game, unoccupiedCellSpaces);
@@ -217,13 +226,13 @@ class HintAI {
 
     // --- --- --- Possible Solutions --- --- ---
     _getPossibleSolutions(game, solutions) {
-        if (game.getPentominoes().length === 0) {
+        if (game.getAllPentominoes().length === 0) {
             throw new Error("game is empty");
         }
 
         let possibleSolutions = [];
         solutions.forEach(solution => {
-            let allPentominoesOnBoardArePerfect = game.getPentominoes()
+            let allPentominoesOnBoardArePerfect = game.getAllPentominoes()
                 .filter(pentomino => game.isPlacedOnBoard(pentomino))
                 .every(pentominoOnBoard => {
                     return this._isPerfectPentomino(game, solution, pentominoOnBoard.name);
@@ -254,9 +263,9 @@ class HintAI {
         solutions.forEach(solution => {
             let numOfPerfectPentominoesOnBoard = 0;
             let counter = 0;
-            let numOfPentominoes = game.getPentominoes().length;
+            let numOfPentominoes = game.getAllPentominoes().length;
 
-            game.getPentominoes().filter(p => game.isPlacedOnBoard(p)).every(gamePentomino => {
+            game.getAllPentominoes().filter(p => game.isPlacedOnBoard(p)).every(gamePentomino => {
                 let remainingPentominoes = numOfPentominoes - counter;
                 let maxPossibleNumOfPerfectPentominoes = remainingPentominoes + numOfPerfectPentominoesOnBoard;
                 if (maxPossibleNumOfPerfectPentominoes <= numOfPerfectPentominoesOnBoardOfClosestSolution) {
@@ -282,7 +291,7 @@ class HintAI {
     _getCommandSequenceListToSolution(game, solution) {
         let commandSequenceList = new CommandSequenceList();
 
-        let nonPerfectPentominoes = game.getPentominoes().filter(p => !this._isPerfectPentomino(game, solution, p.name));
+        let nonPerfectPentominoes = game.getAllPentominoes().filter(p => !this._isPerfectPentomino(game, solution, p.name));
         nonPerfectPentominoes.forEach(p => {
             commandSequenceList.addCommandSequence(p.name, this._getCommandsToPerfectPentominoState(game, solution, p));
         });
@@ -297,19 +306,19 @@ class HintAI {
      * @returns {null}
      */
     /*_getNextCommandsToSolution(game, solution, backtracking) {
-        if (game.getPentominoes().length === 0) {
+        if (game.getAllPentominoes().length === 0) {
             throw new Error("game is empty");
         }
 
         let pentomino;
         if (backtracking) {
-            pentomino = game.getPentominoes().find(p => !this._isPerfectPentomino(game, solution, p.name));
+            pentomino = game.getAllPentominoes().find(p => !this._isPerfectPentomino(game, solution, p.name));
         } else {
-            let pentominoesOnBoard = game.getPentominoes().filter(p => game.isPlacedOnBoard(p));
+            let pentominoesOnBoard = game.getAllPentominoes().filter(p => game.isPlacedOnBoard(p));
             pentomino = pentominoesOnBoard.find(p => !this._isPerfectPentomino(game, solution, p.name));
             if (pentomino === undefined || pentomino === null) {
                 // no non perfect pentominoes inside the board
-                pentomino = game.getPentominoes().filter(p => !game.isPlacedOnBoard(p)).find(p => !this._isPerfectPentomino(game, solution, p.name));
+                pentomino = game.getAllPentominoes().filter(p => !game.isPlacedOnBoard(p)).find(p => !this._isPerfectPentomino(game, solution, p.name));
             }
         }
 
