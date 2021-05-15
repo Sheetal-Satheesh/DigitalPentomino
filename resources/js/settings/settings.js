@@ -45,4 +45,12 @@ class Settings {
     getSettings() {
         return this._settings;
     }
+
+    static isVisible(visibility, heading, subheading) {
+        if (visibility[heading + "." + subheading] === undefined) {
+            throw new Error("Unknown settings entry: " + heading + "." + subheading);
+        }
+
+        return visibility[heading + "." + subheading] === true;
+    }
 }

@@ -352,23 +352,22 @@ class SettingsForm {
         let settings = SettingsSingleton.getInstance().getSettings();
 
         //change default values according to current schema
-        for (let key in settings) {
-            //console.log(settings[key]);
-            for (let subkey in settings[key]) {
-                //console.log(settings[key][subkey]);
-                let schemaEntry = schema[key]["properties"][subkey];
+        for (let heading in schema) {
+            let subSettings = schema[heading].properties;
+            for (let subheading in subSettings) {
+                let schemaEntry = schema[heading]["properties"][subheading];
                 switch (schemaEntry.type) {
                     case "boolean":
-                        SettingsForm.editBooleanSchemaEntry(key, subkey, settings[key][subkey], formElement);
+                        SettingsForm.editBooleanSchemaEntry(heading, subheading, settings[heading][subheading], formElement);
                         break;
                     case "number": case "integer":
-                        SettingsForm.editInputSchemaEntry(key, subkey, settings[key][subkey], formElement);
+                        SettingsForm.editInputSchemaEntry(heading, subheading, settings[heading][subheading], formElement);
                         break;
                     case "string":
                         if (schemaEntry.imgPaths === undefined) {
-                            SettingsForm.editStringSchemaEntry(key, subkey, schemaEntry, settings[key][subkey], formElement);
+                            SettingsForm.editStringSchemaEntry(heading, subheading, schemaEntry, settings[heading][subheading], formElement);
                         } else {
-                            SettingsForm.updateImgSelectElement(key, subkey, schemaEntry, settings[key][subkey], formElement);
+                            SettingsForm.updateImgSelectElement(heading, subheading, schemaEntry, settings[heading][subheading], formElement);
                         }
                         break;
                     default:
@@ -377,7 +376,8 @@ class SettingsForm {
             }
         }
         let currentLanguage = settings.general.language;
-        schema["general"]["properties"]["language"]["default"] = currentLanguage === baseConfigs.languages.ENGLISH ? "en" : "de";
+        // FIXME
+        schema.general.properties.language.default = currentLanguage === baseConfigs.languages.ENGLISH ? "en" : "de";
     }
 
     static editBooleanSchemaEntry(heading, key, value, formElement) {
