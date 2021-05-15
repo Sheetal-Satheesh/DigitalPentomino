@@ -369,7 +369,7 @@
         function handleJsonFormSubmit (errors, values) {
             let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), values);
             // TODO: display seed somehow
-           insertUrlParam("seed", seed);
+           insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
 
             if (errors === false) {
                 event.preventDefault();

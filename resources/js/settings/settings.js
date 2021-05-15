@@ -47,7 +47,7 @@ class Settings {
     }
 
     static isVisible(visibility, heading, subheading) {
-        if (visibility[heading] === undefined) {
+        if (subheading === undefined && visibility[heading] === undefined) {
             throw new Error("Unknown settings heading: " + heading);
         }
 
