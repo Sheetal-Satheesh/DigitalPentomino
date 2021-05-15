@@ -346,6 +346,19 @@ class Board {
         });
     }
 
+
+
+    _getNeighborPositions(row, col) {
+        let positions = [];
+
+        positions.push([row + 1, col]);
+        positions.push([row - 1, col]);
+        positions.push([row, col + 1]);
+        positions.push([row, col - 1]);
+
+        return positions;
+    }
+
     _getValidNeighborPositions(row, col) {
         let unoccupiedNeighbors = [];
         if (this.positionIsValid(row + 1, col)) {
