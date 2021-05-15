@@ -153,6 +153,12 @@ class SettingsForm {
         let useInClassElement = document.createElement("div");
         useInClassElement.style.display = "none";
 
+        useInClassElement.appendChild(SettingsForm.createLabel("Teachers URL: TODO"));
+        useInClassElement.appendChild(document.createElement("br"));
+
+        useInClassElement.appendChild(SettingsForm.createLabel("Class URL: TODO"));
+        useInClassElement.appendChild(document.createElement("br"));
+
         for (let heading in schema) {
             let subSettings = schema[heading].properties;
 
