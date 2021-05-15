@@ -65,6 +65,16 @@ class SettingsParser {
         }
 
         settings.visibility = visibility;
+        for (let heading in schema) {
+            let subSettings = schema[heading].properties;
+            let atLeastOneVisible = false;
+            for (let key in subSettings) {
+                if (settings.visibility[heading + "." + key] === true) {
+                    atLeastOneVisible = true;
+                }
+            }
+            settings.visibility[heading] = atLeastOneVisible;
+        }
 
         SettingsParser.applyNumericalLanguageRepr(settings);
         return settings;

@@ -3,7 +3,8 @@ class SettingsForm {
     // === === === GENERATE FORM === === ===
     static generateForm(formElement, onSubmit) {
         let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
-        SettingsForm.createForm(formElement, schema);
+        let settings = SettingsSingleton.getInstance().getSettings();
+        SettingsForm.createForm(formElement, schema, settings);
 
         formElement.appendChild(document.createElement("br"));
         formElement.appendChild(document.createElement("br"));
@@ -21,7 +22,7 @@ class SettingsForm {
             let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
             let settings = SettingsSingleton.getInstance().getSettings();
             let settingsClone = JSON.parse(JSON.stringify(settings));
-            SettingsForm.collectDataFromForm(formElement, schema, settingsClone);
+            SettingsForm.collectDataFromForm(formElement, schema, settingsClone, settings);
             console.log(settingsClone);
             event.preventDefault();
             onSubmit(false, settingsClone);
@@ -29,7 +30,7 @@ class SettingsForm {
     }
 
     // --- --- --- Form Creation --- --- ---
-    static createForm(formElement, schema) {
+    static createForm(formElement, schema, settings) {
         let creatingNormalSettings = true;
         let advancedSettingsDiv = document.createElement("div");
         advancedSettingsDiv.style.display = "none";
@@ -37,6 +38,9 @@ class SettingsForm {
         let htmlElement = formElement;
 
         for (let heading in schema) {
+            if (!settings.teachersMode && !Settings.isVisible(settings.visibility, heading)) {
+                continue;
+            }
             let subSettings = schema[heading].properties;
 
             if (creatingNormalSettings && schema[heading].advanced) {
@@ -55,6 +59,9 @@ class SettingsForm {
             htmlElement.appendChild(document.createElement("br"));
 
             for (let key in subSettings) {
+                if (!settings.teachersMode && !Settings.isVisible(settings.visibility, heading, key)) {
+                    continue;
+                }
                 let elementName = heading + "." + key;
 
                 let settingsEntry = subSettings[key];
@@ -307,12 +314,19 @@ class SettingsForm {
     }
 
     // --- --- --- Data collection --- --- ---
-    static collectDataFromForm(formElement, schema, result) {
+    static collectDataFromForm(formElement, schema, result, settings) {
 
         for (let heading in schema) {
+            if (!settings.teachersMode && !Settings.isVisible(settings.visibility, heading)) {
+                continue;
+            }
             let subSettings = schema[heading].properties;
             result[heading] = {};
             for (let key in subSettings) {
+                if (!settings.teachersMode && !Settings.isVisible(settings.visibility, heading, key)) {
+                    continue;
+                }
+
                 let name = heading + "." + key;
 
                 let settingsEntry = subSettings[key];
@@ -351,10 +365,15 @@ class SettingsForm {
         let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
         let settings = SettingsSingleton.getInstance().getSettings();
 
-        //change default values according to current schema
         for (let heading in schema) {
+            if (!settings.teachersMode && !Settings.isVisible(settings.visibility, heading)) {
+                continue;
+            }
             let subSettings = schema[heading].properties;
             for (let subheading in subSettings) {
+                if (!settings.teachersMode && !Settings.isVisible(settings.visibility, heading, subheading)) {
+                    continue;
+                }
                 let schemaEntry = schema[heading]["properties"][subheading];
                 switch (schemaEntry.type) {
                     case "boolean":
