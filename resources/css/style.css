@@ -5,23 +5,12 @@
   --magnification:1;
 }
 
-
-#functions {
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  background:  rgb(149, 172, 170);
-  bottom: 0;
-  width: 9.8vw;
-}
-
 #game {
   position: fixed;
   top: 0;
   bottom: 0;
-  left: 9.8vw;
-  width: 89vw;
+  left: 0;
+  width: 100%;
   /*height: 46vw;*/
   border-top: solid rgb(2, 71, 62) 0.2vw;
  /* border-bottom: solid rgb(2, 71, 62) 0.2vw;*/
@@ -30,15 +19,14 @@
 }
 
 #tray {
-  position: fixed;
-  bottom: 0;
-  top: 0.1vw;
-  left: 10vw; 
-  border-bottom: solid rgb(2, 71, 62) 0.2vw;
-  background :rgb(149, 172, 170);
-  height: 6.85vw;
-  width: 89vw;
   z-index: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 10vw;
+  background-color: #e2e0e0;
+  display: flex;
+  overflow-x: auto;
 
 }
 
@@ -144,22 +132,6 @@ rgba(0, 0, 0, 0.3) 20px
   padding-left: 5%;
 }
 
-.cActionBtn img {
-  float: center;
-  width:  3vw;
-  height: 3vw;
-  object-fit: cover;
-  background: rgb(140, 170, 158);
-  border-radius: 25%;
-}
-
-.cActionBtn {
-background: rgb(2, 71, 62);
-border-radius: 10%;
-border: 0;
-
-}
-
 .CMenuTB img{
   float: center;
   width:  4vw;
@@ -175,17 +147,9 @@ border-radius: 10%;
 border: 0;
 }
 
-  .CMenuTB div:active{
-    box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
-    }
-
-  .cActionBtn:active {
-    box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
-   }
-
-
-
-
+.CMenuTB div:active{
+  box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
+}
 
 .cGame {
 position: fixed;
