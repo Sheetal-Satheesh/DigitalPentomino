@@ -77,9 +77,17 @@ class SettingsSchema {
                         "type": "string",
                         "title": titles.hinting.hintingStrategy.title[lang],
                         "description": titles.hinting.hintingStrategy.description[lang],
-                        "enum": ["full", "partial", "area"],
+                        "enum": ["full","partial","area"],
                         "enumText": titles.hinting.hintingStrategy.enumTitles[lang],
-                        "default": "area"
+                        "default": "partial"
+                    },
+                    partialHintingStragety: {
+                        "type": "string",
+                        "title": titles.hinting.partialHintingStrategy.title[lang],
+                        "description": titles.hinting.partialHintingStrategy.description[lang],
+                        "enum": ["random","mostOccupiedCells"],
+                        "enumText": titles.hinting.partialHintingStrategy.enumTitles[lang],
+                        "default": "mostOccupiedCells"
                     },
                     maxPartialHintingCells: {
                         "step": 1,
