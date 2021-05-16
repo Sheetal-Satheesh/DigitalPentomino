@@ -420,10 +420,13 @@ table
   visibility: visible;
   filter: alpha(opacity=65);
   opacity: .6;
+}
 
 html {
 	-webkit-text-size-adjust: none;
 	touch-action: manipulation;
+}
+
 
 
 /**shake animation reference : https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_image_shake **/

@@ -1,6 +1,6 @@
 console.log('Theme switcher initiated');
 
-let themeSwitches = document.getElementsByClassName('themeSwitch');
+let themeSwitches = document.getElementsByClassName('theme-switches');
 let style = localStorage.getItem('style');
 
 
