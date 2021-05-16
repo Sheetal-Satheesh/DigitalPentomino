@@ -123,8 +123,8 @@ h1 {
 }
 
 #boardmodalTop {
-    top: 7vw;
-    left: 10vw;
+    top: 10vw;
+    left: 0vw;
     right: 1vw;
     bottom: 10vw;
     border: 1px solid rgb(18, 122, 114);
@@ -136,8 +136,8 @@ h1 {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
-    width: 89vw;
-    height: 90%;
+    width: 100vw;
+    height: 89%;
 }
   
 .boardmodalContainer {
