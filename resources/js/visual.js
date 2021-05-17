@@ -770,17 +770,15 @@ class Visual {
                         }
                         break;
                     case "area":
-                        for (let i = 0; i < 25; i++) {
-                            let areaPos = this.indicateAreaCells(hintinPen, hintCommand)[0];
-                            let b = this.gameController.game()._board.positionIsValid(areaPos[i][0], areaPos[i][1]);
-                            if (b) {
+                        let areaPos = this.indicateAreaCells(hintinPen, hintCommand)[0];
+                        for (let i = 0; i < areaPos.length; i++) {
                                 let areaPos = this.indicateAreaCells(hintinPen, hintCommand)[0];
                                 fieldvalue = document.getElementById("field_" + areaPos[i][0] + "," + areaPos[i][1]);
                                 prevBackground[i] = fieldvalue.style.background;
                                 fieldvalue.style.background = pentominoColor;
-                                this.hideArea(areaPos, prevBackground, timeoutFrame);
                             }
-                        }
+                        
+                        this.hideArea(areaPos, prevBackground, timeoutFrame);
                         break;
                     default:
                         console.error("Hinting strategy unknown!");
@@ -1048,27 +1046,30 @@ class Visual {
     }
 
 
-    indicateAreaCells(piece, hintCommand) {
+   indicateAreaCells(piece, hintCommand) {
         let hintRow = hintCommand._nextPosition[0];
         let hintColumn = hintCommand._nextPosition[1];
-        let midRow = hintRow;
-        let midColumn = hintColumn;
-        let startR = hintRow - 2;
-        let startCol = hintColumn - 2;
+        let startR; 
+        let startCol;
         let areaPosArray = [];
+        startR = hintRow - 2 ;
+        startCol = hintColumn - 2;
         let k = 0;
         for (let j = 0; j < 5; j++) {
             for (let l = 0; l < 5; l++) {
                 let areaPos = [];
                 areaPos[0] = j + startR;
                 areaPos[1] = l + startCol;
-                areaPosArray[k] = areaPos;
+                let validPosition = this.gameController.game()._board.positionIsValid(areaPos[0], areaPos[1]);
+                if(validPosition){
+                    areaPosArray.push(areaPos);
+                }
                 k++;
             }
         }
         return [areaPosArray, null];
     }
-
+    
     hideArea(areaPos, prevBackground, timeoutFrame) {
 
         setTimeout(function () {
