@@ -770,16 +770,16 @@ class Visual {
                         }
                         break;
                     case "area":
-                            let areaPos = this.indicateAreaCells(hintinPen, hintCommand)[0];
-                            for (let i = 0; i < areaPos.length; i++) {
-                                    let areaPos = this.indicateAreaCells(hintinPen, hintCommand)[0];
-                                    fieldvalue = document.getElementById("field_" + areaPos[i][0] + "," + areaPos[i][1]);
-                                    prevBackground[i] = fieldvalue.style.background;
-                                    fieldvalue.style.background = pentominoColor;
-                                }
-                            
-                            this.hideArea(areaPos, prevBackground, timeoutFrame);
-                            break;
+                        let areaPos = this.indicateAreaCells(hintinPen, hintCommand)[0];
+                        for (let i = 0; i < areaPos.length; i++) {
+                                let areaPos = this.indicateAreaCells(hintinPen, hintCommand)[0];
+                                fieldvalue = document.getElementById("field_" + areaPos[i][0] + "," + areaPos[i][1]);
+                                prevBackground[i] = fieldvalue.style.background;
+                                fieldvalue.style.background = pentominoColor;
+                            }
+                        
+                        this.hideArea(areaPos, prevBackground, timeoutFrame);
+                        break;
                     default:
                         console.error("Hinting strategy unknown!");
                 }
