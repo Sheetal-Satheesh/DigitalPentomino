@@ -128,10 +128,21 @@
                 <button type="button" id='license' class="cActionBtn" onclick="openLicense()"> <img
                     src="resources/images/icons/license.png">
                 </button>
-                <p id="labelNumberSolutionsContainer">
-                    <label id="labelNumberOfSolutionsText">Number of solutions</label>: <label
-                        id="labelNumberSolutions">?</label>
-                </p>
+                <button type="button" id='screenshot' class="cActionBtn" onclick="saveGameImage()">
+                    <img src="resources/images/icons/screenshot.png">
+                </button>
+                <button type="button" id='gallery' class="cActionBtn" onclick="showGameImages()">
+                    <img src="resources/images/icons/gallery.png">
+                </button>
+                <button type="button" id='replay' class="cActionBtn" onclick="execReplay()">
+                    <img src="resources/images/icons/replay.svg">
+                </button>
+            </div>
+
+            <div id="labelNumberSolutionsContainer">
+                <div id="labelNumberSolutionsContainerChild">
+                    <div id="labelNumberOfSolutionsText">Number of solutions:</div><div id="labelNumberSolutions">?</div>
+                </div> 
             </div>
 
         </div>

@@ -54,8 +54,8 @@
   display: flex;
   overflow-x: auto;
   padding: 2%;
-  padding-left: 8%;
-  padding-right: 8%;
+  padding-left: 5%;
+  padding-right: 5%;
 }
 
 .cActionBtn img {
@@ -76,7 +76,7 @@
   min-width: 20px;
   overflow: hidden;
   white-space: nowrap;
-  height: 7vw;
+  height: 6vw;
   margin-left: 1%;
   margin-right: 1%;
 }
@@ -85,6 +85,24 @@
     box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
    }
 
+#labelNumberSolutionsContainer{
+  position: fixed;
+  height: 5vw;
+  width: 25vw;
+  justify-content: center;
+  display: table-cell;
+  background-color: lightblue;
+  border: 1px solid grey;
+  bottom: 10vw;
+  right: 0;
+}
+
+#labelNumberSolutionsContainerChild{
+  height: 100%;
+  text-align: center;
+  vertical-align: middle; 
+  font-size: 1.5vw;
+}
 
 
 #operations {
