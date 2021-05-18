@@ -1195,7 +1195,7 @@ class Visual {
             this.allSolutions = allSolutions;
         }
         if (this.allSolutions.length > 0) {
-            let solution = this.getRandomElementFromArray(this.allSolutions);
+            let solution = UtilitiesClass.getRandomElementFromArray(this.allSolutions);
             let ret = [];
             solution[0].every((piece, index) => ret.push([piece, solution[1][index]]));
             return ret;
@@ -1319,7 +1319,7 @@ class Visual {
     }
 
     getRandomPiece(solution, pickedPieces) {
-        return this.getRandomElementFromArray(solution.filter(piece => !(pickedPieces[piece[0].name] == 1)));
+        return UtilitiesClass.getRandomElementFromArray(solution.filter(piece => !(pickedPieces[piece[0].name] == 1)));
     }
 
     execShadowCmd(command, seqType) {
