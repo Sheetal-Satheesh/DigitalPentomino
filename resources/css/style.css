@@ -8,20 +8,15 @@
 #game {
   position: fixed;
   top: 0;
-  bottom: 0;
   left: 0;
   width: 100%;
-  /*height: 46vw;*/
-  border-top: solid rgb(2, 71, 62) 0.2vw;
- /* border-bottom: solid rgb(2, 71, 62) 0.2vw;*/
-  border-left: solid rgb(2, 71, 62) 0.2vw;
-  /*border-right: solid rgb(2, 71, 62) 0.2vw;*/
 }
 
 #tray {
   z-index: 0;
   position: fixed;
   top: 0;
+  left: 0;
   width: 100%;
   height: 10vw;
   background-color: #e2e0e0;
@@ -32,8 +27,9 @@
 
 #field {
   position: fixed;
+  left: 0vw;
   top: 10vw;  
-  background: white;
+  background: transparent;
   width: 100%;
   /*height: 39.35vw;*/
 }
@@ -48,6 +44,7 @@
   z-index: 10;
   position: fixed;
   bottom: 0;
+  left: 0;
   width: 100%;
   height: 10vw;
   background-color: #e2e0e0;
@@ -91,8 +88,11 @@
   width: 25vw;
   justify-content: center;
   display: table-cell;
-  background-color: lightblue;
+  background-color: #e2e0e0;
   border: 1px solid grey;
+  border-top-left-radius: 25px;
+  border-bottom: none;
+  border-right: none;
   bottom: 10vw;
   right: 0;
 }
@@ -151,16 +151,16 @@ margin-top: 2px;
 .gamearea {
   display: block;
   float: left;
-  background:white;
   user-select: none;
   text-align: center;
-  outline: 1px solid #eee;
-  color: #ddd;
+  /*outline: 1px solid #eee;*/
 }
 
 .boardarea {
-background: rgb(149, 172, 170);
+  outline: 1px solid darkslategray;
+  background: #eceaea;
 }
+
 .blockedcell {
 background: repeating-linear-gradient(
 45deg,
@@ -216,7 +216,7 @@ border: 0;
 .cGame {
 position: fixed;
 top: 0;
-background: rgb(149, 172, 170);
+background: darkgray;
 right: 0;
 bottom: 0;
 left: 0;
