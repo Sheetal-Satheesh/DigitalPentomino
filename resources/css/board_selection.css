@@ -123,7 +123,7 @@ h1 {
 }
 
 #boardmodalTop {
-    top: 6vw;
+    top: 7vw;
     left: 10vw;
     right: 1vw;
     bottom: 10vw;
@@ -137,12 +137,13 @@ h1 {
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
     width: 89vw;
-    height: 38vw;
+    height: 90%;
 }
   
 .boardmodalContainer {
   top:1vw;
   position: relative;
+  overflow-x: hidden;
 
 }
   /* Modal Content/Box */
@@ -151,7 +152,7 @@ h1 {
     top:5vw;
     left: 28vw;
     width: 30vw;
-    padding-bottom: 2vw;;
+    padding-bottom: 2vw;
     background-color: rgb(220, 240, 237);
     border: .2vw solid rgb(2, 71, 62) ;
 
@@ -175,8 +176,8 @@ h1 {
     font-family: 'Courier New', Courier, monospace;
     font-weight: 900;
     border-style: double;
-    border-color: #f3080;
-    color: #f3080;
+    border-color: #f30800;
+    color: #f30800;
     background: solid rgb(10, 26, 22) ;
     z-index: 100;
   }
@@ -187,4 +188,3 @@ h1 {
     cursor: pointer;
   }
 
-/*    */

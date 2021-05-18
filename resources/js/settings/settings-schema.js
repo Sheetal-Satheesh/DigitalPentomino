@@ -53,7 +53,7 @@ class SettingsSchema {
                         "title": titles.general.language.title[lang],
                         "enum": ["en", "de"],
                         "enumText": titles.general.language.enumTitles[lang],
-                        "default": "en"
+                        "default": "de"
                     }
                 }
             },
@@ -80,6 +80,24 @@ class SettingsSchema {
                         "enum": ["full","partial","area"],
                         "enumText": titles.hinting.hintingStrategy.enumTitles[lang],
                         "default": "partial"
+                    },
+                    partialHintingStragety: {
+                        "type": "string",
+                        "title": titles.hinting.partialHintingStrategy.title[lang],
+                        "description": titles.hinting.partialHintingStrategy.description[lang],
+                        "enum": ["random","mostOccupiedCells"],
+                        "enumText": titles.hinting.partialHintingStrategy.enumTitles[lang],
+                        "default": "mostOccupiedCells"
+                    },
+                    maxPartialHintingCells: {
+                        "step": 1,
+                        "type": "integer",
+                        "title": titles.hinting.maxPartialHintingCells.title[lang],
+                        "description": titles.hinting.maxPartialHintingCells.description[lang],
+                        "default": 1,
+                        "minimum": 1,
+                        "exclusiveMinimum": false,
+                        "maximum": 4
                     },
                     skillTeaching: {
                         "type": "boolean",

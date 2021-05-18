@@ -9,24 +9,23 @@
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="resources/images/icons/dp_192.png">
     <link rel="stylesheet" href="resources/css/style.css">
-	<link rel="stylesheet" href="resources/css/board_selection.css">
+    <link rel="stylesheet" href="resources/css/board_selection.css">
     <link rel="stylesheet" href="resources/css/modal.css">
     <link rel="stylesheet" href="resources/css/grid.css">
     <link rel="stylesheet" href="resources/css/settings_form.css">
     <link rel="stylesheet" style="text/css" href="resources/jsonform/bootstrap.css" />
+
     <script src="resources/index.js"></script>
-   
+    <script src="resources/js/ui-template.js"></script>
     <script src="resources/js/board.js"></script>
     <script src="resources/js/overlapping.js"></script>
     <script src="resources/js/pentomino.js"></script>
     <script src="resources/js/game-controller.js"></script>
     <script src="resources/js/game-loader.js"></script>
     <script src="resources/js/game.js"></script>
-    <script src="resources/js/ui-template.js"></script>											   
     <script src="resources/js/command-history/command-node.js"></script>
     <script src="resources/js/command-history/commands.js"></script>
     <script src="resources/js/command-history/command-manager.js"></script>
-    <script src="resources/js/command-history/command-path.js"></script>
     <script src="resources/js/command-history/command-tree.js"></script>
     <script src="resources/js/configs/baseConfigs.js"></script>
     <script src="resources/js/configs/boardConfigs.js"></script>
@@ -44,252 +43,312 @@
     <script type="text/javascript" src="resources/jsonform/underscore.js"></script>
     <script type="text/javascript" src="resources/jsonform/jsonform.js"></script>
     <script type="text/javascript" src="resources/jsonform/jsv.js"></script>
-    
-
+    <script type="text/javascript" src="resources/jsonform/html2canvas.js"></script>
+    <script type="text/javascript" src="resources/jsonform/loadash.js"></script>
     <script src="resources/js/hint.js"></script>
     <script src="resources/js/hint-ai.js"></script>
     <script src="resources/js/help/hinting/command-sequence-list.js"></script>
-
 </head>
 
 <body onload="touchStartup(); initialize()">
-															
-  <div id="seedingCover"></div>
-  <div id="seeding" class="seed">
-    <input type="search" id="seedBar" class="seed" placeholder="Input seed...">
-    <button type="button" id='seedSubmit' class = "cActionBtn" onclick="submitSeed()"><img class="cSeedBtn" src="resources/images/icons/seed.png">
-  </div>
-  <div class = "cGame">
-    <div id="functions">
-        <img id = "logo" src="resources/images/icons/pentomino.png" alt="Pentomino" class="cLogo">
-    
-        <div id="operations">
-          <table>
-     				<tr>
-					<td>
-						<button type="button" id='reset' class="cActionBtn" onclick="resetGame()"><img src="resources/images/icons/tidy_up.png"></button>
-					</td>
-					<td>
-						<button type="button" id='prefillBoard' class="cActionBtn" onclick="prefillBoard()" disabled><img src="resources/images/icons/prefill.png"></button>
-					</td>
-				</tr>
-			</table>
+    <canvas id="canvas" width="auto" height="auto"></canvas>
+    <div id="seedingCover"></div>
+    <div id="seeding" class="seed">
+        <input type="search" id="seedBar" class="seed" placeholder="Input seed...">
+        <button type="button" id='seedSubmit' class="cActionBtn" onclick="submitSeed()"><img class="cSeedBtn"
+                src="resources/images/icons/seed.png">
+    </div>
+    <div class="cGame">
+        <div id="functions" onclick="hideManipulationButtons">
+            <img id="logo" src="resources/images/icons/pentomino.png" alt="Pentomino" class="cLogo">
 
-			<table>
-				<tr>
-					<td>
-						<button type="button" id='undo' class="cActionBtn" onclick="execUndo()"><img src="resources/images/icons/undo.png">
-							</button>
-					</td>
-					<td>
-						<button type="button" id='redo' class="cActionBtn" onclick="execRedo()"><img src="resources/images/icons/redo.png">
-							</button>
-					</td>
-						 
+            <div id="operations">
+                <table>
+                    <tr>
+                        <td>
+                            <button type="button" id='reset' class="cActionBtn" onclick="resetGame()"><img
+                                    src="resources/images/icons/tidy_up.png"></button>
+                        </td>
+                        <td>
+                            <button type="button" id='prefillBoard' class="cActionBtn" onclick="prefillBoard()"
+                                disabled><img src="resources/images/icons/prefill.png"></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" id='replay' class="cActionBtn" onclick="execReplay()">
+                                <img src="resources/images/icons/replay.svg"></button>
+                        </td>
+                    </tr>
+                </table>
 
-				</tr>
-				<tr>
-					<td>
-						<button type="button" id='btnBoardSelect' class="cActionBtn" onclick="selectBoard()"> <img src="resources/images/icons/board.png">
-						</button>
-					</td>
-					<td>
-						<button type="button" id='hintButton' class="cActionBtn" onclick="callHintAI()"> <img src="resources/images/icons/help.png">
-						</button>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<button type="button" id='btnSettingsForm' class="cActionBtn" onclick="selectSettings()"> <img src="resources/images/icons/settings.png">
-																																							 
-						</button>
-					</td>
-					</tr>																										 
-						 
-					  <tr>
-						<button style="display:none" onclick="pd.ui.save()">Save</button>
-						<button style="display:none" onclick="pd.ui.load()">Load</button>
-					  </tr>
-			  </table>
+                <table>
+                    <tr>
+                        <td>
+                            <button type="button" id='undo' class="cActionBtn" onclick="saveGameImage()"><img
+                                    src="resources/images/icons/screenshot.png">
+                            </button>
+                        </td>
+                        <td>
+                            <button type="button" id='redo' class="cActionBtn" onclick="showGameImages()"><img
+                                    src="resources/images/icons/gallery.png">
+                            </button>
+                        </td>
 
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" id='undo' class="cActionBtn" onclick="execUndo()"><img
+                                    src="resources/images/icons/undo.png">
+                            </button>
+                        </td>
+                        <td>
+                            <button type="button" id='redo' class="cActionBtn" onclick="execRedo()"><img
+                                    src="resources/images/icons/redo.png">
+                            </button>
+                        </td>
 
-          <p id="labelNumberSolutionsContainer">
-              <label id="labelNumberOfSolutionsText">Number of solutions</label>: <label id="labelNumberSolutions">?</label>
-          </p>
-        
-		<div id="boardmodalTop" class="boardmodal" style="background: rgb(220, 240, 237) none repeat scroll 0% 0%; display: none;">
-		<span onclick="document.getElementById('boardmodalTop').style.display='none'" class="boardclose" title="Close Modal">x</span>
-            <div class ="boardmodalContainer" id="boardmodalContainerID">
-                <div class="boardouterGrid">
-                    <div class="boardinnerGrid" id="boardinnerGrid"style="display: block;">
-					
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" id='btnBoardSelect' class="cActionBtn" onclick="selectBoard()"> <img
+                                    src="resources/images/icons/board.png">
+                            </button>
+                        </td>
+                        <td>
+                            <button type="button" id='hintButton' class="cActionBtn" onclick="callHintAI()"> <img
+                                    src="resources/images/icons/help.png">
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" id='btnSettingsForm' class="cActionBtn" onclick="selectSettings()">
+                                <img src="resources/images/icons/settings.png">
+                            </button>
+                        </td>
+                        <td>
+                            <button type="button" id='license' class="cActionBtn" onclick="openLicense()"> <img
+                                    src="resources/images/icons/license.png">
+                            </button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <button style="display:none" onclick="pd.ui.save()">Save</button>
+                        <button style="display:none" onclick="pd.ui.load()">Load</button>
+                    </tr>
+                </table>
+
+                <p id="labelNumberSolutionsContainer">
+                    <label id="labelNumberOfSolutionsText">Number of solutions</label>: <label
+                        id="labelNumberSolutions">?</label>
+                </p>
+            </div> <!-- operation -->
+        </div>
+
+        <div id="game" class="FlashOff">
+            <div id="tray"></div> <!-- tray -->
+            <div id="field"></div> <!-- field -->
+            <div id="piecearea"></div> <!-- piecearea -->
+
+            <div id="boardmodalTop" class="boardmodal"
+                style="background: rgb(220, 240, 237) none repeat scroll 0% 0%; display: none;">
+                <span onclick="closeModal()" class="boardclose" title="Close Modal">x</span>
+                <div class="boardmodalContainer" id="boardmodalContainerID">
+                    <div class="boardouterGrid">
+                        <div class="boardinnerGrid" id="boardinnerGrid" style="display: block;">
+
+                        </div>
+                        <form class="boardmodalFormContent" style="display: none;">
+                            <form></form>
+                            <div class="boardmodalFormContainer" id="boardmodalFormContainerID">
+                                <h3 id="boardmodalTextID"></h3>
+                                <div class="boardmodalButtons" id="boardmodalButtonsID"></div>
+                            </div>
+                        </form>
                     </div>
-                <form class="boardmodalFormContent" style="display: none;">
-                <form></form>
-                <div class="boardmodalFormContainer" id="boardmodalFormContainerID">
-                        <h3 id="boardmodalTextID"></h3>
-                        <div class="boardmodalButtons" id="boardmodalButtonsID"></div>
-               </div>
-                </form>
+                </div>
             </div>
+            <!--board modal end-->
 
+            <div id="modalTop" class="modal">
+                <span onclick="closeModal()" class="close" title="Close Modal">x</span>
+                <div class="modalContainer" id="modalContainerID">
+                    <div class="outerGrid">
+                        <div class="innerGrid" id="innerGrid"></div>
+                        <form id="innerGridForm"></form>
+                    </div>
+                    <form class="modalFormContent">
+                        <div class="modalFormContainer" id="modalFormContainerID">
+                            <h3 id="modalTitleID"></h3>
+                            <div class="modalButtons" id="modalButtonsID"></div>
+                            <div class="modalBody" id="modalBodyID"></div>
 
-        </div> <!--board modal end-->
-		  
-		   
-      
-		
-        </div>  <!-- operation -->
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--modal end-->
+
+        </div>
+
+        <div class="cPieceManipulation" id="pieceManipulation">
+            <table>
+                <tr>
+                    <td>
+                        <button type="button" class="controlButton" id='OpRotateLeft' onclick="rotateAntiClkWise()"><img
+                                src="resources/images/icons/rotate_left.png">
+                        </button>
+                    </td>
+                    <td>
+                        <button type="button" class="controlButton" id='OpRotateRight' onclick="rotateClkWise()"><img
+                                src="resources/images/icons/rotate_right.png">
+                        </button>
+                    </td>
+                    <td>
+                        <button type="button" class="controlButton" id='OpflipV' onclick="flipV()"><img
+                                src="resources/images/icons/flip_vertically.png">
+                        </button>
+                    </td>
+                    <td>
+                        <button type="button" class="controlButton" id='OpflipH' onclick="flipH()"><img
+                                src="resources/images/icons/flip_horizontally.png">
+                        </button>
+                    </td>
+                </tr>
+            </table>
+
+        </div> <!-- cPieceManipulation -->
     </div>
 
-    <div id="game">
-        <div id="tray"></div> <!-- tray -->
-        <div id="field"></div> <!-- field -->
-        <div id="piecearea"></div> <!-- piecearea -->
-        <div id="modalTop" class="modal">
-            <span onclick="document.getElementById('modalTop').style.display='none'" class="close" title="Close Modal">x</span>
-            <div class ="modalContainer" id="modalContainerID">
-                <div class="outerGrid">
-                    <div class="innerGrid" id="innerGrid"></div>
-                    <form id="innerGridForm"></form>
-                </div>
-                <form class="modalFormContent">
-                    <div class="modalFormContainer" id="modalFormContainerID">
-                        <h3 id="modalTitleID"></h3>
-                         <div class="modalButtons" id="modalButtonsID"></div>
-                        <div class="modalBody" id="modalBodyID"></div>
-																	  
-                    </div>
-                </form>
-            </div>
-          </div> <!--modal end-->
-			  
-    </div> 
-    
-    <div class = "cPieceManipulation" id ="pieceManipulation" >
-        <table>
-      <tr>
-          <td>
-              <button type="button" class="controlButton"  id='OpRotateLeft' onclick="rotateAntiClkWise()"><img src="resources/images/icons/rotate_left.png">
-              </button>
-          </td>
-          <td>
-              <button type="button" class="controlButton" id='OpRotateRight' onclick="rotateClkWise()"><img src="resources/images/icons/rotate_right.png">
-              </button>
-          </td>
-          <td>
-              <button type="button" class="controlButton" id='OpflipV' onclick="flipV()"><img src="resources/images/icons/flip_vertically.png">
-              </button>
-          </td>
-          <td>
-              <button type="button" class="controlButton" id='OpflipH' onclick="flipH()"><img src="resources/images/icons/flip_horizontally.png">
-              </button>
-          </td>
-      </tr>
-        </table>
-		  
-    </div>  <!-- cPieceManipulation -->
-</div>
-
-<script type="text/javascript">
-
-								   
-											
+    <script type="text/javascript">
         let pd;
-		let template;
+        let template;
 
         function initialize() {
             pd = new PD();
-			template = new Template();
+            template = new Template();
             loadBoardList();
-			let settings = SettingsSingleton.getInstance().getSettings();
+            let settings = SettingsSingleton.getInstance().getSettings();
             let initialChanges = SettingsParser.compareSettings(
                 SettingsSchemaSingleton.getInstance().getSettingsSchema(),
                 settings,
                 null);
             processChangesToSettings(initialChanges, settings);
-																																						
         }
-        
-		
-		
-		function loadBoardList() {
 
-		    let boardimageGrid = document.getElementById('boardinnerGrid');
-		    template.clearContent(".boardinnerGrid");
-		
-		    var board_list = pd.getAllBoards();
-		    for (var i=0; i< board_list.length; i++){
-			let boardimageDiv = document.createElement("div");
-			boardimageDiv.setAttribute("class","boardimageDiv");
-		
-			var imageElement = document.createElement("img");
-			imageElement.setAttribute("class","boardimage");
-			imageElement.setAttribute("width","1710");
-			imageElement.setAttribute("height","883");
-			imageElement.setAttribute("style","width: 25vw; height: 15vw; border: 2px solid black;");
-			imageElement.setAttribute("class","boardimage");
-		
-			var img_src = "resources/images/boards/" + board_list[i] + ".png";
-			imageElement.setAttribute("src", img_src);
-			imageElement.setAttribute("onclick", "loadBoard('" + board_list[i] + "')");
-			boardimageDiv.appendChild(imageElement);
-			boardimageGrid.appendChild(boardimageDiv);
-				
-			}
-			
-			
-		}
-		
-       function resetGame() {
-                var modal = document.getElementById('modalTop');
-                modal.style.display = "block";
-                modal.style.background = "transparent";
+        function loadBoardList() {
+            let boardimageGrid = document.getElementById('boardinnerGrid');
+            template.clearContent(".boardinnerGrid");
 
-                document.querySelector(".modalFormContent").style.display = "block";
-                document.querySelector(".innerGrid").style.display = "none";
-                template.clearContent("#modalButtonsID");
-                template.clearContent("#modalTitleID");
-                template.clearContent("#modalBodyID");
-                template.clearContent("#innerGridForm");
+            var board_list = pd.getAllBoards();
+            for (var i = 0; i < board_list.length; i++) {
+                let boardimageDiv = document.createElement("div");
+                boardimageDiv.setAttribute("class", "boardimageDiv");
 
-                let lang = SettingsSingleton.getInstance().getSettings().general.language;
+                var imageElement = document.createElement("img");
+                imageElement.setAttribute("class", "boardimage");
+                imageElement.setAttribute("width", "1710");
+                imageElement.setAttribute("height", "883");
+                imageElement.setAttribute("style", "width: 25vw; height: 15vw; border: 2px solid black;");
+                imageElement.setAttribute("class", "boardimage");
 
-                let textNode = {
-                    class: "modalText",
-                    text: strings.reset[lang]
-                };
-                template.attachText("#modalTitleID", textNode);
-
-                let cancelBtn = {
-                    class: "cancelBtn",
-                    onclick: "document.getElementById('modalTop').style.display='none'",
-                    textContent: strings.general.no[lang]
-                };
-                template.attachBtn("#modalButtonsID", cancelBtn);
-												  
-
-                let deleteBtn = {
-                    class: "deleteBtn",
-                    onclick: "document.getElementById('modalTop').style.display='none'",
-                    textContent: strings.general.yes[lang]
-                };
-														  
-
-                template.attachBtn("#modalButtonsID", deleteBtn);
-
-                let dltBtn = document.querySelector(".deleteBtn");
-                dltBtn.addEventListener("click", () => {
-                    pd.reset();
-                });
+                var img_src = "resources/images/boards/" + board_list[i] + ".png";
+                imageElement.setAttribute("src", img_src);
+                imageElement.setAttribute("onclick", "loadBoard('" + board_list[i] + "')");
+                boardimageDiv.appendChild(imageElement);
+                boardimageGrid.appendChild(boardimageDiv);
             }
+        }
+
+        function openLicense() {
+            this.hideManipulationButtons();
+            this.closeBoardSelector();
+            this.disablePointerEventsOnPieces();
+            var modal = document.getElementById('modalTop');
+            modal.style.display = "block";
+            modal.style.background = "transparent";
+
+            document.querySelector(".modalFormContent").style.display = "block";
+            document.querySelector(".innerGrid").style.display = "none";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent("#innerGridForm");
+
+            let div1 = document.createElement("div");
+            let h5 = document.createElement("h5");
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+            var t1 = document.createTextNode(strings.license[lang]);
+            h5.appendChild(t1);
+            let h6 = document.createElement("h6");
+            var t2 = document.createTextNode("icon1 : https://www.deviantart.com/edicionesnaza/art/Boy-and-Girl-Icon-gif-By-alfreditha-394021423");
+            h6.appendChild(t2);
+            div1.appendChild(h5);
+            div1.appendChild(h6);
+            modalBodyID.appendChild(div1);
+        }
+
+        function resetGame() {
+            this.hideManipulationButtons();
+            this.closeBoardSelector();
+            this.disablePointerEventsOnPieces();
+            var modal = document.getElementById('modalTop');
+            modal.style.display = "block";
+            modal.style.background = "transparent";
+
+            document.querySelector(".modalFormContent").style.display = "block";
+            document.querySelector(".innerGrid").style.display = "none";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent("#innerGridForm");
+
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
+            let textNode = {
+                class: "modalText",
+                text: strings.reset[lang]
+            };
+            template.attachText("#modalTitleID", textNode);
+
+            let cancelBtn = {
+                class: "cancelBtn",
+                onclick: "closeModalContainer()",
+                textContent: strings.general.no[lang]
+            };
+            template.attachBtn("#modalButtonsID", cancelBtn);
+
+            let deleteBtn = {
+                class: "deleteBtn",
+                onclick: "closeModalContainer()",
+                textContent: strings.general.yes[lang]
+            };
+
+            template.attachBtn("#modalButtonsID", deleteBtn);
+
+            let dltBtn = document.querySelector(".deleteBtn");
+            dltBtn.addEventListener("click", () => {
+                pd.reset();
+            });
+        }
+
+        function closeModal() {
+            document.getElementById('boardmodalTop').style.display = 'none';
+            this.closeModalContainer();
+        }
 
         function callHintAI() {
-            pd.visual.callHintAI();
-            
-        }       
+            if (!pd.gameController.game()._board.isSolved()) {
+                pd.visual.callHintAI();
+            } else {
+                // TODO - handle, e.g. shake hint button
+                console.log("Game is already solved. Cannot display hint");
+            }
+        }
 
-        function rotateClkWise(){
+        function rotateClkWise() {
             pd.rotateClkWise();
         }
 
@@ -297,45 +356,55 @@
             pd.rotateAntiClkWise();
         }
 
-        function flipH(){
+        function flipH() {
             pd.flipH();
         }
 
-        function flipV(){
+        function flipV() {
             pd.flipV();
         }
 
-								
-																			 
-		 
-
-																															 
-        function selectBoard(){
-			document.getElementById("boardmodalTop").style.display = "block";
-																			   																																  															 
-			 
+        function prefillBoard() {
+            pd.visual.prefillBoard();
+            this.closeBoardSelector();
+            this.closeSettings();
         }
-		
-		 // From https://stackoverflow.com/questions/10970078/modifying-a-query-string-without-reloading-the-page (2nd answer)
+
+        function execUndo() {
+            this.hideManipulationButtons();
+            pd.visual.undo();
+        }
+
+        function execRedo() {
+            pd.visual.redo();
+        }
+
+        function selectBoard() {
+            document.getElementById("boardmodalTop").style.display = "block";
+            this.hideManipulationButtons();
+            //this.closeSettings();
+            this.disablePointerEventsOnPieces();
+        }
+
+        // From https://stackoverflow.com/questions/10970078/modifying-a-query-string-without-reloading-the-page (2nd answer)
         function insertUrlParam(key, value) {
             if (history.pushState) {
                 let searchParams = new URLSearchParams(window.location.search);
                 searchParams.set(key, value);
                 let newURL = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + searchParams.toString();
-                window.history.pushState({path: newURL}, '', newURL);
+                window.history.pushState({ path: newURL }, '', newURL);
             }
         }
 
-
-        function handleJsonFormSubmit (errors, values) {
+        function handleJsonFormSubmit(errors, values) {
             let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), values);
             // TODO: display seed somehow
-           insertUrlParam("seed", seed);
+            insertUrlParam("seed", seed);
 
             if (errors === false) {
                 event.preventDefault();
-                console.log("JsonForm: Submitted values:");
-                console.log(values);
+                // console.log("JsonForm: Submitted values:");
+                // console.log(values);
                 closeSettings();
 
                 let oldSettings = SettingsSingleton.getInstance().getSettings();
@@ -343,13 +412,12 @@
                 let changesToSettings = SettingsParser.compareSettings(schema, oldSettings, values);
 
                 SettingsSingleton.getInstance().setSettings(values);
-
                 processChangesToSettings(changesToSettings, values);
-																	   
+
             }
         }
 
-         function processChangesToSettings(changes, settings) {
+        function processChangesToSettings(changes, settings) {
             changes.forEach(changesEntry => {
                 let heading = changesEntry.heading;
                 let key = changesEntry.key;
@@ -367,7 +435,7 @@
                     let visible = settings[heading][key];
                     document.getElementById("prefillBoard").style.visibility = visible ? "visible" : "hidden";
                 }
-              });
+            });
         }
 
         function updateSettingSchemaDefaultFromSettings(settingsSchema, settings) {
@@ -437,7 +505,7 @@
 
         function handleJsonFormErrors(errors, formElt) {
             let lang = SettingsSingleton.getInstance().getSettings().general.language;
-            for (let i=0; i<errors.length; i++) {
+            for (let i = 0; i < errors.length; i++) {
                 let error = errors[i];
 
                 switch (error.attribute) {
@@ -452,8 +520,11 @@
             $(formElt).jsonFormErrors(errors, $('#innerGridForm'));
         }
 
-        function selectSettings(){
-
+        function selectSettings() {
+            this.disablePointerEventsOnPieces();
+            this.hideManipulationButtons();
+            // this.disablePrefillButton();
+            //this.closeBoardSelector();
             var modal = document.getElementById('modalTop');
             modal.style.display = "block";
             modal.style.background = "rgb(220, 240, 237)";
@@ -463,8 +534,9 @@
             template.clearContent("#modalButtonsID");
             template.clearContent("#modalTitleID");
             template.clearContent("#modalBodyID");
+            template.clearContent(".innerGrid")
             template.clearContent("#innerGridForm");
-            
+
             //add form to attach settings to
             $('#innerGridForm').jsonForm({
                 schema: SettingsSchemaSingleton.getInstance().getSettingsSchema(),
@@ -486,10 +558,10 @@
                 submitButton.form = "innerGrid"
 
                 // Find parent of default jsonform submit button & inclusion of other buttons
-                let btnContainer = $('#innerGridForm input[type=submit]').parent();			   
+                let btnContainer = $('#innerGridForm input[type=submit]').parent();
 
                 // Add own buttons
-                let $closeButton = $('<input id="settings-close-button" type="button" value="Abort" onClick="closeSettings()" />');
+                let $closeButton = $('<input id="settings-close-button" class="btn btn-primary" type="button" value="Abort" onClick="closeSettings()" />');
                 $closeButton.appendTo(btnContainer);
                 /*let $seedButton = $('<input id="btnSeed" class="button" type="button" value="Enter a seed..." onClick="selectSeeding()" />');
                 $seedButton.appendTo(btnContainer);*/
@@ -498,7 +570,7 @@
             // Change select box to names of enums
             let lang = SettingsSingleton.getInstance().getSettings().general.language;
 
-										
+
             let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
             for (let heading in schema) {
                 let subSettings = schema[heading].properties;
@@ -525,16 +597,31 @@
             Translator.translateHeaders(SettingsSingleton.getInstance().getSettings().general.language);
         }
 
-        function closeModalContainer(){
+        let piecesIdArray = ['piece_X', 'piece_Y', 'piece_F', 'piece_I', 'piece_L', 'piece_N', 'piece_P', 'piece_T', 'piece_U', 'piece_V', 'piece_W', 'piece_Z'];
+        function disablePointerEventsOnPieces() {
+            piecesIdArray.forEach(function (piece) {
+                document.getElementById(piece).style.pointerEvents = "none";
+            });
+        }
+
+        function enablePointerEventsOnPiece() {
+            piecesIdArray.forEach(function (piece) {
+                document.getElementById(piece).style.pointerEvents = "auto";
+            });
+        }
+
+        function closeModalContainer() {
             document.getElementById('modalTop').style.display = "none";
+            this.enablePointerEventsOnPiece();
         }
 
         function closeSettings() {
-            document.getElementById("modalTop").style.display = "none";
+            this.closeModalContainer();
         }
 
         function closeBoardSelector() {
-            document.getElementById('board_selection_form').style.display = "none";
+            document.getElementById('boardmodalTop').style.display = "none";
+            this.enablePointerEventsOnPiece();
         }
 
         function selectSeeding() {
@@ -547,11 +634,23 @@
             document.getElementById("seeding").style.visibility = "hidden";
         }
 
+        function hideManipulationButtons() {
+            document.getElementById('pieceManipulation').style.display = 'none';
+        }
+
+        function disablePrefillButton() {
+            document.getElementById('prefillBoard').disabled = 'true';
+        }
+
+        function enablePrefillButton() {
+            document.getElementById('prefillBoard').disabled = 'false';
+        }
+
         function submitSeed() {
             let seedValue = document.getElementById("seedBar").value;
             let settings = SettingsParser.parseSettingsFromSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), seedValue);
             if (!(settings === null)) {
-                console.log("Seedbar entered value: " + seedValue);
+                // console.log("Seedbar entered value: " + seedValue);
                 document.getElementById("seedBar").value = "";
 
                 document.getElementById("seedingCover").style.visibility = "hidden";
@@ -563,38 +662,208 @@
             }
         }
 
-	  
-		function loadBoard(selectedBoard){
-			//var selectedBoard = document.querySelector("input[name=board_list]:checked").value;
-			document.getElementById("boardmodalTop").style.display = "none";
-           pd.loadBoard(selectedBoard);
-			
-        }
-		
-		function closeForm() {
-			document.getElementById("board_selection_form").style.display = "none";
-		}
-
-        function prefillBoard(){
-            pd.visual.prefillBoard();
+        function addFlash(elementId) {
+            let element = document.querySelector("#" + elementId);
+            element.classList.add('FlashOn');
+            var millisecondsToWait = 100;
+            setTimeout(function () {
+                element.classList.remove('FlashOn');
+            }, millisecondsToWait);
         }
 
-        function execUndo(){
-            pd.visual.undo();
+        function saveGameImage() {
+            addFlash("game");
+            let gameImage = undefined;
+            let gameElem = document.getElementById('game');
+
+            html2canvas(gameElem).then(function (screeshot) {
+                screeshot.setAttribute("class", "screenshot");
+                screeshot.style.width = '25vw';
+                screeshot.style.height = '15vw';
+                screeshot.style.border = "2px solid black";
+                gameImage = screeshot;
+                pd.visual.saveGameImage(gameImage);
+            });
         }
 
-        function execRedo(){
-            pd.visual.redo();
+        function loadGameImage(key) {
+            pd.visual.loadGame(key);
+            pd.loadBoard(pd.visual.getBoard(), "Snapshot");
+            var modal = document.getElementById('modalTop');
+            modal.style.display = "none";
+
         }
- 
-       
+
+        function deleteGameImage(key) {
+            pd.visual.deleteGameImage(key);
+            showGameImages();
+        }
+
+        function generateRandomColor() {
+            /**
+             * https://stackoverflow.com/questions/1152024/
+             * best-way-to-generate-a-random-color-in-javascript/1152508
+            */
+
+            return '#' + (0x1000000 + Math.random() * 0xffffff).toString(16).substr(1, 6);
+
+        }
+
+        function showGameImages() {
+            this.disablePointerEventsOnPieces();
+            this.hideManipulationButtons();
+            var modal = document.getElementById('modalTop');
+            modal.style.background = " rgb(220, 240, 237)";
+            modal.style.display = "block";
+
+            document.querySelector(".modalFormContent").style.display = "none";
+            document.querySelector(".innerGrid").style.display = "block";
+
+            let imageList = pd.visual.showGameImages();
+            let imageGrid = document.getElementById('innerGrid');
+            template.clearContent(".innerGrid");
+            template.clearContent("#innerGridForm");
+            let gameId = undefined;
+            let borderColor = generateRandomColor();
+
+            imageList.forEach((item) => {
+                let imgKey = Object.keys(item)[0];
+                let image = item[imgKey];
+                let imageDiv = document.createElement("div");
+                imageDiv.setAttribute("class", "imageDiv");
+
+                if (gameId != pd.visual.getGameIdByKey(imgKey)) {
+                    gameId = pd.visual.getGameIdByKey(imgKey);
+                    borderColor = generateRandomColor();
+                }
+                imageDiv.style.borderWidth = "3px";
+                imageDiv.style.borderColor = borderColor;
+
+                let buttonDiv = document.createElement("div");
+                buttonDiv.setAttribute("class", "imageBtnDiv");
+
+                let loadBtn = document.createElement("button");
+                loadBtn.setAttribute("class", "imageButton imageLoadBtn");
+                loadBtn.textContent = "Load";
+                loadBtn.addEventListener('click', function () {
+                    loadGameImage(imgKey);
+                }, false);
 
 
+                let deleteBtn = document.createElement("button");
+                deleteBtn.setAttribute("class", "imageButton imageDeleteBtn");
+                deleteBtn.textContent = "Delete";
+                deleteBtn.addEventListener('click', function () {
+                    deleteGameImage(imgKey);
+                }, false);
+
+
+                buttonDiv.appendChild(loadBtn);
+                buttonDiv.appendChild(deleteBtn);
+
+                imageDiv.appendChild(image);
+                imageDiv.appendChild(buttonDiv);
+                imageGrid.appendChild(imageDiv);
+
+            });
+        }
+
+        function execReplay() {
+
+            var modal = document.getElementById('modalTop');
+            modal.style.display = "block";
+            modal.style.background = "transparent";
+
+            document.querySelector(".modalFormContent").style.display = "block";
+            document.querySelector(".innerGrid").style.display = "none";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent("#innerGridForm");
+
+            let startGameState = pd.getGameState("start");
+            let currGameState = pd.getGameState("current");
+
+            if (startGameState == undefined) {
+                let textNode = {
+                    name: "modalText",
+                    text: "Game Not Started Yet ",
+                }
+
+                template.attachText("#modalTitleID", textNode);
+                return;
+            }
+
+            let allGameState = pd.getAllGameStates();
+
+            let selectStartElem = document.createElement("select");
+            selectStartElem.setAttribute("class", "StateSelect");
+            selectStartElem.setAttribute("id", "startStateOptions");
+            selectStartElem.setAttribute("style", "margin: 0 .5vw;");
+
+            let selectTargetElem = document.createElement("select");
+            selectTargetElem.setAttribute("class", "StateSelect");
+            selectTargetElem.setAttribute("id", "targetStateOptions");
+            selectTargetElem.setAttribute("style", "margin: 0 .5vw;");
+
+            for (let index = 0; index < allGameState.length; ++index) {
+                let optStart = document.createElement('option');
+                let optTarget = document.createElement('option');
+                optStart.value = allGameState[index];
+                optTarget.value = allGameState[index];
+                optStart.innerHTML = allGameState[index];
+                optTarget.innerHTML = allGameState[index];
+
+                if (allGameState[index] == startGameState) {
+                    optStart.selected = "selected";
+                    optStart.setAttribute("class", "selected");
+                }
+                else if (allGameState[index] == currGameState) {
+                    optTarget.selected = "selected";
+                    optTarget.setAttribute("class", "selected");
+
+                }
+
+                selectStartElem.appendChild(optStart);
+                selectTargetElem.appendChild(optTarget);
+            }
+
+            document.getElementById("modalBodyID").appendChild(selectStartElem);
+            document.getElementById("modalBodyID").appendChild(selectTargetElem);
+
+            var submit = document.createElement("input");
+            submit.setAttribute("type", "button");
+            submit.setAttribute("value", "Submit");
+            submit.setAttribute("class", "submitReplay");
+            submit.setAttribute("style", "margin: 0 .5vw;background-color:rgb(149, 172, 170);");
+            submit.onclick = function () {
+                let replayId = document.getElementById("replay");
+                let replayImg = replayId.children[0];
+                replayImg.setAttribute('src', 'resources/images/icons/pause.png');
+                let sValue = document.getElementById("startStateOptions").value;
+                let eValue = document.getElementById("targetStateOptions").value;
+                console.log(sValue);
+                console.log(eValue);
+                pd.replay(sValue, eValue);
+                modal.style.display = "none";
+
+            }
+            document.getElementById("modalBodyID").appendChild(submit);
+        }
+
+        function loadBoard(selectedBoard) {
+            document.getElementById("boardmodalTop").style.display = "none";
+            pd.loadBoard(selectedBoard);
+            this.closeModalContainer();
+        }
+
+        function closeForm() {
+            document.getElementById("board_selection_form").style.display = "none";
+        }
 
     </script>
-   <script src="./registerSW.js"></script>
+    <script src="./registerSW.js"></script>
 
-		 
 </body>
 
 </html>
