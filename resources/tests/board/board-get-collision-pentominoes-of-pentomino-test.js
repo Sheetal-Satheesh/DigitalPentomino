@@ -17,14 +17,14 @@ board.placePentomino(X, 5, 5);
 
 board.display();
 
-describe('Board.getCollisionPentominoesOfPentomino()', function() {
+describe('Board.getCollisionPentominoesOfPentomino()', function () {
 
-    it('should return a list of the colliding pentominoes', function() {
+    it('should return a list of the colliding pentominoes', function () {
         assert.strictEqual(board.getCollisionPentominoesOfPentomino(F).length, 2);
         assert.includeDeepMembers(board.getCollisionPentominoesOfPentomino(F), [T, I]);
     });
 
-    it('should return an empty list if no collision occured', function() {
+    it('should return an empty list if no collision occured', function () {
         assert.strictEqual(board.getCollisionPentominoesOfPentomino(X).length, 0);
     });
 });

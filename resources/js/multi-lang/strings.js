@@ -6,8 +6,8 @@ const strings = {
     },
     reset: ["Do You Want To Reset?", "Willst du deinen Spielstand wirklich löschen?"],
     showSolved: {
-        congrats : ["Congratulations!", "Glückwunsch!"],
-        play : ["Play Again?","Nochmal spielen?"]
+        congrats: ["Congratulations!", "Glückwunsch!"],
+        play: ["Play Again?", "Nochmal spielen?"]
     },
     license: ["LICENSES", "LIZENZEN"],
     numberOfPossibleSolutions: ["Number of solutions", "Anzahl Lösungen"],
@@ -57,6 +57,12 @@ const strings = {
                             "<li><b>Bereich-Hinweise:</b> Die Aktion wird nur angedeutet, indem ein Bereich angezeigt wird, der die Zielposition des Pentominoes enthält.</li>" +
                         "</ul>"]
             },
+            partialHintingStrategy: {
+                title: ["Partial Hinting Strategy", "Partielle Hinweise Strategie"],
+                enumTitles: [["Random", "Most Occupied Cells"], ["Zufällig", "Maximal belegte Felder"]],
+                description: ["TODO",
+                    "TODO"]
+            },
             maxPartialHintingCells: {
                 title: ["Max Partial Hinting Cells", "Maximale Anzahl Zellen bei partiellen Hinweisen"],
                 description: ["If Partial hinting is enabled, the number of cells is randomly determined between 1 and the specified value.",
@@ -85,15 +91,15 @@ const strings = {
                 enumTitles: [["Distance", "Pieces"], ["Distanz", "Nachbar"]],
                 description: [
                     "The selected constraint is applied when the pentominoes are placed on the board:" +
-                        "<ul>" +
-                            "<li><b>Distance-Constraint:</b> Pieces are not closer than the value specified in <i>Distance value</i>.</li>" +
-                            "<li><b>Pieces-Constraint:</b> Pieces are not touching more pieces than specified in <i>Distance value</i>.</li>" +
-                        "</ul>",
+                    "<ul>" +
+                    "<li><b>Distance-Constraint:</b> Pieces are not closer than the value specified in <i>Distance value</i>.</li>" +
+                    "<li><b>Pieces-Constraint:</b> Pieces are not touching more pieces than specified in <i>Distance value</i>.</li>" +
+                    "</ul>",
                     "Die Einschränkung muss eingehalten werden, wenn die Pentominoes auf dem Spielfeld platziert werden:" +
-                        "<ul>" +
-                            "<li><b>Distanz-Einschränkung:</b> Distanz zweier Pentominoes ist maximal der Wert spezifiziert in <i>Distanz-Wert</i>.</li>" +
-                            "<li><b>Nachbar-Einschränkung:</b> Ein Pentomino hat maximal so viele benachbarte Pentominoes wie spezifiziert in <i>Distanz-Wert</i>.</li>" +
-                        "</ul>"]
+                    "<ul>" +
+                    "<li><b>Distanz-Einschränkung:</b> Distanz zweier Pentominoes ist maximal der Wert spezifiziert in <i>Distanz-Wert</i>.</li>" +
+                    "<li><b>Nachbar-Einschränkung:</b> Ein Pentomino hat maximal so viele benachbarte Pentominoes wie spezifiziert in <i>Distanz-Wert</i>.</li>" +
+                    "</ul>"]
             },
             distanceValue: ["Distance value", "Distanz-Wert"]
         },

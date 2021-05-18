@@ -48,6 +48,7 @@ h1 {
 .imageDiv {
     position: relative;
     width: 20%;
+    margin: 5px;
   }
 
 .screenshot {
