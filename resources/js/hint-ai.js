@@ -42,7 +42,7 @@ class HintAI {
                 if (bestUnreachableCellSpace === null) {
                     let commandSequenceList = this._getCommandSequenceListToSolution(game, closestSolution);
                     let misplacedPentominos = this._removeWronglyPlacedPentominos(game, closestSolution);
-                    if (misplacedPentominos){
+                    if (misplacedPentominos) {
                         return new Hint([misplacedPentominos], possibleSolutions);
                     }
                     let commands = this._getBestNextCommandsMaxOccupiedNeighbors(game, closestSolution, commandSequenceList);
@@ -65,7 +65,7 @@ class HintAI {
      */
 
     _removeWronglyPlacedPentominos(game, closestSolution) {
-        let pentominoesOnBoard = game.getPentominoes().filter(p => game.isPlacedOnBoard(p));
+        let pentominoesOnBoard = game.getAllPentominoes().filter(p => game.isPlacedOnBoard(p));
         for (var solPentominoes = 0; solPentominoes < closestSolution._board._pentominoes.length; solPentominoes++) {
           let solPentominoName = closestSolution._board._pentominoes[solPentominoes].name;
           let solPentominoPos = closestSolution._board._pentominoes[solPentominoes].sRepr;
@@ -76,13 +76,13 @@ class HintAI {
 
             if (solPentominoName === pentominoesOnBoardName ) {
               if (solPentominoPos != pentominoesOnBoardPos) {
-
                 return new RemoveCommand( game.getPentominoByName(pentominoesOnBoardName),
                                           game.getPosition(game.getPentominoByName(pentominoesOnBoardName)));
               }
             }
           }
         }
+        return null;
     }
 
     // --- --- --- Apply Skill --- --- ---
