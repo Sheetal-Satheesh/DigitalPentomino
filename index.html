@@ -710,6 +710,8 @@
         }
 
         function showGameImages() {
+            this.disablePointerEventsOnPieces();
+            this.hideManipulationButtons();
             var modal = document.getElementById('modalTop');
             modal.style.background = " rgb(220, 240, 237)";
             modal.style.display = "block";
