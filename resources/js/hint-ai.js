@@ -558,16 +558,32 @@ class HintAI {
         commandSequenceList.getAllCommandSequences().forEach(commandSequence => {
             let pentominoName = commandSequence["pentominoName"];
             let solutionPentomino = closestSolution.getPentominoByName(pentominoName);
-            let neighboringPositions = closestSolution._board._getNeighbPositionsOfPentomino(solutionPentomino);
-            let currAdjacentPentominos = -1;
-            neighboringPositions.forEach(neighboringPosition => {
-                let neighboringGamePosition = [
-                    neighboringPosition[0] + game._board._boardSRows,
-                    neighboringPosition[1] + game._board._boardSCols
+            let pentominoAnchor = closestSolution._board.getPosition(solutionPentomino);
+            let pentominoRelPositions = solutionPentomino.getRelPentominoPositions();
+            let pentominoPositions = pentominoRelPositions.map(relPosition => {
+                return solutionPentomino.getCoordinatePosition(pentominoAnchor, relPosition)
+            });
+            let currAdjacentPentominos = 0;
+            
+            pentominoPositions.forEach(position => {
+                let pentominoGamePosition = [
+                    position[0] + game._board._boardSRows,
+                    position[1] + game._board._boardSCols
                 ];
-
-                if (game._board.positionIsValid(neighboringGamePosition[0], neighboringGamePosition[1]) &&
-                    (game._board.isOccupied(neighboringGamePosition[0], neighboringGamePosition[1]) != null)) {
+                if (game._board.positionIsValid(pentominoGamePosition[0]+1, pentominoGamePosition[1]) &&
+                    game._board.isOccupied(pentominoGamePosition[0]+1, pentominoGamePosition[1])) {
+                        currAdjacentPentominos++;
+                }
+                if (game._board.positionIsValid(pentominoGamePosition[0], pentominoGamePosition[1]+1) &&
+                    game._board.isOccupied(pentominoGamePosition[0], pentominoGamePosition[1]+1)) {
+                        currAdjacentPentominos++;
+                }
+                if (game._board.positionIsValid(pentominoGamePosition[0]-1, pentominoGamePosition[1]) &&
+                    game._board.isOccupied(pentominoGamePosition[0]-1, pentominoGamePosition[1])) {
+                        currAdjacentPentominos++;
+                }
+                if (game._board.positionIsValid(pentominoGamePosition[0], pentominoGamePosition[1]-1) &&
+                    game._board.isOccupied(pentominoGamePosition[0], pentominoGamePosition[1]-1)) {
                         currAdjacentPentominos++;
                 }
             });
@@ -576,7 +592,10 @@ class HintAI {
                 bestAdjacentPentominos = currAdjacentPentominos;
             }
         });
-
+        if(!bestNextCommands) {
+            let bestNextCommandSequence = UtilitiesClass.getRandomElementFromArray(commandSequenceList.getAllCommandSequences());
+            bestNextCommands = bestNextCommandSequence["commands"];
+        }
         return bestNextCommands;
     }
 
