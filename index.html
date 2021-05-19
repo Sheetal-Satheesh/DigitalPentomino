@@ -263,10 +263,15 @@
         }
 
         function openLicense() {
+            var modal = document.getElementById('modalTop');
+            if($(modal).is(':visible')){
+               this.closeModal();
+            }
+            else
+            {
             this.hideManipulationButtons();
             this.closeBoardSelector();
             this.disablePointerEventsOnPieces();
-            var modal = document.getElementById('modalTop');
             modal.style.display = "block";
             modal.style.background = "transparent";
 
@@ -288,50 +293,57 @@
             div1.appendChild(h5);
             div1.appendChild(h6);
             modalBodyID.appendChild(div1);
+            }            
         }
 
         function resetGame() {
-            this.hideManipulationButtons();
-            this.closeBoardSelector();
-            this.disablePointerEventsOnPieces();
             var modal = document.getElementById('modalTop');
-            modal.style.display = "block";
-            modal.style.background = "transparent";
+            if($(modal).is(':visible')){
+               this.closeModal();
+            }
+            else
+            {
+                this.hideManipulationButtons();
+                this.closeBoardSelector();
+                this.disablePointerEventsOnPieces();
+                modal.style.display = "block";
+                modal.style.background = "transparent";
 
-            document.querySelector(".modalFormContent").style.display = "block";
-            document.querySelector(".innerGrid").style.display = "none";
-            template.clearContent("#modalButtonsID");
-            template.clearContent("#modalTitleID");
-            template.clearContent("#modalBodyID");
-            template.clearContent("#innerGridForm");
+                document.querySelector(".modalFormContent").style.display = "block";
+                document.querySelector(".innerGrid").style.display = "none";
+                template.clearContent("#modalButtonsID");
+                template.clearContent("#modalTitleID");
+                template.clearContent("#modalBodyID");
+                template.clearContent("#innerGridForm");
 
-            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+                let lang = SettingsSingleton.getInstance().getSettings().general.language;
 
-            let textNode = {
-                class: "modalText",
-                text: strings.reset[lang]
-            };
-            template.attachText("#modalTitleID", textNode);
+                let textNode = {
+                    class: "modalText",
+                    text: strings.reset[lang]
+                };
+                template.attachText("#modalTitleID", textNode);
 
-            let cancelBtn = {
-                class: "cancelBtn",
-                onclick: "closeModalContainer()",
-                textContent: strings.general.no[lang]
-            };
-            template.attachBtn("#modalButtonsID", cancelBtn);
+                let cancelBtn = {
+                    class: "cancelBtn",
+                    onclick: "closeModalContainer()",
+                    textContent: strings.general.no[lang]
+                };
+                template.attachBtn("#modalButtonsID", cancelBtn);
 
-            let deleteBtn = {
-                class: "deleteBtn",
-                onclick: "closeModalContainer()",
-                textContent: strings.general.yes[lang]
-            };
+                let deleteBtn = {
+                    class: "deleteBtn",
+                    onclick: "closeModalContainer()",
+                    textContent: strings.general.yes[lang]
+                };
 
-            template.attachBtn("#modalButtonsID", deleteBtn);
+                template.attachBtn("#modalButtonsID", deleteBtn);
 
-            let dltBtn = document.querySelector(".deleteBtn");
-            dltBtn.addEventListener("click", () => {
-                pd.reset();
-            });
+                let dltBtn = document.querySelector(".deleteBtn");
+                dltBtn.addEventListener("click", () => {
+                    pd.reset();
+                });
+            }    
         }
 
         function closeModal() {
@@ -380,10 +392,17 @@
         }
 
         function selectBoard() {
-            document.getElementById("boardmodalTop").style.display = "block";
+            var boardSelectorPopup = document.getElementById("boardmodalTop");
+            if($(boardSelectorPopup).is(':visible')){
+               this.closeBoardSelector();
+            }
+            else
+            {
+            boardSelectorPopup.style.display = "block";
             this.hideManipulationButtons();
-            //this.closeSettings();
+            this.closeSettings();
             this.disablePointerEventsOnPieces();
+            }
         }
 
         // From https://stackoverflow.com/questions/10970078/modifying-a-query-string-without-reloading-the-page (2nd answer)
@@ -521,30 +540,37 @@
         }
 
         function selectSettings() {
-            this.disablePointerEventsOnPieces();
-            this.hideManipulationButtons();
-            // this.disablePrefillButton();
-            //this.closeBoardSelector();
             var modal = document.getElementById('modalTop');
-            modal.style.display = "block";
-            modal.style.background = "rgb(220, 240, 237)";
+            if($(modal).is(':visible')){
+               this.closeSettings();
+            }
+            else
+            {
+                this.disablePointerEventsOnPieces();
+                this.hideManipulationButtons();
+                // this.disablePrefillButton();
+                //this.closeBoardSelector();
+                modal.style.display = "block";
+                modal.style.background = "rgb(220, 240, 237)";
 
-            document.querySelector(".modalFormContent").style.display = "none";
-            document.querySelector(".innerGrid").style.display = "block";
-            template.clearContent("#modalButtonsID");
-            template.clearContent("#modalTitleID");
-            template.clearContent("#modalBodyID");
-            template.clearContent(".innerGrid")
-            template.clearContent("#innerGridForm");
+                document.querySelector(".modalFormContent").style.display = "none";
+                document.querySelector(".innerGrid").style.display = "block";
+                template.clearContent("#modalButtonsID");
+                template.clearContent("#modalTitleID");
+                template.clearContent("#modalBodyID");
+                template.clearContent(".innerGrid")
+                template.clearContent("#innerGridForm");
 
-            //add form to attach settings to
-            $('#innerGridForm').jsonForm({
-                schema: SettingsSchemaSingleton.getInstance().getSettingsSchema(),
-                onSubmit: this.handleJsonFormSubmit,
-                displayErrors: this.handleJsonFormErrors
-            });
+                //add form to attach settings to
+                $('#innerGridForm').jsonForm({
+                    schema: SettingsSchemaSingleton.getInstance().getSettingsSchema(),
+                    onSubmit: this.handleJsonFormSubmit,
+                    displayErrors: this.handleJsonFormErrors
+                });
 
-            this.postProcessSettingsForm(SettingsSingleton.getInstance().getSettings());
+                this.postProcessSettingsForm(SettingsSingleton.getInstance().getSettings());
+            }
+           
         }
 
         function postProcessSettingsForm(settings) {
@@ -710,9 +736,14 @@
         }
 
         function showGameImages() {
-            this.disablePointerEventsOnPieces();
-            this.hideManipulationButtons();
             var modal = document.getElementById('modalTop');
+            if($(modal).is(':visible')){
+               this.closeModal();
+            }
+            else
+            {
+                this.disablePointerEventsOnPieces();
+            this.hideManipulationButtons();
             modal.style.background = " rgb(220, 240, 237)";
             modal.style.display = "block";
 
@@ -766,6 +797,7 @@
                 imageGrid.appendChild(imageDiv);
 
             });
+        }    
         }
 
         function execReplay() {
