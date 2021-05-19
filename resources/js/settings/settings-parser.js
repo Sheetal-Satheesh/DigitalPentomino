@@ -61,6 +61,8 @@ class SettingsParser {
                         console.warn("Unknown visibility qualifier: " + remainingSeed[0]);
                         return null;
                 }
+
+                remainingSeed = remainingSeed.substr(1, remainingSeed.length);
             }
         }
 
