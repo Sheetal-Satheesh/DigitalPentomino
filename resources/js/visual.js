@@ -201,7 +201,6 @@ class Visual {
         var pieceArea = document.getElementById('piecearea');
         let out = '';
         var width = UIProperty.WindowWidth / this.pd.gameWidth;
-        console.log("width of piecearea = " + width + " consisting of WindowWidth: " + UIProperty.WindowWidth + "/ " + "this.pd.gameWidth" + this.pd.gameWidth);
         this.pieces.forEach(piece => {
             let bitMap = piece.getMatrixRepresentation();
 
@@ -269,16 +268,13 @@ class Visual {
             let [positionY, positionX] = this.gameController.getPositionOfPentomino(piece);
             let left = undefined;
             let top = undefined;
-            console.log("Offset?: " + offset);
             if (offset) {
                 left = UIProperty.Sidebar + width * (positionX - 2) + (width / 8);
                 top = UIProperty.TrayHeight + width * (positionY - 2) - (width / 8);
             }
             else {
                 left = UIProperty.Sidebar + width * (positionX - 2);
-                console.log("Left: " + left);
                 top = UIProperty.TrayHeight + width * (positionY - 2);
-                console.log("Top: " + top);
             }
 
             //HERE
@@ -347,10 +343,6 @@ class Visual {
         var width = UIProperty.WindowWidth / this.pd.gameWidth;
         var gameWidth = document.getElementById("game").clientWidth;
         var gameHeight = document.getElementById("game").clientHeight;
-
-        console.log("Width: " + width);
-        console.log("gameWidth: " + gameWidth);
-        console.log("gameHight: " + gameHeight);
 
         if ((xPosition + 15 > gameWidth)) {
             if ((yPosition > 0) && (yPosition < gameHeight)) {
@@ -474,7 +466,6 @@ class Visual {
                    // if ((y > 0) && (y < gameHeight - diff)) {
 
                         container.style.left = 'calc(' + x + 'px - ' + (width * 2.5) + 'vw)';
-                        console.log(container.style.left);
                         container.style.top = 'calc(' + y + 'px - ' + (width * 2.5) + 'vw)';
                         container.style.transformOrigin = '50% 50%';
                         container.style.zIndex = 100;
