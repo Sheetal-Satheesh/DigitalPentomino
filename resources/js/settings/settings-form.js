@@ -180,7 +180,7 @@ class SettingsForm {
                 );
 
                 useInClassElement.appendChild(
-                    SettingsForm.createInputElement("checkbox", elementName + "teachers"));
+                    SettingsForm.createInputElement("checkbox",  "teachers." + elementName));
                 useInClassElement.appendChild(document.createElement("br"));
             }
         }
@@ -394,6 +394,17 @@ class SettingsForm {
                 }
             }
         }
+
+        if (settings.teachersMode) {
+            for (let heading in schema) {
+                let subSettings = schema[heading].properties;
+                for (let subheading in subSettings) {
+                    let inputElement = $("input[name='teachers." + heading + "." + subheading + "']")[0];
+                    inputElement.checked = Settings.isVisible(settings.visibility, heading, subheading);
+                }
+            }
+        }
+
         let currentLanguage = settings.general.language;
         // FIXME
         schema.general.properties.language.default = currentLanguage === baseConfigs.languages.ENGLISH ? "en" : "de";
