@@ -22,10 +22,10 @@ class SettingsForm {
             let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
             let settings = SettingsSingleton.getInstance().getSettings();
             let settingsClone = JSON.parse(JSON.stringify(settings));
-            SettingsForm.collectDataFromForm(formElement, schema, settingsClone, settings);
-            console.log(settingsClone);
+            SettingsForm.collectDataFromForm(formElement, schema, settings, settingsClone);
+            console.log(settings);
             event.preventDefault();
-            onSubmit(false, settingsClone);
+            onSubmit(false, settings);
         });
     }
 

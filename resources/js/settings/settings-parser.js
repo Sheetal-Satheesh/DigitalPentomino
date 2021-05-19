@@ -262,14 +262,14 @@ class SettingsParser {
     // --- --- --- Create Empty Settings Object --- --- ---
     static createDefaultSettingsObject(schema) {
         let settings = {};
-        settings.visibility = {};
+        settings.visibility = new SettingsVisibility();
         settings.teachersMode = true;
         for (let heading in schema) {
             let subSettings = schema[heading].properties;
             settings[heading] = {};
             for (let key in subSettings) {
                 settings[heading][key] = schema[heading].properties[key].default;
-                settings.visibility[heading + "." + key] = true;
+                settings.visibility.setVisible(heading, key, true);
             }
         }
         SettingsParser.applyNumericalLanguageRepr(settings);
