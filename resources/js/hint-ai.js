@@ -554,52 +554,43 @@ class HintAI {
     _getBestNextCommandsMaxAdjacentEdges(game, closestSolution, commandSequenceList) {
         let bestNextCommands = null;
         let bestAdjacentPentominos = 0;
-        let bSurroundedByPieces = false;
+        let lockedPieceCommand = null;
+
+        lockedPieceCommand = this._getLockedPieceCommand(game, closestSolution, commandSequenceList);
+        if (lockedPieceCommand) {
+            return lockedPieceCommand;
+        }
 
         commandSequenceList.getAllCommandSequences().forEach(commandSequence => {
-            if(bSurroundedByPieces) {
-                return;
-            }
             let pentominoName = commandSequence["pentominoName"];
             let solutionPentomino = closestSolution.getPentominoByName(pentominoName);
-            let emptyNeighborPos = closestSolution._board._getNeighbPositionsOfPentomino(solutionPentomino)
-                                        .map(neighbour => [
-                                            neighbour[0] + game._board._boardSRows,
-                                            neighbour[1] + game._board._boardSCols])
-                                        .filter(neighbour => game._board.positionIsValid(neighbour[0], neighbour[1]))
-                                        .filter(neighbour => !game._board.isOccupied(neighbour[0], neighbour[1]));
-            if(emptyNeighborPos.length == 0) {
-                bestNextCommands = commandSequence["commands"];
-                bSurroundedByPieces = true;
-                return;
-            }
+            let currAdjacentPentominos = 0;
             let pentominoAnchor = closestSolution._board.getPosition(solutionPentomino);
             let pentominoRelPositions = solutionPentomino.getRelPentominoPositions();
             let pentominoPositions = pentominoRelPositions.map(relPosition => {
                 return solutionPentomino.getCoordinatePosition(pentominoAnchor, relPosition)
             });
-            let currAdjacentPentominos = 0;
-            
+
             pentominoPositions.forEach(position => {
                 let pentominoGamePosition = [
                     position[0] + game._board._boardSRows,
                     position[1] + game._board._boardSCols
                 ];
-                if (game._board.positionIsValid(pentominoGamePosition[0]+1, pentominoGamePosition[1]) &&
-                    game._board.isOccupied(pentominoGamePosition[0]+1, pentominoGamePosition[1])) {
-                        currAdjacentPentominos++;
+                if (game._board.positionIsValid(pentominoGamePosition[0] + 1, pentominoGamePosition[1]) &&
+                    game._board.isOccupied(pentominoGamePosition[0] + 1, pentominoGamePosition[1])) {
+                    currAdjacentPentominos++;
                 }
-                if (game._board.positionIsValid(pentominoGamePosition[0], pentominoGamePosition[1]+1) &&
-                    game._board.isOccupied(pentominoGamePosition[0], pentominoGamePosition[1]+1)) {
-                        currAdjacentPentominos++;
+                if (game._board.positionIsValid(pentominoGamePosition[0], pentominoGamePosition[1] + 1) &&
+                    game._board.isOccupied(pentominoGamePosition[0], pentominoGamePosition[1] + 1)) {
+                    currAdjacentPentominos++;
                 }
-                if (game._board.positionIsValid(pentominoGamePosition[0]-1, pentominoGamePosition[1]) &&
-                    game._board.isOccupied(pentominoGamePosition[0]-1, pentominoGamePosition[1])) {
-                        currAdjacentPentominos++;
+                if (game._board.positionIsValid(pentominoGamePosition[0] - 1, pentominoGamePosition[1]) &&
+                    game._board.isOccupied(pentominoGamePosition[0] - 1, pentominoGamePosition[1])) {
+                    currAdjacentPentominos++;
                 }
-                if (game._board.positionIsValid(pentominoGamePosition[0], pentominoGamePosition[1]-1) &&
-                    game._board.isOccupied(pentominoGamePosition[0], pentominoGamePosition[1]-1)) {
-                        currAdjacentPentominos++;
+                if (game._board.positionIsValid(pentominoGamePosition[0], pentominoGamePosition[1] - 1) &&
+                    game._board.isOccupied(pentominoGamePosition[0], pentominoGamePosition[1] - 1)) {
+                    currAdjacentPentominos++;
                 }
             });
             if (currAdjacentPentominos > bestAdjacentPentominos) {
@@ -607,11 +598,32 @@ class HintAI {
                 bestAdjacentPentominos = currAdjacentPentominos;
             }
         });
-        if(!bestNextCommands) {
+        if (!bestNextCommands) {
             let bestNextCommandSequence = UtilitiesClass.getRandomElementFromArray(commandSequenceList.getAllCommandSequences());
             bestNextCommands = bestNextCommandSequence["commands"];
         }
         return bestNextCommands;
+    }
+
+    _getLockedPieceCommand(game, closestSolution, commandSequenceList) {
+        let pentominoName = null;
+        let solutionPentomino = null;
+        let emptyNeighborPos = null;
+
+        for (const commandSequence of commandSequenceList.getAllCommandSequences()) {
+            pentominoName = commandSequence["pentominoName"];
+            solutionPentomino = closestSolution.getPentominoByName(pentominoName);
+            emptyNeighborPos = closestSolution._board._getNeighbPositionsOfPentomino(solutionPentomino)
+                .map(neighbour => [
+                    neighbour[0] + game._board._boardSRows,
+                    neighbour[1] + game._board._boardSCols])
+                .filter(neighbour => game._board.positionIsValid(neighbour[0], neighbour[1]))
+                .filter(neighbour => !game._board.isOccupied(neighbour[0], neighbour[1]));
+            if(emptyNeighborPos.length == 0) {
+                return commandSequence["commands"];
+            }
+        }
+        return false;
     }
 
     // --- --- --- Helper functions --- --- ---
