@@ -21,11 +21,11 @@ class SettingsForm {
         $(formElement).submit(function(event) {
             let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
             let settings = SettingsSingleton.getInstance().getSettings();
-            let settingsClone = JSON.parse(JSON.stringify(settings));
-            SettingsForm.collectDataFromForm(formElement, schema, settings, settingsClone);
-            console.log(settings);
+            let settingsClone = jQuery.extend(true, { }, settings);
+            SettingsForm.collectDataFromForm(formElement, schema, settingsClone, settings);
+            console.log(settingsClone);
             event.preventDefault();
-            onSubmit(false, settings);
+            onSubmit(false, settingsClone);
         });
     }
 
@@ -321,7 +321,6 @@ class SettingsForm {
                 continue;
             }
             let subSettings = schema[heading].properties;
-            result[heading] = {};
             for (let key in subSettings) {
                 if (!settings.teachersMode && !settings.visibility.isVisible(heading, key)) {
                     continue;
