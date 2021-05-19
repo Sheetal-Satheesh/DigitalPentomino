@@ -358,6 +358,16 @@ class SettingsForm {
                 }
             }
         }
+
+        if (settings.teachersMode) {
+            for (let heading in schema) {
+                let subSettings = schema[heading].properties;
+                for (let subheading in subSettings) {
+                    let inputElement = $("input[name='teachers." + heading + "." + subheading + "']")[0];
+                    result.visibility[heading + "." + subheading] = inputElement.checked;
+                }
+            }
+        }
     }
 
     // === === === UPDATE FORM === === ===
