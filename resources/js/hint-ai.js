@@ -554,10 +554,25 @@ class HintAI {
     _getBestNextCommandsMaxAdjacentEdges(game, closestSolution, commandSequenceList) {
         let bestNextCommands = null;
         let bestAdjacentPentominos = 0;
+        let bSurroundedByPieces = false;
 
         commandSequenceList.getAllCommandSequences().forEach(commandSequence => {
+            if(bSurroundedByPieces) {
+                return;
+            }
             let pentominoName = commandSequence["pentominoName"];
             let solutionPentomino = closestSolution.getPentominoByName(pentominoName);
+            let emptyNeighborPos = closestSolution._board._getNeighbPositionsOfPentomino(solutionPentomino)
+                                        .map(neighbour => [
+                                            neighbour[0] + game._board._boardSRows,
+                                            neighbour[1] + game._board._boardSCols])
+                                        .filter(neighbour => game._board.positionIsValid(neighbour[0], neighbour[1]))
+                                        .filter(neighbour => !game._board.isOccupied(neighbour[0], neighbour[1]));
+            if(emptyNeighborPos.length == 0) {
+                bestNextCommands = commandSequence["commands"];
+                bSurroundedByPieces = true;
+                return;
+            }
             let pentominoAnchor = closestSolution._board.getPosition(solutionPentomino);
             let pentominoRelPositions = solutionPentomino.getRelPentominoPositions();
             let pentominoPositions = pentominoRelPositions.map(relPosition => {
