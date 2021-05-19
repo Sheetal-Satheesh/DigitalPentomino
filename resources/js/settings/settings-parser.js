@@ -9,7 +9,7 @@ class SettingsParser {
      */
     static parseSettingsFromSeed(schema, seed) {
         let settings = {};
-        let visibility = {};
+        let visibility = new SettingsVisibility();
 
         settings.teachersMode = seed[0] === "1";
 
@@ -52,10 +52,10 @@ class SettingsParser {
 
                 switch (remainingSeed[0]) {
                     case "0":
-                        visibility[heading + "." + key] = false;
+                        visibility.setVisible(heading, key, false);
                         break;
                     case "1":
-                        visibility[heading + "." + key] = true;
+                        visibility.setVisible(heading, key, true);
                         break;
                     default:
                         console.warn("Unknown visibility qualifier: " + remainingSeed[0]);
@@ -67,16 +67,6 @@ class SettingsParser {
         }
 
         settings.visibility = visibility;
-        for (let heading in schema) {
-            let subSettings = schema[heading].properties;
-            let atLeastOneVisible = false;
-            for (let key in subSettings) {
-                if (settings.visibility[heading + "." + key] === true) {
-                    atLeastOneVisible = true;
-                }
-            }
-            settings.visibility[heading] = atLeastOneVisible;
-        }
 
         SettingsParser.applyNumericalLanguageRepr(settings);
         return settings;
@@ -217,7 +207,7 @@ class SettingsParser {
                         throw new Error("Unknown type: " + schemaEntry.type);
                 }
 
-                seed += Settings.isVisible(visibility, heading, key) === true ? 1 : 0;
+                seed += visibility.isVisible(heading, key) === true ? 1 : 0;
             }
         }
 

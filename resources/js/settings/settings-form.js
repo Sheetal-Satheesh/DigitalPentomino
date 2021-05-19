@@ -38,7 +38,7 @@ class SettingsForm {
         let htmlElement = formElement;
 
         for (let heading in schema) {
-            if (!settings.teachersMode && !Settings.isVisible(settings.visibility, heading)) {
+            if (!settings.teachersMode && !settings.visibility.isVisible(heading)) {
                 continue;
             }
             let subSettings = schema[heading].properties;
@@ -59,7 +59,7 @@ class SettingsForm {
             htmlElement.appendChild(document.createElement("br"));
 
             for (let key in subSettings) {
-                if (!settings.teachersMode && !Settings.isVisible(settings.visibility, heading, key)) {
+                if (!settings.teachersMode && !settings.visibility.isVisible(heading, key)) {
                     continue;
                 }
                 let elementName = heading + "." + key;
@@ -317,13 +317,13 @@ class SettingsForm {
     static collectDataFromForm(formElement, schema, result, settings) {
 
         for (let heading in schema) {
-            if (!settings.teachersMode && !Settings.isVisible(settings.visibility, heading)) {
+            if (!settings.teachersMode && !settings.visibility.isVisible(heading)) {
                 continue;
             }
             let subSettings = schema[heading].properties;
             result[heading] = {};
             for (let key in subSettings) {
-                if (!settings.teachersMode && !Settings.isVisible(settings.visibility, heading, key)) {
+                if (!settings.teachersMode && !settings.visibility.isVisible(heading, key)) {
                     continue;
                 }
 
@@ -364,7 +364,7 @@ class SettingsForm {
                 let subSettings = schema[heading].properties;
                 for (let subheading in subSettings) {
                     let inputElement = $("input[name='teachers." + heading + "." + subheading + "']")[0];
-                    result.visibility[heading + "." + subheading] = inputElement.checked;
+                    result.visibility.setVisible(heading, subheading, inputElement.checked);
                 }
             }
         }
@@ -376,12 +376,12 @@ class SettingsForm {
         let settings = SettingsSingleton.getInstance().getSettings();
 
         for (let heading in schema) {
-            if (!settings.teachersMode && !Settings.isVisible(settings.visibility, heading)) {
+            if (!settings.teachersMode && !settings.visibility.isVisible(heading)) {
                 continue;
             }
             let subSettings = schema[heading].properties;
             for (let subheading in subSettings) {
-                if (!settings.teachersMode && !Settings.isVisible(settings.visibility, heading, subheading)) {
+                if (!settings.teachersMode && !settings.visibility.isVisible(heading, subheading)) {
                     continue;
                 }
                 let schemaEntry = schema[heading]["properties"][subheading];
@@ -410,7 +410,7 @@ class SettingsForm {
                 let subSettings = schema[heading].properties;
                 for (let subheading in subSettings) {
                     let inputElement = $("input[name='teachers." + heading + "." + subheading + "']")[0];
-                    inputElement.checked = Settings.isVisible(settings.visibility, heading, subheading);
+                    inputElement.checked = settings.visibility.isVisible(heading, subheading);
                 }
             }
         }
