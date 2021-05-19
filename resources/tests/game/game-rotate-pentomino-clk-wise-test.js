@@ -19,7 +19,7 @@ game.placePentomino(T, 18, -99);
 game.placePentomino(L, 3, 0);
 game.placePentomino(U, 4, 0);
 
-describe('Game.rotatePentominoClkWise(pentomino)', function() {
+describe('Game.rotatePentominoClkWise(pentomino)', function () {
 
     it('should rotate pieces inside the board', function () {
         assert.ok(game.isPlacedOnBoard(I));
@@ -34,7 +34,7 @@ describe('Game.rotatePentominoClkWise(pentomino)', function() {
         assert.ok(game.isPlacedOnBoard(I));
     });
 
-    it('should rotate pieces outside the board', function() {
+    it('should rotate pieces outside the board', function () {
         assert.ok(game.isPlacedOutsideBoard(T));
         game.rotatePentominoClkWise(T);
         assert.deepEqual(T.getMatrixRepresentation(), [

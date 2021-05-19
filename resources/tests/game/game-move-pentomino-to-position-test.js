@@ -26,7 +26,7 @@ game.movePentominoToPosition(F, 4, 3);
 game.placePentomino(U, 2, 4);
 game.movePentominoToPosition(U, 5, 5);
 
-describe('Game.movePentominoToPosition(pentomino, row, col)', function() {
+describe('Game.movePentominoToPosition(pentomino, row, col)', function () {
 
     it('should handle moving pieces that are on the board', function () {
         assert.ok(game.isPlacedOnBoard(T));

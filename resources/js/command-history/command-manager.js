@@ -5,8 +5,6 @@ if (typeof require != 'undefined') {
 class CommandManager {
     constructor() {
         this._cmdTree = new CommandTree();
-        var fController = new FrontController();
-        this._game = fController.controller.game();
     }
 
     Reset() {
@@ -17,41 +15,51 @@ class CommandManager {
         this._cmdTree.search(this._cmdTree.Root(), key);
     }
 
-    ExecCommand(command, cmdTypes = CommandTypes.Original) {
+    ExecCommand(command, cmdProperty = cmdAttrDefault) {
 
+        var fController = new FrontController();
+        let game = fController.controller.game();
+
+        let cmdType = cmdProperty.cmdType;
+        let cmdSeq = cmdProperty.cmdSeq;
         let isSuccess = true; // Get return value of success or error from
         let currNode = undefined;
-        if (cmdTypes == CommandTypes.Original) {
+        if (cmdType == CommandTypes.Original) {
             currNode = this._cmdTree.Insert(command);
         }
         else {
-            currNode = this._cmdTree.Current();
+            if (cmdSeq == CommandSeq.Forward) {
+                this._cmdTree.MoveDown();
+            }
+            else if (cmdSeq == CommandSeq.Backward) {
+                this._cmdTree.MoveUp();
+            }
         }
 
         let cmdVal = command.ExecValues();
         switch (command.Name()) {
             case "Place":
-                this._game.placePentomino(cmdVal.Pentomino, cmdVal.PosX, cmdVal.PosY);
+                game.placePentomino(cmdVal.Pentomino, cmdVal.PosX, cmdVal.PosY);
                 break;
 
             case "Remove":
-                this._game.removePentomino(cmdVal.Pentomino);
+                game.removePentomino(cmdVal.Pentomino);
                 break;
 
             case "RotateClkWise":
-                this._game.rotatePentominoClkWise(cmdVal.Pentomino);
+                game.rotatePentominoClkWise(cmdVal.Pentomino);
                 break;
 
             case "RotateAntiClkWise":
-                this._game.rotatePentominoAntiClkWise(cmdVal.Pentomino);
+                game.rotatePentominoAntiClkWise(cmdVal.Pentomino);
                 break;
 
             case "MirrorH":
-                this._game.mirrorPentominoH(cmdVal.Pentomino);
+                game.mirrorPentominoH(cmdVal.Pentomino);
                 break;
 
             case "MirrorV":
-                this._game.mirrorPentominoV(cmdVal.Pentomino);
+                game.mirrorPentominoV(cmdVal.Pentomino);
                 break;
 
             default:
@@ -62,8 +70,9 @@ class CommandManager {
 
         }
 
+        currNode = this._cmdTree.Current();
         if (isSuccess && (currNode != undefined)) {
-            this._game.updateCmdKey(currNode.Key());
+            game.updateCmdKey(currNode.Key());
             /*
                 console.info("Root Key: "+ this._cmdTree.RootKey());
                 console.info("Current Key: "+ this._cmdTree.CurrentKey());
@@ -73,12 +82,64 @@ class CommandManager {
         return command;
     }
 
-    JumpToRoot() {
-        let cmdSequences = [];
-        while (!this._cmdTree.isAtRoot()) {
-            executedCommands.push(this.undo());
+    StartCmdKey() {
+        return this._cmdTree.RootCmdKey();
+    }
+
+    LastCmdKey() {
+        return this._cmdTree.LeafCmdKey();
+    }
+
+    CurrentCmdKey() {
+        return this._cmdTree.CurrentCmdKey();
+    }
+
+    IsKeyFound(key) {
+        let retNode = this._cmdTree.SearchCmdNode(
+            this._cmdTree.Root(), key);
+        if (retNode != undefined) {
+            return true;
+        } else {
+            return false;
         }
-        return cmdSequences;
+    }
+
+    CmdKeySequences() {
+
+        let startKey = this._cmdTree.RootCmdKey();
+        let endKey = this._cmdTree.LeafCmdKey();
+        let cmdKeySeq = this._cmdTree.CollectCmdKeySequences(
+            this._cmdTree.Root(),
+            startKey,
+            endKey, 0);
+
+        return cmdKeySeq;
+    }
+
+    CmdSequences(startKey, endKey) {
+        if (startKey == undefined) {
+            startKey = this.StartCmdKey();
+        }
+
+        let cmdObj = this._cmdTree.CollectCmdSequences(
+            this._cmdTree.Root(),
+            startKey,
+            endKey, 0);
+
+        if (cmdObj.seqType == 2) {
+            cmdObj.commands = cmdObj.commands.reverse();
+        }
+
+        let cmdSequences = [];
+        cmdObj.commands.forEach((command) => {
+            if (cmdObj.seqType == 1) {
+                cmdSequences.push(command.ExecValues());
+
+            } else {
+                cmdSequences.push(command.ExecUndoValues());
+            }
+        }, this);
+        return [cmdSequences, cmdObj.seqType];
     }
 
     ExecCmdSequence(cmdSequence, onUndo, onRedo) {
@@ -112,19 +173,6 @@ class CommandManager {
         return !(this._cmdTree.isAtRoot());
     }
 
-    /* 
-       Undo() {
-            if (this._cmdTree.isAtRoot()) {
-                throw new Error("There exists no command to undo");
-            }
-    
-            let undoCommand = this._cmdTree.getLastCommand();
-            undoCommand.undo();
-            this._cmdTree.moveUp();
-            return undoCommand;
-        }
-    */
-
     Undo() {
         let command = this._cmdTree.MoveUp();
         if (command == undefined) {
@@ -134,27 +182,24 @@ class CommandManager {
 
     }
 
-    Redo(strategy) {
-        let command = this._cmdTree.MoveDown(strategy);
+    Redo() {
+        let command = this._cmdTree.MoveDown();
         if (command == undefined) {
             return undefined;
         }
         return command.ExecValues();
     }
 
-    /*
-        Redo(command) {
-            command.execute();
-            this._cmdTree.moveDown(command);
-            return command;
-        }
-    */
     RedoCommandsAll() {
         return this._cmdTree.getLastCommand().getChildren();
     }
 
     CmdTree() {
         return this._cmdTree;
+    }
+
+    AdjustCurrCmd(key) {
+        this._cmdTree.PositionCurrent(key);
     }
 }
 

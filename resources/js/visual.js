@@ -11,27 +11,50 @@ Object.freeze(UIProperty);
 const CommandTypes = { "Original": 1, "Shadow": 2 };
 Object.freeze(CommandTypes);
 
-const RedoStrategy = { "TOP": 1, "BOTTOM": 2 };
-Object.freeze(RedoStrategy);
+const CommandSeq = { "Forward": 1, "Backward": 2 };
+Object.freeze(CommandSeq);
+
+function updateCommandAttr(cmdType, cmdSeq) {
+    return {
+        "cmdType": cmdType,
+        "cmdSeq": cmdSeq
+    }
+}
+
+const cmdAttrDefault = updateCommandAttr(CommandTypes.Original, CommandSeq.Forward);
+
 let lastHintedPentName = null;
 let randomCell;
 class Visual {
 
-    constructor(pd) {
+    constructor(pd, type = "reload") {
         this.pd = pd;
         this.gameController = pd.gameController;
         this.boardX = pd.boardStartX;
         this.boardY = pd.boardStartY;
-        this.pieces = this.gameController.getPentominoes();
+        this.pieces = this.gameController.getAllPentominoes();
         this.selected = false;
         this.overlapBlock = new OverlapBlock();
 
         this.renderBoard();
         this.renderPieces();
-
         this.disablePrefillButton(false);
-
         this.initalizeListeners();
+    }
+
+    reload(pd) {
+        this.boardX = pd.boardStartX;
+        this.boardY = pd.boardStartY;
+        this.pieces = this.gameController.getAllPentominoes();
+        this.selected = false;
+        this.overlapBlock = new OverlapBlock();
+
+        this.renderBoard();
+        this.renderPieces();
+        let pentominosInGameArea = this.gameController.getPentominoesInGmArea();
+        pentominosInGameArea.forEach((pentomino) => {
+            this.positionPiece(pentomino);
+        });
     }
 
     getBoard() {
@@ -52,7 +75,6 @@ class Visual {
     }
 
     isPentominoInBlockCells(pentomino) {
-
         var [pX, pY] = this.gameController.getPositionOfPentomino(pentomino);
         var pMatrix = pentomino.getMatrixRepresentation();
 
@@ -80,10 +102,12 @@ class Visual {
         }
     }
 
-    placePentomino(pentomino, posX, posY, cmdType = CommandTypes.Original) {
-        this.gameController.placePentomino(pentomino, posX, posY, cmdType);
+    placePentomino(pentomino, posX, posY, cmdProperty = cmdAttrDefault) {
+        this.gameController.placePentomino(pentomino, posX, posY, cmdProperty);
         this.positionPiece(pentomino);
-        this.checkIfGameWon();
+        if(cmdProperty.cmdType != CommandTypes.Shadow){
+            this.checkIfGameWon();
+        }
     }
 
     checkIfGameWon() {
@@ -92,13 +116,22 @@ class Visual {
         }
     }
 
-    movePentominoToTray(pentomino, cmdType = CommandTypes.Original) {
-        this.gameController.removePentomino(pentomino, cmdType);
+    removeFromTray(pentomino) {
+        if (pentomino.inTray == 0) {
+            return;
+        }
+        this.gameController.removeFromTray(pentomino);
     }
 
-    clear() {
+    movePentominoToTray(pentomino, cmdProperty = cmdAttrDefault) {
+        this.gameController.addToTray(pentomino);
+        this.gameController.removePentomino(pentomino, cmdProperty);
+        this.positionPiece(pentomino);
+    }
+
+    reset() {
         this.gameController.resetGame();
-        this.pieces = this.gameController.getPentominoes();
+        this.pieces = this.gameController.getAllPentominoes();
         this.pd.visual.disableManipulations();
         this.renderPieces();
     }
@@ -220,6 +253,7 @@ class Visual {
 
         }
         else {
+
             var bCellsFnd = this.isPentominoInBlockCells(piece);
             var collisonFnd = this.isCollision(piece);
             if (collisonFnd) {
@@ -258,7 +292,6 @@ class Visual {
 
         //making the element visible (see remark in renderPieces)
         htmlElement.style.display = 'block';
-
     }
 
     select(piece, xPosition, yPosition) {
@@ -470,9 +503,11 @@ class Visual {
                 for (var i in elements) {
                     var element = elements[i];
                     var id = element.id;
-                    //when piece is moved back to tray reset Pentomio inTray variable to 1 and place the piece in Tray
+                    /**
+                     * when piece is moved back to tray reset Pentomio inTray variable to 1 and place the 
+                     * piece in Tray */
                     if (id == 'tray') {
-                        let piece = data[1].toTray();
+                        let piece = data[1];
                         that.positionPiece(piece);
                         that.movePentominoToTray(piece);
                         that.disableManipulations();
@@ -480,7 +515,7 @@ class Visual {
 
                     if (id.split('_')[0] == 'field') {
                         var coords = (id.split('_')[1].split(','));
-                        data[1].removeFromTray();
+                        that.removeFromTray(data[1]);
                         that.placePentomino(data[1], coords[0], coords[1]);
                         if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
                             that.showNumberOfPossibleSolutions();
@@ -506,7 +541,7 @@ class Visual {
         }
     }
 
-    rotateClkWise(cmdType = CommandTypes.Original) {
+    rotateClkWise(cmdProperty = cmdAttrDefault) {
         let piece = this.selected;
         if (piece) {
             let pieceDiv = document.getElementById("piece_" + piece.name);
@@ -514,14 +549,16 @@ class Visual {
             let currentRot = pieceDiv.style.getPropertyValue("--rotationZ").split(/(-?\d+)/)[1] * 1; //converts string value to int
             let newRot = flipped ? currentRot - 90 : currentRot + 90;
             // Update the backend
-            this.gameController.rotatePentominoClkWise(piece, cmdType);
+            this.gameController.rotatePentominoClkWise(piece, cmdProperty);
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
-            this.checkIfGameWon();
+            if(cmdProperty.cmdType != CommandTypes.Shadow){
+                this.checkIfGameWon();
+            }
         }
     }
 
-    rotateAntiClkWise(cmdType = CommandTypes.Original) {
+    rotateAntiClkWise(cmdProperty = cmdAttrDefault) {
         let piece = this.selected;
         if (piece) {
             let pieceDiv = document.getElementById("piece_" + piece.name);
@@ -529,14 +566,16 @@ class Visual {
             let currentRot = pieceDiv.style.getPropertyValue("--rotationZ").split(/(-?\d+)/)[1] * 1; //converts string value to int
             let newRot = flipped ? currentRot + 90 : currentRot - 90;
             // Update the backend
-            this.gameController.rotatePentominoAntiClkWise(piece, cmdType);
+            this.gameController.rotatePentominoAntiClkWise(piece, cmdProperty);
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
-            this.checkIfGameWon();
+            if(cmdProperty.cmdType != CommandTypes.Shadow){
+                this.checkIfGameWon();
+            }
         }
     }
 
-    flipH(cmdType = CommandTypes.Original) {
+    flipH(cmdProperty = cmdAttrDefault) {
         let piece = this.selected;
         if (piece) {
             let pieceDiv = document.getElementById("piece_" + piece.name);
@@ -544,15 +583,17 @@ class Visual {
             let currentRot = pieceDiv.style.getPropertyValue("--rotationX").split(/(-?\d+)/)[1] * 1; //converts string value to int
             let newRot = currentRot + 180;
             // Update the backend
-            this.gameController.mirrorPentominoH(piece, cmdType);
+            this.gameController.mirrorPentominoH(piece, cmdProperty);
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationX", newRot.toString() + "deg");
             pieceDiv.setAttribute("flipped", 1 - flipped);
-            this.checkIfGameWon();
+            if(cmdProperty.cmdType != CommandTypes.Shadow){
+                this.checkIfGameWon();
+            }
         }
     }
 
-    flipV(cmdType = CommandTypes.Original) {
+    flipV(cmdProperty = cmdAttrDefault) {
         let piece = this.selected;
         if (piece) {
             let pieceDiv = document.getElementById("piece_" + piece.name);
@@ -560,11 +601,13 @@ class Visual {
             let currentRot = pieceDiv.style.getPropertyValue("--rotationY").split(/(-?\d+)/)[1] * 1; //converts string value to int
             let newRot = currentRot + 180;
             // Update the backend
-            this.gameController.mirrorPentominoV(piece, cmdType);
+            this.gameController.mirrorPentominoV(piece, cmdProperty);
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationY", newRot.toString() + "deg");
             pieceDiv.setAttribute("flipped", 1 - flipped);
-            this.checkIfGameWon();
+            if(cmdProperty.cmdType != CommandTypes.Shadow){
+                this.checkIfGameWon();
+            }
         }
     }
 
@@ -634,7 +677,7 @@ class Visual {
         return [false, null];
     }
 
-    indicateHint(hint, commandNumber) {
+   indicateHint(hint,commandNumber){
         let timeoutFrame = 1000;
         //possible command names (place, remove, moveToPosition, rotateClkWise, rotateAntiClkWise, mirrorH, mirrorV)
         let hintCommand = hint.getCommands()[commandNumber];
@@ -643,22 +686,22 @@ class Visual {
         let hintinPen = hintCommand._pentomino;
         let pentominoColor = hintinPen.color;
         let clientRect = document.getElementById("piece_" + hintinPen.name).getBoundingClientRect();
-        let [posX, posY] = [clientRect.x + clientRect.width / 2, clientRect.y + clientRect.height / 2];
+        let [posX, posY] = [clientRect.x + clientRect.width/2, clientRect.y + clientRect.height/2];
         let currentPenHintName = hintinPen.name;
         //let currentPenHintNaame = this.selected.name;
-        if (!(currentPenHintName === lastHintedPentName)) {
+        if(!(currentPenHintName === lastHintedPentName)){
             let maxPartialHintingCells = SettingsSingleton.getInstance().getSettings().hinting.maxPartialHintingCells;
             randomCell = Math.floor(Math.random() * (maxPartialHintingCells)) + 1;
             lastHintedPentName = currentPenHintName;
         }
 
         let tempHintinPen = hintinPen;
-        if (!SettingsSingleton.getInstance().getSettings().hinting.exactHints) {
+        if (!SettingsSingleton.getInstance().getSettings().hinting.exactHints){
             //tempHintinPen = new Pentomino(hintinPen.name);
             tempHintinPen = Object.assign(Object.create(Object.getPrototypeOf(hintinPen)), hintinPen);
             //do actions on pentomino copy to prepare for place hint
-            for (let hintnr = 0; hintnr < commandNumber; hintnr++) {
-                switch (hint.getCommands()[hintnr]._name) {
+            for (let hintnr = 0; hintnr < commandNumber; hintnr++){
+                switch (hint.getCommands()[hintnr]._name){
                     case "Remove": break;
                     case "Place": break;
                     case "RotateClkWise": tempHintinPen.rotateClkWise(); break;
@@ -670,138 +713,166 @@ class Visual {
             }
         }
 
-        //indication of unoccupied cells
+       //indication of unoccupied cells
         if (!(hintSkill === null) && (SettingsSingleton.getInstance().getSettings().hinting.skillTeaching)) {
             //blink unoccupied cells
             this.blinkCells(hintSkill);
         }
         else {
 
-            this.indicatePentomino(hintinPen, timeoutFrame);
+            this.indicatePentomino(hintinPen,timeoutFrame);
 
             switch (hintName) {
-                case "Place":
-                    // handle place hint
-                    let hintRow = hintCommand._nextPosition[0];
-                    let hintColumn = hintCommand._nextPosition[1];
-                    let fieldvalue;
-                    let prevBackground = [];
+            case "Place":
+                // handle place hint
+                let hintRow = hintCommand._nextPosition[0];
+                let hintColumn = hintCommand._nextPosition[1];
+                let fieldvalue;
+                let prevBackground = [];
 
-                    //show destination position (and fade away)
-                    let piecePos = this.getOccupiedPositions(tempHintinPen, hintCommand);
-                    //usage of random cell variable to indicate hinting
+                //show destination position (and fade away)
+                let piecePos = this.getOccupiedPositions(tempHintinPen,hintCommand);
+                let  randomCellPos =  this.calculateNeighbour(piecePos , hintCommand);
+                //usage of random cell variable to indicate hinting
 
-                    switch (SettingsSingleton.getInstance().getSettings().hinting.hintingStrategy) {
-                        case "partial":
-                            for (let i = 0; i < randomCell; i++) {
-                                fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
-                                prevBackground[i] = fieldvalue.style.background;
-                                fieldvalue.style.background = pentominoColor;
-                                this.hide(piecePos, prevBackground, timeoutFrame);
-                            }
-                            break;
-                        case "full":
-                            for (let i = 0; i < 5; i++) {
-                                fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
-                                prevBackground[i] = fieldvalue.style.background;
-                                fieldvalue.style.background = pentominoColor;
-                                this.hide(piecePos, prevBackground, timeoutFrame);
-                            }
-                            break;
-                        case "area":
-                            for (let i = 0; i < 25; i++) {
-                                let areaPos = this.indicateAreaCells(hintinPen, hintCommand)[0];
-                                let b = this.gameController.game()._board.positionIsValid(areaPos[i][0], areaPos[i][1]);
-                                if (b) {
-                                    let areaPos = this.indicateAreaCells(hintinPen, hintCommand)[0];
-                                    fieldvalue = document.getElementById("field_" + areaPos[i][0] + "," + areaPos[i][1]);
+                switch (SettingsSingleton.getInstance().getSettings().hinting.hintingStrategy) {
+                    case "partial":
+                        switch (SettingsSingleton.getInstance().getSettings().hinting.partialHintingStragety) {
+                            case "random":
+                                //piecePos = filtered;
+                                for (let i = 0; i < randomCell; i++) {
+                                    fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
                                     prevBackground[i] = fieldvalue.style.background;
                                     fieldvalue.style.background = pentominoColor;
-                                    this.hideArea(areaPos, prevBackground, timeoutFrame);
+                                    this.hide(piecePos, prevBackground, timeoutFrame);
                                 }
+                                break;
+                            case "mostOccupiedCells":
+                                let mostCells = this.mostNeigh(hintinPen , piecePos, hintCommand);
+                                let cellsToIndicate = this.cellsToIndicate(piecePos, mostCells, hintCommand);
+                                for (let i = 0; i < cellsToIndicate.length; i++) {
+                                    fieldvalue = document.getElementById("field_" + cellsToIndicate[i][0] + "," + cellsToIndicate[i][1]);
+                                    prevBackground[i] = fieldvalue.style.background;
+                                    fieldvalue.style.background = pentominoColor;
+                                    this.hideMostOccupiedNeighbors(cellsToIndicate, prevBackground, timeoutFrame);
+                                 }
+                                break;
+                            default:
+                                throw new Error("Unknown partial hinting strategy");
+                        }
+                        break;
+                    case "full":
+                        for (let i = 0; i < 5; i++) {
+                            fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
+                            prevBackground[i] = fieldvalue.style.background;
+                            fieldvalue.style.background = pentominoColor;
+                            this.hide(piecePos, prevBackground, timeoutFrame);
+                        }
+                        break;
+                    case "area":
+                        let areaPos = this.indicateAreaCells(hintinPen, hintCommand)[0];
+                        for (let i = 0; i < areaPos.length; i++) {
+                                let areaPos = this.indicateAreaCells(hintinPen, hintCommand)[0];
+                                fieldvalue = document.getElementById("field_" + areaPos[i][0] + "," + areaPos[i][1]);
+                                prevBackground[i] = fieldvalue.style.background;
+                                fieldvalue.style.background = pentominoColor;
                             }
-                            break;
-                        default:
-                            console.error("Hinting strategy unknown!");
-                    }
-                    break;
+                        
+                        this.hideArea(areaPos, prevBackground, timeoutFrame);
+                        break;
+                    default:
+                        console.error("Hinting strategy unknown!");
+                }
+                break;
 
-                case "Remove":
-                    // handle remove hint
-                    this.select(hintinPen, posX, posY);
-                    var pen = document.getElementById("piece_" + hintinPen.name);
-                    //console.log("pent",hintinPen,this.selected);
-                    if (!this.selected.inTray) {
-                        pen.style.opacity = '0.2';
-                        setTimeout(function () {
-                            pen.style.opacity = '1';
-                        }, timeoutFrame);
-                    }
-                    break;
+            case "Remove":
+                // handle remove hint
+                this.select(hintinPen,posX,posY);
+                var pen = document.getElementById("piece_" + hintinPen.name);
+                //console.log("pent",hintinPen,this.selected);
+                if (!this.selected.inTray){
+                    pen.style.opacity = '0.2';
+                    setTimeout(function(){
+                    pen.style.opacity = '1';
+                    },timeoutFrame);
+                }
+                break;
 
-                case "RotateClkWise":
-                    // handle rotateClkWise hint
-                    this.select(hintinPen, posX, posY);
-                    if (!this.selected.inTray) {
-                        rotateClkWise();
-                        setTimeout(function () {
-                            rotateAntiClkWise();
-                        }, timeoutFrame);
-                    }
-                    break;
+            case "RotateClkWise":
+                // handle rotateClkWise hint
+                this.select(hintinPen,posX,posY);
+                if (!this.selected.inTray){
+                    rotateClkWise();
+                    setTimeout(function(){
+                    rotateAntiClkWise();
+                    },timeoutFrame);
+                }
+                break;
 
-                case "RotateAntiClkWise":
-                    // handle rotateAntiClkWise hint
-                    this.select(hintinPen, posX, posY);
-                    if (!this.selected.inTray) {
-                        rotateAntiClkWise();
-                        setTimeout(function () {
-                            rotateClkWise();
-                        }, timeoutFrame);
-                    }
-                    break;
+            case "RotateAntiClkWise":
+                // handle rotateAntiClkWise hint
+                this.select(hintinPen,posX,posY);
+                if (!this.selected.inTray){
+                    rotateAntiClkWise();
+                    setTimeout(function(){
+                    rotateClkWise();
+                    },timeoutFrame);
+                }
+                break;
 
-                case "MirrorH":
-                    // handle mirrorH hint
-                    //select piece in the UI to flip
-                    this.select(hintinPen, posX, posY);
-                    if (!this.selected.inTray) {
-                        flipH();
-                        setTimeout(function () {
-                            flipH();
-                        }, timeoutFrame);
-                    }
-                    break;
+            case "MirrorH":
+                // handle mirrorH hint
+                //select piece in the UI to flip
+                this.select(hintinPen,posX,posY);
+                if (!this.selected.inTray){
+                    flipH();
+                    setTimeout(function(){
+                    flipH();
+                    },timeoutFrame);
+                }
+                break;
 
-                case "MirrorV":
-                    // handle mirrorV hint
-                    this.select(hintinPen, posX, posY);
-                    if (!this.selected.inTray) {
-                        flipV();
-                        setTimeout(function () {
-                            flipV();
-                        }, timeoutFrame);
-                    }
-                    break;
+            case "MirrorV":
+                // handle mirrorV hint
+                this.select(hintinPen,posX,posY);
+                if (!this.selected.inTray){
+                    flipV();
+                    setTimeout(function(){
+                    flipV();
+                    },timeoutFrame);
+                }
+                break;
 
-                default:
-                    console.error("Unknown piece action detected!");
+            default:
+                console.error("Unknown piece action detected!");
             }
         }
     }
+
 
     indicatePentomino(pentomino, timeframe) {
         Array.prototype.forEach.call(document.getElementById("piece_" + pentomino.name).getElementsByClassName("bmPoint"), function (element) {
             element.style["box-shadow"] = "0 0 20px " + pentomino.color;
             if (pentomino.inTray) {
                 element.classList.add('horizTranslate');
-                //element.style.transform = "scale(2) rotate(0.1deg)";
+                
+                //obtain and increase current scale of piece
+                let htmlPiece = document.getElementById("piece_" + pentomino.name);
+                let transformValue = $('#piece_' + pentomino.name).css('transform');
+                let values = transformValue.split('(')[1];
+                values = values.split(')')[0];
+                values = values.split(',');
+                let a = values[0];
+                let b = values[1];
+                let scale = Math.sqrt(a*a + b*b);
+                document.getElementById("piece_" + pentomino.name).style.transform = "scale(" + scale*2 + ")";
             }
 
             setTimeout(function () {
                 element.style.removeProperty("box-shadow");
                 //element.style.transform = "none";
                 element.classList.remove('horizTranslate');
+                document.getElementById("piece_" + pentomino.name).style.removeProperty("transform");
             }, timeframe);
         });
     }
@@ -872,29 +943,133 @@ class Visual {
     }
 
 
-    indicateAreaCells(piece, hintCommand) {
+     cellsToIndicate(piecePos, mostCells, hintCommand){
+        let maxPartialHintingCells = SettingsSingleton.getInstance().getSettings().hinting.maxPartialHintingCells;
+        let randomCell = Math.floor(Math.random() * (maxPartialHintingCells)) + 1;
+        let game = this.gameController.game();
+        let board = game._board;
+        let cellsToIndicate = [];
+        let temp = [];
+        let temp2 = [];
+        cellsToIndicate.push(mostCells);
+        cellsToIndicate.forEach(function(element){
+            piecePos.forEach(function(ele){
+                if(!((element[0] == ele[0])&&(element[1] == ele[1]))){
+                    cellsToIndicate.push(ele);
+                }
+            });
+       });
+       let filtered = cellsToIndicate.splice(randomCell, cellsToIndicate.length);
+       return cellsToIndicate;
+    }
+
+    mostNeigh(hintinPen ,piecePos , hintCommand){
+        let game = this.gameController.game();
+        let board = game._board;
+        hintinPen = hintCommand._pentomino;
+        let maxNumOccupiedCells = 0;
+        //unoccupied cells
+        let bestCell;
+        let cellIsOccupied;
+        let ab;
+        for(let i=0; i<piecePos.length; i++){
+            let counter = 0;
+            ab = board._getNeighborPositions(piecePos[i][0], piecePos[i][1]);           
+            for(let j = 0; j<ab.length; j++){
+                if(board.positionIsValid(ab[j][0], ab[j][1])){
+                    cellIsOccupied = board.isOccupied(ab[j][0], ab[j][1]);
+                    if(!(cellIsOccupied === null) && !(cellIsOccupied === hintinPen)){
+                        counter += 1;
+                    }
+                }
+                else {
+                    counter += 1;
+                }
+                if(counter > maxNumOccupiedCells){
+                    maxNumOccupiedCells = counter;
+                    if(board.positionIsValid(ab[j][0], ab[j][1])){
+                        if(cellIsOccupied){
+                            bestCell = piecePos[i];
+                        }
+                    }
+                    else{
+                        bestCell = piecePos[i];
+                    } 
+                }
+            }
+        }
+        return bestCell;
+    }
+
+
+
+    calculateNeighbour(piecePos , hintCommand){
+        let game = this.gameController.game();
+        let board = game._board;
+        let neighb;
+        let randomCellPos = [];
+        let reduced = []
+        for(let i=0; i<piecePos.length; i++){
+            neighb = this.gameController.game()._board._getNeighborPositions(piecePos[i][0], piecePos[i][1]);
+            for(let j=0; j<neighb.length; j++){
+                if(board.positionIsValid(neighb[j][0], neighb[j][1])){
+                    if(board.isOccupied(neighb[j][0], neighb[j][1])){
+                        randomCellPos.push(piecePos[i]);
+                    }
+                }
+                else{
+                    randomCellPos.push(piecePos[i]);
+                }
+            }
+        }
+        //remove duplicate values
+        reduced = [...randomCellPos.reduce((p,c) => p.set(c,true),new Map()).keys()];
+        let filtered = reduced.splice(randomCell, reduced.length);
+        return reduced;
+    }
+
+
+   
+
+    //returns unique elements of an array : reference : https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-array
+        unique(arr) {
+        return arr.sort().filter(function(ele, posi, ary) {
+            return !posi || ele != ary[posi - 1];
+        });
+    }
+
+
+    calculateDistance(currentPoint,neighbourPoint){
+        return  Math.round(Math.sqrt(
+                Math.pow((currentPoint[0]-neighbourPoint[0]),2) +
+                Math.pow((currentPoint[1]-neighbourPoint[1]),2)));
+    }
+
+
+   indicateAreaCells(piece, hintCommand) {
         let hintRow = hintCommand._nextPosition[0];
         let hintColumn = hintCommand._nextPosition[1];
-        let midRow = hintRow;
-        let midColumn = hintColumn;
-        let startR = hintRow - 2;
-        let startCol = hintColumn - 2;
+        let startR; 
+        let startCol;
         let areaPosArray = [];
+        startR = hintRow - 2 ;
+        startCol = hintColumn - 2;
         let k = 0;
         for (let j = 0; j < 5; j++) {
             for (let l = 0; l < 5; l++) {
                 let areaPos = [];
                 areaPos[0] = j + startR;
                 areaPos[1] = l + startCol;
-                areaPosArray[k] = areaPos;
+                let validPosition = this.gameController.game()._board.positionIsValid(areaPos[0], areaPos[1]);
+                if(validPosition){
+                    areaPosArray.push(areaPos);
+                }
                 k++;
             }
         }
         return [areaPosArray, null];
     }
-
-
-
+    
     hideArea(areaPos, prevBackground, timeoutFrame) {
 
         setTimeout(function () {
@@ -905,11 +1080,6 @@ class Visual {
             }
         }, timeoutFrame);
     }
-
-
-
-
-
 
     hide(piecePos, prevBackground, timeoutFrame) {
 
@@ -922,6 +1092,18 @@ class Visual {
         }, timeoutFrame);
     }
 
+
+
+    hideMostOccupiedNeighbors(cellsToIndicate, prevBackground, timeoutFrame){
+
+        setTimeout(function(){
+            for (let j=0;j<cellsToIndicate.length;j++){
+                let fvalue = document.getElementById("field_" + cellsToIndicate[j][0] + "," + cellsToIndicate[j][1]);
+                    //TODO: replace with proper fadeOut animation
+                fvalue.style.background = prevBackground[j];
+            }
+        }, timeoutFrame);
+    }
 
     getOccupiedPositions(piece, hintCommand) {
 
@@ -999,7 +1181,7 @@ class Visual {
     }
 
     readyForPrefilling() {
-        this.clear();
+        this.reset();
         // Prevent clicking of button while previous prefilling is going on
         this.disablePrefillButton(true);
     }
@@ -1084,8 +1266,9 @@ class Visual {
                 }
                 blockedCells = JSON.parse(JSON.stringify(blockedCellsTemp));
                 prefillCandidates.push(piece);
-                piece.removeFromTray();
-                this.gameController.placePentomino(piece, currentAnchor[0], currentAnchor[1]);
+                this.removeFromTray(piece);
+                piece.updateTrayValue(0);
+                this.placePentomino(piece, currentAnchor[0], currentAnchor[1]);
 
             } else {
                 piece = new Pentomino(piece.name);
@@ -1127,8 +1310,9 @@ class Visual {
             }
             prefillCandidates.push(piece);
             positions.push(currentAnchor);
-            piece.removeFromTray();
-            this.gameController.placePentomino(piece, currentAnchor[0], currentAnchor[1]);
+            this.removeFromTray(piece);
+            piece.updateTrayValue(0);
+            this.placePentomino(piece, currentAnchor[0], currentAnchor[1]);
         }
 
         return prefillCandidates;
@@ -1138,9 +1322,8 @@ class Visual {
         return this.getRandomElementFromArray(solution.filter(piece => !(pickedPieces[piece[0].name] == 1)));
     }
 
-
-
-    execShadowCmd(command) {
+    execShadowCmd(command, seqType) {
+        let cmdProperty = updateCommandAttr(CommandTypes.Shadow, seqType);
         switch (command.name) {
             case "Remove":
             case "Place":
@@ -1149,34 +1332,41 @@ class Visual {
                     if (command.Pentomino.inTray == 1) {
                         break;
                     }
-                    command.Pentomino.toTray();
-                    this.movePentominoToTray(command.Pentomino, CommandTypes.Shadow);
+                    command.Pentomino.updateTrayValue(1);
+                    this.movePentominoToTray(
+                        command.Pentomino,
+                        cmdProperty);
                     this.positionPiece(command.Pentomino);
                 }
                 else {
                     command.Pentomino.inTray = 0;
-                    this.placePentomino(command.Pentomino, command.PosX, command.PosY, CommandTypes.Shadow);
+                    this.placePentomino(
+                        command.Pentomino,
+                        command.PosX,
+                        command.PosY,
+                        cmdProperty);
                 }
+
                 break;
 
             case "RotateClkWise":
                 this.selected = command.Pentomino;
-                this.rotateClkWise(CommandTypes.Shadow);
+                this.rotateClkWise(cmdProperty);
                 break;
 
             case "RotateAntiClkWise":
                 this.selected = command.Pentomino;
-                this.rotateAntiClkWise(CommandTypes.Shadow);
+                this.rotateAntiClkWise(cmdProperty);
                 break;
 
             case "MirrorH":
                 this.selected = command.Pentomino;
-                this.flipH(CommandTypes.Shadow);
+                this.flipH(cmdProperty);
                 break;
 
             case "MirrorV":
                 this.selected = command.Pentomino;
-                this.flipV(CommandTypes.Shadow);
+                this.flipV(cmdProperty);
                 break;
 
             default:
@@ -1186,12 +1376,26 @@ class Visual {
         }
     }
 
+    getCmdState(stateType) {
+        if (stateType == "start") {
+            return this.gameController.getStartCmdKey();
+        }
+        else {
+            return this.gameController.getCurrentCmdKey()
+        }
+    }
+
+    getGameStates() {
+        let cmdKeySequences = this.gameController.getCmdKeySequences();
+        return cmdKeySequences;
+    }
+
     undo() {
         let command = this.gameController.undo();
         if (command == undefined) {
             return;
         }
-        this.execShadowCmd(command, "Undo");
+        this.execShadowCmd(command);
         if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.showNumberOfPossibleSolutions();
         }
@@ -1199,15 +1403,87 @@ class Visual {
     }
 
     redo() {
-        let command = this.gameController.redo(RedoStrategy.TOP);
+        let command = this.gameController.redo();
         if (command == undefined) {
             return;
         }
-        this.execShadowCmd(command, "Redo");
+        this.execShadowCmd(command);
         if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.showNumberOfPossibleSolutions();
         }
         this.checkIfGameWon();
+    }
+
+    getGameIdByKey(key) {
+        return this.gameController.getGameIdByKey(key);
+    }
+    saveGameImage(image) {
+        this.gameController.saveGameImage(image);
+    }
+
+    showGameImages() {
+        let gameImages = this.gameController.getGameImages();
+        return gameImages;
+    }
+
+    deleteGameImage(key) {
+        this.gameController.deleteGameImage(key);
+    }
+
+    loadGame(key) {
+        this.gameController.loadGame(key);
+    }
+
+    loadGameState(targetStateKey) {
+        let currentCmdKey = this.gameController.getCurrentCmdKey();
+        if (currentCmdKey == undefined) {
+            currentCmdKey = this.gameController.getStartCmdKey();
+        }
+        let [cmdSequences, seqType] = this.gameController.getCmdSequences(currentCmdKey, targetStateKey);
+        for (let indx = 0; indx < cmdSequences.length; indx++) {
+            this.execShadowCmd(cmdSequences[indx], seqType);
+        }
+    }
+
+    replay(startKey, targetKey) {
+        
+        if (startKey.length == 0) {
+            startKey = this.gameController.getStartCmdKey();
+            if (startKey == undefined) {
+                console.error("Game is not Started yet");
+                return;
+            }
+        }
+
+        if (targetKey.length == 0) {
+            targetKey = this.gameController.getLastCmdKey();
+            if (targetKey == undefined) {
+                console.error("Game is not Started yet");
+                return;
+            }
+        }
+
+        let [cmdSequences, seqType] = this.gameController.getCmdSequences(startKey, targetKey);
+        this.loadGameState(startKey);
+
+
+        let timeInterval = 100;
+        for (let indx = 0; indx < cmdSequences.length; indx++) {
+            let command = cmdSequences[indx];
+            var that = this;
+
+            setTimeout(function (that, command) {
+                that.execShadowCmd(command, seqType);
+            }, timeInterval += 500, that, command);
+        }
+
+        const pause = function () {
+            let replayId = document.getElementById("replay");
+            let replayImg = replayId.children[0];
+            replayImg.setAttribute('src', 'resources/images/icons/replay.svg');
+        };
+        setTimeout(pause, timeInterval);
+
     }
 
     disablePointerEventsOnPieces() {

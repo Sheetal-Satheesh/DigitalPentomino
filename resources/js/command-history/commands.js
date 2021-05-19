@@ -168,8 +168,6 @@ class MirrorVCommand extends Command {
     }
 }
 
-
-
 if (typeof module != 'undefined') {
     module.exports = Command;
 }

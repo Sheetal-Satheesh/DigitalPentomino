@@ -46,10 +46,11 @@ class GameController {
     setGame(game) {
         this._gameLoader.setGame(game);
     };
-
+    getName() {
+        return this.game().getName();
+    }
     resetGame() {
         this._gameLoader.resetGame();
-        return this.game();
     }
 
     createGame(boardStartXY,
@@ -64,6 +65,21 @@ class GameController {
             blockedCells,
             name);
     }
+    saveGameImage(image) {
+        this._gameLoader.saveGameImage(image);
+    }
+
+    deleteGameImage(key) {
+        this._gameLoader.deleteGameImage(key);
+    }
+
+    getGameImages() {
+        return this._gameLoader.getGameImages();
+    }
+
+    loadGame(key) {
+        this._gameLoader.loadGame(key);
+    }
 
     cmdManager() {
         return this._gameLoader.cmdManager();
@@ -71,6 +87,38 @@ class GameController {
 
     hintAI() {
         return this._gameLoader.hintAI();
+    }
+
+    getStartCmdKey() {
+        return this.cmdManager().StartCmdKey();
+    }
+
+    getLastCmdKey() {
+        return this.cmdManager().LastCmdKey();
+    }
+
+    getCurrentCmdKey() {
+        return this.cmdManager().CurrentCmdKey();
+    }
+
+    getCmdSequences(startKey, endKey) {
+        if (this.cmdManager().IsKeyFound(startKey) == false) {
+            throw new Error("Selected Game State Not Found :(");
+        }
+
+        if (this.cmdManager().IsKeyFound(endKey) == false) {
+            throw new Error("Selected Game State Not Found :(");
+        }
+
+        return this.cmdManager().CmdSequences(startKey, endKey);
+    }
+
+    getCmdKeySequences() {
+        return this.cmdManager().CmdKeySequences();
+    }
+
+    getGameIdByKey(key) {
+        return this._gameLoader.getGameIdByKey(key);
     }
 
     exceptionHandler(pentomino) {
@@ -94,7 +142,7 @@ class GameController {
         pentomino,
         row,
         col,
-        cmdType = CommandTypes.Original) {
+        cmdProperty = cmdAttrDefault) {
 
         row = parseInt(row);
         col = parseInt(col);
@@ -104,14 +152,14 @@ class GameController {
             new PlaceCommand(pentomino,
                 this.game().getPosition(pentomino),
                 [row, col]),
-            cmdType);
+            cmdProperty);
     }
 
     movePentominoToPosition(
         pentomino,
         row,
         col,
-        cmdType = CommandTypes.Original) {
+        cmdProperty = cmdAttrDefault) {
 
         row = parseInt(row);
         col = parseInt(col);
@@ -119,65 +167,74 @@ class GameController {
 
         return this.cmdManager().ExecCommand(
             new MoveToPositionCommand(pentomino, row, col),
-            cmdType);
+            cmdProperty);
     }
 
     rotatePentominoAntiClkWise(
         pentomino,
-        cmdType = CommandTypes.Original) {
+        cmdProperty = cmdAttrDefault) {
 
         this.exceptionHandler(pentomino);
 
         return this.cmdManager().ExecCommand(
             new RotateAntiClkWiseCommand(pentomino),
-            cmdType);
+            cmdProperty);
     }
 
     rotatePentominoClkWise(
         pentomino,
-        cmdType = CommandTypes.Original) {
+        cmdProperty = cmdAttrDefault) {
 
         this.exceptionHandler(pentomino);
 
         return this.cmdManager().ExecCommand(
             new RotateClkWiseCommand(pentomino),
-            cmdType);
+            cmdProperty);
     }
 
     mirrorPentominoH(
         pentomino,
-        cmdType = CommandTypes.Original) {
+        cmdProperty = cmdAttrDefault) {
 
         this.exceptionHandler(pentomino);
 
         return this.cmdManager().ExecCommand(
             new MirrorHCommand(pentomino),
-            cmdType);
+            cmdProperty);
     }
 
     mirrorPentominoV(
         pentomino,
-        cmdType = CommandTypes.Original) {
+        cmdProperty = cmdAttrDefault) {
 
         this.exceptionHandler(pentomino);
 
         return this.cmdManager().ExecCommand(
             new MirrorVCommand(pentomino),
-            cmdType);
+            cmdProperty);
     }
 
     removePentomino(
         pentomino,
-        cmdType = CommandTypes.Original) {
+        cmdProperty = cmdAttrDefault) {
 
         this.exceptionHandler(pentomino);
 
         return this.cmdManager().ExecCommand(
             new RemoveCommand(pentomino,
                 this.game().getPosition(pentomino)
-            ), cmdType);
+            ), cmdProperty);
     }
 
+    removeFromTray(pentomino) {
+        pentomino.updateTrayValue(0);
+        this.game().removeFromTray(pentomino);
+    }
+
+    addToTray(pentomino) {
+        pentomino.updateTrayValue(1);
+        this.game().addToTray(pentomino);
+    }
     // --- --- --- Hints --- --- ---
     getHint() {
         if (this.game() === null) {
@@ -188,11 +245,11 @@ class GameController {
             console.error("HintAI not initialized");
         }
 
-        return this.hintAI().getHint();
+        return this.hintAI().getHint(this.game());
     }
 
     getSolutions() {
-        return this.game().getSolutions();
+        return this.hintAI().getSolutions();
     }
 
     // --- --- --- History --- --- ---
@@ -236,12 +293,12 @@ class GameController {
         return this.cmdManager().Undo();
     }
 
-    redo(strategy = RedoStrategy.TOP) {
+    redo() {
         if (this.game() === null) {
             throw new Error("Game is not set");
         }
 
-        return this.cmdManager().Redo(strategy);
+        return this.cmdManager().Redo();
     }
 
     isUndoPossible() {
@@ -335,11 +392,19 @@ class GameController {
         return this.game().getBoardSize();
     }
 
-    getPentominoes() {
+    getAllPentominoes() {
         if (this.game() === null) {
             throw new Error("Game is not set");
         }
-        return this.game().getPentominoes();
+        return this.game().getAllPentominoes();
+    }
+
+    getPentominoesInGmArea() {
+        return this.game().getPentominoesInGmArea();
+    }
+
+    getPentominosInTray() {
+        return this.game().getPentominosInTray();
     }
 
     getPositionOfPentomino(pentomino) {

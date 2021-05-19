@@ -33,6 +33,14 @@ class Board {
         this._pentominoPositions = [];
     }
 
+    getBoardSettings() {
+        return {
+            "boardStartPos": [this._boardSRows, this._boardSCols],
+            "boardSize": [this._boardRows, this._boardCols],
+            "blockCells": this._blockedCells
+        };
+    }
+
     placePentomino(pentomino, row, col) {
 
         /**
@@ -336,6 +344,19 @@ class Board {
                 this._createSpace(remainingUnoccupiedCells, this._getValidNeighborPositions(neighborCell[0], neighborCell[1]), space);
             }
         });
+    }
+
+
+
+    _getNeighborPositions(row, col) {
+        let positions = [];
+
+        positions.push([row + 1, col]);
+        positions.push([row - 1, col]);
+        positions.push([row, col + 1]);
+        positions.push([row, col - 1]);
+
+        return positions;
     }
 
     _getValidNeighborPositions(row, col) {

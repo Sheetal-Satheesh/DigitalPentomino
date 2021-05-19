@@ -41,17 +41,23 @@ const strings = {
                 enumTitles: [["Concrete", "Partial", "Area"], ["Konkret", "Partiell", "Bereich"]],
                 description: [
                     "Specifies what hints are given to the user:" +
-                    "<ul>" +
-                    "<li><b>Concrete Hints:</b> A hint suggests a specific action for a specific pentomino.</li>" +
-                    "<li><b>Partial Hints:</b> An action is indicated by displaying cells of the pentomino in the desired state.</li>" +
-                    "<li><b>Area Hints:</b> An action is indicated by displaying an area, where the pentomino should be placed.</li>" +
-                    "</ul>",
+                        "<ul>" +
+                            "<li><b>Concrete Hints:</b> A hint suggests a specific action for a specific pentomino.</li>" +
+                            "<li><b>Partial Hints:</b> An action is indicated by displaying cells of the pentomino in the desired state.</li>" +
+                            "<li><b>Area Hints:</b> An action is indicated by displaying an area, where the pentomino should be placed.</li>" +
+                        "</ul>",
                     "Spezifiziert, von welcher Art die Hinweise sind:" +
-                    "<ul>" +
-                    "<li><b>Konkrete Hinweise:</b> Der Hinweis empfiehlt direkt eine Aktion für ein bestimmtes Pentomino.</li>" +
-                    "<li><b>Partielle Hinweise:</b> Die Aktion wird nur angedeutet, indem Zellen des Pentominoes an dessen Zielposition angezeigt werden.</li>" +
-                    "<li><b>Bereich-Hinweise:</b> Die Aktion wird nur angedeutet, indem ein Bereich angezeigt wird, der die Zielposition des Pentominoes enthält.</li>" +
-                    "</ul>"]
+                        "<ul>" +
+                            "<li><b>Konkrete Hinweise:</b> Der Hinweis empfiehlt direkt eine Aktion für ein bestimmtes Pentomino.</li>" +
+                            "<li><b>Partielle Hinweise:</b> Die Aktion wird nur angedeutet, indem Zellen des Pentominoes an dessen Zielposition angezeigt werden.</li>" +
+                            "<li><b>Bereich-Hinweise:</b> Die Aktion wird nur angedeutet, indem ein Bereich angezeigt wird, der die Zielposition des Pentominoes enthält.</li>" +
+                        "</ul>"]
+            },
+            partialHintingStrategy: {
+                title: ["Partial Hinting Strategy", "Partielle Hinweise Strategie"],
+                enumTitles: [["Random", "Most Occupied Cells"], ["Zufällig", "Maximal belegte Felder"]],
+                description: ["TODO",
+                    "TODO"]
             },
             maxPartialHintingCells: {
                 title: ["Max Partial Hinting Cells", "Maximale Anzahl Zellen bei partiellen Hinweisen"],
