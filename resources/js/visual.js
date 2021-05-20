@@ -744,6 +744,7 @@ class Visual {
                                 for (let i = 0; i < randomCell; i++) {
                                     fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
                                     prevBackground[i] = fieldvalue.style.background;
+                                    console.log("piecePos", piecePos[i][0], piecePos[i][1]);
                                     fieldvalue.style.background = pentominoColor;
                                     this.hide(piecePos, prevBackground, timeoutFrame);
                                 }
@@ -947,24 +948,43 @@ class Visual {
     cellsToIndicate(piecePos, mostCells, hintCommand){
         let hintinPen = hintCommand._pentomino;
         let currentPenHintName = hintinPen.name;
+        let cellSeries; 
+        let board = this.gameController.game()._board;
         if(!(currentPenHintName === lastHintedPentName)){
             let maxPartCells = SettingsSingleton.getInstance().getSettings().hinting.maxPartialHintingCells;
             randomCell = (Math.floor(Math.random() * (maxPartCells)) + 1);
             lastHintedPentName = currentPenHintName;
         }
-        let game = this.gameController.game();
-        let board = game._board;
         let cellsToIndicate = [];
         let temp = [];
         let temp2 = [];
         cellsToIndicate.push(mostCells);
+        temp2.push(mostCells);
+        console.log("mostCells", mostCells);
         cellsToIndicate.forEach(function(element){
             piecePos.forEach(function(ele){
+                cellSeries = board._getValidNeighborPositions(element[0], element[1]);
+                cellSeries.forEach(function(el){
+                    if(((el[0] == ele[0])&&(el[1] == ele[1]))){
+                        temp2.push(el);
+                        temp = board._getValidNeighborPositions(el[0], el[1]);
+                        /*temp.forEach(function(e){
+                            if(!((e[0] == mostCells[0])&&(e[1] == mostCells[1]))){
+                                if(!(board.isOccupied(e[0], e[1]))){
+                                    
+                                }
+                            }
+                            
+                        });*/
+                    }
+                });
                 if(!((element[0] == ele[0])&&(element[1] == ele[1]))){
                     cellsToIndicate.push(ele);
                 }
             });
        });
+        console.log("temp2",temp2, "piecePos", piecePos);
+        cellsToIndicate = temp2;
        let filtered = cellsToIndicate.splice(randomCell, cellsToIndicate.length);
        return cellsToIndicate;
     }
@@ -1045,6 +1065,7 @@ class Visual {
     }
 
 
+    //reference : stackoverflow
     calculateDistance(currentPoint,neighbourPoint){
         return  Math.round(Math.sqrt(
                 Math.pow((currentPoint[0]-neighbourPoint[0]),2) +
