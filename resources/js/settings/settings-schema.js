@@ -57,6 +57,11 @@ class SettingsSchema {
                         "imgPaths": ["resources/images/icons/flag_of_the_united_kingdom_200px.png",
                             "resources/images/icons/flag_of_germany_200px.png"],
                         "default": "de"
+                    },
+                    enableAudio: {
+                        "type": "boolean",
+                        "title": titles.general.enableAudio.title[lang],
+                        "default": false
                     }
                 }
             },

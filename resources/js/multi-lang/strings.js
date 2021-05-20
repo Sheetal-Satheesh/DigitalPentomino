@@ -26,6 +26,9 @@ const strings = {
             language: {
                 title: ["Language", "Sprache"],
                 enumTitles: [["English", "German"], ["Englisch", "Deutsch"]]
+            },
+            enableAudio: {
+                title: ["Enable Audio", "Audio einschalten"]
             }
         },
         hinting: {

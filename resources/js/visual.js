@@ -113,6 +113,9 @@ class Visual {
     checkIfGameWon() {
         if (this.gameController.game()._board.isSolved()) {
             this.showGameSolved();
+            if (SettingsSingleton.getInstance().getSettings().general.enableAudio) {
+                document.getElementById("audioTukaScream").play();
+            }
         }
     }
 
