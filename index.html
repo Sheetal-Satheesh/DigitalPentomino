@@ -264,45 +264,43 @@
 
         function openLicense() {
             var modal = document.getElementById('modalTop');
-            if($(modal).is(':visible')){
-               this.closeModal();
+            if ($(modal).is(':visible')) {
+                this.closeModal();
             }
-            else
-            {
-            this.hideManipulationButtons();
-            this.closeBoardSelector();
-            this.disablePointerEventsOnPieces();
-            modal.style.display = "block";
-            modal.style.background = "transparent";
+            else {
+                this.hideManipulationButtons();
+                this.closeBoardSelector();
+                this.disablePointerEventsOnPieces();
+                modal.style.display = "block";
+                modal.style.background = "transparent";
 
-            document.querySelector(".modalFormContent").style.display = "block";
-            document.querySelector(".innerGrid").style.display = "none";
-            template.clearContent("#modalButtonsID");
-            template.clearContent("#modalTitleID");
-            template.clearContent("#modalBodyID");
-            template.clearContent("#innerGridForm");
+                document.querySelector(".modalFormContent").style.display = "block";
+                document.querySelector(".innerGrid").style.display = "none";
+                template.clearContent("#modalButtonsID");
+                template.clearContent("#modalTitleID");
+                template.clearContent("#modalBodyID");
+                template.clearContent("#innerGridForm");
 
-            let div1 = document.createElement("div");
-            let h5 = document.createElement("h5");
-            let lang = SettingsSingleton.getInstance().getSettings().general.language;
-            var t1 = document.createTextNode(strings.license[lang]);
-            h5.appendChild(t1);
-            let h6 = document.createElement("h6");
-            var t2 = document.createTextNode("icon1 : https://www.deviantart.com/edicionesnaza/art/Boy-and-Girl-Icon-gif-By-alfreditha-394021423");
-            h6.appendChild(t2);
-            div1.appendChild(h5);
-            div1.appendChild(h6);
-            modalBodyID.appendChild(div1);
-            }            
+                let div1 = document.createElement("div");
+                let h5 = document.createElement("h5");
+                let lang = SettingsSingleton.getInstance().getSettings().general.language;
+                var t1 = document.createTextNode(strings.license[lang]);
+                h5.appendChild(t1);
+                let h6 = document.createElement("h6");
+                var t2 = document.createTextNode("icon1 : https://www.deviantart.com/edicionesnaza/art/Boy-and-Girl-Icon-gif-By-alfreditha-394021423");
+                h6.appendChild(t2);
+                div1.appendChild(h5);
+                div1.appendChild(h6);
+                modalBodyID.appendChild(div1);
+            }
         }
 
         function resetGame() {
             var modal = document.getElementById('modalTop');
-            if($(modal).is(':visible')){
-               this.closeModal();
+            if ($(modal).is(':visible')) {
+                this.closeModal();
             }
-            else
-            {
+            else {
                 this.hideManipulationButtons();
                 this.closeBoardSelector();
                 this.disablePointerEventsOnPieces();
@@ -343,7 +341,7 @@
                 dltBtn.addEventListener("click", () => {
                     pd.reset();
                 });
-            }    
+            }
         }
 
         function closeModal() {
@@ -393,15 +391,14 @@
 
         function selectBoard() {
             var boardSelectorPopup = document.getElementById("boardmodalTop");
-            if($(boardSelectorPopup).is(':visible')){
-               this.closeBoardSelector();
+            if ($(boardSelectorPopup).is(':visible')) {
+                this.closeBoardSelector();
             }
-            else
-            {
-            boardSelectorPopup.style.display = "block";
-            this.hideManipulationButtons();
-            this.closeSettings();
-            this.disablePointerEventsOnPieces();
+            else {
+                boardSelectorPopup.style.display = "block";
+                this.hideManipulationButtons();
+                this.closeSettings();
+                this.disablePointerEventsOnPieces();
             }
         }
 
@@ -541,11 +538,10 @@
 
         function selectSettings() {
             var modal = document.getElementById('modalTop');
-            if($(modal).is(':visible')){
-               this.closeSettings();
+            if ($(modal).is(':visible')) {
+                this.closeSettings();
             }
-            else
-            {
+            else {
                 this.disablePointerEventsOnPieces();
                 this.hideManipulationButtons();
                 // this.disablePrefillButton();
@@ -570,7 +566,7 @@
 
                 this.postProcessSettingsForm(SettingsSingleton.getInstance().getSettings());
             }
-           
+
         }
 
         function postProcessSettingsForm(settings) {
@@ -737,67 +733,66 @@
 
         function showGameImages() {
             var modal = document.getElementById('modalTop');
-            if($(modal).is(':visible')){
-               this.closeModal();
+            if ($(modal).is(':visible')) {
+                this.closeModal();
             }
-            else
-            {
+            else {
                 this.disablePointerEventsOnPieces();
-            this.hideManipulationButtons();
-            modal.style.background = " rgb(220, 240, 237)";
-            modal.style.display = "block";
+                this.hideManipulationButtons();
+                modal.style.background = " rgb(220, 240, 237)";
+                modal.style.display = "block";
 
-            document.querySelector(".modalFormContent").style.display = "none";
-            document.querySelector(".innerGrid").style.display = "block";
+                document.querySelector(".modalFormContent").style.display = "none";
+                document.querySelector(".innerGrid").style.display = "block";
 
-            let imageList = pd.visual.showGameImages();
-            let imageGrid = document.getElementById('innerGrid');
-            template.clearContent(".innerGrid");
-            template.clearContent("#innerGridForm");
-            let gameId = undefined;
-            let borderColor = generateRandomColor();
+                let imageList = pd.visual.showGameImages();
+                let imageGrid = document.getElementById('innerGrid');
+                template.clearContent(".innerGrid");
+                template.clearContent("#innerGridForm");
+                let gameId = undefined;
+                let borderColor = generateRandomColor();
 
-            imageList.forEach((item) => {
-                let imgKey = Object.keys(item)[0];
-                let image = item[imgKey];
-                let imageDiv = document.createElement("div");
-                imageDiv.setAttribute("class", "imageDiv");
+                imageList.forEach((item) => {
+                    let imgKey = Object.keys(item)[0];
+                    let image = item[imgKey];
+                    let imageDiv = document.createElement("div");
+                    imageDiv.setAttribute("class", "imageDiv");
 
-                if (gameId != pd.visual.getGameIdByKey(imgKey)) {
-                    gameId = pd.visual.getGameIdByKey(imgKey);
-                    borderColor = generateRandomColor();
-                }
-                imageDiv.style.borderWidth = "3px";
-                imageDiv.style.borderColor = borderColor;
+                    if (gameId != pd.visual.getGameIdByKey(imgKey)) {
+                        gameId = pd.visual.getGameIdByKey(imgKey);
+                        borderColor = generateRandomColor();
+                    }
+                    imageDiv.style.borderWidth = "3px";
+                    imageDiv.style.borderColor = borderColor;
 
-                let buttonDiv = document.createElement("div");
-                buttonDiv.setAttribute("class", "imageBtnDiv");
+                    let buttonDiv = document.createElement("div");
+                    buttonDiv.setAttribute("class", "imageBtnDiv");
 
-                let loadBtn = document.createElement("button");
-                loadBtn.setAttribute("class", "imageButton imageLoadBtn");
-                loadBtn.textContent = "Load";
-                loadBtn.addEventListener('click', function () {
-                    loadGameImage(imgKey);
-                }, false);
-
-
-                let deleteBtn = document.createElement("button");
-                deleteBtn.setAttribute("class", "imageButton imageDeleteBtn");
-                deleteBtn.textContent = "Delete";
-                deleteBtn.addEventListener('click', function () {
-                    deleteGameImage(imgKey);
-                }, false);
+                    let loadBtn = document.createElement("button");
+                    loadBtn.setAttribute("class", "imageButton imageLoadBtn");
+                    loadBtn.textContent = "Load";
+                    loadBtn.addEventListener('click', function () {
+                        loadGameImage(imgKey);
+                    }, false);
 
 
-                buttonDiv.appendChild(loadBtn);
-                buttonDiv.appendChild(deleteBtn);
+                    let deleteBtn = document.createElement("button");
+                    deleteBtn.setAttribute("class", "imageButton imageDeleteBtn");
+                    deleteBtn.textContent = "Delete";
+                    deleteBtn.addEventListener('click', function () {
+                        deleteGameImage(imgKey);
+                    }, false);
 
-                imageDiv.appendChild(image);
-                imageDiv.appendChild(buttonDiv);
-                imageGrid.appendChild(imageDiv);
 
-            });
-        }    
+                    buttonDiv.appendChild(loadBtn);
+                    buttonDiv.appendChild(deleteBtn);
+
+                    imageDiv.appendChild(image);
+                    imageDiv.appendChild(buttonDiv);
+                    imageGrid.appendChild(imageDiv);
+
+                });
+            }
         }
 
         function execReplay() {
