@@ -946,46 +946,88 @@ class Visual {
 
 
     cellsToIndicate(piecePos, mostCells, hintCommand){
+        let visual = this;
         let hintinPen = hintCommand._pentomino;
         let currentPenHintName = hintinPen.name;
         let cellSeries; 
         let board = this.gameController.game()._board;
+        let temp2 = [];
+        let tempDis = [];
+        let temp;
+        let temp3 = [];
+        let index;
+        let distance;
+        console.log("mostCells", mostCells);
+
         if(!(currentPenHintName === lastHintedPentName)){
             let maxPartCells = SettingsSingleton.getInstance().getSettings().hinting.maxPartialHintingCells;
             randomCell = (Math.floor(Math.random() * (maxPartCells)) + 1);
             lastHintedPentName = currentPenHintName;
         }
         let cellsToIndicate = [];
-        let temp = [];
-        let temp2 = [];
-        cellsToIndicate.push(mostCells);
-        temp2.push(mostCells);
-        cellsToIndicate.forEach(function(element){
-            piecePos.forEach(function(ele){
-                cellSeries = board._getValidNeighborPositions(element[0], element[1]);
-                cellSeries.forEach(function(el){
-                    if(((el[0] == ele[0])&&(el[1] == ele[1]))){
-                        temp2.push(el);
-                        temp = board._getValidNeighborPositions(el[0], el[1]);
-                        temp.splice(2, temp.length);
-                        temp.forEach(function(e){
-                            temp2.push(e);
-                        });
-                    }
-                });
-               if(!((element[0] == ele[0])&&(element[1] == ele[1]))){
-                    cellsToIndicate.push(ele);
-                }
-            });
-       });
-        temp2.forEach(function(e){
-            cellsToIndicate.forEach(function(elem){
-                elem = e;
-            });
+        
+        //calculate distance
+        piecePos.forEach(function(element){
+            distance = visual.calculateDistance(element, mostCells);
+            console.log("distance",  element, mostCells, distance);
+            tempDis.push(distance);
         });
+
+        //sort distance array
+        tempDis.sort();
+        console.log("this.returnMin(sortArr)", this.returnMin(tempDis));
+        tempDis.forEach(function(){
+
+        });
+
+        //sort piecepos according to the distance
+        temp = visual.getSorted(piecePos, tempDis);
+
+
+        //console.log("temp", temp);
+        cellsToIndicate= piecePos;
        let filtered = cellsToIndicate.splice(randomCell, cellsToIndicate.length);
        return cellsToIndicate;
     }
+
+
+
+    getSorted(arr, sortArr) {
+      var result = [];
+      let seen = null;
+      //repeated element 
+      seen = this.returnSame(sortArr);
+
+      console.log(this.returnSame(sortArr),"seen", seen);
+
+      for (let i = 0; i < arr.length; i++) {            
+        console.log(sortArr[i], arr[i]);
+        result[i] = arr[sortArr[i]];
+      }
+      console.log("result", result);
+      return result;
+    }
+
+    returnMin(arr){
+        return arr.reduce((a, b) => Math.min(a, b));
+    }
+
+    returnSame(a){
+        let seen = a.filter((s => v => s.has(v) || !s.add(v))(new Set));
+        return seen;
+    }
+
+
+
+    /*func1: compare single array...(comapre all ele in a asingle array )..
+               return smallest ele
+
+
+      func 2 : sorting each ele of 2 arrays,   2 i/ps
+               call func1 when same dis. ocuurs
+               choose piece with smallest ele index getting from func1
+
+               */
 
     mostNeigh(hintinPen ,piecePos , hintCommand){
         let game = this.gameController.game();
