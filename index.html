@@ -263,75 +263,85 @@
         }
 
         function openLicense() {
-            this.hideManipulationButtons();
-            this.closeBoardSelector();
-            this.disablePointerEventsOnPieces();
             var modal = document.getElementById('modalTop');
-            modal.style.display = "block";
-            modal.style.background = "transparent";
+            if ($(modal).is(':visible')) {
+                this.closeModal();
+            }
+            else {
+                this.hideManipulationButtons();
+                this.closeBoardSelector();
+                this.disablePointerEventsOnPieces();
+                modal.style.display = "block";
+                modal.style.background = "transparent";
 
-            document.querySelector(".modalFormContent").style.display = "block";
-            document.querySelector(".innerGrid").style.display = "none";
-            template.clearContent("#modalButtonsID");
-            template.clearContent("#modalTitleID");
-            template.clearContent("#modalBodyID");
-            template.clearContent("#innerGridForm");
+                document.querySelector(".modalFormContent").style.display = "block";
+                document.querySelector(".innerGrid").style.display = "none";
+                template.clearContent("#modalButtonsID");
+                template.clearContent("#modalTitleID");
+                template.clearContent("#modalBodyID");
+                template.clearContent("#innerGridForm");
 
-            let div1 = document.createElement("div");
-            let h5 = document.createElement("h5");
-            let lang = SettingsSingleton.getInstance().getSettings().general.language;
-            var t1 = document.createTextNode(strings.license[lang]);
-            h5.appendChild(t1);
-            let h6 = document.createElement("h6");
-            var t2 = document.createTextNode("icon1 : https://www.deviantart.com/edicionesnaza/art/Boy-and-Girl-Icon-gif-By-alfreditha-394021423");
-            h6.appendChild(t2);
-            div1.appendChild(h5);
-            div1.appendChild(h6);
-            modalBodyID.appendChild(div1);
+                let div1 = document.createElement("div");
+                let h5 = document.createElement("h5");
+                let lang = SettingsSingleton.getInstance().getSettings().general.language;
+                var t1 = document.createTextNode(strings.license[lang]);
+                h5.appendChild(t1);
+                let h6 = document.createElement("h6");
+                var t2 = document.createTextNode("icon1 : https://www.deviantart.com/edicionesnaza/art/Boy-and-Girl-Icon-gif-By-alfreditha-394021423");
+                h6.appendChild(t2);
+                div1.appendChild(h5);
+                div1.appendChild(h6);
+                modalBodyID.appendChild(div1);
+            }
         }
 
         function resetGame() {
-            this.hideManipulationButtons();
-            this.closeBoardSelector();
-            this.disablePointerEventsOnPieces();
             var modal = document.getElementById('modalTop');
-            modal.style.display = "block";
-            modal.style.background = "transparent";
+            if ($(modal).is(':visible')) {
+                this.closeModal();
+            }
+            else {
+                this.hideManipulationButtons();
+                this.closeBoardSelector();
+                this.disablePointerEventsOnPieces();
+                modal.style.display = "block";
+                modal.style.background = "transparent";
 
-            document.querySelector(".modalFormContent").style.display = "block";
-            document.querySelector(".innerGrid").style.display = "none";
-            template.clearContent("#modalButtonsID");
-            template.clearContent("#modalTitleID");
-            template.clearContent("#modalBodyID");
-            template.clearContent("#innerGridForm");
+                document.querySelector(".modalFormContent").style.display = "block";
+                document.querySelector(".innerGrid").style.display = "none";
+                template.clearContent("#modalButtonsID");
+                template.clearContent("#modalTitleID");
+                template.clearContent("#modalBodyID");
+                template.clearContent("#innerGridForm");
 
-            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+                let lang = SettingsSingleton.getInstance().getSettings().general.language;
 
-            let textNode = {
-                class: "modalText",
-                text: strings.reset[lang]
-            };
-            template.attachText("#modalTitleID", textNode);
+                let textNode = {
+                    class: "modalText",
+                    text: strings.reset[lang]
+                };
+                template.attachText("#modalTitleID", textNode);
 
-            let cancelBtn = {
-                class: "cancelBtn",
-                onclick: "closeModalContainer()",
-                textContent: strings.general.no[lang]
-            };
-            template.attachBtn("#modalButtonsID", cancelBtn);
+                let cancelBtn = {
+                    class: "cancelBtn",
+                    onclick: "closeModalContainer()",
+                    textContent: strings.general.no[lang]
+                };
+                template.attachBtn("#modalButtonsID", cancelBtn);
 
-            let deleteBtn = {
-                class: "deleteBtn",
-                onclick: "closeModalContainer()",
-                textContent: strings.general.yes[lang]
-            };
+                let deleteBtn = {
+                    class: "deleteBtn",
+                    onclick: "closeModalContainer()",
+                    textContent: strings.general.yes[lang]
+                };
 
-            template.attachBtn("#modalButtonsID", deleteBtn);
+                template.attachBtn("#modalButtonsID", deleteBtn);
 
-            let dltBtn = document.querySelector(".deleteBtn");
-            dltBtn.addEventListener("click", () => {
-                pd.reset();
-            });
+                let dltBtn = document.querySelector(".deleteBtn");
+                dltBtn.addEventListener("click", () => {
+                    pd.reset();
+                });
+            }
         }
 
         function closeModal() {
@@ -380,10 +390,16 @@
         }
 
         function selectBoard() {
-            document.getElementById("boardmodalTop").style.display = "block";
-            this.hideManipulationButtons();
-            //this.closeSettings();
-            this.disablePointerEventsOnPieces();
+            var boardSelectorPopup = document.getElementById("boardmodalTop");
+            if ($(boardSelectorPopup).is(':visible')) {
+                this.closeBoardSelector();
+            }
+            else {
+                boardSelectorPopup.style.display = "block";
+                this.hideManipulationButtons();
+                this.closeSettings();
+                this.disablePointerEventsOnPieces();
+            }
         }
 
         // From https://stackoverflow.com/questions/10970078/modifying-a-query-string-without-reloading-the-page (2nd answer)
@@ -521,30 +537,36 @@
         }
 
         function selectSettings() {
-            this.disablePointerEventsOnPieces();
-            this.hideManipulationButtons();
-            // this.disablePrefillButton();
-            //this.closeBoardSelector();
             var modal = document.getElementById('modalTop');
-            modal.style.display = "block";
-            modal.style.background = "rgb(220, 240, 237)";
+            if ($(modal).is(':visible')) {
+                this.closeSettings();
+            }
+            else {
+                this.disablePointerEventsOnPieces();
+                this.hideManipulationButtons();
+                // this.disablePrefillButton();
+                //this.closeBoardSelector();
+                modal.style.display = "block";
+                modal.style.background = "rgb(220, 240, 237)";
 
-            document.querySelector(".modalFormContent").style.display = "none";
-            document.querySelector(".innerGrid").style.display = "block";
-            template.clearContent("#modalButtonsID");
-            template.clearContent("#modalTitleID");
-            template.clearContent("#modalBodyID");
-            template.clearContent(".innerGrid")
-            template.clearContent("#innerGridForm");
+                document.querySelector(".modalFormContent").style.display = "none";
+                document.querySelector(".innerGrid").style.display = "block";
+                template.clearContent("#modalButtonsID");
+                template.clearContent("#modalTitleID");
+                template.clearContent("#modalBodyID");
+                template.clearContent(".innerGrid")
+                template.clearContent("#innerGridForm");
 
-            //add form to attach settings to
-            $('#innerGridForm').jsonForm({
-                schema: SettingsSchemaSingleton.getInstance().getSettingsSchema(),
-                onSubmit: this.handleJsonFormSubmit,
-                displayErrors: this.handleJsonFormErrors
-            });
+                //add form to attach settings to
+                $('#innerGridForm').jsonForm({
+                    schema: SettingsSchemaSingleton.getInstance().getSettingsSchema(),
+                    onSubmit: this.handleJsonFormSubmit,
+                    displayErrors: this.handleJsonFormErrors
+                });
 
-            this.postProcessSettingsForm(SettingsSingleton.getInstance().getSettings());
+                this.postProcessSettingsForm(SettingsSingleton.getInstance().getSettings());
+            }
+
         }
 
         function postProcessSettingsForm(settings) {
@@ -710,62 +732,67 @@
         }
 
         function showGameImages() {
-            this.disablePointerEventsOnPieces();
-            this.hideManipulationButtons();
             var modal = document.getElementById('modalTop');
-            modal.style.background = " rgb(220, 240, 237)";
-            modal.style.display = "block";
+            if ($(modal).is(':visible')) {
+                this.closeModal();
+            }
+            else {
+                this.disablePointerEventsOnPieces();
+                this.hideManipulationButtons();
+                modal.style.background = " rgb(220, 240, 237)";
+                modal.style.display = "block";
 
-            document.querySelector(".modalFormContent").style.display = "none";
-            document.querySelector(".innerGrid").style.display = "block";
+                document.querySelector(".modalFormContent").style.display = "none";
+                document.querySelector(".innerGrid").style.display = "block";
 
-            let imageList = pd.visual.showGameImages();
-            let imageGrid = document.getElementById('innerGrid');
-            template.clearContent(".innerGrid");
-            template.clearContent("#innerGridForm");
-            let gameId = undefined;
-            let borderColor = generateRandomColor();
+                let imageList = pd.visual.showGameImages();
+                let imageGrid = document.getElementById('innerGrid');
+                template.clearContent(".innerGrid");
+                template.clearContent("#innerGridForm");
+                let gameId = undefined;
+                let borderColor = generateRandomColor();
 
-            imageList.forEach((item) => {
-                let imgKey = Object.keys(item)[0];
-                let image = item[imgKey];
-                let imageDiv = document.createElement("div");
-                imageDiv.setAttribute("class", "imageDiv");
+                imageList.forEach((item) => {
+                    let imgKey = Object.keys(item)[0];
+                    let image = item[imgKey];
+                    let imageDiv = document.createElement("div");
+                    imageDiv.setAttribute("class", "imageDiv");
 
-                if (gameId != pd.visual.getGameIdByKey(imgKey)) {
-                    gameId = pd.visual.getGameIdByKey(imgKey);
-                    borderColor = generateRandomColor();
-                }
-                imageDiv.style.borderWidth = "3px";
-                imageDiv.style.borderColor = borderColor;
+                    if (gameId != pd.visual.getGameIdByKey(imgKey)) {
+                        gameId = pd.visual.getGameIdByKey(imgKey);
+                        borderColor = generateRandomColor();
+                    }
+                    imageDiv.style.borderWidth = "3px";
+                    imageDiv.style.borderColor = borderColor;
 
-                let buttonDiv = document.createElement("div");
-                buttonDiv.setAttribute("class", "imageBtnDiv");
+                    let buttonDiv = document.createElement("div");
+                    buttonDiv.setAttribute("class", "imageBtnDiv");
 
-                let loadBtn = document.createElement("button");
-                loadBtn.setAttribute("class", "imageButton imageLoadBtn");
-                loadBtn.textContent = "Load";
-                loadBtn.addEventListener('click', function () {
-                    loadGameImage(imgKey);
-                }, false);
-
-
-                let deleteBtn = document.createElement("button");
-                deleteBtn.setAttribute("class", "imageButton imageDeleteBtn");
-                deleteBtn.textContent = "Delete";
-                deleteBtn.addEventListener('click', function () {
-                    deleteGameImage(imgKey);
-                }, false);
+                    let loadBtn = document.createElement("button");
+                    loadBtn.setAttribute("class", "imageButton imageLoadBtn");
+                    loadBtn.textContent = "Load";
+                    loadBtn.addEventListener('click', function () {
+                        loadGameImage(imgKey);
+                    }, false);
 
 
-                buttonDiv.appendChild(loadBtn);
-                buttonDiv.appendChild(deleteBtn);
+                    let deleteBtn = document.createElement("button");
+                    deleteBtn.setAttribute("class", "imageButton imageDeleteBtn");
+                    deleteBtn.textContent = "Delete";
+                    deleteBtn.addEventListener('click', function () {
+                        deleteGameImage(imgKey);
+                    }, false);
 
-                imageDiv.appendChild(image);
-                imageDiv.appendChild(buttonDiv);
-                imageGrid.appendChild(imageDiv);
 
-            });
+                    buttonDiv.appendChild(loadBtn);
+                    buttonDiv.appendChild(deleteBtn);
+
+                    imageDiv.appendChild(image);
+                    imageDiv.appendChild(buttonDiv);
+                    imageGrid.appendChild(imageDiv);
+
+                });
+            }
         }
 
         function execReplay() {
