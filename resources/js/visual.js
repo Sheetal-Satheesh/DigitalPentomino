@@ -978,7 +978,6 @@ class Visual {
                 }
             });
        });
-
         temp2.forEach(function(e){
             cellsToIndicate.forEach(function(elem){
                 elem = e;
