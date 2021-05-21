@@ -957,6 +957,10 @@ class Visual {
         let temp3 = [];
         let index;
         let distance;
+         const Compare = {
+    LESS_THAN: -1,
+    BIGGER_THAN: 1
+};
         console.log("mostCells", mostCells);
 
         if(!(currentPenHintName === lastHintedPentName)){
@@ -965,23 +969,62 @@ class Visual {
             lastHintedPentName = currentPenHintName;
         }
         let cellsToIndicate = [];
+        let b;
+        let q;
         
         //calculate distance
-        piecePos.forEach(function(element){
-            distance = visual.calculateDistance(element, mostCells);
-            console.log("distance",  element, mostCells, distance);
-            tempDis.push(distance);
-        });
+       
+        tempDis.sort();
+        for(let i=0; i<piecePos.length; i++){
+             distance = visual.calculateDistance(piecePos[i], mostCells);
+             console.log(piecePos[i], mostCells, "distance", distance);
+             tempDis.push(distance);
+             for(let j=0; j<tempDis.length; j++){
+                  console.log(tempDis[j], tempDis[j+1], visual.defaultCompare(tempDis[j], tempDis[j+1]));
+             }
+        }
+         
+
+        /*const { length } = piecePos;
+    let minIndex;
+    for (let i = 0; i < length - 1; i++) {
+        minIndex = i;
+        for (let j = i; j < length; j++) {
+            if (visual.defaultCompare(piecePos[minIndex], piecePos[j]) === Compare.BIGGER_THAN) {
+                minIndex = j;
+            }
+        }
+        if (i !== minIndex) {
+            swap(piecePos, i, minIndex);
+        }
+    }*/
+
+    
+    
+
+      /*  console.log("before piecePos", piecePos);
+        const { length } = piecePos.length;
+        for(let k=0; k<tempDis.length; k++){
+            for (let i = 0; i < piecePos.length; i++) {
+                for (let j = 0; j < piecePos.length - 1 - i; j++) { // refer to note below
+                    if (visual.defaultCompare(tempDis[k], tempDis[k + 1]) === Compare.BIGGER_THAN) {
+                        visual.swap(piecePos, i, i + 1);
+                    }
+                }
+
+            }
+        }*/
+        
 
         //sort distance array
-        tempDis.sort();
-        console.log("this.returnMin(sortArr)", this.returnMin(tempDis));
+       
         tempDis.forEach(function(){
 
         });
 
         //sort piecepos according to the distance
-        temp = visual.getSorted(piecePos, tempDis);
+        //temp = visual.getSorted(piecePos, tempDis);
+
 
 
         //console.log("temp", temp);
@@ -989,6 +1032,25 @@ class Visual {
        let filtered = cellsToIndicate.splice(randomCell, cellsToIndicate.length);
        return cellsToIndicate;
     }
+
+    swap(arr, a, b) {
+    let temp = arr[a];
+    arr[a] = arr[b];
+    arr[b] = temp;
+}
+
+
+
+ defaultCompare(a, b) {
+    const Compare = {
+    LESS_THAN: -1,
+    BIGGER_THAN: 1
+};
+    if (a === b) {
+        return 0;
+    }
+    return a < b ? Compare.LESS_THAN : Compare.BIGGER_THAN;
+}
 
 
 
@@ -1002,15 +1064,20 @@ class Visual {
 
       for (let i = 0; i < arr.length; i++) {            
         console.log(sortArr[i], arr[i]);
+            console.log(seen, (sortArr[i] == seen), "return 0");
+            if(sortArr[i] == seen){
+                   console.log(sortArr.indexOf(sortArr[i]));
+            }else{
+
+            }
+          
         result[i] = arr[sortArr[i]];
       }
       console.log("result", result);
       return result;
     }
 
-    returnMin(arr){
-        return arr.reduce((a, b) => Math.min(a, b));
-    }
+   
 
     returnSame(a){
         let seen = a.filter((s => v => s.has(v) || !s.add(v))(new Set));
