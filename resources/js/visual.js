@@ -960,7 +960,6 @@ class Visual {
         let temp2 = [];
         cellsToIndicate.push(mostCells);
         temp2.push(mostCells);
-        console.log("mostCells", mostCells);
         cellsToIndicate.forEach(function(element){
             piecePos.forEach(function(ele){
                 cellSeries = board._getValidNeighborPositions(element[0], element[1]);
@@ -968,23 +967,23 @@ class Visual {
                     if(((el[0] == ele[0])&&(el[1] == ele[1]))){
                         temp2.push(el);
                         temp = board._getValidNeighborPositions(el[0], el[1]);
-                        /*temp.forEach(function(e){
-                            if(!((e[0] == mostCells[0])&&(e[1] == mostCells[1]))){
-                                if(!(board.isOccupied(e[0], e[1]))){
-                                    
-                                }
-                            }
-                            
-                        });*/
+                        temp.splice(2, temp.length);
+                        temp.forEach(function(e){
+                            temp2.push(e);
+                        });
                     }
                 });
-                if(!((element[0] == ele[0])&&(element[1] == ele[1]))){
+               if(!((element[0] == ele[0])&&(element[1] == ele[1]))){
                     cellsToIndicate.push(ele);
                 }
             });
        });
-        console.log("temp2",temp2, "piecePos", piecePos);
-        cellsToIndicate = temp2;
+
+        temp2.forEach(function(e){
+            cellsToIndicate.forEach(function(elem){
+                elem = e;
+            });
+        });
        let filtered = cellsToIndicate.splice(randomCell, cellsToIndicate.length);
        return cellsToIndicate;
     }
