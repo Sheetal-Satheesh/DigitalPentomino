@@ -13,6 +13,7 @@ class GameLoader {
         this._game = null;
         this._commandManager = null;
         this._hintAI = null;
+        this._splitBoard = null;
         /**
          *  
          * [{
@@ -46,6 +47,10 @@ class GameLoader {
         return this._hintAI;
     }
 
+    splitBoard() {
+        return this._splitBoard;
+    }
+
     getGame() {
         return this._game;
     }
@@ -68,6 +73,10 @@ class GameLoader {
 
     setHintAI(hintAI) {
         this._hintAI = hintAI;
+    }
+
+    setSplitBoard(splitBoard) {
+        this._splitBoard = splitBoard;
     }
 
     isGameStateSaved(game) {
@@ -126,6 +135,12 @@ class GameLoader {
         if (prevGameName == null || prevGameName != this._game.getName()) {
             this._hintAI = new HintAI(this._game, true);
         }
+
+        if (prevGameName == null || prevGameName != this._game.getName()) {
+            this._splitBoard = new SplitBoard(this._game, true);
+        }
+
+                
         this.saveGame();
     }
 
@@ -162,13 +177,15 @@ class GameLoader {
         let gameClone = _.cloneDeep(this._game);
         let cmdManagerClone = _.cloneDeep(this._commandManager);
         let hintAIClone = _.cloneDeep(this._hintAI);
+        let splitBoardClone = _.cloneDeep(this._splitBoard);
 
         if (!this._gameList.hasOwnProperty(gameId)) {
             this._gameList[gameId] = {
                 "game": gameClone,
                 "cmdManager": cmdManagerClone,
                 "hintAI": hintAIClone,
-                "cmdKey": [cmdKey]
+                "cmdKey": [cmdKey],
+                "splitBoard": splitBoardClone
             };
 
             this._gameList[gameId].cmdKey = this._gameList[gameId].cmdKey.filter(
@@ -178,6 +195,7 @@ class GameLoader {
             this._gameList[gameId].cmdKey.push(cmdKey);
             this._gameList[gameId].cmdManager = cmdManagerClone;
             this._gameList[gameId].hintAI = hintAIClone;
+            this._gameList[gameId].splitBoard = splitBoardClone;
         }
     }
 
@@ -224,6 +242,7 @@ class GameLoader {
                         this.setGame(this._gameList[gameKey].game);
                         this.setHintAI(this._gameList[gameKey].hintAI);
                         this.loadGameState(cmdKey);
+                        this.setSplitBoard(this._gameList[gameKey].splitBoard);
                         return;
                     }
                 }

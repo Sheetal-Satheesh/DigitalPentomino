@@ -48,6 +48,7 @@
     <script src="resources/js/hint.js"></script>
     <script src="resources/js/hint-ai.js"></script>
     <script src="resources/js/help/hinting/command-sequence-list.js"></script>
+    <script src="resources/js/split-board.js"></script>
 </head>
 
 <body onload="touchStartup(); initialize()">
@@ -145,6 +146,14 @@
                         id="labelNumberSolutions">?</label>
                 </p>
             </div> <!-- operation -->
+
+            <div class= "toggle" >
+                <h5>Toggle Split</h5>
+                <label class= "toggleSplitBoard">
+                <input id="toggleswitch" type="checkbox" onclick = "callSplitBoard()" >
+                <span class="slider"></span>
+                </label>
+            </div><!--Toggle-->
         </div>
 
         <div id="game" class="FlashOff">
@@ -346,6 +355,26 @@
                 // TODO - handle, e.g. shake hint button
                 console.log("Game is already solved. Cannot display hint");
             }
+        }
+
+        function callSplitBoard() {
+            let input = document.getElementById('toggleswitch');            
+
+            input.addEventListener('change', function () {
+                if (this.checked) {                   
+                    if (!pd.gameController.game()._board.isSolved()) {
+                        pd.visual.callSplitBoard();                        
+                    } else {
+                        console.log("Game is already solved");
+                    }
+                } else {
+                    if (!pd.gameController.game()._board.isSolved()) {                        
+                        pd.visual.undoSplit();                    
+                    } else {                     
+                        console.log("Game is already solved");
+                    }                
+                }
+            });
         }
 
         function rotateClkWise() {

@@ -22,6 +22,8 @@ function updateCommandAttr(cmdType, cmdSeq) {
 }
 
 const cmdAttrDefault = updateCommandAttr(CommandTypes.Original, CommandSeq.Forward);
+const alternateColor = ["#77C9D4", "#57B390", "#015249"];
+const backGroundColor = '#959DAC';
 
 let lastHintedPentName = null;
 let randomCell;
@@ -635,6 +637,42 @@ class Visual {
         setTimeout(function () {
             hintButton.disabled = false;
         }, 1000);
+    }
+
+    callSplitBoard() {
+        let partitionedArray = pd.gameController.loadSplit();        
+        this.displaySplit(partitionedArray, alternateColor);        
+    }
+
+    undoSplit() {        
+        Array.prototype.forEach.call(document.getElementsByClassName("gamearea boardarea"), function (element) {            
+            element.style.background = backGroundColor;
+        });
+        this.pieces.forEach(piece => {
+            Array.prototype.forEach.call(document.getElementById('piece_' + piece.name).getElementsByClassName("bmPoint"), function (element) {
+                element.style.background = piece.color
+            });
+        });
+    }
+
+    displaySplit(partitionedArray, alternateColor) {
+        for (var i = 0; i < partitionedArray.length; i++) {
+            for (var j = 0; j < partitionedArray[i].length; j++) {
+                if (partitionedArray[i][j][1]) {
+                    let fieldValue = partitionedArray[i][j][1];
+                    for (var k = 0; k < fieldValue.length; k++) {
+                        let fieldID = document.getElementById("field_" + fieldValue[k][0] + "," + fieldValue[k][1]);
+                        fieldID.style.background = alternateColor[i];
+                        fieldID.style.opacity = .8;
+                    }
+                }
+                var piece = partitionedArray[i][j][0]
+                piece.alternateColor = alternateColor[i];
+                Array.prototype.forEach.call(document.getElementById('piece_' + piece.name).getElementsByClassName("bmPoint"), function (element) {
+                    element.style.background = alternateColor[i];
+                });
+            }
+        }        
     }
 
 

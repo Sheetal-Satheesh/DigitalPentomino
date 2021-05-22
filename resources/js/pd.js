@@ -123,6 +123,10 @@ class PD {
         this.visual.callHintAI();
     }
 
+    callSplitBoard() {
+        this.visual.callSplitBoard();
+    }
+
     prefillBoard() {
         this.visual.prefillBoard();
         if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
