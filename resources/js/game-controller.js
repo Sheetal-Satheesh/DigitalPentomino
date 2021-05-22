@@ -251,7 +251,8 @@ class GameController {
         }
 
         return this.hintAI().getHint(this.game());
-    }    
+    }
+        
     //--- --- --- Split Board --- --- --
     loadSplit() {
         if (this.game() === null) {

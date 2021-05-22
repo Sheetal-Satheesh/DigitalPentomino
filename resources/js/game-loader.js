@@ -75,10 +75,6 @@ class GameLoader {
         this._hintAI = hintAI;
     }
 
-    setSplitBoard(splitBoard) {
-        this._splitBoard = splitBoard;
-    }
-
     isGameStateSaved(game) {
         let gameId = game.getId();
 
@@ -136,11 +132,7 @@ class GameLoader {
             this._hintAI = new HintAI(this._game, true);
         }
 
-        if (prevGameName == null || prevGameName != this._game.getName()) {
-            this._splitBoard = new SplitBoard(this._game, true);
-        }
-
-                
+        this._splitBoard = new SplitBoard(this._game);                
         this.saveGame();
     }
 
@@ -176,16 +168,14 @@ class GameLoader {
 
         let gameClone = _.cloneDeep(this._game);
         let cmdManagerClone = _.cloneDeep(this._commandManager);
-        let hintAIClone = _.cloneDeep(this._hintAI);
-        let splitBoardClone = _.cloneDeep(this._splitBoard);
+        let hintAIClone = _.cloneDeep(this._hintAI);        
 
         if (!this._gameList.hasOwnProperty(gameId)) {
             this._gameList[gameId] = {
                 "game": gameClone,
                 "cmdManager": cmdManagerClone,
                 "hintAI": hintAIClone,
-                "cmdKey": [cmdKey],
-                "splitBoard": splitBoardClone
+                "cmdKey": [cmdKey],                
             };
 
             this._gameList[gameId].cmdKey = this._gameList[gameId].cmdKey.filter(
@@ -194,8 +184,7 @@ class GameLoader {
         else {
             this._gameList[gameId].cmdKey.push(cmdKey);
             this._gameList[gameId].cmdManager = cmdManagerClone;
-            this._gameList[gameId].hintAI = hintAIClone;
-            this._gameList[gameId].splitBoard = splitBoardClone;
+            this._gameList[gameId].hintAI = hintAIClone;            
         }
     }
 
@@ -241,8 +230,7 @@ class GameLoader {
                         this.setCmdManager(this._gameList[gameKey].cmdManager);
                         this.setGame(this._gameList[gameKey].game);
                         this.setHintAI(this._gameList[gameKey].hintAI);
-                        this.loadGameState(cmdKey);
-                        this.setSplitBoard(this._gameList[gameKey].splitBoard);
+                        this.loadGameState(cmdKey);                        
                         return;
                     }
                 }
