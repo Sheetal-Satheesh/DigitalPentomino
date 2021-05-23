@@ -985,6 +985,8 @@ class Visual {
         }
          
 
+        console.log("piecePos.sort(defaultCompare)",piecePos.sort(visual.defaultCompare));
+
         /*const { length } = piecePos;
     let minIndex;
     for (let i = 0; i < length - 1; i++) {
