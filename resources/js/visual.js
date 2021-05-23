@@ -977,15 +977,28 @@ class Visual {
         tempDis.sort();
         for(let i=0; i<piecePos.length; i++){
              distance = visual.calculateDistance(piecePos[i], mostCells);
-             console.log(piecePos[i], mostCells, "distance", distance);
+             //console.log(piecePos[i], mostCells, "distance", distance);
              tempDis.push(distance);
              for(let j=0; j<tempDis.length; j++){
-                  console.log(tempDis[j], tempDis[j+1], visual.defaultCompare(tempDis[j], tempDis[j+1]));
+                  //console.log(tempDis[j], tempDis[j+1], visual.defaultCompare(tempDis[j], tempDis[j+1]));
+                  if(visual.defaultCompare(tempDis[j], tempDis[j+1]) === -1){
+                      console.log(piecePos[i], mostCells, "this is less", -1, tempDis[j], tempDis[j+1]);
+                  }
+                  else if(visual.defaultCompare(tempDis[j], tempDis[j+1]) === 1){
+                       console.log(piecePos[i], mostCells, "this is greater", 1 , tempDis[j], tempDis[j+1]);
+                       //console.log("swap(piecePos, i, i + 1)",visual.swap(piecePos, i, i + 1));
+                  }
+                  else if(visual.defaultCompare(tempDis[j], tempDis[j+1]) === 0){
+                    console.log(piecePos[i], mostCells, "this is equal", 0, tempDis[j], tempDis[j+1]);
+                  }
              }
         }
+
+        console.log("visual.insertionSort(piecePos, compare = defaultCompare)", visual.insertionSort(piecePos,visual.defaultCompare));
+
          
 
-        console.log("piecePos.sort(defaultCompare)",piecePos.sort(visual.defaultCompare));
+        //console.log("piecePos.sort(defaultCompare)",piecePos.sort(visual.defaultCompare));
 
         /*const { length } = piecePos;
     let minIndex;
@@ -1035,10 +1048,34 @@ class Visual {
        return cellsToIndicate;
     }
 
+
+
+    insertionSort(arr, defaultCompare) {
+
+        const Compare = {
+    LESS_THAN: -1,
+    BIGGER_THAN: 1
+};
+    const { length } = arr;
+    let temp;
+    for (let i = 1; i < length; i++) {
+        let j = i;
+        temp = arr[i];
+        while (j > 0 && defaultCompare(arr[j - 1], temp) === Compare.BIGGER_THAN) {
+            arr[j] = arr[j - 1];
+            j--;
+        }
+        arr[j] = temp;
+    }
+    return arr;
+}
+
     swap(arr, a, b) {
     let temp = arr[a];
     arr[a] = arr[b];
     arr[b] = temp;
+    console.log("arr", arr);
+    //return arr;
 }
 
 
