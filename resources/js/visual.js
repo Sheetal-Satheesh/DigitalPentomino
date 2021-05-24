@@ -744,7 +744,6 @@ class Visual {
                                 for (let i = 0; i < randomCell; i++) {
                                     fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
                                     prevBackground[i] = fieldvalue.style.background;
-                                    console.log("piecePos", piecePos[i][0], piecePos[i][1]);
                                     fieldvalue.style.background = pentominoColor;
                                     this.hide(piecePos, prevBackground, timeoutFrame);
                                 }
@@ -961,10 +960,6 @@ class Visual {
         let filtered = result.splice(randomCell, result.length);
         return result;
     }
-
-
-
-   
 
     mostNeigh(hintinPen ,piecePos , hintCommand){
         let game = this.gameController.game();
