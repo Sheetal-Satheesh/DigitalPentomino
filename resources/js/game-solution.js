@@ -29,8 +29,9 @@ class Solutions {
         let rows = gameString.split(" ");
         let height = rows.length;
         let width = rows[0].length;
+        let boardStartCoords = UtilitiesClass.getBoardStartCoords();
         //console.log("Initialize game with height: " + height + " and width: " + width);
-        let game = new Game(new Board([0, 0], [height, width]));
+        let game = new Game(new Board(boardStartCoords, [height, width]));
 
         //prepare pentominos for the board
         let X = new Pentomino('X');

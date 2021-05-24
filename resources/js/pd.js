@@ -13,7 +13,6 @@ class PD {
         var fController = new FrontController();
         this.gameController = fController.controller;
         this.loadBoard("board_6x10");
-
     }
 
     rotateClkWise() {
@@ -52,19 +51,6 @@ class PD {
     }
 
     /**
- * Returns a game object of the selected/default game that can be used to draw the board
- */
-    getGameUISettings(board) {
-        return {
-            gameHeight: boardConfigs[board].gameHeight || baseConfigs.gameHeight,
-            gameWidth: boardConfigs[board].gameWidth || baseConfigs.gameWidth,
-            boardSize: boardConfigs[board].boardSize,
-            blockedCells: boardConfigs[board].blockedCells || undefined,
-            boardShape: boardConfigs[board].boardShape || baseConfigs.boardShape
-        };
-    }
-
-    /**
     * Returns all boards with configurations and solutions
     */
     getAllBoards() {
@@ -86,7 +72,8 @@ class PD {
     }
 
     loadBoard(board, loadType) {
-        let gameObject = this.getGameUISettings(board);
+        UtilitiesClass.setBoardName(board);
+        let gameObject = UtilitiesClass.getGameUISettings();
         this.boardName = board; // HACK: To be changed later. This needs to be obtained from the backend. 
         this.boardSize = gameObject.boardSize;
         this.boardShape = gameObject.boardShape;
@@ -97,6 +84,8 @@ class PD {
 
         this.boardStartX = Math.floor((this.gameHeight - this.boardSize[0]) / 2);
         this.boardStartY = Math.floor((this.gameWidth - this.boardSize[1]) / 2);
+
+        [this.boardStartX, this.boardStartY] = UtilitiesClass.getBoardStartCoords();
 
         if (loadType != "Snapshot") {
             this.gameController.createGame(
