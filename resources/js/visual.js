@@ -958,8 +958,8 @@ class Visual {
         }
         let X = mostCells;
         let result = piecePos.sort((a,b) => (this.dist(a, X) > this.dist(b, X)) ? 1 : ((this.dist(b, X) > this.dist(a, X)) ? -1 : 0));
-       let filtered = result.splice(randomCell, result.length);
-       return result;
+        let filtered = result.splice(randomCell, result.length);
+        return result;
     }
 
 
@@ -1042,12 +1042,7 @@ class Visual {
     }
 
 
-    //reference : stackoverflow
-    calculateDistance(currentPoint,neighbourPoint){
-        return  Math.round(Math.sqrt(
-                Math.pow((currentPoint[0]-neighbourPoint[0]),2) +
-                Math.pow((currentPoint[1]-neighbourPoint[1]),2)));
-    }
+  
 
 
    indicateAreaCells(piece, hintCommand) {
