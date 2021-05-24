@@ -944,6 +944,9 @@ class Visual {
         });
     }
 
+    dist(a, b) {
+        return Math.sqrt((a[0] - b[0]) * (a[0] - b[0]) + (a[1] - b[1]) * (a[1] - b[1]));
+    }
 
     cellsToIndicate(piecePos, mostCells, hintCommand){
         let visual = this;
@@ -973,7 +976,12 @@ class Visual {
         let q;
         
         //calculate distance
-       
+
+        let X = mostCells;
+        let result = piecePos.sort((a,b) => (this.dist(a, X) > this.dist(b, X)) ? 1 : ((this.dist(b, X) > this.dist(a, X)) ? -1 : 0));
+        console.log("Result: ");
+        console.log(result);
+
         tempDis.sort();
         for(let i=0; i<piecePos.length; i++){
              distance = visual.calculateDistance(piecePos[i], mostCells);
