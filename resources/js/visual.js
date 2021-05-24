@@ -1226,8 +1226,8 @@ class Visual {
         for (let i = 0; i < randomSolution.length; ++i) {
             [piecePosition, piece] = this.getRandomPiece(randomSolution, pickedPieces);
             pickedPieces[piece.name] = 1;
-            currentAnchor = [piecePosition.boardPosition[0] + this.boardX,
-            piecePosition.boardPosition[1] + this.boardY];
+            currentAnchor = [piecePosition.boardPosition[0],
+            piecePosition.boardPosition[1]];
             let matrix = piece.getMatrixRepresentation();
 
             blockedCellsTemp = {};
@@ -1297,8 +1297,8 @@ class Visual {
         for (let i = 0; i < randomSolution.length; ++i) {
             [piecePosition, piece] = this.getRandomPiece(randomSolution, pickedPieces);
             pickedPieces[piece.name] = 1;
-            currentAnchor = [piecePosition.boardPosition[0] + this.boardX,
-            piecePosition.boardPosition[1] + this.boardY];
+            currentAnchor = [piecePosition.boardPosition[0],
+            piecePosition.boardPosition[1]];
             for (let j = 0; j < positions.length; ++j) {
                 bOverlap = false;
                 candidateAnchor = [positions[j][0], positions[j][1]];
