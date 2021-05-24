@@ -695,6 +695,7 @@ class Visual {
             lastHintedPentName = currentPenHintName;
         }
 
+
         let tempHintinPen = hintinPen;
         if (!SettingsSingleton.getInstance().getSettings().hinting.exactHints){
             //tempHintinPen = new Pentomino(hintinPen.name);
@@ -943,9 +944,14 @@ class Visual {
     }
 
 
-     cellsToIndicate(piecePos, mostCells, hintCommand){
-        let maxPartialHintingCells = SettingsSingleton.getInstance().getSettings().hinting.maxPartialHintingCells;
-        let randomCell = Math.floor(Math.random() * (maxPartialHintingCells)) + 1;
+    cellsToIndicate(piecePos, mostCells, hintCommand){
+        let hintinPen = hintCommand._pentomino;
+        let currentPenHintName = hintinPen.name;
+        if(!(currentPenHintName === lastHintedPentName)){
+            let maxPartCells = SettingsSingleton.getInstance().getSettings().hinting.maxPartialHintingCells;
+            randomCell = (Math.floor(Math.random() * (maxPartCells)) + 1);
+            lastHintedPentName = currentPenHintName;
+        }
         let game = this.gameController.game();
         let board = game._board;
         let cellsToIndicate = [];
