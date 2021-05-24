@@ -66,6 +66,8 @@ class Solutions {
                 if (position != null) {
                     //console.log("Center of piece " + pento.name + " found: " + position);
                     //console.log("Placing element" + pento.name + " on board...");
+                    position[0] += boardStartCoords[0];
+                    position[1] += boardStartCoords[1];
                     game.placePentomino(pento, position[0], position[1]);
                     hasNextOp = false;
                 } else {
