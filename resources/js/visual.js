@@ -949,199 +949,22 @@ class Visual {
     }
 
     cellsToIndicate(piecePos, mostCells, hintCommand){
-        let visual = this;
         let hintinPen = hintCommand._pentomino;
         let currentPenHintName = hintinPen.name;
-        let cellSeries; 
-        let board = this.gameController.game()._board;
-        let temp2 = [];
-        let tempDis = [];
-        let temp;
-        let temp3 = [];
-        let index;
-        let distance;
-         const Compare = {
-    LESS_THAN: -1,
-    BIGGER_THAN: 1
-};
-        console.log("mostCells", mostCells);
-
         if(!(currentPenHintName === lastHintedPentName)){
             let maxPartCells = SettingsSingleton.getInstance().getSettings().hinting.maxPartialHintingCells;
             randomCell = (Math.floor(Math.random() * (maxPartCells)) + 1);
             lastHintedPentName = currentPenHintName;
         }
-        let cellsToIndicate = [];
-        let b;
-        let q;
-        
-        //calculate distance
-
         let X = mostCells;
         let result = piecePos.sort((a,b) => (this.dist(a, X) > this.dist(b, X)) ? 1 : ((this.dist(b, X) > this.dist(a, X)) ? -1 : 0));
-        console.log("Result: ");
-        console.log(result);
-
-        tempDis.sort();
-        for(let i=0; i<piecePos.length; i++){
-             distance = visual.calculateDistance(piecePos[i], mostCells);
-             //console.log(piecePos[i], mostCells, "distance", distance);
-             tempDis.push(distance);
-             for(let j=0; j<tempDis.length; j++){
-                  //console.log(tempDis[j], tempDis[j+1], visual.defaultCompare(tempDis[j], tempDis[j+1]));
-                  if(visual.defaultCompare(tempDis[j], tempDis[j+1]) === -1){
-                      console.log(piecePos[i], mostCells, "this is less", -1, tempDis[j], tempDis[j+1]);
-                  }
-                  else if(visual.defaultCompare(tempDis[j], tempDis[j+1]) === 1){
-                       console.log(piecePos[i], mostCells, "this is greater", 1 , tempDis[j], tempDis[j+1]);
-                       //console.log("swap(piecePos, i, i + 1)",visual.swap(piecePos, i, i + 1));
-                  }
-                  else if(visual.defaultCompare(tempDis[j], tempDis[j+1]) === 0){
-                    console.log(piecePos[i], mostCells, "this is equal", 0, tempDis[j], tempDis[j+1]);
-                  }
-             }
-        }
-
-        console.log("visual.insertionSort(piecePos, compare = defaultCompare)", visual.insertionSort(piecePos,visual.defaultCompare));
-
-         
-
-        //console.log("piecePos.sort(defaultCompare)",piecePos.sort(visual.defaultCompare));
-
-        /*const { length } = piecePos;
-    let minIndex;
-    for (let i = 0; i < length - 1; i++) {
-        minIndex = i;
-        for (let j = i; j < length; j++) {
-            if (visual.defaultCompare(piecePos[minIndex], piecePos[j]) === Compare.BIGGER_THAN) {
-                minIndex = j;
-            }
-        }
-        if (i !== minIndex) {
-            swap(piecePos, i, minIndex);
-        }
-    }*/
-
-    
-    
-
-      /*  console.log("before piecePos", piecePos);
-        const { length } = piecePos.length;
-        for(let k=0; k<tempDis.length; k++){
-            for (let i = 0; i < piecePos.length; i++) {
-                for (let j = 0; j < piecePos.length - 1 - i; j++) { // refer to note below
-                    if (visual.defaultCompare(tempDis[k], tempDis[k + 1]) === Compare.BIGGER_THAN) {
-                        visual.swap(piecePos, i, i + 1);
-                    }
-                }
-
-            }
-        }*/
-        
-
-        //sort distance array
-       
-        tempDis.forEach(function(){
-
-        });
-
-        //sort piecepos according to the distance
-        //temp = visual.getSorted(piecePos, tempDis);
-
-
-
-        //console.log("temp", temp);
-        cellsToIndicate= piecePos;
-       let filtered = cellsToIndicate.splice(randomCell, cellsToIndicate.length);
-       return cellsToIndicate;
+       let filtered = result.splice(randomCell, result.length);
+       return result;
     }
 
 
-
-    insertionSort(arr, defaultCompare) {
-
-        const Compare = {
-    LESS_THAN: -1,
-    BIGGER_THAN: 1
-};
-    const { length } = arr;
-    let temp;
-    for (let i = 1; i < length; i++) {
-        let j = i;
-        temp = arr[i];
-        while (j > 0 && defaultCompare(arr[j - 1], temp) === Compare.BIGGER_THAN) {
-            arr[j] = arr[j - 1];
-            j--;
-        }
-        arr[j] = temp;
-    }
-    return arr;
-}
-
-    swap(arr, a, b) {
-    let temp = arr[a];
-    arr[a] = arr[b];
-    arr[b] = temp;
-    console.log("arr", arr);
-    //return arr;
-}
-
-
-
- defaultCompare(a, b) {
-    const Compare = {
-    LESS_THAN: -1,
-    BIGGER_THAN: 1
-};
-    if (a === b) {
-        return 0;
-    }
-    return a < b ? Compare.LESS_THAN : Compare.BIGGER_THAN;
-}
-
-
-
-    getSorted(arr, sortArr) {
-      var result = [];
-      let seen = null;
-      //repeated element 
-      seen = this.returnSame(sortArr);
-
-      console.log(this.returnSame(sortArr),"seen", seen);
-
-      for (let i = 0; i < arr.length; i++) {            
-        console.log(sortArr[i], arr[i]);
-            console.log(seen, (sortArr[i] == seen), "return 0");
-            if(sortArr[i] == seen){
-                   console.log(sortArr.indexOf(sortArr[i]));
-            }else{
-
-            }
-          
-        result[i] = arr[sortArr[i]];
-      }
-      console.log("result", result);
-      return result;
-    }
 
    
-
-    returnSame(a){
-        let seen = a.filter((s => v => s.has(v) || !s.add(v))(new Set));
-        return seen;
-    }
-
-
-
-    /*func1: compare single array...(comapre all ele in a asingle array )..
-               return smallest ele
-
-
-      func 2 : sorting each ele of 2 arrays,   2 i/ps
-               call func1 when same dis. ocuurs
-               choose piece with smallest ele index getting from func1
-
-               */
 
     mostNeigh(hintinPen ,piecePos , hintCommand){
         let game = this.gameController.game();
