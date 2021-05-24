@@ -283,7 +283,7 @@ class Visual {
             htmlElement.style.left = left + 'vw';
             htmlElement.style.top = top + 'vw';
             htmlElement.style.transformOrigin = 'center';
-            htmlElement.style.setProperty("--magnification", 1);
+            htmlElement.style.setProperty("--magnification", '1vw');
         }
         if (htmlElement.style.getPropertyValue("--rotationX") === "") {
             htmlElement.style.setProperty("--rotationX", "0deg");
@@ -469,7 +469,7 @@ class Visual {
                         container.style.top = 'calc(' + y + 'px - ' + (width * 2.5) + 'vw)';
                         container.style.transformOrigin = '50% 50%';
                         container.style.zIndex = 100;
-                        container.style.setProperty("--magnification", 1);
+                        container.style.setProperty("--magnification", '1vw');
                    // }
                // }
             }

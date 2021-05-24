@@ -2,7 +2,7 @@
   --rotationX: 0;
   --rotationY: 0;
   --rotationZ: 0;
-  --magnification:1;
+  --magnification:1vw;
 }
 
 #game {
@@ -154,6 +154,7 @@ margin-top: 2px;
 }
 
 .gamearea {
+  justify-content:;
   display: block;
   float: left;
   user-select: none;
@@ -226,7 +227,7 @@ right: 0;
 bottom: 0;
 left: 0;
 overflow:none;
--webkit-transform: translate3d(0,0,0);
+--webkit-transform: translate3d(0,0,0);
 }
 
 img#logo{
