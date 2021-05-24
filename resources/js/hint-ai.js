@@ -666,7 +666,7 @@ class HintAI {
 
             pentominoPositions.forEach(position => {
                 currAdjacentPentominos += that._getOuterCorners(position, game, pentominoName);
-                currAdjacentPentominos += that._getInnerCorners(position, closestSolution, pentominoName);
+                currAdjacentPentominos += that._getInnerCorners(position, closestSolution, game, pentominoName);
             });
             if (currAdjacentPentominos > bestAdjacentPentominos) {
                 bestNextCommands = commandSequence["commands"];
@@ -749,7 +749,7 @@ class HintAI {
         return corners;
     }
 
-    _getInnerCorners([row, column], solutionGame, pentominoName) {
+    _getInnerCorners([row, column], solutionGame, game, pentominoName) {
         let corners = 0;
         let row1 = 0, row2 = 0, col1 = 0, col2 = 0;
 
@@ -759,6 +759,7 @@ class HintAI {
         col2 = column + 1;
         if (this._isSamePentomino(row1, col1, solutionGame, pentominoName) &&
             this._isSamePentomino(row2, col2, solutionGame, pentominoName) &&
+            game._board.isOccupied(row1, col2) &&
             !this._isSamePentomino(row1, col2, solutionGame, pentominoName)) {
             ++corners;
         }
@@ -769,6 +770,7 @@ class HintAI {
         col2 = column;
         if (this._isSamePentomino(row1, col1, solutionGame, pentominoName) &&
             this._isSamePentomino(row2, col2, solutionGame, pentominoName) &&
+            game._board.isOccupied(row2, col1) &&
             !this._isSamePentomino(row2, col1, solutionGame, pentominoName)) {
             ++corners;
         }
@@ -779,6 +781,7 @@ class HintAI {
         col2 = column - 1;
         if (this._isSamePentomino(row1, col1, solutionGame, pentominoName) &&
             this._isSamePentomino(row2, col2, solutionGame, pentominoName) &&
+            game._board.isOccupied(row1, col2) &&
             !this._isSamePentomino(row1, col2, solutionGame, pentominoName)) {
             ++corners;
         }
@@ -789,6 +792,7 @@ class HintAI {
         col2 = column;
         if (this._isSamePentomino(row1, col1, solutionGame, pentominoName) &&
             this._isSamePentomino(row2, col2, solutionGame, pentominoName) &&
+            game._board.isOccupied(row2, col1) &&
             !this._isSamePentomino(row2, col1, solutionGame, pentominoName)) {
             ++corners;
         }
