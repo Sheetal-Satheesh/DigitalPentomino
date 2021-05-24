@@ -41,6 +41,10 @@ class HintAI {
 
                 if (bestUnreachableCellSpace === null) {
                     let commandSequenceList = this._getCommandSequenceListToSolution(game, closestSolution);
+                    let misplacedPentominos = this._removeWronglyPlacedPentominos(game, closestSolution);
+                    if (misplacedPentominos) {
+                        return new Hint([misplacedPentominos], possibleSolutions);
+                    }
                     let commands = this._getBestNextCommandsMaxCorners(game, closestSolution, commandSequenceList);
                     return new Hint(commands, possibleSolutions);
                 } else {
@@ -414,14 +418,10 @@ class HintAI {
                 } else {
                     // pentomino needs to change position
                     let solutionPentominoPosition = solution.getPosition(solutionPentomino);
-                    let solutionPentominoRelPosition = [
-                        solutionPentominoPosition[0],
-                        solutionPentominoPosition[1]
-                    ];
 
                     return [new PlaceCommand(gamePentomino,
                         game.getPosition(gamePentomino),
-                        [solutionPentominoRelPosition[0], solutionPentominoRelPosition[1]])];
+                        [solutionPentominoPosition[0], solutionPentominoPosition[1]])];
                 }
             } else {
                 // place should be outside board
@@ -440,14 +440,10 @@ class HintAI {
                 } else {
                     // pentomino needs to change position
                     let solutionPentominoPosition = solution.getPosition(solutionPentomino);
-                    let solutionPentominoRelPosition = [
-                        solutionPentominoPosition[0],
-                        solutionPentominoPosition[1]
-                    ];
-
+               
                     return [new PlaceCommand(gamePentomino,
                         game.getPosition(gamePentomino),
-                        [solutionPentominoRelPosition[0], solutionPentominoRelPosition[1]])];
+                        [solutionPentominoPosition[0], solutionPentominoPosition[1]])];
                 }
             } else {
                 // perfect pentomino
@@ -483,26 +479,18 @@ class HintAI {
             if (game.isPlacedOnBoard(gamePentomino)) {
                 let gamePentominoPosition = game.getPosition(gamePentomino);
                 let solutionPentominoPosition = solution.getPosition(solutionPentomino);
-                let solutionPentominoRelPosition = [
-                    solutionPentominoPosition[0],
-                    solutionPentominoPosition[1]
-                ];
-
-                if (!(solutionPentominoRelPosition[0] === gamePentominoPosition[0])
-                    || !(solutionPentominoRelPosition[1] === gamePentominoPosition[1])) {
+                
+                if (!(solutionPentominoPosition[0] === gamePentominoPosition[0])
+                    || !(solutionPentominoPosition[1] === gamePentominoPosition[1])) {
                     commands.push(new PlaceCommand(gamePentomino,
                         game.getPosition(gamePentomino),
-                        [solutionPentominoRelPosition[0], solutionPentominoRelPosition[1]]));
+                        [solutionPentominoPosition[0], solutionPentominoPosition[1]]));
                 }
             } else {
                 let solutionPentominoPosition = solution.getPosition(solutionPentomino);
-                let solutionPentominoRelPosition = [
-                    solutionPentominoPosition[0],
-                    solutionPentominoPosition[1]
-                ];
                 commands.push(new PlaceCommand(gamePentomino,
                     game.getPosition(gamePentomino),
-                    [solutionPentominoRelPosition[0], solutionPentominoRelPosition[1]]));
+                    [solutionPentominoPosition[0], solutionPentominoPosition[1]]));
             }
 
             return commands;
@@ -581,13 +569,8 @@ class HintAI {
             let neighboringPositions = closestSolution._board._getNeighbPositionsOfPentomino(solutionPentomino);
             let numUnoccupiedNeighbors = neighboringPositions.length;
             neighboringPositions.forEach(neighboringPosition => {
-                let neighboringGamePosition = [
-                    neighboringPosition[0],
-                    neighboringPosition[1]
-                ];
-
-                if (!game._board.positionIsValid(neighboringGamePosition[0], neighboringGamePosition[1]) ||
-                    !(game._board.isOccupied(neighboringGamePosition[0], neighboringGamePosition[1]) === null)) {
+                if (!game._board.positionIsValid(neighboringPosition[0], neighboringPosition[1]) ||
+                    !(game._board.isOccupied(neighboringPosition[0], neighboringPosition[1]) === null)) {
                     numUnoccupiedNeighbors--;
                 }
             });
@@ -625,25 +608,22 @@ class HintAI {
             });
 
             pentominoPositions.forEach(position => {
-                let pentominoGamePosition = [
-                    position[0],
-                    position[1]
-                ];
+
                 // FIXME: Increase count only if cell occupied by different pentomino
-                if (game._board.positionIsValid(pentominoGamePosition[0] + 1, pentominoGamePosition[1]) &&
-                    game._board.isOccupied(pentominoGamePosition[0] + 1, pentominoGamePosition[1])) {
+                if (game._board.positionIsValid(position[0] + 1, position[1]) &&
+                    game._board.isOccupied(position[0] + 1, position[1])) {
                     currAdjacentPentominos++;
                 }
-                if (game._board.positionIsValid(pentominoGamePosition[0], pentominoGamePosition[1] + 1) &&
-                    game._board.isOccupied(pentominoGamePosition[0], pentominoGamePosition[1] + 1)) {
+                if (game._board.positionIsValid(position[0], position[1] + 1) &&
+                    game._board.isOccupied(position[0], position[1] + 1)) {
                     currAdjacentPentominos++;
                 }
-                if (game._board.positionIsValid(pentominoGamePosition[0] - 1, pentominoGamePosition[1]) &&
-                    game._board.isOccupied(pentominoGamePosition[0] - 1, pentominoGamePosition[1])) {
+                if (game._board.positionIsValid(position[0] - 1, position[1]) &&
+                    game._board.isOccupied(position[0] - 1, position[1])) {
                     currAdjacentPentominos++;
                 }
-                if (game._board.positionIsValid(pentominoGamePosition[0], pentominoGamePosition[1] - 1) &&
-                    game._board.isOccupied(pentominoGamePosition[0], pentominoGamePosition[1] - 1)) {
+                if (game._board.positionIsValid(position[0], position[1] - 1) &&
+                    game._board.isOccupied(position[0], position[1] - 1)) {
                     currAdjacentPentominos++;
                 }
             });
@@ -685,11 +665,8 @@ class HintAI {
             });
 
             pentominoPositions.forEach(position => {
-                let pentominoGamePosition = [
-                    position[0],
-                    position[1]
-                ];
-                currAdjacentPentominos += that._getOuterCorners(pentominoGamePosition, game, pentominoName);
+                currAdjacentPentominos += that._getOuterCorners(position, game, pentominoName);
+                currAdjacentPentominos += that._getInnerCorners(position, closestSolution, pentominoName);
             });
             if (currAdjacentPentominos > bestAdjacentPentominos) {
                 bestNextCommands = commandSequence["commands"];
@@ -729,10 +706,10 @@ class HintAI {
         col1 = column;
         row2 = row;
         col2 = column + 1;
-        if ((!game._board.positionIsValid(row1, col1) ||
-            (game._board.isOccupied(row1, col1) && game._board.getPentominoesAtPosition(row1, col1)[0].name != pentominoName)) &&
-            (!game._board.positionIsValid(row2, col2) ||
-            (game._board.isOccupied(row2, col2) && game._board.getPentominoesAtPosition(row2, col2)[0].name != pentominoName))) {
+        if ((!game._board.positionIsValid(row1, col1) || game._board.isBlockedCell(row1, col1) ||
+            (game._board.isOccupied(row1, col1) && !this._isSamePentomino(row1, col1, game, pentominoName))) &&
+            (!game._board.positionIsValid(row2, col2) || game._board.isBlockedCell(row2, col2) ||
+            (game._board.isOccupied(row2, col2) && !this._isSamePentomino(row2, col2, game, pentominoName)))) {
             ++corners;
         }
 
@@ -740,10 +717,10 @@ class HintAI {
         col1 = column + 1;
         row2 = row - 1;
         col2 = column;
-        if ((!game._board.positionIsValid(row1, col1) ||
-            (game._board.isOccupied(row1, col1) && game._board.getPentominoesAtPosition(row1, col1)[0].name != pentominoName)) &&
-            (!game._board.positionIsValid(row2, col2) ||
-            (game._board.isOccupied(row2, col2) && game._board.getPentominoesAtPosition(row2, col2)[0].name != pentominoName))) {
+        if ((!game._board.positionIsValid(row1, col1) || game._board.isBlockedCell(row1, col1) ||
+            (game._board.isOccupied(row1, col1) && !this._isSamePentomino(row1, col1, game, pentominoName))) &&
+            (!game._board.positionIsValid(row2, col2) || game._board.isBlockedCell(row2, col2) ||
+            (game._board.isOccupied(row2, col2) && !this._isSamePentomino(row1, col1, game, pentominoName)))) {
             ++corners;
         }
 
@@ -751,10 +728,10 @@ class HintAI {
         col1 = column;
         row2 = row;
         col2 = column - 1;
-        if ((!game._board.positionIsValid(row1, col1) ||
-            (game._board.isOccupied(row1, col1) && game._board.getPentominoesAtPosition(row1, col1)[0].name != pentominoName)) &&
-            (!game._board.positionIsValid(row2, col2) ||
-            (game._board.isOccupied(row2, col2) && game._board.getPentominoesAtPosition(row2, col2)[0].name != pentominoName))) {
+        if ((!game._board.positionIsValid(row1, col1) || game._board.isBlockedCell(row1, col1) ||
+            (game._board.isOccupied(row1, col1) && !this._isSamePentomino(row1, col1, game, pentominoName))) &&
+            (!game._board.positionIsValid(row2, col2) || game._board.isBlockedCell(row2, col2) ||
+            (game._board.isOccupied(row2, col2) && !this._isSamePentomino(row1, col1, game, pentominoName)))) {
             ++corners;
         }
 
@@ -762,10 +739,10 @@ class HintAI {
         col1 = column - 1;
         row2 = row + 1;
         col2 = column;
-        if ((!game._board.positionIsValid(row1, col1) ||
-            (game._board.isOccupied(row1, col1) && game._board.getPentominoesAtPosition(row1, col1)[0].name != pentominoName)) &&
-            (!game._board.positionIsValid(row2, col2) ||
-            (game._board.isOccupied(row2, col2) && game._board.getPentominoesAtPosition(row2, col2)[0].name != pentominoName))) {
+        if ((!game._board.positionIsValid(row1, col1) || game._board.isBlockedCell(row1, col1) ||
+            (game._board.isOccupied(row1, col1) && !this._isSamePentomino(row1, col1, game, pentominoName))) &&
+            (!game._board.positionIsValid(row2, col2) || game._board.isBlockedCell(row2, col2) ||
+            (game._board.isOccupied(row2, col2) && !this._isSamePentomino(row1, col1, game, pentominoName)))) {
             ++corners;
         }
 
@@ -773,7 +750,62 @@ class HintAI {
     }
 
     _getInnerCorners([row, column], solutionGame, pentominoName) {
+        let corners = 0;
+        let row1 = 0, row2 = 0, col1 = 0, col2 = 0;
 
+        row1 = row + 1;
+        col1 = column;
+        row2 = row;
+        col2 = column + 1;
+        if (this._isSamePentomino(row1, col1, solutionGame, pentominoName) &&
+            this._isSamePentomino(row2, col2, solutionGame, pentominoName) &&
+            !this._isSamePentomino(row1, col2, solutionGame, pentominoName)) {
+            ++corners;
+        }
+
+        row1 = row;
+        col1 = column + 1;
+        row2 = row - 1;
+        col2 = column;
+        if (this._isSamePentomino(row1, col1, solutionGame, pentominoName) &&
+            this._isSamePentomino(row2, col2, solutionGame, pentominoName) &&
+            !this._isSamePentomino(row2, col1, solutionGame, pentominoName)) {
+            ++corners;
+        }
+
+        row1 = row - 1;
+        col1 = column;
+        row2 = row;
+        col2 = column - 1;
+        if (this._isSamePentomino(row1, col1, solutionGame, pentominoName) &&
+            this._isSamePentomino(row2, col2, solutionGame, pentominoName) &&
+            !this._isSamePentomino(row1, col2, solutionGame, pentominoName)) {
+            ++corners;
+        }
+
+        row1 = row;
+        col1 = column - 1;
+        row2 = row + 1;
+        col2 = column;
+        if (this._isSamePentomino(row1, col1, solutionGame, pentominoName) &&
+            this._isSamePentomino(row2, col2, solutionGame, pentominoName) &&
+            !this._isSamePentomino(row2, col1, solutionGame, pentominoName)) {
+            ++corners;
+        }
+
+        return corners;
+    }
+
+    _isSamePentomino(row, col, game, pentominoName) {
+        try {
+            let testPento = game._board.getPentominoesAtPosition(row, col)[0];
+            if(testPento.name == pentominoName) {
+                return true;
+            }
+        } catch(error) {
+            return false;
+        }
+        return false;
     }
 
     // --- --- --- Helper functions --- --- ---
@@ -818,12 +850,9 @@ class HintAI {
         else if (solution.isPlacedOnBoard(solutionPentomino)) {
             let gamePentominoPosition = game.getPosition(gamePentomino);
             let solutionPentominoPosition = solution.getPosition(solutionPentomino);
-            let solutionPentominoRelPosition = [
-                solutionPentominoPosition[0],
-                solutionPentominoPosition[1]
-            ]
-            return gamePentominoPosition[0] === solutionPentominoRelPosition[0]
-                && gamePentominoPosition[1] === solutionPentominoRelPosition[1]
+            
+            return gamePentominoPosition[0] === solutionPentominoPosition[0]
+                && gamePentominoPosition[1] === solutionPentominoPosition[1]
                 && gamePentomino.sRepr.localeCompare(solutionPentomino.sRepr) === 0;
         } else {
             return false;
