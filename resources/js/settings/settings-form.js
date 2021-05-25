@@ -202,7 +202,7 @@ class SettingsForm {
         let seed = SettingsParser.parseSettingsToSeed(schema, currentSettings);
 
         let teacherUrl = baseConfigs.url + "?" + baseConfigs.seedUrlParamName + "=" + seed;
-        let pupilUrl = "2" + teacherUrl.substr(0, teacherUrl.length);
+        let pupilUrl = baseConfigs.url + "?" + baseConfigs.seedUrlParamName + "=2" + seed.substr(0, seed.length);
         teacherURLLabel.innerHTML = teacherUrl;
         pupilURLLabel.innerHTML = pupilUrl;
 
