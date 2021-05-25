@@ -4,15 +4,26 @@ class SettingsForm {
     static generateForm(formElement, onSubmit) {
         let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
         let settings = SettingsSingleton.getInstance().getSettings();
-        SettingsForm.createForm(formElement, schema, settings);
+
+        let teacherURLLabel = null;
+        let pupilURLLabel = null;
+
+        if (settings.teachersMode) {
+            teacherURLLabel = SettingsForm.createLabel("-");
+            pupilURLLabel = SettingsForm.createLabel("-");
+        }
+
+        SettingsForm.createForm(formElement, schema, settings, teacherURLLabel, pupilURLLabel);
 
         formElement.appendChild(document.createElement("br"));
         formElement.appendChild(document.createElement("br"));
 
-        if (SettingsSingleton.getInstance().getSettings().teachersMode) {
-            formElement.appendChild(SettingsForm.createLabel("Teachers URL: TODO"));
+        if (settings.teachersMode) {
+            formElement.appendChild(SettingsForm.createLabel("Teacher Link: "));
+            formElement.appendChild(teacherURLLabel);
             formElement.appendChild(document.createElement("br"));
-            formElement.appendChild(SettingsForm.createLabel("Class URL: TODO"));
+            formElement.appendChild(SettingsForm.createLabel("Pupil Link: "));
+            formElement.appendChild(pupilURLLabel);
             formElement.appendChild(document.createElement("br"));
         }
 
@@ -21,8 +32,7 @@ class SettingsForm {
         $(formElement).submit(function(event) {
             let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
             let settings = SettingsSingleton.getInstance().getSettings();
-            let settingsClone = jQuery.extend(true, { }, settings);
-            SettingsForm.collectDataFromForm(formElement, schema, settingsClone, settings);
+            let settingsClone = SettingsForm.collectDataFromForm(formElement, schema, settings);
             console.log(settingsClone);
             event.preventDefault();
             onSubmit(false, settingsClone);
@@ -30,7 +40,7 @@ class SettingsForm {
     }
 
     // --- --- --- Form Creation --- --- ---
-    static createForm(formElement, schema, settings) {
+    static createForm(formElement, schema, settings, teacherURLLabel, pupilURLLabel) {
         let creatingNormalSettings = true;
         let advancedSettingsDiv = document.createElement("div");
         advancedSettingsDiv.style.display = "none";
@@ -73,6 +83,11 @@ class SettingsForm {
                 switch (settingsEntryType) {
                     case "boolean":
                         let checkbox = SettingsForm.createInputElement("checkbox", elementName);
+                        if (settings.teachersMode) {
+                            checkbox.onclick = function() {
+                                SettingsForm.handleSettingsFormChange(formElement, teacherURLLabel, pupilURLLabel);
+                            };
+                        }
                         div.appendChild(checkbox);
                         let label = SettingsForm.createLabel(settingsEntry.title, {
                             for: checkbox.id
@@ -139,6 +154,17 @@ class SettingsForm {
         }
 
         formElement.appendChild(advancedSettingsDiv);
+    }
+
+    static handleSettingsFormChange(formElement, teacherURLLabel, pupilURLLabel) {
+        let settings = SettingsSingleton.getInstance().getSettings();
+        let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+
+        let currentSettings = SettingsForm.collectDataFromForm(formElement, schema, settings);
+        let seed = SettingsParser.parseSettingsToSeed(schema, currentSettings);
+
+        teacherURLLabel.innerHTML = baseConfigs.url + "?" + baseConfigs.seedUrlParamName + "=" + seed;
+        pupilURLLabel.innerHTML = "detected";
     }
 
     static createCollapsibleButton(showText, hideText) {
@@ -314,7 +340,9 @@ class SettingsForm {
     }
 
     // --- --- --- Data collection --- --- ---
-    static collectDataFromForm(formElement, schema, result, settings) {
+    static collectDataFromForm(formElement, schema, settings) {
+
+        let result = jQuery.extend(true, { }, settings);
 
         for (let heading in schema) {
             if (!settings.teachersMode && !settings.visibility.isVisible(heading)) {
@@ -367,6 +395,8 @@ class SettingsForm {
                 }
             }
         }
+
+        return result;
     }
 
     // === === === UPDATE FORM === === ===
