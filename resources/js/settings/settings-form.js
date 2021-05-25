@@ -212,7 +212,7 @@ class SettingsForm {
         return buttonElement;
     }
 
-    static createTeachersAdvancedSettings(formElement, schema, teacherURLLabel, pupilURLLabel) {
+    static createTeachersAdvancedSettings(formElement, schema) {
         let useInClassElement = document.createElement("div");
 
         for (let heading in schema) {
