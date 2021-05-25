@@ -30,6 +30,14 @@ class SettingsForm {
             pupilQrCodeDiv.id = "pupilQrCode";
             formElement.appendChild(pupilQrCodeDiv);
             formElement.appendChild(document.createElement("br"));
+
+            let printButton = SettingsForm.createButton("Print");
+            printButton.onclick = function(event) {
+                window.print();
+            };
+            formElement.appendChild(printButton);
+
+            formElement.appendChild(document.createElement("br"));
         }
 
         formElement.appendChild(SettingsForm.createSubmitButton());
