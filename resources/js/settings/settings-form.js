@@ -172,7 +172,7 @@ class SettingsForm {
 
         if (SettingsSingleton.getInstance().getSettings().teachersMode) {
             htmlElement.appendChild(SettingsForm.createHeader("h3", "Displayed Settings in Pupil Mode"));
-            htmlElement.appendChild(SettingsForm.createTeachersAdvancedSettings(schema));
+            htmlElement.appendChild(SettingsForm.createTeachersAdvancedSettings(formElement, schema, teacherURLLabel, pupilURLLabel));
         }
 
         formElement.appendChild(advancedSettingsDiv);
@@ -209,7 +209,7 @@ class SettingsForm {
         return buttonElement;
     }
 
-    static createTeachersAdvancedSettings(schema) {
+    static createTeachersAdvancedSettings(formElement, schema, teacherURLLabel, pupilURLLabel) {
         let useInClassElement = document.createElement("div");
 
         for (let heading in schema) {
@@ -221,14 +221,13 @@ class SettingsForm {
                 let elementName = heading + "." + key;
 
                 let settingsEntry = subSettings[key];
-                let settingsEntryType = settingsEntry.type;
 
-                useInClassElement.appendChild(
-                    SettingsForm.createLabel(key)
-                );
-
-                useInClassElement.appendChild(
-                    SettingsForm.createInputElement("checkbox",  "teachers." + elementName));
+                useInClassElement.appendChild(SettingsForm.createLabel(key));
+                let checkBoxElement = SettingsForm.createInputElement("checkbox",  "teachers." + elementName);
+                useInClassElement.appendChild(checkBoxElement);
+                checkBoxElement.onchange = function() {
+                    SettingsForm.handleSettingsFormChange(formElement, teacherURLLabel, pupilURLLabel);
+                };
                 useInClassElement.appendChild(document.createElement("br"));
             }
         }
