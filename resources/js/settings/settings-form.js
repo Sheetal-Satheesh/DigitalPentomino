@@ -21,9 +21,14 @@ class SettingsForm {
             formElement.appendChild(pupilURLLabel);
             formElement.appendChild(document.createElement("br"));
 
-            let qrCodeDiv = document.createElement("div");
-            qrCodeDiv.id = "qrCodeDiv";
-            formElement.appendChild(qrCodeDiv);
+            let teacherQrCodeDiv = document.createElement("div");
+            teacherQrCodeDiv.id = "teacherQrCode";
+            formElement.appendChild(teacherQrCodeDiv);
+            formElement.appendChild(document.createElement("br"));
+
+            let pupilQrCodeDiv = document.createElement("div");
+            pupilQrCodeDiv.id = "pupilQrCode";
+            formElement.appendChild(pupilQrCodeDiv);
             formElement.appendChild(document.createElement("br"));
         }
 
@@ -189,19 +194,36 @@ class SettingsForm {
         let seed = SettingsParser.parseSettingsToSeed(schema, currentSettings);
 
         let teacherUrl = baseConfigs.url + "?" + baseConfigs.seedUrlParamName + "=" + seed;
+        let pupilUrl = "2" + teacherUrl.substr(0, teacherUrl.length);
         teacherURLLabel.innerHTML = teacherUrl;
-        pupilURLLabel.innerHTML = "detected";
+        pupilURLLabel.innerHTML = pupilUrl;
 
         // Generate QR
-        let qrCodeDivQuery = $(formElement).find("div[id='qrCodeDiv']");
-        qrCodeDivQuery.empty();
+        let teacherQrCodeElement = $(formElement).find("div[id='teacherQrCode']");
+        teacherQrCodeElement.empty();
         // Set Size to Match User Input
-        qrCodeDivQuery.css({
+        // FIXME: fix width and height
+        teacherQrCodeElement.css({
             'width' : 133,
             'height' : 133
         });
         // Generate and Output QR Code
-        qrCodeDivQuery.qrcode({
+        teacherQrCodeElement.qrcode({
+            width: 133,
+            height: 133,
+            text: teacherUrl
+        });
+
+        // Generate QR
+        let pupilQrCodeElement = $(formElement).find("div[id='pupilQrCode']");
+        pupilQrCodeElement.empty();
+        // Set Size to Match User Input
+        pupilQrCodeElement.css({
+            'width' : 133,
+            'height' : 133
+        });
+        // Generate and Output QR Code
+        pupilQrCodeElement.qrcode({
             width: 133,
             height: 133,
             text: teacherUrl
