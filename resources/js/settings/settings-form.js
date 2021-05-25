@@ -115,6 +115,13 @@ class SettingsForm {
                                 settingsEntry.enumText,
                                 settingsEntry.imgPaths
                             );
+                            if (settings.teachersMode) {
+                                imgElement.childNodes.forEach(childButton => {
+                                    childButton.addEventListener("click", (event) => {
+                                        SettingsForm.handleSettingsFormChange(formElement, teacherURLLabel, pupilURLLabel);
+                                    });
+                                });
+                            }
                             div.appendChild(imgElement);
                         }
                         break;
@@ -187,7 +194,7 @@ class SettingsForm {
             "class": "collapsible"
         });
 
-        buttonElement.addEventListener("click", function() {
+        buttonElement.addEventListener("click", function(event) {
             this.classList.toggle("active");
             let content = this.nextElementSibling;
             if (content.style.display === "block") {
@@ -318,7 +325,7 @@ class SettingsForm {
             };
 
             let enumElement = enumElements[i];
-            buttonElement.onclick = () => {
+            buttonElement.addEventListener("click", (event) => {
                 div.childNodes.forEach(childNode => childNode.classList.remove("selected"));
                 div.value = enumElement;
                 if (buttonElement.classList.contains("selected")) {
@@ -326,7 +333,7 @@ class SettingsForm {
                 } else {
                     buttonElement.classList.add("selected");
                 }
-            };
+            });
             div.appendChild(buttonElement);
             i++;
         });
