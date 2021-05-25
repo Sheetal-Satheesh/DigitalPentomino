@@ -464,10 +464,6 @@ class SettingsForm {
                 }
             }
         }
-
-        let currentLanguage = settings.general.language;
-        // FIXME
-        schema.general.properties.language.default = currentLanguage === baseConfigs.languages.ENGLISH ? "en" : "de";
     }
 
     static editBooleanSchemaEntry(heading, key, value, formElement) {
