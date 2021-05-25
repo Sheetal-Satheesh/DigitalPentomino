@@ -9,11 +9,11 @@ class SettingsForm {
         let pupilURLLabel = null;
 
         if (settings.teachersMode) {
-            teacherURLLabel = SettingsForm.createLabel("-");
-            pupilURLLabel = SettingsForm.createLabel("-");
+            teacherURLLabel = SettingsForm.createLabel("-", {"name": "teacherURLLabel"});
+            pupilURLLabel = SettingsForm.createLabel("-", {"name": "pupilURLLabel"});
         }
 
-        SettingsForm.createForm(formElement, schema, settings, teacherURLLabel, pupilURLLabel);
+        SettingsForm.createForm(formElement, schema, settings);
 
         formElement.appendChild(document.createElement("br"));
         formElement.appendChild(document.createElement("br"));
@@ -40,7 +40,7 @@ class SettingsForm {
     }
 
     // --- --- --- Form Creation --- --- ---
-    static createForm(formElement, schema, settings, teacherURLLabel, pupilURLLabel) {
+    static createForm(formElement, schema, settings) {
         let creatingNormalSettings = true;
         let advancedSettingsDiv = document.createElement("div");
         advancedSettingsDiv.style.display = "none";
@@ -85,7 +85,7 @@ class SettingsForm {
                         let checkbox = SettingsForm.createInputElement("checkbox", elementName);
                         if (settings.teachersMode) {
                             checkbox.onclick = function() {
-                                SettingsForm.handleSettingsFormChange(formElement, teacherURLLabel, pupilURLLabel);
+                                SettingsForm.handleSettingsFormChange(formElement);
                             };
                         }
                         div.appendChild(checkbox);
@@ -104,7 +104,7 @@ class SettingsForm {
                                 settingsEntry.enumText);
                             if (settings.teachersMode) {
                                 selectElement.onchange = function() {
-                                    SettingsForm.handleSettingsFormChange(formElement, teacherURLLabel, pupilURLLabel);
+                                    SettingsForm.handleSettingsFormChange(formElement);
                                 };
                             }
                             div.appendChild(selectElement);
@@ -118,7 +118,7 @@ class SettingsForm {
                             if (settings.teachersMode) {
                                 imgElement.childNodes.forEach(childButton => {
                                     childButton.addEventListener("click", (event) => {
-                                        SettingsForm.handleSettingsFormChange(formElement, teacherURLLabel, pupilURLLabel);
+                                        SettingsForm.handleSettingsFormChange(formElement);
                                     });
                                 });
                             }
@@ -136,7 +136,7 @@ class SettingsForm {
                         });
                         if (settings.teachersMode) {
                             integerInputElement.onchange = function() {
-                                SettingsForm.handleSettingsFormChange(formElement, teacherURLLabel, pupilURLLabel);
+                                SettingsForm.handleSettingsFormChange(formElement);
                             };
                         }
                         div.appendChild(integerInputElement);
@@ -152,7 +152,7 @@ class SettingsForm {
                         });
                         if (settings.teachersMode) {
                             numberInputElement.onchange = function() {
-                                SettingsForm.handleSettingsFormChange(formElement, teacherURLLabel, pupilURLLabel);
+                                SettingsForm.handleSettingsFormChange(formElement);
                             };
                         }
                         div.appendChild(numberInputElement);
@@ -172,13 +172,16 @@ class SettingsForm {
 
         if (SettingsSingleton.getInstance().getSettings().teachersMode) {
             htmlElement.appendChild(SettingsForm.createHeader("h3", "Displayed Settings in Pupil Mode"));
-            htmlElement.appendChild(SettingsForm.createTeachersAdvancedSettings(formElement, schema, teacherURLLabel, pupilURLLabel));
+            htmlElement.appendChild(SettingsForm.createTeachersAdvancedSettings(formElement, schema));
         }
 
         formElement.appendChild(advancedSettingsDiv);
     }
 
-    static handleSettingsFormChange(formElement, teacherURLLabel, pupilURLLabel) {
+    static handleSettingsFormChange(formElement) {
+        let teacherURLLabel = $(formElement).find("label[name='teacherURLLabel']")[0];
+        let pupilURLLabel = $(formElement).find("label[name='pupilURLLabel']")[0];
+
         let settings = SettingsSingleton.getInstance().getSettings();
         let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
 
@@ -226,7 +229,7 @@ class SettingsForm {
                 let checkBoxElement = SettingsForm.createInputElement("checkbox",  "teachers." + elementName);
                 useInClassElement.appendChild(checkBoxElement);
                 checkBoxElement.onchange = function() {
-                    SettingsForm.handleSettingsFormChange(formElement, teacherURLLabel, pupilURLLabel);
+                    SettingsForm.handleSettingsFormChange(formElement);
                 };
                 useInClassElement.appendChild(document.createElement("br"));
             }
@@ -463,6 +466,10 @@ class SettingsForm {
                     inputElement.checked = settings.visibility.isVisible(heading, subheading);
                 }
             }
+        }
+
+        if (settings.teachersMode) {
+            SettingsForm.handleSettingsFormChange(formElement);
         }
     }
 
