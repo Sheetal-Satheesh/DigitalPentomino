@@ -5,25 +5,25 @@ class SettingsForm {
         let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
         let settings = SettingsSingleton.getInstance().getSettings();
 
-        let teacherURLLabel = null;
-        let pupilURLLabel = null;
-
-        if (settings.teachersMode) {
-            teacherURLLabel = SettingsForm.createLabel("-", {"name": "teacherURLLabel"});
-            pupilURLLabel = SettingsForm.createLabel("-", {"name": "pupilURLLabel"});
-        }
-
         SettingsForm.createForm(formElement, schema, settings);
 
         formElement.appendChild(document.createElement("br"));
         formElement.appendChild(document.createElement("br"));
 
         if (settings.teachersMode) {
+            let teacherURLLabel = SettingsForm.createLabel("-", {"name": "teacherURLLabel"});
+            let pupilURLLabel = SettingsForm.createLabel("-", {"name": "pupilURLLabel"});
+
             formElement.appendChild(SettingsForm.createLabel("Teacher Link: "));
             formElement.appendChild(teacherURLLabel);
             formElement.appendChild(document.createElement("br"));
             formElement.appendChild(SettingsForm.createLabel("Pupil Link: "));
             formElement.appendChild(pupilURLLabel);
+            formElement.appendChild(document.createElement("br"));
+
+            let qrCodeDiv = document.createElement("div");
+            qrCodeDiv.id = "qrCodeDiv";
+            formElement.appendChild(qrCodeDiv);
             formElement.appendChild(document.createElement("br"));
         }
 
@@ -188,8 +188,24 @@ class SettingsForm {
         let currentSettings = SettingsForm.collectDataFromForm(formElement, schema, settings);
         let seed = SettingsParser.parseSettingsToSeed(schema, currentSettings);
 
-        teacherURLLabel.innerHTML = baseConfigs.url + "?" + baseConfigs.seedUrlParamName + "=" + seed;
+        let teacherUrl = baseConfigs.url + "?" + baseConfigs.seedUrlParamName + "=" + seed;
+        teacherURLLabel.innerHTML = teacherUrl;
         pupilURLLabel.innerHTML = "detected";
+
+        // Generate QR
+        let qrCodeDivQuery = $(formElement).find("div[id='qrCodeDiv']");
+        qrCodeDivQuery.empty();
+        // Set Size to Match User Input
+        qrCodeDivQuery.css({
+            'width' : 133,
+            'height' : 133
+        });
+        // Generate and Output QR Code
+        qrCodeDivQuery.qrcode({
+            width: 133,
+            height: 133,
+            text: teacherUrl
+        });
     }
 
     static createCollapsibleButton(showText, hideText) {
