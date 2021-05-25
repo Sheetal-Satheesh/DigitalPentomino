@@ -102,6 +102,11 @@ class SettingsForm {
                                 elementName,
                                 settingsEntry.enum,
                                 settingsEntry.enumText);
+                            if (settings.teachersMode) {
+                                selectElement.onchange = function() {
+                                    SettingsForm.handleSettingsFormChange(formElement, teacherURLLabel, pupilURLLabel);
+                                };
+                            }
                             div.appendChild(selectElement);
                         } else {
                             let imgElement = SettingsForm.createImgSelectElement(
@@ -122,6 +127,11 @@ class SettingsForm {
                             min: settingsEntry.minimum,
                             max: settingsEntry.maximum
                         });
+                        if (settings.teachersMode) {
+                            integerInputElement.onchange = function() {
+                                SettingsForm.handleSettingsFormChange(formElement, teacherURLLabel, pupilURLLabel);
+                            };
+                        }
                         div.appendChild(integerInputElement);
                         break;
                     case "number":
@@ -133,6 +143,11 @@ class SettingsForm {
                             min: settingsEntry.minimum,
                             max: settingsEntry.maximum
                         });
+                        if (settings.teachersMode) {
+                            numberInputElement.onchange = function() {
+                                SettingsForm.handleSettingsFormChange(formElement, teacherURLLabel, pupilURLLabel);
+                            };
+                        }
                         div.appendChild(numberInputElement);
                         break;
                     default:
