@@ -9,5 +9,5 @@ baseConfigs = {
     languages: { ENGLISH: 0, GERMAN: 1 },
     defaultLanguage: 0,
     seedUrlParamName: "tuka-code",
-    url: "https://pentomino-digital.de/V5/"
+    url: "https://pentomino-digital.de/V5/index.html"
 };
