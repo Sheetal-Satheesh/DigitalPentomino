@@ -943,6 +943,9 @@ class Visual {
         });
     }
 
+    dist(a, b) {
+        return Math.sqrt((a[0] - b[0]) * (a[0] - b[0]) + (a[1] - b[1]) * (a[1] - b[1]));
+    }
 
     cellsToIndicate(piecePos, mostCells, hintCommand){
         let hintinPen = hintCommand._pentomino;
@@ -952,21 +955,10 @@ class Visual {
             randomCell = (Math.floor(Math.random() * (maxPartCells)) + 1);
             lastHintedPentName = currentPenHintName;
         }
-        let game = this.gameController.game();
-        let board = game._board;
-        let cellsToIndicate = [];
-        let temp = [];
-        let temp2 = [];
-        cellsToIndicate.push(mostCells);
-        cellsToIndicate.forEach(function(element){
-            piecePos.forEach(function(ele){
-                if(!((element[0] == ele[0])&&(element[1] == ele[1]))){
-                    cellsToIndicate.push(ele);
-                }
-            });
-       });
-       let filtered = cellsToIndicate.splice(randomCell, cellsToIndicate.length);
-       return cellsToIndicate;
+        let X = mostCells;
+        let result = piecePos.sort((a,b) => (this.dist(a, X) > this.dist(b, X)) ? 1 : ((this.dist(b, X) > this.dist(a, X)) ? -1 : 0));
+        let filtered = result.splice(randomCell, result.length);
+        return result;
     }
 
     mostNeigh(hintinPen ,piecePos , hintCommand){
@@ -1045,11 +1037,7 @@ class Visual {
     }
 
 
-    calculateDistance(currentPoint,neighbourPoint){
-        return  Math.round(Math.sqrt(
-                Math.pow((currentPoint[0]-neighbourPoint[0]),2) +
-                Math.pow((currentPoint[1]-neighbourPoint[1]),2)));
-    }
+  
 
 
    indicateAreaCells(piece, hintCommand) {
