@@ -456,25 +456,25 @@ class Visual {
                 //resize object to full size while moving and attach their center to the pointer
                 var width = UIProperty.WindowWidth / that.pd.gameWidth;
                 //set new style for left and top value of element, BUT do not cross borders
-                var functionsWidth = document.getElementById("functions_navbar").clientWidth;
                 var gameWidth = document.getElementById("game").clientWidth;
                 var gameHeight = document.getElementById("game").clientHeight;
                 var trayHeight = document.getElementById("tray").clientHeight;
                 var fieldHeight = document.getElementById("field").clientHeight;
+                var functionsHeight = document.getElementById("functions_navbar").clientHeight;
 
                 var diff = gameHeight - (fieldHeight + trayHeight);
 
                 //TODO: Add handling of borders
-                //if ((x > functionsWidth) && (x < (gameWidth + functionsWidth))) {
-                   // if ((y > 0) && (y < gameHeight - diff)) {
+                if ((x > 0) && (x < gameWidth)) {
+                   if ((y > 0) && (y < (gameHeight - functionsHeight))) {
 
                         container.style.left = 'calc(' + x + 'px - ' + (width * 2.5) + 'vw)';
                         container.style.top = 'calc(' + y + 'px - ' + (width * 2.5) + 'vw)';
                         container.style.transformOrigin = '50% 50%';
                         container.style.zIndex = 100;
                         container.style.setProperty("--magnification", 1);
-                   // }
-               // }
+                   }
+                }
             }
         }
 
@@ -701,6 +701,7 @@ class Visual {
             randomCell = Math.floor(Math.random() * (maxPartialHintingCells)) + 1;
             lastHintedPentName = currentPenHintName;
         }
+
 
         let tempHintinPen = hintinPen;
         if (!SettingsSingleton.getInstance().getSettings().hinting.exactHints){
@@ -950,9 +951,14 @@ class Visual {
     }
 
 
-     cellsToIndicate(piecePos, mostCells, hintCommand){
-        let maxPartialHintingCells = SettingsSingleton.getInstance().getSettings().hinting.maxPartialHintingCells;
-        let randomCell = Math.floor(Math.random() * (maxPartialHintingCells)) + 1;
+    cellsToIndicate(piecePos, mostCells, hintCommand){
+        let hintinPen = hintCommand._pentomino;
+        let currentPenHintName = hintinPen.name;
+        if(!(currentPenHintName === lastHintedPentName)){
+            let maxPartCells = SettingsSingleton.getInstance().getSettings().hinting.maxPartialHintingCells;
+            randomCell = (Math.floor(Math.random() * (maxPartCells)) + 1);
+            lastHintedPentName = currentPenHintName;
+        }
         let game = this.gameController.game();
         let board = game._board;
         let cellsToIndicate = [];
