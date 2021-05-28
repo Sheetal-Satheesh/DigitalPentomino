@@ -412,7 +412,8 @@ class SettingsForm {
     // --- --- --- Data collection --- --- ---
     static collectDataFromForm(formElement, schema, settings) {
 
-        let result = jQuery.extend(true, { }, settings);
+        let result = jQuery.extend(true, {}, settings);
+        result.visibility = jQuery.extend(true, new SettingsVisibility(), settings.visibility);
 
         for (let heading in schema) {
             if (!settings.teachersMode && !settings.visibility.isVisible(heading)) {

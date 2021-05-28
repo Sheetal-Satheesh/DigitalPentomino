@@ -40,6 +40,7 @@ class Settings {
                 this._settings[heading][key] = settings[heading][key];
             }
         }
+        this._settings.visibility = jQuery.extend(true, new SettingsVisibility(), settings.visibility);
     }
 
     getSettings() {
