@@ -255,6 +255,7 @@
                 this.closeModal();
             }
             else {
+                this.disableSnapshotButton();
                 this.hideManipulationButtons();
                 this.closeBoardSelector();
                 this.disablePointerEventsOnPieces();
@@ -301,11 +302,13 @@
         function closeModal() {
             document.getElementById('boardmodalTop').style.display = 'none';
             this.closeModalContainer();
+            this.enableSnapshotButton();
         }
 
         function callHintAI() {
             if (!pd.gameController.game()._board.isSolved()) {
                 pd.visual.callHintAI();
+                this.hideManipulationButtons();
             } else {
                 // TODO - handle, e.g. shake hint button
                 console.log("Game is already solved. Cannot display hint");
@@ -353,6 +356,7 @@
                 this.hideManipulationButtons();
                 this.closeSettings();
                 this.disablePointerEventsOnPieces();
+                this.disableSnapshotButton();
             }
         }
 
@@ -496,6 +500,7 @@
                 this.closeSettings();
             }
             else {
+                this.disableSnapshotButton()
                 this.disablePointerEventsOnPieces();
                 this.hideManipulationButtons();
                 // this.disablePrefillButton();
@@ -593,6 +598,7 @@
 
         function closeSettings() {
             this.closeModalContainer();
+            this.enableSnapshotButton();
         }
 
         function closeBoardSelector() {
@@ -670,6 +676,14 @@
 
         }
 
+        function disableSnapshotButton(){
+            $('#screenshot').prop('disabled', true);
+        }
+
+        function enableSnapshotButton(){
+            $('#screenshot').prop('disabled', false);
+        }
+
         function deleteGameImage(key) {
             pd.visual.deleteGameImage(key);
             showGameImages();
@@ -691,6 +705,7 @@
                 this.closeModal();
             }
             else {
+                this.disableSnapshotButton();
                 this.disablePointerEventsOnPieces();
                 this.hideManipulationButtons();
                 modal.style.background = " rgb(220, 240, 237)";
