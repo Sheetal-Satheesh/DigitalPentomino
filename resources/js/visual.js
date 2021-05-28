@@ -695,6 +695,7 @@ class Visual {
             lastHintedPentName = currentPenHintName;
         }
 
+
         let tempHintinPen = hintinPen;
         if (!SettingsSingleton.getInstance().getSettings().hinting.exactHints){
             //tempHintinPen = new Pentomino(hintinPen.name);
@@ -770,17 +771,15 @@ class Visual {
                         }
                         break;
                     case "area":
-                        for (let i = 0; i < 25; i++) {
-                            let areaPos = this.indicateAreaCells(hintinPen, hintCommand)[0];
-                            let b = this.gameController.game()._board.positionIsValid(areaPos[i][0], areaPos[i][1]);
-                            if (b) {
+                        let areaPos = this.indicateAreaCells(hintinPen, hintCommand)[0];
+                        for (let i = 0; i < areaPos.length; i++) {
                                 let areaPos = this.indicateAreaCells(hintinPen, hintCommand)[0];
                                 fieldvalue = document.getElementById("field_" + areaPos[i][0] + "," + areaPos[i][1]);
                                 prevBackground[i] = fieldvalue.style.background;
                                 fieldvalue.style.background = pentominoColor;
-                                this.hideArea(areaPos, prevBackground, timeoutFrame);
                             }
-                        }
+                        
+                        this.hideArea(areaPos, prevBackground, timeoutFrame);
                         break;
                     default:
                         console.error("Hinting strategy unknown!");
@@ -944,25 +943,22 @@ class Visual {
         });
     }
 
+    dist(a, b) {
+        return Math.sqrt((a[0] - b[0]) * (a[0] - b[0]) + (a[1] - b[1]) * (a[1] - b[1]));
+    }
 
-     cellsToIndicate(piecePos, mostCells, hintCommand){
-        let maxPartialHintingCells = SettingsSingleton.getInstance().getSettings().hinting.maxPartialHintingCells;
-        let randomCell = Math.floor(Math.random() * (maxPartialHintingCells)) + 1;
-        let game = this.gameController.game();
-        let board = game._board;
-        let cellsToIndicate = [];
-        let temp = [];
-        let temp2 = [];
-        cellsToIndicate.push(mostCells);
-        cellsToIndicate.forEach(function(element){
-            piecePos.forEach(function(ele){
-                if(!((element[0] == ele[0])&&(element[1] == ele[1]))){
-                    cellsToIndicate.push(ele);
-                }
-            });
-       });
-       let filtered = cellsToIndicate.splice(randomCell, cellsToIndicate.length);
-       return cellsToIndicate;
+    cellsToIndicate(piecePos, mostCells, hintCommand){
+        let hintinPen = hintCommand._pentomino;
+        let currentPenHintName = hintinPen.name;
+        if(!(currentPenHintName === lastHintedPentName)){
+            let maxPartCells = SettingsSingleton.getInstance().getSettings().hinting.maxPartialHintingCells;
+            randomCell = (Math.floor(Math.random() * (maxPartCells)) + 1);
+            lastHintedPentName = currentPenHintName;
+        }
+        let X = mostCells;
+        let result = piecePos.sort((a,b) => (this.dist(a, X) > this.dist(b, X)) ? 1 : ((this.dist(b, X) > this.dist(a, X)) ? -1 : 0));
+        let filtered = result.splice(randomCell, result.length);
+        return result;
     }
 
     mostNeigh(hintinPen ,piecePos , hintCommand){
@@ -1041,34 +1037,33 @@ class Visual {
     }
 
 
-    calculateDistance(currentPoint,neighbourPoint){
-        return  Math.round(Math.sqrt(
-                Math.pow((currentPoint[0]-neighbourPoint[0]),2) +
-                Math.pow((currentPoint[1]-neighbourPoint[1]),2)));
-    }
+  
 
 
-    indicateAreaCells(piece, hintCommand) {
+   indicateAreaCells(piece, hintCommand) {
         let hintRow = hintCommand._nextPosition[0];
         let hintColumn = hintCommand._nextPosition[1];
-        let midRow = hintRow;
-        let midColumn = hintColumn;
-        let startR = hintRow - 2;
-        let startCol = hintColumn - 2;
+        let startR; 
+        let startCol;
         let areaPosArray = [];
+        startR = hintRow - 2 ;
+        startCol = hintColumn - 2;
         let k = 0;
         for (let j = 0; j < 5; j++) {
             for (let l = 0; l < 5; l++) {
                 let areaPos = [];
                 areaPos[0] = j + startR;
                 areaPos[1] = l + startCol;
-                areaPosArray[k] = areaPos;
+                let validPosition = this.gameController.game()._board.positionIsValid(areaPos[0], areaPos[1]);
+                if(validPosition){
+                    areaPosArray.push(areaPos);
+                }
                 k++;
             }
         }
         return [areaPosArray, null];
     }
-
+    
     hideArea(areaPos, prevBackground, timeoutFrame) {
 
         setTimeout(function () {

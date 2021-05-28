@@ -36,7 +36,8 @@
   left: 10vw; 
   border-bottom: solid rgb(2, 71, 62) 0.2vw;
   background :rgb(149, 172, 170);
-  height: 6.85vw;
+  /* Do not modify height. iPad issues */
+  height: 7vw;
   width: 89vw;
   z-index: 0;
 
@@ -44,7 +45,8 @@
 
 #field {
   position: fixed;
-  top: 7.0vw;  
+  /* Do not modify top. iPad  issues */
+  top: 7.2vw;  
   background: white;
   width: 89vw;
   /*height: 39.35vw;*/
