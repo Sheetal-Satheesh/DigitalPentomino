@@ -61,93 +61,6 @@
                 src="resources/images/icons/seed.png">
     </div>
     <div class="cGame">
-        <div id="functions" onclick="hideManipulationButtons">
-            <img id="logo" src="resources/images/icons/pentomino.png" alt="Pentomino" class="cLogo">
-
-            <div id="operations">
-                <table>
-                    <tr>
-                        <td>
-                            <button type="button" id='reset' class="cActionBtn" onclick="resetGame()"><img
-                                    src="resources/images/icons/tidy_up.png"></button>
-                        </td>
-                        <td>
-                            <button type="button" id='prefillBoard' class="cActionBtn" onclick="prefillBoard()"
-                                disabled><img src="resources/images/icons/prefill.png"></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <button type="button" id='replay' class="cActionBtn" onclick="execReplay()">
-                                <img src="resources/images/icons/replay.svg"></button>
-                        </td>
-                    </tr>
-                </table>
-
-                <table>
-                    <tr>
-                        <td>
-                            <button type="button" id='undo' class="cActionBtn" onclick="saveGameImage()"><img
-                                    src="resources/images/icons/screenshot.png">
-                            </button>
-                        </td>
-                        <td>
-                            <button type="button" id='redo' class="cActionBtn" onclick="showGameImages()"><img
-                                    src="resources/images/icons/gallery.png">
-                            </button>
-                        </td>
-
-                    </tr>
-                    <tr>
-                        <td>
-                            <button type="button" id='undo' class="cActionBtn" onclick="execUndo()"><img
-                                    src="resources/images/icons/undo.png">
-                            </button>
-                        </td>
-                        <td>
-                            <button type="button" id='redo' class="cActionBtn" onclick="execRedo()"><img
-                                    src="resources/images/icons/redo.png">
-                            </button>
-                        </td>
-
-                    </tr>
-                    <tr>
-                        <td>
-                            <button type="button" id='btnBoardSelect' class="cActionBtn" onclick="selectBoard()"> <img
-                                    src="resources/images/icons/board.png">
-                            </button>
-                        </td>
-                        <td>
-                            <button type="button" id='hintButton' class="cActionBtn" onclick="callHintAI()"> <img
-                                    src="resources/images/icons/help.png">
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <button type="button" id='btnSettingsForm' class="cActionBtn" onclick="selectSettings()">
-                                <img src="resources/images/icons/settings.png">
-                            </button>
-                        </td>
-                        <td>
-                            <button type="button" id='license' class="cActionBtn" onclick="openLicense()"> <img
-                                    src="resources/images/icons/license.png">
-                            </button>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <button style="display:none" onclick="pd.ui.save()">Save</button>
-                        <button style="display:none" onclick="pd.ui.load()">Load</button>
-                    </tr>
-                </table>
-
-                <p id="labelNumberSolutionsContainer">
-                    <label id="labelNumberOfSolutionsText">Number of solutions</label>: <label
-                        id="labelNumberSolutions">?</label>
-                </p>
-            </div> <!-- operation -->
-        </div>
 
         <div id="game" class="FlashOff">
             <div id="tray"></div> <!-- tray -->
@@ -192,6 +105,47 @@
                 </div>
             </div>
             <!--modal end-->
+
+            <div id="functions_navbar" class="nav" onclick="hideManipulationButtons">
+                <button type="button" id='btnSettingsForm' class="cActionBtn" onclick="selectSettings()">
+                    <img src="resources/images/icons/settings.png">
+                </button>
+                <button type="button" id='btnBoardSelect' class="cActionBtn" onclick="selectBoard()"> <img
+                    src="resources/images/icons/board.png">
+                </button>
+                <button type="button" id='prefillBoard' class="cActionBtn" onclick="prefillBoard()" disabled>
+                    <img src="resources/images/icons/prefill.png">
+                </button>
+                <button type="button" id='hintButton' class="cActionBtn" onclick="callHintAI()"> <img
+                    src="resources/images/icons/help.png">
+                </button>
+                <button type="button" id='undo' class="cActionBtn" onclick="execUndo()">
+                    <img src="resources/images/icons/undo.png">
+                </button>
+                <button type="button" id='redo' class="cActionBtn" onclick="execRedo()"><img
+                    src="resources/images/icons/redo.png">
+                </button>
+                <button type="button" id='screenshot' class="cActionBtn" onclick="saveGameImage()">
+                    <img src="resources/images/icons/screenshot.png">
+                </button>
+                <button type="button" id='gallery' class="cActionBtn" onclick="showGameImages()">
+                    <img src="resources/images/icons/gallery.png">
+                </button>
+                <button type="button" id='replay' class="cActionBtn" onclick="execReplay()">
+                    <img src="resources/images/icons/replay.svg">
+                </button>
+                <button type="button" id='license' class="cActionBtn" onclick="openLicense()"> <img
+                    src="resources/images/icons/license.png">
+                </button>
+                <button type="button" id='reset' class="cActionBtn" onclick="resetGame()">
+                    <img src="resources/images/icons/tidy_up.png"></button>
+            </div>
+
+            <div id="labelNumberSolutionsContainer">
+                <div id="labelNumberSolutionsContainerChild">
+                    <div id="labelNumberOfSolutionsText">Number of solutions:</div><div id="labelNumberSolutions">?</div>
+                </div> 
+            </div>
 
         </div>
 

@@ -1,10 +1,10 @@
 const UIProperty = {
-    "TrayCSSLeft": 7,
-    "TrayHeight": 7,
-    "WindowWidth": 89,
-    "PentominoX": 5,
-    "PentominoY": 5,
-    "FunctionWidth": 10
+    "TrayCSSLeft": 0,
+    "TrayHeight": 10,
+    "WindowWidth": 100,
+    "PentominoX": 8,
+    "PentominoY": 8,
+    "Sidebar": 0
 }
 Object.freeze(UIProperty);
 
@@ -142,6 +142,9 @@ class Visual {
         var fieldHTML = document.getElementById('field');
         var out = '';
         var width = UIProperty.WindowWidth / this.pd.gameWidth;
+        var height = UIProperty.WindowHeight / this.pd.gameHeight;
+        console.log(width);
+        console.log(height);
 
         /*The field consists of divs. Each div saves in its id field its resepective coorinates*/
 
@@ -241,10 +244,10 @@ class Visual {
         var htmlElement = document.getElementById('piece_' + piece.name);
 
         if (piece.inTray) {
-            var widthVW = UIProperty.TrayCSSLeft + (piece.trayPosition) * 7;
-            var magnification = 6 / (5 * width);
+            var widthVW = UIProperty.TrayCSSLeft + (piece.trayPosition) * 7.2;
+            var magnification = 8 / (5 * width);
             htmlElement.style.left = widthVW + 'vw';
-            htmlElement.style.top = '.7vw';
+            htmlElement.style.top = '' + 0.1 * UIProperty.TrayHeight + 'vw'; //position pieces in tray around 20% from top
             htmlElement.style.transformOrigin = 'top';
             htmlElement.style.setProperty("--magnification", magnification);
             htmlElement.style.setProperty("--rotationX", "0deg");
@@ -269,13 +272,15 @@ class Visual {
             let left = undefined;
             let top = undefined;
             if (offset) {
-                left = UIProperty.FunctionWidth + width * (positionX - 2) + (width / 8);
+                left = UIProperty.Sidebar + width * (positionX - 2) + (width / 8);
                 top = UIProperty.TrayHeight + width * (positionY - 2) - (width / 8);
             }
             else {
-                left = UIProperty.FunctionWidth + width * (positionX - 2);
+                left = UIProperty.Sidebar + width * (positionX - 2);
                 top = UIProperty.TrayHeight + width * (positionY - 2);
             }
+
+            //HERE
 
             htmlElement.style.zIndex = this.overlapBlock.getZIndex(piece);
             htmlElement.style.left = left + 'vw';
@@ -341,6 +346,7 @@ class Visual {
         var width = UIProperty.WindowWidth / this.pd.gameWidth;
         var gameWidth = document.getElementById("game").clientWidth;
         var gameHeight = document.getElementById("game").clientHeight;
+
         if ((xPosition + 15 > gameWidth)) {
             if ((yPosition > 0) && (yPosition < gameHeight)) {
                 document.getElementById('pieceManipulation').style.left = 'calc(' + xPosition + 'px - ' + (width * 3) + 'vw)';
@@ -450,23 +456,24 @@ class Visual {
                 //resize object to full size while moving and attach their center to the pointer
                 var width = UIProperty.WindowWidth / that.pd.gameWidth;
                 //set new style for left and top value of element, BUT do not cross borders
-                var functionsWidth = document.getElementById("functions").clientWidth;
                 var gameWidth = document.getElementById("game").clientWidth;
                 var gameHeight = document.getElementById("game").clientHeight;
                 var trayHeight = document.getElementById("tray").clientHeight;
                 var fieldHeight = document.getElementById("field").clientHeight;
+                var functionsHeight = document.getElementById("functions_navbar").clientHeight;
 
                 var diff = gameHeight - (fieldHeight + trayHeight);
 
-                if ((x > functionsWidth) && (x < (gameWidth + functionsWidth))) {
-                    if ((y > 0) && (y < gameHeight - diff)) {
+                //TODO: Add handling of borders
+                if ((x > 0) && (x < gameWidth)) {
+                   if ((y > 0) && (y < (gameHeight - functionsHeight))) {
 
                         container.style.left = 'calc(' + x + 'px - ' + (width * 2.5) + 'vw)';
                         container.style.top = 'calc(' + y + 'px - ' + (width * 2.5) + 'vw)';
                         container.style.transformOrigin = '50% 50%';
                         container.style.zIndex = 100;
                         container.style.setProperty("--magnification", 1);
-                    }
+                   }
                 }
             }
         }
@@ -534,7 +541,7 @@ class Visual {
                 var elements = document.elementsFromPoint(event.clientX, event.clientY);
                 for (var i in elements) {
                     var element = elements[i];
-                    if (element.id == 'functions' || element.id == 'pieceManipulation') return; //do not unselect if operations have been applied to the functions panel
+                    if (element.id == 'functions_navbar' || element.id == 'pieceManipulation') return; //do not unselect if operations have been applied to the functions panel
                 }
                 that.deleteSelection();
             }

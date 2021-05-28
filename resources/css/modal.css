@@ -22,11 +22,11 @@ button:hover {
 }
 
 #modalTop {
-    top: 6.8vw;
-    left: 10vw;
+    top: 10vw;
+    left: 0vw;
     right: 1vw;
     bottom: 10vw;
-    border: 1px solid rgb(18, 122, 114);
+    /*border: 1px solid rgb(18, 122, 114);*/
     overflow: auto;
 }
 
@@ -35,8 +35,8 @@ button:hover {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
-    width: 89vw;
-    height: 90%;
+    left:0;
+    right:0;
 }
   
 .modalContainer {
