@@ -8,6 +8,6 @@ baseConfigs = {
     boardShape: "Block",
     languages: { ENGLISH: 0, GERMAN: 1 },
     defaultLanguage: 0,
-    seedUrlParamName: "tuka-code",
-    url: "https://pentomino-digital.de/V5/index.html"
+    seedUrlParamName: "t",
+    url: "pentomino-digital.de/V5/index.html"
 };
