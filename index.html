@@ -688,12 +688,11 @@
         function enableSnapshotButton() {
             $('#screenshot').prop('disabled', false);
         }
-
         function deleteGameImage(key) {
             pd.visual.deleteGameImage(key);
             showGameImages();
         }
-
+        
         function generateRandomColor() {
             /**
              * https://stackoverflow.com/questions/1152024/
@@ -764,7 +763,6 @@
                     imageDiv.appendChild(image);
                     imageDiv.appendChild(buttonDiv);
                     imageGrid.appendChild(imageDiv);
-
                 });
             }
         }
