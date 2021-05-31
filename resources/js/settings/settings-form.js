@@ -11,34 +11,6 @@ class SettingsForm {
         formElement.appendChild(document.createElement("br"));
 
         if (settings.teachersMode) {
-            let teacherURLLabel = SettingsForm.createLabel("-", {"name": "teacherURLLabel"});
-            let pupilURLLabel = SettingsForm.createLabel("-", {"name": "pupilURLLabel"});
-
-            formElement.appendChild(SettingsForm.createLabel("Teacher Link: "));
-            formElement.appendChild(teacherURLLabel);
-            formElement.appendChild(document.createElement("br"));
-            formElement.appendChild(SettingsForm.createLabel("Pupil Link: "));
-            formElement.appendChild(pupilURLLabel);
-            formElement.appendChild(document.createElement("br"));
-
-            let teacherQrCodeDiv = document.createElement("div");
-            teacherQrCodeDiv.id = "teacherQrCode";
-            formElement.appendChild(teacherQrCodeDiv);
-            formElement.appendChild(document.createElement("br"));
-
-            let pupilQrCodeDiv = document.createElement("div");
-            pupilQrCodeDiv.id = "pupilQrCode";
-            formElement.appendChild(pupilQrCodeDiv);
-            formElement.appendChild(document.createElement("br"));
-
-            let printButton = SettingsForm.createButton("Print");
-            printButton.onclick = function(event) {
-                window.print();
-            };
-            formElement.appendChild(printButton);
-
-            formElement.appendChild(document.createElement("br"));
-
             let useInClassButton = SettingsForm.createButton("Use In Class");
             useInClassButton.addEventListener("click", function () {
                     let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
@@ -104,11 +76,6 @@ class SettingsForm {
                 switch (settingsEntryType) {
                     case "boolean":
                         let checkbox = SettingsForm.createInputElement("checkbox", elementName);
-                        if (settings.teachersMode) {
-                            checkbox.onclick = function() {
-                                SettingsForm.handleSettingsFormChange(formElement);
-                            };
-                        }
                         div.appendChild(checkbox);
                         let label = SettingsForm.createLabel(settingsEntry.title, {
                             for: checkbox.id
@@ -123,11 +90,6 @@ class SettingsForm {
                                 elementName,
                                 settingsEntry.enum,
                                 settingsEntry.enumText);
-                            if (settings.teachersMode) {
-                                selectElement.onchange = function() {
-                                    SettingsForm.handleSettingsFormChange(formElement);
-                                };
-                            }
                             div.appendChild(selectElement);
                         } else {
                             let imgElement = SettingsForm.createImgSelectElement(
@@ -136,13 +98,6 @@ class SettingsForm {
                                 settingsEntry.enumText,
                                 settingsEntry.imgPaths
                             );
-                            if (settings.teachersMode) {
-                                imgElement.childNodes.forEach(childButton => {
-                                    childButton.addEventListener("click", (event) => {
-                                        SettingsForm.handleSettingsFormChange(formElement);
-                                    });
-                                });
-                            }
                             div.appendChild(imgElement);
                         }
                         break;
@@ -155,11 +110,6 @@ class SettingsForm {
                             min: settingsEntry.minimum,
                             max: settingsEntry.maximum
                         });
-                        if (settings.teachersMode) {
-                            integerInputElement.onchange = function() {
-                                SettingsForm.handleSettingsFormChange(formElement);
-                            };
-                        }
                         div.appendChild(integerInputElement);
                         break;
                     case "number":
@@ -171,11 +121,6 @@ class SettingsForm {
                             min: settingsEntry.minimum,
                             max: settingsEntry.maximum
                         });
-                        if (settings.teachersMode) {
-                            numberInputElement.onchange = function() {
-                                SettingsForm.handleSettingsFormChange(formElement);
-                            };
-                        }
                         div.appendChild(numberInputElement);
                         break;
                     default:
@@ -197,10 +142,6 @@ class SettingsForm {
         }
 
         formElement.appendChild(advancedSettingsDiv);
-    }
-
-    static handleSettingsFormChange(formElement) {
-        // TODO - remove me
     }
 
     static createCollapsibleButton(showText, hideText) {
@@ -239,9 +180,6 @@ class SettingsForm {
                 useInClassElement.appendChild(SettingsForm.createLabel(key));
                 let checkBoxElement = SettingsForm.createInputElement("checkbox",  "teachers." + elementName);
                 useInClassElement.appendChild(checkBoxElement);
-                checkBoxElement.onchange = function() {
-                    SettingsForm.handleSettingsFormChange(formElement);
-                };
                 useInClassElement.appendChild(document.createElement("br"));
             }
         }
@@ -478,10 +416,6 @@ class SettingsForm {
                     inputElement.checked = settings.visibility.isVisible(heading, subheading);
                 }
             }
-        }
-
-        if (settings.teachersMode) {
-            SettingsForm.handleSettingsFormChange(formElement);
         }
     }
 
