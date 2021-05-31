@@ -1,0 +1,496 @@
+:root {
+    --rotationX: 0;
+    --rotationY: 0;
+    --rotationZ: 0;
+    --magnification:1;
+  }
+  
+  #game {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  
+  #tray {
+    z-index: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 10vw;
+    background-color:#042c2c00;
+    display: flex;
+    overflow-x: auto;
+  
+  }
+  
+  #field {
+    position: fixed;
+    left: 0vw;
+    top: 10vw;  
+    background: transparent;
+    /* background-image: url('file:///C:/Users/saura/Desktop/DP - Git/digitalpentomino_v5/resources/images/UI_images/tucaIceThemeBackground2.png'); */
+    /* background-image: url('file:///C:/Users/saura/Desktop/DP - Git/digitalpentomino_v5/resources/images/UI_images/tuca_space_background.jpg'); */
+    /* background-size: cover; */
+    width: 100%;
+    /*height: 39.35vw;*/
+    bottom: 10vw;
+  }
+  
+  #piecearea {
+    user-select: none;
+    width: 100%;
+    height: 10vw;
+  }
+  
+  #functions_navbar {
+    z-index: 10;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 10vw;
+    background-color: #def9f6;
+    display: flex;
+    overflow-x: auto;
+    padding: 2%;
+    padding-left: 5%;
+    padding-right: 5%;
+  }
+  
+  .cActionBtn img {
+    float: center;
+    width:  4vw;
+    height: 4vw;
+    object-fit: cover;
+    border-radius: 10%;
+  }
+  
+  .cActionBtn {
+    border: 1px solid grey;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    width: 1vw;
+    height: 1vw;
+    overflow: hidden;
+    white-space: nowrap;
+    height: 6vw;
+    margin-left: 1%;
+    margin-right: 1%;
+    border-radius: 50%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    outline: 0;
+  }
+  
+  .cActionBtn:active {
+    box-shadow: inset 0 0 0 0.4vw #67b4e7;
+  }
+  
+  #labelNumberSolutionsContainer{
+    position: fixed;
+    height: 5vw;
+    width: 25vw;
+    justify-content: center;
+    display: table-cell;
+    background-color: #def9f6;
+    border: 1px solid grey;
+    border-top-left-radius: 25px;
+    border-bottom: none;
+    border-right: none;
+    bottom: 10vw;
+    right: 0;
+  }
+  
+  #labelNumberSolutionsContainerChild{
+    height: 100%;
+    text-align: center;
+    vertical-align: middle; 
+    font-size: 1.5vw;
+  }
+  
+  
+  #operations {
+    display: inline-block;
+    margin-top: 8vw;
+  }
+  
+  #operations {
+    display: block;
+  }
+  
+  #operations  img{
+    width:4vw;
+    height:4vw;
+  }
+  
+  #operations table tr td div{
+    margin:20%;
+    margin-top: 2%;
+  }
+  
+  
+  #operations button{
+  margin: 0.4vw;
+  margin-top: 2%;
+  width: 4vw;
+  height: 4vw;
+  }
+  
+  #pieceManipulation table tr td div{
+  margin:14px;
+  margin-top: 2px;
+  }
+  
+  #pieceManipulation  img{
+    width:5vw;
+    height:5vw;
+  
+  }
+  #pieceManipulation{
+   position: absolute;
+   display: none;
+   z-index: 10;
+  }
+  
+  .gamearea {
+    justify-content:;
+    display: block;
+    float: left;
+    user-select: none;
+    text-align: center;
+    /*outline: 1px solid #eee;*/
+  }
+  
+  .boardarea {
+    outline: 1px solid #2f4f4a2e;
+    background: #eceaea;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  
+  .blockedcell {
+  background: repeating-linear-gradient(
+  45deg,
+  rgba(0, 0, 0, 0.2),
+  rgba(0, 0, 0, 0.2) 10px,
+  rgba(0, 0, 0, 0.3) 10px,
+  rgba(0, 0, 0, 0.3) 20px
+  )
+  }
+  
+  .piece {
+    position: fixed;
+    top: 0;
+    width: 9vw;
+    height: 9vw;
+    transform: scale(var(--magnification)) rotateX(var(--rotationX)) rotateY(var(--rotationY)) rotateZ(var(--rotationZ));
+    transition: transform .2s;
+  }
+  
+  .bmAround {
+    pointer-events: none
+  }
+  
+  .CActionTB {
+    padding-top: 10%;
+    padding-left: 5%;
+  }
+  
+  .CMenuTB {
+    padding-top: 40%;
+    padding-left: 5%;
+  }
+  
+  .CMenuTB img{
+    float: center;
+    width:  4vw;
+    height: 4vw;
+    object-fit: cover;
+    background: rgb(193, 199, 201);
+    border-radius: 25%;
+  }
+  
+  .CMenuTB div{
+  background:rgb(141, 160, 157);
+  border-radius: 10%;
+  border: 0;
+  }
+  
+  .CMenuTB div:active{
+    box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
+  }
+  
+  .cGame {
+  position: fixed;
+  top: 0;
+  /* background: darkgray; */
+  background: transparent;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow:none;
+  --webkit-transform: translate3d(0,0,0);
+  background-image: url('file:///C:/Users/saura/Desktop/DP - Git/digitalpentomino_v5/resources/images/UI_images/tucaIceThemeBackground2.png');
+  /* background-image: url('/resources/images/UI_images/tucaIceThemeBackground2.png');  */
+  background-size: cover;
+  background-position-y: 10vw;
+  opacity: 0.97;
+  }
+  
+  img#logo{
+  position: fixed;
+  width: 9.5vw;
+  height: 6.5vw;
+  background: rgb(197, 207, 203);
+  }
+  
+  /* hint container - can be anything you want */
+  .hintPopup {
+    position: relative;
+    margin: 20px;
+    background-color: #fff;
+    padding: 10px;
+    border:red 40px;
+    display: inline-block;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    margin-right:30px !important
+  }
+  
+  /* The actual hint */
+  .hintPopup .hintPopupText {
+    visibility: hidden;
+    width: 100px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left:-40px;
+  }
+  
+  /* hint arrow */
+  .hintPopup .hintPopupText::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+  }
+  
+  /* Toggle this class - hide and show the hint */
+  .hintPopup .show {
+    visibility: visible;
+    -webkit-animation: fadeIn 1s;
+    animation: fadeIn 1s;
+  }
+  
+  /* Add animation (fade in the hint) */
+  @-webkit-keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+  }
+  
+  @keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity:1 ;}
+  }
+  
+  
+  
+  table
+    {
+     position: relative;
+      margin-top: 30px;
+      width: -10px!important;
+       border-spacing: 0px;
+       border-collapse:collapse;
+       padding: 0px;
+     }
+  
+     table tr td{
+        margin:-20px;
+        border-width:0px;
+        margin:0px;
+        width: 10px;
+        padding: 0px;
+     }
+  
+  
+  
+      table tr td button:active {
+        box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
+       }
+  
+       table tr td div:active {
+        box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
+       }  
+     
+  
+    table tr td button{
+      background:rgb(141, 160, 157);
+      border-radius: 10%;
+      border: 0;
+      padding: 0px;
+    }
+  
+    #operations table tr td div{
+      background:rgb(141, 160, 157);
+      border-radius: 10%;
+      border: 0;
+      padding: 0.1vw;
+      margin: 0.1vw;
+    }
+  
+     table tr td div{
+        background:rgb(141, 160, 157);
+      border-radius: 10%;
+      border: 0;
+      padding: 0px;
+     }
+  
+   
+  
+    #logo{
+    height:7vw!important;
+    width:10vw !important
+  }
+  
+  
+  @media only screen and (max-width: 1137px) {
+      #operations  img{
+            width:4vw;
+            height:4vw;
+        }
+  
+        #operations table tr td div{
+            margin:10px;
+        }
+  
+  
+        #operations button{
+          margin:0.5vw;
+          margin-top: 1px;
+          width: 4vw;
+          height: 4vw;
+        }
+  
+    }
+  
+    @media only screen and (max-width: 1137px) {
+      #operations  img{
+            width:4vw;
+            height:4vw;
+        }
+  
+        #operations table tr td div{
+            margin:3px;
+          margin-top: 1px;
+        }
+  
+  
+        #operations button{
+          margin:3px;
+          margin-top: 1px;
+        }
+  
+      }
+  
+      body {
+        /* Disables pull-to-refresh but allows overscroll flow effects. TODO: Need to check on different screen sizes*/
+        overscroll-behavior-y: contain;
+      } 
+  
+      
+      #blink {
+    text-align: center;
+    background: #c6c6c6;
+    color: #fff;
+    margin: 0;
+    padding: 20px;
+  }
+  
+  
+  /* Styling of search bar for seeding */
+  
+  #seeding {
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    /* bring your own prefixes */
+    transform: translate(-50%, -50%);
+    z-index: 99999999999;
+    visibility: hidden;
+  }
+  
+  #seedingCover {
+    position: fixed;
+    background: white;
+    width: 100%;
+    height: 100%;
+    opacity: 80%;
+    z-index: 99999999998;
+    visibility: hidden;
+  }
+  
+  #seedBar {
+    border: 2px solid #999;
+    border-radius: 0.5em;;
+    font-size: 1.2em;
+    width: 10em;
+    transition: width 0.5s ease-in-out;
+  }
+   
+  #seedBar:focus {
+  }
+  
+  .FlashOn {
+    display: block;
+    visibility: visible;
+    filter: alpha(opacity=65);
+    opacity: .6;
+  }
+  
+  html {
+      -webkit-text-size-adjust: none;
+      touch-action: manipulation;
+  }
+  
+  
+  
+  /**shake animation reference : https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_image_shake **/
+  .horizTranslate {
+    animation: shaking 1.5s;
+    animation-iteration-count: infinite;
+  }
+  
+  
+  @keyframes shaking {
+     0% {
+          transform: scale(1,1);
+      }
+      50% {
+          transform: scale(1.5,1.5);
+      }
+      100% {
+          transform: scale(1,1);
+      }
+  }
