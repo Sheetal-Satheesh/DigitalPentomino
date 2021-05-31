@@ -1,7 +1,7 @@
 class SettingsForm {
 
     // === === === GENERATE FORM === === ===
-    static generateForm(formElement, onSubmit) {
+    static generateForm(formElement, onSubmit, onExport) {
         let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
         let settings = SettingsSingleton.getInstance().getSettings();
 
@@ -38,6 +38,14 @@ class SettingsForm {
             formElement.appendChild(printButton);
 
             formElement.appendChild(document.createElement("br"));
+
+            let useInClassButton = SettingsForm.createButton("Use In Class");
+            useInClassButton.addEventListener("click", function () {
+                    let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+                    let settings = SettingsSingleton.getInstance().getSettings();
+                    onExport(SettingsForm.collectDataFromForm(formElement, schema, settings));
+            });
+            formElement.appendChild(useInClassButton);
         }
 
         formElement.appendChild(SettingsForm.createSubmitButton());
