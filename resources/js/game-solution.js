@@ -15,7 +15,7 @@ class Solutions {
         for (let i = 0; i < tempArray.length; i++) {
             let line = tempArray[i];
 
-            let game = this.getGameFromString(line);
+            let game = this.getGameFromString(line, boardname);
             gameArray.push(game);
         }
 
@@ -24,12 +24,12 @@ class Solutions {
 
     /*  */
     /*TODO: Move to gameLoader class */
-    static getGameFromString(gameString) {
+    static getGameFromString(gameString, boardname) {
 
         let rows = gameString.split(" ");
         let height = rows.length;
         let width = rows[0].length;
-        let boardStartCoords = UtilitiesClass.getBoardStartCoords();
+        let boardStartCoords = UtilitiesClass.getBoardStartCoords(boardname);
         //console.log("Initialize game with height: " + height + " and width: " + width);
         let game = new Game(new Board(boardStartCoords, [height, width]));
 
