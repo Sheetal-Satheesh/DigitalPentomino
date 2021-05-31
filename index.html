@@ -494,7 +494,7 @@
 
             let div1 = document.createElement("div");
             let h5 = document.createElement("h3");
-            var t1 = document.createTextNode("Use In Class");
+            var t1 = document.createTextNode("Share");
             h5.appendChild(t1);
             div1.appendChild(h5);
             modalBodyID.appendChild(div1);
@@ -513,22 +513,22 @@
             let table = document.createElement("table");
             table.style.margin = "auto";
 
+            let tr23 = document.createElement("tr");
+            table.appendChild(tr23);
+            let td111 = document.createElement("td");
+            td111.appendChild(document.createTextNode("Share With Other Teachers"));
+            tr23.appendChild(td111);
+            let td212 = document.createElement("td");
+            td212.appendChild(document.createTextNode("Use In Class"));
+            tr23.appendChild(td212);
+
             let qrTr = generateQrTrElement(teacherUrl, pupilUrl);
             table.appendChild(qrTr);
-
-            /*let tr2 = document.createElement("tr");
-            table.appendChild(tr2);
-            let td11 = document.createElement("td");
-            td11.appendChild(teacherURLLabel);
-            tr2.appendChild(td11);
-            let td21 = document.createElement("td");
-            td21.appendChild(pupilURLLabel);
-            tr2.appendChild(td21);*/
 
             let tr2 = document.createElement("tr");
             table.appendChild(tr2);
             let td11 = document.createElement("td");
-            td11.appendChild(document.createTextNode("Use this to share with  other teachers"));
+            td11.appendChild(document.createTextNode("Use this to share with other teachers (Restricted Settings)"));
             tr2.appendChild(td11);
             let td21 = document.createElement("td");
             td21.appendChild(document.createTextNode("Use this in class"));

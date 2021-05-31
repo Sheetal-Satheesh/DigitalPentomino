@@ -11,7 +11,7 @@ class SettingsForm {
         formElement.appendChild(document.createElement("br"));
 
         if (settings.teachersMode) {
-            let useInClassButton = SettingsForm.createButton("Use In Class");
+            let useInClassButton = SettingsForm.createButton("Share");
             useInClassButton.addEventListener("click", function () {
                     let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
                     let settings = SettingsSingleton.getInstance().getSettings();
