@@ -493,16 +493,60 @@
             template.clearContent("#innerGridForm");
 
             let div1 = document.createElement("div");
-            let h5 = document.createElement("h5");
+            let h5 = document.createElement("h3");
             let lang = SettingsSingleton.getInstance().getSettings().general.language;
             var t1 = document.createTextNode("Use In Class");
             h5.appendChild(t1);
-            let h6 = document.createElement("h6");
-            var t2 = document.createTextNode("icon1 : https://www.deviantart.com/edicionesnaza/art/Boy-and-Girl-Icon-gif-By-alfreditha-394021423");
-            h6.appendChild(t2);
             div1.appendChild(h5);
-            div1.appendChild(h6);
             modalBodyID.appendChild(div1);
+
+            let teacherURLLabel = document.createElement("label");
+            let pupilURLLabel = document.createElement("label");
+
+            div1.appendChild(teacherURLLabel);
+            div1.appendChild(pupilURLLabel);
+
+            let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+            let seed = SettingsParser.parseSettingsToSeed(schema, settings);
+
+            let teacherUrl = baseConfigs.url + "?" + baseConfigs.seedUrlParamName + "=" + seed;
+            let pupilUrl = baseConfigs.url + "?" + baseConfigs.seedUrlParamName + "=2" + seed.substr(0, seed.length);
+            teacherURLLabel.innerHTML = teacherUrl;
+            pupilURLLabel.innerHTML = pupilUrl;
+
+            // Generate QR
+            let teacherQrCodeElement = document.createElement("div");
+            let pupilQrCodeElement = document.createElement("div");
+            modalBodyID.appendChild(teacherQrCodeElement);
+            modalBodyID.appendChild(pupilQrCodeElement);
+
+            $(teacherQrCodeElement).empty();
+            // Set Size to Match User Input
+            // FIXME: fix width and height
+            $(teacherQrCodeElement).css({
+                'width' : 133,
+                'height' : 133
+            });
+            // Generate and Output QR Code
+            $(teacherQrCodeElement).qrcode({
+                width: 133,
+                height: 133,
+                text: teacherUrl
+            });
+
+            // Generate QR
+            $(pupilQrCodeElement).empty();
+            // Set Size to Match User Input
+            $(pupilQrCodeElement).css({
+                'width' : 133,
+                'height' : 133
+            });
+            // Generate and Output QR Code
+            $(pupilQrCodeElement).qrcode({
+                width: 133,
+                height: 133,
+                text: teacherUrl
+            });
         }
 
         let piecesIdArray = ['piece_X', 'piece_Y', 'piece_F', 'piece_I', 'piece_L', 'piece_N', 'piece_P', 'piece_T', 'piece_U', 'piece_V', 'piece_W', 'piece_Z'];

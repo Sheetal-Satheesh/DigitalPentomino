@@ -200,50 +200,7 @@ class SettingsForm {
     }
 
     static handleSettingsFormChange(formElement) {
-        let teacherURLLabel = $(formElement).find("label[name='teacherURLLabel']")[0];
-        let pupilURLLabel = $(formElement).find("label[name='pupilURLLabel']")[0];
-
-        let settings = SettingsSingleton.getInstance().getSettings();
-        let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
-
-        let currentSettings = SettingsForm.collectDataFromForm(formElement, schema, settings);
-        let seed = SettingsParser.parseSettingsToSeed(schema, currentSettings);
-
-        let teacherUrl = baseConfigs.url + "?" + baseConfigs.seedUrlParamName + "=" + seed;
-        let pupilUrl = baseConfigs.url + "?" + baseConfigs.seedUrlParamName + "=2" + seed.substr(0, seed.length);
-        teacherURLLabel.innerHTML = teacherUrl;
-        pupilURLLabel.innerHTML = pupilUrl;
-
-        // Generate QR
-        let teacherQrCodeElement = $(formElement).find("div[id='teacherQrCode']");
-        teacherQrCodeElement.empty();
-        // Set Size to Match User Input
-        // FIXME: fix width and height
-        teacherQrCodeElement.css({
-            'width' : 133,
-            'height' : 133
-        });
-        // Generate and Output QR Code
-        teacherQrCodeElement.qrcode({
-            width: 133,
-            height: 133,
-            text: teacherUrl
-        });
-
-        // Generate QR
-        let pupilQrCodeElement = $(formElement).find("div[id='pupilQrCode']");
-        pupilQrCodeElement.empty();
-        // Set Size to Match User Input
-        pupilQrCodeElement.css({
-            'width' : 133,
-            'height' : 133
-        });
-        // Generate and Output QR Code
-        pupilQrCodeElement.qrcode({
-            width: 133,
-            height: 133,
-            text: teacherUrl
-        });
+        // TODO - remove me
     }
 
     static createCollapsibleButton(showText, hideText) {
