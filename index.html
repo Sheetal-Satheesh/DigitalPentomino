@@ -510,7 +510,7 @@
             let seed = SettingsParser.parseSettingsToSeed(schema, settings);
 
             let teacherUrl = baseConfigs.url + "?" + baseConfigs.seedUrlParamName + "=" + seed;
-            let pupilUrl = baseConfigs.url + "?" + baseConfigs.seedUrlParamName + "=2" + seed.substr(0, seed.length);
+            let pupilUrl = baseConfigs.url + "?" + baseConfigs.seedUrlParamName + "=2" + seed.substr(1, seed.length);
             teacherURLLabel.innerHTML = teacherUrl;
             pupilURLLabel.innerHTML = pupilUrl;
 
