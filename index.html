@@ -547,6 +547,12 @@
                 height: 133,
                 text: teacherUrl
             });
+
+            let printButton = SettingsForm.createButton("Print");
+            printButton.addEventListener("click", function () {
+                window.print();
+            });
+            modalBodyID.appendChild(printButton);
         }
 
         let piecesIdArray = ['piece_X', 'piece_Y', 'piece_F', 'piece_I', 'piece_L', 'piece_N', 'piece_P', 'piece_T', 'piece_U', 'piece_V', 'piece_W', 'piece_Z'];
