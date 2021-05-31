@@ -170,15 +170,15 @@ class SettingsForm {
         for (let heading in schema) {
             let subSettings = schema[heading].properties;
 
-            useInClassElement.appendChild(SettingsForm.createHeader("h4", heading));
+            useInClassElement.appendChild(SettingsForm.createHeader("h4", schema[heading].title));
 
             for (let key in subSettings) {
                 let elementName = heading + "." + key;
 
                 let settingsEntry = subSettings[key];
 
-                useInClassElement.appendChild(SettingsForm.createLabel(key));
                 let checkBoxElement = SettingsForm.createInputElement("checkbox",  "teachers." + elementName);
+                useInClassElement.appendChild(SettingsForm.createLabel(settingsEntry.title, {for: checkBoxElement.id}));
                 useInClassElement.appendChild(checkBoxElement);
                 useInClassElement.appendChild(document.createElement("br"));
             }
