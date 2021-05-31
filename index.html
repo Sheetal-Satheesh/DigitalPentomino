@@ -516,13 +516,22 @@
             let qrTr = generateQrTrElement(teacherUrl, pupilUrl);
             table.appendChild(qrTr);
 
-            let tr2 = document.createElement("tr");
+            /*let tr2 = document.createElement("tr");
             table.appendChild(tr2);
             let td11 = document.createElement("td");
             td11.appendChild(teacherURLLabel);
             tr2.appendChild(td11);
             let td21 = document.createElement("td");
             td21.appendChild(pupilURLLabel);
+            tr2.appendChild(td21);*/
+
+            let tr2 = document.createElement("tr");
+            table.appendChild(tr2);
+            let td11 = document.createElement("td");
+            td11.appendChild(document.createTextNode("Use this to share with  other teachers"));
+            tr2.appendChild(td11);
+            let td21 = document.createElement("td");
+            td21.appendChild(document.createTextNode("Use this in class"));
             tr2.appendChild(td21);
 
             modalBodyID.appendChild(table);
