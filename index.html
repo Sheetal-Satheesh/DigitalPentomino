@@ -494,7 +494,6 @@
 
             let div1 = document.createElement("div");
             let h5 = document.createElement("h3");
-            let lang = SettingsSingleton.getInstance().getSettings().general.language;
             var t1 = document.createTextNode("Use In Class");
             h5.appendChild(t1);
             div1.appendChild(h5);
@@ -517,8 +516,6 @@
             // Generate QR
             let teacherQrCodeElement = document.createElement("div");
             let pupilQrCodeElement = document.createElement("div");
-            modalBodyID.appendChild(teacherQrCodeElement);
-            modalBodyID.appendChild(pupilQrCodeElement);
 
             $(teacherQrCodeElement).empty();
             // Set Size to Match User Input
@@ -547,6 +544,19 @@
                 height: 133,
                 text: teacherUrl
             });
+
+            let table = document.createElement("table");
+            let tr = document.createElement("tr");
+            table.appendChild(tr);
+            let td1 = document.createElement("td");
+            tr.appendChild(td1);
+            let td2 = document.createElement("td");
+            tr.appendChild(td2);
+
+            td1.appendChild(teacherQrCodeElement);
+            td2.appendChild(pupilQrCodeElement);
+
+            modalBodyID.appendChild(table);
 
             let printButton = SettingsForm.createButton("Print");
             printButton.addEventListener("click", function () {
