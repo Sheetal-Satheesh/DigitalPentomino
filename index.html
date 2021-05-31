@@ -502,9 +502,6 @@
             let teacherURLLabel = document.createElement("label");
             let pupilURLLabel = document.createElement("label");
 
-            div1.appendChild(teacherURLLabel);
-            div1.appendChild(pupilURLLabel);
-
             let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
             let seed = SettingsParser.parseSettingsToSeed(schema, settings);
 
@@ -513,48 +510,20 @@
             teacherURLLabel.innerHTML = teacherUrl;
             pupilURLLabel.innerHTML = pupilUrl;
 
-            // Generate QR
-            let teacherQrCodeElement = document.createElement("div");
-            let pupilQrCodeElement = document.createElement("div");
-
-            $(teacherQrCodeElement).empty();
-            // Set Size to Match User Input
-            // FIXME: fix width and height
-            $(teacherQrCodeElement).css({
-                'width' : 133,
-                'height' : 133
-            });
-            // Generate and Output QR Code
-            $(teacherQrCodeElement).qrcode({
-                width: 133,
-                height: 133,
-                text: teacherUrl
-            });
-
-            // Generate QR
-            $(pupilQrCodeElement).empty();
-            // Set Size to Match User Input
-            $(pupilQrCodeElement).css({
-                'width' : 133,
-                'height' : 133
-            });
-            // Generate and Output QR Code
-            $(pupilQrCodeElement).qrcode({
-                width: 133,
-                height: 133,
-                text: teacherUrl
-            });
-
             let table = document.createElement("table");
-            let tr = document.createElement("tr");
-            table.appendChild(tr);
-            let td1 = document.createElement("td");
-            tr.appendChild(td1);
-            let td2 = document.createElement("td");
-            tr.appendChild(td2);
+            table.style.margin = "auto";
 
-            td1.appendChild(teacherQrCodeElement);
-            td2.appendChild(pupilQrCodeElement);
+            let qrTr = generateQrTrElement(teacherUrl, pupilUrl);
+            table.appendChild(qrTr);
+
+            let tr2 = document.createElement("tr");
+            table.appendChild(tr2);
+            let td11 = document.createElement("td");
+            td11.appendChild(teacherURLLabel);
+            tr2.appendChild(td11);
+            let td21 = document.createElement("td");
+            td21.appendChild(pupilURLLabel);
+            tr2.appendChild(td21);
 
             modalBodyID.appendChild(table);
 
@@ -563,6 +532,43 @@
                 window.print();
             });
             modalBodyID.appendChild(printButton);
+        }
+
+        function generateQrTrElement(teacherUrl, pupilUrl) {
+            // Generate QR
+            let teacherQrCodeElement = document.createElement("div");
+            let pupilQrCodeElement = document.createElement("div");
+
+            generateQrCode(teacherQrCodeElement, teacherUrl);
+            generateQrCode(pupilQrCodeElement, pupilUrl);
+
+            let tr = document.createElement("tr");
+            let td1 = document.createElement("td");
+            tr.appendChild(td1);
+            let td2 = document.createElement("td");
+            tr.appendChild(td2);
+
+            td1.appendChild(teacherQrCodeElement);
+            td2.appendChild(pupilQrCodeElement);
+
+            return tr;
+        }
+
+        function generateQrCode(element, inputText) {
+            let selector = $(element);
+            selector.empty();
+            // Set Size to Match User Input
+            // FIXME: fix width and height
+            selector.css({
+                'width' : 133,
+                'height' : 133
+            });
+            // Generate and Output QR Code
+            selector.qrcode({
+                width: 133,
+                height: 133,
+                text: inputText
+            });
         }
 
         let piecesIdArray = ['piece_X', 'piece_Y', 'piece_F', 'piece_I', 'piece_L', 'piece_N', 'piece_P', 'piece_T', 'piece_U', 'piece_V', 'piece_W', 'piece_Z'];
