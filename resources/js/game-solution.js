@@ -15,7 +15,7 @@ class Solutions {
         for (let i = 0; i < tempArray.length; i++) {
             let line = tempArray[i];
 
-            let game = this.getGameFromString(line);
+            let game = this.getGameFromString(line, boardname);
             gameArray.push(game);
         }
 
@@ -24,13 +24,14 @@ class Solutions {
 
     /*  */
     /*TODO: Move to gameLoader class */
-    static getGameFromString(gameString) {
+    static getGameFromString(gameString, boardname) {
 
         let rows = gameString.split(" ");
         let height = rows.length;
         let width = rows[0].length;
+        let boardStartCoords = UtilitiesClass.getBoardStartCoords(boardname);
         //console.log("Initialize game with height: " + height + " and width: " + width);
-        let game = new Game(new Board([0, 0], [height, width]));
+        let game = new Game(new Board(boardStartCoords, [height, width]));
 
         //prepare pentominos for the board
         let X = new Pentomino('X');
@@ -65,6 +66,8 @@ class Solutions {
                 if (position != null) {
                     //console.log("Center of piece " + pento.name + " found: " + position);
                     //console.log("Placing element" + pento.name + " on board...");
+                    position[0] += boardStartCoords[0];
+                    position[1] += boardStartCoords[1];
                     game.placePentomino(pento, position[0], position[1]);
                     hasNextOp = false;
                 } else {
