@@ -75,6 +75,23 @@ const strings = {
                     "Aktiviert: Drehen, Spiegeln und Bewege-Aktionen, die auf ein Pentomino angewandt werden müssen sind drei separate Hinweise. Deaktiviert: Aktionen werden in einem Hinweis zusammengefasst."]
             }
         },
+
+
+        showSolvedBoardScreen:{
+                title: ["Show Solved Board Screen", "Bildschirm Gelöste Karte anzeigen"],
+                enableSolvedScreen:{
+                    title: ["Enable solved screen?", "Gelösten Bildschirm freigeben"],
+                    description: ["Solved Board Screen indicates what should happen after the whole board is fully solved.",
+                    "Der Bildschirm Gelöstes Board zeigt an, was passieren soll, nachdem das gesamte Board vollständig gelöst ist."]
+                },
+
+                SolvedScreens: {
+                    title: ["Different solved screens", "Unterschiedlich gelöste Bildschirme"],
+                    enumTitles: [["Play again? Yes No", "Well done! Please wait for your Teacher to continue", "Excellent ! Now continue with the next task on your assignment"], 
+                                ["Nochmal spielen? Ja Nein", "Gut gemacht! Bitte warten Sie auf Ihren Lehrer, um fortzufahren", "Ausgezeichnet! Fahren Sie jetzt mit der nächsten Aufgabe Ihres Auftrags fort"]]
+                }
+        },
+
         prefilling: {
             title: ["Prefilling", "Automatisches Füllen"],
             enablePrefilling: {
