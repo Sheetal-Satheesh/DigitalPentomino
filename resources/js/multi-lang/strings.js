@@ -7,7 +7,9 @@ const strings = {
     reset: ["Do You Want To Reset?", "Willst du deinen Spielstand wirklich löschen?"],
     showSolved: {
         congrats: ["Congratulations!", "Glückwunsch!"],
-        play: ["Play Again?", "Nochmal spielen?"]
+        play: ["Play Again?", "Nochmal spielen?"],
+        WellDone: ["Well done! Please wait for your Teacher to continue", "Gut gemacht! Bitte warten Sie auf Ihren Lehrer, um fortzufahren"],
+        Excellent: ["Excellent ! Now continue with the next task on your assignment", "Ausgezeichnet! Fahren Sie jetzt mit der nächsten Aufgabe Ihres Auftrags fort"]
     },
     license: ["LICENSES", "LIZENZEN"],
     numberOfPossibleSolutions: ["Number of solutions", "Anzahl Lösungen"],
