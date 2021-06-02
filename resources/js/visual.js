@@ -644,7 +644,6 @@ class Visual {
         }, 1000);
     }
 
-
     blinkCells(cells) {
         let menu = [];
         let bgColor;
@@ -861,7 +860,6 @@ class Visual {
         }
     }
 
-
     indicatePentomino(pentomino, timeframe) {
         Array.prototype.forEach.call(document.getElementById("piece_" + pentomino.name).getElementsByClassName("bmPoint"), function (element) {
             element.style["box-shadow"] = "0 0 20px " + pentomino.color;
@@ -1010,8 +1008,6 @@ class Visual {
         return bestCell;
     }
 
-
-
     calculateNeighbour(piecePos, hintCommand) {
         let game = this.gameController.game();
         let board = game._board;
@@ -1036,9 +1032,6 @@ class Visual {
         let filtered = reduced.splice(randomCell, reduced.length);
         return reduced;
     }
-
-
-
 
     //returns unique elements of an array : reference : https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-array
     unique(arr) {
@@ -1092,8 +1085,6 @@ class Visual {
             }
         }, timeoutFrame);
     }
-
-
 
     hideMostOccupiedNeighbors(cellsToIndicate, prevBackground, timeoutFrame) {
 
