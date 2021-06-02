@@ -690,66 +690,62 @@
 
         function showGameImages() {
             var modal = document.getElementById('modalTop');
-            if ($(modal).is(':visible')) {
-                this.closeModal();
-            }
-            else {
-                this.disablePointerEventsOnPieces();
-                this.hideManipulationButtons();
-                modal.style.background = " rgb(220, 240, 237)";
-                modal.style.display = "block";
+            this.disablePointerEventsOnPieces();
+            this.hideManipulationButtons();
+            modal.style.background = " rgb(220, 240, 237)";
+            modal.style.display = "block";
 
-                document.querySelector(".modalFormContent").style.display = "none";
-                document.querySelector(".innerGrid").style.display = "block";
+            document.querySelector(".modalFormContent").style.display = "none";
+            document.querySelector(".innerGrid").style.display = "block";
 
-                let imageList = pd.visual.showGameImages();
-                let imageGrid = document.getElementById('innerGrid');
-                template.clearContent(".innerGrid");
-                template.clearContent("#innerGridForm");
-                let gameId = undefined;
-                let borderColor = generateRandomColor();
+            let imageList = pd.visual.showGameImages();
+            let imageGrid = document.getElementById('innerGrid');
+            template.clearContent(".innerGrid");
+            template.clearContent("#innerGridForm");
+            let gameId = undefined;
+            let borderColor = generateRandomColor();
 
-                imageList.forEach((item) => {
-                    let imgKey = Object.keys(item)[0];
-                    let image = item[imgKey];
-                    let imageDiv = document.createElement("div");
-                    imageDiv.setAttribute("class", "imageDiv");
+            imageList.forEach((item) => {
+                let imgKey = Object.keys(item)[0];
+                let image = item[imgKey];
+                let imageDiv = document.createElement("div");
+                imageDiv.setAttribute("class", "imageDiv");
 
-                    if (gameId != pd.visual.getGameIdByKey(imgKey)) {
-                        gameId = pd.visual.getGameIdByKey(imgKey);
-                        borderColor = generateRandomColor();
-                    }
-                    imageDiv.style.borderWidth = "3px";
-                    imageDiv.style.borderColor = borderColor;
+                if (gameId != pd.visual.getGameIdByKey(imgKey)) {
+                    gameId = pd.visual.getGameIdByKey(imgKey);
+                    borderColor = generateRandomColor();
+                }
+                imageDiv.style.borderWidth = "3px";
+                imageDiv.style.borderColor = borderColor;
 
-                    let buttonDiv = document.createElement("div");
-                    buttonDiv.setAttribute("class", "imageBtnDiv");
+                let buttonDiv = document.createElement("div");
+                buttonDiv.setAttribute("class", "imageBtnDiv");
 
-                    let loadBtn = document.createElement("button");
-                    loadBtn.setAttribute("class", "imageButton imageLoadBtn");
-                    loadBtn.textContent = "Load";
-                    loadBtn.addEventListener('click', function () {
-                        loadGameImage(imgKey);
-                    }, false);
+                let loadBtn = document.createElement("button");
+                loadBtn.setAttribute("class", "imageButton imageLoadBtn");
+                loadBtn.textContent = "Load";
+                loadBtn.addEventListener('click', function () {
+                    loadGameImage(imgKey);
+                }, false);
 
 
-                    let deleteBtn = document.createElement("button");
-                    deleteBtn.setAttribute("class", "imageButton imageDeleteBtn");
-                    deleteBtn.textContent = "Delete";
-                    deleteBtn.addEventListener('click', function () {
-                        deleteGameImage(imgKey);
-                    }, false);
+                let deleteBtn = document.createElement("button");
+                deleteBtn.setAttribute("class", "imageButton imageDeleteBtn");
+                deleteBtn.textContent = "Delete";
+                deleteBtn.addEventListener('click', function () {
+                    deleteGameImage(imgKey);
+                }, false);
 
 
-                    buttonDiv.appendChild(loadBtn);
-                    buttonDiv.appendChild(deleteBtn);
+                buttonDiv.appendChild(loadBtn);
+                buttonDiv.appendChild(deleteBtn);
 
-                    imageDiv.appendChild(image);
-                    imageDiv.appendChild(buttonDiv);
-                    imageGrid.appendChild(imageDiv);
+                imageDiv.appendChild(image);
+                imageDiv.appendChild(buttonDiv);
+                imageGrid.appendChild(imageDiv);
 
-                });
-            }
+            });
+
         }
 
         function execReplay() {
