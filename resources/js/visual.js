@@ -8,7 +8,7 @@ const UIProperty = {
 }
 Object.freeze(UIProperty);
 
-const CommandTypes = { "Original": 1, "Shadow": 2 };
+const CommandTypes = { "Original": 1, "Shadow": 2, "None":3 };
 Object.freeze(CommandTypes);
 
 const CommandSeq = { "Forward": 1, "Backward": 2 };
@@ -702,7 +702,7 @@ class Visual {
             lastHintedPentName = currentPenHintName;
         }
 
-
+        let cmdProperty = updateCommandAttr(CommandTypes.None, CommandSeq.Forward);
         let tempHintinPen = hintinPen;
         if (!SettingsSingleton.getInstance().getSettings().hinting.exactHints){
             //tempHintinPen = new Pentomino(hintinPen.name);
@@ -712,10 +712,10 @@ class Visual {
                 switch (hint.getCommands()[hintnr]._name){
                     case "Remove": break;
                     case "Place": break;
-                    case "RotateClkWise": tempHintinPen.rotateClkWise(); break;
-                    case "RotateAntiClkWise": tempHintinPen.rotateAntiClkWise(); break;
-                    case "MirrorH": tempHintinPen.mirrorH(); break;
-                    case "MirrorV": tempHintinPen.mirrorV(); break;
+                    case "RotateClkWise": tempHintinPen.rotateClkWise(cmdProperty); break;
+                    case "RotateAntiClkWise": tempHintinPen.rotateAntiClkWise(cmdProperty); break;
+                    case "MirrorH": tempHintinPen.mirrorH(cmdProperty); break;
+                    case "MirrorV": tempHintinPen.mirrorV(cmdProperty); break;
                     default: throw new Error("Error on commands on pentomino copy.");
                 }
             }
@@ -810,10 +810,11 @@ class Visual {
                 // handle rotateClkWise hint
                 this.select(hintinPen,posX,posY);
                 if (!this.selected.inTray){
-                    rotateClkWise();
-                    setTimeout(function(){
-                    rotateAntiClkWise();
-                    },timeoutFrame);
+                    this.rotateClkWise(cmdProperty);
+                    var that = this;
+                    setTimeout(function(that){
+                        that.rotateAntiClkWise(cmdProperty);
+                    },timeoutFrame, that);
                 }
                 break;
 
@@ -821,10 +822,11 @@ class Visual {
                 // handle rotateAntiClkWise hint
                 this.select(hintinPen,posX,posY);
                 if (!this.selected.inTray){
-                    rotateAntiClkWise();
-                    setTimeout(function(){
-                    rotateClkWise();
-                    },timeoutFrame);
+                    this.rotateAntiClkWise(cmdProperty);
+                    var that = this;
+                    setTimeout(function(that){
+                        that.rotateClkWise(cmdProperty);
+                    },timeoutFrame,that);
                 }
                 break;
 
@@ -833,10 +835,11 @@ class Visual {
                 //select piece in the UI to flip
                 this.select(hintinPen,posX,posY);
                 if (!this.selected.inTray){
-                    flipH();
-                    setTimeout(function(){
-                    flipH();
-                    },timeoutFrame);
+                    this.flipH(cmdProperty);
+                    var that = this;
+                    setTimeout(function(that){
+                        that.flipH(cmdProperty);
+                    },timeoutFrame,that);
                 }
                 break;
 
@@ -844,10 +847,11 @@ class Visual {
                 // handle mirrorV hint
                 this.select(hintinPen,posX,posY);
                 if (!this.selected.inTray){
-                    flipV();
-                    setTimeout(function(){
-                    flipV();
-                    },timeoutFrame);
+                    this.flipV(cmdProperty);
+                    var that = this;
+                    setTimeout(function(that){
+                        that.flipV(cmdProperty);
+                    },timeoutFrame,that);
                 }
                 break;
 
@@ -1042,10 +1046,6 @@ class Visual {
             return !posi || ele != ary[posi - 1];
         });
     }
-
-
-  
-
 
    indicateAreaCells(piece, hintCommand) {
         let hintRow = hintCommand._nextPosition[0];
