@@ -61,11 +61,12 @@
     </div>
     <div class="cGame">
 
-        <div id="game" class="FlashOff">
+        <div id="game">
             <div id="tray"></div> <!-- tray -->
-            <div id="field"></div> <!-- field -->
-            <div id="piecearea"></div> <!-- piecearea -->
-
+            <div id="playarea" class="FlashOff">
+                <div id="field"></div> <!-- field -->
+                <div id="piecearea"></div> <!-- piecearea -->
+            </div>
             <div id="boardmodalTop" class="boardmodal"
                 style="background: rgb(220, 240, 237) none repeat scroll 0% 0%; display: none;">
                 <span onclick="closeModal()" class="boardclose" title="Close Modal">x</span>
@@ -110,19 +111,19 @@
                     <img src="resources/images/icons/settings.png">
                 </button>
                 <button type="button" id='btnBoardSelect' class="cActionBtn" onclick="selectBoard()"> <img
-                    src="resources/images/icons/board.png">
+                        src="resources/images/icons/board.png">
                 </button>
                 <button type="button" id='prefillBoard' class="cActionBtn" onclick="prefillBoard()" disabled>
                     <img src="resources/images/icons/prefill.png">
                 </button>
                 <button type="button" id='hintButton' class="cActionBtn" onclick="callHintAI()"> <img
-                    src="resources/images/icons/help.png">
+                        src="resources/images/icons/help.png">
                 </button>
                 <button type="button" id='undo' class="cActionBtn" onclick="execUndo()">
                     <img src="resources/images/icons/undo.png">
                 </button>
                 <button type="button" id='redo' class="cActionBtn" onclick="execRedo()"><img
-                    src="resources/images/icons/redo.png">
+                        src="resources/images/icons/redo.png">
                 </button>
                 <button type="button" id='screenshot' class="cActionBtn" onclick="saveGameImage()">
                     <img src="resources/images/icons/screenshot.png">
@@ -134,7 +135,7 @@
                     <img src="resources/images/icons/replay.svg">
                 </button>
                 <button type="button" id='license' class="cActionBtn" onclick="openLicense()"> <img
-                    src="resources/images/icons/license.png">
+                        src="resources/images/icons/license.png">
                 </button>
                 <button type="button" id='reset' class="cActionBtn" onclick="resetGame()">
                     <img src="resources/images/icons/tidy_up.png"></button>
@@ -142,8 +143,9 @@
 
             <div id="labelNumberSolutionsContainer">
                 <div id="labelNumberSolutionsContainerChild">
-                    <div id="labelNumberOfSolutionsText">Number of solutions:</div><div id="labelNumberSolutions">?</div>
-                </div> 
+                    <div id="labelNumberOfSolutionsText">Number of solutions:</div>
+                    <div id="labelNumberSolutions">?</div>
+                </div>
             </div>
 
         </div>
@@ -649,9 +651,9 @@
         }
 
         function saveGameImage() {
-            addFlash("game");
+            addFlash("playarea");
             let gameImage = undefined;
-            let gameElem = document.getElementById('game');
+            let gameElem = document.getElementById('playarea');
 
             html2canvas(gameElem).then(function (screeshot) {
                 screeshot.setAttribute("class", "screenshot");
