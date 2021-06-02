@@ -87,8 +87,21 @@ const strings = {
 
                 SolvedScreens: {
                     title: ["Different solved screens", "Unterschiedlich gelöste Bildschirme"],
-                    enumTitles: [["Play again? Yes No", "Well done! Please wait for your Teacher to continue", "Excellent ! Now continue with the next task on your assignment"], 
-                                ["Nochmal spielen? Ja Nein", "Gut gemacht! Bitte warten Sie auf Ihren Lehrer, um fortzufahren", "Ausgezeichnet! Fahren Sie jetzt mit der nächsten Aufgabe Ihres Auftrags fort"]]
+                    enumTitles: [["Play again?", "Well done! Please wait for your Teacher to continue", "Excellent ! Now continue with the next task on your assignment"], 
+                                ["Noch einmal spielen?", "Gut gemacht! Bitte warten Sie auf Ihren Lehrer, um fortzufahren", "Ausgezeichnet! Fahren Sie jetzt mit der nächsten Aufgabe Ihres Auftrags fort"]],
+                    description: [
+                    "The selected board is applied when the game is fully solved"+
+                     "<ul>" +
+                    "<li><b>Play again?:</b>Asking the students to play the game again with options<i>yes or no </i>.</li>" +
+                    "<li><b>Well done! Please wait for your Teacher to continue:</b>Asking the students to wait for the teacher to continue</li>" +
+                    "<li><b>Excellent ! Now continue with the next task on your assignment:</b>Asking the students to continue their next assignment</li>"+
+                    "</ul>",
+                    "Das gewählte Brett wird angewendet, wenn das Spiel vollständig gelöst ist "+
+                     "<ul>" +
+                    "<li><b>Noch einmal spielen?:</b>Aufforderung an die Schüler, das Spiel noch einmal zu spielen, mit den Optionen<i>ja oder nein</i>.</li>" +
+                    "<li><b>Gut gemacht! Bitte warten Sie auf den Lehrer, um fortzufahren:</b>Aufforderung an die Schüler, auf den Lehrer zu warten, um fortzufahren</li>" +
+                    "<li><b>Exzellent! Fahren Sie jetzt mit der nächsten Aufgabe Ihres Auftrags fort:</b>Aufforderung an die Schüler, mit der nächsten Aufgabe fortzufahren</li>"+
+                    "</ul>"]
                 }
         },
 
@@ -97,7 +110,7 @@ const strings = {
             enablePrefilling: {
                 title: ["Enable Prefilling?", "Automatisches Füllen einschalten"],
                 description: ["Prefilling fills the board randomly with pentominoes.",
-                    "Automatisches Füllen platziert zufällig Pentominoes auf das Spielfeld."]
+                    "Automatisches Füllen platziert zufällig Pentominoes auf das Spielfeld"]
             },
             prefillingStrategy: {
                 title: ["Prefill-Constraint", "Automatisches Füllen-Einschränkung"],

@@ -917,7 +917,7 @@ class Visual {
         modalBodyID.appendChild(div1);
         let textNode2 = {
             class: "modalText",
-            text: strings.showSolved.play[lang]
+            text: strings.showSolvedBoardScreen.play[lang]
         };
         template.attachText("#modalBodyID", textNode2);
         let div2 = document.createElement("div");
