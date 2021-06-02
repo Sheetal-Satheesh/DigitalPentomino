@@ -143,8 +143,6 @@ class Visual {
         var out = '';
         var width = UIProperty.WindowWidth / this.pd.gameWidth;
         var height = UIProperty.WindowHeight / this.pd.gameHeight;
-        console.log(width);
-        console.log(height);
 
         /*The field consists of divs. Each div saves in its id field its resepective coorinates*/
 
