@@ -110,19 +110,19 @@
                     <img src="resources/images/icons/settings.png">
                 </button>
                 <button type="button" id='btnBoardSelect' class="cActionBtn" onclick="selectBoard()"> <img
-                    src="resources/images/icons/board.png">
+                        src="resources/images/icons/board.png">
                 </button>
                 <button type="button" id='prefillBoard' class="cActionBtn" onclick="prefillBoard()" disabled>
                     <img src="resources/images/icons/prefill.png">
                 </button>
                 <button type="button" id='hintButton' class="cActionBtn" onclick="callHintAI()"> <img
-                    src="resources/images/icons/help.png">
+                        src="resources/images/icons/help.png">
                 </button>
                 <button type="button" id='undo' class="cActionBtn" onclick="execUndo()">
                     <img src="resources/images/icons/undo.png">
                 </button>
                 <button type="button" id='redo' class="cActionBtn" onclick="execRedo()"><img
-                    src="resources/images/icons/redo.png">
+                        src="resources/images/icons/redo.png">
                 </button>
                 <button type="button" id='screenshot' class="cActionBtn" onclick="saveGameImage()">
                     <img src="resources/images/icons/screenshot.png">
@@ -134,7 +134,7 @@
                     <img src="resources/images/icons/replay.svg">
                 </button>
                 <button type="button" id='license' class="cActionBtn" onclick="openLicense()"> <img
-                    src="resources/images/icons/license.png">
+                        src="resources/images/icons/license.png">
                 </button>
                 <button type="button" id='reset' class="cActionBtn" onclick="resetGame()">
                     <img src="resources/images/icons/tidy_up.png"></button>
@@ -142,8 +142,9 @@
 
             <div id="labelNumberSolutionsContainer">
                 <div id="labelNumberSolutionsContainerChild">
-                    <div id="labelNumberOfSolutionsText">Number of solutions:</div><div id="labelNumberSolutions">?</div>
-                </div> 
+                    <div id="labelNumberOfSolutionsText">Number of solutions:</div>
+                    <div id="labelNumberSolutions">?</div>
+                </div>
             </div>
 
         </div>
@@ -223,6 +224,7 @@
                 this.closeModal();
             }
             else {
+                this.disableSnapshotButton();
                 this.hideManipulationButtons();
                 this.closeBoardSelector();
                 this.disablePointerEventsOnPieces();
@@ -256,6 +258,7 @@
                 this.closeModal();
             }
             else {
+                this.disableSnapshotButton();
                 this.hideManipulationButtons();
                 this.closeBoardSelector();
                 this.disablePointerEventsOnPieces();
@@ -302,11 +305,13 @@
         function closeModal() {
             document.getElementById('boardmodalTop').style.display = 'none';
             this.closeModalContainer();
+            this.enableSnapshotButton();
         }
 
         function callHintAI() {
             if (!pd.gameController.game()._board.isSolved()) {
                 pd.visual.callHintAI();
+                this.hideManipulationButtons();
             } else {
                 // TODO - handle, e.g. shake hint button
                 console.log("Game is already solved. Cannot display hint");
@@ -348,12 +353,15 @@
             var boardSelectorPopup = document.getElementById("boardmodalTop");
             if ($(boardSelectorPopup).is(':visible')) {
                 this.closeBoardSelector();
+                this.enableSnapshotButton();
+                //this.closeModal();
             }
             else {
                 boardSelectorPopup.style.display = "block";
                 this.hideManipulationButtons();
                 this.closeSettings();
                 this.disablePointerEventsOnPieces();
+                this.disableSnapshotButton();
             }
         }
 
@@ -497,10 +505,11 @@
                 this.closeSettings();
             }
             else {
+                this.disableSnapshotButton()
                 this.disablePointerEventsOnPieces();
                 this.hideManipulationButtons();
                 // this.disablePrefillButton();
-                //this.closeBoardSelector();
+                this.closeBoardSelector();
                 modal.style.display = "block";
                 modal.style.background = "rgb(220, 240, 237)";
 
@@ -594,6 +603,8 @@
 
         function closeSettings() {
             this.closeModalContainer();
+            //Do not remove as this will create issue while toggling between the popups
+            this.enableSnapshotButton();
         }
 
         function closeBoardSelector() {
@@ -671,11 +682,18 @@
 
         }
 
+        function disableSnapshotButton() {
+            $('#screenshot').prop('disabled', true);
+        }
+
+        function enableSnapshotButton() {
+            $('#screenshot').prop('disabled', false);
+        }
         function deleteGameImage(key) {
             pd.visual.deleteGameImage(key);
             showGameImages();
         }
-
+        
         function generateRandomColor() {
             /**
              * https://stackoverflow.com/questions/1152024/
@@ -692,6 +710,7 @@
                 this.closeModal();
             }
             else {
+                this.disableSnapshotButton();
                 this.disablePointerEventsOnPieces();
                 this.hideManipulationButtons();
                 modal.style.background = " rgb(220, 240, 237)";
@@ -745,92 +764,98 @@
                     imageDiv.appendChild(image);
                     imageDiv.appendChild(buttonDiv);
                     imageGrid.appendChild(imageDiv);
-
                 });
             }
         }
 
         function execReplay() {
-
             var modal = document.getElementById('modalTop');
-            modal.style.display = "block";
-            modal.style.background = "transparent";
+            if ($('.modalFormContainer').is(':visible')) {
+                this.closeModal();
+            }
+            else {
+                this.disableSnapshotButton();
+                this.hideManipulationButtons();
+                this.disablePointerEventsOnPieces();
+                modal.style.display = "block";
+                modal.style.background = "transparent";
+                document.querySelector(".modalFormContent").style.display = "block";
+                document.querySelector(".innerGrid").style.display = "none";
+                template.clearContent("#modalButtonsID");
+                template.clearContent("#modalTitleID");
+                template.clearContent("#modalBodyID");
+                template.clearContent("#innerGridForm");
 
-            document.querySelector(".modalFormContent").style.display = "block";
-            document.querySelector(".innerGrid").style.display = "none";
-            template.clearContent("#modalButtonsID");
-            template.clearContent("#modalTitleID");
-            template.clearContent("#modalBodyID");
-            template.clearContent("#innerGridForm");
+                let startGameState = pd.getGameState("start");
+                let currGameState = pd.getGameState("current");
 
-            let startGameState = pd.getGameState("start");
-            let currGameState = pd.getGameState("current");
+                if (startGameState == undefined) {
+                    let textNode = {
+                        name: "modalText",
+                        text: "Game Not Started Yet ",
+                    }
 
-            if (startGameState == undefined) {
-                let textNode = {
-                    name: "modalText",
-                    text: "Game Not Started Yet ",
+                    template.attachText("#modalTitleID", textNode);
+                    return;
                 }
 
-                template.attachText("#modalTitleID", textNode);
-                return;
-            }
+                let allGameState = pd.getAllGameStates();
 
-            let allGameState = pd.getAllGameStates();
+                let selectStartElem = document.createElement("select");
+                selectStartElem.setAttribute("class", "StateSelect");
+                selectStartElem.setAttribute("id", "startStateOptions");
+                selectStartElem.setAttribute("style", "margin: 0 .5vw;");
 
-            let selectStartElem = document.createElement("select");
-            selectStartElem.setAttribute("class", "StateSelect");
-            selectStartElem.setAttribute("id", "startStateOptions");
-            selectStartElem.setAttribute("style", "margin: 0 .5vw;");
+                let selectTargetElem = document.createElement("select");
+                selectTargetElem.setAttribute("class", "StateSelect");
+                selectTargetElem.setAttribute("id", "targetStateOptions");
+                selectTargetElem.setAttribute("style", "margin: 0 .5vw;");
 
-            let selectTargetElem = document.createElement("select");
-            selectTargetElem.setAttribute("class", "StateSelect");
-            selectTargetElem.setAttribute("id", "targetStateOptions");
-            selectTargetElem.setAttribute("style", "margin: 0 .5vw;");
+                for (let index = 0; index < allGameState.length; ++index) {
+                    let optStart = document.createElement('option');
+                    let optTarget = document.createElement('option');
+                    optStart.value = allGameState[index];
+                    optTarget.value = allGameState[index];
+                    optStart.innerHTML = allGameState[index];
+                    optTarget.innerHTML = allGameState[index];
 
-            for (let index = 0; index < allGameState.length; ++index) {
-                let optStart = document.createElement('option');
-                let optTarget = document.createElement('option');
-                optStart.value = allGameState[index];
-                optTarget.value = allGameState[index];
-                optStart.innerHTML = allGameState[index];
-                optTarget.innerHTML = allGameState[index];
+                    if (allGameState[index] == startGameState) {
+                        optStart.selected = "selected";
+                        optStart.setAttribute("class", "selected");
+                    }
+                    else if (allGameState[index] == currGameState) {
+                        optTarget.selected = "selected";
+                        optTarget.setAttribute("class", "selected");
 
-                if (allGameState[index] == startGameState) {
-                    optStart.selected = "selected";
-                    optStart.setAttribute("class", "selected");
+                    }
+
+                    selectStartElem.appendChild(optStart);
+                    selectTargetElem.appendChild(optTarget);
                 }
-                else if (allGameState[index] == currGameState) {
-                    optTarget.selected = "selected";
-                    optTarget.setAttribute("class", "selected");
+
+                document.getElementById("modalBodyID").appendChild(selectStartElem);
+                document.getElementById("modalBodyID").appendChild(selectTargetElem);
+
+                var submit = document.createElement("input");
+                submit.setAttribute("type", "button");
+                submit.setAttribute("value", "Submit");
+                submit.setAttribute("class", "submitReplay");
+                submit.setAttribute("style", "margin: 0 .5vw;background-color:rgb(149, 172, 170);");
+                submit.onclick = function () {
+                    let replayId = document.getElementById("replay");
+                    let replayImg = replayId.children[0];
+                    replayImg.setAttribute('src', 'resources/images/icons/pause.png');
+                    let sValue = document.getElementById("startStateOptions").value;
+                    let eValue = document.getElementById("targetStateOptions").value;
+                    console.log(sValue);
+                    console.log(eValue);
+                    pd.replay(sValue, eValue);
+                    modal.style.display = "none";
 
                 }
-
-                selectStartElem.appendChild(optStart);
-                selectTargetElem.appendChild(optTarget);
+                document.getElementById("modalBodyID").appendChild(submit);
+                this.enableSnapshotButton();
             }
-
-            document.getElementById("modalBodyID").appendChild(selectStartElem);
-            document.getElementById("modalBodyID").appendChild(selectTargetElem);
-
-            var submit = document.createElement("input");
-            submit.setAttribute("type", "button");
-            submit.setAttribute("value", "Submit");
-            submit.setAttribute("class", "submitReplay");
-            submit.setAttribute("style", "margin: 0 .5vw;background-color:rgb(149, 172, 170);");
-            submit.onclick = function () {
-                let replayId = document.getElementById("replay");
-                let replayImg = replayId.children[0];
-                replayImg.setAttribute('src', 'resources/images/icons/pause.png');
-                let sValue = document.getElementById("startStateOptions").value;
-                let eValue = document.getElementById("targetStateOptions").value;
-                console.log(sValue);
-                console.log(eValue);
-                pd.replay(sValue, eValue);
-                modal.style.display = "none";
-
-            }
-            document.getElementById("modalBodyID").appendChild(submit);
         }
 
         function loadBoard(selectedBoard) {
