@@ -1196,7 +1196,7 @@ class Visual {
             this.allSolutions = allSolutions;
         }
         if (this.allSolutions.length > 0) {
-            let solution = this.getRandomElementFromArray(this.allSolutions);
+            let solution = UtilitiesClass.getRandomElementFromArray(this.allSolutions);
             let ret = [];
             solution[0].every((piece, index) => ret.push([piece, solution[1][index]]));
             return ret;
@@ -1221,8 +1221,8 @@ class Visual {
         for (let i = 0; i < randomSolution.length; ++i) {
             [piecePosition, piece] = this.getRandomPiece(randomSolution, pickedPieces);
             pickedPieces[piece.name] = 1;
-            currentAnchor = [piecePosition.boardPosition[0] + this.boardX,
-            piecePosition.boardPosition[1] + this.boardY];
+            currentAnchor = [piecePosition.boardPosition[0],
+            piecePosition.boardPosition[1]];
             let matrix = piece.getMatrixRepresentation();
 
             blockedCellsTemp = {};
@@ -1292,8 +1292,8 @@ class Visual {
         for (let i = 0; i < randomSolution.length; ++i) {
             [piecePosition, piece] = this.getRandomPiece(randomSolution, pickedPieces);
             pickedPieces[piece.name] = 1;
-            currentAnchor = [piecePosition.boardPosition[0] + this.boardX,
-            piecePosition.boardPosition[1] + this.boardY];
+            currentAnchor = [piecePosition.boardPosition[0],
+            piecePosition.boardPosition[1]];
             for (let j = 0; j < positions.length; ++j) {
                 bOverlap = false;
                 candidateAnchor = [positions[j][0], positions[j][1]];
@@ -1320,7 +1320,7 @@ class Visual {
     }
 
     getRandomPiece(solution, pickedPieces) {
-        return this.getRandomElementFromArray(solution.filter(piece => !(pickedPieces[piece[0].name] == 1)));
+        return UtilitiesClass.getRandomElementFromArray(solution.filter(piece => !(pickedPieces[piece[0].name] == 1)));
     }
 
     execShadowCmd(command, seqType) {
