@@ -923,6 +923,12 @@ class Visual {
                                     class: "modalText",
                                     text: strings.showSolved.play[lang]
                                     };
+                                    img.src = "resources/images/icons/jboy-2.ico";
+                                    img.style.cursor = "none";
+                                    div1.appendChild(img);
+                                    //attach div 
+                                    modalBodyID.appendChild(div1);
+                                    template.attachText("#modalBodyID", textNode2);
                                     cancelBtn = {
                                         class: "cancelBtn",
                                         onclick: "document.getElementById('modalTop').style.display='none'",
@@ -933,9 +939,13 @@ class Visual {
                                         onclick: "document.getElementById('modalTop').style.display='none'",
                                         textContent: strings.general.yes[lang]
                                     };
+
+                                    let div4 = document.createElement("div");
+                                    
+                                    template.attachBtn("#modalBodyID", playAgnBtnAttributes);
                                     template.attachBtn("#modalBodyID", cancelBtn);
        
-                                    template.attachBtn("#modalBodyID", playAgnBtnAttributes);
+                                    
                                     let playAgainBtn = document.querySelector(".deleteBtn");
                                     playAgainBtn.addEventListener("click", () => {
                                         pd.reset();
@@ -946,7 +956,7 @@ class Visual {
                                     dontPlayAgainBtn.addEventListener("click", () => {
                                         this.enablePointerEventsOnPieces();
                                     });
-                                    img.src = "resources/images/icons/jboy-2.ico";
+                                    
                                 break;
             case "Well done! Please wait for your Teacher to continue": textNode2 = {
                                                                             class: "modalText",
@@ -962,12 +972,9 @@ class Visual {
                                                                                         img.src = "resources/images/icons/present.ico";
                                                                                     break;
         }
-         img.style.cursor = "none";
-        div1.appendChild(img);
-        //attach div 
-        modalBodyID.appendChild(div1);
+        
        
-        template.attachText("#modalBodyID", textNode2);
+       
         let div2 = document.createElement("div");
         let text = document.createElement("h4");
         text.innerHTML = "\n";
