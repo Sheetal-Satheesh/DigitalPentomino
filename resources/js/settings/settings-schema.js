@@ -57,6 +57,20 @@ class SettingsSchema {
                     }
                 }
             },
+            theming: {
+                "type": "object",
+                "title": titles.theming.title[lang],
+                "properties": {
+                    theme: {
+                        "type": "string",
+                        "title": titles.theming.theme.title[lang],
+                        "description": titles.theming.theme.description[lang],
+                        "enum": ["theme1", "theme2", "theme3", "theme4"],
+                        "enumText": titles.theming.theme.enumTitles[lang],
+                        "default": "theme1"
+                    },
+                }
+            },
             hinting: {
                 "type": "object",
                 "title": titles.hinting.title[lang],
