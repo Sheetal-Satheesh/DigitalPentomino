@@ -485,6 +485,8 @@
             modal.style.display = "block";
             modal.style.background = "transparent";
 
+            console.log("i am here");
+
             document.querySelector(".modalFormContent").style.display = "block";
             document.querySelector(".innerGrid").style.display = "none";
             template.clearContent("#modalButtonsID");
@@ -498,6 +500,18 @@
             h5.appendChild(t1);
             div1.appendChild(h5);
             modalBodyID.appendChild(div1);
+
+            //add a back button to return to settings
+            let btn = document.createElement("button");
+            btn.id = "backButton";
+            btn.innerHTML = "Back";
+            btn.innerText = "Back to settings"; 
+            btn.onclick = function () {
+                selectSettings();
+                $('#backButton').remove();
+            };
+            btn.name = "backButton";
+            modalTop.appendChild(btn);
 
             let teacherURLLabel = document.createElement("label");
             let pupilURLLabel = document.createElement("label");
