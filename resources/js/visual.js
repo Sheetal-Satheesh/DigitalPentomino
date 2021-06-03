@@ -8,7 +8,7 @@ const UIProperty = {
 }
 Object.freeze(UIProperty);
 
-const CommandTypes = { "Original": 1, "Shadow": 2 };
+const CommandTypes = { "Original": 1, "Shadow": 2, "None": 3 };
 Object.freeze(CommandTypes);
 
 const CommandSeq = { "Forward": 1, "Backward": 2 };
@@ -105,7 +105,7 @@ class Visual {
     placePentomino(pentomino, posX, posY, cmdProperty = cmdAttrDefault) {
         this.gameController.placePentomino(pentomino, posX, posY, cmdProperty);
         this.positionPiece(pentomino);
-        if(cmdProperty.cmdType != CommandTypes.Shadow){
+        if (cmdProperty.cmdType != CommandTypes.Shadow) {
             this.checkIfGameWon();
         }
     }
@@ -466,14 +466,14 @@ class Visual {
 
                 //TODO: Add handling of borders
                 if ((x > 0) && (x < gameWidth)) {
-                   if ((y > 0) && (y < (gameHeight - functionsHeight))) {
+                    if ((y > 0) && (y < (gameHeight - functionsHeight))) {
 
                         container.style.left = 'calc(' + x + 'px - ' + (width * 2.5) + 'vw)';
                         container.style.top = 'calc(' + y + 'px - ' + (width * 2.5) + 'vw)';
                         container.style.transformOrigin = '50% 50%';
                         container.style.zIndex = 100;
                         container.style.setProperty("--magnification", 1);
-                   }
+                    }
                 }
             }
         }
@@ -559,7 +559,7 @@ class Visual {
             this.gameController.rotatePentominoClkWise(piece, cmdProperty);
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
-            if(cmdProperty.cmdType != CommandTypes.Shadow){
+            if (cmdProperty.cmdType != CommandTypes.Shadow) {
                 this.checkIfGameWon();
             }
         }
@@ -576,7 +576,7 @@ class Visual {
             this.gameController.rotatePentominoAntiClkWise(piece, cmdProperty);
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationZ", newRot.toString() + "deg");
-            if(cmdProperty.cmdType != CommandTypes.Shadow){
+            if (cmdProperty.cmdType != CommandTypes.Shadow) {
                 this.checkIfGameWon();
             }
         }
@@ -594,7 +594,7 @@ class Visual {
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationX", newRot.toString() + "deg");
             pieceDiv.setAttribute("flipped", 1 - flipped);
-            if(cmdProperty.cmdType != CommandTypes.Shadow){
+            if (cmdProperty.cmdType != CommandTypes.Shadow) {
                 this.checkIfGameWon();
             }
         }
@@ -612,7 +612,7 @@ class Visual {
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationY", newRot.toString() + "deg");
             pieceDiv.setAttribute("flipped", 1 - flipped);
-            if(cmdProperty.cmdType != CommandTypes.Shadow){
+            if (cmdProperty.cmdType != CommandTypes.Shadow) {
                 this.checkIfGameWon();
             }
         }
@@ -643,7 +643,6 @@ class Visual {
             hintButton.disabled = false;
         }, 1000);
     }
-
 
     blinkCells(cells) {
         let menu = [];
@@ -684,7 +683,7 @@ class Visual {
         return [false, null];
     }
 
-   indicateHint(hint,commandNumber){
+    indicateHint(hint, commandNumber) {
         let timeoutFrame = 1000;
         //possible command names (place, remove, moveToPosition, rotateClkWise, rotateAntiClkWise, mirrorH, mirrorV)
         let hintCommand = hint.getCommands()[commandNumber];
@@ -693,177 +692,180 @@ class Visual {
         let hintinPen = hintCommand._pentomino;
         let pentominoColor = hintinPen.color;
         let clientRect = document.getElementById("piece_" + hintinPen.name).getBoundingClientRect();
-        let [posX, posY] = [clientRect.x + clientRect.width/2, clientRect.y + clientRect.height/2];
+        let [posX, posY] = [clientRect.x + clientRect.width / 2, clientRect.y + clientRect.height / 2];
         let currentPenHintName = hintinPen.name;
         //let currentPenHintNaame = this.selected.name;
-        if(!(currentPenHintName === lastHintedPentName)){
+        if (!(currentPenHintName === lastHintedPentName)) {
             let maxPartialHintingCells = SettingsSingleton.getInstance().getSettings().hinting.maxPartialHintingCells;
             randomCell = Math.floor(Math.random() * (maxPartialHintingCells)) + 1;
             lastHintedPentName = currentPenHintName;
         }
 
-
+        let cmdProperty = updateCommandAttr(CommandTypes.None, CommandSeq.Forward);
         let tempHintinPen = hintinPen;
-        if (!SettingsSingleton.getInstance().getSettings().hinting.exactHints){
+        if (!SettingsSingleton.getInstance().getSettings().hinting.exactHints) {
             //tempHintinPen = new Pentomino(hintinPen.name);
             tempHintinPen = Object.assign(Object.create(Object.getPrototypeOf(hintinPen)), hintinPen);
             //do actions on pentomino copy to prepare for place hint
-            for (let hintnr = 0; hintnr < commandNumber; hintnr++){
-                switch (hint.getCommands()[hintnr]._name){
+            for (let hintnr = 0; hintnr < commandNumber; hintnr++) {
+                switch (hint.getCommands()[hintnr]._name) {
                     case "Remove": break;
                     case "Place": break;
-                    case "RotateClkWise": tempHintinPen.rotateClkWise(); break;
-                    case "RotateAntiClkWise": tempHintinPen.rotateAntiClkWise(); break;
-                    case "MirrorH": tempHintinPen.mirrorH(); break;
-                    case "MirrorV": tempHintinPen.mirrorV(); break;
+                    case "RotateClkWise": tempHintinPen.rotateClkWise(cmdProperty); break;
+                    case "RotateAntiClkWise": tempHintinPen.rotateAntiClkWise(cmdProperty); break;
+                    case "MirrorH": tempHintinPen.mirrorH(cmdProperty); break;
+                    case "MirrorV": tempHintinPen.mirrorV(cmdProperty); break;
                     default: throw new Error("Error on commands on pentomino copy.");
                 }
             }
         }
 
-       //indication of unoccupied cells
+        //indication of unoccupied cells
         if (!(hintSkill === null) && (SettingsSingleton.getInstance().getSettings().hinting.skillTeaching)) {
             //blink unoccupied cells
             this.blinkCells(hintSkill);
         }
         else {
 
-            this.indicatePentomino(hintinPen,timeoutFrame);
+            this.indicatePentomino(hintinPen, timeoutFrame);
 
             switch (hintName) {
-            case "Place":
-                // handle place hint
-                let hintRow = hintCommand._nextPosition[0];
-                let hintColumn = hintCommand._nextPosition[1];
-                let fieldvalue;
-                let prevBackground = [];
+                case "Place":
+                    // handle place hint
+                    let hintRow = hintCommand._nextPosition[0];
+                    let hintColumn = hintCommand._nextPosition[1];
+                    let fieldvalue;
+                    let prevBackground = [];
 
-                //show destination position (and fade away)
-                let piecePos = this.getOccupiedPositions(tempHintinPen,hintCommand);
-                let  randomCellPos =  this.calculateNeighbour(piecePos , hintCommand);
-                //usage of random cell variable to indicate hinting
+                    //show destination position (and fade away)
+                    let piecePos = this.getOccupiedPositions(tempHintinPen, hintCommand);
+                    let randomCellPos = this.calculateNeighbour(piecePos, hintCommand);
+                    //usage of random cell variable to indicate hinting
 
-                switch (SettingsSingleton.getInstance().getSettings().hinting.hintingStrategy) {
-                    case "partial":
-                        switch (SettingsSingleton.getInstance().getSettings().hinting.partialHintingStragety) {
-                            case "random":
-                                //piecePos = filtered;
-                                for (let i = 0; i < randomCell; i++) {
-                                    fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
-                                    prevBackground[i] = fieldvalue.style.background;
-                                    fieldvalue.style.background = pentominoColor;
-                                    this.hide(piecePos, prevBackground, timeoutFrame);
-                                }
-                                break;
-                            case "mostOccupiedCells":
-                                let mostCells = this.mostNeigh(hintinPen , piecePos, hintCommand);
-                                let cellsToIndicate = this.cellsToIndicate(piecePos, mostCells, hintCommand);
-                                for (let i = 0; i < cellsToIndicate.length; i++) {
-                                    fieldvalue = document.getElementById("field_" + cellsToIndicate[i][0] + "," + cellsToIndicate[i][1]);
-                                    prevBackground[i] = fieldvalue.style.background;
-                                    fieldvalue.style.background = pentominoColor;
-                                    this.hideMostOccupiedNeighbors(cellsToIndicate, prevBackground, timeoutFrame);
-                                 }
-                                break;
-                            default:
-                                throw new Error("Unknown partial hinting strategy");
-                        }
-                        break;
-                    case "full":
-                        for (let i = 0; i < 5; i++) {
-                            fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
-                            prevBackground[i] = fieldvalue.style.background;
-                            fieldvalue.style.background = pentominoColor;
-                            this.hide(piecePos, prevBackground, timeoutFrame);
-                        }
-                        break;
-                    case "area":
-                        let areaPos = this.indicateAreaCells(hintinPen, hintCommand)[0];
-                        for (let i = 0; i < areaPos.length; i++) {
+                    switch (SettingsSingleton.getInstance().getSettings().hinting.hintingStrategy) {
+                        case "partial":
+                            switch (SettingsSingleton.getInstance().getSettings().hinting.partialHintingStragety) {
+                                case "random":
+                                    //piecePos = filtered;
+                                    for (let i = 0; i < randomCell; i++) {
+                                        fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
+                                        prevBackground[i] = fieldvalue.style.background;
+                                        fieldvalue.style.background = pentominoColor;
+                                        this.hide(piecePos, prevBackground, timeoutFrame);
+                                    }
+                                    break;
+                                case "mostOccupiedCells":
+                                    let mostCells = this.mostNeigh(hintinPen, piecePos, hintCommand);
+                                    let cellsToIndicate = this.cellsToIndicate(piecePos, mostCells, hintCommand);
+                                    for (let i = 0; i < cellsToIndicate.length; i++) {
+                                        fieldvalue = document.getElementById("field_" + cellsToIndicate[i][0] + "," + cellsToIndicate[i][1]);
+                                        prevBackground[i] = fieldvalue.style.background;
+                                        fieldvalue.style.background = pentominoColor;
+                                        this.hideMostOccupiedNeighbors(cellsToIndicate, prevBackground, timeoutFrame);
+                                    }
+                                    break;
+                                default:
+                                    throw new Error("Unknown partial hinting strategy");
+                            }
+                            break;
+                        case "full":
+                            for (let i = 0; i < 5; i++) {
+                                fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
+                                prevBackground[i] = fieldvalue.style.background;
+                                fieldvalue.style.background = pentominoColor;
+                                this.hide(piecePos, prevBackground, timeoutFrame);
+                            }
+                            break;
+                        case "area":
+                            let areaPos = this.indicateAreaCells(hintinPen, hintCommand)[0];
+                            for (let i = 0; i < areaPos.length; i++) {
                                 let areaPos = this.indicateAreaCells(hintinPen, hintCommand)[0];
                                 fieldvalue = document.getElementById("field_" + areaPos[i][0] + "," + areaPos[i][1]);
                                 prevBackground[i] = fieldvalue.style.background;
                                 fieldvalue.style.background = pentominoColor;
                             }
-                        
-                        this.hideArea(areaPos, prevBackground, timeoutFrame);
-                        break;
-                    default:
-                        console.error("Hinting strategy unknown!");
-                }
-                break;
 
-            case "Remove":
-                // handle remove hint
-                this.select(hintinPen,posX,posY);
-                var pen = document.getElementById("piece_" + hintinPen.name);
-                //console.log("pent",hintinPen,this.selected);
-                if (!this.selected.inTray){
-                    pen.style.opacity = '0.2';
-                    setTimeout(function(){
-                    pen.style.opacity = '1';
-                    },timeoutFrame);
-                }
-                break;
+                            this.hideArea(areaPos, prevBackground, timeoutFrame);
+                            break;
+                        default:
+                            console.error("Hinting strategy unknown!");
+                    }
+                    break;
 
-            case "RotateClkWise":
-                // handle rotateClkWise hint
-                this.select(hintinPen,posX,posY);
-                if (!this.selected.inTray){
-                    rotateClkWise();
-                    setTimeout(function(){
-                    rotateAntiClkWise();
-                    },timeoutFrame);
-                }
-                break;
+                case "Remove":
+                    // handle remove hint
+                    this.select(hintinPen, posX, posY);
+                    var pen = document.getElementById("piece_" + hintinPen.name);
+                    //console.log("pent",hintinPen,this.selected);
+                    if (!this.selected.inTray) {
+                        pen.style.opacity = '0.2';
+                        setTimeout(function () {
+                            pen.style.opacity = '1';
+                        }, timeoutFrame);
+                    }
+                    break;
 
-            case "RotateAntiClkWise":
-                // handle rotateAntiClkWise hint
-                this.select(hintinPen,posX,posY);
-                if (!this.selected.inTray){
-                    rotateAntiClkWise();
-                    setTimeout(function(){
-                    rotateClkWise();
-                    },timeoutFrame);
-                }
-                break;
+                case "RotateClkWise":
+                    // handle rotateClkWise hint
+                    this.select(hintinPen, posX, posY);
+                    if (!this.selected.inTray) {
+                        this.rotateClkWise(cmdProperty);
+                        var that = this;
+                        setTimeout(function (that) {
+                            that.rotateAntiClkWise(cmdProperty);
+                        }, timeoutFrame, that);
+                    }
+                    break;
 
-            case "MirrorH":
-                // handle mirrorH hint
-                //select piece in the UI to flip
-                this.select(hintinPen,posX,posY);
-                if (!this.selected.inTray){
-                    flipH();
-                    setTimeout(function(){
-                    flipH();
-                    },timeoutFrame);
-                }
-                break;
+                case "RotateAntiClkWise":
+                    // handle rotateAntiClkWise hint
+                    this.select(hintinPen, posX, posY);
+                    if (!this.selected.inTray) {
+                        this.rotateAntiClkWise(cmdProperty);
+                        var that = this;
+                        setTimeout(function (that) {
+                            that.rotateClkWise(cmdProperty);
+                        }, timeoutFrame, that);
+                    }
+                    break;
 
-            case "MirrorV":
-                // handle mirrorV hint
-                this.select(hintinPen,posX,posY);
-                if (!this.selected.inTray){
-                    flipV();
-                    setTimeout(function(){
-                    flipV();
-                    },timeoutFrame);
-                }
-                break;
+                case "MirrorH":
+                    // handle mirrorH hint
+                    //select piece in the UI to flip
+                    this.select(hintinPen, posX, posY);
+                    if (!this.selected.inTray) {
+                        this.flipH(cmdProperty);
+                        var that = this;
+                        setTimeout(function (that) {
+                            that.flipH(cmdProperty);
+                        }, timeoutFrame, that);
+                    }
+                    break;
 
-            default:
-                console.error("Unknown piece action detected!");
+                case "MirrorV":
+                    // handle mirrorV hint
+                    this.select(hintinPen, posX, posY);
+                    if (!this.selected.inTray) {
+                        this.flipV(cmdProperty);
+                        var that = this;
+                        setTimeout(function (that) {
+                            that.flipV(cmdProperty);
+                        }, timeoutFrame, that);
+                    }
+                    break;
+
+                default:
+                    console.error("Unknown piece action detected!");
             }
         }
     }
-
 
     indicatePentomino(pentomino, timeframe) {
         Array.prototype.forEach.call(document.getElementById("piece_" + pentomino.name).getElementsByClassName("bmPoint"), function (element) {
             element.style["box-shadow"] = "0 0 20px " + pentomino.color;
             if (pentomino.inTray) {
                 element.classList.add('horizTranslate');
-                
+
                 //obtain and increase current scale of piece
                 let htmlPiece = document.getElementById("piece_" + pentomino.name);
                 let transformValue = $('#piece_' + pentomino.name).css('transform');
@@ -872,8 +874,8 @@ class Visual {
                 values = values.split(',');
                 let a = values[0];
                 let b = values[1];
-                let scale = Math.sqrt(a*a + b*b);
-                document.getElementById("piece_" + pentomino.name).style.transform = "scale(" + scale*2 + ")";
+                let scale = Math.sqrt(a * a + b * b);
+                document.getElementById("piece_" + pentomino.name).style.transform = "scale(" + scale * 2 + ")";
             }
 
             setTimeout(function () {
@@ -954,21 +956,21 @@ class Visual {
         return Math.sqrt((a[0] - b[0]) * (a[0] - b[0]) + (a[1] - b[1]) * (a[1] - b[1]));
     }
 
-    cellsToIndicate(piecePos, mostCells, hintCommand){
+    cellsToIndicate(piecePos, mostCells, hintCommand) {
         let hintinPen = hintCommand._pentomino;
         let currentPenHintName = hintinPen.name;
-        if(!(currentPenHintName === lastHintedPentName)){
+        if (!(currentPenHintName === lastHintedPentName)) {
             let maxPartCells = SettingsSingleton.getInstance().getSettings().hinting.maxPartialHintingCells;
             randomCell = (Math.floor(Math.random() * (maxPartCells)) + 1);
             lastHintedPentName = currentPenHintName;
         }
         let X = mostCells;
-        let result = piecePos.sort((a,b) => (this.dist(a, X) > this.dist(b, X)) ? 1 : ((this.dist(b, X) > this.dist(a, X)) ? -1 : 0));
+        let result = piecePos.sort((a, b) => (this.dist(a, X) > this.dist(b, X)) ? 1 : ((this.dist(b, X) > this.dist(a, X)) ? -1 : 0));
         let filtered = result.splice(randomCell, result.length);
         return result;
     }
 
-    mostNeigh(hintinPen ,piecePos , hintCommand){
+    mostNeigh(hintinPen, piecePos, hintCommand) {
         let game = this.gameController.game();
         let board = game._board;
         hintinPen = hintCommand._pentomino;
@@ -977,83 +979,74 @@ class Visual {
         let bestCell;
         let cellIsOccupied;
         let ab;
-        for(let i=0; i<piecePos.length; i++){
+        for (let i = 0; i < piecePos.length; i++) {
             let counter = 0;
-            ab = board._getNeighborPositions(piecePos[i][0], piecePos[i][1]);           
-            for(let j = 0; j<ab.length; j++){
-                if(board.positionIsValid(ab[j][0], ab[j][1])){
+            ab = board._getNeighborPositions(piecePos[i][0], piecePos[i][1]);
+            for (let j = 0; j < ab.length; j++) {
+                if (board.positionIsValid(ab[j][0], ab[j][1])) {
                     cellIsOccupied = board.isOccupied(ab[j][0], ab[j][1]);
-                    if(!(cellIsOccupied === null) && !(cellIsOccupied === hintinPen)){
+                    if (!(cellIsOccupied === null) && !(cellIsOccupied === hintinPen)) {
                         counter += 1;
                     }
                 }
                 else {
                     counter += 1;
                 }
-                if(counter > maxNumOccupiedCells){
+                if (counter > maxNumOccupiedCells) {
                     maxNumOccupiedCells = counter;
-                    if(board.positionIsValid(ab[j][0], ab[j][1])){
-                        if(cellIsOccupied){
+                    if (board.positionIsValid(ab[j][0], ab[j][1])) {
+                        if (cellIsOccupied) {
                             bestCell = piecePos[i];
                         }
                     }
-                    else{
+                    else {
                         bestCell = piecePos[i];
-                    } 
+                    }
                 }
             }
         }
         return bestCell;
     }
 
-
-
-    calculateNeighbour(piecePos , hintCommand){
+    calculateNeighbour(piecePos, hintCommand) {
         let game = this.gameController.game();
         let board = game._board;
         let neighb;
         let randomCellPos = [];
         let reduced = []
-        for(let i=0; i<piecePos.length; i++){
+        for (let i = 0; i < piecePos.length; i++) {
             neighb = this.gameController.game()._board._getNeighborPositions(piecePos[i][0], piecePos[i][1]);
-            for(let j=0; j<neighb.length; j++){
-                if(board.positionIsValid(neighb[j][0], neighb[j][1])){
-                    if(board.isOccupied(neighb[j][0], neighb[j][1])){
+            for (let j = 0; j < neighb.length; j++) {
+                if (board.positionIsValid(neighb[j][0], neighb[j][1])) {
+                    if (board.isOccupied(neighb[j][0], neighb[j][1])) {
                         randomCellPos.push(piecePos[i]);
                     }
                 }
-                else{
+                else {
                     randomCellPos.push(piecePos[i]);
                 }
             }
         }
         //remove duplicate values
-        reduced = [...randomCellPos.reduce((p,c) => p.set(c,true),new Map()).keys()];
+        reduced = [...randomCellPos.reduce((p, c) => p.set(c, true), new Map()).keys()];
         let filtered = reduced.splice(randomCell, reduced.length);
         return reduced;
     }
 
-
-   
-
     //returns unique elements of an array : reference : https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-array
-        unique(arr) {
-        return arr.sort().filter(function(ele, posi, ary) {
+    unique(arr) {
+        return arr.sort().filter(function (ele, posi, ary) {
             return !posi || ele != ary[posi - 1];
         });
     }
 
-
-  
-
-
-   indicateAreaCells(piece, hintCommand) {
+    indicateAreaCells(piece, hintCommand) {
         let hintRow = hintCommand._nextPosition[0];
         let hintColumn = hintCommand._nextPosition[1];
-        let startR; 
+        let startR;
         let startCol;
         let areaPosArray = [];
-        startR = hintRow - 2 ;
+        startR = hintRow - 2;
         startCol = hintColumn - 2;
         let k = 0;
         for (let j = 0; j < 5; j++) {
@@ -1062,7 +1055,7 @@ class Visual {
                 areaPos[0] = j + startR;
                 areaPos[1] = l + startCol;
                 let validPosition = this.gameController.game()._board.positionIsValid(areaPos[0], areaPos[1]);
-                if(validPosition){
+                if (validPosition) {
                     areaPosArray.push(areaPos);
                 }
                 k++;
@@ -1070,7 +1063,7 @@ class Visual {
         }
         return [areaPosArray, null];
     }
-    
+
     hideArea(areaPos, prevBackground, timeoutFrame) {
 
         setTimeout(function () {
@@ -1093,14 +1086,12 @@ class Visual {
         }, timeoutFrame);
     }
 
+    hideMostOccupiedNeighbors(cellsToIndicate, prevBackground, timeoutFrame) {
 
-
-    hideMostOccupiedNeighbors(cellsToIndicate, prevBackground, timeoutFrame){
-
-        setTimeout(function(){
-            for (let j=0;j<cellsToIndicate.length;j++){
+        setTimeout(function () {
+            for (let j = 0; j < cellsToIndicate.length; j++) {
                 let fvalue = document.getElementById("field_" + cellsToIndicate[j][0] + "," + cellsToIndicate[j][1]);
-                    //TODO: replace with proper fadeOut animation
+                //TODO: replace with proper fadeOut animation
                 fvalue.style.background = prevBackground[j];
             }
         }, timeoutFrame);
@@ -1447,7 +1438,7 @@ class Visual {
     }
 
     replay(startKey, targetKey) {
-        
+
         if (startKey.length == 0) {
             startKey = this.gameController.getStartCmdKey();
             if (startKey == undefined) {
