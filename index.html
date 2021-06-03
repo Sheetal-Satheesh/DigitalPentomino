@@ -179,6 +179,7 @@
 
             <div id="modalTop" class="modal">
                 <span onclick="closeModal()" class="close" title="Close Modal">x</span>
+                <button id="backButton" class="back" style="display:none">&#8249;</button>
                 <div class="modalContainer" id="modalContainerID">
                     <div class="outerGrid">
                         <div class="innerGrid" id="innerGrid"></div>
@@ -485,8 +486,6 @@
             modal.style.display = "block";
             modal.style.background = "transparent";
 
-            console.log("i am here");
-
             document.querySelector(".modalFormContent").style.display = "block";
             document.querySelector(".innerGrid").style.display = "none";
             template.clearContent("#modalButtonsID");
@@ -501,17 +500,13 @@
             div1.appendChild(h5);
             modalBodyID.appendChild(div1);
 
-            //add a back button to return to settings
-            let btn = document.createElement("button");
-            btn.id = "backButton";
-            btn.innerHTML = "Back";
-            btn.innerText = "Back to settings"; 
+            //show back button
+            let btn = document.getElementById("backButton"); 
+            btn.style.display = "block";
             btn.onclick = function () {
                 selectSettings();
-                $('#backButton').remove();
+                btn.style.display = "none";
             };
-            btn.name = "backButton";
-            modalTop.appendChild(btn);
 
             let teacherURLLabel = document.createElement("label");
             let pupilURLLabel = document.createElement("label");
@@ -632,6 +627,7 @@
 
         function closeModalContainer() {
             document.getElementById('modalTop').style.display = "none";
+            document.getElementById('backButton').style.display = "none";
             this.enablePointerEventsOnPiece();
         }
 
