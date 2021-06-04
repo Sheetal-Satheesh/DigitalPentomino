@@ -56,7 +56,7 @@ class SettingsSchema {
                         "enumText": titles.general.language.enumTitles[lang],
                         "imgPaths": ["resources/images/icons/flag_of_the_united_kingdom_200px.png",
                             "resources/images/icons/flag_of_germany_200px.png"],
-                        "default": "de"
+                        "default": "en"
                     },
                     enableAudio: {
                         "type": "boolean",
