@@ -919,72 +919,69 @@ class Visual {
        
         let playAgnBtnAttributes;
         switch(textNode3){
-            case "Play again?": textNode2 = {
-                                    class: "modalText",
-                                    text: strings.showSolved.play[lang]
-                                    };
-                                    img.src = "resources/images/icons/jboy-2.ico";
-                                    img.style.cursor = "none";
-                                    div1.appendChild(img);
-                                     modalBodyID.appendChild(div1);
-                                      template.attachText("#modalBodyID", textNode2);
-                                    cancelBtn = {
-                                        class: "cancelBtn",
-                                        onclick: "document.getElementById('modalTop').style.display='none'",
-                                        textContent: strings.general.no[lang]
-                                    };
-                                    playAgnBtnAttributes = {
-                                        class: "deleteBtn",
-                                        onclick: "document.getElementById('modalTop').style.display='none'",
-                                        textContent: strings.general.yes[lang]
-                                    };
-                                    let div2 = document.createElement("div");
-                                    let text = document.createElement("h4");
-                                    text.innerHTML = "\n";
-                                    div2.appendChild(text);
-                                    //attach div 
-                                    modalBodyID.appendChild(div2);
-                                   
-                                    template.attachBtn("#modalBodyID", playAgnBtnAttributes);
-                                     template.attachBtn("#modalBodyID", cancelBtn);
-                                    let playAgainBtn = document.querySelector(".deleteBtn");
-                                    playAgainBtn.addEventListener("click", () => {
-                                        pd.reset();
-                                        this.enablePointerEventsOnPieces();
-                                    });
+            case "Play again?":
+                textNode2 = {
+                    class: "modalText",
+                    text: strings.showSolved.play[lang]
+                    };
+                    img.src = "resources/images/icons/jboy-2.ico";
+                    img.style.cursor = "none";
+                    div1.appendChild(img);
+                     modalBodyID.appendChild(div1);
+                      template.attachText("#modalBodyID", textNode2);
+                    cancelBtn = {
+                        class: "cancelBtn",
+                        onclick: "document.getElementById('modalTop').style.display='none'",
+                        textContent: strings.general.no[lang]
+                    };
+                    playAgnBtnAttributes = {
+                        class: "deleteBtn",
+                        onclick: "document.getElementById('modalTop').style.display='none'",
+                        textContent: strings.general.yes[lang]
+                    };
+                    let div2 = document.createElement("div");
+                    let text = document.createElement("h4");
+                    text.innerHTML = "\n";
+                    div2.appendChild(text);
+                    //attach div 
+                    modalBodyID.appendChild(div2);
+                   
+                    template.attachBtn("#modalBodyID", playAgnBtnAttributes);
+                     template.attachBtn("#modalBodyID", cancelBtn);
+                    let playAgainBtn = document.querySelector(".deleteBtn");
+                    playAgainBtn.addEventListener("click", () => {
+                        pd.reset();
+                        this.enablePointerEventsOnPieces();
+                    });
 
-                                    let dontPlayAgainBtn = document.querySelector(".cancelBtn");
-                                    dontPlayAgainBtn.addEventListener("click", () => {
-                                        this.enablePointerEventsOnPieces();
-                                    });
-                                   
-                                break;
-            case "Well done! Please wait for your Teacher to continue": textNode2 = {
-                                                                            class: "modalText",
-                                                                            text: strings.showSolved.WellDone[lang]
-                                                                            };
-                                                                            img.src = "resources/images/icons/wizard.ico";
-                                                                            div1.appendChild(img);
-                                                                            modalBodyID.appendChild(div1);
-                                                                            template.attachText("#modalBodyID", textNode2);
-                                                                        break;
+                    let dontPlayAgainBtn = document.querySelector(".cancelBtn");
+                    dontPlayAgainBtn.addEventListener("click", () => {
+                        this.enablePointerEventsOnPieces();
+                    });
+                   
+                break;
+            case "Well done! Please wait for your Teacher to continue": 
+                textNode2 = {
+                    class: "modalText",
+                    text: strings.showSolved.WellDone[lang]
+                    };
+                    img.src = "resources/images/icons/wizard.ico";
+                    div1.appendChild(img);
+                    modalBodyID.appendChild(div1);
+                    template.attachText("#modalBodyID", textNode2);
+                break;
 
-            case "Excellent ! Now continue with the next task on your assignment":  textNode2 = {
-                                                                                        class: "modalText",
-                                                                                        text: strings.showSolved.Excellent[lang]
-                                                                                        };
-                                                                                        img.src = "resources/images/icons/present.ico";
-                                                                                        div1.appendChild(img);
-                                                                                        modalBodyID.appendChild(div1);
-                                                                                        template.attachText("#modalBodyID", textNode2);
-                                                                                    break;
-        }
-         
-        //attach div 
-       
-       
-
-       
+            case "Excellent ! Now continue with the next task on your assignment":  
+                textNode2 = {
+                    class: "modalText",
+                    text: strings.showSolved.Excellent[lang]
+                    };
+                    img.src = "resources/images/icons/present.ico";
+                    div1.appendChild(img);
+                    modalBodyID.appendChild(div1);
+                    template.attachText("#modalBodyID", textNode2);
+                break;
+        }       
     }
 
     dist(a, b) {

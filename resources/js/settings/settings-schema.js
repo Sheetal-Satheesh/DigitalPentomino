@@ -57,14 +57,6 @@ class SettingsSchema {
                     }
                 }
             },
-
-
-            useInClass: {
-
-
-
-            },
-
             hinting: {
                 "type": "object",
                 "title": titles.hinting.title[lang],
