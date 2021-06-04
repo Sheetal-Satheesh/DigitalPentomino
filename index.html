@@ -56,6 +56,7 @@
 
 <body onload="touchStartup(); initialize()">
     <audio id="audioTukaScream" src="resources/audio/tuka-scream.mp3"></audio>
+    <audio id="bgMusic" src="resources/audio/chee-zee-beach-by-kevin-macleod-from-filmmusic-io.mp3" loop></audio>
 
     <canvas id="canvas" width="auto" height="auto"></canvas>
     <div id="seedingCover"></div>
@@ -250,10 +251,18 @@
                 var t1 = document.createTextNode(strings.license[lang]);
                 h5.appendChild(t1);
                 let h6 = document.createElement("h6");
-                var t2 = document.createTextNode("icon1 : https://www.deviantart.com/edicionesnaza/art/Boy-and-Girl-Icon-gif-By-alfreditha-394021423");
+                let t2 = document.createTextNode("icon1 : https://www.deviantart.com/edicionesnaza/art/Boy-and-Girl-Icon-gif-By-alfreditha-394021423");
                 h6.appendChild(t2);
+
+                let hBgMusic = document.createElement("h6");
+                let bgMusicLicense = document.createTextNode("Background Music 'Chee Zee Beach' by Kevin MacLeod\n" +
+                    "Link: https://incompetech.filmmusic.io/song/3490-chee-zee-beach\n" +
+                    "License: https://filmmusic.io/standard-license");
+                hBgMusic.appendChild(bgMusicLicense);
+
                 div1.appendChild(h5);
                 div1.appendChild(h6);
+                div1.appendChild(hBgMusic);
                 modalBodyID.appendChild(div1);
             }
         }
@@ -419,6 +428,19 @@
                 } else if (heading === "prefilling" && key === "enablePrefilling") {
                     let visible = settings[heading][key];
                     document.getElementById("prefillBoard").style.visibility = visible ? "visible" : "hidden";
+                } else if (heading === "general" && key === "enableBgMusic") {
+                    let playBgMusic = settings[heading][key];
+                    let bgMusicAudio = document.getElementById("bgMusic");
+                    if (playBgMusic) {
+                        if (bgMusicAudio.paused || bgMusicAudio.duration === 0) {
+                            bgMusicAudio.play();
+                        }
+                    } else {
+                        if (!bgMusicAudio.paused) {
+                            bgMusicAudio.pause();
+                            bgMusicAudio.currentTime = 0;
+                        }
+                    }
                 }
             });
         }

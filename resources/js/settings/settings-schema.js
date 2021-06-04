@@ -62,6 +62,11 @@ class SettingsSchema {
                         "type": "boolean",
                         "title": titles.general.enableAudio.title[lang],
                         "default": false
+                    },
+                    enableBgMusic: {
+                        "type": "boolean",
+                        "title": titles.general.enableBgMusic.title[lang],
+                        "default": false
                     }
                 }
             },

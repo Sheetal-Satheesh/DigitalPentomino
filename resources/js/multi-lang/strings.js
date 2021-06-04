@@ -29,6 +29,9 @@ const strings = {
             },
             enableAudio: {
                 title: ["Enable Audio", "Audio einschalten"]
+            },
+            enableBgMusic: {
+                title: ["Enable Background Music", "Hintergrundmusik einschalten"]
             }
         },
         hinting: {
