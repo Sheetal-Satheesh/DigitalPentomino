@@ -13,16 +13,16 @@ class SettingsForm {
         if (settings.teachersMode) {
             let useInClassButton = SettingsForm.createButton("Share");
             useInClassButton.addEventListener("click", function () {
-                    let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
-                    let settings = SettingsSingleton.getInstance().getSettings();
-                    onExport(SettingsForm.collectDataFromForm(formElement, schema, settings));
+                let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+                let settings = SettingsSingleton.getInstance().getSettings();
+                onExport(SettingsForm.collectDataFromForm(formElement, schema, settings));
             });
             formElement.appendChild(useInClassButton);
         }
 
         formElement.appendChild(SettingsForm.createSubmitButton());
 
-        $(formElement).submit(function(event) {
+        $(formElement).submit(function (event) {
             let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
             let settings = SettingsSingleton.getInstance().getSettings();
             let settingsClone = SettingsForm.collectDataFromForm(formElement, schema, settings);
@@ -149,7 +149,7 @@ class SettingsForm {
             "class": "collapsible"
         });
 
-        buttonElement.addEventListener("click", function(event) {
+        buttonElement.addEventListener("click", function (event) {
             this.classList.toggle("active");
             let content = this.nextElementSibling;
             if (content.style.display === "block") {
@@ -177,7 +177,7 @@ class SettingsForm {
 
                 let settingsEntry = subSettings[key];
 
-                let checkBoxElement = SettingsForm.createInputElement("checkbox",  "teachers." + elementName);
+                let checkBoxElement = SettingsForm.createInputElement("checkbox", "teachers." + elementName);
                 useInClassElement.appendChild(SettingsForm.createLabel(settingsEntry.title, {for: checkBoxElement.id}));
                 useInClassElement.appendChild(checkBoxElement);
                 useInClassElement.appendChild(document.createElement("br"));
@@ -263,7 +263,7 @@ class SettingsForm {
 
         let i = 0;
         imgPaths.forEach(imgPath => {
-            let buttonElement = SettingsForm.createButton(undefined,{
+            let buttonElement = SettingsForm.createButton(undefined, {
                 style: "background:url(" + imgPath + ");background-size: 100%;",
             });
 
@@ -307,7 +307,7 @@ class SettingsForm {
     }
 
     static createSubmitButton() {
-        return SettingsForm.createButton("Submit",{
+        return SettingsForm.createButton("Submit", {
             type: "submit"
         });
     }
@@ -392,7 +392,8 @@ class SettingsForm {
                     case "boolean":
                         SettingsForm.editBooleanSchemaEntry(heading, subheading, settings[heading][subheading], formElement);
                         break;
-                    case "number": case "integer":
+                    case "number":
+                    case "integer":
                         SettingsForm.editInputSchemaEntry(heading, subheading, settings[heading][subheading], formElement);
                         break;
                     case "string":
