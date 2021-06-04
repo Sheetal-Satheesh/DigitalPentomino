@@ -24,6 +24,11 @@ class CommandManager {
         let cmdSeq = cmdProperty.cmdSeq;
         let isSuccess = true; // Get return value of success or error from
         let currNode = undefined;
+
+        if (cmdType == CommandTypes.None) {
+            return;
+        }
+
         if (cmdType == CommandTypes.Original) {
             currNode = this._cmdTree.Insert(command);
         }

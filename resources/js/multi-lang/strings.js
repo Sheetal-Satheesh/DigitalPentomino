@@ -106,6 +106,14 @@ const strings = {
             },
             distanceValue: ["Distance value", "Distanz-Wert"]
         },
+        theming: {
+            title: ["Application theme", "Applikationsdesign"],
+            theme: {
+                title: ["Choose a theme", "Wähle ein Design"],
+                enumTitles: [["Default", "DayTuca", "NightTuca", "HighContrast"], ["Standard", "TucaHell", "TucaDunkel", "Kontrast"]],
+                description: ["General theme of the application.", "Grundlegendes Design der Applikation"]
+            }
+        },
         errors: {
             lowerThanMin: ["This shouldn't be smaller than", "Dieser Eintrag darf nicht kleiner sein als"],
             higherThanMax: ["This shouldn't be greater than", "Dieser Eintrag darf nicht größer sein als"],
