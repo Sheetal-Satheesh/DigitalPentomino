@@ -436,6 +436,7 @@ table
   position: absolute;
   bottom: 0;
   right: 0;
+  z-index: 12;
   transition: transform .2s; 
 }
 
