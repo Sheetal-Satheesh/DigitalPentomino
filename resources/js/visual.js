@@ -889,9 +889,12 @@ class Visual {
 
     showGameSolved() {
         let enabledSolvedScreen = SettingsSingleton.getInstance().getSettings().showSolvedBoardScreen.enableSolvedScreen;
-        if(enabledSolvedScreen){
-            this.disablePointerEventsOnPieces();
-        var modal = document.getElementById('modalTop');
+        if(!enabledSolvedScreen) {
+            return;
+        }
+
+        this.disablePointerEventsOnPieces();
+        let modal = document.getElementById('modalTop');
         modal.style.display = "block";
         modal.style.background = "transparent";
         let modalFormContent = document.querySelector(".modalFormContent");
@@ -914,13 +917,13 @@ class Visual {
         let div1 = document.createElement("div");
         let img = document.createElement("img");
        
-       
         let textNode3 = SettingsSingleton.getInstance().getSettings().showSolvedBoardScreen.SolvedScreens;
         let textNode2;
         let cancelBtn ;
         let playAgnBtnAttributes;
         template.attachText("#modalBodyID", textNode1);
-            switch(textNode3){
+
+        switch(textNode3) {
             case "Play again?":
                 textNode2 = {
                 class: "modalText",
@@ -945,9 +948,9 @@ class Visual {
                 let text = document.createElement("h4");
                 text.innerHTML = "\n";
                 div2.appendChild(text);
-                //attach div 
+                //attach div
                 modalBodyID.appendChild(div2);
-               
+
                 template.attachBtn("#modalBodyID", playAgnBtnAttributes);
                  template.attachBtn("#modalBodyID", cancelBtn);
                 let playAgainBtn = document.querySelector(".deleteBtn");
@@ -960,9 +963,9 @@ class Visual {
                 dontPlayAgainBtn.addEventListener("click", () => {
                     this.enablePointerEventsOnPieces();
                 });
-                   
+
                 break;
-            case "Well done! Please wait for your Teacher to continue": 
+            case "Well done! Please wait for your Teacher to continue":
                 textNode2 = {
                 class: "modalText",
                 text: strings.showSolved.WellDone[lang]
@@ -973,7 +976,7 @@ class Visual {
                 template.attachText("#modalBodyID", textNode2);
                 break;
 
-            case "Excellent ! Now continue with the next task on your assignment":  
+            case "Excellent ! Now continue with the next task on your assignment":
                 textNode2 = {
                 class: "modalText",
                 text: strings.showSolved.Excellent[lang]
@@ -983,8 +986,7 @@ class Visual {
                 modalBodyID.appendChild(div1);
                 template.attachText("#modalBodyID", textNode2);
                 break;
-            } 
-        }      
+        }
     }
 
     dist(a, b) {
