@@ -1,4 +1,4 @@
-if(typeof require != 'undefined') {
+if (typeof require != 'undefined') {
     Pentomino = require('./pentomino.js');
     Board = require('./board.js');
     Game = require('./game.js');
@@ -6,14 +6,23 @@ if(typeof require != 'undefined') {
 }
 
 class HintAI {
-
-    constructor(game) {
-        this._game = game;
+    constructor(game, loadSolutions = false) {
+        if (loadSolutions == true) {
+            this._solutions = Solutions.getGamesFromSolutionsConfig(game.getName());
+        }
     }
 
-    getHint() {
-        let game = this._game;
-        let possibleSolutions = this._getPossibleSolutions(game, game.getSolutions());
+    /** ---------------  Solutions-------------*/
+    getSolutions() {
+        if (this._solutions == undefined) {
+            console.error("Solution is not set");
+        }
+        return this._solutions;
+    }
+
+    getHint(game) {
+        // let game = this._game;
+        let possibleSolutions = this._getPossibleSolutions(game, this._solutions);
 
         if (possibleSolutions.length > 0) {
             let closestSolution = possibleSolutions[0];
@@ -22,7 +31,7 @@ class HintAI {
             return new Hint(commands, possibleSolutions);
         } else {
             // Pursue closest game state, which has at least one possible solution
-            let closestSolution = this._getClosesSolution(game, game.getSolutions());
+            let closestSolution = this._getClosesSolution(game, this._solutions);
 
             let unoccupiedCellSpaces = game._board.getUnoccupiedCellSpaces();
             let bestImpossibleCellSpace = this._calculateBestImpossibleUnoccupiedCellSpace(game, unoccupiedCellSpaces);
@@ -32,10 +41,14 @@ class HintAI {
 
                 if (bestUnreachableCellSpace === null) {
                     let commandSequenceList = this._getCommandSequenceListToSolution(game, closestSolution);
+                    let misplacedPentominos = this._removeWronglyPlacedPentominos(game, closestSolution);
+                    if (misplacedPentominos) {
+                        return new Hint([misplacedPentominos], possibleSolutions);
+                    }
                     let commands = this._getBestNextCommandsMaxOccupiedNeighbors(game, closestSolution, commandSequenceList);
                     return new Hint(commands, possibleSolutions);
                 } else {
-                    let command = this._getCommandBasedOnUnoccupiedCellsSkill(game, closestSolution, bestUnreachableCellSpace);
+                    let command = this._getCommandBasedOnUnreachableCellsSkill(game, closestSolution, bestUnreachableCellSpace);
                     return new Hint([command], possibleSolutions, bestUnreachableCellSpace);
                 }
             } else {
@@ -43,6 +56,33 @@ class HintAI {
                 return new Hint([command], possibleSolutions, bestImpossibleCellSpace);
             }
         }
+    }
+
+    /**
+     * Returns when a pentomino is placed in wrong position. Compared with the
+     * @param game
+     * @param closestSolution
+     */
+
+    _removeWronglyPlacedPentominos(game, closestSolution) {
+        let pentominoesOnBoard = game.getAllPentominoes().filter(p => game.isPlacedOnBoard(p));
+        for (var solPentominoes = 0; solPentominoes < closestSolution._board._pentominoes.length; solPentominoes++) {
+          let solPentominoName = closestSolution._board._pentominoes[solPentominoes].name;
+          let solPentominoPos = closestSolution._board._pentominoes[solPentominoes].sRepr;
+
+          for (var j = 0; j < pentominoesOnBoard.length; j++) {
+            let pentominoesOnBoardName = pentominoesOnBoard[j].name;
+            let pentominoesOnBoardPos = pentominoesOnBoard[j].sRepr;
+
+            if (solPentominoName === pentominoesOnBoardName ) {
+              if (solPentominoPos != pentominoesOnBoardPos) {
+                return new RemoveCommand( game.getPentominoByName(pentominoesOnBoardName),
+                                          game.getPosition(game.getPentominoByName(pentominoesOnBoardName)));
+              }
+            }
+          }
+        }
+        return null;
     }
 
     // --- --- --- Apply Skill --- --- ---
@@ -160,8 +200,30 @@ class HintAI {
         let neighboringPentominoes = game._board.getNeighbPentominoesOfCellSpace(bestImpossibleCellSpace);
         let nonPerfectPentominoes = neighboringPentominoes.filter(p => !this._isPerfectPentomino(game, closestSolution, p.name));
         let pentomino = nonPerfectPentominoes[0];
-        return new RemoveCommand( pentomino,
-                                  game.getPosition(pentomino));
+        return new RemoveCommand(pentomino,
+            game.getPosition(pentomino));
+    }
+
+    /**
+     * Tries find nonperfect pentomino neighboring unreachableCellSpace. If all neighboring pieces are perfect, it
+     * just suggest to remove a piece based on _removeWronglyPlacedPentominos.
+     * @param game
+     * @param closestSolution
+     * @param unreachableCellSpace
+     * @return {RemoveCommand}
+     * @private
+     */
+    _getCommandBasedOnUnreachableCellsSkill(game, closestSolution, unreachableCellSpace) {
+        let neighboringPentominoes = game._board.getNeighbPentominoesOfCellSpace(unreachableCellSpace);
+        let nonPerfectPentominoes = neighboringPentominoes.filter(p => !this._isPerfectPentomino(game, closestSolution, p.name));
+
+        if (!(nonPerfectPentominoes.length === 0)) {
+            let pentomino = nonPerfectPentominoes[0];
+            return new RemoveCommand( pentomino,
+                game.getPosition(pentomino));
+        } else {
+            return this._removeWronglyPlacedPentominos(game, closestSolution);
+        }
     }
 
     _getSeparateCellSpaces(cellSpace) {
@@ -217,13 +279,13 @@ class HintAI {
 
     // --- --- --- Possible Solutions --- --- ---
     _getPossibleSolutions(game, solutions) {
-        if (game.getPentominoes().length === 0) {
+        if (game.getAllPentominoes().length === 0) {
             throw new Error("game is empty");
         }
 
         let possibleSolutions = [];
         solutions.forEach(solution => {
-            let allPentominoesOnBoardArePerfect = game.getPentominoes()
+            let allPentominoesOnBoardArePerfect = game.getAllPentominoes()
                 .filter(pentomino => game.isPlacedOnBoard(pentomino))
                 .every(pentominoOnBoard => {
                     return this._isPerfectPentomino(game, solution, pentominoOnBoard.name);
@@ -254,9 +316,9 @@ class HintAI {
         solutions.forEach(solution => {
             let numOfPerfectPentominoesOnBoard = 0;
             let counter = 0;
-            let numOfPentominoes = game.getPentominoes().length;
+            let numOfPentominoes = game.getAllPentominoes().length;
 
-            game.getPentominoes().filter(p => game.isPlacedOnBoard(p)).every(gamePentomino => {
+            game.getAllPentominoes().filter(p => game.isPlacedOnBoard(p)).every(gamePentomino => {
                 let remainingPentominoes = numOfPentominoes - counter;
                 let maxPossibleNumOfPerfectPentominoes = remainingPentominoes + numOfPerfectPentominoesOnBoard;
                 if (maxPossibleNumOfPerfectPentominoes <= numOfPerfectPentominoesOnBoardOfClosestSolution) {
@@ -282,7 +344,7 @@ class HintAI {
     _getCommandSequenceListToSolution(game, solution) {
         let commandSequenceList = new CommandSequenceList();
 
-        let nonPerfectPentominoes = game.getPentominoes().filter(p => !this._isPerfectPentomino(game, solution, p.name));
+        let nonPerfectPentominoes = game.getAllPentominoes().filter(p => !this._isPerfectPentomino(game, solution, p.name));
         nonPerfectPentominoes.forEach(p => {
             commandSequenceList.addCommandSequence(p.name, this._getCommandsToPerfectPentominoState(game, solution, p));
         });
@@ -297,19 +359,19 @@ class HintAI {
      * @returns {null}
      */
     /*_getNextCommandsToSolution(game, solution, backtracking) {
-        if (game.getPentominoes().length === 0) {
+        if (game.getAllPentominoes().length === 0) {
             throw new Error("game is empty");
         }
 
         let pentomino;
         if (backtracking) {
-            pentomino = game.getPentominoes().find(p => !this._isPerfectPentomino(game, solution, p.name));
+            pentomino = game.getAllPentominoes().find(p => !this._isPerfectPentomino(game, solution, p.name));
         } else {
-            let pentominoesOnBoard = game.getPentominoes().filter(p => game.isPlacedOnBoard(p));
+            let pentominoesOnBoard = game.getAllPentominoes().filter(p => game.isPlacedOnBoard(p));
             pentomino = pentominoesOnBoard.find(p => !this._isPerfectPentomino(game, solution, p.name));
             if (pentomino === undefined || pentomino === null) {
                 // no non perfect pentominoes inside the board
-                pentomino = game.getPentominoes().filter(p => !game.isPlacedOnBoard(p)).find(p => !this._isPerfectPentomino(game, solution, p.name));
+                pentomino = game.getAllPentominoes().filter(p => !game.isPlacedOnBoard(p)).find(p => !this._isPerfectPentomino(game, solution, p.name));
             }
         }
 
@@ -340,8 +402,8 @@ class HintAI {
         if (solutionPentomino === null) {
             if (game.isPlacedOnBoard(gamePentomino)) {
                 let gamePentominoPos = game.getPosition(gamePentomino);
-                return [new RemoveCommand(  gamePentomino, 
-                                            [gamePentominoPos[0], gamePentominoPos[1]])];
+                return [new RemoveCommand(gamePentomino,
+                    [gamePentominoPos[0], gamePentominoPos[1]])];
             } else {
                 throw Error("Pentomino " + gamePentomino.name + " is already placed correct.");
             }
@@ -361,16 +423,16 @@ class HintAI {
                         solutionPentominoPosition[1] + game._board._boardSCols
                     ];
 
-                    return [new PlaceCommand( gamePentomino,
-                                              game.getPosition(gamePentomino),
-                                              [solutionPentominoRelPosition[0], solutionPentominoRelPosition[1]])];
+                    return [new PlaceCommand(gamePentomino,
+                        game.getPosition(gamePentomino),
+                        [solutionPentominoRelPosition[0], solutionPentominoRelPosition[1]])];
                 }
             } else {
                 // place should be outside board
                 let gamePentominoPos = game.getPosition(gamePentomino);
                 // FIXME - move outside and not move completely -> Eventually move to tray
-                return [new RemoveCommand( gamePentomino,
-                                           [gamePentominoPos[0], gamePentominoPos[1]])];
+                return [new RemoveCommand(gamePentomino,
+                    [gamePentominoPos[0], gamePentominoPos[1]])];
             }
         } else {
             if (solution.isPlacedOnBoard(solutionPentomino)) {
@@ -387,9 +449,9 @@ class HintAI {
                         solutionPentominoPosition[1] + game._board._boardSCols
                     ];
 
-                    return [new PlaceCommand( gamePentomino, 
-                                              game.getPosition(gamePentomino),
-                                              [solutionPentominoRelPosition[0], solutionPentominoRelPosition[1]])];
+                    return [new PlaceCommand(gamePentomino,
+                        game.getPosition(gamePentomino),
+                        [solutionPentominoRelPosition[0], solutionPentominoRelPosition[1]])];
                 }
             } else {
                 // perfect pentomino
@@ -432,9 +494,9 @@ class HintAI {
 
                 if (!(solutionPentominoRelPosition[0] === gamePentominoPosition[0])
                     || !(solutionPentominoRelPosition[1] === gamePentominoPosition[1])) {
-                    commands.push(new PlaceCommand( gamePentomino, 
-                                                    game.getPosition(gamePentomino),
-                                                    [solutionPentominoRelPosition[0], solutionPentominoRelPosition[1]]));
+                    commands.push(new PlaceCommand(gamePentomino,
+                        game.getPosition(gamePentomino),
+                        [solutionPentominoRelPosition[0], solutionPentominoRelPosition[1]]));
                 }
             } else {
                 let solutionPentominoPosition = solution.getPosition(solutionPentomino);
@@ -442,9 +504,9 @@ class HintAI {
                     solutionPentominoPosition[0] + game._board._boardSRows,
                     solutionPentominoPosition[1] + game._board._boardSCols
                 ];
-                commands.push(new PlaceCommand( gamePentomino, 
-                                                game.getPosition(gamePentomino),
-                                                [solutionPentominoRelPosition[0], solutionPentominoRelPosition[1]]));
+                commands.push(new PlaceCommand(gamePentomino,
+                    game.getPosition(gamePentomino),
+                    [solutionPentominoRelPosition[0], solutionPentominoRelPosition[1]]));
             }
 
             return commands;
@@ -681,6 +743,6 @@ class HintAI {
     }
 }
 
-if(typeof module != 'undefined') {
+if (typeof module != 'undefined') {
     module.exports = HintAI;
 }

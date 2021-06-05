@@ -21,16 +21,16 @@ gameController.undo();
 let cm2 = gameController.movePentominoToPosition(T, 3, 5);
 gameController.undo();
 
-describe('GameController', function() {
-    describe('#getPossibleRedoCommands()', function() {
-        it('should return redo commands', function()  {
+describe('GameController', function () {
+    describe('#getPossibleRedoCommands()', function () {
+        it('should return redo commands', function () {
             let redoCommands = gameController.getPossibleRedoCommands();
             assert.strictEqual(redoCommands.length, 2);
             assert.ok(redoCommands[0] === cm1 && redoCommands[1] === cm2
                 || redoCommands[0] === cm2 && redoCommands[1] === cm1);
         });
 
-        it('should return an empty list if no possible redo commands exist', function()  {
+        it('should return an empty list if no possible redo commands exist', function () {
             gameController.redo(gameController.getPossibleRedoCommands()[0]);
             let redoCommands = gameController.getPossibleRedoCommands();
             assert.strictEqual(redoCommands.length, 0);

@@ -14,9 +14,9 @@ board.placePentomino(T, 2, 3);
 board.placePentomino(I, 3, 1);
 board.placePentomino(F, 4, 2);
 
-describe('Board.getCollisionCells()', function() {
+describe('Board.getCollisionCells()', function () {
 
-    it('should return a list of all colliding cells', function() {
+    it('should return a list of all colliding cells', function () {
         assert.strictEqual(board.getCollisionCells().length, 2);
         assert.deepEqual(board.getCollisionCells(), [
             {
@@ -30,7 +30,7 @@ describe('Board.getCollisionCells()', function() {
         ]);
     });
 
-    it('should return an empty list if no collision occured', function() {
+    it('should return an empty list if no collision occured', function () {
         // TODO
     });
 });

@@ -1,7 +1,7 @@
-if(typeof require != 'undefined') {
-                         Pentomino = require('./pentomino.js');
-                         Config = require('./config.js');
-                     }
+if (typeof require != 'undefined') {
+    Pentomino = require('./pentomino.js');
+    Config = require('./config.js');
+}
 
 
 class PD {
@@ -12,80 +12,80 @@ class PD {
          */
         var fController = new FrontController();
         this.gameController = fController.controller;
-        this.loadGame("board_6x10");
-        
+        this.loadBoard("board_6x10");
+
     }
 
-    rotateClkWise(){
+    rotateClkWise() {
         this.visual.rotateClkWise();
-        if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
+        if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.visual.showNumberOfPossibleSolutions();
         }
     }
 
     rotateAntiClkWise() {
         this.visual.rotateAntiClkWise();
-        if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
+        if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.visual.showNumberOfPossibleSolutions();
         }
     }
 
-    flipH(){
+    flipH() {
         this.visual.flipH();
-        if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
+        if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.visual.showNumberOfPossibleSolutions();
         }
     }
 
-    flipV(){
+    flipV() {
         this.visual.flipV();
-        if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
+        if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.visual.showNumberOfPossibleSolutions();
         }
     }
 
-    reset(){
-       this.visual.clear();
-       if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
-           this.visual.showNumberOfPossibleSolutions();
-       }
+    reset() {
+        this.visual.reset();
+        if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
+            this.visual.showNumberOfPossibleSolutions();
+        }
     }
 
-        /**
-     * Returns a game object of the selected/default game that can be used to draw the board
-     */
-    getGameUISettings(board){
+    /**
+ * Returns a game object of the selected/default game that can be used to draw the board
+ */
+    getGameUISettings(board) {
         return {
-                gameHeight: boardConfigs[board].gameHeight || baseConfigs.gameHeight,
-                gameWidth: boardConfigs[board].gameWidth || baseConfigs.gameWidth,
-                boardSize: boardConfigs[board].boardSize,
-                blockedCells: boardConfigs[board].blockedCells || undefined,
-                boardShape: boardConfigs[board].boardShape || baseConfigs.boardShape
+            gameHeight: boardConfigs[board].gameHeight || baseConfigs.gameHeight,
+            gameWidth: boardConfigs[board].gameWidth || baseConfigs.gameWidth,
+            boardSize: boardConfigs[board].boardSize,
+            blockedCells: boardConfigs[board].blockedCells || undefined,
+            boardShape: boardConfigs[board].boardShape || baseConfigs.boardShape
         };
     }
 
-     /**
-     * Returns all boards with configurations and solutions
-     */
-      getAllBoards(){
+    /**
+    * Returns all boards with configurations and solutions
+    */
+    getAllBoards() {
         let boardsWithConfig = [];
-        if(baseConfigs != undefined && boardConfigs != undefined){
-            if(baseConfigs.hasOwnProperty("boards")){
+        if (baseConfigs != undefined && boardConfigs != undefined) {
+            if (baseConfigs.hasOwnProperty("boards")) {
                 baseConfigs.boards.forEach(board => {
-                    if(boardConfigs.hasOwnProperty(board)){
+                    if (boardConfigs.hasOwnProperty(board)) {
                         boardsWithConfig.push(board);
                     }
                 });
-            }else{
-                throw new Error("Error in configuration: Could not find any boards");    
+            } else {
+                throw new Error("Error in configuration: Could not find any boards");
             }
-        } else{
+        } else {
             throw new Error("Error in configuration: Could not find basic game configurations");
         }
         return boardsWithConfig;
     }
 
-    loadGame(board){
+    loadBoard(board, loadType) {
         let gameObject = this.getGameUISettings(board);
         this.boardName = board; // HACK: To be changed later. This needs to be obtained from the backend. 
         this.boardSize = gameObject.boardSize;
@@ -93,44 +93,70 @@ class PD {
         this.gameHeight = gameObject.gameHeight;
         this.gameWidth = gameObject.gameWidth;
         this.blockedCells = gameObject.blockedCells;
+        this.gameCellPattern = boardConfigs[board].gameCellPattern;
 
         this.boardStartX = Math.floor((this.gameHeight - this.boardSize[0]) / 2);
         this.boardStartY = Math.floor((this.gameWidth - this.boardSize[1]) / 2);
-        this.gameController.createGame(
-                                    [this.boardStartX, this.boardStartY],
-                                    this.boardSize,
-                                    this.boardShape,
-                                    board);
 
-        this.visual = new Visual(this);
-        if (SettingsSingleton.getInstance().getSettings().hinting.enableHinting) {
+        if (loadType != "Snapshot") {
+            this.gameController.createGame(
+                [this.boardStartX, this.boardStartY],
+                this.boardSize,
+                this.boardShape,
+                this.blockedCells,
+                board);
+            this.visual = new Visual(this);
+        } else {
+            this.visual.reload(pd);
+        }
+
+        if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.visual.showNumberOfPossibleSolutions();
         }
     }
 
-    hints(){
-       return this.gameController.getHint();
+    hints() {
+        return this.gameController.getHint();
     }
 
-     callHintAI(){
+    callHintAI() {
         this.visual.callHintAI();
     }
 
-    prefillBoard(){
+    prefillBoard() {
         this.visual.prefillBoard();
-    }
-    
-    undo(){
-        this.visual.undo();
+        if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
+            this.visual.showNumberOfPossibleSolutions();
+        }
     }
 
-    redo(){
+    undo() {
+        this.visual.undo();
+        if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
+            this.visual.showNumberOfPossibleSolutions();
+        }
+    }
+
+    redo() {
         this.visual.redo();
+        if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
+            this.visual.showNumberOfPossibleSolutions();
+        }
+    }
+
+    replay(startState, targetState) {
+        this.visual.replay(startState, targetState);
+    }
+
+    getGameState(type) {
+        return this.visual.getCmdState(type);
+    }
+
+    getAllGameStates() {
+        return this.visual.getGameStates();
     }
 
 }
 
 
-
 // this.ui.load();
-// document.getElementById("btnBoardSelect").onclick = () => { this.loadBoard('board_6x10'); }; -->

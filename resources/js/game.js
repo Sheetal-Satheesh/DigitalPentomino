@@ -1,4 +1,4 @@
-if(typeof require != 'undefined') {
+if (typeof require != 'undefined') {
     CommandManager = require('./command-history/command-manager.js');
     RemoveCommand = require('./command-history/commands.js');
     Pentomino = require('./pentomino');
@@ -9,33 +9,40 @@ class Game {
         this._name = name;
         this._board = board;
         this._cmdKey = undefined;
-        
+
         /**
             TODO: reconsider this tray, do we really need to store tray information.
 
             It is added to create and save all the pentomino when, game is loaded for
             the first time.
         */
-        this._tray=[]; 
+        this._tray = [];
         this._pentominosOutside = [];
         this._pentominoOutsidePositions = [];
         this._collisions = [];
-        this._solutions = Solutions.getGamesFromSolutionsConfig(this._name);
+        this._id = Math.random().toString(36).slice(-10);
     }
 
-    reset(){
+    reset() {
         this._board.reset();
-        this._tray=[];
-        this._fillUpTray(); 
+        this._tray = [];
         this._pentominosOutside = [];
         this._pentominoOutsidePositions = [];
         this._collisions = [];
     }
 
-    updateCmdKey(cmdKey){
+    updateCmdKey(cmdKey) {
         this._cmdKey = cmdKey;
     }
-    
+
+    getCmdKey() {
+        return this._cmdKey;
+    }
+
+    getId() {
+        return this._id;
+    }
+
     /**
      * Adds new pentomino to game
      * @param pentomino
@@ -43,46 +50,46 @@ class Game {
      * @param col
      */
     placePentomino(pentomino, row, col) {
-       /**
-        * Find if pentomino already placed in the board or out of the board.
-        * If it is placed already in the board, and target position is not valid, 
-        * then remove pentomino from the board, place out of the board
-        * 
-        * If it is placed already in the outside of the board, if target position
-        * is valide, remove the pentomino from the outside area and place it in the
-        * board
-        *
-        */
+        /**
+         * Find if pentomino already placed in the board or out of the board.
+         * If it is placed already in the board, and target position is not valid, 
+         * then remove pentomino from the board, place out of the board
+         * 
+         * If it is placed already in the outside of the board, if target position
+         * is valide, remove the pentomino from the outside area and place it in the
+         * board
+         *
+         */
 
-       let targetPosOnBoard = this._board.pentominoIsValidAtPosition(pentomino, row, col);
-       if(this.isPlacedOnBoard(pentomino) ){
-            if(targetPosOnBoard == true){
-                this._board.placePentomino(pentomino, row, col);    
-            }else{
+        let targetPosOnBoard = this._board.pentominoIsValidAtPosition(pentomino, row, col);
+        if (this.isPlacedOnBoard(pentomino)) {
+            if (targetPosOnBoard == true) {
+                this._board.placePentomino(pentomino, row, col);
+            } else {
                 this.movePentominoToPosition(pentomino, row, col);
             }
-        }else if(this.isPlacedOutsideBoard(pentomino)){
-            if(targetPosOnBoard == false){
+        } else if (this.isPlacedOutsideBoard(pentomino)) {
+            if (targetPosOnBoard == false) {
                 this._placePentominoOutsideBoard(pentomino, row, col);
-            }else{
+            } else {
                 this.movePentominoToPosition(pentomino, row, col);
             }
-        } else{
+        } else {
             if (targetPosOnBoard) {
                 this._board.placePentomino(pentomino, row, col);
-                    /**
-                     * TODO: return collision information, if this piece placement make collisions
-                     * with other pentomino
-                    */
+                /**
+                 * TODO: return collision information, if this piece placement make collisions
+                 * with other pentomino
+                */
             } else {
                 this._placePentominoOutsideBoard(pentomino, row, col);
             }
         }
         this.removeCollisionByPentomino(pentomino);
-        let collisonCells= this.isCollidesAtPosition(pentomino, row, col);
-            if(collisonCells.length != 0){
-                this.setCollisionCells(collisonCells);
-            }
+        let collisonCells = this.isCollidesAtPosition(pentomino, row, col);
+        if (collisonCells.length != 0) {
+            this.setCollisionCells(collisonCells);
+        }
     }
 
     /**
@@ -103,12 +110,12 @@ class Game {
         if (oldPentominoPositionIsOnBoard) {
             if (newPentominoPositionIsOnBoard) {
                 this._board.movePentominoToPosition(pentomino, row, col);
-            } 
+            }
             else {
                 this._board.removePentomino(pentomino);
                 this._placePentominoOutsideBoard(pentomino, row, col);
             }
-        } 
+        }
         else {
             if (newPentominoPositionIsOnBoard) {
                 this._removePentominoOutsideTheBoard(pentomino);
@@ -119,8 +126,8 @@ class Game {
             }
         }
         this.removeCollisionByPentomino(pentomino);
-        let collisonCells= this.isCollidesAtPosition(pentomino, row, col);
-        if(collisonCells.length != 0){
+        let collisonCells = this.isCollidesAtPosition(pentomino, row, col);
+        if (collisonCells.length != 0) {
             this.setCollisionCells(collisonCells);
         }
     }
@@ -129,44 +136,44 @@ class Game {
         this.removeCollisionByPentomino(pentomino);
         if (this._board.isPlacedOnBoard(pentomino)) {
             this._board.removePentomino(pentomino);
-        } 
+        }
         else {
             if (this.isPlacedOutsideBoard(pentomino)) {
                 this._removePentominoOutsideTheBoard(pentomino);
-            } 
+            }
             else {
-               ;// throw new Error("Pentomino \'" + pentomino.name + "\' does not exist in this game.");
+                ;// throw new Error("Pentomino \'" + pentomino.name + "\' does not exist in this game.");
             }
         }
     }
 
     rotatePentominoClkWise(pentomino) {
         this._doLocalOperation(
-                        pentomino, 
-                        p => p.rotateClkWise(), 
-                        p => this._board.rotatePentominoClkWise(p));
+            pentomino,
+            p => p.rotateClkWise(),
+            p => this._board.rotatePentominoClkWise(p));
     }
 
     rotatePentominoAntiClkWise(pentomino) {
         this._doLocalOperation(
-                        pentomino, 
-                        p => p.rotateAntiClkWise(),
-                        p => this._board.rotatePentominoAntiClkWise(p));
+            pentomino,
+            p => p.rotateAntiClkWise(),
+            p => this._board.rotatePentominoAntiClkWise(p));
     }
 
     mirrorPentominoH(pentomino) {
         this._doLocalOperation(
-                        pentomino,
-                        p => p.mirrorH(),
-                        p => this._board.mirrorPentominoH(p));
+            pentomino,
+            p => p.mirrorH(),
+            p => this._board.mirrorPentominoH(p));
 
     }
 
     mirrorPentominoV(pentomino) {
         this._doLocalOperation(
-                        pentomino,
-                        p => p.mirrorV(),
-                        p => this._board.mirrorPentominoV(p));
+            pentomino,
+            p => p.mirrorV(),
+            p => this._board.mirrorPentominoV(p));
     }
 
     // --- --- --- Collisions --- --- ---
@@ -180,30 +187,30 @@ class Game {
      */
     isCollidesAtPosition(pentomino, row, col) {
 
-        var collisionsCell=[];
+        var collisionsCell = [];
         var pentominoes = this.getPentominoesInGmArea();
-        pentominoes.forEach(function(entry){
-            if(pentomino.name === entry.name){/** if same pentomino placed again */
+        pentominoes.forEach(function (entry) {
+            if (pentomino.name === entry.name) {/** if same pentomino placed again */
                 return this.getCollisionCellsOfPentomino(pentomino);
             }
-            if(this.doPentominoMatricesOverlapAtPosition(row,col, pentomino, entry)){
+            if (this.doPentominoMatricesOverlapAtPosition(row, col, pentomino, entry)) {
                 let entryPosition = this.getPosition(entry);
                 let pentominoPosition = [row, col];
-                let overlapCells = this.getOverlappingCells(row,col,pentomino,entry);
+                let overlapCells = this.getOverlappingCells(row, col, pentomino, entry);
 
-                for (let i=0; i < overlapCells.length;++i) {
+                for (let i = 0; i < overlapCells.length; ++i) {
                     let cell = overlapCells[i];
                     let pOverlapCellMatrixPos = pentomino.getMatrixPosition(pentominoPosition, [cell.x, cell.y]);
                     let pValue = pentomino.getCharAtMatrixPosition(pOverlapCellMatrixPos[0], pOverlapCellMatrixPos[1]);
                     let eOverlapCellMatrixPos = entry.getMatrixPosition(entryPosition, [cell.x, cell.y]);
                     let eValue = entry.getCharAtMatrixPosition(eOverlapCellMatrixPos[0], eOverlapCellMatrixPos[1]);
-                    if(eValue === '1' && pValue === eValue) {
+                    if (eValue === '1' && pValue === eValue) {
                         let index = collisionsCell.findIndex(item => item.cell[0] === cell.x &&
                             item.cell[1] === cell.y);
                         if (index === -1) {
                             collisionsCell.push({
-                                'cell':[cell.x,cell.y],
-                                'pentominos':[pentomino.name,entry.name]
+                                'cell': [cell.x, cell.y],
+                                'pentominos': [pentomino.name, entry.name]
                             });
                         } else {
                             collisionsCell[index].pentominos.push(pentomino.name);
@@ -211,7 +218,7 @@ class Game {
                     }
                 }
             }
-        },this);
+        }, this);
 
         return collisionsCell;
     }
@@ -226,7 +233,7 @@ class Game {
      */
     doPentominoMatricesOverlapAtPosition(row, col, pentominoA, pentominoB) {
 
-        if(this.isPlacedInGame(pentominoB) == false){
+        if (this.isPlacedInGame(pentominoB) == false) {
             return false;
         }
 
@@ -245,7 +252,7 @@ class Game {
             && Math.max(aLowestCol, bLowestCol) <= Math.min(aHighestCol, bHighestCol));
     }
 
-    getOverlappingCells(row, col, pentominoA, pentominoB){
+    getOverlappingCells(row, col, pentominoA, pentominoB) {
         let cells = [];
 
         let aLowestRow = row - pentominoA.rowAnchor;
@@ -259,16 +266,16 @@ class Game {
         let bLowestCol = q1 - pentominoB.colAnchor;
         let bHighestCol = q1 + pentominoB.colAnchor;
 
-        let bottomRow   = Math.max(aLowestRow, bLowestRow);
-        let topRow      = Math.min(aHighestRow, bHighestRow);
-        let leftCol     = Math.max(aLowestCol, bLowestCol);
-        let rightCol    = Math.min(aHighestCol, bHighestCol);
+        let bottomRow = Math.max(aLowestRow, bLowestRow);
+        let topRow = Math.min(aHighestRow, bHighestRow);
+        let leftCol = Math.max(aLowestCol, bLowestCol);
+        let rightCol = Math.min(aHighestCol, bHighestCol);
 
-        for(let i=bottomRow; i <= topRow; ++i){
-            for(let j=leftCol; j <= rightCol; ++j){
+        for (let i = bottomRow; i <= topRow; ++i) {
+            for (let j = leftCol; j <= rightCol; ++j) {
                 cells.push({
-                    'x':i,
-                    'y':j
+                    'x': i,
+                    'y': j
                 });
             }
         }
@@ -276,45 +283,45 @@ class Game {
         return cells;
     }
 
-    setCollisionCells(collisionCells){
-        if(this._collisions.length === 0){
+    setCollisionCells(collisionCells) {
+        if (this._collisions.length === 0) {
             this._collisions.push(...collisionCells);
-        }else{
-            collisionCells.forEach(function(element){
+        } else {
+            collisionCells.forEach(function (element) {
                 let index = this._collisions.findIndex(item => item.cell[0] === element.cell[0] &&
                     item.cell[1] === element.cell[1]);
                 if (index === -1) {
                     this._collisions.push({
-                        'cell':element.cell,
-                        'pentominos':element.pentominos
+                        'cell': element.cell,
+                        'pentominos': element.pentominos
                     });
-                }else {
+                } else {
                     this._collisions[index].pentominos = [...new Set([...this._collisions[index].pentominos,
-                        ...element.pentominos])];
+                    ...element.pentominos])];
                 }
-            },this);
+            }, this);
         }
     }
 
-    removeCollisionByCells(cells){
+    removeCollisionByCells(cells) {
         this._collisions = this._collisions.filter(
-                    item => (item.cell[0] != cells[0]) &&
-                            (item.cell[1] != cells[1])
-                             );
+            item => (item.cell[0] != cells[0]) &&
+                (item.cell[1] != cells[1])
+        );
     }
 
-    removeCollisionByPentomino(pentomino){
-        this._collisions = this._collisions.map((cItem, index)=>{
-            cItem.pentominos =  cItem.pentominos.filter(
-                                        item =>item !== pentomino.name);
+    removeCollisionByPentomino(pentomino) {
+        this._collisions = this._collisions.map((cItem, index) => {
+            cItem.pentominos = cItem.pentominos.filter(
+                item => item !== pentomino.name);
             return cItem;
-        },this);
+        }, this);
 
         this._collisions = this._collisions.filter(
             item => (item.pentominos.length != 1));
     }
 
-    getCollisionCells(){
+    getCollisionCells() {
         return this._collisions;
     }
 
@@ -325,43 +332,36 @@ class Game {
          *
          * https://console.spec.whatwg.org/#log
         */
-  
-        var collisionCells=[];
-        this._collisions.forEach(function(element){
+
+        var collisionCells = [];
+        this._collisions.forEach(function (element) {
             element.pentominos.forEach(item => {
-                if(item === pentomino.name){
+                if (item === pentomino.name) {
                     let collidePentominos = element.pentominos.filter(item => (item != pentomino.name));
                     collisionCells.push({
-                        'cell':element.cell,
-                        'pentominos':collidePentominos
-                        });
-                    }
-                },this);
-        },this);
+                        'cell': element.cell,
+                        'pentominos': collidePentominos
+                    });
+                }
+            }, this);
+        }, this);
 
         return collisionCells;
     }
 
     getCollisionOfPentominoes(pentomino) {
-      
+
         let allCollisions = this.getCollisionCellsOfPentomino(pentomino);
         var pentominos = [];
 
-        allCollisions.forEach(element=> {
+        allCollisions.forEach(element => {
             element.pentominos.forEach(item => {
                 pentominos.push(item);
-            },this);
-        },this);
+            }, this);
+        }, this);
 
         return [...new Set(pentominos)];
     }
-
-    /** ---------------  Solutions-------------*/
-
-    getSolutions(){
-        return this._solutions;
-    }
-
 
     // --- --- --- Helper Pentomino Operations --- --- ---
     _doLocalOperation(pentomino, operation, boardOperation) {
@@ -372,9 +372,9 @@ class Game {
         let oldPentominoIsOnBoard = this._board.isPlacedOnBoard(pentomino);
         let position = this.getPosition(pentomino);
         let newPentominoIsOnBoard = this._board.pentominoIsValidAtPosition(
-                                                    tempPentomino,
-                                                    position[0],
-                                                    position[1]);
+            tempPentomino,
+            position[0],
+            position[1]);
 
         if (oldPentominoIsOnBoard && newPentominoIsOnBoard) {
             boardOperation(pentomino);
@@ -384,13 +384,13 @@ class Game {
             this._board.removePentomino(pentomino);
             Object.assign(pentomino, tempPentomino);
             this._placePentominoOutsideBoard(
-                                                pentomino,
-                                                position[0], 
-                                                position[1]);
+                pentomino,
+                position[0],
+                position[1]);
 
         }
-        else if ( (!oldPentominoIsOnBoard) &&
-                  (!newPentominoIsOnBoard)) {
+        else if ((!oldPentominoIsOnBoard) &&
+            (!newPentominoIsOnBoard)) {
 
             Object.assign(pentomino, tempPentomino);
         }
@@ -403,8 +403,8 @@ class Game {
 
         position = this.getPosition(pentomino);
         this.removeCollisionByPentomino(pentomino);
-        let collisonCells= this.isCollidesAtPosition(pentomino,position[0], position[1]);
-        if(collisonCells.length != 0){
+        let collisonCells = this.isCollidesAtPosition(pentomino, position[0], position[1]);
+        if (collisonCells.length != 0) {
             this.setCollisionCells(collisonCells);
         }
     }
@@ -419,25 +419,25 @@ class Game {
             throw new Error('Pentomino \'' + pentomino.name + "\' is already in the game");
         }
 
-        var pentominoExist=false;
+        var pentominoExist = false;
         this._pentominosOutside.find((item, index) => {
             if (item.name === pentomino.name) {
                 pentominoExist = true;
-                let penPosition= {
-                                name: pentomino.name,
-                                position: [row, col]
-                               };
-                this._pentominosOutside[index]=item;
-                this._pentominoOutsidePositions[index] = penPosition;
-            }
-        },this);
-
-        if(!pentominoExist){
-            this._pentominosOutside.push(pentomino);
-            this._pentominoOutsidePositions.push({
+                let penPosition = {
                     name: pentomino.name,
                     position: [row, col]
-                });
+                };
+                this._pentominosOutside[index] = item;
+                this._pentominoOutsidePositions[index] = penPosition;
+            }
+        }, this);
+
+        if (!pentominoExist) {
+            this._pentominosOutside.push(pentomino);
+            this._pentominoOutsidePositions.push({
+                name: pentomino.name,
+                position: [row, col]
+            });
         }
     }
 
@@ -449,15 +449,35 @@ class Game {
         });
     }
 
-    _fillUpTray(){
-        var allPentominos=[
-            'F','I','L','N','P','T',
-            'U','V','W','X','Y','Z'];
-        allPentominos.forEach(function(pentominoType){
-            let pentomino = new Pentomino(pentominoType); 
+    _fillUpTray() {
+        var allPentominos = [
+            'F', 'I', 'L', 'N', 'P', 'T',
+            'U', 'V', 'W', 'X', 'Y', 'Z'];
+        allPentominos.forEach(function (pentominoType) {
+            let pentomino = new Pentomino(pentominoType);
             this._tray.push(pentomino);
-        },this);
+        }, this);
 
+    }
+
+
+    removeFromTray(pentomino) {
+        this._tray = this._tray.filter(item => (item.name != pentomino.name));
+    }
+
+    addToTray(pentomino) {
+        if (!this._tray.find(p => p.name === pentomino.name)) {
+            this._tray.push(pentomino);
+        }
+    }
+
+    isPentominiInTray(pentomino) {
+        if (this._tray.find(p => p.name === pentomino.name)) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
     // --- --- --- History --- --- ---
     undo() {
@@ -484,11 +504,15 @@ class Game {
         });
     }
 
-    getPentominoes() {
+    getAllPentominoes() {
         return this._board.getPentominoes().concat(this._pentominosOutside).concat(this._tray);
     }
 
-    getPentominoesInGmArea(){
+    getPentominosInTray() {
+        return this._tray;
+    }
+
+    getPentominoesInGmArea() {
         return this._board.getPentominoes().concat(this._pentominosOutside);
     }
 
@@ -507,7 +531,7 @@ class Game {
         } else {
             retPosition = this._getOutsidePosition(pentomino);
         }
-        
+
         return retPosition;
     }
 
@@ -515,9 +539,9 @@ class Game {
         let outsidePosition = null;
         this._pentominoOutsidePositions.find((item, index) => {
             if (item.name === pentomino.name) {
-                outsidePosition=item.position;
+                outsidePosition = item.position;
             }
-        },this);
+        }, this);
         if (outsidePosition === null) {
             return undefined;
         }
@@ -593,7 +617,7 @@ class Game {
     }
 
     getBoardSize() {
-        return [this._board._boardRows,this._board._boardCols];
+        return [this._board._boardRows, this._board._boardCols];
     }
 
     getName() {
@@ -623,6 +647,6 @@ class Game {
     }
 }
 
-if(typeof module != 'undefined') {
+if (typeof module != 'undefined') {
     module.exports = Game;
 }

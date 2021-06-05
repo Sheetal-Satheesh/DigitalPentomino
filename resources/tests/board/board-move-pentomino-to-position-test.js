@@ -18,9 +18,9 @@ board.placePentomino(I, 2, 6);
 
 board.movePentominoToPosition(X, 4, 1);
 
-describe('Board.movePentominoToPosition(pentomino, row, col)', function() {
+describe('Board.movePentominoToPosition(pentomino, row, col)', function () {
 
-    it('should save piece at new position', function() {
+    it('should save piece at new position', function () {
         assert.deepEqual(board.getPosition(X), [4, 1]);
     });
 
@@ -33,6 +33,6 @@ describe('Board.movePentominoToPosition(pentomino, row, col)', function() {
     });
 
     it('should throw error if piece does not exist on board', function () {
-       assert.throws(() => board.movePentominoToPosition(L, 2, 2));
+        assert.throws(() => board.movePentominoToPosition(L, 2, 2));
     });
 });

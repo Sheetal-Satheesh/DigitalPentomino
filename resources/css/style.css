@@ -3,60 +3,121 @@
   --rotationY: 0;
   --rotationZ: 0;
   --magnification:1;
-}
-
-
-#functions {
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  background:  rgb(149, 172, 170);
-  bottom: 0;
-  width: 9.8vw;
+  --buttonRotA:0deg;
+  --buttonRotB:0deg;
+  --buttonRotC:0deg;
+  --buttonRotD:0deg;
 }
 
 #game {
   position: fixed;
   top: 0;
-  bottom: 0;
-  left: 9.8vw;
-  width: 89vw;
-  height: 46vw;
-  border-top: solid rgb(2, 71, 62) 0.2vw;
-  border-bottom: solid rgb(2, 71, 62) 0.2vw;
-  border-left: solid rgb(2, 71, 62) 0.2vw;
-  border-right: solid rgb(2, 71, 62) 0.2vw;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 #tray {
-  position: fixed;
-  bottom: 0;
-  top: 0.1vw;
-  left: 10vw;
-  border-bottom: solid rgb(2, 71, 62) 0.2vw;
-  background :rgb(149, 172, 170);
-  height: 6.7vw;
-  width: 89vw;
   z-index: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 10vw;
+  background-color: #e2e0e0;
+  display: flex;
+  overflow-x: auto;
 
 }
 
 #field {
   position: fixed;
-  top: 7vw;
-  background: white;
-  width: 89vw;
-  height: 39.32vw;
+  left: 0vw;
+  top: 10vw;  
+  background: transparent;
+  width: 100%;
+  /*height: 39.35vw;*/
 }
 
 #piecearea {
   user-select: none;
+  width: 100%;
+  height: 10vw;
 }
+
+#functions_navbar {
+  z-index: 10;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 10vw;
+  background-color: #e2e0e0;
+  display: flex;
+  overflow-x: auto;
+  padding: 2%;
+  padding-left: 5%;
+  padding-right: 5%;
+}
+
+.cActionBtn img {
+  float: center;
+  width:  4vw;
+  height: 4vw;
+  object-fit: cover;
+  border-radius: 10%;
+}
+
+.cActionBtn {
+  border: 1px solid grey;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  width: 1vw;
+  height: 1vw;
+  overflow: hidden;
+  white-space: nowrap;
+  height: 6vw;
+  margin-left: 1%;
+  margin-right: 1%;
+  border-radius: 50%;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  outline: 0;
+}
+
+.cActionBtn:active {
+  box-shadow: inset 0 0 0 0.4vw #67b4e7;
+}
+
+#labelNumberSolutionsContainer{
+  position: fixed;
+  height: 5vw;
+  width: 25vw;
+  justify-content: center;
+  display: table-cell;
+  background-color: #e2e0e0;
+  border: 1px solid grey;
+  border-top-left-radius: 25px;
+  border-bottom: none;
+  border-right: none;
+  bottom: 10vw;
+  right: 0;
+}
+
+#labelNumberSolutionsContainerChild{
+  height: 100%;
+  text-align: center;
+  vertical-align: middle; 
+  font-size: 1.5vw;
+}
+
 
 #operations {
   display: inline-block;
-  margin-top: 10vw;
+  margin-top: 8vw;
 }
 
 #operations {
@@ -64,20 +125,21 @@
 }
 
 #operations  img{
-  width:3vw;
-  height:3vw;
-
+  width:4vw;
+  height:4vw;
 }
 
 #operations table tr td div{
-  margin:14px;
-margin-top: 2px;
+  margin:20%;
+  margin-top: 2%;
 }
 
 
 #operations button{
-margin:14px;
-margin-top: 2px;
+margin: 0.4vw;
+margin-top: 2%;
+width: 4vw;
+height: 4vw;
 }
 
 #pieceManipulation table tr td div{
@@ -86,8 +148,8 @@ margin-top: 2px;
 }
 
 #pieceManipulation  img{
-  width:3vw;
-  height:3vw;
+  width:5vw;
+  height:5vw;
 
 }
 #pieceManipulation{
@@ -97,17 +159,23 @@ margin-top: 2px;
 }
 
 .gamearea {
+  justify-content:;
   display: block;
   float: left;
   user-select: none;
   text-align: center;
-  outline: 1px solid #eee;
-  color: #ddd;
+  /*outline: 1px solid #eee;*/
 }
 
 .boardarea {
-background: rgb(149, 172, 170);
+  outline: 1px solid darkslategray;
+  background: #eceaea;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
+
 .blockedcell {
 background: repeating-linear-gradient(
 45deg,
@@ -141,26 +209,10 @@ rgba(0, 0, 0, 0.3) 20px
   padding-left: 5%;
 }
 
-.cActionBtn img {
-  float: center;
-  width:  3vw;
-  height: 3vw;
-  object-fit: cover;
-  background: rgb(140, 170, 158);
-  border-radius: 25%;
-}
-
-.cActionBtn {
-background: rgb(2, 71, 62);
-border-radius: 10%;
-border: 0;
-
-}
-
 .CMenuTB img{
   float: center;
-  width:  3vw;
-  height: 3vw;
+  width:  4vw;
+  height: 4vw;
   object-fit: cover;
   background: rgb(193, 199, 201);
   border-radius: 25%;
@@ -172,21 +224,19 @@ border-radius: 10%;
 border: 0;
 }
 
-.CMenuTB div:hover{
-box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
-}
-
-.cActionBtn:hover {
-box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
+.CMenuTB div:active{
+  box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
 }
 
 .cGame {
-position: absolute;
+position: fixed;
 top: 0;
+background: darkgray;
 right: 0;
 bottom: 0;
 left: 0;
-overflow: auto;
+overflow:none;
+--webkit-transform: translate3d(0,0,0);
 }
 
 img#logo{
@@ -263,7 +313,7 @@ background: rgb(197, 207, 203);
 table
   {
    position: relative;
-    margin-top: 50px;
+    margin-top: 30px;
     width: -10px!important;
      border-spacing: 0px;
      border-collapse:collapse;
@@ -278,9 +328,16 @@ table
       padding: 0px;
    }
 
-   table tr td button:hover {
-   box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
-  }
+
+
+    table tr td button:active {
+      box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
+     }
+
+     table tr td div:active {
+      box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
+     }  
+   
 
   table tr td button{
     background:rgb(141, 160, 157);
@@ -293,7 +350,8 @@ table
     background:rgb(141, 160, 157);
     border-radius: 10%;
     border: 0;
-    padding: 0px;
+    padding: 0.1vw;
+    margin: 0.1vw;
   }
 
    table tr td div{
@@ -303,9 +361,7 @@ table
     padding: 0px;
    }
 
-   table tr td div:hover {
-   box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
-  }
+ 
 
   #logo{
   height:7vw!important;
@@ -315,37 +371,38 @@ table
 
 @media only screen and (max-width: 1137px) {
     #operations  img{
-          width:2.5vw;
-          height:2.5vw;
+          width:4vw;
+          height:4vw;
       }
 
       #operations table tr td div{
           margin:10px;
-        margin-top: 1px;
       }
 
 
       #operations button{
-        margin:10px;
+        margin:0.5vw;
         margin-top: 1px;
+        width: 4vw;
+        height: 4vw;
       }
 
   }
 
   @media only screen and (max-width: 1137px) {
     #operations  img{
-          width:2vw;
-          height:2vw;
+          width:4vw;
+          height:4vw;
       }
 
       #operations table tr td div{
-          margin:10px;
+          margin:3px;
         margin-top: 1px;
       }
 
 
       #operations button{
-        margin:10px;
+        margin:3px;
         margin-top: 1px;
       }
 
@@ -365,163 +422,41 @@ table
   padding: 20px;
 }
 
-
-/* Styling of search bar for seeding */
-
-#seeding {
-  position: fixed;
-  top: 30%;
-  left: 50%;
-  /* bring your own prefixes */
-  transform: translate(-50%, -50%);
-  z-index: 99999999999;
-  visibility: hidden;
-}
-
-#seedingCover {
-  position: fixed;
-  background: white;
-  width: 100%;
-  height: 100%;
-  opacity: 80%;
-  z-index: 99999999998;
-  visibility: hidden;
-}
-
-#seedBar {
-  border: 2px solid #999;
-  border-radius: 0.5em;;
-  font-size: 1.2em;
-  width: 10em;
-  transition: width 0.5s ease-in-out;
-}
-
-#seedBar:focus {
-}
-
 /* Style for Button Manipulation */
-
-.icon-plus {
-  color: #fff;
-  font-size: 34px;
-}
-
-.button-inside .icon-plus {
-  font-size: 16px;
-}
-
 .main-wrapper {
   width: 200px;
   height: 200px;
   position: relative;
-  /* border-radius: 50%; */
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  /* box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); */
-}
-
-.main-wrapper-inside {
-  width: 10px;
-  height: 10px;
-  position: relative;
-}
-
-.button {
-  border-radius: 50%;
-  width: 48px;
-  height: 48px;
-  background-color: blue;
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  z-index: 6;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  cursor: pointer;
-  -webkit-transition: all 500ms cubic-bezier(0.19, 1, 0.22, 1);
-          transition: all 500ms cubic-bezier(0.19, 1, 0.22, 1);
-  box-shadow: -1px 2px 12px rgba(0, 0, 0, 0.4);
-  will-change: transform;
-}
-
-.button .icon-plus{
-  -webkit-transition: transform 200ms cubic-bezier(0.19, 1, 0.22, 1);
-          transition: transform 200ms cubic-bezier(0.19, 1, 0.22, 1);
-  will-change: transform;
-  transform-origin: center center;
-}
-
-.button.animation {
-  background-color: #ff0029;
-}
-
-.button.animation .icon-plus {
-  -webkit-transform: rotate(-45deg) translateZ(0);
-          transform: rotate(-45deg) translateZ(0);
 }
 
 .button-wrapper {
+  border-radius: 50%;
   width: 200px;
   height: 200px;
   position: absolute;
-  border-radius: 50%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-transition: transform 400ms cubic-bezier(0.07, 1.1, 0.28, 1.01);
-          transition: transform 400ms cubic-bezier(0.07, 1.1, 0.28, 1.01);
-  will-change: transform;
+  bottom: 0;
+  right: 0;
+  transition: transform .2s; 
 }
 
-.button-wrapper.animation {
-  -webkit-transition: transform 500ms cubic-bezier(0.19, 1, 0.22, 1);
-          transition: transform 500ms cubic-bezier(0.19, 1, 0.22, 1);
-  will-change: transform;
+.button-wrapper.first {
+  transform: rotate(var(--buttonRotA));
+  transition: transform .5s;
 }
 
-.button-wrapper.first.animation {
-  transform: rotate(-36deg) translateZ(0);
+.button-wrapper.second {
+  transform: rotate(var(--buttonRotB)) ;
+  transition: transform .5s;
 }
 
-.button-wrapper.second.animation {
-  transform: rotate(-68deg) translateZ(0);
+.button-wrapper.third {
+  transform: rotate(var(--buttonRotC)) ;
+  transition: transform .5s;
 }
 
-.button-wrapper.third.animation {
-  transform: rotate(-100deg) translateZ(0);
-}
-
-.button-wrapper.fourth.animation {
-  transform: rotate(-136deg) translateZ(0);
+.button-wrapper.fourth {
+  transform: rotate(var(--buttonRotD));
+  transition: transform .5s;
 }
 
 .button-inside {
@@ -531,41 +466,62 @@ table
   position: absolute;
   bottom: 3px;
   right: 3px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  color: #fff;
-  cursor: pointer;
 }
 
 .button-inside.first {
   background-color: #ff0033;
-  transform: rotate(36deg);
 }
 
 .button-inside.second {
   background-color: #ff0033;
-  transform: rotate(68deg);
+
 }
 
 .button-inside.third {
   background-color: #ff0033;
-  transform: rotate(100deg);
+
 }
 
 .button-inside.fourth {
   background-color: #ff0033;
-  transform: rotate(136deg);
 }
+
+.icon-rotateLeft {
+  width: 34px;
+  height: 34px;
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+  font-size:24px ;
+}
+
+.icon-rotateRight {
+  width: 34px;
+  height: 34px;
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+  font-size:24px ;
+}
+
+.icon-flipHorizontally {
+  width: 34px;
+  height: 34px;
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+  font-size:24px ;
+}
+
+.icon-flipVertically {
+  width: 34px;
+  height: 34px;
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+  font-size:24px ;
+}
+
 
 @font-face {
   font-family: 'icomoon';
@@ -608,4 +564,68 @@ table
 }
 .icon-plus:before {
   content: "\65";
+}
+
+/* Styling of search bar for seeding */
+
+#seeding {
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  /* bring your own prefixes */
+  transform: translate(-50%, -50%);
+  z-index: 99999999999;
+  visibility: hidden;
+}
+
+#seedingCover {
+  position: fixed;
+  background: white;
+  width: 100%;
+  height: 100%;
+  opacity: 80%;
+  z-index: 99999999998;
+  visibility: hidden;
+}
+
+#seedBar {
+  border: 2px solid #999;
+  border-radius: 0.5em;;
+  font-size: 1.2em;
+  width: 10em;
+  transition: width 0.5s ease-in-out;
+}
+
+#seedBar:focus {
+}
+
+
+.FlashOn {
+  display: block;
+  visibility: visible;
+  filter: alpha(opacity=65);
+  opacity: .6;
+
+html {
+	-webkit-text-size-adjust: none;
+	touch-action: manipulation;
+
+
+/**shake animation reference : https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_image_shake **/
+.horizTranslate {
+  animation: shaking 1.5s;
+  animation-iteration-count: infinite;
+}
+
+
+@keyframes shaking {
+   0% {
+        transform: scale(1,1);
+    }
+    50% {
+        transform: scale(1.5,1.5);
+    }
+    100% {
+        transform: scale(1,1);
+    }
 }

@@ -15,20 +15,30 @@ class Board {
      * @param boardCols;
      * @param shape; shape of the block
      */
-    constructor(boardStartXY, boardSizeXY,boardShape='Block') {
+    constructor(boardStartXY, boardSizeXY, blockedCells, boardShape = 'Block') {
         this._boardSRows = boardStartXY[0];
         this._boardSCols = boardStartXY[1];
 
         this._boardRows = boardSizeXY[0];
         this._boardCols = boardSizeXY[1];
 
+        this._blockedCells = blockedCells === undefined ? [] : blockedCells;
+
         this._pentominoes = [];
         this._pentominoPositions = [];
     }
 
-    reset(){
+    reset() {
         this._pentominoes = [];
         this._pentominoPositions = [];
+    }
+
+    getBoardSettings() {
+        return {
+            "boardStartPos": [this._boardSRows, this._boardSCols],
+            "boardSize": [this._boardRows, this._boardCols],
+            "blockCells": this._blockedCells
+        };
     }
 
     placePentomino(pentomino, row, col) {
@@ -54,12 +64,12 @@ class Board {
              * return from here
              */
             this.movePentominoToPosition(pentomino, row, col);
-        }else{
+        } else {
 
             this._pentominoes.push(pentomino);
             this._pentominoPositions.push({
-                name:pentomino.name,
-                boardPosition:[row,col]
+                name: pentomino.name,
+                boardPosition: [row, col]
             });
         }
     }
@@ -93,11 +103,11 @@ class Board {
         }
 
         this._pentominoPositions = this._pentominoPositions.filter(
-            item =>item.name !== pentomino.name);
+            item => item.name !== pentomino.name);
 
         this._pentominoPositions.push({
-            name:pentomino.name,
-            boardPosition:[row,col]
+            name: pentomino.name,
+            boardPosition: [row, col]
         });
     }
 
@@ -148,9 +158,9 @@ class Board {
             throw new Error("Pentomino with name '" + pentomino.name + "' is not placed on the board.");
         }
         this._pentominoPositions = this._pentominoPositions.filter(
-                                            item =>item.name !== pentomino.name);
+            item => item.name !== pentomino.name);
         this._pentominoes = this._pentominoes.filter(
-                                            item =>item.name !== pentomino.name);
+            item => item.name !== pentomino.name);
 
     }
 
@@ -177,9 +187,9 @@ class Board {
         } else {
             this._pentominoPositions.find((item, index) => {
                 if (item.name === pentomino.name) {
-                    boardPosition=item.boardPosition;
+                    boardPosition = item.boardPosition;
                 }
-            },this);
+            }, this);
         }
 
         return boardPosition;
@@ -214,15 +224,15 @@ class Board {
             throw new Error("Position [" + row + "," + col + "] is outside the board");
         }
 
-        let pentomino=undefined;
-        this._pentominoPositions.forEach(function(item){    
-            if(item.boardPosition[0] === row && item.boardPosition[1] === col){
-                pentomino=this.getPentominoByName(item.name);
+        let pentomino = undefined;
+        this._pentominoPositions.forEach(function (item) {
+            if (item.boardPosition[0] === row && item.boardPosition[1] === col) {
+                pentomino = this.getPentominoByName(item.name);
             }
-        },this);
-        if(pentomino === undefined){
+        }, this);
+        if (pentomino === undefined) {
             throw new Error("No pentomino at position [" + row + ", " + col + "]");
-        }else{
+        } else {
             return pentomino;
         }
     }
@@ -261,15 +271,15 @@ class Board {
      */
     positionIsValid(row, col) {
 
-        row=parseInt(row);
-        col=parseInt(col);
+        row = parseInt(row);
+        col = parseInt(col);
 
-        return  !(
+        return !(
             (row < this._boardSRows)
-            || (row >= (this._boardRows+ this._boardSRows))
+            || (row >= (this._boardRows + this._boardSRows))
             || (col < this._boardSCols)
-            || (col >= (this._boardCols+this._boardSCols))
-            );
+            || (col >= (this._boardCols + this._boardSCols))
+        );
     }
 
     /** Returns whether the pentomino will fit onto the board at the specified position
@@ -334,6 +344,19 @@ class Board {
                 this._createSpace(remainingUnoccupiedCells, this._getValidNeighborPositions(neighborCell[0], neighborCell[1]), space);
             }
         });
+    }
+
+
+
+    _getNeighborPositions(row, col) {
+        let positions = [];
+
+        positions.push([row + 1, col]);
+        positions.push([row - 1, col]);
+        positions.push([row, col + 1]);
+        positions.push([row, col - 1]);
+
+        return positions;
     }
 
     _getValidNeighborPositions(row, col) {
@@ -415,12 +438,31 @@ class Board {
         let unoccupiedPositions = [];
         for (let row = this._boardSRows; row < this._boardSRows + this._boardRows; row++) {
             for (let col = this._boardSCols; col < this._boardSCols + this._boardCols; col++) {
-                if (this.isOccupied(row, col) === null) {
+                if (!this.isBlockedCell(row, col) && this.isOccupied(row, col) === null) {
                     unoccupiedPositions.push([row, col]);
                 }
             }
         }
         return unoccupiedPositions;
+    }
+
+    isBlockedCell(row, col) {
+        return this._blockedCells.some(pos => row - this._boardSRows === pos[0] && col - this._boardSCols === pos[1]);
+    }
+
+    hasUnoccupiedPosition() {
+        for (let row = this._boardSRows; row < this._boardSRows + this._boardRows; row++) {
+            for (let col = this._boardSCols; col < this._boardSCols + this._boardCols; col++) {
+                if (!this.isBlockedCell(row, col) && this.isOccupied(row, col) === null) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    isSolved() {
+        return !this.hasUnoccupiedPosition();
     }
 
     isOccupied(row, col) {
@@ -531,7 +573,7 @@ class Board {
         },this);
 */
     }
-    
+
     /**
      * Prints board to console for debugging purposes.
      */
@@ -564,17 +606,17 @@ class Board {
 
     display() {
         let board = [];
-        for (let i=0; i<this._boardRows; ++i) {
+        for (let i = 0; i < this._boardRows; ++i) {
             board.push(Array(this._boardCols).fill('-'));
         }
-        this._pentominoes.forEach(function(pentomino) {
-            let [anchorRow,anchorCol] = this.getPosition(pentomino);
+        this._pentominoes.forEach(function (pentomino) {
+            let [anchorRow, anchorCol] = this.getPosition(pentomino);
             for (let relRow = 0; relRow < pentomino.iRows; ++relRow) {
                 for (let relCol = 0; relCol < pentomino.iCols; ++relCol) {
                     if (pentomino.getCharAtMatrixPosition(relRow, relCol) === '1') {
                         let coordinatePosition = pentomino.getCoordinatePosition([anchorRow, anchorCol], [relRow, relCol]);
-                        let boardCoordX =coordinatePosition[0] - this._boardSRows;
-                        let boardCoordY =  coordinatePosition[1] - this._boardSCols ;
+                        let boardCoordX = coordinatePosition[0] - this._boardSRows;
+                        let boardCoordY = coordinatePosition[1] - this._boardSCols;
 
                         if (board[boardCoordX][boardCoordY] === '-') {
                             board[boardCoordX][boardCoordY] = pentomino.name;
@@ -585,7 +627,7 @@ class Board {
                 }
             }
 
-        },this);
+        }, this);
 
         console.table(board);
 
@@ -612,6 +654,6 @@ class Board {
     }
 }
 
-if(typeof module != 'undefined') {
+if (typeof module != 'undefined') {
     module.exports = Board;
 }
