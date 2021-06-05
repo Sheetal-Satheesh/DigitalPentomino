@@ -353,8 +353,8 @@ class Visual {
                 document.documentElement.style.setProperty("--buttonRotC", "-100deg");
                 document.documentElement.style.setProperty("--buttonRotD", "-136deg");
                 document.getElementById('pieceManipulation').style.display = 'block';
-                document.getElementById('pieceManipulation').style.left = 'calc(' + xPosition + 'px - '+ (width * 2) + 'vw)';
-                document.getElementById('pieceManipulation').style.top = 'calc(' + yPosition + 'px - ' + (width * 2) + 'vw)';
+                document.getElementById('pieceManipulation').style.left = 'calc(' + xPosition + 'px - '+ (width * 1.5) + 'vw)';
+                document.getElementById('pieceManipulation').style.top = 'calc(' + yPosition + 'px - ' + (width * 1) + 'vw)';
                 }
 
     }
