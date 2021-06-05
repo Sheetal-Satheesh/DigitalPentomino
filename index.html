@@ -450,7 +450,16 @@
         }
 
         function selectSettings() {
-            var modal = document.getElementById('modalTop');
+            let modal = document.getElementById('modalTop');
+            if ($(modal).is(':visible')) {
+                this.closeModal();
+            } else {
+                openSettings();
+            }
+        }
+
+        function openSettings() {
+            let modal = document.getElementById('modalTop');
             modal.style.display = "block";
             modal.style.background = "rgb(220, 240, 237)";
 
@@ -505,7 +514,7 @@
             let btn = document.getElementById("backButton"); 
             btn.style.display = "block";
             btn.onclick = function () {
-                selectSettings();
+                openSettings();
                 btn.style.display = "none";
             };
 
