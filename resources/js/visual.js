@@ -888,7 +888,9 @@ class Visual {
     }
 
     showGameSolved() {
-        this.disablePointerEventsOnPieces();
+        let enabledSolvedScreen = SettingsSingleton.getInstance().getSettings().showSolvedBoardScreen.enableSolvedScreen;
+        if(enabledSolvedScreen){
+            this.disablePointerEventsOnPieces();
         var modal = document.getElementById('modalTop');
         modal.style.display = "block";
         modal.style.background = "transparent";
@@ -909,18 +911,16 @@ class Visual {
             class: "modalText",
             text: strings.showSolved.congrats[lang]
         };
-        template.attachText("#modalBodyID", textNode1);
         let div1 = document.createElement("div");
         let img = document.createElement("img");
        
        
         let textNode3 = SettingsSingleton.getInstance().getSettings().showSolvedBoardScreen.SolvedScreens;
         let textNode2;
-       
         let cancelBtn ;
-       
         let playAgnBtnAttributes;
-        switch(textNode3){
+        template.attachText("#modalBodyID", textNode1);
+            switch(textNode3){
             case "Play again?":
                 textNode2 = {
                 class: "modalText",
@@ -983,7 +983,8 @@ class Visual {
                 modalBodyID.appendChild(div1);
                 template.attachText("#modalBodyID", textNode2);
                 break;
-        }       
+            } 
+        }      
     }
 
     dist(a, b) {
