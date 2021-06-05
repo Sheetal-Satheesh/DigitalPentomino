@@ -374,9 +374,8 @@ class SettingsForm {
     }
 
     // === === === UPDATE FORM === === ===
-    static updateForm(formElement) {
+    static updateForm(formElement, settings) {
         let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
-        let settings = SettingsSingleton.getInstance().getSettings();
 
         for (let heading in schema) {
             if (!settings.teachersMode && !settings.visibility.isVisible(heading)) {

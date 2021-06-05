@@ -484,7 +484,8 @@
                 this.handleSettingsExport
             );
 
-            SettingsForm.updateForm($('#innerGridForm')[0]);
+            let settings = SettingsSingleton.getInstance().getSettings();
+            SettingsForm.updateForm($('#innerGridForm')[0], settings);
             // this.postProcessSettingsForm(SettingsSingleton.getInstance().getSettings());
         }
 
@@ -515,6 +516,7 @@
             btn.style.display = "block";
             btn.onclick = function () {
                 openSettings();
+                SettingsForm.updateForm($('#innerGridForm')[0], settings);
                 btn.style.display = "none";
             };
 
@@ -684,7 +686,8 @@
                 document.getElementById("seedingCover").style.visibility = "hidden";
                 document.getElementById("seeding").style.visibility = "hidden";
 
-                SettingsForm.updateForm($('#innerGridForm')[0]);
+                let settings = SettingsSingleton.getInstance().getSettings();
+                SettingsForm.updateForm($('#innerGridForm')[0], settings);
                 // this.postProcessSettingsForm(settings);
             } else {
                 // TODO: handle error
