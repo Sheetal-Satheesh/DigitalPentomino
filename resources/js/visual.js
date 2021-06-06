@@ -299,7 +299,7 @@ class Visual {
         htmlElement.style.display = 'block';
     }
 
-    select(piece) {
+    select(piece, x, y) {
         this.selected = piece;
         if (piece.inTray) {
             this.disableManipulations();
@@ -308,7 +308,7 @@ class Visual {
             this.disableManipulations();
         }
         else {
-            this.showManipulations(piece);
+            this.showManipulations(piece, x, y);
         }
     }
 
@@ -327,35 +327,45 @@ class Visual {
             b: parseInt(rgbFormat[3], 16)
         } : null;
     }
+   
     //Enable or Disable manipulation buttons
 
-    showManipulations(piece) {        
+    showManipulations(piece, x, y) {        
         let clientRect = document.getElementById("piece_" + piece.name).getBoundingClientRect();
         let [xPosition, yPosition] = [clientRect.x + clientRect.width/2, clientRect.y + clientRect.height/2];      
         let width = UIProperty.WindowWidth / this.pd.gameWidth;
         let gameWidth = document.getElementById("game").clientWidth;
         let gameHeight = document.getElementById("game").clientHeight;
 
-        if ( (xPosition + 105 > gameWidth)) {
+        if ( (x + 130 > gameWidth)) {
           if ((yPosition > 0) && (yPosition < gameHeight)) {
                 document.getElementById('pieceManipulation').style.left = 'calc(' + xPosition + 'px - '+ (width * 2) + 'vw)';
                 document.getElementById('pieceManipulation').style.top = 'calc(' + yPosition + 'px - ' + (width * 1) + 'vw)';
                 document.getElementById('pieceManipulation').style.display = 'block';
-                document.documentElement.style.setProperty("--buttonRotA", "36deg");
-                document.documentElement.style.setProperty("--buttonRotB", "68deg");
-                document.documentElement.style.setProperty("--buttonRotC", "100deg");
-                document.documentElement.style.setProperty("--buttonRotD", "136deg");
+                document.documentElement.style.setProperty("--buttonRotA", "68deg");
+                document.documentElement.style.setProperty("--buttonRotB", "100deg");
+                document.documentElement.style.setProperty("--buttonRotC", "136deg");
+                document.documentElement.style.setProperty("--buttonRotD", "168deg");
           }
 
-        } else {
-                document.documentElement.style.setProperty("--buttonRotA", "-36deg");
+        } else if((x > 0) && (x < 130)) {
+                document.getElementById('pieceManipulation').style.left = 'calc(' + xPosition + 'px - '+ (width * 2) + 'vw)';
+                document.getElementById('pieceManipulation').style.top = 'calc(' + yPosition + 'px - ' + (width * 1) + 'vw)';
+                document.getElementById('pieceManipulation').style.display = 'block';
+                document.documentElement.style.setProperty("--buttonRotA", "-98deg");
                 document.documentElement.style.setProperty("--buttonRotB", "-68deg");
-                document.documentElement.style.setProperty("--buttonRotC", "-100deg");
-                document.documentElement.style.setProperty("--buttonRotD", "-136deg");
+                document.documentElement.style.setProperty("--buttonRotC", "-128deg");
+                document.documentElement.style.setProperty("--buttonRotD", "-38deg");
+        }         
+        else {
+                document.documentElement.style.setProperty("--buttonRotA", "-88deg");
+                document.documentElement.style.setProperty("--buttonRotB", "-118deg");
+                document.documentElement.style.setProperty("--buttonRotC", "-148deg");
+                document.documentElement.style.setProperty("--buttonRotD", "-178deg");
                 document.getElementById('pieceManipulation').style.display = 'block';
                 document.getElementById('pieceManipulation').style.left = 'calc(' + xPosition + 'px - '+ (width * 1.5) + 'vw)';
                 document.getElementById('pieceManipulation').style.top = 'calc(' + yPosition + 'px - ' + (width * 1) + 'vw)';
-                }
+        }
 
     }
 
@@ -530,7 +540,7 @@ class Visual {
                          *
                          * TODO: Make buttons disappear/appear if nothing/something is selected
                          */
-                        that.select(data[1]);
+                        that.select(data_[1], event.clientX, event.clientY);
                         return;
                     }
                 }
@@ -794,7 +804,7 @@ class Visual {
 
             case "Remove":
                 // handle remove hint
-                this.select(hintinPen);
+                this.select(hintinPen, PosX, PosY);
                 var pen = document.getElementById("piece_" + hintinPen.name);
                 //console.log("pent",hintinPen,this.selected);
                 if (!this.selected.inTray){
@@ -807,7 +817,7 @@ class Visual {
 
             case "RotateClkWise":
                 // handle rotateClkWise hint
-                this.select(hintinPen);
+                this.select(hintinPen, PosX, PosY);
                 if (!this.selected.inTray){
                     rotateClkWise();
                     setTimeout(function(){
@@ -818,7 +828,7 @@ class Visual {
 
             case "RotateAntiClkWise":
                 // handle rotateAntiClkWise hint
-                this.select(hintinPen);
+                this.select(hintinPen, PosX, PosY);
                 if (!this.selected.inTray){
                     rotateAntiClkWise();
                     setTimeout(function(){
@@ -830,7 +840,7 @@ class Visual {
             case "MirrorH":
                 // handle mirrorH hint
                 //select piece in the UI to flip
-                this.select(hintinPen);
+                this.select(hintinPen, PosX, PosY);
                 if (!this.selected.inTray){
                     flipH();
                     setTimeout(function(){
@@ -841,7 +851,7 @@ class Visual {
 
             case "MirrorV":
                 // handle mirrorV hint
-                this.select(hintinPen);
+                this.select(hintinPen, PosX, PosY);
                 if (!this.selected.inTray){
                     flipV();
                     setTimeout(function(){

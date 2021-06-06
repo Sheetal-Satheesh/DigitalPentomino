@@ -426,18 +426,18 @@ table
 .main-wrapper {
   width: 200px;
   height: 200px;
-  position: relative;
+  position: relative;    
 }
 
 .button-wrapper {
   border-radius: 50%;
-  width: 200px;
-  height: 200px;
+  width: 280px;
+  height: 280px;
   position: absolute;
   bottom: 0;
   right: 0;
   z-index: 12;
-  transition: transform .2s; 
+  transition: transform .2s;   
 }
 
 .button-wrapper.first {
@@ -470,8 +470,8 @@ table
 }
 
 .button-inside.first {
-  background-color: #ff0033;
-}
+   background-color: #ff0033;
+} 
 
 .button-inside.second {
   background-color: #ff0033;
@@ -486,48 +486,52 @@ table
 }
 
 
-.icon-rotateLeft:before {
+.icon-rotateLeft:before {  
   width: 34px;
   height: 34px;
   position: absolute;
-  bottom: 3px;
-  right: 3px;
+  bottom: 1px;
+  right: 1px;
   font-size:24px ;
+  transform: 0deg;
 }
 
-.icon-rotateRight {
+.icon-rotateRight {  
   width: 34px;
   height: 34px;
   position: absolute;
-  bottom: 3px;
-  right: 3px;
+  bottom: 1px;
+  right: 1px;
   font-size:24px ;
-}
-.icon-flipHorizontally{
-  width: 34px;
-  height: 34px;
-  position: absolute;
-  bottom: 3px;
-  right: 3px;
-  font-size:24px ;
+  transform: 0deg;
 }
 
-.icon-flipVertically {
+.icon-flipHorizontally {  
   width: 34px;
   height: 34px;
   position: absolute;
   bottom: 3px;
   right: 3px;
   font-size:24px ;
+  transform: rotate(var(--buttonRotA)); 
+}
+
+.icon-flipVertically {  
+  width: 34px;
+  height: 34px;
+  position: absolute;
+  bottom: 1px;
+  right: 1px;
+  font-size:24px ;     
 }
 
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?fg31j2');
-  src:  url('fonts/icomoon.eot?fg31j2#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?fg31j2') format('truetype'),
-    url('fonts/icomoon.woff?fg31j2') format('woff'),
-    url('fonts/icomoon.svg?fg31j2#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?qgib2i');
+  src:  url('fonts/icomoon.eot?qgib2i#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?qgib2i') format('truetype'),
+    url('fonts/icomoon.woff?qgib2i') format('woff'),
+    url('fonts/icomoon.svg?qgib2i#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -548,17 +552,26 @@ table
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-rotateLeft:before {
+.icon-flipHorizontally:before {
   content: "\61";
 }
-.icon-rotateRight:before {
+.icon-flipVertically:before {
   content: "\62";
 }
-.icon-flipHorizontally:before {
+.icon-select:before {
+  content: "\67";
+}
+.icon-rotateRight:before {
   content: "\63";
 }
-.icon-flipVertically:before {
+.icon-rotateLeft:before {
   content: "\64";
+}
+.icon-setting:before {
+  content: "\66";
+}
+.icon-plus:before {
+  content: "\65";
 }
 
 /* Styling of search bar for seeding */
