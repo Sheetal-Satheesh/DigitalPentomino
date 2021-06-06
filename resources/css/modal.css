@@ -24,7 +24,7 @@ button:hover {
 #modalTop {
     top: 10vw;
     left: 0vw;
-    right: 1vw;
+    right: 0vw;
     bottom: 10vw;
     /*border: 1px solid rgb(18, 122, 114);*/
     overflow: auto;
