@@ -17,62 +17,62 @@ class Pentomino {
         this.inTray = 1;
         switch (sPentominoType) {
             case 'F':
-                this.color = "#cc2828";
+                this.color = this.setPentominoColors(0);
                 this.trayPosition = 0;
                 this.sRepr = '0000000110011000010000000';
                 break;
             case 'L':
-                this.color = "#cccc28";
+                this.color = this.setPentominoColors(1);
                 this.trayPosition = 1;
                 this.sRepr = '0010000100001000011000000';
                 break;
             case 'N':
-                this.color = "#7acc28";
+                this.color = this.setPentominoColors(2);
                 this.trayPosition = 2;
                 this.sRepr = '0010000100011000100000000';
                 break;
             case 'P':
-                this.color = "#28cc28";
+                this.color = this.setPentominoColors(3);
                 this.trayPosition = 3;
                 this.sRepr = '0000001100011000100000000';
                 break;
             case 'Y':
-                this.color = "#cc28cc";
+                this.color = this.setPentominoColors(4);
                 this.trayPosition = 4;
                 this.sRepr = '0000000000001001111000000';
                 break;
             case 'T':
-                this.color = "#28cc7a";
+                this.color = this.setPentominoColors(5);
                 this.trayPosition = 5;
                 this.sRepr = '0000001110001000010000000';
                 break;
             case 'U':
-                this.color = "#28cccc";
+                this.color = this.setPentominoColors(6);
                 this.trayPosition = 6;
                 this.sRepr = '0000001010011100000000000';
                 break;
             case 'V':
-                this.color = "#287acc";
+                this.color = this.setPentominoColors(7);
                 this.trayPosition = 7;
                 this.sRepr = '0000001000010000111000000';
                 break;
             case 'W':
-                this.color = "#2828cc";
+                this.color = this.setPentominoColors(8);
                 this.trayPosition = 8;
                 this.sRepr = '0000001000011000011000000';
                 break;
             case 'Z':
-                this.color = "#cc287a";
+                this.color = this.setPentominoColors(9);
                 this.trayPosition = 9;
                 this.sRepr = '0000001100001000011000000';
                 break;
             case 'I':
-                this.color = "#cc7a28";
+                this.color = this.setPentominoColors(10);
                 this.trayPosition = 10;
                 this.sRepr = '0010000100001000010000100';
                 break;
             case 'X':
-                this.color = "#7a28cc";
+                this.color = this.setPentominoColors(11);
                 this.trayPosition = 11;
                 this.sRepr = '0000000100011100010000000';
                 break;
@@ -80,6 +80,19 @@ class Pentomino {
                 throw 'Unexpected Pentomino Type: \'' + sPentominoType + '\'';
         }
     }
+
+    setPentominoColors(colorNumber) {
+        let themeStyle = 'default';
+        var colorsArrayDefault = ['#cc2828', '#cccc28', '#7acc28', '#28cc28', '#cc28cc', '#28cc7a', '#28cccc', '#287acc', '#2828cc', '#cc287a', '#cc7a28', '#7a28cc'];
+        // console.log('random color---->', _.sample(colorsArray));
+        if (themeStyle == 'default') {
+            return colorsArrayDefault[colorNumber];
+        }
+        else if (themeStyle == 'grey') {
+            return '#3e3d3d'
+        }
+    }
+
 
     getMatrixPosition([anchorRow, anchorCol], [row, col]) {
         return [
