@@ -146,7 +146,7 @@ class SettingsForm {
 
     static createCollapsibleButton(showText, hideText) {
         let buttonElement = SettingsForm.createButton(showText.toUpperCase(), {
-            "class": "collapsible"
+            "class": "collapsible btn btn-primary btn-lg"
         });
 
         buttonElement.addEventListener("click", function (event) {
