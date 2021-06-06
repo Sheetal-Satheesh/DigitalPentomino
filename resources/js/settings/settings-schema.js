@@ -47,13 +47,26 @@ class SettingsSchema {
             general: {
                 "type": "object",
                 "title": titles.general.title[lang],
+                "advanced": false,
                 "properties": {
                     language: {
                         "type": "string",
                         "title": titles.general.language.title[lang],
                         "enum": ["en", "de"],
                         "enumText": titles.general.language.enumTitles[lang],
-                        "default": "de"
+                        "imgPaths": ["resources/images/icons/flag_of_the_united_kingdom_200px.png",
+                            "resources/images/icons/flag_of_germany_200px.png"],
+                        "default": "en"
+                    },
+                    enableAudio: {
+                        "type": "boolean",
+                        "title": titles.general.enableAudio.title[lang],
+                        "default": false
+                    },
+                    enableBgMusic: {
+                        "type": "boolean",
+                        "title": titles.general.enableBgMusic.title[lang],
+                        "default": false
                     }
                 }
             },
@@ -74,6 +87,7 @@ class SettingsSchema {
             hinting: {
                 "type": "object",
                 "title": titles.hinting.title[lang],
+                "advanced": true,
                 "properties": {
                     showNumberOfPossibleSolutions: {
                         "type": "boolean",
@@ -153,7 +167,9 @@ class SettingsSchema {
 
             prefilling: {
                 "type": "object",
+                "advanced": true,
                 "title": titles.prefilling.title[lang],
+                "visible": false,
                 "properties": {
                     enablePrefilling: {
                         "type": "boolean",

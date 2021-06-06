@@ -35,6 +35,8 @@
     <script src="resources/js/settings/settings.js"></script>
     <script src="resources/js/settings/settings-parser.js"></script>
     <script src="resources/js/settings/translator.js"></script>
+    <script src="resources/js/settings/settings-form.js"></script>
+    <script src="resources/js/settings/settings-visibility.js"></script>
     <script src="resources/js/multi-lang/strings.js"></script>
     <script src="resources/js/pd.js"></script>
     <script src="resources/js/visual.js"></script>
@@ -45,6 +47,7 @@
     <script type="text/javascript" src="resources/jsonform/jsv.js"></script>
     <script type="text/javascript" src="resources/jsonform/html2canvas.js"></script>
     <script type="text/javascript" src="resources/jsonform/loadash.js"></script>
+    <script type="text/javascript" src="resources/jsonform/jquery.qrcode.min.js"></script>
     <script type="text/javascript" src="resources/js/util.js"></script>
     <script src="resources/js/hint.js"></script>
     <script src="resources/js/hint-ai.js"></script>
@@ -52,6 +55,9 @@
 </head>
 
 <body onload="touchStartup(); initialize()">
+    <audio id="audioTukaScream" src="resources/audio/tuka-scream.mp3"></audio>
+    <audio id="bgMusic" src="resources/audio/chee-zee-beach-by-kevin-macleod-from-filmmusic-io.mp3" loop></audio>
+
     <canvas id="canvas" width="auto" height="auto"></canvas>
     <div id="seedingCover"></div>
     <div id="seeding" class="seed">
@@ -88,6 +94,7 @@
 
             <div id="modalTop" class="modal">
                 <span onclick="closeModal()" class="close" title="Close Modal">x</span>
+                <button id="backButton" class="back" style="display:none">&#8249;</button>
                 <div class="modalContainer" id="modalContainerID">
                     <div class="outerGrid">
                         <div class="innerGrid" id="innerGrid"></div>
@@ -219,7 +226,7 @@
         }
 
         function openLicense() {
-            var modal = document.getElementById('modalTop');
+            let modal = document.getElementById('modalTop');
             if ($(modal).is(':visible')) {
                 this.closeModal();
             }
@@ -241,8 +248,17 @@
                 let div1 = document.createElement("div");
                 let h5 = document.createElement("h5");
                 let lang = SettingsSingleton.getInstance().getSettings().general.language;
-                var t1 = document.createTextNode(strings.license[lang]);
+                let t1 = document.createTextNode(strings.license[lang]);
                 h5.appendChild(t1);
+                div1.appendChild(h5);
+
+                let hBgMusic = document.createElement("h6");
+                let bgMusicLicense = document.createTextNode("Background Music 'Chee Zee Beach' by Kevin MacLeod\n" +
+                    "Link: https://incompetech.filmmusic.io/song/3490-chee-zee-beach\n" +
+                    "License: https://filmmusic.io/standard-license");
+                hBgMusic.appendChild(bgMusicLicense);
+                div1.appendChild(hBgMusic);
+
                 let h6 = document.createElement("h6");
                 let t2 = document.createTextNode("(author: Edicionesnaza) jboy-2 : https://www.deviantart.com/edicionesnaza/art/Boy-and-Girl-Icon-gif-By-alfreditha-394021423"+"\n");
                 let t3 = document.createTextNode("(author: Ahkâm) present :https://www.freeiconspng.com/img/39913    \n");
@@ -250,7 +266,6 @@
                 h6.appendChild(t2);
                 h6.appendChild(t3);
                 h6.appendChild(t4);
-                div1.appendChild(h5);
                 div1.appendChild(h6);
                 modalBodyID.appendChild(div1);
             }
@@ -382,7 +397,7 @@
         function handleJsonFormSubmit(errors, values) {
             let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), values);
             // TODO: display seed somehow
-            insertUrlParam("seed", seed);
+           insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
 
             if (errors === false) {
                 event.preventDefault();
@@ -417,174 +432,196 @@
                 } else if (heading === "prefilling" && key === "enablePrefilling") {
                     let visible = settings[heading][key];
                     document.getElementById("prefillBoard").style.visibility = visible ? "visible" : "hidden";
+                } else if (heading === "general" && key === "enableBgMusic") {
+                    let playBgMusic = settings[heading][key];
+                    let bgMusicAudio = document.getElementById("bgMusic");
+                    if (playBgMusic) {
+                        if (bgMusicAudio.paused || bgMusicAudio.duration === 0) {
+                            bgMusicAudio.play();
+                        }
+                    } else {
+                        if (!bgMusicAudio.paused) {
+                            bgMusicAudio.pause();
+                            bgMusicAudio.currentTime = 0;
+                        }
+                    }
                 }
             });
         }
 
-        function updateSettingSchemaDefaultFromSettings(settingsSchema, settings) {
-            let formElement = $('#innerGridForm');
-
-            //change default values according to current schema
-            for (let key in settings) {
-                //console.log(settings[key]);
-                for (let subkey in settings[key]) {
-                    //console.log(settings[key][subkey]);
-                    let schemaEntry = settingsSchema[key]["properties"][subkey];
-                    switch (schemaEntry.type) {
-                        case "boolean":
-                            editBooleanSchemaEntry(key, subkey, settings[key][subkey], formElement);
-                            break;
-                        case "number": case "integer":
-                            editInputSchemaEntry(key, subkey, settings[key][subkey], formElement);
-                            break;
-                        case "string":
-                            editStringSchemaEntry(key, subkey, schemaEntry, settings[key][subkey], formElement);
-                            break;
-                        default:
-                            throw new Error("Schema Error: Unknown type: " + schemaEntry.type);
-                    }
-                }
-            }
-            let currentLanguage = settings.general.language;
-            settingsSchema["general"]["properties"]["language"]["default"] = currentLanguage === baseConfigs.languages.ENGLISH ? "en" : "de";
-        }
-
-        function editBooleanSchemaEntry(heading, key, value, formElement) {
-            let name = heading + "." + key;
-            let inputElement = formElement.find("input[name='" + name + "']")[0];
-            inputElement.checked = value;
-        }
-
-        function editInputSchemaEntry(heading, key, value, formElement) {
-            let name = heading + "." + key;
-            let inputElement = formElement.find("input[name='" + name + "']")[0];
-            inputElement.value = value;
-        }
-
-        function editStringSchemaEntry(heading, key, schemaEntry, selectedValue, formElement) {
-            let selectName = heading + "." + key;
-            let enumText = schemaEntry.enumText;
-            if (enumText === undefined) {
-                throw new Error("No enumText defined");
-            }
-            let selectElement = formElement.find("select[name='" + selectName + "']")[0];
-            if (!(selectElement.options.length === enumText.length)) {
-                throw new Error("Number of elements does not match number of texts specified in enumText");
-            }
-
-            if (heading === "general" && key === "language") {
-                selectedValue = selectedValue === baseConfigs.languages.ENGLISH ? "en" : "de";
-            }
-
-            let selectedOption = null;
-            for (let i = 0; i < selectElement.options.length; i++) {
-                let option = selectElement.options[i];
-                if (option.value === selectedValue) {
-                    selectedOption = option;
-                }
-            }
-            selectedOption.selected = true;
-        }
-
-        function handleJsonFormErrors(errors, formElt) {
-            let lang = SettingsSingleton.getInstance().getSettings().general.language;
-            for (let i = 0; i < errors.length; i++) {
-                let error = errors[i];
-
-                switch (error.attribute) {
-                    case "maximum":
-                        error.message = "<p style=\"color:red\"><b>" + strings.settings.errors.higherThanMax[lang] + " (" + error.details + ")</b></p>";
-                        break;
-                    case "minimum":
-                        error.message = "<p style=\"color:red\"><b>" + strings.settings.errors.lowerThanMin[lang] + " (" + error.details + ")</b></p>";
-                        break;
-                }
-            }
-            $(formElt).jsonFormErrors(errors, $('#innerGridForm'));
-        }
-
         function selectSettings() {
-            var modal = document.getElementById('modalTop');
+            let modal = document.getElementById('modalTop');
             if ($(modal).is(':visible')) {
-                this.closeSettings();
+                this.closeModal();
+            } else {
+                openSettings();
             }
-            else {
-                this.disableSnapshotButton()
-                this.disablePointerEventsOnPieces();
-                this.hideManipulationButtons();
-                // this.disablePrefillButton();
-                this.closeBoardSelector();
-                modal.style.display = "block";
-                modal.style.background = "rgb(220, 240, 237)";
-
-                document.querySelector(".modalFormContent").style.display = "none";
-                document.querySelector(".innerGrid").style.display = "block";
-                template.clearContent("#modalButtonsID");
-                template.clearContent("#modalTitleID");
-                template.clearContent("#modalBodyID");
-                template.clearContent(".innerGrid")
-                template.clearContent("#innerGridForm");
-
-                //add form to attach settings to
-                $('#innerGridForm').jsonForm({
-                    schema: SettingsSchemaSingleton.getInstance().getSettingsSchema(),
-                    onSubmit: this.handleJsonFormSubmit,
-                    displayErrors: this.handleJsonFormErrors
-                });
-
-                this.postProcessSettingsForm(SettingsSingleton.getInstance().getSettings());
-            }
-
         }
 
-        function postProcessSettingsForm(settings) {
-            this.updateSettingSchemaDefaultFromSettings(SettingsSchemaSingleton.getInstance().getSettingsSchema(), settings);
+        function openSettings() {
+            let modal = document.getElementById('modalTop');
+            modal.style.display = "block";
+            modal.style.background = "rgb(220, 240, 237)";
 
-            // Overwrite default 'submit' button
-            let submitButton = $('#innerGridForm input[type=submit]')[0];
-            if (submitButton.id.length === 0) {
-                submitButton.id = "settings-submit-button";
-                submitButton.value = "Apply";
-                submitButton.form = "innerGrid"
+            document.querySelector(".modalFormContent").style.display = "none";
+            document.querySelector(".innerGrid").style.display = "block";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent(".innerGrid")
+            template.clearContent("#innerGridForm");
 
-                // Find parent of default jsonform submit button & inclusion of other buttons
-                let btnContainer = $('#innerGridForm input[type=submit]').parent();
+            //add form to attach settings to
+            //$('#innerGridForm').jsonForm({
+            //    schema: SettingsSchemaSingleton.getInstance().getSettingsSchema(),
+            //    onSubmit: this.handleJsonFormSubmit,
+            //    displayErrors: this.handleJsonFormErrors
+            //});
 
-                // Add own buttons
-                let $closeButton = $('<input id="settings-close-button" class="btn btn-primary" type="button" value="Abort" onClick="closeSettings()" />');
-                $closeButton.appendTo(btnContainer);
-                /*let $seedButton = $('<input id="btnSeed" class="button" type="button" value="Enter a seed..." onClick="selectSeeding()" />');
-                $seedButton.appendTo(btnContainer);*/
-            }
+            SettingsForm.generateForm(
+                $('#innerGridForm')[0],
+                this.handleJsonFormSubmit,
+                this.handleSettingsExport
+            );
 
-            // Change select box to names of enums
-            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+            let settings = SettingsSingleton.getInstance().getSettings();
+            SettingsForm.updateForm($('#innerGridForm')[0], settings);
+            // this.postProcessSettingsForm(SettingsSingleton.getInstance().getSettings());
+        }
 
+        function handleSettingsExport(settings) {
+            this.hideManipulationButtons();
+            this.closeBoardSelector();
+            this.disablePointerEventsOnPieces();
+            var modal = document.getElementById('modalTop');
+            modal.style.display = "block";
+            modal.style.background = "transparent";
+
+            document.querySelector(".modalFormContent").style.display = "block";
+            document.querySelector(".innerGrid").style.display = "none";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent("#innerGridForm");
+
+            let div1 = document.createElement("div");
+            let h5 = document.createElement("h3");
+            var t1 = document.createTextNode("Share");
+            h5.appendChild(t1);
+            div1.appendChild(h5);
+            modalBodyID.appendChild(div1);
+
+            //show back button
+            let btn = document.getElementById("backButton"); 
+            btn.style.display = "block";
+            btn.onclick = function () {
+                openSettings();
+                SettingsForm.updateForm($('#innerGridForm')[0], settings);
+                btn.style.display = "none";
+            };
+
+            let teacherURLLabel = document.createElement("label");
+            let pupilURLLabel = document.createElement("label");
 
             let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
-            for (let heading in schema) {
-                let subSettings = schema[heading].properties;
-                for (let key in subSettings) {
-                    let settingsEntry = subSettings[key];
-                    if (settingsEntry.type === "string") {
-                        let selectName = heading + "." + key;
-                        let enumText = settingsEntry.enumText;
-                        if (enumText === undefined) {
-                            throw new Error("No enumText defined");
-                        }
-                        let selectElement = $("select[name='" + selectName + "']")[0];
-                        if (!(selectElement.options.length === enumText.length)) {
-                            throw new Error("Number of elements does not match number of texts specified in enumText");
-                        }
-                        for (let i = 0; i < selectElement.options.length; i++) {
-                            let option = selectElement.options[i];
-                            option.text = enumText[i];
-                        }
-                    }
-                }
-            }
+            let seed = SettingsParser.parseSettingsToSeed(schema, settings);
 
-            Translator.translateHeaders(SettingsSingleton.getInstance().getSettings().general.language);
+            let teacherUrl = baseConfigs.url + "?" + baseConfigs.seedUrlParamName + "=" + seed;
+            let pupilUrl = baseConfigs.url + "?" + baseConfigs.seedUrlParamName + "=2" + seed.substr(1, seed.length);
+            teacherURLLabel.innerHTML = teacherUrl;
+            pupilURLLabel.innerHTML = pupilUrl;
+
+            let teacherQrCodeElement = document.createElement("div");
+            let pupilQrCodeElement = document.createElement("div");
+            pupilQrCodeElement.style.margin = "auto";
+
+            generateQrCode(pupilQrCodeElement, pupilUrl);
+            modalBodyID.appendChild(pupilQrCodeElement);
+
+            /*let table = document.createElement("table");
+            table.style.margin = "auto";
+
+            let tr23 = document.createElement("tr");
+            table.appendChild(tr23);
+            let td111 = document.createElement("td");
+            td111.appendChild(document.createTextNode("Share With Other Teachers"));
+            tr23.appendChild(td111);
+            let td212 = document.createElement("td");
+            td212.appendChild(document.createTextNode("Use In Class"));
+            tr23.appendChild(td212);
+
+            let qrTr = generateQrTrElement(teacherUrl, pupilUrl);
+            table.appendChild(qrTr);
+
+            let tr2 = document.createElement("tr");
+            table.appendChild(tr2);
+            let td11 = document.createElement("td");
+            td11.appendChild(document.createTextNode("Use this to share with other teachers (Restricted Settings)"));
+            tr2.appendChild(td11);
+            let td21 = document.createElement("td");
+            td21.appendChild(document.createTextNode("Use this in class"));
+            tr2.appendChild(td21);
+
+            modalBodyID.appendChild(table);*/
+
+            modalBodyID.appendChild(document.createElement("br"));
+            modalBodyID.appendChild(document.createTextNode("Use this QR-code to bring your current settings on your pupil's devices."));
+
+            modalBodyID.appendChild(document.createElement("br"));
+            modalBodyID.appendChild(document.createTextNode("1. Print QR-code 2. The pupils scan it with the X-button in the TUCA-App."));
+
+            modalBodyID.appendChild(document.createElement("br"));
+            let printButton = SettingsForm.createButton("Print");
+            printButton.addEventListener("click", function () {
+                window.print();
+            });
+            modalBodyID.appendChild(printButton);
+            modalBodyID.appendChild(document.createElement("br"));
+            modalBodyID.appendChild(document.createElement("br"));
+
+            let collapsibleButton = SettingsForm.createCollapsibleButton("SHOW ADVANCED SHARE OPTIONS", "HIDE ADVANCED SHARE OPTIONS");
+            let divToHide = document.createElement("div");
+            divToHide.appendChild(document.createTextNode("Test"));
+
+            modalBodyID.appendChild(collapsibleButton);
+            modalBodyID.appendChild(divToHide);
+        }
+
+        /*function generateQrTrElement(teacherUrl, pupilUrl) {
+            // Generate QR
+            let teacherQrCodeElement = document.createElement("div");
+            let pupilQrCodeElement = document.createElement("div");
+
+            generateQrCode(teacherQrCodeElement, teacherUrl);
+            generateQrCode(pupilQrCodeElement, pupilUrl);
+
+            let tr = document.createElement("tr");
+            let td1 = document.createElement("td");
+            tr.appendChild(td1);
+            let td2 = document.createElement("td");
+            tr.appendChild(td2);
+
+            td1.appendChild(teacherQrCodeElement);
+            td2.appendChild(pupilQrCodeElement);
+
+            return tr;
+        }*/
+
+        function generateQrCode(element, inputText) {
+            let selector = $(element);
+            selector.empty();
+            // Set Size to Match User Input
+            // FIXME: fix width and height
+            selector.css({
+                'width' : 255,
+                'height' : 255
+            });
+            // Generate and Output QR Code
+            selector.qrcode({
+                width: 255,
+                height: 255,
+                text: inputText
+            });
         }
 
         let piecesIdArray = ['piece_X', 'piece_Y', 'piece_F', 'piece_I', 'piece_L', 'piece_N', 'piece_P', 'piece_T', 'piece_U', 'piece_V', 'piece_W', 'piece_Z'];
@@ -602,6 +639,7 @@
 
         function closeModalContainer() {
             document.getElementById('modalTop').style.display = "none";
+            document.getElementById('backButton').style.display = "none";
             this.enablePointerEventsOnPiece();
         }
 
@@ -648,7 +686,9 @@
                 document.getElementById("seedingCover").style.visibility = "hidden";
                 document.getElementById("seeding").style.visibility = "hidden";
 
-                this.postProcessSettingsForm(settings);
+                let settings = SettingsSingleton.getInstance().getSettings();
+                SettingsForm.updateForm($('#innerGridForm')[0], settings);
+                // this.postProcessSettingsForm(settings);
             } else {
                 // TODO: handle error
             }

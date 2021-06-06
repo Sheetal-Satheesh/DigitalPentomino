@@ -88,3 +88,20 @@ button:hover {
   }
 
 /*    */
+
+
+/* The modal back button (<<) */
+
+.modal .back {
+  position: relative;
+  left: 1vw;
+  top: 1vw;
+  width: 4vw;
+  height: 4vw;
+  border-radius: 50%;
+  border: 1px solid black;
+  display: inline-block;
+  text-align: center;
+}
+
+/* */

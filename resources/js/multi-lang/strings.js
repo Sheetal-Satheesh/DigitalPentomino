@@ -15,6 +15,10 @@ const strings = {
     numberOfPossibleSolutions: ["Number of solutions", "Anzahl Lösungen"],
     settings: {
         header: ["Game settings", "Spieleinstellungen"],
+        advanced: {
+            show: ["Show advanced settings", "Öffne erweiterte Einstellungen"],
+            hide: ["Hide advanced settings", "Schließe erweiterte Einstellungen"]
+        },
         buttons: {
             apply: ["Apply", "Bestätigen"],
             cancel: ["Cancel", "Abbrechen"]
@@ -24,6 +28,12 @@ const strings = {
             language: {
                 title: ["Language", "Sprache"],
                 enumTitles: [["English", "German"], ["Englisch", "Deutsch"]]
+            },
+            enableAudio: {
+                title: ["Enable Audio", "Audio einschalten"]
+            },
+            enableBgMusic: {
+                title: ["Enable Background Music", "Hintergrundmusik einschalten"]
             }
         },
         hinting: {
@@ -136,8 +146,9 @@ const strings = {
             }
         },
         errors: {
-            lowerThanMin: ["The value is lower than the minimum", "Der Eintrag ist kleiner als der minimale Wert"],
-            higherThanMax: ["The value is higher than the maximum", "Der Eintrag ist größer als der maximale Wert"]
+            lowerThanMin: ["This shouldn't be smaller than", "Dieser Eintrag darf nicht kleiner sein als"],
+            higherThanMax: ["This shouldn't be greater than", "Dieser Eintrag darf nicht größer sein als"],
+            numberBadInput: ["Please enter a number", "Bitte geben Sie eine Zahl ein"]
         }
     }
 };
