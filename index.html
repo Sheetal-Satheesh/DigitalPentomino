@@ -122,7 +122,7 @@
                 <button type="button" id='prefillBoard' class="cActionBtn" onclick="prefillBoard()" disabled>
                     <img src="resources/images/icons/prefill.png">
                 </button>
-                <button type="button" id='qrCodeButton' class="cActionBtn" onclick="clickedOnScanQrCode()" disabled>
+                <button type="button" id='qrCodeButton' class="cActionBtn" onclick="clickedOnScanQrCode()">
                     <img src="resources/images/icons/qr-code.png">
                 </button>
                 <button type="button" id='hintButton' class="cActionBtn" onclick="callHintAI()"> <img
@@ -229,7 +229,28 @@
         }
 
         function clickedOnScanQrCode() {
-            // TODO
+            let modal = document.getElementById('modalTop');
+            if ($(modal).is(':visible')) {
+                this.closeModal();
+            } else {
+                openScanQrCode();
+            }
+        }
+
+        function openScanQrCode() {
+            let modal = document.getElementById('modalTop');
+            modal.style.display = "block";
+            modal.style.background = "rgb(220, 240, 237)";
+
+            document.querySelector(".modalFormContent").style.display = "none";
+            document.querySelector(".innerGrid").style.display = "block";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent(".innerGrid")
+            template.clearContent("#innerGridForm");
+
+            $('#innerGridForm')[0].appendChild(document.createTextNode("Scan QR-code"));
         }
 
         function openLicense() {
