@@ -48,6 +48,7 @@
     <script type="text/javascript" src="resources/jsonform/html2canvas.js"></script>
     <script type="text/javascript" src="resources/jsonform/loadash.js"></script>
     <script type="text/javascript" src="resources/jsonform/jquery.qrcode.min.js"></script>
+    <script type="text/javascript" src="resources/jsonform/qr-scanner.umd.min.js"></script>
     <script type="text/javascript" src="resources/js/util.js"></script>
     <script src="resources/js/hint.js"></script>
     <script src="resources/js/hint-ai.js"></script>
@@ -250,7 +251,21 @@
             template.clearContent(".innerGrid")
             template.clearContent("#innerGridForm");
 
-            $('#innerGridForm')[0].appendChild(document.createTextNode("Scan QR-code"));
+            let parent = $('#innerGridForm')[0];
+
+            let heading = document.createElement("h4");
+            heading.innerHTML = "Scan QR-code";
+            parent.appendChild(heading);
+
+            let videoElement = parent.appendChild(document.createElement("video"));
+            parent.appendChild(videoElement);
+
+            const qrScanner = new QrScanner(videoElement, result => {
+                console.log('decoded qr code:', result);
+                qrScanner.stop();
+            });
+
+            qrScanner.start();
         }
 
         function openLicense() {
