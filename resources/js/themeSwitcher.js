@@ -1,6 +1,11 @@
+// //consider 4 ids:
+// // ids: defaultTheme, dayTheme, iceTheme, blackAndWhiteTheme
+
+
 // console.log('Theme switcher initiated');
 
-// let themeSwitches = document.getElementsByClassName('theme-switches');
+// // let themeSwitches = document.getElementById('jsonform-4-elt-theming.theme');
+// // console.log(themeSwitches);
 // let style = localStorage.getItem('style');
 
 
@@ -11,8 +16,9 @@
 //     setTheme(style);
 // } 
 
+// let themeSwitches = ['defaultTheme', 'dayTheme', 'iceTheme', 'blackAndWhiteTheme'];
 // for(let i of themeSwitches){
-//     i.addEventListener('click', function(){
+//     document.getElementById(i).addEventListener('click', function(){
 //         let theme = this.dataset.theme;
 //         console.log(theme);
 //         setTheme(theme);
@@ -20,13 +26,17 @@
 // }
 
 // function setTheme(theme){
-//     if(theme == 'default'){
+//     if(theme == 'defaultTheme'){
 //         document.getElementById('switcher-id').href = 'resources/css/style.css';
 //     }
-//     else if(theme == 'light'){
+//     else if(theme == 'dayTheme'){
 //         document.getElementById('switcher-id').href = 'resources/css/day-theme.css';
-//     }else if (theme == 'ice') {
+//     }
+//     else if (theme == 'iceTheme') {
 //         document.getElementById('switcher-id').href = 'resources/css/ice-theme.css';
+//     }
+//     else if(theme == 'blackAndWhiteTheme') {
+//         document.getElementById('switcher-id').href = 'resources/css/blackandwhitetheme.css';
 //     }
 //     localStorage.setItem('style', theme);
 // }

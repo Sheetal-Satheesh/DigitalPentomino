@@ -47,7 +47,7 @@
   }
   
   #functions_navbar {
-    z-index: 10;
+    /* z-index: 10; */
     position: fixed;
     bottom: 0;
     left: 0;
