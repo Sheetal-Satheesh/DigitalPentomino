@@ -96,7 +96,6 @@
                             <h3 id="modalTitleID"></h3>
                             <div class="modalButtons" id="modalButtonsID"></div>
                             <div class="modalBody" id="modalBodyID"></div>
-
                         </div>
                     </form>
                 </div>
@@ -166,7 +165,7 @@
                     <span class="icon-flipVertically"></span>
                 </div>
             </div>
-        </div> 
+        </div> <!---Button Manipulation Ends-->
     </div>
 
     <script type="text/javascript">
@@ -186,10 +185,10 @@
         }
 
         function buttonManipulation() {
-          let btn = document.querySelector('.button');
-          let buttonWrapper = document.querySelectorAll('.button-wrapper');
+            let btn = document.querySelector('.button');
+            let buttonWrapper = document.querySelectorAll('.button-wrapper');
 
-          btn.addEventListener('click', function(){
+            btn.addEventListener('click', function() {
 
             if(btn.classList.contains('animation')) {
               btn.classList.remove('animation');
@@ -197,7 +196,7 @@
               btn.classList.add('animation');
             }
             for (i = 0; i < buttonWrapper.length; i++ ) {
-              if(buttonWrapper[i].classList.contains('animation')){
+              if(buttonWrapper[i].classList.contains('animation')) {
                  buttonWrapper[i].classList.remove('animation');
               } else {
                 buttonWrapper[i].classList.add('animation');

@@ -540,7 +540,7 @@ class Visual {
                          *
                          * TODO: Make buttons disappear/appear if nothing/something is selected
                          */
-                        that.select(data_[1], event.clientX, event.clientY);
+                        that.select(data[1], event.clientX, event.clientY);
                         return;
                     }
                 }
@@ -804,7 +804,7 @@ class Visual {
 
             case "Remove":
                 // handle remove hint
-                this.select(hintinPen, PosX, PosY);
+                this.select(hintinPen, posX, posY);
                 var pen = document.getElementById("piece_" + hintinPen.name);
                 //console.log("pent",hintinPen,this.selected);
                 if (!this.selected.inTray){
@@ -817,7 +817,7 @@ class Visual {
 
             case "RotateClkWise":
                 // handle rotateClkWise hint
-                this.select(hintinPen, PosX, PosY);
+                this.select(hintinPen, posX, posY);
                 if (!this.selected.inTray){
                     rotateClkWise();
                     setTimeout(function(){
@@ -828,7 +828,7 @@ class Visual {
 
             case "RotateAntiClkWise":
                 // handle rotateAntiClkWise hint
-                this.select(hintinPen, PosX, PosY);
+                this.select(hintinPen, posX, posY);
                 if (!this.selected.inTray){
                     rotateAntiClkWise();
                     setTimeout(function(){
@@ -840,7 +840,7 @@ class Visual {
             case "MirrorH":
                 // handle mirrorH hint
                 //select piece in the UI to flip
-                this.select(hintinPen, PosX, PosY);
+                this.select(hintinPen, posX, posY);
                 if (!this.selected.inTray){
                     flipH();
                     setTimeout(function(){
@@ -851,7 +851,7 @@ class Visual {
 
             case "MirrorV":
                 // handle mirrorV hint
-                this.select(hintinPen, PosX, PosY);
+                this.select(hintinPen, posX, posY);
                 if (!this.selected.inTray){
                     flipV();
                     setTimeout(function(){
