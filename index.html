@@ -12,7 +12,7 @@
     <link rel="stylesheet" id="switcher-id" href="">
     <!-- <link rel="stylesheet" href="resources/css/dayTheme.css"> -->
     <!-- <link rel="stylesheet" href="resources/css/iceTheme.css"> -->
-    <link rel="stylesheet" href="resources/css/blackandwhitetheme.css">
+    <!-- <link rel="stylesheet" href="resources/css/blackandwhitetheme.css"> -->
     <link rel="stylesheet" href="resources/css/board_selection.css">
     <link rel="stylesheet" href="resources/css/modal.css">
     <link rel="stylesheet" href="resources/css/grid.css">
@@ -397,7 +397,35 @@
 
                 SettingsSingleton.getInstance().setSettings(values);
                 processChangesToSettings(changesToSettings, values);
+                console.log(' Theme value---->',values.theming.theme);
+                applytheme(values.theming.theme);
 
+            }
+        }
+
+        function applytheme(themeName){
+            console.log('In applyTheme');
+            var switcherId = document.getElementById('switcher-id');
+            switch(themeName){
+                case theme1:
+                    switcherId.href =  'resources/css/style.css';
+                    break;
+                
+                case theme2:
+                    switcherId.href = 'resources/css/dayTheme.css';
+                    break;
+
+                case theme3:
+                switcherId.href = 'resources/css/iceTheme.css';
+                break;
+
+                case theme4:
+                switcherId.href = 'resources/css/blackandwhiteTheme.css';
+                break;
+
+                default:
+                switcherId.href = 'resources/css/blackandwhiteTheme.css';
+            
             }
         }
 

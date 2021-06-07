@@ -82,7 +82,7 @@ class Pentomino {
     }
 
     setPentominoColors(colorNumber) {
-        let themeStyle = 'blackandwhite';
+        let themeStyle = 'default';
         var colorsArrayDefault = ['#cc2828', '#cccc28', '#7acc28', '#28cc28', '#cc28cc', '#28cc7a', '#28cccc', '#287acc', '#2828cc', '#cc287a', '#cc7a28', '#7a28cc'];
         // console.log('random color---->', _.sample(colorsArray));
         if (themeStyle == 'default') {
