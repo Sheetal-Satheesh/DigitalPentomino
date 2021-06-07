@@ -260,6 +260,8 @@
             let videoElement = parent.appendChild(document.createElement("video"));
             parent.appendChild(videoElement);
 
+            QrScanner.WORKER_PATH = 'resources/jsonform/qr-scanner-worker.min.js';
+
             const qrScanner = new QrScanner(videoElement, result => {
                 console.log('decoded qr code:', result);
                 qrScanner.stop();
