@@ -122,6 +122,9 @@
                 <button type="button" id='prefillBoard' class="cActionBtn" onclick="prefillBoard()" disabled>
                     <img src="resources/images/icons/prefill.png">
                 </button>
+                <button type="button" id='qrCodeButton' class="cActionBtn" onclick="clickedOnScanQrCode()" disabled>
+                    <img src="resources/images/icons/qr-code.png">
+                </button>
                 <button type="button" id='hintButton' class="cActionBtn" onclick="callHintAI()"> <img
                     src="resources/images/icons/help_v2.png">
                 </button>
@@ -223,6 +226,10 @@
                 boardimageDiv.appendChild(imageElement);
                 boardimageGrid.appendChild(boardimageDiv);
             }
+        }
+
+        function clickedOnScanQrCode() {
+            // TODO
         }
 
         function openLicense() {
