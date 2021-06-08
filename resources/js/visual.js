@@ -549,8 +549,7 @@ class Visual {
                 var elements = document.elementsFromPoint(event.clientX, event.clientY);
                 for (var i in elements) {
                     var element = elements[i];
-                    if (element.id == 'functions_navbar' || element.id == 'pieceManipulation') return; //do not unselect if operations have been applied to the functions panel
-                    else if(element.querySelectorAll("[id^='.button-inside']")) return;
+                    if (element.id == 'functions_navbar' || element.id.startsWith('insideWrapper')) return; //do not unselect if operations have been applied to the functions panel                    
                 }
                 that.deleteSelection();
             }
