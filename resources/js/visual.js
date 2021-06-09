@@ -104,6 +104,10 @@ class Visual {
 
     placePentomino(pentomino, posX, posY, cmdProperty = cmdAttrDefault) {
         this.gameController.placePentomino(pentomino, posX, posY, cmdProperty);
+        if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
+            let audio = new Audio('resources/audio/snap.wav');
+            audio.play();
+        }
         this.positionPiece(pentomino);
         if (cmdProperty.cmdType != CommandTypes.Shadow) {
             this.checkIfGameWon();
