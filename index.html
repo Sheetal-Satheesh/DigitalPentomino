@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="resources/css/style.css">
     <link rel="stylesheet" href="resources/css/board_selection.css">
     <link rel="stylesheet" href="resources/css/modal.css">
+    <link rel="stylesheet" href="resources/css/load_screen.css">
     <link rel="stylesheet" href="resources/css/grid.css">
     <link rel="stylesheet" href="resources/css/settings_form.css">
     <link rel="stylesheet" style="text/css" href="resources/jsonform/bootstrap.css" />
@@ -53,8 +54,9 @@
     <script src="resources/js/help/hinting/command-sequence-list.js"></script>
     <script src="resources/js/load_screen.js"></script>
 </head>
-<div id="loading">
-    <div id="load"></div>
+<!-- Preloader section -->
+<div class="preloader">
+    <div class="spinner"></div>
 </div>
 <body onload="touchStartup(); initialize()" class="page">
     <audio id="audioTukaScream" src="resources/audio/tuka-scream.mp3"></audio>

@@ -1,17 +1,6 @@
-function onReady(callback) {
-  var intervalId = window.setInterval(function() {
-    if (document.getElementsByTagName('body')[0] !== undefined) {
-      window.clearInterval(intervalId);
-      callback.call(this);
-    }
-  }, 1000);
-}
-
-function setVisible(selector, visible) {
-  document.querySelector(selector).style.display = visible ? 'block' : 'none';
-}
-
-onReady(function() {
-  setVisible('.page', true);
-  setVisible('#loading', false);
+ /* jQuery Pre loader
+  -----------------------------------------------*/
+  //reference: https://codepen.io/hariharakumar/pen/VmOdBx
+$(window).load(function(){
+    $('.preloader').fadeOut(1000); // set duration in brackets    
 });
