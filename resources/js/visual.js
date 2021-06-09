@@ -265,7 +265,7 @@ class Visual {
                 let collisonPentomino = this.gameController.getCollisionOfPentominoes(piece).pop();
                 this.overlapBlock.add(piece, collisonPentomino);
                 if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
-                    let audio = new Audio('resources/audio/colision.wav');
+                    let audio = new Audio('resources/audio/collision.mp3');
                     audio.play();
                 }
             }
@@ -645,7 +645,7 @@ class Visual {
         let hintCommand = hint.getCommands()[commandNumber];
         let hintinPen = hintCommand._pentomino;
         if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
-            let audio = new Audio('resources/audio/hinting.wav');
+            let audio = new Audio('resources/audio/hinting.mp3');
             audio.play();
         }
         this.indicateHint(hint, commandNumber);
@@ -1180,7 +1180,7 @@ class Visual {
     prefillBoard() {
         this.readyForPrefilling();
         if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
-            let audio = new Audio('resources/audio/prefill.wav');
+            let audio = new Audio('resources/audio/prefill.mp3');
             audio.play();
         }
         let randomSolution = this.fetchRandomSolution();
