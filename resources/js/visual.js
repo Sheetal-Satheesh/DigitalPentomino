@@ -259,12 +259,15 @@ class Visual {
 
         }
         else {
-
             var bCellsFnd = this.isPentominoInBlockCells(piece);
             var collisonFnd = this.isCollision(piece);
             if (collisonFnd) {
                 let collisonPentomino = this.gameController.getCollisionOfPentominoes(piece).pop();
                 this.overlapBlock.add(piece, collisonPentomino);
+                if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
+                    let audio = new Audio('resources/audio/collision.wav');
+                    audio.play();
+                }
             }
             else {
                 this.overlapBlock.remove(piece);
@@ -641,6 +644,10 @@ class Visual {
         }
         let hintCommand = hint.getCommands()[commandNumber];
         let hintinPen = hintCommand._pentomino;
+        if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
+            let audio = new Audio('resources/audio/hint.wav');
+            audio.play();
+        }
         this.indicateHint(hint, commandNumber);
         setTimeout(function () {
             hintButton.disabled = false;
@@ -1172,8 +1179,11 @@ class Visual {
 
     prefillBoard() {
         this.readyForPrefilling();
+        if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
+            let audio = new Audio('resources/audio/prefill.wav');
+            audio.play();
+        }
         let randomSolution = this.fetchRandomSolution();
-
         let prefillCandidates = [];
         let threshold = SettingsSingleton.getInstance().getSettings().prefilling.distanceValue;
         let scheme = SettingsSingleton.getInstance().getSettings().prefilling.prefillingStrategy;
