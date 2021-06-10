@@ -151,6 +151,9 @@ class Visual {
 
         /*The field consists of divs. Each div saves in its id field its resepective coorinates*/
 
+        console.log("Game height: " + this.pd.gameHeight);
+        console.log("Game width: " + this.pd.gameWidth);
+
         for (var row = 0; row < this.pd.gameHeight; row++) {
             for (var col = 0; col < this.pd.gameWidth; col++) {
 
