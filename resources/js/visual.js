@@ -204,8 +204,8 @@ class Visual {
          * again and again.
         */
 
-        var pieceArea = document.getElementById('piecearea');
-        var trayArea = document.getElementById('tray');
+        let pieceArea = document.getElementById('piecearea');
+        let trayArea = document.getElementById('tray');
         let trayout = '';
         let out = '';
         var width = UIProperty.WindowWidth / this.pd.gameWidth;
