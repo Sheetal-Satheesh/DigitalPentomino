@@ -397,9 +397,8 @@
 
                 SettingsSingleton.getInstance().setSettings(values);
                 processChangesToSettings(changesToSettings, values);
-                console.log(' Theme value---->',values.theming.theme);
+                // console.log(' Theme value---->',values.theming.theme);
                 applytheme(values.theming.theme);
-
             }
         }
 
@@ -407,19 +406,19 @@
             console.log('In applyTheme');
             var switcherId = document.getElementById('switcher-id');
             switch(themeName){
-                case theme1:
+                case 'theme1':
                     switcherId.href =  'resources/css/style.css';
                     break;
                 
-                case theme2:
+                case 'theme2':
                     switcherId.href = 'resources/css/dayTheme.css';
                     break;
 
-                case theme3:
+                case 'theme3':
                 switcherId.href = 'resources/css/iceTheme.css';
                 break;
 
-                case theme4:
+                case 'theme4':
                 switcherId.href = 'resources/css/blackandwhiteTheme.css';
                 break;
 
