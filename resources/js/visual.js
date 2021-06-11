@@ -242,10 +242,10 @@ class Visual {
         trayArea.innerHTML = trayout;
         pieceArea.innerHTML = out;
         this.pieces.forEach(piece => {
-            var trayElement = document.getElementById('tray_' + piece.trayPosition);
+            let trayElement = document.getElementById('tray_' + piece.trayPosition);
 
-            var widthVW = UIProperty.TrayCSSLeft + (piece.trayPosition) * 7.2;
-            var magnification = 8 / (5 * width);
+            let widthVW = UIProperty.TrayCSSLeft + (piece.trayPosition) * 7.2;
+            let magnification = 8 / (5 * width);
             trayElement.style.left = widthVW + 'vw';
             trayElement.style.top = '.7vw';
             trayElement.style.transformOrigin = 'top';
@@ -523,8 +523,8 @@ class Visual {
                     about that movement (which in turn  repositions the element so it snaps to the grid)
                 */
                 var data = window.currentlyMoving;
-                var trayPos = 0;
-                var pentominoList = that.gameController.getAllPentominoes();
+                let trayPos = 0;
+                let pentominoList = that.gameController.getAllPentominoes();
                 window.currentlyMoving = false;
                 var elements = document.elementsFromPoint(event.clientX, event.clientY); //determine the target
                 for (var i in elements) {
@@ -542,31 +542,31 @@ class Visual {
                      * piece in Tray */
                     if (id == 'tray') {
                         let piece = data[1];
-                        var newPos = Number(this.trayPos);
-                        var trayOverlapFlag = that.isTrayOverlap(pentominoList, newPos);
-                        var minEmptyPos;
-                        var totalCount = pentominoList.length;
-                        var emptyTrayList = that.getEmptyTrayPos(pentominoList);
+                        let newPos = Number(this.trayPos);
+                        let trayOverlapFlag = that.isTrayOverlap(pentominoList, newPos);
+                        let minEmptyPos;
+                        let totalCount = pentominoList.length;
+                        let emptyTrayList = that.getEmptyTrayPos(pentominoList);
                         if (piece.inTray == 1) {
                             emptyTrayList.push(piece.trayPosition);
                         }
-                        var arr = [];
+                        let arr = [];
                         emptyTrayList.forEach((l_rec) => {
                             arr.push(Math.abs(l_rec - newPos));
                         });
 
-                        var closest = arr.indexOf(Math.min.apply(null, arr));
+                        let closest = arr.indexOf(Math.min.apply(null, arr));
                         if (emptyTrayList.length != 0) {
                             minEmptyPos = Math.min.apply(null, emptyTrayList);
                         }
                         pentominoList.forEach((pentomino) => {
-                            var tempTrayPos = Number(pentomino.trayPosition);
+                            let tempTrayPos = Number(pentomino.trayPosition);
 
                             if (pentomino.inTray == 1 && tempTrayPos >= newPos && tempTrayPos <= emptyTrayList[closest] && trayOverlapFlag == 'Y') {
                                 pentomino.trayPosition = tempTrayPos + 1;
                                 that.positionPiece(pentomino);
                                 pentominoList.forEach((pent) => {
-                                    var tempTrayPos1 = Number(pent.trayPosition);
+                                    let tempTrayPos1 = Number(pent.trayPosition);
                                     if (pent.inTray == 0 && (tempTrayPos + 1) == tempTrayPos1) {
                                         pent.trayPosition = Number(piece.trayPosition);
                                     }
@@ -576,7 +576,7 @@ class Visual {
                                 pentomino.trayPosition = tempTrayPos - 1;
                                 that.positionPiece(pentomino);
                                 pentominoList.forEach((pent) => {
-                                    var tempTrayPos1 = Number(pent.trayPosition);
+                                    let tempTrayPos1 = Number(pent.trayPosition);
                                     if (pent.inTray == 0 && (tempTrayPos - 1) == tempTrayPos1) {
                                         pent.trayPosition = Number(piece.trayPosition);
                                     }
