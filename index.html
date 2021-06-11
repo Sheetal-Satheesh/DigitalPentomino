@@ -97,6 +97,7 @@
                 <button id="backButton" class="back" style="display:none">&#8249;</button>
                 <div class="modalContainer" id="modalContainerID">
                     <div class="outerGrid">
+                        <div class="filterGrid" id="filterGrid"></div>
                         <div class="innerGrid" id="innerGrid"></div>
                         <form id="innerGridForm"></form>
                     </div>
@@ -720,6 +721,15 @@
                 gameImage = screeshot;
                 pd.visual.saveGameImage(gameImage);
             });
+
+            html2canvas(gameElem).then(function (screeshotCopy) {
+                screeshotCopy.setAttribute("class", "screeshotCopy");
+                screeshotCopy.style.width = '25vw';
+                screeshotCopy.style.height = '15vw';
+                screeshotCopy.style.border = "2px solid black";
+                gameImage = screeshotCopy;
+                pd.visual.saveGameImage(gameImage);
+            });
         }
 
         function loadGameImage(key) {
@@ -752,40 +762,18 @@
 
         }
 
-        function showGameImages() {
-            var modal = document.getElementById('modalTop');
-            if ($(modal).is(':visible')) {
-                this.closeModal();
-            }
-            else {
-                this.disableSnapshotButton();
-                this.disablePointerEventsOnPieces();
-                this.hideManipulationButtons();
-                modal.style.background = " rgb(220, 240, 237)";
-                modal.style.display = "block";
+        function renderGallery(images){
 
-                document.querySelector(".modalFormContent").style.display = "none";
-                document.querySelector(".innerGrid").style.display = "block";
+            document.querySelector(".innerGrid").style.display = "block";
+            let imageGrid = document.getElementById('innerGrid');
+            template.clearContent(".innerGrid");
+            template.clearContent("#innerGridForm");
 
-                let imageList = pd.visual.showGameImages();
-                let imageGrid = document.getElementById('innerGrid');
-                template.clearContent(".innerGrid");
-                template.clearContent("#innerGridForm");
-                let gameId = undefined;
-                let borderColor = generateRandomColor();
-
-                imageList.forEach((item) => {
+            images.forEach((item) => {
                     let imgKey = Object.keys(item)[0];
                     let image = item[imgKey];
                     let imageDiv = document.createElement("div");
                     imageDiv.setAttribute("class", "imageDiv");
-
-                    if (gameId != pd.visual.getGameIdByKey(imgKey)) {
-                        gameId = pd.visual.getGameIdByKey(imgKey);
-                        borderColor = generateRandomColor();
-                    }
-                    imageDiv.style.borderWidth = "3px";
-                    imageDiv.style.borderColor = borderColor;
 
                     let buttonDiv = document.createElement("div");
                     buttonDiv.setAttribute("class", "imageBtnDiv");
@@ -813,6 +801,49 @@
                     imageDiv.appendChild(buttonDiv);
                     imageGrid.appendChild(imageDiv);
                 });
+        }
+
+        function showGameImages() {
+            var modal = document.getElementById('modalTop');
+            if ($(modal).is(':visible')) {
+                this.closeModal();
+            }
+            else {
+                this.disableSnapshotButton();
+                this.disablePointerEventsOnPieces();
+                this.hideManipulationButtons();
+                modal.style.background = " rgb(220, 240, 237)";
+                modal.style.display = "block";
+
+                document.querySelector(".modalFormContent").style.display = "none";
+                
+                document.querySelector(".innerGrid").style.display = "block";
+
+                let imageList = pd.visual.showGameImages();
+                let imageGrid = document.getElementById('innerGrid');
+                let imgFilterGrid = document.getElementById('filterGrid');
+                template.clearContent(".filterGrid"); 
+                template.clearContent(".innerGrid");
+                template.clearContent("#innerGridForm");
+                let gameId = undefined;
+                let borderColor = generateRandomColor();
+
+                let gameIds = pd.visual.getAllGameIds();
+                gameIds.forEach((id) => {
+                    let img = pd.visual.getLastGameimages(id);
+                    img.style.width="10vw";
+                    img.style.height = "5vw";
+                    img.style.zIndex="100";
+                    let fImgDiv = document.createElement("div");
+                    fImgDiv.setAttribute("class", "fimageDiv");
+                    
+                    fImgDiv.appendChild(img);
+                    imgFilterGrid.appendChild(fImgDiv);
+                });
+
+                let currGmKey = pd.visual.getCurrentGameKey();
+                let images =  pd.visual.getImagesByGameId(currGmKey)
+                renderGallery(images);                
             }
         }
 

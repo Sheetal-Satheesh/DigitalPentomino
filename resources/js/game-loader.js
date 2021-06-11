@@ -25,6 +25,7 @@ class GameLoader {
          */
         this._gameList = {};
         this._gameImages = [];
+        this._gameLastImages = {};
 
         /**[
          *  gameId : {
@@ -50,8 +51,38 @@ class GameLoader {
         return this._game;
     }
 
+    getCurrentGameKey() {
+        return this._game.getId();
+    }
+
     getGameImages() {
         return this._gameImages;
+    }
+
+    getImagesByGameId(gameId) {
+        let cmdKeys = this._gameList[gameId].cmdKey;
+        let localImages = [];
+        cmdKeys.forEach((item) => {
+            this._gameImages.forEach((gameImg) => {
+                if (Object.keys(gameImg) == item) {
+                    localImages.push(gameImg);
+                }
+            });
+        }, this);
+
+        return localImages;
+    }
+
+    getAllGameIds() {
+        let gameIds = [];
+        for (let gameEntry in this._gameList) {
+            gameIds.push(gameEntry);
+        }
+        return gameIds;
+    }
+
+    getLastGameimages(gameId) {
+        return this._gameLastImages[gameId];
     }
 
     getGames() {
@@ -173,11 +204,18 @@ class GameLoader {
 
             this._gameList[gameId].cmdKey = this._gameList[gameId].cmdKey.filter(
                 (cmdKey) => cmdKey !== undefined);
+
+            return true;
         }
         else {
+            if (this._gameList[gameId].cmdKey.find(key => key == cmdKey)) {
+                return false;
+            }
             this._gameList[gameId].cmdKey.push(cmdKey);
             this._gameList[gameId].cmdManager = cmdManagerClone;
             this._gameList[gameId].hintAI = hintAIClone;
+
+            return true;
         }
     }
 
@@ -203,7 +241,11 @@ class GameLoader {
             return;
         }
 
-        this.saveGame();
+        let verdict = this.saveGame();
+        if (verdict == false) {
+            this._gameLastImages[this._game.getId()] = image;
+            return;
+        }
         this._gameImages.push({
             [cmdKey]: image
         });

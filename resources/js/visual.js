@@ -104,7 +104,7 @@ class Visual {
 
     placePentomino(pentomino, posX, posY, cmdProperty = cmdAttrDefault) {
         this.gameController.placePentomino(pentomino, posX, posY, cmdProperty);
-        if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
+        if (SettingsSingleton.getInstance().getSettings().general.enableAudio) {
             let audio = new Audio('resources/audio/snap.wav');
             audio.play();
         }
@@ -268,7 +268,7 @@ class Visual {
             if (collisonFnd) {
                 let collisonPentomino = this.gameController.getCollisionOfPentominoes(piece).pop();
                 this.overlapBlock.add(piece, collisonPentomino);
-                if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
+                if (SettingsSingleton.getInstance().getSettings().general.enableAudio) {
                     let audio = new Audio('resources/audio/collision.mp3');
                     audio.play();
                 }
@@ -648,7 +648,7 @@ class Visual {
         }
         let hintCommand = hint.getCommands()[commandNumber];
         let hintinPen = hintCommand._pentomino;
-        if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
+        if (SettingsSingleton.getInstance().getSettings().general.enableAudio) {
             let audio = new Audio('resources/audio/hinting.mp3');
             audio.play();
         }
@@ -903,7 +903,7 @@ class Visual {
 
     showGameSolved() {
         let enabledSolvedScreen = SettingsSingleton.getInstance().getSettings().showSolvedBoardScreen.enableSolvedScreen;
-        if(!enabledSolvedScreen) {
+        if (!enabledSolvedScreen) {
             return;
         }
 
@@ -930,24 +930,24 @@ class Visual {
         };
         let div1 = document.createElement("div");
         let img = document.createElement("img");
-       
+
         let textNode3 = SettingsSingleton.getInstance().getSettings().showSolvedBoardScreen.SolvedScreens;
         let textNode2;
-        let cancelBtn ;
+        let cancelBtn;
         let playAgnBtnAttributes;
         template.attachText("#modalBodyID", textNode1);
 
-        switch(textNode3) {
+        switch (textNode3) {
             case "Play again?":
                 textNode2 = {
-                class: "modalText",
-                text: strings.showSolved.play[lang]
+                    class: "modalText",
+                    text: strings.showSolved.play[lang]
                 };
                 img.src = "resources/images/icons/jboy-2.ico";
                 img.style.cursor = "none";
                 div1.appendChild(img);
-                 modalBodyID.appendChild(div1);
-                  template.attachText("#modalBodyID", textNode2);
+                modalBodyID.appendChild(div1);
+                template.attachText("#modalBodyID", textNode2);
                 cancelBtn = {
                     class: "cancelBtn",
                     onclick: "document.getElementById('modalTop').style.display='none'",
@@ -966,7 +966,7 @@ class Visual {
                 modalBodyID.appendChild(div2);
 
                 template.attachBtn("#modalBodyID", playAgnBtnAttributes);
-                 template.attachBtn("#modalBodyID", cancelBtn);
+                template.attachBtn("#modalBodyID", cancelBtn);
                 let playAgainBtn = document.querySelector(".deleteBtn");
                 playAgainBtn.addEventListener("click", () => {
                     pd.reset();
@@ -981,8 +981,8 @@ class Visual {
                 break;
             case "Well done! Please wait for your Teacher to continue":
                 textNode2 = {
-                class: "modalText",
-                text: strings.showSolved.WellDone[lang]
+                    class: "modalText",
+                    text: strings.showSolved.WellDone[lang]
                 };
                 img.src = "resources/images/icons/wizard.ico";
                 div1.appendChild(img);
@@ -992,8 +992,8 @@ class Visual {
 
             case "Excellent ! Now continue with the next task on your assignment":
                 textNode2 = {
-                class: "modalText",
-                text: strings.showSolved.Excellent[lang]
+                    class: "modalText",
+                    text: strings.showSolved.Excellent[lang]
                 };
                 img.src = "resources/images/icons/present.ico";
                 div1.appendChild(img);
@@ -1183,7 +1183,7 @@ class Visual {
 
     prefillBoard() {
         this.readyForPrefilling();
-        if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
+        if (SettingsSingleton.getInstance().getSettings().general.enableAudio) {
             let audio = new Audio('resources/audio/prefill.mp3');
             audio.play();
         }
@@ -1463,6 +1463,19 @@ class Visual {
     getGameIdByKey(key) {
         return this.gameController.getGameIdByKey(key);
     }
+
+    getAllGameIds() {
+        return this.gameController.getAllGameIds();
+    }
+
+    getImagesByGameId(gameId) {
+        return this.gameController.getImagesByGameId(gameId);
+    }
+
+    getLastGameimages(gameId) {
+        return this.gameController.getLastGameimages(gameId);
+    }
+
     saveGameImage(image) {
         this.gameController.saveGameImage(image);
     }
@@ -1474,6 +1487,10 @@ class Visual {
 
     deleteGameImage(key) {
         this.gameController.deleteGameImage(key);
+    }
+
+    getCurrentGameKey(){
+        return this.gameController.getCurrentGameKey();
     }
 
     loadGame(key) {
