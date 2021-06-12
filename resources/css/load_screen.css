@@ -27,8 +27,8 @@
 
 .sk-cube-grid {
   position:absolute;
-  width: 40px;
-  height: 40px;
+  width: 10vh;
+  height: 10vh;
   margin: 100px auto;
   margin-top:40%;
 }
