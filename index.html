@@ -67,11 +67,12 @@
     </div>
     <div class="cGame">
 
-        <div id="game" class="FlashOff">
+        <div id="game">
             <div id="tray"></div> <!-- tray -->
-            <div id="field"></div> <!-- field -->
-            <div id="piecearea"></div> <!-- piecearea -->
-
+            <div id="playarea" class="FlashOff">
+                <div id="field"></div> <!-- field -->
+                <div id="piecearea"></div> <!-- piecearea -->
+            </div>
             <div id="boardmodalTop" class="boardmodal"
                 style="background: rgb(220, 240, 237) none repeat scroll 0% 0%; display: none;">
                 <span onclick="closeModal()" class="boardclose" title="Close Modal">x</span>
@@ -161,23 +162,23 @@
             <table>
                 <tr>
                     <td>
-                        <button type="button" class="controlButton" id='OpRotateLeft' onclick="rotateAntiClkWise()"><img
-                                src="resources/images/icons/rotate_left.png">
+                        <button type="button" class="controlButton" id='OpRotateLeft' onclick="rotateAntiClkWise()">
+                            <img src="resources/images/icons/rotate_left.png">
                         </button>
                     </td>
                     <td>
-                        <button type="button" class="controlButton" id='OpRotateRight' onclick="rotateClkWise()"><img
-                                src="resources/images/icons/rotate_right.png">
+                        <button type="button" class="controlButton" id='OpRotateRight' onclick="rotateClkWise()">
+                            <img src="resources/images/icons/rotate_right.png">
                         </button>
                     </td>
                     <td>
-                        <button type="button" class="controlButton" id='OpflipV' onclick="flipV()"><img
-                                src="resources/images/icons/flip_vertically.png">
+                        <button type="button" class="controlButton" id='OpflipV' onclick="flipV()">
+                            <img src="resources/images/icons/flip_vertically.png">
                         </button>
                     </td>
                     <td>
-                        <button type="button" class="controlButton" id='OpflipH' onclick="flipH()"><img
-                                src="resources/images/icons/flip_horizontally.png">
+                        <button type="button" class="controlButton" id='OpflipH' onclick="flipH()">
+                            <img src="resources/images/icons/flip_horizontally.png">
                         </button>
                     </td>
                 </tr>
@@ -709,9 +710,9 @@
         }
 
         function saveGameImage() {
-            addFlash("game");
+            addFlash("playarea");
             let gameImage = undefined;
-            let gameElem = document.getElementById('game');
+            let gameElem = document.getElementById('playarea');
 
             html2canvas(gameElem).then(function (screeshot) {
                 screeshot.setAttribute("class", "screenshot");
@@ -805,11 +806,7 @@
 
         function showGameImages() {
             var modal = document.getElementById('modalTop');
-            if ($(modal).is(':visible')) {
-                this.closeModal();
-            }
-            else {
-                this.disableSnapshotButton();
+            this.disableSnapshotButton();
                 this.disablePointerEventsOnPieces();
                 this.hideManipulationButtons();
                 modal.style.background = " rgb(220, 240, 237)";
