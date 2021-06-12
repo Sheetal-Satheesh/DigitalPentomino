@@ -716,6 +716,7 @@
 
             html2canvas(gameElem).then(function (screeshot) {
                 screeshot.setAttribute("class", "screenshot");
+                screeshot.setAttribute("type", "original");
                 screeshot.style.width = '25vw';
                 screeshot.style.height = '15vw';
                 screeshot.style.border = "2px solid black";
@@ -724,7 +725,8 @@
             });
 
             html2canvas(gameElem).then(function (screeshotCopy) {
-                screeshotCopy.setAttribute("class", "screeshotCopy");
+                screeshotCopy.setAttribute("class", "screeshot");
+                screeshotCopy.setAttribute("type", "copy");
                 screeshotCopy.style.width = '25vw';
                 screeshotCopy.style.height = '15vw';
                 screeshotCopy.style.border = "2px solid black";

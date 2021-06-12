@@ -236,14 +236,21 @@ class GameLoader {
     }
 
     saveGameImage(image) {
+
         let cmdKey = this._game.getCmdKey();
         if (cmdKey == undefined) {
             return;
         }
 
+        const imgType = image.getAttribute('type');
+        if(imgType === "copy") {
+            this._gameLastImages[this._game.getId()] = image;
+            return;
+        }
+
         let verdict = this.saveGame();
         if (verdict == false) {
-            this._gameLastImages[this._game.getId()] = image;
+            
             return;
         }
         this._gameImages.push({

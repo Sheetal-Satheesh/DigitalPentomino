@@ -149,9 +149,11 @@ class Visual {
         var fieldHTML = document.getElementById('field');
         var out = '';
         var width = UIProperty.WindowWidth / this.pd.gameWidth;
+/*  TODO: @marcel 
         var height = UIProperty.WindowHeight / this.pd.gameHeight;
         console.log(width);
         console.log(height);
+*/
 
         /*The field consists of divs. Each div saves in its id field its resepective coorinates*/
 
