@@ -246,6 +246,7 @@
                 template.clearContent("#modalTitleID");
                 template.clearContent("#modalBodyID");
                 template.clearContent("#innerGridForm");
+                template.clearContent("#filterGrid");
 
                 let div1 = document.createElement("div");
                 let h5 = document.createElement("h5");
@@ -296,6 +297,7 @@
                 template.clearContent("#modalTitleID");
                 template.clearContent("#modalBodyID");
                 template.clearContent("#innerGridForm");
+                template.clearContent("#filterGrid");
 
                 let lang = SettingsSingleton.getInstance().getSettings().general.language;
 
@@ -476,6 +478,7 @@
             template.clearContent("#modalBodyID");
             template.clearContent(".innerGrid")
             template.clearContent("#innerGridForm");
+            template.clearContent("#filterGrid");
 
             //add form to attach settings to
             //$('#innerGridForm').jsonForm({
@@ -509,6 +512,7 @@
             template.clearContent("#modalTitleID");
             template.clearContent("#modalBodyID");
             template.clearContent("#innerGridForm");
+            template.clearContent("#filterGrid");
 
             let div1 = document.createElement("div");
             let h5 = document.createElement("h3");
@@ -724,6 +728,10 @@
                 pd.visual.saveGameImage(gameImage);
             });
 
+            /* 
+                This duplicate has bad consequences in performance respect to times.
+                Optimization required in future.
+            */
             html2canvas(gameElem).then(function (screeshotCopy) {
                 screeshotCopy.setAttribute("class", "screeshot");
                 screeshotCopy.setAttribute("type", "copy");
@@ -815,41 +823,39 @@
             modal.style.display = "block";
 
             document.querySelector(".modalFormContent").style.display = "none";
-
             document.querySelector(".innerGrid").style.display = "block";
 
             let imageList = pd.visual.showGameImages();
             let imageGrid = document.getElementById('innerGrid');
             let imgFilterGrid = document.getElementById('filterGrid');
-            template.clearContent(".filterGrid");
             template.clearContent(".innerGrid");
             template.clearContent("#innerGridForm");
-            let gameId = undefined;
-            let borderColor = generateRandomColor();
+            template.clearContent("#filterGrid");
+
+            let currGmKey = pd.visual.getCurrentGameKey();
+            let images = pd.visual.getImagesByGameId(currGmKey)
+            renderGallery(images);
 
             let gameIds = pd.visual.getAllGameIds();
             gameIds.forEach((id) => {
                 let img = pd.visual.getLastGameimages(id);
-                if (img == undefined){
+                if (img == undefined) {
                     return;
                 }
+                /* All css property should be aligned with generic IPad design perspective*/
                 img.style.width = "10vw";
                 img.style.height = "5.5vw";
                 let fImgDiv = document.createElement("div");
                 fImgDiv.setAttribute("class", "fimageDiv");
+
                 img.addEventListener('click', function () {
                     let images = pd.visual.getImagesByGameId(id)
                     renderGallery(images);
                 }, false);
 
-
                 fImgDiv.appendChild(img);
                 imgFilterGrid.appendChild(fImgDiv);
             });
-
-            let currGmKey = pd.visual.getCurrentGameKey();
-            let images = pd.visual.getImagesByGameId(currGmKey)
-            renderGallery(images);
         }
 
 
@@ -870,6 +876,7 @@
                 template.clearContent("#modalTitleID");
                 template.clearContent("#modalBodyID");
                 template.clearContent("#innerGridForm");
+                template.clearContent("#filterGrid");
 
                 let startGameState = pd.getGameState("start");
                 let currGameState = pd.getGameState("current");
