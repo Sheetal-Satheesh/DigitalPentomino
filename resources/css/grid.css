@@ -13,24 +13,19 @@ h1 {
 
 .filterGrid {
    position:fixed;
-   top:12vw;
+   top:13vw;
    bottom:10vw;
    left: 3vw;
-   width: 10vw;
-
-   border: 2px solid gray;
-   border-style: ridge;
-   overflow-x: hidden;
+   width: 10.5vw;
 }
 
 .filterGrid .fimageDiv {
    position: relative;
-   width: 10vw;
-   border: .1vw solid rgb(2, 71, 62);
+   width: 10.5vw;
+   border: .2vw solid rgb(2, 71, 62);
    border-style: dashed;
-
-
 }
+
 .innerGrid {
    position:fixed;
    top:12vw;
