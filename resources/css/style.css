@@ -26,6 +26,16 @@
 
 }
 
+#playarea {
+  position: fixed;
+  left: 0vw;
+  top: 10vw;
+  bottom: 10vw;
+  background: transparent;
+  width: 100%;
+  /*height: 39.35vw;*/
+}
+
 #field {
   position: fixed;
   left: 0vw;
