@@ -16,14 +16,15 @@ h1 {
    top:13vw;
    bottom:10vw;
    left: 3vw;
-   width: 10.5vw;
+   width: 10vw;
+   overflow-x: hidden;
 }
 
 .filterGrid .fimageDiv {
    position: relative;
-   width: 10.5vw;
-   border: .2vw solid rgb(2, 71, 62);
-   border-style: dashed;
+   width: 10vw;
+   /* border: .2vw solid rgb(2, 71, 62);
+   border-style: solid; */
 }
 
 .innerGrid {
@@ -67,8 +68,6 @@ h1 {
     margin: 5px;
   }
 
-
-
 .screenshot {
     opacity: 1;
     display: block;
@@ -99,6 +98,11 @@ h1 {
     opacity: 1;
   }
 
+  .fimageDiv:hover {
+     opacity: 0.6;
+     background-color: aqua;
+  }
+
   .imageButton {
     color: white;
     /* font-size: 10px;
@@ -116,5 +120,4 @@ h1 {
   }
   .imageDeleteBtn {
     background-color: #d34944;
-
   }

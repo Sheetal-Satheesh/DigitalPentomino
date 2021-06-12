@@ -821,9 +821,8 @@
             modal.style.display = "block";
 
             document.querySelector(".modalFormContent").style.display = "none";
-            document.querySelector(".innerGrid").style.display = "block";
+            document.querySelector(".outerGrid").style.display = "block";
 
-            let imageList = pd.visual.showGameImages();
             let imageGrid = document.getElementById('innerGrid');
             let imgFilterGrid = document.getElementById('filterGrid');
             template.clearContent(".innerGrid");
@@ -831,16 +830,27 @@
             template.clearContent("#filterGrid");
 
             let currGmKey = pd.visual.getCurrentGameKey();
-            let images = pd.visual.getImagesByGameId(currGmKey)
-            renderGallery(images);
-
             let gameIds = pd.visual.getAllGameIds();
+
             gameIds.forEach((id) => {
                 let img = pd.visual.getLastGameimages(id);
                 if (img == undefined) {
                     return;
                 }
+
+                if (id == currGmKey) {
+                    img.style.filter = "brightness(120%) saturate(120%)";
+                    img.style.border = "dotted";
+
+                    let images = pd.visual.getImagesByGameId(currGmKey)
+                    renderGallery(images);
+                }
+                else {
+                    img.style.border = "0";
+                }
+
                 /* All css property should be aligned with generic IPad design perspective*/
+                img.setAttribute("class", "filterImage");
                 img.style.width = "10vw";
                 img.style.height = "5.5vw";
                 let fImgDiv = document.createElement("div");
