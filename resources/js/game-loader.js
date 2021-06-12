@@ -90,7 +90,7 @@ class GameLoader {
             console.error("Game Id:" + gameId + "not found in gameList");
             return undefined;
         }
-   }
+    }
 
     getGames() {
         return this._gameList;
@@ -244,7 +244,6 @@ class GameLoader {
     }
 
     saveGameImage(image) {
-
         let cmdKey = this._game.getCmdKey();
         if (cmdKey == undefined) {
             return;
@@ -258,7 +257,6 @@ class GameLoader {
 
         let verdict = this.saveGame();
         if (verdict == false) {
-
             return;
         }
         this._gameImages.push({

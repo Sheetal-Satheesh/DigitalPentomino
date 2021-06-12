@@ -85,7 +85,7 @@ class GameController {
         this._gameLoader.loadGame(key);
     }
 
-    getCurrentGameKey(){
+    getCurrentGameKey() {
         return this._gameLoader.getCurrentGameKey();
     }
 

@@ -27,5 +27,4 @@ class UtilitiesClass {
             Math.floor((gameObject.gameWidth - gameObject.boardSize[1]) / 2)
         ];
     }
-
 }

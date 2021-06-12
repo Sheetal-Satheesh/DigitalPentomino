@@ -796,14 +796,12 @@
                     loadGameImage(imgKey);
                 }, false);
 
-
                 let deleteBtn = document.createElement("button");
                 deleteBtn.setAttribute("class", "imageButton imageDeleteBtn");
                 deleteBtn.textContent = "Delete";
                 deleteBtn.addEventListener('click', function () {
                     deleteGameImage(imgKey);
                 }, false);
-
 
                 buttonDiv.appendChild(loadBtn);
                 buttonDiv.appendChild(deleteBtn);
@@ -857,7 +855,6 @@
                 imgFilterGrid.appendChild(fImgDiv);
             });
         }
-
 
         function execReplay() {
             var modal = document.getElementById('modalTop');
