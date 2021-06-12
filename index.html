@@ -830,10 +830,18 @@
             let gameIds = pd.visual.getAllGameIds();
             gameIds.forEach((id) => {
                 let img = pd.visual.getLastGameimages(id);
+                if (img == undefined){
+                    return;
+                }
                 img.style.width = "10vw";
                 img.style.height = "5.5vw";
                 let fImgDiv = document.createElement("div");
                 fImgDiv.setAttribute("class", "fimageDiv");
+                img.addEventListener('click', function () {
+                    let images = pd.visual.getImagesByGameId(id)
+                    renderGallery(images);
+                }, false);
+
 
                 fImgDiv.appendChild(img);
                 imgFilterGrid.appendChild(fImgDiv);
