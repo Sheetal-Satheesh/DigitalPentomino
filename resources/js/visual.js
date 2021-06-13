@@ -146,12 +146,26 @@ class Visual {
     renderBoard() {
         //TODO: Check whether in the innerHTML approach is good here!
 
-        var fieldHTML = document.getElementById('field');
-        var out = '';
-        var heightField = document.getElementById('field').clientHeight;
-        var widthField = document.getElementById('field').clientWidth;
-        var width = 100 / this.pd.gameWidth;
-        var height = 50 / this.pd.gameHeight;
+        let fieldHTML = document.getElementById('field');
+        let out = '';
+        let heightField = document.getElementById('field').clientHeight;
+        let widthField = document.getElementById('field').clientWidth;
+
+        //calculate needed blocks in width based on available height
+        let blockAmountHeight = this.gameController.getBoardSize()[0] + 4;
+        let absHeightPerBlock = heightField / blockAmountHeight;
+        let ratioFieldWidthHeight = widthField / heightField;
+        let blockAmountWidth = Math.round(blockAmountHeight * ratioFieldWidthHeight);
+
+        //todo: make sure that index where the board starts is calculated correctly
+        // TODO: replace in pd calculation instead of here!!!!!
+        let boardStartX_2 = Math.floor((blockAmountHeight - this.gameController.getBoardSize()[0]) / 2);
+        let boardStartY_2 = Math.floor((blockAmountWidth - this.gameController.getBoardSize()[1]) / 2);
+        console.log(boardStartY_2);
+
+
+        let width = 100 / blockAmountWidth;
+        let height = 100 / blockAmountHeight;
 
         /*The field consists of divs. Each div saves in its id field its resepective coorinates*/
 
@@ -160,16 +174,16 @@ class Visual {
 
         console.log(this.pd.boardSize);
 
-        for (var row = 0; row < this.pd.gameHeight; row++) {
-            for (var col = 0; col < this.pd.gameWidth; col++) {
+        for (var row = 0; row < blockAmountHeight; row++) {
+            for (var col = 0; col < blockAmountWidth; col++) {
 
                 var isBoard = true;   //indicate where on the field the board is
                 var blockedCell = false;
                 //TODO: Implement blocked elements
-                if (col < this.boardY) isBoard = false;
-                if (col >= this.boardY + this.gameController.getBoardSize()[1]) isBoard = false;
-                if (row < this.boardX) isBoard = false;
-                if (row >= this.boardX + this.gameController.getBoardSize()[0]) isBoard = false;
+                if (col < boardStartY_2) isBoard = false;
+                if (col >= boardStartY_2 + this.gameController.getBoardSize()[1]) isBoard = false;
+                if (row < boardStartX_2) isBoard = false;
+                if (row >= boardStartX_2 + this.gameController.getBoardSize()[0]) isBoard = false;
                 //Ashwini: For Blocking the cells
                 if (this.pd.blockedCells != undefined) {
                     var gameCellPattern = this.pd.gameCellPattern;
