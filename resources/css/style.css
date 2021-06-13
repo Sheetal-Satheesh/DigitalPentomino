@@ -43,7 +43,7 @@
 }
 
 #functions_navbar {
-  align-items: center;
+  align-items: flex-end;;
   justify-content: center;
   z-index: 10;
   position: fixed;
@@ -75,8 +75,8 @@
   justify-content: center;
   overflow: hidden;
   white-space: nowrap;
-  height: 6.3vw;
-  width: 6.3vw;
+  height: 6vw;
+  width: 6vw;
   margin-left: 1%;
   margin-right: 1%;
   border-radius: 50%;

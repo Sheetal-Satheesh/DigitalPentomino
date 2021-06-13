@@ -144,15 +144,17 @@ class Visual {
 
         var fieldHTML = document.getElementById('field');
         var out = '';
-        var width = UIProperty.WindowWidth / this.pd.gameWidth;
-        var height = UIProperty.WindowHeight / this.pd.gameHeight;
-        console.log(width);
-        console.log(height);
+        var heightField = document.getElementById('field').clientHeight;
+        var widthField = document.getElementById('field').clientWidth;
+        var width = 100 / this.pd.gameWidth;
+        var height = 50 / this.pd.gameHeight;
 
         /*The field consists of divs. Each div saves in its id field its resepective coorinates*/
 
-        console.log("Game height: " + this.pd.gameHeight);
-        console.log("Game width: " + this.pd.gameWidth);
+        console.log("Width of field: " + widthField + " Width per block: " + width);
+        console.log("Height of field: " + heightField + " Height per block: " + height);
+
+        console.log(this.pd.boardSize);
 
         for (var row = 0; row < this.pd.gameHeight; row++) {
             for (var col = 0; col < this.pd.gameWidth; col++) {
