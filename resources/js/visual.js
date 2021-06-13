@@ -562,7 +562,7 @@ class Visual {
                         pentominoList.forEach((pentomino) => {
                             let tempTrayPos = Number(pentomino.trayPosition);
 
-                            if (pentomino.inTray == 1 && tempTrayPos >= newPos && tempTrayPos <= emptyTrayList[closest] && trayOverlapFlag == 'Y') {
+                            if (pentomino.inTray == 1 && tempTrayPos >= newPos && tempTrayPos <= emptyTrayList[closest] && trayOverlapFlag == true) {
                                 pentomino.trayPosition = tempTrayPos + 1;
                                 that.positionPiece(pentomino);
                                 pentominoList.forEach((pent) => {
@@ -572,7 +572,7 @@ class Visual {
                                     }
                                 });
                             }
-                            else if (pentomino.inTray == 1 && tempTrayPos <= newPos && tempTrayPos >= emptyTrayList[closest] && trayOverlapFlag == 'Y') {
+                            else if (pentomino.inTray == 1 && tempTrayPos <= newPos && tempTrayPos >= emptyTrayList[closest] && trayOverlapFlag == true) {
                                 pentomino.trayPosition = tempTrayPos - 1;
                                 that.positionPiece(pentomino);
                                 pentominoList.forEach((pent) => {
@@ -622,14 +622,14 @@ class Visual {
         }
     }
     isTrayOverlap(pentominoList, pos) {
-        let overlapFlag = 'N';
+        let overlapFlag = false;
         pentominoList.forEach((pentomino) => {
             if (pentomino.trayPosition == pos) {
                 if (pentomino.inTray == 1) {
-                    overlapFlag = 'Y';
+                    overlapFlag = true;
                 }
                 else {
-                    overlapFlag = 'N';
+                    overlapFlag = true;
                 }
             }
         });
