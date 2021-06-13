@@ -527,8 +527,8 @@ class Visual {
                 let pentominoList = that.gameController.getAllPentominoes();
                 window.currentlyMoving = false;
                 var elements = document.elementsFromPoint(event.clientX, event.clientY); //determine the target
-                for (var i in elements) {
-                    var element = elements[i];
+                for (let i in elements) {
+                    let element = elements[i];
 
                     if (element.className == 'trayPosition') {
                         this.trayPos = element.id.split('_')[1];
@@ -622,7 +622,7 @@ class Visual {
         }
     }
     isTrayOverlap(pentominoList, pos) {
-        var overlapFlag = 'N';
+        let overlapFlag = 'N';
         pentominoList.forEach((pentomino) => {
             if (pentomino.trayPosition == pos) {
                 if (pentomino.inTray == 1) {
@@ -637,8 +637,8 @@ class Visual {
     }
 
     getEmptyTrayPos(pentominoList) {
-        var emptyTrayList = [];
-        var l_count = 0;
+        let emptyTrayList = [];
+        let l_count = 0;
 
         pentominoList.forEach((pentomino) => {
             if (pentomino.inTray == 0) {
