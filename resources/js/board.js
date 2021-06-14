@@ -83,6 +83,9 @@ class Board {
      * @returns {boolean} returns false if a collision occurred else true
      */
     movePentominoToPosition(pentomino, row, col) {
+
+        console.log("Move pentomino to position is called");
+
         if (!this.pentominoIsValidAtPosition(pentomino, row, col)) {
             if (!this.positionIsValid(row, col)) {
                 throw new Error("Position [" + row + "," + col + "] is outside the board");

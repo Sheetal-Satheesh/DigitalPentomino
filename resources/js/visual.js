@@ -2,8 +2,6 @@ const UIProperty = {
     "TrayCSSLeft": 0,
     "TrayHeight": 10,
     "WindowWidth": 100,
-    "PentominoX": 8,
-    "PentominoY": 8,
     "Sidebar": 0
 }
 Object.freeze(UIProperty);
@@ -110,7 +108,7 @@ class Visual {
         }
         this.positionPiece(pentomino);
         if (cmdProperty.cmdType != CommandTypes.Shadow) {
-            this.checkIfGameWon();
+            //this.checkIfGameWon(); TODO: reenable
         }
     }
 
@@ -152,20 +150,25 @@ class Visual {
         let widthField = document.getElementById('field').clientWidth;
 
         //calculate needed blocks in width based on available height
+        //TODO: if height > width invert!
         let blockAmountHeight = this.gameController.getBoardSize()[0] + 4;
         let absHeightPerBlock = heightField / blockAmountHeight;
         let ratioFieldWidthHeight = widthField / heightField;
         let blockAmountWidth = Math.round(blockAmountHeight * ratioFieldWidthHeight);
+        //check if wide enough to display full board, else increase boardWidth
+        if (blockAmountWidth < this.gameController.getBoardSize()[1] + 4){
+            blockAmountWidth = this.gameController.getBoardSize()[1] + 4;
+        }
 
         //todo: make sure that index where the board starts is calculated correctly
         // TODO: replace in pd calculation instead of here!!!!!
-        let boardStartX_2 = Math.floor((blockAmountHeight - this.gameController.getBoardSize()[0]) / 2);
-        let boardStartY_2 = Math.floor((blockAmountWidth - this.gameController.getBoardSize()[1]) / 2);
-        console.log(boardStartY_2);
+        this.pd.boardStartX = Math.floor((blockAmountHeight - this.gameController.getBoardSize()[0]) / 2);
+        this.pd.boardStartY = Math.floor((blockAmountWidth - this.gameController.getBoardSize()[1]) / 2);
 
 
         let width = 100 / blockAmountWidth;
         let height = 100 / blockAmountHeight;
+        this.pd.gameWidth = blockAmountWidth;
 
         /*The field consists of divs. Each div saves in its id field its resepective coorinates*/
 
@@ -180,10 +183,10 @@ class Visual {
                 var isBoard = true;   //indicate where on the field the board is
                 var blockedCell = false;
                 //TODO: Implement blocked elements
-                if (col < boardStartY_2) isBoard = false;
-                if (col >= boardStartY_2 + this.gameController.getBoardSize()[1]) isBoard = false;
-                if (row < boardStartX_2) isBoard = false;
-                if (row >= boardStartX_2 + this.gameController.getBoardSize()[0]) isBoard = false;
+                if (col < this.pd.boardStartY) isBoard = false;
+                if (col >= this.pd.boardStartY + this.gameController.getBoardSize()[1]) isBoard = false;
+                if (row < this.pd.boardStartX) isBoard = false;
+                if (row >= this.pd.boardStartX + this.gameController.getBoardSize()[0]) isBoard = false;
                 //Ashwini: For Blocking the cells
                 if (this.pd.blockedCells != undefined) {
                     var gameCellPattern = this.pd.gameCellPattern;
@@ -270,7 +273,7 @@ class Visual {
         var htmlElement = document.getElementById('piece_' + piece.name);
 
         if (piece.inTray) {
-            var widthVW = UIProperty.TrayCSSLeft + (piece.trayPosition) * 7.2;
+            var widthVW = UIProperty.TrayCSSLeft + (piece.trayPosition) * width;
             var magnification = 8 / (5 * width);
             htmlElement.style.left = widthVW + 'vw';
             htmlElement.style.top = '' + 0.1 * UIProperty.TrayHeight + 'vw'; //position pieces in tray around 20% from top
@@ -1235,7 +1238,7 @@ class Visual {
         if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.showNumberOfPossibleSolutions();
         }
-        this.checkIfGameWon();
+        //this.checkIfGameWon();
     }
 
     getRandomElementFromArray(arrayObject) {
@@ -1356,6 +1359,8 @@ class Visual {
         for (let i = 0; i < randomSolution.length; ++i) {
             [piecePosition, piece] = this.getRandomPiece(randomSolution, pickedPieces);
             pickedPieces[piece.name] = 1;
+            console.log("Piece position: ");
+            console.log(piecePosition);
             currentAnchor = [piecePosition.boardPosition[0],
             piecePosition.boardPosition[1]];
             for (let j = 0; j < positions.length; ++j) {
@@ -1377,6 +1382,7 @@ class Visual {
             positions.push(currentAnchor);
             this.removeFromTray(piece);
             piece.updateTrayValue(0);
+            console.log("Anchor for placement of " + piece + " is " + currentAnchor[0] + "," + currentAnchor[1]);
             this.placePentomino(piece, currentAnchor[0], currentAnchor[1]);
         }
 

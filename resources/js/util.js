@@ -12,8 +12,8 @@ class UtilitiesClass {
     */
     static getGameUISettings(boardName) {
         return {
-            gameHeight: boardConfigs[boardName].gameHeight || baseConfigs.gameHeight,
-            gameWidth: boardConfigs[boardName].gameWidth || baseConfigs.gameWidth,
+            gameHeight: 10,
+            gameWidth: 16,
             boardSize: boardConfigs[boardName].boardSize,
             blockedCells: boardConfigs[boardName].blockedCells || undefined,
             boardShape: boardConfigs[boardName].boardShape || baseConfigs.boardShape
