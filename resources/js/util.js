@@ -12,8 +12,8 @@ class UtilitiesClass {
     */
     static getGameUISettings(boardName) {
         return {
-            gameHeight: 10,
-            gameWidth: 16,
+            gameHeight: baseConfigs.gameHeight,
+            gameWidth: baseConfigs.gameWidth,
             boardSize: boardConfigs[boardName].boardSize,
             blockedCells: boardConfigs[boardName].blockedCells || undefined,
             boardShape: boardConfigs[boardName].boardShape || baseConfigs.boardShape
@@ -22,6 +22,9 @@ class UtilitiesClass {
 
     static getBoardStartCoords(boardName) {
         let gameObject = this.getGameUISettings(boardName);
+        console.log("Game object height: " + gameObject.gameHeight);
+        console.log("Game object width: " + gameObject.gameWidth);
+
         return [
             Math.floor((gameObject.gameHeight - gameObject.boardSize[0]) / 2),
             Math.floor((gameObject.gameWidth - gameObject.boardSize[1]) / 2)

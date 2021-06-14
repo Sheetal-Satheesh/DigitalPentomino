@@ -160,6 +160,13 @@ class Visual {
             blockAmountWidth = this.gameController.getBoardSize()[1] + 4;
         }
 
+        baseConfigs.gameHeight = blockAmountHeight;
+        baseConfigs.gameWidth = blockAmountWidth;
+
+        console.log(baseConfigs.gameHeight);
+        console.log(baseConfigs.gameWidth);
+        //console.log(boardConfigs[boardName].boardSize);
+
         //todo: make sure that index where the board starts is calculated correctly
         // TODO: replace in pd calculation instead of here!!!!!
         this.pd.boardStartX = Math.floor((blockAmountHeight - this.gameController.getBoardSize()[0]) / 2);
