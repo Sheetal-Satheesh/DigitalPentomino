@@ -208,7 +208,9 @@ class Visual {
          * again and again.
         */
 
-        var pieceArea = document.getElementById('piecearea');
+        let pieceArea = document.getElementById('piecearea');
+        let trayArea = document.getElementById('tray');
+        let trayout = '';
         let out = '';
         var width = UIProperty.WindowWidth / this.pd.gameWidth;
         this.pieces.forEach(piece => {
@@ -219,7 +221,7 @@ class Visual {
              * to display:none avoids the appearing for a split second before positioning
              *
             */
-
+            trayout += '<div class="trayPosition" id="tray_' + piece.trayPosition + '" style="width:' + (5 * width) + 'vw;height:' + (5 * width) + 'vw;display:block;z-index:0;"></div>';
             out += '<div class="piece" id="piece_' + piece.name + '" style="width:' + (5 * width) + 'vw;height:' + (5 * width) + 'vw;display:none;z-index:0;">';
 
             //this "paints" the bitmap of the pice into the bounding box
@@ -241,7 +243,21 @@ class Visual {
 
         });
 
+        trayArea.innerHTML = trayout;
         pieceArea.innerHTML = out;
+        this.pieces.forEach(piece => {
+            let trayElement = document.getElementById('tray_' + piece.trayPosition);
+
+            let widthVW = UIProperty.TrayCSSLeft + (piece.trayPosition) * 7.2;
+            let magnification = 8 / (5 * width);
+            trayElement.style.left = widthVW + 'vw';
+            trayElement.style.top = '.7vw';
+            trayElement.style.transformOrigin = 'top';
+            trayElement.style.setProperty("--magnification", magnification);
+            trayElement.style.setProperty("--rotationX", "0deg");
+            trayElement.style.setProperty("--rotationY", "0deg");
+            trayElement.style.setProperty("--rotationZ", "0deg");
+        });
 
     }
 
@@ -514,9 +530,17 @@ class Visual {
                     about that movement (which in turn  repositions the element so it snaps to the grid)
                 */
                 var data = window.currentlyMoving;
+                let trayPos = 0;
+                let pentominoList = that.gameController.getAllPentominoes();
                 window.currentlyMoving = false;
                 var elements = document.elementsFromPoint(event.clientX, event.clientY); //determine the target
+                for (let i in elements) {
+                    let element = elements[i];
 
+                    if (element.className == 'trayPosition') {
+                        this.trayPos = element.id.split('_')[1];
+                    }
+                }
                 for (var i in elements) {
                     var element = elements[i];
                     var id = element.id;
@@ -525,6 +549,53 @@ class Visual {
                      * piece in Tray */
                     if (id == 'tray') {
                         let piece = data[1];
+                        let newPos = Number(this.trayPos);
+                        let trayOverlapFlag = that.isTrayOverlap(pentominoList, newPos);
+                        let minEmptyPos;
+                        let totalCount = pentominoList.length;
+                        let emptyTrayList = that.getEmptyTrayPos(pentominoList);
+                        if (piece.inTray == 1) {
+                            emptyTrayList.push(piece.trayPosition);
+                        }
+                        let arr = [];
+                        emptyTrayList.forEach((l_rec) => {
+                            arr.push(Math.abs(l_rec - newPos));
+                        });
+
+                        let closest = arr.indexOf(Math.min.apply(null, arr));
+                        if (emptyTrayList.length != 0) {
+                            minEmptyPos = Math.min.apply(null, emptyTrayList);
+                        }
+                        pentominoList.forEach((pentomino) => {
+                            let tempTrayPos = Number(pentomino.trayPosition);
+
+                            if (pentomino.inTray == 1 && tempTrayPos >= newPos && tempTrayPos <= emptyTrayList[closest] && trayOverlapFlag == true) {
+                                pentomino.trayPosition = tempTrayPos + 1;
+                                that.positionPiece(pentomino);
+                                pentominoList.forEach((pent) => {
+                                    let tempTrayPos1 = Number(pent.trayPosition);
+                                    if (pent.inTray == 0 && (tempTrayPos + 1) == tempTrayPos1) {
+                                        pent.trayPosition = Number(piece.trayPosition);
+                                    }
+                                });
+                            }
+                            else if (pentomino.inTray == 1 && tempTrayPos <= newPos && tempTrayPos >= emptyTrayList[closest] && trayOverlapFlag == true) {
+                                pentomino.trayPosition = tempTrayPos - 1;
+                                that.positionPiece(pentomino);
+                                pentominoList.forEach((pent) => {
+                                    let tempTrayPos1 = Number(pent.trayPosition);
+                                    if (pent.inTray == 0 && (tempTrayPos - 1) == tempTrayPos1) {
+                                        pent.trayPosition = Number(piece.trayPosition);
+                                    }
+                                });
+                            }
+                            else if (pentomino.inTray == 0 && tempTrayPos == newPos) {
+                                pentomino.trayPosition = Number(piece.trayPosition);
+                            }
+
+                        });
+
+                        piece.trayPosition = newPos;
                         that.positionPiece(piece);
                         that.movePentominoToTray(piece);
                         that.disableManipulations();
@@ -557,6 +628,35 @@ class Visual {
             }
         }
     }
+    isTrayOverlap(pentominoList, pos) {
+        let overlapFlag = false;
+        pentominoList.forEach((pentomino) => {
+            if (pentomino.trayPosition == pos) {
+                if (pentomino.inTray == 1) {
+                    overlapFlag = true;
+                }
+                else {
+                    overlapFlag = true;
+                }
+            }
+        });
+        return overlapFlag;
+    }
+
+    getEmptyTrayPos(pentominoList) {
+        let emptyTrayList = [];
+        let l_count = 0;
+
+        pentominoList.forEach((pentomino) => {
+            if (pentomino.inTray == 0) {
+                emptyTrayList.push(pentomino.trayPosition);
+                l_count = l_count + 1;
+            }
+        });
+
+        return emptyTrayList;
+    }
+
 
     rotateClkWise(cmdProperty = cmdAttrDefault) {
         let piece = this.selected;
@@ -903,7 +1003,7 @@ class Visual {
 
     showGameSolved() {
         let enabledSolvedScreen = SettingsSingleton.getInstance().getSettings().showSolvedBoardScreen.enableSolvedScreen;
-        if(!enabledSolvedScreen) {
+        if (!enabledSolvedScreen) {
             return;
         }
 
@@ -930,24 +1030,24 @@ class Visual {
         };
         let div1 = document.createElement("div");
         let img = document.createElement("img");
-       
+
         let textNode3 = SettingsSingleton.getInstance().getSettings().showSolvedBoardScreen.SolvedScreens;
         let textNode2;
-        let cancelBtn ;
+        let cancelBtn;
         let playAgnBtnAttributes;
         template.attachText("#modalBodyID", textNode1);
 
-        switch(textNode3) {
+        switch (textNode3) {
             case "Play again?":
                 textNode2 = {
-                class: "modalText",
-                text: strings.showSolved.play[lang]
+                    class: "modalText",
+                    text: strings.showSolved.play[lang]
                 };
                 img.src = "resources/images/icons/jboy-2.ico";
                 img.style.cursor = "none";
                 div1.appendChild(img);
-                 modalBodyID.appendChild(div1);
-                  template.attachText("#modalBodyID", textNode2);
+                modalBodyID.appendChild(div1);
+                template.attachText("#modalBodyID", textNode2);
                 cancelBtn = {
                     class: "cancelBtn",
                     onclick: "document.getElementById('modalTop').style.display='none'",
@@ -966,7 +1066,7 @@ class Visual {
                 modalBodyID.appendChild(div2);
 
                 template.attachBtn("#modalBodyID", playAgnBtnAttributes);
-                 template.attachBtn("#modalBodyID", cancelBtn);
+                template.attachBtn("#modalBodyID", cancelBtn);
                 let playAgainBtn = document.querySelector(".deleteBtn");
                 playAgainBtn.addEventListener("click", () => {
                     pd.reset();
@@ -981,8 +1081,8 @@ class Visual {
                 break;
             case "Well done! Please wait for your Teacher to continue":
                 textNode2 = {
-                class: "modalText",
-                text: strings.showSolved.WellDone[lang]
+                    class: "modalText",
+                    text: strings.showSolved.WellDone[lang]
                 };
                 img.src = "resources/images/icons/wizard.ico";
                 div1.appendChild(img);
@@ -992,8 +1092,8 @@ class Visual {
 
             case "Excellent ! Now continue with the next task on your assignment":
                 textNode2 = {
-                class: "modalText",
-                text: strings.showSolved.Excellent[lang]
+                    class: "modalText",
+                    text: strings.showSolved.Excellent[lang]
                 };
                 img.src = "resources/images/icons/present.ico";
                 div1.appendChild(img);
