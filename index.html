@@ -290,7 +290,7 @@
             let url = new URL(qrCode);
             let seed = url.searchParams.get(baseConfigs.seedUrlParamName);
 
-            if (!(seed === undefined)) {
+            if (!(seed === null)) {
                 alert("Scanned in qr-code with seed: " + seed);
 
                 let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
