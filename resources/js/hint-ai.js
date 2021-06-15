@@ -814,10 +814,10 @@ class HintAI {
         let bestNextCommands = null,
             objFuncValue = null;
         [bestNextCommands, objFuncValue] = this._getBestNextCommandsMaxCorners(game, closestSolution, commandSequenceList);
-        if(objFuncValue < 3) {
+        if(objFuncValue < 5) {
             [bestNextCommands, objFuncValue] = this._getBestNextCommandsMaxAdjacentEdges(game, closestSolution, commandSequenceList);
         }
-        if(objFuncValue < 2) {
+        if(objFuncValue < 5) {
             return this._getBestNextCommandsMaxOccupiedNeighbors(game, closestSolution, commandSequenceList);
         }
         return bestNextCommands;
