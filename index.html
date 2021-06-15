@@ -279,11 +279,32 @@
             QrScanner.WORKER_PATH = 'resources/jsonform/qr-scanner-worker.min.js';
 
             const qrScanner = new QrScanner(videoElement, result => {
-                console.log('decoded qr code:', result);
+                onQrCodeScanned(result);
                 qrScanner.stop();
             });
 
             qrScanner.start();
+        }
+
+        function onQrCodeScanned(qrCode) {
+            let url = new URL(qrCode);
+            let seed = url.searchParams.get(baseConfigs.seedUrlParamName);
+
+            if (!(seed === undefined)) {
+                alert("Scanned in qr-code with seed: " + seed);
+
+                let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+                let newSettings = SettingsParser.parseSettingsFromSeed(schema, seed);
+
+                let oldSettings = SettingsSingleton.getInstance().getSettings();
+                let changesToSettings = SettingsParser.compareSettings(schema, oldSettings, newSettings);
+
+                SettingsSingleton.getInstance().setSettings(newSettings);
+                processChangesToSettings(changesToSettings, newSettings);
+            } else {
+                // TODO: handle better
+                alert("Scanned in wrong qr-code");
+            }
         }
 
         function openLicense() {
