@@ -47,19 +47,47 @@ class SettingsSchema {
             general: {
                 "type": "object",
                 "title": titles.general.title[lang],
+                "advanced": false,
                 "properties": {
                     language: {
                         "type": "string",
                         "title": titles.general.language.title[lang],
                         "enum": ["en", "de"],
                         "enumText": titles.general.language.enumTitles[lang],
-                        "default": "de"
+                        "imgPaths": ["resources/images/icons/flag_of_the_united_kingdom_200px.png",
+                            "resources/images/icons/flag_of_germany_200px.png"],
+                        "default": "en"
+                    },
+                    enableAudio: {
+                        "type": "boolean",
+                        "title": titles.general.enableAudio.title[lang],
+                        "default": false
+                    },
+                    enableBgMusic: {
+                        "type": "boolean",
+                        "title": titles.general.enableBgMusic.title[lang],
+                        "default": false
                     }
+                }
+            },
+            theming: {
+                "type": "object",
+                "title": titles.theming.title[lang],
+                "properties": {
+                    theme: {
+                        "type": "string",
+                        "title": titles.theming.theme.title[lang],
+                        "description": titles.theming.theme.description[lang],
+                        "enum": ["theme1", "theme2", "theme3", "theme4"],
+                        "enumText": titles.theming.theme.enumTitles[lang],
+                        "default": "theme1"
+                    },
                 }
             },
             hinting: {
                 "type": "object",
                 "title": titles.hinting.title[lang],
+                "advanced": true,
                 "properties": {
                     showNumberOfPossibleSolutions: {
                         "type": "boolean",
@@ -113,9 +141,35 @@ class SettingsSchema {
                     }
                 }
             },
+
+
+            showSolvedBoardScreen: {
+                "type": "object",
+                "title": titles.showSolvedBoardScreen.title[lang],
+                "properties":{
+                    enableSolvedScreen: {
+                        "type": "boolean",
+                        "title": titles.showSolvedBoardScreen.enableSolvedScreen.title[lang],
+                        "description": titles.showSolvedBoardScreen.enableSolvedScreen.description[lang],
+                        "default": true
+                    },
+                    SolvedScreens:{
+                         "type": "string",
+                        "title": titles.showSolvedBoardScreen.SolvedScreens.title[lang],
+                        "description": titles.showSolvedBoardScreen.SolvedScreens.description[lang],
+                        "enum": ["Play again?", "Well done! Please wait for your Teacher to continue", "Excellent ! Now continue with the next task on your assignment"],
+                        "enumText": titles.showSolvedBoardScreen.SolvedScreens.enumTitles[lang],
+                        "enumText": titles.showSolvedBoardScreen.SolvedScreens.enumTitles[lang],
+                        "default": "Play again?"
+                    }
+                }
+            },
+
             prefilling: {
                 "type": "object",
+                "advanced": true,
                 "title": titles.prefilling.title[lang],
+                "visible": false,
                 "properties": {
                     enablePrefilling: {
                         "type": "boolean",
