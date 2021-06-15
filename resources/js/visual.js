@@ -104,6 +104,10 @@ class Visual {
 
     placePentomino(pentomino, posX, posY, cmdProperty = cmdAttrDefault) {
         this.gameController.placePentomino(pentomino, posX, posY, cmdProperty);
+        if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
+            let audio = new Audio('resources/audio/snap.wav');
+            audio.play();
+        }
         this.positionPiece(pentomino);
         if (cmdProperty.cmdType != CommandTypes.Shadow) {
             this.checkIfGameWon();
@@ -275,12 +279,15 @@ class Visual {
 
         }
         else {
-
             var bCellsFnd = this.isPentominoInBlockCells(piece);
             var collisonFnd = this.isCollision(piece);
             if (collisonFnd) {
                 let collisonPentomino = this.gameController.getCollisionOfPentominoes(piece).pop();
                 this.overlapBlock.add(piece, collisonPentomino);
+                if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
+                    let audio = new Audio('resources/audio/collision.mp3');
+                    audio.play();
+                }
             }
             else {
                 this.overlapBlock.remove(piece);
@@ -741,6 +748,10 @@ class Visual {
         }
         let hintCommand = hint.getCommands()[commandNumber];
         let hintinPen = hintCommand._pentomino;
+        if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
+            let audio = new Audio('resources/audio/hinting.mp3');
+            audio.play();
+        }
         this.indicateHint(hint, commandNumber);
         setTimeout(function () {
             hintButton.disabled = false;
@@ -1272,8 +1283,11 @@ class Visual {
 
     prefillBoard() {
         this.readyForPrefilling();
+        if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
+            let audio = new Audio('resources/audio/prefill.mp3');
+            audio.play();
+        }
         let randomSolution = this.fetchRandomSolution();
-
         let prefillCandidates = [];
         let threshold = SettingsSingleton.getInstance().getSettings().prefilling.distanceValue;
         let scheme = SettingsSingleton.getInstance().getSettings().prefilling.prefillingStrategy;

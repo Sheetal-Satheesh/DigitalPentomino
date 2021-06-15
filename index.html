@@ -11,10 +11,10 @@
     <link rel="stylesheet" href="resources/css/style.css">
     <link rel="stylesheet" href="resources/css/board_selection.css">
     <link rel="stylesheet" href="resources/css/modal.css">
+    <link rel="stylesheet" href="resources/css/load_screen.css">
     <link rel="stylesheet" href="resources/css/grid.css">
     <link rel="stylesheet" href="resources/css/settings_form.css">
     <link rel="stylesheet" style="text/css" href="resources/jsonform/bootstrap.css" />
-
     <script src="resources/index.js"></script>
     <script src="resources/js/ui-template.js"></script>
     <script src="resources/js/board.js"></script>
@@ -52,9 +52,24 @@
     <script src="resources/js/hint.js"></script>
     <script src="resources/js/hint-ai.js"></script>
     <script src="resources/js/help/hinting/command-sequence-list.js"></script>
+    <script src="resources/js/load_screen.js"></script>
 </head>
-
-<body onload="touchStartup(); initialize()">
+<!-- Preloader section -->
+<div class="preloader">
+        <div class="tuca"></div>
+        <div class="sk-cube-grid">
+            <div class="sk-cube sk-cube1"></div>
+            <div class="sk-cube sk-cube2"></div>
+            <div class="sk-cube sk-cube3"></div>
+            <div class="sk-cube sk-cube4"></div>
+            <div class="sk-cube sk-cube5"></div>
+            <div class="sk-cube sk-cube6"></div>
+            <div class="sk-cube sk-cube7"></div>
+            <div class="sk-cube sk-cube8"></div>
+            <div class="sk-cube sk-cube9"></div>
+        </div>
+</div>
+<body onload="touchStartup(); initialize()" class="page">
     <audio id="audioTukaScream" src="resources/audio/tuka-scream.mp3"></audio>
     <audio id="bgMusic" src="resources/audio/chee-zee-beach-by-kevin-macleod-from-filmmusic-io.mp3" loop></audio>
 
@@ -67,11 +82,12 @@
     </div>
     <div class="cGame">
 
-        <div id="game" class="FlashOff">
+        <div id="game">
             <div id="tray"></div> <!-- tray -->
-            <div id="field"></div> <!-- field -->
-            <div id="piecearea"></div> <!-- piecearea -->
-
+            <div id="playarea" class="FlashOff">
+                <div id="field"></div> <!-- field -->
+                <div id="piecearea"></div> <!-- piecearea -->
+            </div>
             <div id="boardmodalTop" class="boardmodal"
                 style="background: rgb(220, 240, 237) none repeat scroll 0% 0%; display: none;">
                 <span onclick="closeModal()" class="boardclose" title="Close Modal">x</span>
@@ -160,23 +176,23 @@
             <table>
                 <tr>
                     <td>
-                        <button type="button" class="controlButton" id='OpRotateLeft' onclick="rotateAntiClkWise()"><img
-                                src="resources/images/icons/rotate_left.png">
+                        <button type="button" class="controlButton" id='OpRotateLeft' onclick="rotateAntiClkWise()">
+                            <img src="resources/images/icons/rotate_left.png">
                         </button>
                     </td>
                     <td>
-                        <button type="button" class="controlButton" id='OpRotateRight' onclick="rotateClkWise()"><img
-                                src="resources/images/icons/rotate_right.png">
+                        <button type="button" class="controlButton" id='OpRotateRight' onclick="rotateClkWise()">
+                            <img src="resources/images/icons/rotate_right.png">
                         </button>
                     </td>
                     <td>
-                        <button type="button" class="controlButton" id='OpflipV' onclick="flipV()"><img
-                                src="resources/images/icons/flip_vertically.png">
+                        <button type="button" class="controlButton" id='OpflipV' onclick="flipV()">
+                            <img src="resources/images/icons/flip_vertically.png">
                         </button>
                     </td>
                     <td>
-                        <button type="button" class="controlButton" id='OpflipH' onclick="flipH()"><img
-                                src="resources/images/icons/flip_horizontally.png">
+                        <button type="button" class="controlButton" id='OpflipH' onclick="flipH()">
+                            <img src="resources/images/icons/flip_horizontally.png">
                         </button>
                     </td>
                 </tr>
@@ -259,6 +275,10 @@
                 hBgMusic.appendChild(bgMusicLicense);
                 div1.appendChild(hBgMusic);
 
+                let birdMusic = document.createElement("h6");
+                let birdSoundsLicense = document.createTextNode("link : https://www.zapsplat.com/sound-effect-category/wood/\n" + "License :https://www.zapsplat.com/license-type/standard-license/");
+                birdMusic.appendChild(birdSoundsLicense);
+                div1.appendChild(birdMusic);
                 let h6 = document.createElement("h6");
                 let t2 = document.createTextNode("(author: Edicionesnaza) jboy-2 : https://www.deviantart.com/edicionesnaza/art/Boy-and-Girl-Icon-gif-By-alfreditha-394021423"+"\n");
                 let t3 = document.createTextNode("(author: Ahkâm) present :https://www.freeiconspng.com/img/39913    \n");
@@ -704,9 +724,9 @@
         }
 
         function saveGameImage() {
-            addFlash("game");
+            addFlash("playarea");
             let gameImage = undefined;
-            let gameElem = document.getElementById('game');
+            let gameElem = document.getElementById('playarea');
 
             html2canvas(gameElem).then(function (screeshot) {
                 screeshot.setAttribute("class", "screenshot");
@@ -750,66 +770,62 @@
 
         function showGameImages() {
             var modal = document.getElementById('modalTop');
-            if ($(modal).is(':visible')) {
-                this.closeModal();
-            }
-            else {
-                this.disableSnapshotButton();
-                this.disablePointerEventsOnPieces();
-                this.hideManipulationButtons();
-                modal.style.background = " rgb(220, 240, 237)";
-                modal.style.display = "block";
+            this.disablePointerEventsOnPieces();
+            this.hideManipulationButtons();
+            modal.style.background = " rgb(220, 240, 237)";
+            modal.style.display = "block";
 
-                document.querySelector(".modalFormContent").style.display = "none";
-                document.querySelector(".innerGrid").style.display = "block";
+            document.querySelector(".modalFormContent").style.display = "none";
+            document.querySelector(".innerGrid").style.display = "block";
 
-                let imageList = pd.visual.showGameImages();
-                let imageGrid = document.getElementById('innerGrid');
-                template.clearContent(".innerGrid");
-                template.clearContent("#innerGridForm");
-                let gameId = undefined;
-                let borderColor = generateRandomColor();
+            let imageList = pd.visual.showGameImages();
+            let imageGrid = document.getElementById('innerGrid');
+            template.clearContent(".innerGrid");
+            template.clearContent("#innerGridForm");
+            let gameId = undefined;
+            let borderColor = generateRandomColor();
 
-                imageList.forEach((item) => {
-                    let imgKey = Object.keys(item)[0];
-                    let image = item[imgKey];
-                    let imageDiv = document.createElement("div");
-                    imageDiv.setAttribute("class", "imageDiv");
+            imageList.forEach((item) => {
+                let imgKey = Object.keys(item)[0];
+                let image = item[imgKey];
+                let imageDiv = document.createElement("div");
+                imageDiv.setAttribute("class", "imageDiv");
 
-                    if (gameId != pd.visual.getGameIdByKey(imgKey)) {
-                        gameId = pd.visual.getGameIdByKey(imgKey);
-                        borderColor = generateRandomColor();
-                    }
-                    imageDiv.style.borderWidth = "3px";
-                    imageDiv.style.borderColor = borderColor;
+                if (gameId != pd.visual.getGameIdByKey(imgKey)) {
+                    gameId = pd.visual.getGameIdByKey(imgKey);
+                    borderColor = generateRandomColor();
+                }
+                imageDiv.style.borderWidth = "3px";
+                imageDiv.style.borderColor = borderColor;
 
-                    let buttonDiv = document.createElement("div");
-                    buttonDiv.setAttribute("class", "imageBtnDiv");
+                let buttonDiv = document.createElement("div");
+                buttonDiv.setAttribute("class", "imageBtnDiv");
 
-                    let loadBtn = document.createElement("button");
-                    loadBtn.setAttribute("class", "imageButton imageLoadBtn");
-                    loadBtn.textContent = "Load";
-                    loadBtn.addEventListener('click', function () {
-                        loadGameImage(imgKey);
-                    }, false);
+                let loadBtn = document.createElement("button");
+                loadBtn.setAttribute("class", "imageButton imageLoadBtn");
+                loadBtn.textContent = "Load";
+                loadBtn.addEventListener('click', function () {
+                    loadGameImage(imgKey);
+                }, false);
 
 
-                    let deleteBtn = document.createElement("button");
-                    deleteBtn.setAttribute("class", "imageButton imageDeleteBtn");
-                    deleteBtn.textContent = "Delete";
-                    deleteBtn.addEventListener('click', function () {
-                        deleteGameImage(imgKey);
-                    }, false);
+                let deleteBtn = document.createElement("button");
+                deleteBtn.setAttribute("class", "imageButton imageDeleteBtn");
+                deleteBtn.textContent = "Delete";
+                deleteBtn.addEventListener('click', function () {
+                    deleteGameImage(imgKey);
+                }, false);
 
 
-                    buttonDiv.appendChild(loadBtn);
-                    buttonDiv.appendChild(deleteBtn);
+                buttonDiv.appendChild(loadBtn);
+                buttonDiv.appendChild(deleteBtn);
 
-                    imageDiv.appendChild(image);
-                    imageDiv.appendChild(buttonDiv);
-                    imageGrid.appendChild(imageDiv);
-                });
-            }
+                imageDiv.appendChild(image);
+                imageDiv.appendChild(buttonDiv);
+                imageGrid.appendChild(imageDiv);
+
+            });
+
         }
 
         function execReplay() {
