@@ -8,7 +8,7 @@ const UIProperty = {
 }
 Object.freeze(UIProperty);
 
-const CommandTypes = { "Original": 1, "Shadow": 2 };
+const CommandTypes = { "Original": 1, "Shadow": 2, "None": 3 };
 Object.freeze(CommandTypes);
 
 const CommandSeq = { "Forward": 1, "Backward": 2 };
@@ -104,6 +104,10 @@ class Visual {
 
     placePentomino(pentomino, posX, posY, cmdProperty = cmdAttrDefault) {
         this.gameController.placePentomino(pentomino, posX, posY, cmdProperty);
+        if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
+            let audio = new Audio('resources/audio/snap.wav');
+            audio.play();
+        }
         this.positionPiece(pentomino);
         if (cmdProperty.cmdType != CommandTypes.Shadow) {
             this.checkIfGameWon();
@@ -113,6 +117,9 @@ class Visual {
     checkIfGameWon() {
         if (this.gameController.game()._board.isSolved()) {
             this.showGameSolved();
+            if (SettingsSingleton.getInstance().getSettings().general.enableAudio) {
+                document.getElementById("audioTukaScream").play();
+            }
         }
     }
 
@@ -201,7 +208,9 @@ class Visual {
          * again and again.
         */
 
-        var pieceArea = document.getElementById('piecearea');
+        let pieceArea = document.getElementById('piecearea');
+        let trayArea = document.getElementById('tray');
+        let trayout = '';
         let out = '';
         var width = UIProperty.WindowWidth / this.pd.gameWidth;
         this.pieces.forEach(piece => {
@@ -212,7 +221,7 @@ class Visual {
              * to display:none avoids the appearing for a split second before positioning
              *
             */
-
+            trayout += '<div class="trayPosition" id="tray_' + piece.trayPosition + '" style="width:' + (5 * width) + 'vw;height:' + (5 * width) + 'vw;display:block;z-index:0;"></div>';
             out += '<div class="piece" id="piece_' + piece.name + '" style="width:' + (5 * width) + 'vw;height:' + (5 * width) + 'vw;display:none;z-index:0;">';
 
             //this "paints" the bitmap of the pice into the bounding box
@@ -234,7 +243,21 @@ class Visual {
 
         });
 
+        trayArea.innerHTML = trayout;
         pieceArea.innerHTML = out;
+        this.pieces.forEach(piece => {
+            let trayElement = document.getElementById('tray_' + piece.trayPosition);
+
+            let widthVW = UIProperty.TrayCSSLeft + (piece.trayPosition) * 7.2;
+            let magnification = 8 / (5 * width);
+            trayElement.style.left = widthVW + 'vw';
+            trayElement.style.top = '.7vw';
+            trayElement.style.transformOrigin = 'top';
+            trayElement.style.setProperty("--magnification", magnification);
+            trayElement.style.setProperty("--rotationX", "0deg");
+            trayElement.style.setProperty("--rotationY", "0deg");
+            trayElement.style.setProperty("--rotationZ", "0deg");
+        });
 
     }
 
@@ -256,12 +279,15 @@ class Visual {
 
         }
         else {
-
             var bCellsFnd = this.isPentominoInBlockCells(piece);
             var collisonFnd = this.isCollision(piece);
             if (collisonFnd) {
                 let collisonPentomino = this.gameController.getCollisionOfPentominoes(piece).pop();
                 this.overlapBlock.add(piece, collisonPentomino);
+                if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
+                    let audio = new Audio('resources/audio/collision.mp3');
+                    audio.play();
+                }
             }
             else {
                 this.overlapBlock.remove(piece);
@@ -522,9 +548,17 @@ class Visual {
                     about that movement (which in turn  repositions the element so it snaps to the grid)
                 */
                 var data = window.currentlyMoving;
+                let trayPos = 0;
+                let pentominoList = that.gameController.getAllPentominoes();
                 window.currentlyMoving = false;
                 var elements = document.elementsFromPoint(event.clientX, event.clientY); //determine the target
+                for (let i in elements) {
+                    let element = elements[i];
 
+                    if (element.className == 'trayPosition') {
+                        this.trayPos = element.id.split('_')[1];
+                    }
+                }
                 for (var i in elements) {
                     var element = elements[i];
                     var id = element.id;
@@ -533,6 +567,53 @@ class Visual {
                      * piece in Tray */
                     if (id == 'tray') {
                         let piece = data[1];
+                        let newPos = Number(this.trayPos);
+                        let trayOverlapFlag = that.isTrayOverlap(pentominoList, newPos);
+                        let minEmptyPos;
+                        let totalCount = pentominoList.length;
+                        let emptyTrayList = that.getEmptyTrayPos(pentominoList);
+                        if (piece.inTray == 1) {
+                            emptyTrayList.push(piece.trayPosition);
+                        }
+                        let arr = [];
+                        emptyTrayList.forEach((l_rec) => {
+                            arr.push(Math.abs(l_rec - newPos));
+                        });
+
+                        let closest = arr.indexOf(Math.min.apply(null, arr));
+                        if (emptyTrayList.length != 0) {
+                            minEmptyPos = Math.min.apply(null, emptyTrayList);
+                        }
+                        pentominoList.forEach((pentomino) => {
+                            let tempTrayPos = Number(pentomino.trayPosition);
+
+                            if (pentomino.inTray == 1 && tempTrayPos >= newPos && tempTrayPos <= emptyTrayList[closest] && trayOverlapFlag == true) {
+                                pentomino.trayPosition = tempTrayPos + 1;
+                                that.positionPiece(pentomino);
+                                pentominoList.forEach((pent) => {
+                                    let tempTrayPos1 = Number(pent.trayPosition);
+                                    if (pent.inTray == 0 && (tempTrayPos + 1) == tempTrayPos1) {
+                                        pent.trayPosition = Number(piece.trayPosition);
+                                    }
+                                });
+                            }
+                            else if (pentomino.inTray == 1 && tempTrayPos <= newPos && tempTrayPos >= emptyTrayList[closest] && trayOverlapFlag == true) {
+                                pentomino.trayPosition = tempTrayPos - 1;
+                                that.positionPiece(pentomino);
+                                pentominoList.forEach((pent) => {
+                                    let tempTrayPos1 = Number(pent.trayPosition);
+                                    if (pent.inTray == 0 && (tempTrayPos - 1) == tempTrayPos1) {
+                                        pent.trayPosition = Number(piece.trayPosition);
+                                    }
+                                });
+                            }
+                            else if (pentomino.inTray == 0 && tempTrayPos == newPos) {
+                                pentomino.trayPosition = Number(piece.trayPosition);
+                            }
+
+                        });
+
+                        piece.trayPosition = newPos;
                         that.positionPiece(piece);
                         that.movePentominoToTray(piece);
                         that.disableManipulations();
@@ -565,6 +646,35 @@ class Visual {
             }
         }
     }
+    isTrayOverlap(pentominoList, pos) {
+        let overlapFlag = false;
+        pentominoList.forEach((pentomino) => {
+            if (pentomino.trayPosition == pos) {
+                if (pentomino.inTray == 1) {
+                    overlapFlag = true;
+                }
+                else {
+                    overlapFlag = true;
+                }
+            }
+        });
+        return overlapFlag;
+    }
+
+    getEmptyTrayPos(pentominoList) {
+        let emptyTrayList = [];
+        let l_count = 0;
+
+        pentominoList.forEach((pentomino) => {
+            if (pentomino.inTray == 0) {
+                emptyTrayList.push(pentomino.trayPosition);
+                l_count = l_count + 1;
+            }
+        });
+
+        return emptyTrayList;
+    }
+
 
     rotateClkWise(cmdProperty = cmdAttrDefault) {
         let piece = this.selected;
@@ -656,12 +766,15 @@ class Visual {
         }
         let hintCommand = hint.getCommands()[commandNumber];
         let hintinPen = hintCommand._pentomino;
+        if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
+            let audio = new Audio('resources/audio/hinting.mp3');
+            audio.play();
+        }
         this.indicateHint(hint, commandNumber);
         setTimeout(function () {
             hintButton.disabled = false;
         }, 1000);
     }
-
 
     blinkCells(cells) {
         let menu = [];
@@ -720,7 +833,7 @@ class Visual {
             lastHintedPentName = currentPenHintName;
         }
 
-
+        let cmdProperty = updateCommandAttr(CommandTypes.None, CommandSeq.Forward);
         let tempHintinPen = hintinPen;
         if (!SettingsSingleton.getInstance().getSettings().hinting.exactHints) {
             //tempHintinPen = new Pentomino(hintinPen.name);
@@ -730,10 +843,10 @@ class Visual {
                 switch (hint.getCommands()[hintnr]._name) {
                     case "Remove": break;
                     case "Place": break;
-                    case "RotateClkWise": tempHintinPen.rotateClkWise(); break;
-                    case "RotateAntiClkWise": tempHintinPen.rotateAntiClkWise(); break;
-                    case "MirrorH": tempHintinPen.mirrorH(); break;
-                    case "MirrorV": tempHintinPen.mirrorV(); break;
+                    case "RotateClkWise": tempHintinPen.rotateClkWise(cmdProperty); break;
+                    case "RotateAntiClkWise": tempHintinPen.rotateAntiClkWise(cmdProperty); break;
+                    case "MirrorH": tempHintinPen.mirrorH(cmdProperty); break;
+                    case "MirrorV": tempHintinPen.mirrorV(cmdProperty); break;
                     default: throw new Error("Error on commands on pentomino copy.");
                 }
             }
@@ -828,10 +941,11 @@ class Visual {
                     // handle rotateClkWise hint
                     this.select(hintinPen, posX, posY);
                     if (!this.selected.inTray) {
-                        rotateClkWise();
-                        setTimeout(function () {
-                            rotateAntiClkWise();
-                        }, timeoutFrame);
+                        this.rotateClkWise(cmdProperty);
+                        var that = this;
+                        setTimeout(function (that) {
+                            that.rotateAntiClkWise(cmdProperty);
+                        }, timeoutFrame, that);
                     }
                     break;
 
@@ -839,10 +953,11 @@ class Visual {
                     // handle rotateAntiClkWise hint
                     this.select(hintinPen, posX, posY);
                     if (!this.selected.inTray) {
-                        rotateAntiClkWise();
-                        setTimeout(function () {
-                            rotateClkWise();
-                        }, timeoutFrame);
+                        this.rotateAntiClkWise(cmdProperty);
+                        var that = this;
+                        setTimeout(function (that) {
+                            that.rotateClkWise(cmdProperty);
+                        }, timeoutFrame, that);
                     }
                     break;
 
@@ -851,10 +966,11 @@ class Visual {
                     //select piece in the UI to flip
                     this.select(hintinPen, posX, posY);
                     if (!this.selected.inTray) {
-                        flipH();
-                        setTimeout(function () {
-                            flipH();
-                        }, timeoutFrame);
+                        this.flipH(cmdProperty);
+                        var that = this;
+                        setTimeout(function (that) {
+                            that.flipH(cmdProperty);
+                        }, timeoutFrame, that);
                     }
                     break;
 
@@ -862,10 +978,11 @@ class Visual {
                     // handle mirrorV hint
                     this.select(hintinPen, posX, posY);
                     if (!this.selected.inTray) {
-                        flipV();
-                        setTimeout(function () {
-                            flipV();
-                        }, timeoutFrame);
+                        this.flipV(cmdProperty);
+                        var that = this;
+                        setTimeout(function (that) {
+                            that.flipV(cmdProperty);
+                        }, timeoutFrame, that);
                     }
                     break;
 
@@ -874,7 +991,6 @@ class Visual {
             }
         }
     }
-
 
     indicatePentomino(pentomino, timeframe) {
         Array.prototype.forEach.call(document.getElementById("piece_" + pentomino.name).getElementsByClassName("bmPoint"), function (element) {
@@ -904,8 +1020,13 @@ class Visual {
     }
 
     showGameSolved() {
+        let enabledSolvedScreen = SettingsSingleton.getInstance().getSettings().showSolvedBoardScreen.enableSolvedScreen;
+        if (!enabledSolvedScreen) {
+            return;
+        }
+
         this.disablePointerEventsOnPieces();
-        var modal = document.getElementById('modalTop');
+        let modal = document.getElementById('modalTop');
         modal.style.display = "block";
         modal.style.background = "transparent";
         let modalFormContent = document.querySelector(".modalFormContent");
@@ -925,47 +1046,79 @@ class Visual {
             class: "modalText",
             text: strings.showSolved.congrats[lang]
         };
-        template.attachText("#modalBodyID", textNode1);
         let div1 = document.createElement("div");
         let img = document.createElement("img");
-        img.src = "resources/images/icons/jboy-2.ico";
-        img.style.cursor = "none";
-        div1.appendChild(img);
-        //attach div 
-        modalBodyID.appendChild(div1);
-        let textNode2 = {
-            class: "modalText",
-            text: strings.showSolved.play[lang]
-        };
-        template.attachText("#modalBodyID", textNode2);
-        let div2 = document.createElement("div");
-        let text = document.createElement("h4");
-        text.innerHTML = "\n";
-        div2.appendChild(text);
-        //attach div 
-        modalBodyID.appendChild(div2);
-        let cancelBtn = {
-            class: "cancelBtn",
-            onclick: "document.getElementById('modalTop').style.display='none'",
-            textContent: strings.general.no[lang]
-        };
-        template.attachBtn("#modalBodyID", cancelBtn);
-        let playAgnBtnAttributes = {
-            class: "deleteBtn",
-            onclick: "document.getElementById('modalTop').style.display='none'",
-            textContent: strings.general.yes[lang]
-        };
-        template.attachBtn("#modalBodyID", playAgnBtnAttributes);
-        let playAgainBtn = document.querySelector(".deleteBtn");
-        playAgainBtn.addEventListener("click", () => {
-            pd.reset();
-            this.enablePointerEventsOnPieces();
-        });
 
-        let dontPlayAgainBtn = document.querySelector(".cancelBtn");
-        dontPlayAgainBtn.addEventListener("click", () => {
-            this.enablePointerEventsOnPieces();
-        });
+        let textNode3 = SettingsSingleton.getInstance().getSettings().showSolvedBoardScreen.SolvedScreens;
+        let textNode2;
+        let cancelBtn;
+        let playAgnBtnAttributes;
+        template.attachText("#modalBodyID", textNode1);
+
+        switch (textNode3) {
+            case "Play again?":
+                textNode2 = {
+                    class: "modalText",
+                    text: strings.showSolved.play[lang]
+                };
+                img.src = "resources/images/icons/jboy-2.ico";
+                img.style.cursor = "none";
+                div1.appendChild(img);
+                modalBodyID.appendChild(div1);
+                template.attachText("#modalBodyID", textNode2);
+                cancelBtn = {
+                    class: "cancelBtn",
+                    onclick: "document.getElementById('modalTop').style.display='none'",
+                    textContent: strings.general.no[lang]
+                };
+                playAgnBtnAttributes = {
+                    class: "deleteBtn",
+                    onclick: "document.getElementById('modalTop').style.display='none'",
+                    textContent: strings.general.yes[lang]
+                };
+                let div2 = document.createElement("div");
+                let text = document.createElement("h4");
+                text.innerHTML = "\n";
+                div2.appendChild(text);
+                //attach div
+                modalBodyID.appendChild(div2);
+
+                template.attachBtn("#modalBodyID", playAgnBtnAttributes);
+                template.attachBtn("#modalBodyID", cancelBtn);
+                let playAgainBtn = document.querySelector(".deleteBtn");
+                playAgainBtn.addEventListener("click", () => {
+                    pd.reset();
+                    this.enablePointerEventsOnPieces();
+                });
+
+                let dontPlayAgainBtn = document.querySelector(".cancelBtn");
+                dontPlayAgainBtn.addEventListener("click", () => {
+                    this.enablePointerEventsOnPieces();
+                });
+
+                break;
+            case "Well done! Please wait for your Teacher to continue":
+                textNode2 = {
+                    class: "modalText",
+                    text: strings.showSolved.WellDone[lang]
+                };
+                img.src = "resources/images/icons/wizard.ico";
+                div1.appendChild(img);
+                modalBodyID.appendChild(div1);
+                template.attachText("#modalBodyID", textNode2);
+                break;
+
+            case "Excellent ! Now continue with the next task on your assignment":
+                textNode2 = {
+                    class: "modalText",
+                    text: strings.showSolved.Excellent[lang]
+                };
+                img.src = "resources/images/icons/present.ico";
+                div1.appendChild(img);
+                modalBodyID.appendChild(div1);
+                template.attachText("#modalBodyID", textNode2);
+                break;
+        }
     }
 
     dist(a, b) {
@@ -1024,8 +1177,6 @@ class Visual {
         return bestCell;
     }
 
-
-
     calculateNeighbour(piecePos, hintCommand) {
         let game = this.gameController.game();
         let board = game._board;
@@ -1051,19 +1202,12 @@ class Visual {
         return reduced;
     }
 
-
-
-
     //returns unique elements of an array : reference : https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-array
     unique(arr) {
         return arr.sort().filter(function (ele, posi, ary) {
             return !posi || ele != ary[posi - 1];
         });
     }
-
-
-
-
 
     indicateAreaCells(piece, hintCommand) {
         let hintRow = hintCommand._nextPosition[0];
@@ -1111,8 +1255,6 @@ class Visual {
         }, timeoutFrame);
     }
 
-
-
     hideMostOccupiedNeighbors(cellsToIndicate, prevBackground, timeoutFrame) {
 
         setTimeout(function () {
@@ -1159,8 +1301,11 @@ class Visual {
 
     prefillBoard() {
         this.readyForPrefilling();
+        if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
+            let audio = new Audio('resources/audio/prefill.mp3');
+            audio.play();
+        }
         let randomSolution = this.fetchRandomSolution();
-
         let prefillCandidates = [];
         let threshold = SettingsSingleton.getInstance().getSettings().prefilling.distanceValue;
         let scheme = SettingsSingleton.getInstance().getSettings().prefilling.prefillingStrategy;
@@ -1214,7 +1359,7 @@ class Visual {
             this.allSolutions = allSolutions;
         }
         if (this.allSolutions.length > 0) {
-            let solution = this.getRandomElementFromArray(this.allSolutions);
+            let solution = UtilitiesClass.getRandomElementFromArray(this.allSolutions);
             let ret = [];
             solution[0].every((piece, index) => ret.push([piece, solution[1][index]]));
             return ret;
@@ -1239,8 +1384,8 @@ class Visual {
         for (let i = 0; i < randomSolution.length; ++i) {
             [piecePosition, piece] = this.getRandomPiece(randomSolution, pickedPieces);
             pickedPieces[piece.name] = 1;
-            currentAnchor = [piecePosition.boardPosition[0] + this.boardX,
-            piecePosition.boardPosition[1] + this.boardY];
+            currentAnchor = [piecePosition.boardPosition[0],
+            piecePosition.boardPosition[1]];
             let matrix = piece.getMatrixRepresentation();
 
             blockedCellsTemp = {};
@@ -1310,8 +1455,8 @@ class Visual {
         for (let i = 0; i < randomSolution.length; ++i) {
             [piecePosition, piece] = this.getRandomPiece(randomSolution, pickedPieces);
             pickedPieces[piece.name] = 1;
-            currentAnchor = [piecePosition.boardPosition[0] + this.boardX,
-            piecePosition.boardPosition[1] + this.boardY];
+            currentAnchor = [piecePosition.boardPosition[0],
+            piecePosition.boardPosition[1]];
             for (let j = 0; j < positions.length; ++j) {
                 bOverlap = false;
                 candidateAnchor = [positions[j][0], positions[j][1]];
@@ -1338,7 +1483,7 @@ class Visual {
     }
 
     getRandomPiece(solution, pickedPieces) {
-        return this.getRandomElementFromArray(solution.filter(piece => !(pickedPieces[piece[0].name] == 1)));
+        return UtilitiesClass.getRandomElementFromArray(solution.filter(piece => !(pickedPieces[piece[0].name] == 1)));
     }
 
     execShadowCmd(command, seqType) {

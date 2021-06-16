@@ -8,8 +8,12 @@ class SettingsParser {
      * @returns {object | null}
      */
     static parseSettingsFromSeed(schema, seed) {
-        let remainingSeed = String(seed);
         let settings = {};
+        let visibility = new SettingsVisibility();
+
+        settings.teachersMode = seed[0] === "1";
+
+        let remainingSeed = String(seed.substr(1, seed.length));
 
         let lastElement;
 
@@ -45,8 +49,24 @@ class SettingsParser {
                 }
 
                 remainingSeed = remainingSeed.substr(lastElement + 1, remainingSeed.length);
+
+                switch (remainingSeed[0]) {
+                    case "0":
+                        visibility.setVisible(heading, key, false);
+                        break;
+                    case "1":
+                        visibility.setVisible(heading, key, true);
+                        break;
+                    default:
+                        console.warn("Unknown visibility qualifier: " + remainingSeed[0]);
+                        return null;
+                }
+
+                remainingSeed = remainingSeed.substr(1, remainingSeed.length);
             }
         }
+
+        settings.visibility = visibility;
 
         SettingsParser.applyNumericalLanguageRepr(settings);
         return settings;
@@ -158,7 +178,9 @@ class SettingsParser {
     static parseSettingsToSeed(schema, settings) {
         SettingsParser.revertNumericalLanguageRepr(settings);
 
-        let seed = "";
+        let seed = (settings.teachersMode ? 1 : 2).toString();
+
+        let visibility = settings.visibility;
 
         for (let heading in schema) {
             let subSettings = schema[heading].properties;
@@ -184,6 +206,8 @@ class SettingsParser {
                     default:
                         throw new Error("Unknown type: " + schemaEntry.type);
                 }
+
+                seed += visibility.isVisible(heading, key) === true ? 1 : 0;
             }
         }
 
@@ -238,11 +262,14 @@ class SettingsParser {
     // --- --- --- Create Empty Settings Object --- --- ---
     static createDefaultSettingsObject(schema) {
         let settings = {};
+        settings.visibility = new SettingsVisibility();
+        settings.teachersMode = true;
         for (let heading in schema) {
             let subSettings = schema[heading].properties;
             settings[heading] = {};
             for (let key in subSettings) {
                 settings[heading][key] = schema[heading].properties[key].default;
+                settings.visibility.setVisible(heading, key, true);
             }
         }
         SettingsParser.applyNumericalLanguageRepr(settings);
