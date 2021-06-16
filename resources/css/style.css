@@ -424,19 +424,18 @@ table
 
 /* Style for Button Manipulation */
 .main-wrapper {
-  width: 200px;
-  height: 200px;
-  position: relative;    
+  width: 2px;
+  height: 2px;
+  position: relative;   
 }
 
 .button-wrapper {
   border-radius: 50%;
-  width: 280px;
+  width: 0px;
   height: 280px;
   position: absolute;
   bottom: 0;
-  right: 0;
-  z-index: 12;
+  right: 0;  
   transition: transform .2s;   
 }
 

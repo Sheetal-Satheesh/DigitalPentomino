@@ -332,7 +332,8 @@ class Visual {
 
     showManipulations(piece, x, y) {
         let clientRect = document.getElementById("piece_" + piece.name).getBoundingClientRect();
-        let [xPosition, yPosition] = [clientRect.x + clientRect.width / 2, clientRect.y + clientRect.height / 2];
+        let [x1Position, y1Position] = [clientRect.x + clientRect.width / 2, clientRect.y + clientRect.height / 2];
+        let [x2Position, y2Position] = [clientRect.right + clientRect.width / 2, clientRect.bottom + clientRect.height / 2];
         let width = UIProperty.WindowWidth / this.pd.gameWidth;
         let gameWidth = document.getElementById("game").clientWidth;
         let gameHeight = document.getElementById("game").clientHeight;
@@ -346,10 +347,10 @@ class Visual {
 
         }        
 
-        if ((x + 130 > gameWidth)) {
-            if ((yPosition > 0) && (yPosition < gameHeight)) {
-                document.getElementById('pieceManipulation').style.left = 'calc(' + xPosition + 'px - ' + (width * 2) + 'vw)';
-                document.getElementById('pieceManipulation').style.top = 'calc(' + yPosition + 'px - ' + (width * 1) + 'vw)';
+        if ((x + 170 > gameWidth)) {
+            if ((y2Position > 0) && (y2Position < gameHeight)) {
+                document.getElementById('pieceManipulation').style.left = 'calc(' + x1Position + 'px - ' + (width * 1) + 'vw)';
+                document.getElementById('pieceManipulation').style.top = 'calc(' + y2Position + 'px - ' + (width * 2) + 'vw)';
                 document.getElementById('pieceManipulation').style.display = 'block';
                 document.documentElement.style.setProperty("--buttonRotA", "68deg");
                 document.documentElement.style.setProperty("--buttonRotB", "100deg");
@@ -357,8 +358,8 @@ class Visual {
                 document.documentElement.style.setProperty("--buttonRotD", "168deg");
             }
         } else if ((x > 0) && (x < 130)) {
-            document.getElementById('pieceManipulation').style.left = 'calc(' + xPosition + 'px - ' + (width * 2) + 'vw)';
-            document.getElementById('pieceManipulation').style.top = 'calc(' + yPosition + 'px - ' + (width * 1) + 'vw)';
+            document.getElementById('pieceManipulation').style.left = 'calc(' + x1Position + 'px - ' + (width * -1) + 'vw)';
+            document.getElementById('pieceManipulation').style.top = 'calc(' + y2Position + 'px - ' + (width * 1) + 'vw)';
             document.getElementById('pieceManipulation').style.display = 'block';
             document.documentElement.style.setProperty("--buttonRotA", "-98deg");
             document.documentElement.style.setProperty("--buttonRotB", "-68deg");
@@ -366,13 +367,13 @@ class Visual {
             document.documentElement.style.setProperty("--buttonRotD", "-38deg");
         }
         else {
+            document.getElementById('pieceManipulation').style.left = 'calc(' + x1Position + 'px - ' + (width *-1.5) + 'vw)';
+            document.getElementById('pieceManipulation').style.top = 'calc(' + y2Position + 'px - ' + (width * 1) + 'vw)';
             document.documentElement.style.setProperty("--buttonRotA", "-88deg");
             document.documentElement.style.setProperty("--buttonRotB", "-118deg");
             document.documentElement.style.setProperty("--buttonRotC", "-148deg");
             document.documentElement.style.setProperty("--buttonRotD", "-178deg");
-            document.getElementById('pieceManipulation').style.display = 'block';
-            document.getElementById('pieceManipulation').style.left = 'calc(' + xPosition + 'px - ' + (width * 1.5) + 'vw)';
-            document.getElementById('pieceManipulation').style.top = 'calc(' + yPosition + 'px - ' + (width * 1) + 'vw)';
+            document.getElementById('pieceManipulation').style.display = 'block';            
         }
         
     }
@@ -477,6 +478,7 @@ class Visual {
                 var trayHeight = document.getElementById("tray").clientHeight;
                 var fieldHeight = document.getElementById("field").clientHeight;
                 var functionsHeight = document.getElementById("functions_navbar").clientHeight;
+                that.disableManipulations();
 
                 var diff = gameHeight - (fieldHeight + trayHeight);
 
