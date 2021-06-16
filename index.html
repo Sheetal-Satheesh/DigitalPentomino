@@ -281,11 +281,13 @@
             /*const qrScanner = new QrScanner(videoElement, result => {
                 onQrCodeScanned(result);
                 qrScanner.stop();
+                this.closeModal();
             });
 
             qrScanner.start();*/
 
             onQrCodeScanned("https://pentomino-digital.de/V5/index.html?t=201010101111111110111011101110121");
+            this.closeModal();
         }
 
         function onQrCodeScanned(qrCode) {
@@ -582,7 +584,7 @@
             SettingsForm.generateForm(
                 $('#innerGridForm')[0],
                 this.handleJsonFormSubmit,
-                this.handleSettingsExport
+                this.handleShareSettings
             );
 
             let settings = SettingsSingleton.getInstance().getSettings();
@@ -590,7 +592,7 @@
             // this.postProcessSettingsForm(SettingsSingleton.getInstance().getSettings());
         }
 
-        function handleSettingsExport(settings) {
+        function handleShareSettings(settings) {
             this.hideManipulationButtons();
             this.closeBoardSelector();
             this.disablePointerEventsOnPieces();
