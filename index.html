@@ -677,6 +677,13 @@
                 window.print();
             });
             modalBodyID.appendChild(printButton);
+            let downloadImageButton = document.createElement("a");
+            downloadImageButton.innerHTML = "Download image";
+            downloadImageButton.addEventListener("click", function () {
+                handleDownloadImage(downloadImageButton, pupilQrCodeElement.firstElementChild);
+            });
+            downloadImageButton.download = "Canvas.png";
+            modalBodyID.appendChild(downloadImageButton);
             modalBodyID.appendChild(document.createElement("br"));
             modalBodyID.appendChild(document.createElement("br"));
 
@@ -686,6 +693,16 @@
 
             modalBodyID.appendChild(collapsibleButton);
             modalBodyID.appendChild(divToHide);
+        }
+
+        function handleDownloadImage(downloadImageButton, canvasElement) {
+            alert("downloading image ...");
+            dlCanvas(downloadImageButton, canvasElement);
+        }
+
+        function dlCanvas(downloadImageButton, canvasElem) {
+            let dt = canvasElem.toDataURL('image/png');
+            downloadImageButton.href = dt;
         }
 
         /*function generateQrTrElement(teacherUrl, pupilUrl) {
