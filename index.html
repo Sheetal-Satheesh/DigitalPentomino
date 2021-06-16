@@ -278,33 +278,46 @@
 
             QrScanner.WORKER_PATH = 'resources/jsonform/qr-scanner-worker.min.js';
 
-            const qrScanner = new QrScanner(videoElement, result => {
+            /*const qrScanner = new QrScanner(videoElement, result => {
                 onQrCodeScanned(result);
                 qrScanner.stop();
             });
 
-            qrScanner.start();
+            qrScanner.start();*/
+
+            onQrCodeScanned("https://pentomino-digital.de/V5/index.html?t=201010101111111110111011101110121");
         }
 
         function onQrCodeScanned(qrCode) {
-            let url = new URL(qrCode);
+            let url;
+            try {
+                url = new URL(qrCode);
+            } catch (_) {
+                // TODO: handle
+                alert("Scanned-in code is no url");
+                return;
+            }
+
             let seed = url.searchParams.get(baseConfigs.seedUrlParamName);
 
-            if (!(seed === null)) {
-                alert("Scanned in qr-code with seed: " + seed);
-
-                let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
-                let newSettings = SettingsParser.parseSettingsFromSeed(schema, seed);
-
-                let oldSettings = SettingsSingleton.getInstance().getSettings();
-                let changesToSettings = SettingsParser.compareSettings(schema, oldSettings, newSettings);
-
-                SettingsSingleton.getInstance().setSettings(newSettings);
-                processChangesToSettings(changesToSettings, newSettings);
-            } else {
-                // TODO: handle better
-                alert("Scanned in wrong qr-code");
+            if (seed === null) {
+                // No parameter for seed found
+                alert("Scanned in url without tuca seed");
+                return;
             }
+
+            let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+            let newSettings = SettingsParser.parseSettingsFromSeed(schema, seed);
+
+            if (newSettings === null) {
+                // TODO: handle invalid seed
+                alert("Scanned in wrong qr-code");
+                return;
+            }
+
+            alert("Scanned in qr-code with seed: " + seed);
+            applyNewSettingsObjToApp(newSettings);
+            insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
         }
 
         function openLicense() {
@@ -490,15 +503,17 @@
                 // console.log("JsonForm: Submitted values:");
                 // console.log(values);
                 closeSettings();
-
-                let oldSettings = SettingsSingleton.getInstance().getSettings();
-                let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
-                let changesToSettings = SettingsParser.compareSettings(schema, oldSettings, values);
-
-                SettingsSingleton.getInstance().setSettings(values);
-                processChangesToSettings(changesToSettings, values);
-
+                applyNewSettingsObjToApp(values);
             }
+        }
+
+        function applyNewSettingsObjToApp(settings) {
+            let oldSettings = SettingsSingleton.getInstance().getSettings();
+            let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+            let changesToSettings = SettingsParser.compareSettings(schema, oldSettings, settings);
+
+            SettingsSingleton.getInstance().setSettings(settings);
+            processChangesToSettings(changesToSettings, settings);
         }
 
         function processChangesToSettings(changes, settings) {
