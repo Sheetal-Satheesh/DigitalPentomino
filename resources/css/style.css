@@ -165,6 +165,15 @@ margin-top: 2px;
  z-index: 10;
 }
 
+.trayPosition {
+  position: fixed;
+  top: 0;
+  width: 9vw;
+  height: 9vw;
+  transform: scale(var(--magnification)) rotateX(var(--rotationX)) rotateY(var(--rotationY)) rotateZ(var(--rotationZ));
+  transition: transform .2s;
+}
+
 .gamearea {
   justify-content:;
   display: block;
