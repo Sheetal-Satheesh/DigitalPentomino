@@ -11,6 +11,25 @@ class UtilitiesClass {
     * Returns a game object of the selected/default game that can be used to draw the board
     */
     static getGameUISettings(boardName) {
+
+        //read gameWidth and gameHeight dynamically from board
+        let fieldHTML = document.getElementById('field');
+        let heightField = document.getElementById('field').clientHeight;
+        let widthField = document.getElementById('field').clientWidth;
+
+        //calculate needed blocks in width based on available height
+        //TODO: if height > width invert!
+        let blockAmountHeight = boardConfigs[boardName].boardSize[0] + 4;
+        let absHeightPerBlock = heightField / blockAmountHeight;
+        let ratioFieldWidthHeight = widthField / heightField;
+        let blockAmountWidth = Math.round(blockAmountHeight * ratioFieldWidthHeight);
+        //check if wide enough to display full board, else increase boardWidth
+        if (blockAmountWidth < boardConfigs[boardName].boardSize[1] + 4){
+            blockAmountWidth = boardConfigs[boardName].boardSize[1] + 4;
+        }
+        baseConfigs.gameHeight = blockAmountHeight;
+        baseConfigs.gameWidth = blockAmountWidth;
+
         return {
             gameHeight: baseConfigs.gameHeight,
             gameWidth: baseConfigs.gameWidth,

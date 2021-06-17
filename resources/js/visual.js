@@ -108,7 +108,7 @@ class Visual {
         }
         this.positionPiece(pentomino);
         if (cmdProperty.cmdType != CommandTypes.Shadow) {
-            //this.checkIfGameWon(); TODO: reenable
+            this.checkIfGameWon();
         }
     }
 
@@ -142,54 +142,21 @@ class Visual {
     }
 
     renderBoard() {
-        //TODO: Check whether in the innerHTML approach is good here!
-
         let fieldHTML = document.getElementById('field');
         let out = '';
         let heightField = document.getElementById('field').clientHeight;
         let widthField = document.getElementById('field').clientWidth;
 
-        //calculate needed blocks in width based on available height
-        //TODO: if height > width invert!
-        let blockAmountHeight = this.gameController.getBoardSize()[0] + 4;
-        let absHeightPerBlock = heightField / blockAmountHeight;
-        let ratioFieldWidthHeight = widthField / heightField;
-        let blockAmountWidth = Math.round(blockAmountHeight * ratioFieldWidthHeight);
-        //check if wide enough to display full board, else increase boardWidth
-        if (blockAmountWidth < this.gameController.getBoardSize()[1] + 4){
-            blockAmountWidth = this.gameController.getBoardSize()[1] + 4;
-        }
-
-        baseConfigs.gameHeight = blockAmountHeight;
-        baseConfigs.gameWidth = blockAmountWidth;
-
-        console.log(baseConfigs.gameHeight);
-        console.log(baseConfigs.gameWidth);
-        //console.log(boardConfigs[boardName].boardSize);
-
-        //todo: make sure that index where the board starts is calculated correctly
-        // TODO: replace in pd calculation instead of here!!!!!
-        this.pd.boardStartX = Math.floor((blockAmountHeight - this.gameController.getBoardSize()[0]) / 2);
-        this.pd.boardStartY = Math.floor((blockAmountWidth - this.gameController.getBoardSize()[1]) / 2);
-
-
-        let width = 100 / blockAmountWidth;
-        let height = 100 / blockAmountHeight;
-        this.pd.gameWidth = blockAmountWidth;
+        let width = 100 / baseConfigs.gameWidth;
+        let height = 100 / baseConfigs.gameHeight;
 
         /*The field consists of divs. Each div saves in its id field its resepective coorinates*/
-
-        console.log("Width of field: " + widthField + " Width per block: " + width);
-        console.log("Height of field: " + heightField + " Height per block: " + height);
-
-        console.log(this.pd.boardSize);
-
-        for (var row = 0; row < blockAmountHeight; row++) {
-            for (var col = 0; col < blockAmountWidth; col++) {
+        for (var row = 0; row < baseConfigs.gameHeight; row++) {
+            for (var col = 0; col < baseConfigs.gameWidth; col++) {
 
                 var isBoard = true;   //indicate where on the field the board is
                 var blockedCell = false;
-                //TODO: Implement blocked elements
+                //Check for blocked elements
                 if (col < this.pd.boardStartY) isBoard = false;
                 if (col >= this.pd.boardStartY + this.gameController.getBoardSize()[1]) isBoard = false;
                 if (row < this.pd.boardStartX) isBoard = false;
@@ -280,7 +247,7 @@ class Visual {
         var htmlElement = document.getElementById('piece_' + piece.name);
 
         if (piece.inTray) {
-            var widthVW = UIProperty.TrayCSSLeft + (piece.trayPosition) * width;
+            var widthVW = 100 / 12 * (piece.trayPosition-1); //UIProperty.TrayCSSLeft + (piece.trayPosition) * width;
             var magnification = 8 / (5 * width);
             htmlElement.style.left = widthVW + 'vw';
             htmlElement.style.top = '' + 0.1 * UIProperty.TrayHeight + 'vw'; //position pieces in tray around 20% from top
