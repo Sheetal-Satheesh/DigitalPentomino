@@ -89,6 +89,15 @@ class SettingsSchema {
                 "title": titles.hinting.title[lang],
                 "advanced": true,
                 "properties": {
+                    hintingLevels: {
+                        "type": "string",
+                        "title": titles.hinting.hintingLevels.title[lang],
+                        "description": titles.hinting.hintingLevels.description[lang],
+                        "enum": ["Easy", "Medium", "Difficult","Custom"],
+                        "enumText": titles.hinting.hintingLevels.enumTitles[lang],
+                        "default": "Easy"
+                    },
+
                     showNumberOfPossibleSolutions: {
                         "type": "boolean",
                         "title": titles.hinting.showNumberOfPossibleSolutions.title[lang],

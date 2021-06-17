@@ -901,6 +901,8 @@ class Visual {
         });
     }
 
+    
+
     showGameSolved() {
         let enabledSolvedScreen = SettingsSingleton.getInstance().getSettings().showSolvedBoardScreen.enableSolvedScreen;
         if(!enabledSolvedScreen) {

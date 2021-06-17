@@ -142,6 +142,72 @@ class SettingsForm {
         }
 
         formElement.appendChild(advancedSettingsDiv);
+        SettingsForm.addDifficultyLevelsListener(formElement);
+    }
+
+    static addDifficultyLevelsListener(formElement) {
+        let hintingLevelSelectElem = $(formElement).find($('select[name="hinting.hintingLevels"]'))[0];
+        hintingLevelSelectElem.addEventListener("change", (event) => {
+            // TODO: insert stuff
+            // Retrieve the select element from the event.
+            let select = event.target;
+            let selectedOption = select.options[select.selectedIndex];
+            let value = selectedOption.getAttribute('value');
+            let partial = $('select[name="hinting.partialHintingStragety"]');
+
+
+            /* if(hintingLevelSelectElem === "easy"){
+                console.log("easy");
+            }
+
+            else if(hintingLevelSelectElem === "Medium"){
+                console.log("medium");
+            }
+
+            else{
+                console.log("difficult");
+            }
+*/
+            switch (value) {
+                case "Easy":
+                    console.log("i am easy");
+                    //activate full hint
+                    $('select[name="hinting.hintingStrategy"]').find('option[value="full"]').attr("selected", true);
+                    //hide partial
+                    partial.hide();
+                    //disable hintingStrategy
+                    $('select[name="hinting.hintingStrategy"]').attr("disabled", true);
+                    /*(TODO : HIDE partial hint strategy label if wanted)
+                    let parent = $('select[id="hinting.partialHintingStragety"] ').parent().map(function () {
+                        return this.tagName;
+                    });
+                    parent.find('label').hide();
+                    */
+                    break;
+                case "Medium": console.log("i am Medium", partial.title);
+                    //activate area hint
+                    $('select[name="hinting.hintingStrategy"]').find('option[value="area"]').attr("selected", true);
+                    //disable hintingStrategy
+                    $('select[name="hinting.hintingStrategy"]').attr("disabled", true);
+                    //hide partial
+                    partial.hide();
+                    break;
+                case "Difficult": console.log("i am Difficult");
+                    //activate partail hint
+                    $('select[name="hinting.hintingStrategy"]').find('option[value="partial"]').attr("selected", true);
+                    //disable hintingStrategy
+                    $('select[name="hinting.hintingStrategy"]').attr("disabled", true);
+                    //show partial
+                    partial.show();
+                    break;
+                case "Custom": console.log("i am custom");
+                     //enable hintingStrategy
+                     $('select[name="hinting.hintingStrategy"]').attr("disabled", false);
+                     break;
+                default: console.log("Level unknown");
+            }
+        });
+    
     }
 
     static createCollapsibleButton(showText, hideText) {
