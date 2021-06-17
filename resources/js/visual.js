@@ -1312,7 +1312,7 @@ class Visual {
         if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.showNumberOfPossibleSolutions();
         }
-        //this.checkIfGameWon();
+        this.checkIfGameWon();
     }
 
     getRandomElementFromArray(arrayObject) {
