@@ -247,11 +247,11 @@ class Visual {
         var htmlElement = document.getElementById('piece_' + piece.name);
 
         if (piece.inTray) {
-            var widthVW = 100 / 12 * (piece.trayPosition-1); //UIProperty.TrayCSSLeft + (piece.trayPosition) * width;
+            var widthVW = 100 / 12 * piece.trayPosition; //UIProperty.TrayCSSLeft + (piece.trayPosition) * width;
             var magnification = 8 / (5 * width);
             htmlElement.style.left = widthVW + 'vw';
             htmlElement.style.top = '' + 0.1 * UIProperty.TrayHeight + 'vw'; //position pieces in tray around 20% from top
-            htmlElement.style.transformOrigin = 'top';
+            htmlElement.style.transformOrigin = 'left top';
             htmlElement.style.setProperty("--magnification", magnification);
             htmlElement.style.setProperty("--rotationX", "0deg");
             htmlElement.style.setProperty("--rotationY", "0deg");

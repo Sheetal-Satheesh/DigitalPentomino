@@ -41,8 +41,6 @@ class UtilitiesClass {
 
     static getBoardStartCoords(boardName) {
         let gameObject = this.getGameUISettings(boardName);
-        console.log("Game object height: " + gameObject.gameHeight);
-        console.log("Game object width: " + gameObject.gameWidth);
 
         return [
             Math.floor((gameObject.gameHeight - gameObject.boardSize[0]) / 2),
