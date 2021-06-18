@@ -172,11 +172,13 @@ class SettingsForm {
                 case "Easy":
                     console.log("i am easy");
                     //activate full hint
-                    $('select[name="hinting.hintingStrategy"]').find('option[value="full"]').attr("selected", true);
+                    let full = $('select[name="hinting.hintingStrategy"]').find('option[value="full"]').attr("selected", true);
+                    full.addClass('changed');
                     //hide partial
                     partial.hide();
                     //disable hintingStrategy
-                    $('select[name="hinting.hintingStrategy"]').attr("disabled", true);
+                    let dsble = $('select[name="hinting.hintingStrategy"]').attr("disabled", true);
+                    dsble.addClass('changed');
                     /*(TODO : HIDE partial hint strategy label if wanted)
                     let parent = $('select[id="hinting.partialHintingStragety"] ').parent().map(function () {
                         return this.tagName;
@@ -203,6 +205,7 @@ class SettingsForm {
                 case "Custom": console.log("i am custom");
                      //enable hintingStrategy
                      $('select[name="hinting.hintingStrategy"]').attr("disabled", false);
+                     partial.show();
                      break;
                 default: console.log("Level unknown");
             }
