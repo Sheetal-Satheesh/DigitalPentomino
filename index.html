@@ -278,16 +278,18 @@
 
             QrScanner.WORKER_PATH = 'resources/jsonform/qr-scanner-worker.min.js';
 
-            /*const qrScanner = new QrScanner(videoElement, result => {
-                onQrCodeScanned(result);
-                qrScanner.stop();
-                this.closeModal();
+            const qrScanner = new QrScanner(videoElement, result => {
+                let success = onQrCodeScanned(result);
+                if (success) {
+                    qrScanner.stop();
+                    this.closeModal();
+                }
             });
 
-            qrScanner.start();*/
+            qrScanner.start();
 
-            onQrCodeScanned("https://pentomino-digital.de/V5/index.html?t=201010101111111110111011101110121");
-            this.closeModal();
+            // onQrCodeScanned("https://pentomino-digital.de/V5/index.html?t=201010101111111110111011101110121");
+            // this.closeModal();
         }
 
         function onQrCodeScanned(qrCode) {
@@ -295,31 +297,35 @@
             try {
                 url = new URL(qrCode);
             } catch (_) {
-                // TODO: handle
-                alert("Scanned-in code is no url");
-                return;
+                // TODO: display error-msg to user in better way
+                alert("Scanned in wrong QR-code.");
+                console.error("Scanned code is not a url: " + qrCode);
+                return false;
             }
 
             let seed = url.searchParams.get(baseConfigs.seedUrlParamName);
 
             if (seed === null) {
+                // TODO: display error-msg to user in better way
                 // No parameter for seed found
-                alert("Scanned in url without tuca seed");
-                return;
+                alert("Scanned in wrong QR-code.");
+                console.error("Scanned url does not contain TUCA seed: " + qrCode);
+                return false;
             }
 
             let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
             let newSettings = SettingsParser.parseSettingsFromSeed(schema, seed);
 
             if (newSettings === null) {
-                // TODO: handle invalid seed
-                alert("Scanned in wrong qr-code");
-                return;
+                // TODO: display error-msg to user in better way
+                alert("Scanned in wrong QR-code.");
+                console.error("Scanned seed could not be parsed into a settings configuration: " + seed);
+                return false;
             }
 
-            alert("Scanned in qr-code with seed: " + seed);
             applyNewSettingsObjToApp(newSettings);
             insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
+            return true;
         }
 
         function openLicense() {
