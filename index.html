@@ -274,7 +274,12 @@
             parent.appendChild(heading);
 
             let videoElement = parent.appendChild(document.createElement("video"));
+            videoElement.id = "webCamera";
+            videoElement.style.display = "none";
             parent.appendChild(videoElement);
+
+            let canvasElem = parent.appendChild(document.createElement("canvas"));
+            canvasElem.id = "videoCanvas";
 
             QrScanner.WORKER_PATH = 'resources/jsonform/qr-scanner-worker.min.js';
 
@@ -288,8 +293,42 @@
 
             qrScanner.start();
 
+            // Draw video on canvas with rectangle
+            videoElement.onplay = function() {
+                setTimeout(function() {
+                    drawImage(videoElement, canvasElem);
+                } , 300);
+            };
+
             //onQrCodeScanned("https://pentomino-digital.de/V5/index.html?t=2010101110111011101110121");
             //this.closeModal();
+        }
+
+        // from https://stackoverflow.com/questions/59702127/draw-rectangle-over-html-5-tag-video first answer
+        function drawImage(video, canvas){
+            let ctx = canvas.getContext('2d');
+
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            let rectWidth = Math.min(canvas.width * (2/3), canvas.height * (2/3));
+
+            let centerX = canvas.width / 2;
+            let centerY = canvas.height / 2;
+
+            let pX = centerX - rectWidth / 2;
+            let pY = centerY - rectWidth / 2;
+
+            ctx.rect(pX,pY,rectWidth,rectWidth);
+            ctx.lineWidth = "6";
+            ctx.strokeStyle = "red";
+            ctx.stroke();
+
+            setTimeout(function() {
+                drawImage(video, canvas);
+            }, 100);
         }
 
         function onQrCodeScanned(qrCode) {
