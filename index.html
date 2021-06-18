@@ -296,7 +296,7 @@
             // Draw video on canvas with rectangle
             videoElement.onplay = function() {
                 setTimeout(function() {
-                    drawImage(videoElement, canvasElem);
+                    drawVideoToCanvas(videoElement, canvasElem);
                 } , 300);
             };
 
@@ -305,7 +305,7 @@
         }
 
         // from https://stackoverflow.com/questions/59702127/draw-rectangle-over-html-5-tag-video first answer
-        function drawImage(video, canvas){
+        function drawVideoToCanvas(video, canvas){
             let ctx = canvas.getContext('2d');
 
             canvas.width = video.videoWidth;
@@ -327,7 +327,7 @@
             ctx.stroke();
 
             setTimeout(function() {
-                drawImage(video, canvas);
+                drawVideoToCanvas(video, canvas);
             }, 100);
         }
 
