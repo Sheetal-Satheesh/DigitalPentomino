@@ -1,5 +1,6 @@
 /*reference : https://codepen.io/hariharakumar/pen/VmOdBx
 */
+
 .preloader {
     position: fixed;
     top: 0;
@@ -11,156 +12,170 @@
     flex-flow: row nowrap;
     justify-content: center;
     align-items: center;
-    background-color:#fff;
-    display:flex;
+    background-color: #fff;
+    display: flex;
 }
 
-.tuca{
-  background: none no-repeat scroll 0 0 #fff;
-  background-position: center center;
-  background-attachment: fixed;
-  background-size: 60%;
-  width: 100%;
-  height: 100%;
-  margin-bottom:50px;
+.tuca {
+    background: none no-repeat scroll 0 0 #fff;
+    background-position: center center;
+    background-attachment: fixed;
+    background-size: 60%;
+    width: 100%;
+    height: 100%;
+    margin-bottom: 50px;
 }
 
-.tuca embed{
-  position:absolute;
- height: 70vh;
- width:70vh;
- margin: 100px auto;
- margin-left:35%;
-  margin-top:7%;
+.tuca embed {
+    position: absolute;
+    height: 70vh;
+    width: 70vh;
+    margin: 100px auto;
+    margin-left: 35%;
+    margin-top: 7%;
 }
 
 .sk-cube-grid {
-  position:absolute;
-  width: 10vh;
-  height: 10vh;
-  margin: 100px auto;
-  margin-top:40%;
+    position: absolute;
+    width: 10vh;
+    height: 10vh;
+    margin: 100px auto;
+    margin-top: 40%;
 }
 
-
-@media only screen and (max-width: 800px){
-  .tuca embed{
-    position:absolute;
-   height: 60vh!important;
-   width:60vh!important;
-   margin: 100px auto;
-   margin-left:35%;
-    margin-top:7%;
-  }
-
+@media only screen and (max-width: 800px) {
+    .tuca embed {
+        position: absolute;
+        height: 60vh!important;
+        width: 60vh!important;
+        margin: 100px auto;
+        margin-left: 35%;
+        margin-top: 7%;
+    }
 }
-
 
 @media only screen and (max-width: 1176px) {
-  .sk-cube-grid {
-    position:absolute;
-    width: 40px;
-    height: 40px;
-    margin: 100px auto;
-    margin-top:50%;
-  }
-
-  .tuca embed{
-    position:absolute;
-   height: 70vh;
-   width:70vh;
-   margin: 100px auto;
-   margin-left:35%;
-    margin-top:7%;
-  }
-
-
+    .sk-cube-grid {
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        margin: 100px auto;
+        margin-top: 50%;
+    }
+    .tuca embed {
+        position: absolute;
+        height: 70vh;
+        width: 70vh;
+        margin: 100px auto;
+        margin-left: 35%;
+        margin-top: 7%;
+    }
 }
 
 @media only screen and (max-width: 600px) {
-  .sk-cube-grid {
-    position:absolute;
-    width: 40px;
-    height: 40px;
-    margin: 100px auto;
-    margin-top:60%;
-  }
-
-  .tuca embed{
-   position:absolute;
-   height: 50vh;
-   width:50vh;
-   margin: 100px auto;
-   margin-left:26%;
-    margin-top:7%;
-  }
-
+    .sk-cube-grid {
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        margin: 100px auto;
+        margin-top: 60%;
+    }
+    .tuca embed {
+        position: absolute;
+        height: 50vh;
+        width: 50vh;
+        margin: 100px auto;
+        margin-left: 26%;
+        margin-top: 7%;
+    }
 }
 
-@media only screen and (max-height: 600px){
-  .sk-cube-grid {
-    position:absolute;
-    width: 40px;
-    height: 40px;
-    margin: 100px auto;
-    margin-top:40%;
-  }
-
+@media only screen and (max-height: 600px) {
+    .sk-cube-grid {
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        margin: 100px auto;
+        margin-top: 40%;
+    }
 }
-
 
 .sk-cube-grid .sk-cube {
-  width: 33%;
-  height: 33%;
-  background-color: #000;
-  float: left;
-  -webkit-animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
-          animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out; 
+    width: 33%;
+    height: 33%;
+    background-color: #000;
+    float: left;
+    -webkit-animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
+    animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
 }
+
 .sk-cube-grid .sk-cube1 {
-  -webkit-animation-delay: 0.2s;
-          animation-delay: 0.2s; }
+    -webkit-animation-delay: 0.2s;
+    animation-delay: 0.2s;
+}
+
 .sk-cube-grid .sk-cube2 {
-  -webkit-animation-delay: 0.3s;
-          animation-delay: 0.3s; }
+    -webkit-animation-delay: 0.3s;
+    animation-delay: 0.3s;
+}
+
 .sk-cube-grid .sk-cube3 {
-  -webkit-animation-delay: 0.4s;
-          animation-delay: 0.4s; }
+    -webkit-animation-delay: 0.4s;
+    animation-delay: 0.4s;
+}
+
 .sk-cube-grid .sk-cube4 {
-  -webkit-animation-delay: 0.1s;
-          animation-delay: 0.1s; }
+    -webkit-animation-delay: 0.1s;
+    animation-delay: 0.1s;
+}
+
 .sk-cube-grid .sk-cube5 {
-  -webkit-animation-delay: 0.2s;
-          animation-delay: 0.2s; }
+    -webkit-animation-delay: 0.2s;
+    animation-delay: 0.2s;
+}
+
 .sk-cube-grid .sk-cube6 {
-  -webkit-animation-delay: 0.3s;
-          animation-delay: 0.3s; }
+    -webkit-animation-delay: 0.3s;
+    animation-delay: 0.3s;
+}
+
 .sk-cube-grid .sk-cube7 {
-  -webkit-animation-delay: 0s;
-          animation-delay: 0s; }
+    -webkit-animation-delay: 0s;
+    animation-delay: 0s;
+}
+
 .sk-cube-grid .sk-cube8 {
-  -webkit-animation-delay: 0.1s;
-          animation-delay: 0.1s; }
+    -webkit-animation-delay: 0.1s;
+    animation-delay: 0.1s;
+}
+
 .sk-cube-grid .sk-cube9 {
-  -webkit-animation-delay: 0.2s;
-          animation-delay: 0.2s; }
+    -webkit-animation-delay: 0.2s;
+    animation-delay: 0.2s;
+}
 
 @-webkit-keyframes sk-cubeGridScaleDelay {
-  0%, 70%, 100% {
-    -webkit-transform: scale3D(1, 1, 1);
-            transform: scale3D(1, 1, 1);
-  } 35% {
-    -webkit-transform: scale3D(0, 0, 1);
-            transform: scale3D(0, 0, 1); 
-  }
+    0%,
+    70%,
+    100% {
+        -webkit-transform: scale3D(1, 1, 1);
+        transform: scale3D(1, 1, 1);
+    }
+    35% {
+        -webkit-transform: scale3D(0, 0, 1);
+        transform: scale3D(0, 0, 1);
+    }
 }
 
 @keyframes sk-cubeGridScaleDelay {
-  0%, 70%, 100% {
-    -webkit-transform: scale3D(1, 1, 1);
-            transform: scale3D(1, 1, 1);
-  } 35% {
-    -webkit-transform: scale3D(0, 0, 1);
-            transform: scale3D(0, 0, 1);
-  } 
+    0%,
+    70%,
+    100% {
+        -webkit-transform: scale3D(1, 1, 1);
+        transform: scale3D(1, 1, 1);
+    }
+    35% {
+        -webkit-transform: scale3D(0, 0, 1);
+        transform: scale3D(0, 0, 1);
+    }
 }
