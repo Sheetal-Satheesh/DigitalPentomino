@@ -148,69 +148,39 @@ class SettingsForm {
     static addDifficultyLevelsListener(formElement) {
         let hintingLevelSelectElem = $(formElement).find($('select[name="hinting.hintingLevels"]'))[0];
         hintingLevelSelectElem.addEventListener("change", (event) => {
-            // TODO: insert stuff
             // Retrieve the select element from the event.
             let select = event.target;
             let selectedOption = select.options[select.selectedIndex];
             let value = selectedOption.getAttribute('value');
             let partial = $('select[name="hinting.partialHintingStragety"]');
-
-
-            /* if(hintingLevelSelectElem === "easy"){
-                console.log("easy");
-            }
-
-            else if(hintingLevelSelectElem === "Medium"){
-                console.log("medium");
-            }
-
-            else{
-                console.log("difficult");
-            }
-*/
             switch (value) {
                 case "Easy":
                     console.log("i am easy");
                     //activate full hint
-                    let full = $('select[name="hinting.hintingStrategy"]').find('option[value="full"]').attr("selected", true);
-                    full.addClass('changed');
-                    //hide partial
-                    partial.hide();
-                    //disable hintingStrategy
-                    let dsble = $('select[name="hinting.hintingStrategy"]').attr("disabled", true);
-                    dsble.addClass('changed');
-                    /*(TODO : HIDE partial hint strategy label if wanted)
-                    let parent = $('select[id="hinting.partialHintingStragety"] ').parent().map(function () {
-                        return this.tagName;
-                    });
-                    parent.find('label').hide();
-                    */
+                    $('select[name="hinting.hintingStrategy"]').find('option[value="full"]').attr("selected", true);
+                    //check exact hints
+                    document.getElementById("teachers.hinting.exactHints").checked = true;
+                     //disable partial hinting
+                     document.getElementById("teachers.hinting.partialHintingStragety").checked = false;
+                     //enable prefilling
+                    document.getElementById("teachers.prefilling.enablePrefilling").checked = true;
                     break;
-                case "Medium": console.log("i am Medium", partial.title);
+                case "Medium": console.log("i am Medium");
                     //activate area hint
                     $('select[name="hinting.hintingStrategy"]').find('option[value="area"]').attr("selected", true);
-                    //disable hintingStrategy
-                    $('select[name="hinting.hintingStrategy"]').attr("disabled", true);
-                    //hide partial
-                    partial.hide();
                     break;
                 case "Difficult": console.log("i am Difficult");
                     //activate partail hint
                     $('select[name="hinting.hintingStrategy"]').find('option[value="partial"]').attr("selected", true);
-                    //disable hintingStrategy
-                    $('select[name="hinting.hintingStrategy"]').attr("disabled", true);
-                    //show partial
-                    partial.show();
+                    //disable prefilling
+                    document.getElementById("teachers.prefilling.enablePrefilling").checked = false;
                     break;
                 case "Custom": console.log("i am custom");
-                     //enable hintingStrategy
-                     $('select[name="hinting.hintingStrategy"]').attr("disabled", false);
-                     partial.show();
-                     break;
+                    break;
                 default: console.log("Level unknown");
             }
         });
-    
+
     }
 
     static createCollapsibleButton(showText, hideText) {
@@ -247,7 +217,7 @@ class SettingsForm {
                 let settingsEntry = subSettings[key];
 
                 let checkBoxElement = SettingsForm.createInputElement("checkbox", "teachers." + elementName);
-                useInClassElement.appendChild(SettingsForm.createLabel(settingsEntry.title, {for: checkBoxElement.id}));
+                useInClassElement.appendChild(SettingsForm.createLabel(settingsEntry.title, { for: checkBoxElement.id }));
                 useInClassElement.appendChild(checkBoxElement);
                 useInClassElement.appendChild(document.createElement("br"));
             }
