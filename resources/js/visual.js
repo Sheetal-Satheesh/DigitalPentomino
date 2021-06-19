@@ -883,7 +883,6 @@ class Visual {
             element.style["box-shadow"] = "0 0 20px " + pentomino.color;
             if (pentomino.inTray) {
                 element.classList.add('horizTranslate');
-
                 //obtain and increase current scale of piece
                 let htmlPiece = document.getElementById("piece_" + pentomino.name);
                 let transformValue = $('#piece_' + pentomino.name).css('transform');
