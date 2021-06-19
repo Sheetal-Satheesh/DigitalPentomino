@@ -16,13 +16,22 @@
 }
 
 .tuca{
-  background: url("../images/icons/tuca_logo_new.svg") no-repeat scroll 0 0 #fff;
+  background: none no-repeat scroll 0 0 #fff;
   background-position: center center;
   background-attachment: fixed;
   background-size: 60%;
   width: 100%;
   height: 100%;
   margin-bottom:50px;
+}
+
+.tuca embed{
+  position:absolute;
+ height: 70vh;
+ width:70vh;
+ margin: 100px auto;
+ margin-left:35%;
+  margin-top:7%;
 }
 
 .sk-cube-grid {
@@ -33,7 +42,21 @@
   margin-top:40%;
 }
 
-@media only screen and (max-width: 1100px) {
+
+@media only screen and (max-width: 800px){
+  .tuca embed{
+    position:absolute;
+   height: 60vh!important;
+   width:60vh!important;
+   margin: 100px auto;
+   margin-left:35%;
+    margin-top:7%;
+  }
+
+}
+
+
+@media only screen and (max-width: 1176px) {
   .sk-cube-grid {
     position:absolute;
     width: 40px;
@@ -41,6 +64,17 @@
     margin: 100px auto;
     margin-top:50%;
   }
+
+  .tuca embed{
+    position:absolute;
+   height: 70vh;
+   width:70vh;
+   margin: 100px auto;
+   margin-left:35%;
+    margin-top:7%;
+  }
+
+
 }
 
 @media only screen and (max-width: 600px) {
@@ -51,7 +85,29 @@
     margin: 100px auto;
     margin-top:60%;
   }
+
+  .tuca embed{
+   position:absolute;
+   height: 50vh;
+   width:50vh;
+   margin: 100px auto;
+   margin-left:26%;
+    margin-top:7%;
+  }
+
 }
+
+@media only screen and (max-height: 600px){
+  .sk-cube-grid {
+    position:absolute;
+    width: 40px;
+    height: 40px;
+    margin: 100px auto;
+    margin-top:40%;
+  }
+
+}
+
 
 .sk-cube-grid .sk-cube {
   width: 33%;
