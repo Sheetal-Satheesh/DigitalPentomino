@@ -12,7 +12,7 @@ class SettingsForm {
 
         if (settings.teachersMode) {
             let useInClassButton = SettingsForm.createButton("Share");
-            useInClassButton.addEventListener("click", function () {
+            useInClassButton.addEventListener("click", function() {
                 let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
                 let settings = SettingsSingleton.getInstance().getSettings();
                 onExport(SettingsForm.collectDataFromForm(formElement, schema, settings));
@@ -22,7 +22,7 @@ class SettingsForm {
 
         formElement.appendChild(SettingsForm.createSubmitButton());
 
-        $(formElement).submit(function (event) {
+        $(formElement).submit(function(event) {
             let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
             let settings = SettingsSingleton.getInstance().getSettings();
             let settingsClone = SettingsForm.collectDataFromForm(formElement, schema, settings);
@@ -153,6 +153,7 @@ class SettingsForm {
             let selectedOption = select.options[select.selectedIndex];
             let value = selectedOption.getAttribute('value');
             let partial = $('select[name="hinting.partialHintingStragety"]');
+            //levels flexible to change help functionality 
             switch (value) {
                 case "Easy":
                     console.log("i am easy");
@@ -160,24 +161,28 @@ class SettingsForm {
                     $('select[name="hinting.hintingStrategy"]').find('option[value="full"]').attr("selected", true);
                     //check exact hints
                     document.getElementById("teachers.hinting.exactHints").checked = true;
-                     //disable partial hinting
-                     document.getElementById("teachers.hinting.partialHintingStragety").checked = false;
-                     //enable prefilling
+                    //disable partial hinting
+                    document.getElementById("teachers.hinting.partialHintingStragety").checked = false;
+                    //enable prefilling
                     document.getElementById("teachers.prefilling.enablePrefilling").checked = true;
                     break;
-                case "Medium": console.log("i am Medium");
+                case "Medium":
+                    console.log("i am Medium");
                     //activate area hint
                     $('select[name="hinting.hintingStrategy"]').find('option[value="area"]').attr("selected", true);
                     break;
-                case "Difficult": console.log("i am Difficult");
+                case "Difficult":
+                    console.log("i am Difficult");
                     //activate partail hint
                     $('select[name="hinting.hintingStrategy"]').find('option[value="partial"]').attr("selected", true);
                     //disable prefilling
                     document.getElementById("teachers.prefilling.enablePrefilling").checked = false;
                     break;
-                case "Custom": console.log("i am custom");
+                case "Custom":
+                    console.log("i am custom");
                     break;
-                default: console.log("Level unknown");
+                default:
+                    console.log("Level unknown");
             }
         });
 
@@ -188,7 +193,7 @@ class SettingsForm {
             "class": "collapsible btn btn-primary btn-lg"
         });
 
-        buttonElement.addEventListener("click", function (event) {
+        buttonElement.addEventListener("click", function(event) {
             this.classList.toggle("active");
             let content = this.nextElementSibling;
             if (content.style.display === "block") {
