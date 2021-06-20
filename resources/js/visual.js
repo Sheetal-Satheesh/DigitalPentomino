@@ -2,8 +2,6 @@ const UIProperty = {
     "TrayCSSLeft": 0,
     "TrayHeight": 10,
     "WindowWidth": 100,
-    "PentominoX": 8,
-    "PentominoY": 8,
     "Sidebar": 0
 }
 Object.freeze(UIProperty);
@@ -144,27 +142,25 @@ class Visual {
     }
 
     renderBoard() {
-        //TODO: Check whether in the innerHTML approach is good here!
+        let fieldHTML = document.getElementById('field');
+        let out = '';
+        let heightField = document.getElementById('field').clientHeight;
+        let widthField = document.getElementById('field').clientWidth;
 
-        var fieldHTML = document.getElementById('field');
-        var out = '';
-        var width = UIProperty.WindowWidth / this.pd.gameWidth;
-        var height = UIProperty.WindowHeight / this.pd.gameHeight;
-        console.log(width);
-        console.log(height);
+        let width = 100 / baseConfigs.gameWidth;
+        let height = 100 / baseConfigs.gameHeight;
 
         /*The field consists of divs. Each div saves in its id field its resepective coorinates*/
-
-        for (var row = 0; row < this.pd.gameHeight; row++) {
-            for (var col = 0; col < this.pd.gameWidth; col++) {
+        for (var row = 0; row < baseConfigs.gameHeight; row++) {
+            for (var col = 0; col < baseConfigs.gameWidth; col++) {
 
                 var isBoard = true;   //indicate where on the field the board is
                 var blockedCell = false;
-                //TODO: Implement blocked elements
-                if (col < this.boardY) isBoard = false;
-                if (col >= this.boardY + this.gameController.getBoardSize()[1]) isBoard = false;
-                if (row < this.boardX) isBoard = false;
-                if (row >= this.boardX + this.gameController.getBoardSize()[0]) isBoard = false;
+                //Check for blocked elements
+                if (col < this.pd.boardStartY) isBoard = false;
+                if (col >= this.pd.boardStartY + this.gameController.getBoardSize()[1]) isBoard = false;
+                if (row < this.pd.boardStartX) isBoard = false;
+                if (row >= this.pd.boardStartX + this.gameController.getBoardSize()[0]) isBoard = false;
                 //Ashwini: For Blocking the cells
                 if (this.pd.blockedCells != undefined) {
                     var gameCellPattern = this.pd.gameCellPattern;
@@ -267,11 +263,11 @@ class Visual {
         var htmlElement = document.getElementById('piece_' + piece.name);
 
         if (piece.inTray) {
-            var widthVW = UIProperty.TrayCSSLeft + (piece.trayPosition) * 7.2;
+            var widthVW = 100 / 12 * piece.trayPosition; //UIProperty.TrayCSSLeft + (piece.trayPosition) * width;
             var magnification = 8 / (5 * width);
             htmlElement.style.left = widthVW + 'vw';
             htmlElement.style.top = '' + 0.1 * UIProperty.TrayHeight + 'vw'; //position pieces in tray around 20% from top
-            htmlElement.style.transformOrigin = 'top';
+            htmlElement.style.transformOrigin = 'left top';
             htmlElement.style.setProperty("--magnification", magnification);
             htmlElement.style.setProperty("--rotationX", "0deg");
             htmlElement.style.setProperty("--rotationY", "0deg");
@@ -1437,6 +1433,8 @@ class Visual {
         for (let i = 0; i < randomSolution.length; ++i) {
             [piecePosition, piece] = this.getRandomPiece(randomSolution, pickedPieces);
             pickedPieces[piece.name] = 1;
+            console.log("Piece position: ");
+            console.log(piecePosition);
             currentAnchor = [piecePosition.boardPosition[0],
             piecePosition.boardPosition[1]];
             for (let j = 0; j < positions.length; ++j) {
@@ -1458,6 +1456,7 @@ class Visual {
             positions.push(currentAnchor);
             this.removeFromTray(piece);
             piece.updateTrayValue(0);
+            console.log("Anchor for placement of " + piece + " is " + currentAnchor[0] + "," + currentAnchor[1]);
             this.placePentomino(piece, currentAnchor[0], currentAnchor[1]);
         }
 
