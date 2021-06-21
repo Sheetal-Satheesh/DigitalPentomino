@@ -266,6 +266,19 @@ class GameController {
         return this.splitBoard().loadSplit();
     }
 
+    //--- --- --- Split Board V2 --- --- ---
+    loadSplit_V2() {
+        if (this.game() === null) {
+            throw new Error("Game is not set");
+        }
+
+        if (this.splitBoard() === null) {
+            console.error(" not initialized");
+        }
+
+        return this.splitBoard().loadSplit_V2();
+    }
+
     getSolutions() {
         return this.hintAI().getSolutions();
     }

@@ -363,7 +363,7 @@
             input.addEventListener('change', function () {
                 if (this.checked) {                   
                     if (!pd.gameController.game()._board.isSolved()) {
-                        pd.visual.callSplitBoard();                        
+                        pd.visual.callSplitBoard_V2();                        
                     } else {
                         console.log("Game is already solved");
                     }

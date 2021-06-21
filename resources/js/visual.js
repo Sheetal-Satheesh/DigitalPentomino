@@ -37,7 +37,6 @@ class Visual {
         this.pieces = this.gameController.getAllPentominoes();
         this.selected = false;
         this.overlapBlock = new OverlapBlock();
-
         this.renderBoard();
         this.renderPieces();
         this.disablePrefillButton(false);
@@ -644,6 +643,31 @@ class Visual {
         this.displaySplit(partitionedArray, alternateColor);        
     }
 
+    callSplitBoard_V2() {
+        let partitionedArray = pd.gameController.loadSplit_V2();         
+        let lengthOfPartitionedArray = partitionedArray.length;
+        for(let partition = 0; partition <= lengthOfPartitionedArray; partition++) {
+            this.displaySplit_V2(partitionedArray[partition], alternateColor);              
+        }
+                
+    }
+
+    // checkPartitonSolved(partitonedArray) {
+    //     for (var i = 0; i < partitionedArray.length; i++) {
+    //         for (var j = 0; j < partitionedArray[i].length; j++) {
+    //             if (partitionedArray[i][j][1]) {
+    //                 let fieldValue = partitionedArray[i][j][1];
+    //                 for (var k = 0; k < fieldValue.length; k++) {
+    //                     let fieldID = document.getElementById("field_" + fieldValue[k][0] + "," + fieldValue[k][1]);
+    //                     fieldID.style.background = alternateColor[0];
+    //                     fieldID.style.opacity = .8;
+    //                 }
+    //             }                
+    //         }            
+    //     } 
+
+    // }
+
     undoSplit() {        
         Array.prototype.forEach.call(document.getElementsByClassName("gamearea boardarea"), function (element) {            
             element.style.background = backGroundColor;
@@ -673,6 +697,26 @@ class Visual {
                 });
             }
         }        
+    }
+
+    displaySplit_V2(partitionedArray, alternateColor) { 
+        let piecesDisplayed = [];
+        for (let i = 0; i < partitionedArray.length; i++) {
+            for (let j = 0; j < partitionedArray[i][1].length; j++) {                
+                    let fieldValue = partitionedArray[i][1];                    
+                    let fieldID = document.getElementById("field_" + fieldValue[j][0] + "," + fieldValue[j][1]);
+                    fieldID.style.background = alternateColor[0];
+                    fieldID.style.opacity = .8;                                  
+            } 
+            piecesDisplayed.push(partitionedArray[i][0].name);                     
+        } 
+        this.pieces.forEach(piece => {
+            let containsDisplayedPieceName = piecesDisplayed.indexOf(piece.name)
+                if(containsDisplayedPieceName === -1) {
+                    document.getElementById('piece_'+ piece.name).style.display = 'none';
+                }                                                      
+        });   
+              
     }
 
 

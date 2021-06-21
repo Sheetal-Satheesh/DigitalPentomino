@@ -10,7 +10,7 @@ class SplitBoard {
 
     constructor(game) {
         this._game = game;
-        this._solutions = Solutions.getGamesFromSolutionsConfig(game.getName());
+        this._solutions = Solutions.getGamesFromSolutionsConfig(game.getName());        
     }
 
     loadSplit() {
@@ -31,6 +31,40 @@ class SplitBoard {
         let partionedArray = this._splitArrayIntoChunks(relativePosAndPiece);
         return partionedArray;
     }
+
+    loadSplit_V2() {
+        let game = this._game;
+        let possibleSolutions = this._getPossibleSolutions(game, this._solutions);
+        let closestSolution;        
+        closestSolution = possibleSolutions[0];               
+        let pentominoAnchors = this._getPentominoesAndAnchorPos(closestSolution);
+        let orderPieces = this._sortPiecesBasedOnAnchor(pentominoAnchors);
+        let relativePosOfPieceWithAnchorPos = this._getRelativePositionOfPieceWithAnchorPosition(game, closestSolution, orderPieces);
+        let partitionedArray = this._splitArrayIntoChunks(relativePosOfPieceWithAnchorPos);                     
+        return partitionedArray;
+    }
+
+    // _partitionHasUnoccupiedPosition(partitionedSpace) {
+    //     let pentominoesOnBoard = game.getAllPentominoes().filter(p => game.isPlacedOnBoard(p));
+    //     for (var solPentominoes = 0; solPentominoes < partitionedSpace._board._pentominoes.length; solPentominoes++) {
+    //       let solPentominoName = closestSolution._board._pentominoes[solPentominoes].name;
+    //       let solPentominoPos = closestSolution._board._pentominoes[solPentominoes].sRepr;
+
+    //       for (var j = 0; j < pentominoesOnBoard.length; j++) {
+    //         let pentominoesOnBoardName = pentominoesOnBoard[j].name;
+    //         let pentominoesOnBoardPos = pentominoesOnBoard[j].sRepr;
+
+    //         if (solPentominoName === pentominoesOnBoardName ) {
+    //           if (solPentominoPos != pentominoesOnBoardPos) {
+    //             return new RemoveCommand( game.getPentominoByName(pentominoesOnBoardName),
+    //                                       game.getPosition(game.getPentominoByName(pentominoesOnBoardName)));
+    //           }
+    //         }
+    //       }
+    //     }
+    //     return null;
+
+    // }  
 
     /** ---------------  Solutions-------------*/
     getSolutions() {
@@ -95,6 +129,37 @@ class SplitBoard {
                         ];
                     });
                     finalPosAndPiece.push([solutionPentomino, pentominoGamePosition]);
+                }
+            });
+        }
+        return finalPosAndPiece;
+    }
+
+    // --- --- --- Calculate Position In Game --- --- ---
+    /**     
+     * @param game
+     * @param solutions
+     * @param sortedarray
+     * @returns [*]
+     */
+     _getRelativePositionOfPieceWithAnchorPosition(game, closestSolution, orderPieces) {
+        let finalPosAndPiece = [];
+        for (let i = 0; i < orderPieces.length; i++) {
+            closestSolution._board._pentominoes.forEach(pent => {
+                if (pent.name === orderPieces[i][0]) {
+                    let solutionPentomino = closestSolution.getPentominoByName(pent.name);
+                    let pentominoAnchor = closestSolution._board.getPosition(solutionPentomino);
+                    let pentominoRelPositions = solutionPentomino.getRelPentominoPositions();
+                    let pentominoPositions = pentominoRelPositions.map(relPosition => {
+                        return solutionPentomino.getCoordinatePosition(pentominoAnchor, relPosition)
+                    });
+                    let pentominoGamePosition = pentominoPositions.map(position => {
+                        return [
+                            position[0] + game._board._boardSRows,
+                            position[1] + game._board._boardSCols
+                        ];
+                    });
+                    finalPosAndPiece.push([solutionPentomino, pentominoGamePosition, orderPieces[i][1]]);
                 }
             });
         }
