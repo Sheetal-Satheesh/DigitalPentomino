@@ -450,7 +450,7 @@ class Visual {
             let settingsEnabled = false;
             for (let j in elements) {
                 let precheck = elements[j].className;
-                if (precheck == 'controlButton') {
+                if (precheck.startsWith('icon-')) {
                     buttonOverPiece = true;
                 }
                 if (precheck == 'settings-popup') {
