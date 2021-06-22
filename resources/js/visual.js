@@ -202,7 +202,7 @@ class Visual {
          * If this function should also handle updates, it should rather check whether elements
          * already exist and update their respective properties instead of creating the pieces
          * again and again.
-         */
+        */
 
         let pieceArea = document.getElementById('piecearea');
         let trayArea = document.getElementById('tray');
@@ -216,7 +216,7 @@ class Visual {
              * this are the bouding boxes into which the piece itself is "painted" setting
              * to display:none avoids the appearing for a split second before positioning
              *
-             */
+            */
             trayout += '<div class="trayPosition" id="tray_' + piece.trayPosition + '" style="width:' + (5 * width) + 'vw;height:' + (5 * width) + 'vw;display:block;z-index:0;"></div>';
             out += '<div class="piece" id="piece_' + piece.name + '" style="width:' + (5 * width) + 'vw;height:' + (5 * width) + 'vw;display:none;z-index:0;">';
 
@@ -541,7 +541,7 @@ class Visual {
                     var element = elements[i];
                     var id = element.id;
                     /**
-                     * when piece is moved back to tray reset Pentomio inTray variable to 1 and place the
+                     * when piece is moved back to tray reset Pentomio inTray variable to 1 and place the 
                      * piece in Tray */
                     if (id == 'tray') {
                         let piece = data[1];
@@ -1363,7 +1363,7 @@ class Visual {
             [piecePosition, piece] = this.getRandomPiece(randomSolution, pickedPieces);
             pickedPieces[piece.name] = 1;
             currentAnchor = [piecePosition.boardPosition[0],
-                piecePosition.boardPosition[1]];
+            piecePosition.boardPosition[1]];
             let matrix = piece.getMatrixRepresentation();
 
             blockedCellsTemp = {};
@@ -1436,7 +1436,7 @@ class Visual {
             console.log("Piece position: ");
             console.log(piecePosition);
             currentAnchor = [piecePosition.boardPosition[0],
-                piecePosition.boardPosition[1]];
+            piecePosition.boardPosition[1]];
             for (let j = 0; j < positions.length; ++j) {
                 bOverlap = false;
                 candidateAnchor = [positions[j][0], positions[j][1]];
