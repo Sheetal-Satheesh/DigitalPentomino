@@ -147,15 +147,8 @@ class Visual {
         let heightField = document.getElementById('field').clientHeight;
         let widthField = document.getElementById('field').clientWidth;
 
-<<<<<<< HEAD
-        var fieldHTML = document.getElementById('field');
-        var out = '';
-        var width = UIProperty.WindowWidth / this.pd.gameWidth;
-        var height = UIProperty.WindowHeight / this.pd.gameHeight;
-=======
         let width = 100 / baseConfigs.gameWidth;
         let height = 100 / baseConfigs.gameHeight;
->>>>>>> development
 
         /*The field consists of divs. Each div saves in its id field its resepective coorinates*/
         for (var row = 0; row < baseConfigs.gameHeight; row++) {
