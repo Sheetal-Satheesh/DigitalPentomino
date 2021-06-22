@@ -3,10 +3,12 @@
   --rotationY: 0;
   --rotationZ: 0;
   --magnification:1;
-  --buttonRotA:0deg;
-  --buttonRotB:0deg;
-  --buttonRotC:0deg;
-  --buttonRotD:0deg;
+  --buttonRotA: 0deg;
+  --buttonRotB: 0deg;
+  --buttonRotC: 0deg;
+  --buttonRotD: 0deg;
+  --rotateH: 0deg;
+  --rotateV: 0deg;
 }
 
 #game {
@@ -432,8 +434,7 @@ table
 }
 
 .button-wrapper {
-  border-radius: 50%;
-  width: 0px;
+  border-radius: 50%;  
   height: 280px;
   position: absolute;
   bottom: 0;
@@ -489,46 +490,46 @@ table
 }
 
 
-.icon-rotateLeft:before {  
-  width: 34px;
-  height: 34px;
+.icon-rotateLeft {  
+  width: 40px;
+  height: 40px;
   position: absolute;
   bottom: 1px;
   right: 1px;
-  font-size:24px ;
+  font-size:34px ;
   transform: 0deg;
   z-index: 12;
 }
 
 .icon-rotateRight {  
-  width: 34px;
-  height: 34px;
+  width: 40px;
+  height: 40px;
   position: absolute;
   bottom: 1px;
   right: 1px;
-  font-size:24px ;
+  font-size:34px ;
   transform: 0deg;
   z-index: 12;
 }
 
 .icon-flipHorizontally {  
-  width: 34px;
-  height: 34px;
-  position: absolute;
-  bottom: 3px;
-  right: 3px;
-  font-size:24px ;
-  transform: rotate(var(--buttonRotA)); 
+  width: 40px;
+  height: 40px;
+  position: absolute; 
+  font-size:34px ;
+  top: 4px;
+  left: 4px;
+  transform: rotate(var(--rotateH)); 
   z-index: 12;
 }
 
 .icon-flipVertically {  
-  width: 34px;
-  height: 34px;
-  position: absolute;
-  bottom: 1px;
-  right: 1px;
-  font-size:24px ;   
+  width: 40px;
+  height: 40px;
+  position: absolute;  
+  right: 3px; 
+  font-size:34px ; 
+  transform: rotate(var(--rotateV));  
   z-index: 12;  
 }
 

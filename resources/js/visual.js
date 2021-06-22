@@ -374,28 +374,35 @@ class Visual {
                 document.getElementById('pieceManipulation').style.left = 'calc(' + x1Position + 'px - ' + (width * 1) + 'vw)';
                 document.getElementById('pieceManipulation').style.top = 'calc(' + y2Position + 'px - ' + (width * 2) + 'vw)';
                 document.getElementById('pieceManipulation').style.display = 'block';
+                document.documentElement.style.setProperty("--rotateV","-168deg");
+                document.documentElement.style.setProperty("--rotateH","-68deg");
                 document.documentElement.style.setProperty("--buttonRotA", "68deg");
                 document.documentElement.style.setProperty("--buttonRotB", "100deg");
                 document.documentElement.style.setProperty("--buttonRotC", "136deg");
                 document.documentElement.style.setProperty("--buttonRotD", "168deg");
             }
         } else if ((x > 0) && (x < 130)) {
+            /* Left Most Manipulation Button */
             document.getElementById('pieceManipulation').style.left = 'calc(' + x1Position + 'px - ' + (width * -1) + 'vw)';
             document.getElementById('pieceManipulation').style.top = 'calc(' + y2Position + 'px - ' + (width * 1) + 'vw)';
             document.getElementById('pieceManipulation').style.display = 'block';
-            document.documentElement.style.setProperty("--buttonRotA", "-98deg");
-            document.documentElement.style.setProperty("--buttonRotB", "-68deg");
-            document.documentElement.style.setProperty("--buttonRotC", "-128deg");
-            document.documentElement.style.setProperty("--buttonRotD", "-38deg");
+            document.documentElement.style.setProperty("--rotateV","128deg");
+            document.documentElement.style.setProperty("--rotateH","38deg");
+            document.documentElement.style.setProperty("--buttonRotA", "-38deg"); 
+            document.documentElement.style.setProperty("--buttonRotB", "-68deg"); 
+            document.documentElement.style.setProperty("--buttonRotC", "-98deg");            
+            document.documentElement.style.setProperty("--buttonRotD", "-128deg");            
         }
         else {
             document.getElementById('pieceManipulation').style.left = 'calc(' + x1Position + 'px - ' + (width *-1.5) + 'vw)';
             document.getElementById('pieceManipulation').style.top = 'calc(' + y2Position + 'px - ' + (width * 1) + 'vw)';
-            document.documentElement.style.setProperty("--buttonRotA", "-88deg");
-            document.documentElement.style.setProperty("--buttonRotB", "-118deg");
+            document.getElementById('pieceManipulation').style.display = 'block';
+            document.documentElement.style.setProperty("--rotateV","178deg");
+            document.documentElement.style.setProperty("--rotateH","88deg"); 
+            document.documentElement.style.setProperty("--buttonRotD", "-178deg"); 
             document.documentElement.style.setProperty("--buttonRotC", "-148deg");
-            document.documentElement.style.setProperty("--buttonRotD", "-178deg");
-            document.getElementById('pieceManipulation').style.display = 'block';            
+            document.documentElement.style.setProperty("--buttonRotB", "-118deg");          
+            document.documentElement.style.setProperty("--buttonRotA", "-88deg");                                                           
         }
         
     }
