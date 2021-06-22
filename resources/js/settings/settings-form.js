@@ -160,11 +160,11 @@ class SettingsForm {
                     //activate full hint
                     hintingStrategy.find('option[value="full"]').attr("selected", true);
                     //check exact hints
-                    $(formElement).find("teachers.hinting.exactHints").checked = true;
+                    $(formElement).find("input[name='hinting.exactHints']").prop('checked', true);
                     //disable partial hinting
-                    $(formElement).find("teachers.hinting.partialHintingStragety").checked = false;
+                    $(formElement).find("input[name='hinting.partialHintingStragety']").prop('checked', false);
                     //enable prefilling
-                    $(formElement).find("teachers.prefilling.enablePrefilling").checked = true;
+                    $(formElement).find("input[name='prefilling.enablePrefilling']").prop('checked', true);
                     break;
                 case "Medium":
                     //activate area hint
@@ -174,7 +174,7 @@ class SettingsForm {
                     //activate partail hint
                     hintingStrategy.find('option[value="partial"]').attr("selected", true);
                     //disable prefilling
-                    $(formElement).find("teachers.prefilling.enablePrefilling").checked = false;
+                    $(formElement).find("input[name='prefilling.enablePrefilling']").prop('checked', false);
                     break;
                 case "Custom":
                     break;
