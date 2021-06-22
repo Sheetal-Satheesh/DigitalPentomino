@@ -12,7 +12,7 @@ class SettingsForm {
 
         if (settings.teachersMode) {
             let useInClassButton = SettingsForm.createButton("Share");
-            useInClassButton.addEventListener("click", function () {
+            useInClassButton.addEventListener("click", function() {
                 let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
                 let settings = SettingsSingleton.getInstance().getSettings();
                 onExport(SettingsForm.collectDataFromForm(formElement, schema, settings));
@@ -22,7 +22,7 @@ class SettingsForm {
 
         formElement.appendChild(SettingsForm.createSubmitButton());
 
-        $(formElement).submit(function (event) {
+        $(formElement).submit(function(event) {
             let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
             let settings = SettingsSingleton.getInstance().getSettings();
             let settingsClone = SettingsForm.collectDataFromForm(formElement, schema, settings);
@@ -142,6 +142,47 @@ class SettingsForm {
         }
 
         formElement.appendChild(advancedSettingsDiv);
+        SettingsForm.addDifficultyLevelsListener(formElement);
+    }
+
+    static addDifficultyLevelsListener(formElement) {
+        let hintingLevelSelectElem = $(formElement).find($('select[name="hinting.hintingLevels"]'))[0];
+        hintingLevelSelectElem.addEventListener("change", (event) => {
+            // Retrieve the select element from the event.
+            let select = event.target;
+            let selectedOption = select.options[select.selectedIndex];
+            let value = selectedOption.getAttribute('value');
+            let partial = $(formElement).find('select[name="hinting.partialHintingStragety"]');
+            let hintingStrategy = $(formElement).find('select[name="hinting.hintingStrategy"]');
+            //levels flexible to change help functionality 
+            switch (value) {
+                case "Easy":
+                    //activate full hint
+                    hintingStrategy.find('option[value="full"]').attr("selected", true);
+                    //check exact hints
+                    $(formElement).find("input[name='hinting.exactHints']").prop('checked', true);
+                    //disable partial hinting
+                    $(formElement).find("input[name='hinting.partialHintingStragety']").prop('checked', false);
+                    //enable prefilling
+                    $(formElement).find("input[name='prefilling.enablePrefilling']").prop('checked', true);
+                    break;
+                case "Medium":
+                    //activate area hint
+                    hintingStrategy.find('option[value="area"]').attr("selected", true);
+                    break;
+                case "Difficult":
+                    //activate partail hint
+                    hintingStrategy.find('option[value="partial"]').attr("selected", true);
+                    //disable prefilling
+                    $(formElement).find("input[name='prefilling.enablePrefilling']").prop('checked', false);
+                    break;
+                case "Custom":
+                    break;
+                default:
+                    console.log("Level unknown");
+            }
+        });
+
     }
 
     static createCollapsibleButton(showText, hideText) {
@@ -149,7 +190,7 @@ class SettingsForm {
             "class": "collapsible btn btn-primary btn-lg"
         });
 
-        buttonElement.addEventListener("click", function (event) {
+        buttonElement.addEventListener("click", function(event) {
             this.classList.toggle("active");
             let content = this.nextElementSibling;
             if (content.style.display === "block") {
@@ -178,7 +219,7 @@ class SettingsForm {
                 let settingsEntry = subSettings[key];
 
                 let checkBoxElement = SettingsForm.createInputElement("checkbox", "teachers." + elementName);
-                useInClassElement.appendChild(SettingsForm.createLabel(settingsEntry.title, {for: checkBoxElement.id}));
+                useInClassElement.appendChild(SettingsForm.createLabel(settingsEntry.title, { for: checkBoxElement.id }));
                 useInClassElement.appendChild(checkBoxElement);
                 useInClassElement.appendChild(document.createElement("br"));
             }
