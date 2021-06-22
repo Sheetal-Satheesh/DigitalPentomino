@@ -152,13 +152,14 @@ class SettingsForm {
             let select = event.target;
             let selectedOption = select.options[select.selectedIndex];
             let value = selectedOption.getAttribute('value');
-            let partial = $('select[name="hinting.partialHintingStragety"]');
+            let partial = $(formElement).find('select[name="hinting.partialHintingStragety"]');
+            let hintingStrategy = $(formElement).find('select[name="hinting.hintingStrategy"]');
             //levels flexible to change help functionality 
             switch (value) {
                 case "Easy":
                     console.log("i am easy");
                     //activate full hint
-                    $('select[name="hinting.hintingStrategy"]').find('option[value="full"]').attr("selected", true);
+                    hintingStrategy.find('option[value="full"]').attr("selected", true);
                     //check exact hints
                     document.getElementById("teachers.hinting.exactHints").checked = true;
                     //disable partial hinting
@@ -169,12 +170,12 @@ class SettingsForm {
                 case "Medium":
                     console.log("i am Medium");
                     //activate area hint
-                    $('select[name="hinting.hintingStrategy"]').find('option[value="area"]').attr("selected", true);
+                    hintingStrategy.find('option[value="area"]').attr("selected", true);
                     break;
                 case "Difficult":
                     console.log("i am Difficult");
                     //activate partail hint
-                    $('select[name="hinting.hintingStrategy"]').find('option[value="partial"]').attr("selected", true);
+                    hintingStrategy.find('option[value="partial"]').attr("selected", true);
                     //disable prefilling
                     document.getElementById("teachers.prefilling.enablePrefilling").checked = false;
                     break;
