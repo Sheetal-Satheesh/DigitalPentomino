@@ -157,30 +157,26 @@ class SettingsForm {
             //levels flexible to change help functionality 
             switch (value) {
                 case "Easy":
-                    console.log("i am easy");
                     //activate full hint
                     hintingStrategy.find('option[value="full"]').attr("selected", true);
                     //check exact hints
-                    document.getElementById("teachers.hinting.exactHints").checked = true;
+                    $(formElement).find("teachers.hinting.exactHints").checked = true;
                     //disable partial hinting
-                    document.getElementById("teachers.hinting.partialHintingStragety").checked = false;
+                    $(formElement).find("teachers.hinting.partialHintingStragety").checked = false;
                     //enable prefilling
-                    document.getElementById("teachers.prefilling.enablePrefilling").checked = true;
+                    $(formElement).find("teachers.prefilling.enablePrefilling").checked = true;
                     break;
                 case "Medium":
-                    console.log("i am Medium");
                     //activate area hint
                     hintingStrategy.find('option[value="area"]').attr("selected", true);
                     break;
                 case "Difficult":
-                    console.log("i am Difficult");
                     //activate partail hint
                     hintingStrategy.find('option[value="partial"]').attr("selected", true);
                     //disable prefilling
-                    document.getElementById("teachers.prefilling.enablePrefilling").checked = false;
+                    $(formElement).find("teachers.prefilling.enablePrefilling").checked = false;
                     break;
                 case "Custom":
-                    console.log("i am custom");
                     break;
                 default:
                     console.log("Level unknown");
