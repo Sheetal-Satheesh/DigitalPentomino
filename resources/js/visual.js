@@ -62,7 +62,7 @@ class Visual {
     isBlockCell(posX, posY) {
         var bCellsFnd = false;
         if (this.pd.blockedCells != undefined) {
-            this.pd.blockedCells.forEach(function(cells) {
+            this.pd.blockedCells.forEach(function (cells) {
                 if (cells[0] + this.boardX == posX && cells[1] + this.boardY == posY) {
                     bCellsFnd = true;
                 }
@@ -102,7 +102,7 @@ class Visual {
 
     placePentomino(pentomino, posX, posY, cmdProperty = cmdAttrDefault) {
         this.gameController.placePentomino(pentomino, posX, posY, cmdProperty);
-        if (SettingsSingleton.getInstance().getSettings().general.enableAudio) {
+        if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
             let audio = new Audio('resources/audio/snap.wav');
             audio.play();
         }
@@ -154,7 +154,7 @@ class Visual {
         for (var row = 0; row < baseConfigs.gameHeight; row++) {
             for (var col = 0; col < baseConfigs.gameWidth; col++) {
 
-                var isBoard = true; //indicate where on the field the board is
+                var isBoard = true;   //indicate where on the field the board is
                 var blockedCell = false;
                 //Check for blocked elements
                 if (col < this.pd.boardStartY) isBoard = false;
@@ -178,8 +178,9 @@ class Visual {
                         out += '<div class="gamearea" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';
                     else
                         out += '<div class="gamearea ' + ((isBoard) ? 'boardarea' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';
-                } else
-                    out += '<div class="gamearea ' + ((isBoard) ? 'boardarea' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>'; //'+col+','+row+'
+                }
+                else
+                    out += '<div class="gamearea ' + ((isBoard) ? 'boardarea' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';   //'+col+','+row+'
             }
         }
 
@@ -201,7 +202,7 @@ class Visual {
          * If this function should also handle updates, it should rather check whether elements
          * already exist and update their respective properties instead of creating the pieces
          * again and again.
-         */
+        */
 
         let pieceArea = document.getElementById('piecearea');
         let trayArea = document.getElementById('tray');
@@ -232,7 +233,7 @@ class Visual {
             //positioning the pieces has to happen after the elements are created
             //TODO: this is a disadvantage of chosing the innerHTML approach.
 
-            setTimeout(function(that, piece) {
+            setTimeout(function (that, piece) {
                 that.positionPiece(piece);
             }, 0, this, piece);
 
@@ -272,17 +273,19 @@ class Visual {
             htmlElement.style.setProperty("--rotationY", "0deg");
             htmlElement.style.setProperty("--rotationZ", "0deg");
 
-        } else {
+        }
+        else {
             var bCellsFnd = this.isPentominoInBlockCells(piece);
             var collisonFnd = this.isCollision(piece);
             if (collisonFnd) {
                 let collisonPentomino = this.gameController.getCollisionOfPentominoes(piece).pop();
                 this.overlapBlock.add(piece, collisonPentomino);
-                if (SettingsSingleton.getInstance().getSettings().general.enableAudio) {
+                if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
                     let audio = new Audio('resources/audio/collision.mp3');
                     audio.play();
                 }
-            } else {
+            }
+            else {
                 this.overlapBlock.remove(piece);
             }
 
@@ -293,7 +296,8 @@ class Visual {
             if (offset) {
                 left = UIProperty.Sidebar + width * (positionX - 2) + (width / 8);
                 top = UIProperty.TrayHeight + width * (positionY - 2) - (width / 8);
-            } else {
+            }
+            else {
                 left = UIProperty.Sidebar + width * (positionX - 2);
                 top = UIProperty.TrayHeight + width * (positionY - 2);
             }
@@ -321,9 +325,11 @@ class Visual {
         this.selected = piece;
         if (piece.inTray) {
             this.disableManipulations();
-        } else if ($("#modalFormContainerID").is(":visible")) {
+        }
+        else if ($("#modalFormContainerID").is(":visible")) {
             this.disableManipulations();
-        } else {
+        }
+        else {
             this.showManipulations(xPosition, yPosition);
         }
     }
@@ -336,14 +342,14 @@ class Visual {
 
 
     hexToRgb(hex) {
-            var rgbFormat = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-            return rgbFormat ? {
-                r: parseInt(rgbFormat[1], 16),
-                g: parseInt(rgbFormat[2], 16),
-                b: parseInt(rgbFormat[3], 16)
-            } : null;
-        }
-        //Enable or Disable manipulation buttons
+        var rgbFormat = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return rgbFormat ? {
+            r: parseInt(rgbFormat[1], 16),
+            g: parseInt(rgbFormat[2], 16),
+            b: parseInt(rgbFormat[3], 16)
+        } : null;
+    }
+    //Enable or Disable manipulation buttons
 
     showManipulations(xPosition, yPosition) {
         var pieceMan = document.getElementById('pieceManipulation').firstElementChild;
@@ -378,12 +384,12 @@ class Visual {
     }
 
     disableManipulations() {
-            document.getElementById('pieceManipulation').style.display = 'none';
-        }
-        // 	save(piece) {
-        // 		console.log("insave::",piece)
-        // 	  	localStorage.setItem('piece',piece);
-        // 	}
+        document.getElementById('pieceManipulation').style.display = 'none';
+    }
+    // 	save(piece) {
+    // 		console.log("insave::",piece)
+    // 	  	localStorage.setItem('piece',piece);
+    // 	}
 
     // load() {
     //   let piece2 = localStorage.getItem('piece');
@@ -408,7 +414,7 @@ class Visual {
          *
          */
 
-        document.onpointerdown = function(event) { //clicking or moving begins
+        document.onpointerdown = function (event) {//clicking or moving begins
             var elements = document.elementsFromPoint(event.clientX, event.clientY);
             onpointerdownX = event.clientX;
             onpointerdownY = event.clientY;
@@ -449,7 +455,7 @@ class Visual {
 
                 var piece = elements[i * 1 + 1].id.split('_')[1];
                 if (!piece) return;
-                var container = elements[i * 1 + 1]; //For some strange reason, i is a String, using *1 to convert it
+                var container = elements[i * 1 + 1];       //For some strange reason, i is a String, using *1 to convert it
                 var piece = that.pieces.find(p => { return p.name === piece; });
                 window.currentlyMoving = [container, piece];
                 break;
@@ -462,7 +468,7 @@ class Visual {
          * move an object in case a drag operation stared on a piece (see above)
          */
 
-        document.onpointermove = function(event) {
+        document.onpointermove = function (event) {
 
             if (window.currentlyMoving) {
                 var x = event.clientX;
@@ -497,7 +503,7 @@ class Visual {
         /**
          * this is called when mouse key is released or fingers are removed from the screen
          */
-        document.onpointerup = function(event) {
+        document.onpointerup = function (event) {
             /**
              * this is called when mouse key is released or fingers are removed from the screen
              * in case of just a click operation (not move operation) piece should not move
@@ -738,12 +744,12 @@ class Visual {
         }
         let hintCommand = hint.getCommands()[commandNumber];
         let hintinPen = hintCommand._pentomino;
-        if (SettingsSingleton.getInstance().getSettings().general.enableAudio) {
+        if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
             let audio = new Audio('resources/audio/hinting.mp3');
             audio.play();
         }
         this.indicateHint(hint, commandNumber);
-        setTimeout(function() {
+        setTimeout(function () {
             hintButton.disabled = false;
         }, 1000);
     }
@@ -761,7 +767,7 @@ class Visual {
         let blinkInterval;
         let counter = 0;
         clearInterval(blinkInterval);
-        blinkInterval = setInterval(function() {
+        blinkInterval = setInterval(function () {
             for (let j = 0; j < menu.length; j++) {
                 if (counter % 2 === 0) {
                     menu[j].style.background = bgColor;
@@ -813,24 +819,13 @@ class Visual {
             //do actions on pentomino copy to prepare for place hint
             for (let hintnr = 0; hintnr < commandNumber; hintnr++) {
                 switch (hint.getCommands()[hintnr]._name) {
-                    case "Remove":
-                        break;
-                    case "Place":
-                        break;
-                    case "RotateClkWise":
-                        tempHintinPen.rotateClkWise(cmdProperty);
-                        break;
-                    case "RotateAntiClkWise":
-                        tempHintinPen.rotateAntiClkWise(cmdProperty);
-                        break;
-                    case "MirrorH":
-                        tempHintinPen.mirrorH(cmdProperty);
-                        break;
-                    case "MirrorV":
-                        tempHintinPen.mirrorV(cmdProperty);
-                        break;
-                    default:
-                        throw new Error("Error on commands on pentomino copy.");
+                    case "Remove": break;
+                    case "Place": break;
+                    case "RotateClkWise": tempHintinPen.rotateClkWise(cmdProperty); break;
+                    case "RotateAntiClkWise": tempHintinPen.rotateAntiClkWise(cmdProperty); break;
+                    case "MirrorH": tempHintinPen.mirrorH(cmdProperty); break;
+                    case "MirrorV": tempHintinPen.mirrorV(cmdProperty); break;
+                    default: throw new Error("Error on commands on pentomino copy.");
                 }
             }
         }
@@ -839,7 +834,8 @@ class Visual {
         if (!(hintSkill === null) && (SettingsSingleton.getInstance().getSettings().hinting.skillTeaching)) {
             //blink unoccupied cells
             this.blinkCells(hintSkill);
-        } else {
+        }
+        else {
 
             this.indicatePentomino(hintinPen, timeoutFrame);
 
@@ -913,7 +909,7 @@ class Visual {
                     //console.log("pent",hintinPen,this.selected);
                     if (!this.selected.inTray) {
                         pen.style.opacity = '0.2';
-                        setTimeout(function() {
+                        setTimeout(function () {
                             pen.style.opacity = '1';
                         }, timeoutFrame);
                     }
@@ -925,7 +921,7 @@ class Visual {
                     if (!this.selected.inTray) {
                         this.rotateClkWise(cmdProperty);
                         var that = this;
-                        setTimeout(function(that) {
+                        setTimeout(function (that) {
                             that.rotateAntiClkWise(cmdProperty);
                         }, timeoutFrame, that);
                     }
@@ -937,7 +933,7 @@ class Visual {
                     if (!this.selected.inTray) {
                         this.rotateAntiClkWise(cmdProperty);
                         var that = this;
-                        setTimeout(function(that) {
+                        setTimeout(function (that) {
                             that.rotateClkWise(cmdProperty);
                         }, timeoutFrame, that);
                     }
@@ -950,7 +946,7 @@ class Visual {
                     if (!this.selected.inTray) {
                         this.flipH(cmdProperty);
                         var that = this;
-                        setTimeout(function(that) {
+                        setTimeout(function (that) {
                             that.flipH(cmdProperty);
                         }, timeoutFrame, that);
                     }
@@ -962,7 +958,7 @@ class Visual {
                     if (!this.selected.inTray) {
                         this.flipV(cmdProperty);
                         var that = this;
-                        setTimeout(function(that) {
+                        setTimeout(function (that) {
                             that.flipV(cmdProperty);
                         }, timeoutFrame, that);
                     }
@@ -975,10 +971,11 @@ class Visual {
     }
 
     indicatePentomino(pentomino, timeframe) {
-        Array.prototype.forEach.call(document.getElementById("piece_" + pentomino.name).getElementsByClassName("bmPoint"), function(element) {
+        Array.prototype.forEach.call(document.getElementById("piece_" + pentomino.name).getElementsByClassName("bmPoint"), function (element) {
             element.style["box-shadow"] = "0 0 20px " + pentomino.color;
             if (pentomino.inTray) {
                 element.classList.add('horizTranslate');
+
                 //obtain and increase current scale of piece
                 let htmlPiece = document.getElementById("piece_" + pentomino.name);
                 let transformValue = $('#piece_' + pentomino.name).css('transform');
@@ -991,7 +988,7 @@ class Visual {
                 document.getElementById("piece_" + pentomino.name).style.transform = "scale(" + scale * 2 + ")";
             }
 
-            setTimeout(function() {
+            setTimeout(function () {
                 element.style.removeProperty("box-shadow");
                 //element.style.transform = "none";
                 element.classList.remove('horizTranslate');
@@ -999,8 +996,6 @@ class Visual {
             }, timeframe);
         });
     }
-
-
 
     showGameSolved() {
         let enabledSolvedScreen = SettingsSingleton.getInstance().getSettings().showSolvedBoardScreen.enableSolvedScreen;
@@ -1140,7 +1135,8 @@ class Visual {
                     if (!(cellIsOccupied === null) && !(cellIsOccupied === hintinPen)) {
                         counter += 1;
                     }
-                } else {
+                }
+                else {
                     counter += 1;
                 }
                 if (counter > maxNumOccupiedCells) {
@@ -1149,7 +1145,8 @@ class Visual {
                         if (cellIsOccupied) {
                             bestCell = piecePos[i];
                         }
-                    } else {
+                    }
+                    else {
                         bestCell = piecePos[i];
                     }
                 }
@@ -1171,7 +1168,8 @@ class Visual {
                     if (board.isOccupied(neighb[j][0], neighb[j][1])) {
                         randomCellPos.push(piecePos[i]);
                     }
-                } else {
+                }
+                else {
                     randomCellPos.push(piecePos[i]);
                 }
             }
@@ -1184,7 +1182,7 @@ class Visual {
 
     //returns unique elements of an array : reference : https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-array
     unique(arr) {
-        return arr.sort().filter(function(ele, posi, ary) {
+        return arr.sort().filter(function (ele, posi, ary) {
             return !posi || ele != ary[posi - 1];
         });
     }
@@ -1215,7 +1213,7 @@ class Visual {
 
     hideArea(areaPos, prevBackground, timeoutFrame) {
 
-        setTimeout(function() {
+        setTimeout(function () {
             for (let j = 0; j < areaPos.length; j++) {
                 let fvalue = document.getElementById("field_" + areaPos[j][0] + "," + areaPos[j][1]);
                 //TODO: replace with proper fadeOut animation
@@ -1226,7 +1224,7 @@ class Visual {
 
     hide(piecePos, prevBackground, timeoutFrame) {
 
-        setTimeout(function() {
+        setTimeout(function () {
             for (let j = 0; j < 5; j++) {
                 let fvalue = document.getElementById("field_" + piecePos[j][0] + "," + piecePos[j][1]);
                 //TODO: replace with proper fadeOut animation
@@ -1237,7 +1235,7 @@ class Visual {
 
     hideMostOccupiedNeighbors(cellsToIndicate, prevBackground, timeoutFrame) {
 
-        setTimeout(function() {
+        setTimeout(function () {
             for (let j = 0; j < cellsToIndicate.length; j++) {
                 let fvalue = document.getElementById("field_" + cellsToIndicate[j][0] + "," + cellsToIndicate[j][1]);
                 //TODO: replace with proper fadeOut animation
@@ -1281,7 +1279,7 @@ class Visual {
 
     prefillBoard() {
         this.readyForPrefilling();
-        if (SettingsSingleton.getInstance().getSettings().general.enableAudio) {
+        if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
             let audio = new Audio('resources/audio/prefill.mp3');
             audio.play();
         }
@@ -1307,7 +1305,7 @@ class Visual {
         this.pieces = prefillCandidates;
         this.renderPieces();
         // So that pieces are rendered before the button becomes enabled
-        setTimeout(function(that) {
+        setTimeout(function (that) {
             that.disablePrefillButton(false);
         }, 100, this);
 
@@ -1358,16 +1356,14 @@ class Visual {
         let blockedCells = {};
         let bNearPentomino = false;
         let blockedCellsTemp = {};
-        let x = 0,
-            y = 0;
+        let x = 0, y = 0;
         let pickedPieces = {};
 
         for (let i = 0; i < randomSolution.length; ++i) {
             [piecePosition, piece] = this.getRandomPiece(randomSolution, pickedPieces);
             pickedPieces[piece.name] = 1;
             currentAnchor = [piecePosition.boardPosition[0],
-                piecePosition.boardPosition[1]
-            ];
+            piecePosition.boardPosition[1]];
             let matrix = piece.getMatrixRepresentation();
 
             blockedCellsTemp = {};
@@ -1440,14 +1436,13 @@ class Visual {
             console.log("Piece position: ");
             console.log(piecePosition);
             currentAnchor = [piecePosition.boardPosition[0],
-                piecePosition.boardPosition[1]
-            ];
+            piecePosition.boardPosition[1]];
             for (let j = 0; j < positions.length; ++j) {
                 bOverlap = false;
                 candidateAnchor = [positions[j][0], positions[j][1]];
                 if (Math.sqrt(
-                        Math.pow((currentAnchor[0] - candidateAnchor[0]), 2) +
-                        Math.pow((currentAnchor[1] - candidateAnchor[1]), 2)) < threshold) {
+                    Math.pow((currentAnchor[0] - candidateAnchor[0]), 2) +
+                    Math.pow((currentAnchor[1] - candidateAnchor[1]), 2)) < threshold) {
                     bOverlap = true;
                     break;
                 }
@@ -1487,7 +1482,8 @@ class Visual {
                         command.Pentomino,
                         cmdProperty);
                     this.positionPiece(command.Pentomino);
-                } else {
+                }
+                else {
                     command.Pentomino.inTray = 0;
                     this.placePentomino(
                         command.Pentomino,
@@ -1528,7 +1524,8 @@ class Visual {
     getCmdState(stateType) {
         if (stateType == "start") {
             return this.gameController.getStartCmdKey();
-        } else {
+        }
+        else {
             return this.gameController.getCurrentCmdKey()
         }
     }
@@ -1620,12 +1617,12 @@ class Visual {
             let command = cmdSequences[indx];
             var that = this;
 
-            setTimeout(function(that, command) {
+            setTimeout(function (that, command) {
                 that.execShadowCmd(command, seqType);
             }, timeInterval += 500, that, command);
         }
 
-        const pause = function() {
+        const pause = function () {
             let replayId = document.getElementById("replay");
             let replayImg = replayId.children[0];
             replayImg.setAttribute('src', 'resources/images/icons/replay.svg');
@@ -1636,14 +1633,14 @@ class Visual {
 
     disablePointerEventsOnPieces() {
         let piecesIdArray = ['piece_X', 'piece_Y', 'piece_F', 'piece_I', 'piece_L', 'piece_N', 'piece_P', 'piece_T', 'piece_U', 'piece_V', 'piece_W', 'piece_Z'];
-        piecesIdArray.forEach(function(piece) {
+        piecesIdArray.forEach(function (piece) {
             document.getElementById(piece).style.pointerEvents = "none";
         });
     }
 
     enablePointerEventsOnPieces() {
         let piecesIdArray = ['piece_X', 'piece_Y', 'piece_F', 'piece_I', 'piece_L', 'piece_N', 'piece_P', 'piece_T', 'piece_U', 'piece_V', 'piece_W', 'piece_Z'];
-        piecesIdArray.forEach(function(piece) {
+        piecesIdArray.forEach(function (piece) {
             document.getElementById(piece).style.pointerEvents = "auto";
         });
     }
