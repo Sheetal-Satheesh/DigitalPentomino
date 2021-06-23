@@ -48,6 +48,7 @@
     <script type="text/javascript" src="resources/jsonform/html2canvas.js"></script>
     <script type="text/javascript" src="resources/jsonform/loadash.js"></script>
     <script type="text/javascript" src="resources/jsonform/jquery.qrcode.min.js"></script>
+    <script type="text/javascript" src="resources/jsonform/qr-scanner.umd.min.js"></script>
     <script type="text/javascript" src="resources/js/util.js"></script>
     <script src="resources/js/hint.js"></script>
     <script src="resources/js/hint-ai.js"></script>
@@ -137,6 +138,9 @@
                 </button>
                 <button type="button" id='prefillBoard' class="cActionBtn" onclick="prefillBoard()" disabled>
                     <img src="resources/images/icons/prefill.png">
+                </button>
+                <button type="button" id='qrCodeButton' class="cActionBtn" onclick="clickedOnScanQrCode()">
+                    <img src="resources/images/icons/qr-code.png">
                 </button>
                 <button type="button" id='hintButton' class="cActionBtn" onclick="callHintAI()"> <img
                     src="resources/images/icons/help_v2.png">
@@ -239,6 +243,128 @@
                 boardimageDiv.appendChild(imageElement);
                 boardimageGrid.appendChild(boardimageDiv);
             }
+        }
+
+        function clickedOnScanQrCode() {
+            let modal = document.getElementById('modalTop');
+            if ($(modal).is(':visible')) {
+                this.closeModal();
+            } else {
+                openScanQrCode();
+            }
+        }
+
+        function openScanQrCode() {
+            let modal = document.getElementById('modalTop');
+            modal.style.display = "block";
+            modal.style.background = "rgb(220, 240, 237)";
+
+            document.querySelector(".modalFormContent").style.display = "none";
+            document.querySelector(".innerGrid").style.display = "block";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent(".innerGrid")
+            template.clearContent("#innerGridForm");
+
+            let parent = $('#innerGridForm')[0];
+
+            let heading = document.createElement("h4");
+            heading.innerHTML = "Scan QR-code";
+            parent.appendChild(heading);
+
+            let videoElement = parent.appendChild(document.createElement("video"));
+            videoElement.id = "webCamera";
+            videoElement.style.display = "none";
+            parent.appendChild(videoElement);
+
+            let canvasElem = parent.appendChild(document.createElement("canvas"));
+            canvasElem.id = "videoCanvas";
+
+            QrScanner.WORKER_PATH = 'resources/jsonform/qr-scanner-worker.min.js';
+
+            const qrScanner = new QrScanner(videoElement, result => {
+                let success = onQrCodeScanned(result);
+                if (success) {
+                    qrScanner.stop();
+                    this.closeModal();
+                }
+            });
+
+            qrScanner.start();
+
+            // Draw video on canvas with rectangle
+            videoElement.onplay = function() {
+                setTimeout(function() {
+                    drawVideoToCanvas(videoElement, canvasElem);
+                } , 300);
+            };
+
+            //onQrCodeScanned("https://pentomino-digital.de/V5/index.html?t=2010101110111011101110121");
+            //this.closeModal();
+        }
+
+        // from https://stackoverflow.com/questions/59702127/draw-rectangle-over-html-5-tag-video first answer
+        function drawVideoToCanvas(video, canvas){
+            let ctx = canvas.getContext('2d');
+
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            let rectWidth = Math.min(canvas.width * (2/3), canvas.height * (2/3));
+
+            let centerX = canvas.width / 2;
+            let centerY = canvas.height / 2;
+
+            let pX = centerX - rectWidth / 2;
+            let pY = centerY - rectWidth / 2;
+
+            ctx.rect(pX,pY,rectWidth,rectWidth);
+            ctx.lineWidth = "6";
+            ctx.strokeStyle = "red";
+            ctx.stroke();
+
+            setTimeout(function() {
+                drawVideoToCanvas(video, canvas);
+            }, 100);
+        }
+
+        function onQrCodeScanned(qrCode) {
+            let url;
+            try {
+                url = new URL(qrCode);
+            } catch (_) {
+                // TODO: display error-msg to user in better way
+                alert("Scanned in wrong QR-code.");
+                console.error("Scanned code is not a url: " + qrCode);
+                return false;
+            }
+
+            let seed = url.searchParams.get(baseConfigs.seedUrlParamName);
+
+            if (seed === null) {
+                // TODO: display error-msg to user in better way
+                // No parameter for seed found
+                alert("Scanned in wrong QR-code.");
+                console.error("Scanned url does not contain TUCA seed: " + qrCode);
+                return false;
+            }
+
+            let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+            let newSettings = SettingsParser.parseSettingsFromSeed(schema, seed);
+
+            if (newSettings === null) {
+                // TODO: display error-msg to user in better way
+                alert("Scanned in wrong QR-code.");
+                console.error("Scanned seed could not be parsed into a settings configuration: " + seed);
+                return false;
+            }
+
+            applyNewSettingsObjToApp(newSettings);
+            insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
+            return true;
         }
 
         function openLicense() {
@@ -424,15 +550,17 @@
                 // console.log("JsonForm: Submitted values:");
                 // console.log(values);
                 closeSettings();
-
-                let oldSettings = SettingsSingleton.getInstance().getSettings();
-                let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
-                let changesToSettings = SettingsParser.compareSettings(schema, oldSettings, values);
-
-                SettingsSingleton.getInstance().setSettings(values);
-                processChangesToSettings(changesToSettings, values);
-
+                applyNewSettingsObjToApp(values);
             }
+        }
+
+        function applyNewSettingsObjToApp(settings) {
+            let oldSettings = SettingsSingleton.getInstance().getSettings();
+            let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+            let changesToSettings = SettingsParser.compareSettings(schema, oldSettings, settings);
+
+            SettingsSingleton.getInstance().setSettings(settings);
+            processChangesToSettings(changesToSettings, settings);
         }
 
         function processChangesToSettings(changes, settings) {
@@ -501,7 +629,7 @@
             SettingsForm.generateForm(
                 $('#innerGridForm')[0],
                 this.handleJsonFormSubmit,
-                this.handleSettingsExport
+                this.handleShareSettings
             );
 
             let settings = SettingsSingleton.getInstance().getSettings();
@@ -509,7 +637,7 @@
             // this.postProcessSettingsForm(SettingsSingleton.getInstance().getSettings());
         }
 
-        function handleSettingsExport(settings) {
+        function handleShareSettings(settings) {
             this.hideManipulationButtons();
             this.closeBoardSelector();
             this.disablePointerEventsOnPieces();
@@ -596,6 +724,13 @@
                 window.print();
             });
             modalBodyID.appendChild(printButton);
+            let downloadImageButton = document.createElement("a");
+            downloadImageButton.innerHTML = "Download image";
+            downloadImageButton.addEventListener("click", function () {
+                handleDownloadImage(downloadImageButton, pupilQrCodeElement.firstElementChild);
+            });
+            downloadImageButton.download = "Canvas.png";
+            modalBodyID.appendChild(downloadImageButton);
             modalBodyID.appendChild(document.createElement("br"));
             modalBodyID.appendChild(document.createElement("br"));
 
@@ -605,6 +740,15 @@
 
             modalBodyID.appendChild(collapsibleButton);
             modalBodyID.appendChild(divToHide);
+        }
+
+        function handleDownloadImage(downloadImageButton, canvasElement) {
+            dlCanvas(downloadImageButton, canvasElement);
+        }
+
+        function dlCanvas(downloadImageButton, canvasElem) {
+            let dt = canvasElem.toDataURL('image/png');
+            downloadImageButton.href = dt;
         }
 
         /*function generateQrTrElement(teacherUrl, pupilUrl) {
