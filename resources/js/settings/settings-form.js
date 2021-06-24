@@ -142,7 +142,9 @@ class SettingsForm {
         }
 
         formElement.appendChild(advancedSettingsDiv);
-        SettingsForm.addDifficultyLevelsListener(formElement);
+
+        if (settings.visibility.isVisible("hinting", "hintingLevels") === true)
+            SettingsForm.addDifficultyLevelsListener(formElement);
     }
 
     static addDifficultyLevelsListener(formElement) {
