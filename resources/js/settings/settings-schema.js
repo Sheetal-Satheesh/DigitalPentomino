@@ -48,6 +48,7 @@ class SettingsSchema {
                 "type": "object",
                 "title": titles.general.title[lang],
                 "advanced": false,
+                "pupilModeVisibleOnDefault": true,
                 "properties": {
                     language: {
                         "type": "string",
@@ -61,18 +62,22 @@ class SettingsSchema {
                     enableAudio: {
                         "type": "boolean",
                         "title": titles.general.enableAudio.title[lang],
-                        "default": false
+                        "default": false,
+                        "pupilModeVisibleOnDefault": false
                     },
                     enableBgMusic: {
                         "type": "boolean",
                         "title": titles.general.enableBgMusic.title[lang],
-                        "default": false
+                        "default": false,
+                        "pupilModeVisibleOnDefault": false
                     }
                 }
             },
             theming: {
                 "type": "object",
                 "title": titles.theming.title[lang],
+                "advanced": false,
+                "pupilModeVisibleOnDefault": true,
                 "properties": {
                     theme: {
                         "type": "string",
@@ -84,9 +89,32 @@ class SettingsSchema {
                     },
                 }
             },
+            showSolvedBoardScreen: {
+                "type": "object",
+                "title": titles.showSolvedBoardScreen.title[lang],
+                "pupilModeVisibleOnDefault": false,
+                "advanced": false,
+                "properties":{
+                    enableSolvedScreen: {
+                        "type": "boolean",
+                        "title": titles.showSolvedBoardScreen.enableSolvedScreen.title[lang],
+                        "description": titles.showSolvedBoardScreen.enableSolvedScreen.description[lang],
+                        "default": true
+                    },
+                    SolvedScreens:{
+                        "type": "string",
+                        "title": titles.showSolvedBoardScreen.SolvedScreens.title[lang],
+                        "description": titles.showSolvedBoardScreen.SolvedScreens.description[lang],
+                        "enum": ["Play again?", "Well done! Please wait for your Teacher to continue", "Excellent ! Now continue with the next task on your assignment"],
+                        "enumText": titles.showSolvedBoardScreen.SolvedScreens.enumTitles[lang],
+                        "default": "Play again?"
+                    }
+                }
+            },
             hinting: {
                 "type": "object",
                 "title": titles.hinting.title[lang],
+                "pupilModeVisibleOnDefault": false,
                 "advanced": true,
                 "properties": {
                     hintingLevels: {
@@ -158,35 +186,12 @@ class SettingsSchema {
                     }
                 }
             },
-
-
-            showSolvedBoardScreen: {
-                "type": "object",
-                "title": titles.showSolvedBoardScreen.title[lang],
-                "properties":{
-                    enableSolvedScreen: {
-                        "type": "boolean",
-                        "title": titles.showSolvedBoardScreen.enableSolvedScreen.title[lang],
-                        "description": titles.showSolvedBoardScreen.enableSolvedScreen.description[lang],
-                        "default": true
-                    },
-                    SolvedScreens:{
-                         "type": "string",
-                        "title": titles.showSolvedBoardScreen.SolvedScreens.title[lang],
-                        "description": titles.showSolvedBoardScreen.SolvedScreens.description[lang],
-                        "enum": ["Play again?", "Well done! Please wait for your Teacher to continue", "Excellent ! Now continue with the next task on your assignment"],
-                        "enumText": titles.showSolvedBoardScreen.SolvedScreens.enumTitles[lang],
-                        "enumText": titles.showSolvedBoardScreen.SolvedScreens.enumTitles[lang],
-                        "default": "Play again?"
-                    }
-                }
-            },
-
             prefilling: {
                 "type": "object",
                 "advanced": true,
                 "title": titles.prefilling.title[lang],
                 "visible": false,
+                "pupilModeVisibleOnDefault": false,
                 "properties": {
                     enablePrefilling: {
                         "type": "boolean",
