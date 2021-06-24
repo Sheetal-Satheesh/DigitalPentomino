@@ -91,6 +91,23 @@ const strings = {
                 title: ["Enable exact Hints?", "Exakte Hinweise aktivieren?"],
                 description: ["If enabled, Rotate, Flip and Move-actions that should be performed on one pentomino are three separate hints. Otherwise these actions are combined into one hint.",
                     "Aktiviert: Drehen, Spiegeln und Bewege-Aktionen, die auf ein Pentomino angewandt werden müssen sind drei separate Hinweise. Deaktiviert: Aktionen werden in einem Hinweis zusammengefasst."]
+            },
+            hintingVariants: {
+                title: ["Hinting variants", "Hinweismöglichkeiten"],
+                enumTitles: [
+                    ["Show pentominoes", "Show destination", "Show both"],
+                    ["Pentomino anzeigen", "Ziel anzeigen", "Beides anzeigen"]
+                ],
+                description: ["Hinting variants have different options:" +
+                    "Show pentominoes: Hinting will only indicate pentomino to pickup" +
+                    "Show destination: Hinting will indicate only destination to place pentomino" +
+                    "Show both : Hinting will show both = pentomino to pickup and the detination to place",
+                    "Hinting-Varianten haben verschiedene Optionen: " +
+                    "Pentomino anzeigen: Hinting zeigt nur Pentomino zum Aufnehmen an " +
+                    "Ziel anzeigen: Hinting zeigt nur das Ziel an, um Pentomino zu platzieren " +
+                    "Beides anzeigen: Hinting zeigt beides an = Pentomino zum Aufnehmen und das Ziel zum Ablegen"
+                ]
+
             }
         },
         showSolvedBoardScreen:{
