@@ -269,7 +269,11 @@ class SettingsParser {
             settings[heading] = {};
             for (let key in subSettings) {
                 settings[heading][key] = schema[heading].properties[key].default;
-                settings.visibility.setVisible(heading, key, true);
+                let headingVisible = schema[heading].pupilModeVisibleOnDefault;
+                let subheadingVisible = schema[heading].properties[key].pupilModeVisibleOnDefault;
+                let isVisible = !(headingVisible === false) && !(subheadingVisible === false)
+                    && !(headingVisible === undefined && subheadingVisible === undefined);
+                settings.visibility.setVisible(heading, key, isVisible);
             }
         }
         SettingsParser.applyNumericalLanguageRepr(settings);
