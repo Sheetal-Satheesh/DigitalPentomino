@@ -837,7 +837,9 @@ class Visual {
         }
         else {
 
-            this.indicatePentomino(hintinPen, timeoutFrame);
+            if (!((SettingsSingleton.getInstance().getSettings().hinting.hintingVariants) === ("Show destination"))) {
+                this.indicatePentomino(hintinPen, timeoutFrame);
+            }
 
             switch (hintName) {
                 case "Place":
@@ -851,55 +853,57 @@ class Visual {
                     let piecePos = this.getOccupiedPositions(tempHintinPen, hintCommand);
                     let randomCellPos = this.calculateNeighbour(piecePos, hintCommand);
                     //usage of random cell variable to indicate hinting
-
-                    switch (SettingsSingleton.getInstance().getSettings().hinting.hintingStrategy) {
-                        case "partial":
-                            switch (SettingsSingleton.getInstance().getSettings().hinting.partialHintingStragety) {
-                                case "random":
-                                    //piecePos = filtered;
-                                    for (let i = 0; i < randomCell; i++) {
-                                        fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
-                                        prevBackground[i] = fieldvalue.style.background;
-                                        fieldvalue.style.background = pentominoColor;
-                                        this.hide(piecePos, prevBackground, timeoutFrame);
-                                    }
-                                    break;
-                                case "mostOccupiedCells":
-                                    let mostCells = this.mostNeigh(hintinPen, piecePos, hintCommand);
-                                    let cellsToIndicate = this.cellsToIndicate(piecePos, mostCells, hintCommand);
-                                    for (let i = 0; i < cellsToIndicate.length; i++) {
-                                        fieldvalue = document.getElementById("field_" + cellsToIndicate[i][0] + "," + cellsToIndicate[i][1]);
-                                        prevBackground[i] = fieldvalue.style.background;
-                                        fieldvalue.style.background = pentominoColor;
-                                        this.hideMostOccupiedNeighbors(cellsToIndicate, prevBackground, timeoutFrame);
-                                    }
-                                    break;
-                                default:
-                                    throw new Error("Unknown partial hinting strategy");
-                            }
-                            break;
-                        case "full":
-                            for (let i = 0; i < 5; i++) {
-                                fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
-                                prevBackground[i] = fieldvalue.style.background;
-                                fieldvalue.style.background = pentominoColor;
-                                this.hide(piecePos, prevBackground, timeoutFrame);
-                            }
-                            break;
-                        case "area":
-                            let areaPos = this.indicateAreaCells(hintinPen, hintCommand)[0];
-                            for (let i = 0; i < areaPos.length; i++) {
+                    if (!((SettingsSingleton.getInstance().getSettings().hinting.hintingVariants) === ("Show pentominoes"))){
+                        switch (SettingsSingleton.getInstance().getSettings().hinting.hintingStrategy) {
+                            case "partial":
+                                switch (SettingsSingleton.getInstance().getSettings().hinting.partialHintingStragety) {
+                                    case "random":
+                                        //piecePos = filtered;
+                                        for (let i = 0; i < randomCell; i++) {
+                                            fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
+                                            prevBackground[i] = fieldvalue.style.background;
+                                            fieldvalue.style.background = pentominoColor;
+                                            this.hide(piecePos, prevBackground, timeoutFrame);
+                                        }
+                                        break;
+                                    case "mostOccupiedCells":
+                                        let mostCells = this.mostNeigh(hintinPen, piecePos, hintCommand);
+                                        let cellsToIndicate = this.cellsToIndicate(piecePos, mostCells, hintCommand);
+                                        for (let i = 0; i < cellsToIndicate.length; i++) {
+                                            fieldvalue = document.getElementById("field_" + cellsToIndicate[i][0] + "," + cellsToIndicate[i][1]);
+                                            prevBackground[i] = fieldvalue.style.background;
+                                            fieldvalue.style.background = pentominoColor;
+                                            this.hideMostOccupiedNeighbors(cellsToIndicate, prevBackground, timeoutFrame);
+                                        }
+                                        break;
+                                    default:
+                                        throw new Error("Unknown partial hinting strategy");
+                                }
+                                break;
+                            case "full":
+                                for (let i = 0; i < 5; i++) {
+                                    fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
+                                    prevBackground[i] = fieldvalue.style.background;
+                                    fieldvalue.style.background = pentominoColor;
+                                    this.hide(piecePos, prevBackground, timeoutFrame);
+                                }
+                                break;
+                            case "area":
                                 let areaPos = this.indicateAreaCells(hintinPen, hintCommand)[0];
-                                fieldvalue = document.getElementById("field_" + areaPos[i][0] + "," + areaPos[i][1]);
-                                prevBackground[i] = fieldvalue.style.background;
-                                fieldvalue.style.background = pentominoColor;
-                            }
+                                for (let i = 0; i < areaPos.length; i++) {
+                                    let areaPos = this.indicateAreaCells(hintinPen, hintCommand)[0];
+                                    fieldvalue = document.getElementById("field_" + areaPos[i][0] + "," + areaPos[i][1]);
+                                    prevBackground[i] = fieldvalue.style.background;
+                                    fieldvalue.style.background = pentominoColor;
+                                }
 
-                            this.hideArea(areaPos, prevBackground, timeoutFrame);
-                            break;
-                        default:
-                            console.error("Hinting strategy unknown!");
+                                this.hideArea(areaPos, prevBackground, timeoutFrame);
+                                break;
+                            default:
+                                console.error("Hinting strategy unknown!");
+                        }
                     }
+                    
                     break;
 
                 case "Remove":
