@@ -712,38 +712,47 @@ class Visual {
 
     flipH(cmdProperty = cmdAttrDefault) {
         let piece = this.selected;
-        if (piece) {
+        if (!piece) return
+        debugger
+        console.log('piece--->', piece);
+            //debugger
             let pieceDiv = document.getElementById("piece_" + piece.name);
             let flipped = pieceDiv.getAttribute("flipped") * 1;
             let currentRot = pieceDiv.style.getPropertyValue("--rotationX").split(/(-?\d+)/)[1] * 1; //converts string value to int
             let newRot = currentRot + 180;
-            // Update the backend
-            this.gameController.mirrorPentominoH(piece, cmdProperty);
-            this.positionPiece(piece);
-            pieceDiv.style.setProperty("--rotationX", newRot.toString() + "deg");
+        //    pieceDiv.style.setProperty("--rotationX", newRot.toString() + "deg");       
+        
+        // this.gameController.mirrorPentominoH(piece, cmdProperty);
+        pieceDiv.style.transform='scaleX(-1)';
+        pieceDiv.style.transition='transform 0.5s';
+        this.gameController.mirrorPentominoH(piece, cmdProperty)
+        this.positionPiece(piece);       
             pieceDiv.setAttribute("flipped", 1 - flipped);
-            if (cmdProperty.cmdType != CommandTypes.Shadow) {
-                this.checkIfGameWon();
-            }
-        }
+                if (cmdProperty.cmdType != CommandTypes.Shadow) {
+                    this.checkIfGameWon();
+                }
+        
     }
 
     flipV(cmdProperty = cmdAttrDefault) {
         let piece = this.selected;
-        if (piece) {
+        if (!piece) return
+            
             let pieceDiv = document.getElementById("piece_" + piece.name);
             let flipped = pieceDiv.getAttribute("flipped") * 1;
             let currentRot = pieceDiv.style.getPropertyValue("--rotationY").split(/(-?\d+)/)[1] * 1; //converts string value to int
             let newRot = currentRot + 180;
             // Update the backend
+            pieceDiv.style.transform='scaleY(-1)';
+		    pieceDiv.style.transition='transform 0.5s';
             this.gameController.mirrorPentominoV(piece, cmdProperty);
             this.positionPiece(piece);
-            pieceDiv.style.setProperty("--rotationY", newRot.toString() + "deg");
+            //pieceDiv.style.setProperty("--rotationY", newRot.toString() + "deg");
             pieceDiv.setAttribute("flipped", 1 - flipped);
             if (cmdProperty.cmdType != CommandTypes.Shadow) {
                 this.checkIfGameWon();
             }
-        }
+        
     }
 
     showNumberOfPossibleSolutions() {

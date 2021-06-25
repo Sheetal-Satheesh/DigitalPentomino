@@ -185,6 +185,7 @@ margin-top: 2px;
   user-select: none;
   text-align: center;
   /*outline: 1px solid #eee;*/
+  --webkit-transform: translate3d(0,0,0);
 }
 
 .boardarea {
@@ -194,6 +195,12 @@ margin-top: 2px;
   bottom: 0;
   left: 0;
   right: 0;
+}
+
+.gamearea .boardarea {
+   transform-style: preserve-3d;
+   -webkit-transform: scale3d();
+  
 }
 
 .blockedcell {
@@ -256,7 +263,7 @@ right: 0;
 bottom: 0;
 left: 0;
 overflow:none;
---webkit-transform: translate3d(0,0,0);
+/* --webkit-transform: translate3d(0,0,0); */
 }
 
 img#logo{
