@@ -89,6 +89,15 @@ class SettingsSchema {
                 "title": titles.hinting.title[lang],
                 "advanced": true,
                 "properties": {
+                    hintingLevels: {
+                        "type": "string",
+                        "title": titles.hinting.hintingLevels.title[lang],
+                        "description": titles.hinting.hintingLevels.description[lang],
+                        "enum": ["Easy", "Medium", "Difficult","Custom"],
+                        "enumText": titles.hinting.hintingLevels.enumTitles[lang],
+                        "default": "Easy"
+                    },
+
                     showNumberOfPossibleSolutions: {
                         "type": "boolean",
                         "title": titles.hinting.showNumberOfPossibleSolutions.title[lang],
@@ -138,6 +147,14 @@ class SettingsSchema {
                         "title": titles.hinting.exactHints.title[lang],
                         "description": titles.hinting.exactHints.description[lang],
                         "default": false
+                    },
+                    hintingVariants: {
+                        "type": "string",
+                        "title": titles.hinting.hintingVariants.title[lang],
+                        "description": titles.hinting.hintingVariants.description[lang],
+                        "enum": ["Show pentominoes", "Show destination", "Show both"],
+                        "enumText": titles.hinting.hintingVariants.enumTitles[lang],
+                        "default": "Show both"
                     }
                 }
             },
