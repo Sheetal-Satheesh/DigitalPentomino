@@ -175,7 +175,7 @@ margin-top: 2px;
 }
 
 .gamearea {
-  justify-content:;
+  justify-content: normal;
   display: block;
   float: left;
   user-select: none;

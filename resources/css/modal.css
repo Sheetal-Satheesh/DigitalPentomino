@@ -69,18 +69,31 @@ button:hover {
   /* The Modal Close Button (x) */
 
   .modal .close {
+    z-index: 100;
     position: relative;
     right: 1vw;
     top: 1vw;
-    width: 4vw;
-    height: 4vw;
+    width: 5vw;
+    height: 5vw;
     background-color:white;
     border-radius: 50%;
     border: 1px solid black;
     display: inline-block;
+    vertical-align: middle;
     text-align: center;
-    z-index: 100;
     font-size: 2vw;
+    color: #000;
+    text-shadow: 0 1px 0 #fff;
+    filter: alpha(opacity=50);
+    opacity: .5;
+  }
+
+  .modal .close .closeBtn {
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+    margin: auto;
+    padding: 25%;
   }
   
   .close:hover,
@@ -95,15 +108,39 @@ button:hover {
 /* The modal back button (<<) */
 
 .modal .back {
+  z-index: 100;
   position: relative;
   left: 1vw;
   top: 1vw;
-  width: 4vw;
-  height: 4vw;
+  width: 5vw;
+  height: 5vw;
+  background-color:white;
   border-radius: 50%;
   border: 1px solid black;
   display: inline-block;
+  vertical-align: middle;
   text-align: center;
+  color: #000;
+  text-shadow: 0 1px 0 #fff;
+  filter: alpha(opacity=50);
+  opacity: .5;
+}
+
+.modal .back .backBtn {
+  display: inline-block;
+  height: 100%;
+  width: 100%;
+  margin: auto;
+  padding: 25%;
+}
+
+.back:hover,
+.back:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+  filter: alpha(opacity=70);
+  opacity: .7;
 }
 
 /* */
