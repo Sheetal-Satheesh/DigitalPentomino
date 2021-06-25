@@ -1,6 +1,8 @@
 /*reference : https://codepen.io/hariharakumar/pen/VmOdBx
 */
 
+
+
 .preloader {
     position: fixed;
     top: 0;
@@ -179,3 +181,4 @@
         transform: scale3D(0, 0, 1);
     }
 }
+
