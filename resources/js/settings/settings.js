@@ -18,7 +18,7 @@ const SettingsSingleton = (function () {
 class Settings {
     constructor() {
         let urlParams = new URLSearchParams(window.location.search);
-        let querySeed = urlParams.get('seed');
+        let querySeed = urlParams.get(baseConfigs.seedUrlParamName);
         let schema = SettingsSchemaSingleton.getInstance().createSchema();
         if (querySeed === null) {
             this._settings = SettingsParser.createDefaultSettingsObject(schema);
@@ -40,6 +40,7 @@ class Settings {
                 this._settings[heading][key] = settings[heading][key];
             }
         }
+        this._settings.visibility = jQuery.extend(true, new SettingsVisibility(), settings.visibility);
     }
 
     getSettings() {

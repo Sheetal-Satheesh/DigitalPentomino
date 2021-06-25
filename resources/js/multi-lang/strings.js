@@ -15,6 +15,10 @@ const strings = {
     numberOfPossibleSolutions: ["Number of solutions", "Anzahl Lösungen"],
     settings: {
         header: ["Game settings", "Spieleinstellungen"],
+        advanced: {
+            show: ["Show advanced settings", "Öffne erweiterte Einstellungen"],
+            hide: ["Hide advanced settings", "Schließe erweiterte Einstellungen"]
+        },
         buttons: {
             apply: ["Apply", "Bestätigen"],
             cancel: ["Cancel", "Abbrechen"]
@@ -24,6 +28,12 @@ const strings = {
             language: {
                 title: ["Language", "Sprache"],
                 enumTitles: [["English", "German"], ["Englisch", "Deutsch"]]
+            },
+            enableAudio: {
+                title: ["Enable Audio", "Audio einschalten"]
+            },
+            enableBgMusic: {
+                title: ["Enable Background Music", "Hintergrundmusik einschalten"]
             }
         },
         hinting: {
@@ -32,6 +42,12 @@ const strings = {
                 title: ["Enable hints", "Hinweise einschalten"],
                 description: ["Hints suggest pentomino-actions to the user, which bring the board closer to a solution.",
                     "Hinweise schlagen dem Spieler Züge vor, die ihn/sie näher zur Lösung bringen."]
+            },
+            hintingLevels: {
+                title: ["Levels", "Levels"],
+                enumTitles: [["Easy", "Medium", "Difficult","Custom"], ["Leicht", "Mittel", "Schwierig", "Benutzerdefiniert"]],
+                description: ["TODO",
+                    "TODO"]
             },
             showNumberOfPossibleSolutions: {
                 title: ["Show number of possible solutions", "Zeige Anzahl der möglichen Lösungen an"],
@@ -75,6 +91,23 @@ const strings = {
                 title: ["Enable exact Hints?", "Exakte Hinweise aktivieren?"],
                 description: ["If enabled, Rotate, Flip and Move-actions that should be performed on one pentomino are three separate hints. Otherwise these actions are combined into one hint.",
                     "Aktiviert: Drehen, Spiegeln und Bewege-Aktionen, die auf ein Pentomino angewandt werden müssen sind drei separate Hinweise. Deaktiviert: Aktionen werden in einem Hinweis zusammengefasst."]
+            },
+            hintingVariants: {
+                title: ["Hinting variants", "Hinweismöglichkeiten"],
+                enumTitles: [
+                    ["Show pentominoes", "Show destination", "Show both"],
+                    ["Pentomino anzeigen", "Ziel anzeigen", "Beides anzeigen"]
+                ],
+                description: ["Hinting variants have different options:" +
+                    "Show pentominoes: Hinting will only indicate pentomino to pickup" +
+                    "Show destination: Hinting will indicate only destination to place pentomino" +
+                    "Show both : Hinting will show both = pentomino to pickup and the detination to place",
+                    "Hinting-Varianten haben verschiedene Optionen: " +
+                    "Pentomino anzeigen: Hinting zeigt nur Pentomino zum Aufnehmen an " +
+                    "Ziel anzeigen: Hinting zeigt nur das Ziel an, um Pentomino zu platzieren " +
+                    "Beides anzeigen: Hinting zeigt beides an = Pentomino zum Aufnehmen und das Ziel zum Ablegen"
+                ]
+
             }
         },
         showSolvedBoardScreen:{
@@ -136,8 +169,9 @@ const strings = {
             }
         },
         errors: {
-            lowerThanMin: ["The value is lower than the minimum", "Der Eintrag ist kleiner als der minimale Wert"],
-            higherThanMax: ["The value is higher than the maximum", "Der Eintrag ist größer als der maximale Wert"]
+            lowerThanMin: ["This shouldn't be smaller than", "Dieser Eintrag darf nicht kleiner sein als"],
+            higherThanMax: ["This shouldn't be greater than", "Dieser Eintrag darf nicht größer sein als"],
+            numberBadInput: ["Please enter a number", "Bitte geben Sie eine Zahl ein"]
         }
     }
 };

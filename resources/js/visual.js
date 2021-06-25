@@ -2,8 +2,6 @@ const UIProperty = {
     "TrayCSSLeft": 0,
     "TrayHeight": 10,
     "WindowWidth": 100,
-    "PentominoX": 8,
-    "PentominoY": 8,
     "Sidebar": 0
 }
 Object.freeze(UIProperty);
@@ -104,6 +102,10 @@ class Visual {
 
     placePentomino(pentomino, posX, posY, cmdProperty = cmdAttrDefault) {
         this.gameController.placePentomino(pentomino, posX, posY, cmdProperty);
+        if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
+            let audio = new Audio('resources/audio/snap.wav');
+            audio.play();
+        }
         this.positionPiece(pentomino);
         if (cmdProperty.cmdType != CommandTypes.Shadow) {
             this.checkIfGameWon();
@@ -113,6 +115,9 @@ class Visual {
     checkIfGameWon() {
         if (this.gameController.game()._board.isSolved()) {
             this.showGameSolved();
+            if (SettingsSingleton.getInstance().getSettings().general.enableAudio) {
+                document.getElementById("audioTukaScream").play();
+            }
         }
     }
 
@@ -137,27 +142,25 @@ class Visual {
     }
 
     renderBoard() {
-        //TODO: Check whether in the innerHTML approach is good here!
+        let fieldHTML = document.getElementById('field');
+        let out = '';
+        let heightField = document.getElementById('field').clientHeight;
+        let widthField = document.getElementById('field').clientWidth;
 
-        var fieldHTML = document.getElementById('field');
-        var out = '';
-        var width = UIProperty.WindowWidth / this.pd.gameWidth;
-        var height = UIProperty.WindowHeight / this.pd.gameHeight;
-        console.log(width);
-        console.log(height);
+        let width = 100 / baseConfigs.gameWidth;
+        let height = 100 / baseConfigs.gameHeight;
 
         /*The field consists of divs. Each div saves in its id field its resepective coorinates*/
-
-        for (var row = 0; row < this.pd.gameHeight; row++) {
-            for (var col = 0; col < this.pd.gameWidth; col++) {
+        for (var row = 0; row < baseConfigs.gameHeight; row++) {
+            for (var col = 0; col < baseConfigs.gameWidth; col++) {
 
                 var isBoard = true;   //indicate where on the field the board is
                 var blockedCell = false;
-                //TODO: Implement blocked elements
-                if (col < this.boardY) isBoard = false;
-                if (col >= this.boardY + this.gameController.getBoardSize()[1]) isBoard = false;
-                if (row < this.boardX) isBoard = false;
-                if (row >= this.boardX + this.gameController.getBoardSize()[0]) isBoard = false;
+                //Check for blocked elements
+                if (col < this.pd.boardStartY) isBoard = false;
+                if (col >= this.pd.boardStartY + this.gameController.getBoardSize()[1]) isBoard = false;
+                if (row < this.pd.boardStartX) isBoard = false;
+                if (row >= this.pd.boardStartX + this.gameController.getBoardSize()[0]) isBoard = false;
                 //Ashwini: For Blocking the cells
                 if (this.pd.blockedCells != undefined) {
                     var gameCellPattern = this.pd.gameCellPattern;
@@ -201,7 +204,9 @@ class Visual {
          * again and again.
         */
 
-        var pieceArea = document.getElementById('piecearea');
+        let pieceArea = document.getElementById('piecearea');
+        let trayArea = document.getElementById('tray');
+        let trayout = '';
         let out = '';
         var width = UIProperty.WindowWidth / this.pd.gameWidth;
         this.pieces.forEach(piece => {
@@ -212,7 +217,7 @@ class Visual {
              * to display:none avoids the appearing for a split second before positioning
              *
             */
-
+            trayout += '<div class="trayPosition" id="tray_' + piece.trayPosition + '" style="width:' + (5 * width) + 'vw;height:' + (5 * width) + 'vw;display:block;z-index:0;"></div>';
             out += '<div class="piece" id="piece_' + piece.name + '" style="width:' + (5 * width) + 'vw;height:' + (5 * width) + 'vw;display:none;z-index:0;">';
 
             //this "paints" the bitmap of the pice into the bounding box
@@ -234,7 +239,21 @@ class Visual {
 
         });
 
+        trayArea.innerHTML = trayout;
         pieceArea.innerHTML = out;
+        this.pieces.forEach(piece => {
+            let trayElement = document.getElementById('tray_' + piece.trayPosition);
+
+            let widthVW = UIProperty.TrayCSSLeft + (piece.trayPosition) * 7.2;
+            let magnification = 8 / (5 * width);
+            trayElement.style.left = widthVW + 'vw';
+            trayElement.style.top = '.7vw';
+            trayElement.style.transformOrigin = 'top';
+            trayElement.style.setProperty("--magnification", magnification);
+            trayElement.style.setProperty("--rotationX", "0deg");
+            trayElement.style.setProperty("--rotationY", "0deg");
+            trayElement.style.setProperty("--rotationZ", "0deg");
+        });
 
     }
 
@@ -244,11 +263,11 @@ class Visual {
         var htmlElement = document.getElementById('piece_' + piece.name);
 
         if (piece.inTray) {
-            var widthVW = UIProperty.TrayCSSLeft + (piece.trayPosition) * 7.2;
+            var widthVW = 100 / 12 * piece.trayPosition; //UIProperty.TrayCSSLeft + (piece.trayPosition) * width;
             var magnification = 8 / (5 * width);
             htmlElement.style.left = widthVW + 'vw';
             htmlElement.style.top = '' + 0.1 * UIProperty.TrayHeight + 'vw'; //position pieces in tray around 20% from top
-            htmlElement.style.transformOrigin = 'top';
+            htmlElement.style.transformOrigin = 'left top';
             htmlElement.style.setProperty("--magnification", magnification);
             htmlElement.style.setProperty("--rotationX", "0deg");
             htmlElement.style.setProperty("--rotationY", "0deg");
@@ -256,12 +275,15 @@ class Visual {
 
         }
         else {
-
             var bCellsFnd = this.isPentominoInBlockCells(piece);
             var collisonFnd = this.isCollision(piece);
             if (collisonFnd) {
                 let collisonPentomino = this.gameController.getCollisionOfPentominoes(piece).pop();
                 this.overlapBlock.add(piece, collisonPentomino);
+                if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
+                    let audio = new Audio('resources/audio/collision.mp3');
+                    audio.play();
+                }
             }
             else {
                 this.overlapBlock.remove(piece);
@@ -504,9 +526,17 @@ class Visual {
                     about that movement (which in turn  repositions the element so it snaps to the grid)
                 */
                 var data = window.currentlyMoving;
+                let trayPos = 0;
+                let pentominoList = that.gameController.getAllPentominoes();
                 window.currentlyMoving = false;
                 var elements = document.elementsFromPoint(event.clientX, event.clientY); //determine the target
+                for (let i in elements) {
+                    let element = elements[i];
 
+                    if (element.className == 'trayPosition') {
+                        this.trayPos = element.id.split('_')[1];
+                    }
+                }
                 for (var i in elements) {
                     var element = elements[i];
                     var id = element.id;
@@ -515,6 +545,53 @@ class Visual {
                      * piece in Tray */
                     if (id == 'tray') {
                         let piece = data[1];
+                        let newPos = Number(this.trayPos);
+                        let trayOverlapFlag = that.isTrayOverlap(pentominoList, newPos);
+                        let minEmptyPos;
+                        let totalCount = pentominoList.length;
+                        let emptyTrayList = that.getEmptyTrayPos(pentominoList);
+                        if (piece.inTray == 1) {
+                            emptyTrayList.push(piece.trayPosition);
+                        }
+                        let arr = [];
+                        emptyTrayList.forEach((l_rec) => {
+                            arr.push(Math.abs(l_rec - newPos));
+                        });
+
+                        let closest = arr.indexOf(Math.min.apply(null, arr));
+                        if (emptyTrayList.length != 0) {
+                            minEmptyPos = Math.min.apply(null, emptyTrayList);
+                        }
+                        pentominoList.forEach((pentomino) => {
+                            let tempTrayPos = Number(pentomino.trayPosition);
+
+                            if (pentomino.inTray == 1 && tempTrayPos >= newPos && tempTrayPos <= emptyTrayList[closest] && trayOverlapFlag == true) {
+                                pentomino.trayPosition = tempTrayPos + 1;
+                                that.positionPiece(pentomino);
+                                pentominoList.forEach((pent) => {
+                                    let tempTrayPos1 = Number(pent.trayPosition);
+                                    if (pent.inTray == 0 && (tempTrayPos + 1) == tempTrayPos1) {
+                                        pent.trayPosition = Number(piece.trayPosition);
+                                    }
+                                });
+                            }
+                            else if (pentomino.inTray == 1 && tempTrayPos <= newPos && tempTrayPos >= emptyTrayList[closest] && trayOverlapFlag == true) {
+                                pentomino.trayPosition = tempTrayPos - 1;
+                                that.positionPiece(pentomino);
+                                pentominoList.forEach((pent) => {
+                                    let tempTrayPos1 = Number(pent.trayPosition);
+                                    if (pent.inTray == 0 && (tempTrayPos - 1) == tempTrayPos1) {
+                                        pent.trayPosition = Number(piece.trayPosition);
+                                    }
+                                });
+                            }
+                            else if (pentomino.inTray == 0 && tempTrayPos == newPos) {
+                                pentomino.trayPosition = Number(piece.trayPosition);
+                            }
+
+                        });
+
+                        piece.trayPosition = newPos;
                         that.positionPiece(piece);
                         that.movePentominoToTray(piece);
                         that.disableManipulations();
@@ -547,6 +624,35 @@ class Visual {
             }
         }
     }
+    isTrayOverlap(pentominoList, pos) {
+        let overlapFlag = false;
+        pentominoList.forEach((pentomino) => {
+            if (pentomino.trayPosition == pos) {
+                if (pentomino.inTray == 1) {
+                    overlapFlag = true;
+                }
+                else {
+                    overlapFlag = true;
+                }
+            }
+        });
+        return overlapFlag;
+    }
+
+    getEmptyTrayPos(pentominoList) {
+        let emptyTrayList = [];
+        let l_count = 0;
+
+        pentominoList.forEach((pentomino) => {
+            if (pentomino.inTray == 0) {
+                emptyTrayList.push(pentomino.trayPosition);
+                l_count = l_count + 1;
+            }
+        });
+
+        return emptyTrayList;
+    }
+
 
     rotateClkWise(cmdProperty = cmdAttrDefault) {
         let piece = this.selected;
@@ -638,6 +744,10 @@ class Visual {
         }
         let hintCommand = hint.getCommands()[commandNumber];
         let hintinPen = hintCommand._pentomino;
+        if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
+            let audio = new Audio('resources/audio/hinting.mp3');
+            audio.play();
+        }
         this.indicateHint(hint, commandNumber);
         setTimeout(function () {
             hintButton.disabled = false;
@@ -727,7 +837,9 @@ class Visual {
         }
         else {
 
-            this.indicatePentomino(hintinPen, timeoutFrame);
+            if (!((SettingsSingleton.getInstance().getSettings().hinting.hintingVariants) === ("Show destination"))) {
+                this.indicatePentomino(hintinPen, timeoutFrame);
+            }
 
             switch (hintName) {
                 case "Place":
@@ -741,55 +853,57 @@ class Visual {
                     let piecePos = this.getOccupiedPositions(tempHintinPen, hintCommand);
                     let randomCellPos = this.calculateNeighbour(piecePos, hintCommand);
                     //usage of random cell variable to indicate hinting
-
-                    switch (SettingsSingleton.getInstance().getSettings().hinting.hintingStrategy) {
-                        case "partial":
-                            switch (SettingsSingleton.getInstance().getSettings().hinting.partialHintingStragety) {
-                                case "random":
-                                    //piecePos = filtered;
-                                    for (let i = 0; i < randomCell; i++) {
-                                        fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
-                                        prevBackground[i] = fieldvalue.style.background;
-                                        fieldvalue.style.background = pentominoColor;
-                                        this.hide(piecePos, prevBackground, timeoutFrame);
-                                    }
-                                    break;
-                                case "mostOccupiedCells":
-                                    let mostCells = this.mostNeigh(hintinPen, piecePos, hintCommand);
-                                    let cellsToIndicate = this.cellsToIndicate(piecePos, mostCells, hintCommand);
-                                    for (let i = 0; i < cellsToIndicate.length; i++) {
-                                        fieldvalue = document.getElementById("field_" + cellsToIndicate[i][0] + "," + cellsToIndicate[i][1]);
-                                        prevBackground[i] = fieldvalue.style.background;
-                                        fieldvalue.style.background = pentominoColor;
-                                        this.hideMostOccupiedNeighbors(cellsToIndicate, prevBackground, timeoutFrame);
-                                    }
-                                    break;
-                                default:
-                                    throw new Error("Unknown partial hinting strategy");
-                            }
-                            break;
-                        case "full":
-                            for (let i = 0; i < 5; i++) {
-                                fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
-                                prevBackground[i] = fieldvalue.style.background;
-                                fieldvalue.style.background = pentominoColor;
-                                this.hide(piecePos, prevBackground, timeoutFrame);
-                            }
-                            break;
-                        case "area":
-                            let areaPos = this.indicateAreaCells(hintinPen, hintCommand)[0];
-                            for (let i = 0; i < areaPos.length; i++) {
+                    if (!((SettingsSingleton.getInstance().getSettings().hinting.hintingVariants) === ("Show pentominoes"))){
+                        switch (SettingsSingleton.getInstance().getSettings().hinting.hintingStrategy) {
+                            case "partial":
+                                switch (SettingsSingleton.getInstance().getSettings().hinting.partialHintingStragety) {
+                                    case "random":
+                                        //piecePos = filtered;
+                                        for (let i = 0; i < randomCell; i++) {
+                                            fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
+                                            prevBackground[i] = fieldvalue.style.background;
+                                            fieldvalue.style.background = pentominoColor;
+                                            this.hide(piecePos, prevBackground, timeoutFrame);
+                                        }
+                                        break;
+                                    case "mostOccupiedCells":
+                                        let mostCells = this.mostNeigh(hintinPen, piecePos, hintCommand);
+                                        let cellsToIndicate = this.cellsToIndicate(piecePos, mostCells, hintCommand);
+                                        for (let i = 0; i < cellsToIndicate.length; i++) {
+                                            fieldvalue = document.getElementById("field_" + cellsToIndicate[i][0] + "," + cellsToIndicate[i][1]);
+                                            prevBackground[i] = fieldvalue.style.background;
+                                            fieldvalue.style.background = pentominoColor;
+                                            this.hideMostOccupiedNeighbors(cellsToIndicate, prevBackground, timeoutFrame);
+                                        }
+                                        break;
+                                    default:
+                                        throw new Error("Unknown partial hinting strategy");
+                                }
+                                break;
+                            case "full":
+                                for (let i = 0; i < 5; i++) {
+                                    fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
+                                    prevBackground[i] = fieldvalue.style.background;
+                                    fieldvalue.style.background = pentominoColor;
+                                    this.hide(piecePos, prevBackground, timeoutFrame);
+                                }
+                                break;
+                            case "area":
                                 let areaPos = this.indicateAreaCells(hintinPen, hintCommand)[0];
-                                fieldvalue = document.getElementById("field_" + areaPos[i][0] + "," + areaPos[i][1]);
-                                prevBackground[i] = fieldvalue.style.background;
-                                fieldvalue.style.background = pentominoColor;
-                            }
+                                for (let i = 0; i < areaPos.length; i++) {
+                                    let areaPos = this.indicateAreaCells(hintinPen, hintCommand)[0];
+                                    fieldvalue = document.getElementById("field_" + areaPos[i][0] + "," + areaPos[i][1]);
+                                    prevBackground[i] = fieldvalue.style.background;
+                                    fieldvalue.style.background = pentominoColor;
+                                }
 
-                            this.hideArea(areaPos, prevBackground, timeoutFrame);
-                            break;
-                        default:
-                            console.error("Hinting strategy unknown!");
+                                this.hideArea(areaPos, prevBackground, timeoutFrame);
+                                break;
+                            default:
+                                console.error("Hinting strategy unknown!");
+                        }
                     }
+                    
                     break;
 
                 case "Remove":
@@ -889,7 +1003,7 @@ class Visual {
 
     showGameSolved() {
         let enabledSolvedScreen = SettingsSingleton.getInstance().getSettings().showSolvedBoardScreen.enableSolvedScreen;
-        if(!enabledSolvedScreen) {
+        if (!enabledSolvedScreen) {
             return;
         }
 
@@ -916,24 +1030,24 @@ class Visual {
         };
         let div1 = document.createElement("div");
         let img = document.createElement("img");
-       
+
         let textNode3 = SettingsSingleton.getInstance().getSettings().showSolvedBoardScreen.SolvedScreens;
         let textNode2;
-        let cancelBtn ;
+        let cancelBtn;
         let playAgnBtnAttributes;
         template.attachText("#modalBodyID", textNode1);
 
-        switch(textNode3) {
+        switch (textNode3) {
             case "Play again?":
                 textNode2 = {
-                class: "modalText",
-                text: strings.showSolved.play[lang]
+                    class: "modalText",
+                    text: strings.showSolved.play[lang]
                 };
                 img.src = "resources/images/icons/jboy-2.ico";
                 img.style.cursor = "none";
                 div1.appendChild(img);
-                 modalBodyID.appendChild(div1);
-                  template.attachText("#modalBodyID", textNode2);
+                modalBodyID.appendChild(div1);
+                template.attachText("#modalBodyID", textNode2);
                 cancelBtn = {
                     class: "cancelBtn",
                     onclick: "document.getElementById('modalTop').style.display='none'",
@@ -952,7 +1066,7 @@ class Visual {
                 modalBodyID.appendChild(div2);
 
                 template.attachBtn("#modalBodyID", playAgnBtnAttributes);
-                 template.attachBtn("#modalBodyID", cancelBtn);
+                template.attachBtn("#modalBodyID", cancelBtn);
                 let playAgainBtn = document.querySelector(".deleteBtn");
                 playAgainBtn.addEventListener("click", () => {
                     pd.reset();
@@ -967,8 +1081,8 @@ class Visual {
                 break;
             case "Well done! Please wait for your Teacher to continue":
                 textNode2 = {
-                class: "modalText",
-                text: strings.showSolved.WellDone[lang]
+                    class: "modalText",
+                    text: strings.showSolved.WellDone[lang]
                 };
                 img.src = "resources/images/icons/wizard.ico";
                 div1.appendChild(img);
@@ -978,8 +1092,8 @@ class Visual {
 
             case "Excellent ! Now continue with the next task on your assignment":
                 textNode2 = {
-                class: "modalText",
-                text: strings.showSolved.Excellent[lang]
+                    class: "modalText",
+                    text: strings.showSolved.Excellent[lang]
                 };
                 img.src = "resources/images/icons/present.ico";
                 div1.appendChild(img);
@@ -1169,8 +1283,11 @@ class Visual {
 
     prefillBoard() {
         this.readyForPrefilling();
+        if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
+            let audio = new Audio('resources/audio/prefill.mp3');
+            audio.play();
+        }
         let randomSolution = this.fetchRandomSolution();
-
         let prefillCandidates = [];
         let threshold = SettingsSingleton.getInstance().getSettings().prefilling.distanceValue;
         let scheme = SettingsSingleton.getInstance().getSettings().prefilling.prefillingStrategy;
@@ -1320,6 +1437,8 @@ class Visual {
         for (let i = 0; i < randomSolution.length; ++i) {
             [piecePosition, piece] = this.getRandomPiece(randomSolution, pickedPieces);
             pickedPieces[piece.name] = 1;
+            console.log("Piece position: ");
+            console.log(piecePosition);
             currentAnchor = [piecePosition.boardPosition[0],
             piecePosition.boardPosition[1]];
             for (let j = 0; j < positions.length; ++j) {
@@ -1341,6 +1460,7 @@ class Visual {
             positions.push(currentAnchor);
             this.removeFromTray(piece);
             piece.updateTrayValue(0);
+            console.log("Anchor for placement of " + piece + " is " + currentAnchor[0] + "," + currentAnchor[1]);
             this.placePentomino(piece, currentAnchor[0], currentAnchor[1]);
         }
 
