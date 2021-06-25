@@ -428,17 +428,17 @@ table
 
 /* Style for Button Manipulation */
 .main-wrapper {
-  width: 2px;
-  height: 2px;
+  width: 1px;
+  height: 1px;
   position: relative;  
 }
 
 .button-wrapper {
   border-radius: 50%;  
-  height: 280px;
-  position: absolute;
+  height: 370px;
+  position: absolute;  
   bottom: 0;
-  right: 0;  
+  right: 0;
   transition: transform .2s;  
   z-index: 12 ;
 }
@@ -465,8 +465,8 @@ table
 
 .button-inside {
   border-radius: 50%;
-  width: 44px;
-  height: 44px;
+  width: 74px;
+  height: 74px;
   position: absolute;
   bottom: 3px;
   right: 3px; 
@@ -485,50 +485,52 @@ table
 }
 
 .button-inside.fourth {
-  background-color: #ff0033;
-  
+  background-color: #ff0033;  
 }
 
-
 .icon-rotateLeft {  
-  width: 40px;
-  height: 40px;
-  position: absolute;
-  bottom: 1px;
-  right: 1px;
-  font-size:34px ;
+  width: 70px;
+  height: 70px;
+  position: absolute; 
+  vertical-align: middle; 
+  padding-left: 8px;
+  padding-top: 5px; 
+  font-size: 58px;
   transform: 0deg;
   z-index: 12;
 }
 
 .icon-rotateRight {  
-  width: 40px;
-  height: 40px;
-  position: absolute;
-  bottom: 1px;
-  right: 1px;
-  font-size:34px ;
+  width: 70px;
+  height: 70px;
+  position: absolute;   
+  font-size: 58px;
   transform: 0deg;
+  vertical-align: middle; 
+  padding-left: 8px;
+  padding-top: 5px;
   z-index: 12;
 }
 
 .icon-flipHorizontally {  
-  width: 40px;
-  height: 40px;
+  width: 70px;
+  height: 70px;
   position: absolute; 
-  font-size:34px ;
-  top: 4px;
-  left: 4px;
+  font-size: 58px;
+  vertical-align: middle;
+  padding-left: 10px;
+  padding-top: 5px;
   transform: rotate(var(--rotateH)); 
   z-index: 12;
 }
 
 .icon-flipVertically {  
-  width: 40px;
-  height: 40px;
-  position: absolute;  
-  right: 3px; 
-  font-size:34px ; 
+  width: 70px;
+  height: 70px;
+  position: absolute;    
+  font-size: 58px; 
+  vertical-align: middle;
+  padding-left: 2px;
   transform: rotate(var(--rotateV));  
   z-index: 12;  
 }
