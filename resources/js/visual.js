@@ -804,6 +804,7 @@ class Visual {
         let clientRect = document.getElementById("piece_" + hintinPen.name).getBoundingClientRect();
         let [posX, posY] = [clientRect.x + clientRect.width / 2, clientRect.y + clientRect.height / 2];
         let currentPenHintName = hintinPen.name;
+        let destinationColor = "Olive";
         //let currentPenHintNaame = this.selected.name;
         if (!(currentPenHintName === lastHintedPentName)) {
             let maxPartialHintingCells = SettingsSingleton.getInstance().getSettings().hinting.maxPartialHintingCells;
@@ -849,6 +850,8 @@ class Visual {
                     let fieldvalue;
                     let prevBackground = [];
 
+
+
                     //show destination position (and fade away)
                     let piecePos = this.getOccupiedPositions(tempHintinPen, hintCommand);
                     let randomCellPos = this.calculateNeighbour(piecePos, hintCommand);
@@ -862,7 +865,7 @@ class Visual {
                                         for (let i = 0; i < randomCell; i++) {
                                             fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
                                             prevBackground[i] = fieldvalue.style.background;
-                                            fieldvalue.style.background = pentominoColor;
+                                            fieldvalue.style.background = destinationColor;
                                             this.hide(piecePos, prevBackground, timeoutFrame);
                                         }
                                         break;
@@ -872,7 +875,7 @@ class Visual {
                                         for (let i = 0; i < cellsToIndicate.length; i++) {
                                             fieldvalue = document.getElementById("field_" + cellsToIndicate[i][0] + "," + cellsToIndicate[i][1]);
                                             prevBackground[i] = fieldvalue.style.background;
-                                            fieldvalue.style.background = pentominoColor;
+                                            fieldvalue.style.background = destinationColor;
                                             this.hideMostOccupiedNeighbors(cellsToIndicate, prevBackground, timeoutFrame);
                                         }
                                         break;
@@ -884,7 +887,7 @@ class Visual {
                                 for (let i = 0; i < 5; i++) {
                                     fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
                                     prevBackground[i] = fieldvalue.style.background;
-                                    fieldvalue.style.background = pentominoColor;
+                                    fieldvalue.style.background = destinationColor;
                                     this.hide(piecePos, prevBackground, timeoutFrame);
                                 }
                                 break;
@@ -894,7 +897,7 @@ class Visual {
                                     let areaPos = this.indicateAreaCells(hintinPen, hintCommand)[0];
                                     fieldvalue = document.getElementById("field_" + areaPos[i][0] + "," + areaPos[i][1]);
                                     prevBackground[i] = fieldvalue.style.background;
-                                    fieldvalue.style.background = pentominoColor;
+                                    fieldvalue.style.background = destinationColor;
                                 }
 
                                 this.hideArea(areaPos, prevBackground, timeoutFrame);
