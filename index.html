@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="resources/css/grid.css">
     <link rel="stylesheet" href="resources/css/settings_form.css">
     <link rel="stylesheet" style="text/css" href="resources/jsonform/bootstrap.css" />
+    <link rel="stylesheet" href="resources/css/settings.css">
     <script src="resources/index.js"></script>
     <script src="resources/js/ui-template.js"></script>
     <script src="resources/js/board.js"></script>
@@ -90,7 +91,7 @@
                 <div id="piecearea"></div> <!-- piecearea -->
             </div>
             <div id="boardmodalTop" class="boardmodal"
-                style="background: rgb(220, 240, 237) none repeat scroll 0% 0%; display: none;">
+                style="background: #eceaea none repeat scroll 0% 0%; display: none;">
                 <span onclick="closeModal()" class="boardclose" title="Close Modal">x</span>
                 <div class="boardmodalContainer" id="boardmodalContainerID">
                     <div class="boardouterGrid">
@@ -259,7 +260,7 @@
         function openScanQrCode() {
             let modal = document.getElementById('modalTop');
             modal.style.display = "block";
-            modal.style.background = "rgb(220, 240, 237)";
+            modal.style.background = "#eceaea";
 
             document.querySelector(".modalFormContent").style.display = "none";
             document.querySelector(".innerGrid").style.display = "block";
@@ -611,7 +612,7 @@
         function openSettings() {
             let modal = document.getElementById('modalTop');
             modal.style.display = "block";
-            modal.style.background = "rgb(220, 240, 237)";
+            modal.style.background = "#eceaea";
 
             document.querySelector(".modalFormContent").style.display = "none";
             document.querySelector(".innerGrid").style.display = "block";
@@ -918,7 +919,7 @@
             var modal = document.getElementById('modalTop');
             this.disablePointerEventsOnPieces();
             this.hideManipulationButtons();
-            modal.style.background = " rgb(220, 240, 237)";
+            modal.style.background = " #eceaea";
             modal.style.display = "block";
 
             document.querySelector(".modalFormContent").style.display = "none";
