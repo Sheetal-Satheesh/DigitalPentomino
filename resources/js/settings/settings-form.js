@@ -41,16 +41,13 @@ class SettingsForm {
         let htmlElement = formElement;
 
         for (let heading in schema) {
-            if (!settings.teachersMode && !settings.visibility.isVisible(heading)) {
-                continue;
-            }
             let subSettings = schema[heading].properties;
 
             if (creatingNormalSettings && schema[heading].advanced) {
                 creatingNormalSettings = false;
                 htmlElement = advancedSettingsDiv;
 
-                let lang = SettingsSingleton.getInstance().getSettings().general.language;
+                let lang = settings.general.language;
 
                 let advancedSettingsButton = SettingsForm.createCollapsibleButton(
                     strings.settings.advanced.show[lang],
@@ -62,15 +59,15 @@ class SettingsForm {
             htmlElement.appendChild(document.createElement("br"));
 
             for (let key in subSettings) {
-                if (!settings.teachersMode && !settings.visibility.isVisible(heading, key)) {
-                    continue;
-                }
                 let elementName = heading + "." + key;
 
                 let settingsEntry = subSettings[key];
                 let settingsEntryType = settingsEntry.type;
 
+                let elementIsVisible = settings.teachersMode || settings.visibility.isVisible(heading, key);
+
                 let div = document.createElement("div");
+                div.style.display = elementIsVisible ? "block" : "none";
                 htmlElement.appendChild(div);
 
                 switch (settingsEntryType) {
@@ -136,7 +133,7 @@ class SettingsForm {
             }
         }
 
-        if (SettingsSingleton.getInstance().getSettings().teachersMode) {
+        if (settings.teachersMode) {
             htmlElement.appendChild(SettingsForm.createHeader("h3", "Displayed Settings in Pupil Mode"));
             htmlElement.appendChild(SettingsForm.createTeachersAdvancedSettings(formElement, schema));
         }
@@ -362,14 +359,8 @@ class SettingsForm {
         result.visibility = jQuery.extend(true, new SettingsVisibility(), settings.visibility);
 
         for (let heading in schema) {
-            if (!settings.teachersMode && !settings.visibility.isVisible(heading)) {
-                continue;
-            }
             let subSettings = schema[heading].properties;
             for (let key in subSettings) {
-                if (!settings.teachersMode && !settings.visibility.isVisible(heading, key)) {
-                    continue;
-                }
 
                 let name = heading + "." + key;
 
@@ -421,14 +412,8 @@ class SettingsForm {
         let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
 
         for (let heading in schema) {
-            if (!settings.teachersMode && !settings.visibility.isVisible(heading)) {
-                continue;
-            }
             let subSettings = schema[heading].properties;
             for (let subheading in subSettings) {
-                if (!settings.teachersMode && !settings.visibility.isVisible(heading, subheading)) {
-                    continue;
-                }
                 let schemaEntry = schema[heading]["properties"][subheading];
                 switch (schemaEntry.type) {
                     case "boolean":
