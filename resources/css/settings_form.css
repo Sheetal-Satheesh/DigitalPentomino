@@ -236,6 +236,8 @@
   animation: glow 1s ease-in-out infinite alternate;
 }
 
+/* Styling within settings */
+
 #general.language {
   margin: 3vw; 
 }
@@ -246,4 +248,43 @@
   padding: 3vw;
   background-color: lightblue;
 }
+
+.modalContainer .btn {
+  border: 1px solid black;
+  width: 28vw;
+  height: 6vw;
+  text-align: center;
+  font-size: 2vw;
+  margin-top: 2vw;
+}
+
+.imgButton {
+  margin: 1vw;
+  width: 15vw;
+  height: 9vw;
+  background-size: 100%;
+}
+
+.imgButton:not(.selected){
+  filter: grayscale(100%);
+}
+
+.modalContainer input[type="checkbox"] {
+  cursor: pointer;
+  margin-left: 1vw;
+  margin-top: 1vw;
+  margin-bottom: 1vw;
+  /* Double-sized Checkboxes */
+  -ms-transform: scale(2); /* IE */
+  -moz-transform: scale(2); /* FF */
+  -webkit-transform: scale(2); /* Safari and Chrome */
+  -o-transform: scale(2); /* Opera */
+  transform: scale(2);
+}
+
+.modalContainer label {
+  margin-left: 2vw;
+  font-size: 1.7vw;
+}
+
 

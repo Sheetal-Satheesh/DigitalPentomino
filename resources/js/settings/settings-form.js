@@ -186,7 +186,7 @@ class SettingsForm {
     }
 
     static createCollapsibleButton(showText, hideText) {
-        let buttonElement = SettingsForm.createButton(showText.toUpperCase(), {
+        let buttonElement = SettingsForm.createButton(showText, {
             "class": "collapsible btn btn-primary btn-lg"
         });
 
@@ -195,10 +195,10 @@ class SettingsForm {
             let content = this.nextElementSibling;
             if (content.style.display === "block") {
                 content.style.display = "none";
-                buttonElement.innerHTML = showText.toUpperCase();
+                buttonElement.innerHTML = showText;
             } else {
                 content.style.display = "block";
-                buttonElement.innerHTML = hideText.toUpperCase();
+                buttonElement.innerHTML = hideText;
             }
         });
 
@@ -305,16 +305,8 @@ class SettingsForm {
         let i = 0;
         imgPaths.forEach(imgPath => {
             let buttonElement = SettingsForm.createButton(undefined, {
-                style: "background:url(" + imgPath + ");background-size: 100%;",
+                style: "background:url(" + imgPath + ");background-size: 100%;", class: "imgButton"
             });
-
-            // FIXME: quick fix
-            let image = new Image();
-            image.src = imgPath;
-            image.onload = () => {
-                buttonElement.style.height = image.height + "px";
-                buttonElement.style.width = image.width + "px";
-            };
 
             let enumElement = enumElements[i];
             buttonElement.addEventListener("click", (event) => {
