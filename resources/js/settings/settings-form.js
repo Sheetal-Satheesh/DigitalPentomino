@@ -145,8 +145,15 @@ class SettingsForm {
 
         formElement.appendChild(advancedSettingsDiv);
 
+        SettingsForm.addDynamicBehaviorOfSettingsForm(formElement, settings);
+    }
+
+    // Dynamic Behavior
+    static addDynamicBehaviorOfSettingsForm(formElement, settings) {
         if (settings.visibility.isVisible("hinting", "hintingLevels") === true)
             SettingsForm.addDifficultyLevelsListener(formElement);
+
+        // further modifications of behavior
     }
 
     static addDifficultyLevelsListener(formElement) {
@@ -189,6 +196,7 @@ class SettingsForm {
 
     }
 
+    // Element Creation
     static createCollapsibleButton(showText, hideText) {
         let buttonElement = SettingsForm.createButton(showText.toUpperCase(), {
             "class": "collapsible btn btn-primary btn-lg"
@@ -357,7 +365,7 @@ class SettingsForm {
         });
     }
 
-    // --- --- --- Data collection --- --- ---
+    // --- --- --- Data Collection --- --- ---
     static collectDataFromForm(formElement, schema, settings) {
 
         let result = jQuery.extend(true, {}, settings);
