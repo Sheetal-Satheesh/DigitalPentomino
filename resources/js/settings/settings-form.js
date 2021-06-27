@@ -43,7 +43,9 @@ class SettingsForm {
         for (let heading in schema) {
             let subSettings = schema[heading].properties;
 
-            if (creatingNormalSettings && schema[heading].advanced) {
+            let headingIsVisible = settings.teachersMode || settings.visibility.isVisible(heading);
+
+            if (headingIsVisible && creatingNormalSettings && schema[heading].advanced) {
                 creatingNormalSettings = false;
                 htmlElement = advancedSettingsDiv;
 
@@ -55,8 +57,11 @@ class SettingsForm {
                 formElement.appendChild(advancedSettingsButton);
             }
 
-            htmlElement.appendChild(SettingsForm.createHeader("h3", schema[heading].title));
-            htmlElement.appendChild(document.createElement("br"));
+
+            if (headingIsVisible) {
+                htmlElement.appendChild(SettingsForm.createHeader("h3", schema[heading].title));
+                htmlElement.appendChild(document.createElement("br"));
+            }
 
             for (let key in subSettings) {
                 let elementName = heading + "." + key;
