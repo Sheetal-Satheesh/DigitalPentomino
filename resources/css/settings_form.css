@@ -287,6 +287,13 @@
   font-size: 1.7vw;
 }
 
+#modalTitleID {
+  left: 0;
+  width: 100vw;
+  padding: 0;
+  background-color: transparent;
+}
+
 .modalContainer select {
   -moz-appearance: none;
   -webkit-appearance: none;
@@ -297,14 +304,17 @@
   -moz-padding-start: calc(10px - 3px);
   padding-left: 1vw;
   background: url(fff-0-2.png) repeat;
-  color: blue;
+  color: rgb(92, 92, 194);
   font-size: 1.7vw;
-  border: none;
+  outline: none;
+  cursor: pointer;
 }
 
-#modalTitleID {
-  left: 0;
-  width: 100vw;
-  padding: 0;
+.modalContainer select option {
+  color: #666;
+}
+
+.modalContainer select:focus::-ms-value {
   background-color: transparent;
 }
+
