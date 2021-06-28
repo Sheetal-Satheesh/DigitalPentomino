@@ -541,7 +541,7 @@ class Visual {
                     var element = elements[i];
                     var id = element.id;
                     /**
-                     * when piece is moved back to tray reset Pentomio inTray variable to 1 and place the 
+                     * when piece is moved back to tray reset Pentomio inTray variable to 1 and place the
                      * piece in Tray */
                     if (id == 'tray') {
                         let piece = data[1];
@@ -849,9 +849,6 @@ class Visual {
                     let hintColumn = hintCommand._nextPosition[1];
                     let fieldvalue;
                     let prevBackground = [];
-
-
-
                     //show destination position (and fade away)
                     let piecePos = this.getOccupiedPositions(tempHintinPen, hintCommand);
                     let randomCellPos = this.calculateNeighbour(piecePos, hintCommand);
@@ -906,7 +903,7 @@ class Visual {
                                 console.error("Hinting strategy unknown!");
                         }
                     }
-                    
+
                     break;
 
                 case "Remove":
