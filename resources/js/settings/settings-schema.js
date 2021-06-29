@@ -28,15 +28,13 @@ class SettingsSchema {
     constructor() {
         this._language = baseConfigs.defaultLanguage;
         this._schema = this.createSchema();
+        this._prefillStrategy = baseConfigs.defaultPrefillStrategy;
     }
 
     getSettingsSchema() {
-        if (this._language === SettingsSingleton.getInstance().getSettings().general.language) {
-            return this._schema;
-        } else {
-            this._language = SettingsSingleton.getInstance().getSettings().general.language;
-            return this.createSchema();
-        }
+        this._language = SettingsSingleton.getInstance().getSettings().general.language;
+        this._prefillStrategy = SettingsSingleton.getInstance().getSettings().prefilling.prefillingStrategy;
+        return this.createSchema();
     }
 
     createSchema() {
@@ -212,7 +210,7 @@ class SettingsSchema {
                         "title": titles.prefilling.distanceValue.title[lang],
                         "default": "easy",
                         "enum": ["easy", "medium", "hard", "extreme"],
-                        "enumText": titles.prefilling.distanceValue.enumTitles["distance"]
+                        "enumText": titles.prefilling.distanceValue.enumTitles[this._prefillStrategy]
                     }
                 }
             }
