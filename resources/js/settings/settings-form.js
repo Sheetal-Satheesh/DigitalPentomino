@@ -159,9 +159,8 @@ class SettingsForm {
 
     static addPrefillChangeListener(formElement, settings) {
         let prefillStratSelectElem = document.getElementById("prefilling.prefillingStrategy");
-        
+
         prefillStratSelectElem.addEventListener("change", (evt) => {
-            debugger;
             let distValSelectElem = document.getElementById("prefilling.distanceValue");
             let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
             let enumTexts = strings.settings.prefilling.distanceValue.enumTitles[evt.target.value];

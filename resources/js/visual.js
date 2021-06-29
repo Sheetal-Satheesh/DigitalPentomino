@@ -1352,6 +1352,12 @@ class Visual {
     }
 
     prefillBasedOnAdjacentPieces(randomSolution, threshold) {
+        let thresholdMap = {
+            "easy": 3,
+            "medium": 2,
+            "hard": 1,
+            "extreme":0
+        };
         let currentAnchor = [];
         let piece = undefined;
         let piecePosition = undefined;
@@ -1400,7 +1406,7 @@ class Visual {
 
             bOverlap = false;
             Object.keys(blockedCellsTemp).forEach(pieceName => {
-                if (blockedCellsTemp[pieceName].nearbyPentominos > threshold) bOverlap = true;
+                if (blockedCellsTemp[pieceName].nearbyPentominos > thresholdMap[threshold]) bOverlap = true;
             });
 
             if (!bOverlap) {
@@ -1426,6 +1432,12 @@ class Visual {
     }
 
     prefillBasedOnDistance(randomSolution, threshold) {
+        let thresholdMap = {
+            "easy": 2,
+            "medium": 3,
+            "hard": 4,
+            "extreme": 5
+        };
         let positions = [];
         let currentAnchor = [];
         let candidateAnchor = [];
@@ -1437,8 +1449,6 @@ class Visual {
         for (let i = 0; i < randomSolution.length; ++i) {
             [piecePosition, piece] = this.getRandomPiece(randomSolution, pickedPieces);
             pickedPieces[piece.name] = 1;
-            console.log("Piece position: ");
-            console.log(piecePosition);
             currentAnchor = [piecePosition.boardPosition[0],
             piecePosition.boardPosition[1]];
             for (let j = 0; j < positions.length; ++j) {
@@ -1446,7 +1456,7 @@ class Visual {
                 candidateAnchor = [positions[j][0], positions[j][1]];
                 if (Math.sqrt(
                     Math.pow((currentAnchor[0] - candidateAnchor[0]), 2) +
-                    Math.pow((currentAnchor[1] - candidateAnchor[1]), 2)) < threshold) {
+                    Math.pow((currentAnchor[1] - candidateAnchor[1]), 2)) < thresholdMap[threshold]) {
                     bOverlap = true;
                     break;
                 }
@@ -1460,7 +1470,6 @@ class Visual {
             positions.push(currentAnchor);
             this.removeFromTray(piece);
             piece.updateTrayValue(0);
-            console.log("Anchor for placement of " + piece + " is " + currentAnchor[0] + "," + currentAnchor[1]);
             this.placePentomino(piece, currentAnchor[0], currentAnchor[1]);
         }
 
