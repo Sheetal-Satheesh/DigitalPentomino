@@ -152,8 +152,33 @@ class SettingsForm {
     static addDynamicBehaviorOfSettingsForm(formElement, settings) {
         if (settings.visibility.isVisible("hinting", "hintingLevels") === true)
             SettingsForm.addDifficultyLevelsListener(formElement);
-
+        // if (settings.visibility.isVisible("prefilling", "distanceValue") === true)
+        SettingsForm.addPrefillChangeListener(formElement, settings);
         // further modifications of behavior
+    }
+
+    static addPrefillChangeListener(formElement, settings) {
+        let prefillStratSelectElem = document.getElementById("prefilling.prefillingStrategy");
+        
+        prefillStratSelectElem.addEventListener("change", (evt) => {
+            debugger;
+            let distValSelectElem = document.getElementById("prefilling.distanceValue");
+            let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+            let enumTexts = strings.settings.prefilling.distanceValue.enumTitles[evt.target.value];
+            let enumElements = schema.prefilling.properties.distanceValue.enum;
+            
+            //Remove the existing elements in the lsit
+            for(let i = distValSelectElem.options.length -1; i >= 0; --i) {
+                distValSelectElem.remove(i);
+            }
+
+            for (let i = 0; i < enumElements.length; i++) {
+                let optionElement = document.createElement("option");
+                optionElement.innerHTML = enumTexts[i];
+                optionElement.value = enumElements[i];
+                distValSelectElem.appendChild(optionElement);
+            }
+        });
     }
 
     static addDifficultyLevelsListener(formElement) {
