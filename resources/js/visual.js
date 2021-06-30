@@ -432,6 +432,7 @@ class Visual {
          */
 
         document.onpointerdown = function (event) {//clicking or moving begins
+            console.log('in pointerdown');
             var elements = document.elementsFromPoint(event.clientX, event.clientY);
             onpointerdownX = event.clientX;
             onpointerdownY = event.clientY;
@@ -511,7 +512,7 @@ class Visual {
                         container.style.left = 'calc(' + x + 'px - ' + (width * 2.5) + 'vw)';
                         container.style.top = 'calc(' + y + 'px - ' + (width * 2.5) + 'vw)';
                         container.style.transformOrigin = '50% 50%';
-                        container.style.zIndex = 100;
+                        //container.style.zIndex = 100;
                         container.style.setProperty("--magnification", 1);
                     }
                 }
@@ -527,6 +528,7 @@ class Visual {
              * in case of just a click operation (not move operation) piece should not move
              */
 
+            console.log('in onpointer up');
             if (onpointerdownX == event.clientX &&
                 onpointerdownY == event.clientY &&
                 window.currentlyMoving) {
@@ -536,7 +538,7 @@ class Visual {
                 that.select(data_[1], event.clientX, event.clientY);
                 return;
             }
-
+            let pentominoList = that.gameController.getAllPentominoes();
             if (window.currentlyMoving) {
 
                 /*  In case an object was in the process of being moved, this changes the movement.
@@ -544,8 +546,52 @@ class Visual {
                     about that movement (which in turn  repositions the element so it snaps to the grid)
                 */
                 var data = window.currentlyMoving;
+                //console.log('window.currentnlyMoving-->', window.currentlyMoving);
                 let trayPos = 0;
-                let pentominoList = that.gameController.getAllPentominoes();
+                //console.log('data------>', data[1].name);
+               
+             
+             /*
+                if(!data[1].inTray){
+                    $(selectedPiece).wrap("<div class = 'pieceWrapper'></div>");
+                    console.log(selectedPiece + 'not in tray');
+                }
+                else{
+                    console.log(selectedPiece + ' in tray');
+                    $(selectedPiece).unwrap("<div class = 'pieceWrapper'></div>");
+                }
+                */
+                //console.log('selectedPiece--->', selectedPiece);
+                // let pentominoList = that.gameController.getAllPentominoes();
+               /* pentominoList.forEach( function(item) {
+                 
+                    
+                    if(!item.inTray){
+                        var outTrayPieceDiv = document.getElementById("piece_" + item.name);
+                        console.log('-------->', outTrayPieceDiv.classList[0]);
+                        //console.log('outTrayPieceDiv---->', outTrayPieceDiv);
+                        //console.log(" not in tray");
+                        // @author: saurabh raut
+                        //adding and removing wrapper class. It resolves zindex isue for ipad. Do not remove!
+                        //let movingPiece = item;
+                        //console.log('movingPiece--->', item);
+                         //outTrayPieceDiv.classList.add("pieceWrapper");
+
+
+                         // wrapping using jquery wrap method:
+                         //$('.'+ outTrayPieceDiv.classList[0]).wrap("<div class = 'pieceWrapper'></div>");
+
+
+                        // console.log('--->', movingPieceDiv);
+                    }
+                    // if(item.inTray){
+                    //     var inTrayPieceDiv = document.getElementById("piece_" + item.name);
+                    //     if($('.'+ inTrayPieceDiv.classList[0]).wrap("<div class = 'pieceWrapper'></div>")){
+                    //         $('.'+ inTrayPieceDiv.classList[0]).unwrap();
+                    //     }
+                    // }
+                 });
+                 */
                 window.currentlyMoving = false;
                 var elements = document.elementsFromPoint(event.clientX, event.clientY); //determine the target
                 for (let i in elements) {
@@ -619,6 +665,35 @@ class Visual {
                         var coords = (id.split('_')[1].split(','));
                         that.removeFromTray(data[1]);
                         that.placePentomino(data[1], coords[0], coords[1]);
+                        console.log('pentomino placed in the field');
+                        var selectedPiece = document.getElementById('piece_'+ data[1].name);
+                        console.log('new data1--->', data[1]);
+                        console.log('selectedPiece.classList--->', selectedPiece.classList);
+                        if(!data[1].inTray){
+                            //if($('#piece_'+ data[1].name).parent().find('.pieceWrapper').length == 0 ){
+                            //Original Funtion 
+                            /*   
+                            if($('#piece_'+ data[1].name).parent().hasClass('pieceWrapper')){
+                                $(selectedPiece).unwrap("<div class = 'pieceWrapper'></div>");
+                                console.log('wrapper already there, thus removed!!!');
+                            }
+                            else{
+                                console.log('Has Wrapper?---->', $('#piece_'+ data[1].name).hasClass('pieceWrapper'));
+                                $(selectedPiece).wrap("<div class = 'pieceWrapper'></div>");
+                                console.log('wrapper added');
+
+                            }// end original function
+                            */
+
+                            if(!$('#piece_'+ data[1].name).parent().hasClass('pieceWrapper')){
+                                $(selectedPiece).wrap("<div class = 'pieceWrapper' id = 'pieceWrapper'></div>");
+                            }
+                        }
+                        // else{
+                        //     console.log('In else');
+                        //     console.log(selectedPiece + ' in tray');
+                        //     $(selectedPiece).unwrap("<div class = 'pieceWrapper'></div>");
+                        // }
                         if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
                             that.showNumberOfPossibleSolutions();
                         }
@@ -709,25 +784,24 @@ class Visual {
     flipH(cmdProperty = cmdAttrDefault) {
         let piece = this.selected;
         if (!piece) return
-        debugger
-        console.log('piece--->', piece);
             //debugger
             let pieceDiv = document.getElementById("piece_" + piece.name);
             let flipped = pieceDiv.getAttribute("flipped") * 1;
             let currentRot = pieceDiv.style.getPropertyValue("--rotationX").split(/(-?\d+)/)[1] * 1; //converts string value to int
+            console.log('currentRotation--->', currentRot);
             let newRot = currentRot + 180;
-        //    pieceDiv.style.setProperty("--rotationX", newRot.toString() + "deg");       
-        
-        // this.gameController.mirrorPentominoH(piece, cmdProperty);
-        pieceDiv.style.transform='scaleX(-1)';
-        pieceDiv.style.transition='transform 0.5s';
-        this.gameController.mirrorPentominoH(piece, cmdProperty)
-        this.positionPiece(piece);       
+            console.log('newRot--->', newRot);
+            pieceDiv.style.setProperty("--rotationX", newRot.toString() + "deg");       
+            this.gameController.mirrorPentominoH(piece, cmdProperty)
+            this.positionPiece(piece);       
+            this.positionPiece(piece);       
+            this.positionPiece(piece);       
+            this.positionPiece(piece);       
+            this.positionPiece(piece);                  
             pieceDiv.setAttribute("flipped", 1 - flipped);
-                if (cmdProperty.cmdType != CommandTypes.Shadow) {
-                    this.checkIfGameWon();
-                }
-        
+            if (cmdProperty.cmdType != CommandTypes.Shadow) {
+                this.checkIfGameWon();
+            }
     }
 
     flipV(cmdProperty = cmdAttrDefault) {
@@ -739,11 +813,12 @@ class Visual {
             let currentRot = pieceDiv.style.getPropertyValue("--rotationY").split(/(-?\d+)/)[1] * 1; //converts string value to int
             let newRot = currentRot + 180;
             // Update the backend
-            pieceDiv.style.transform='scaleY(-1)';
-		    pieceDiv.style.transition='transform 0.5s';
+            // pieceDiv.style.transform='scaleY(-1)';
+		    // pieceDiv.style.transition='transform 0.5s';
             this.gameController.mirrorPentominoV(piece, cmdProperty);
             this.positionPiece(piece);
-            //pieceDiv.style.setProperty("--rotationY", newRot.toString() + "deg");
+            pieceDiv.style.setProperty("--rotationY", newRot.toString() + "deg");
+            //pieceDiv.style.zIndex += document.getElementsByClassName("boardarea gamearea").style.zIndex;
             pieceDiv.setAttribute("flipped", 1 - flipped);
             if (cmdProperty.cmdType != CommandTypes.Shadow) {
                 this.checkIfGameWon();

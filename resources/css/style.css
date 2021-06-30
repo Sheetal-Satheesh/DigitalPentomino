@@ -27,7 +27,6 @@
   background-color: #e2e0e0;
   display: flex;
   overflow-x: auto;
-
 }
 
 #playarea {
@@ -195,13 +194,20 @@ margin-top: 2px;
   bottom: 0;
   left: 0;
   right: 0;
+  /* -webkit-transform: scale3d(); */
+  /* transform-style: preserve-3d; */
 }
 
-.gamearea .boardarea {
+/* .gamearea boardarea {
    transform-style: preserve-3d;
-   -webkit-transform: scale3d();
-  
+   
+} */
+
+.pieceWrapper {
+  transform: translate(0, 0);
+  -webkit-transform: translate(0, 0);
 }
+
 
 .blockedcell {
 background: repeating-linear-gradient(
@@ -220,6 +226,7 @@ rgba(0, 0, 0, 0.3) 20px
   height: 9vw;
   transform: scale(var(--magnification)) rotateX(var(--rotationX)) rotateY(var(--rotationY)) rotateZ(var(--rotationZ));
   transition: transform .2s;
+  /* transform:rotate(0.0rad); */
 }
 
 .bmAround {
@@ -637,11 +644,12 @@ table
   visibility: visible;
   filter: alpha(opacity=65);
   opacity: .6;
+}
 
 html {
 	-webkit-text-size-adjust: none;
 	touch-action: manipulation;
-
+}
 
 /**shake animation reference : https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_image_shake **/
 .horizTranslate {
