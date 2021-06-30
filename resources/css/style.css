@@ -206,6 +206,8 @@ margin-top: 2px;
 .pieceWrapper {
   transform: translate(0, 0);
   -webkit-transform: translate(0, 0);
+  position: fixed;
+  top: 0;
 }
 
 
