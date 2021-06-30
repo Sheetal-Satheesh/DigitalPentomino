@@ -9,6 +9,7 @@
   --buttonRotD: 0deg;
   --rotateH: 0deg;
   --rotateV: 0deg;
+  --heightB: 0vw;
 }
 
 #game {
@@ -428,14 +429,13 @@ table
 
 /* Style for Button Manipulation */
 .main-wrapper {
-  width: .9vw;
-  height: .5vw;
-  position: relative;
+  width: .7vw;
+  height: .1vw;
+  position: relative;  
 }
 
-.button-wrapper {
-  border-radius: 50%;  
-  height: 35vw;
+.buttonWrapper {
+  border-radius: 50%;   
   position: absolute;  
   bottom: 0;
   right: 0;
@@ -443,27 +443,31 @@ table
   z-index: 12 ;
 }
 
-.button-wrapper.first {
+.buttonWrapper.first {
+  height: var(--heightB) ;
   transform: rotate(var(--buttonRotA));
   transition: transform .5s;
 }
 
-.button-wrapper.second {
+.buttonWrapper.second {
+  height: var(--heightB) ;
   transform: rotate(var(--buttonRotB)) ;
   transition: transform .5s;
 }
 
-.button-wrapper.third {
+.buttonWrapper.third {
+  height: var(--heightB) ;
   transform: rotate(var(--buttonRotC)) ;
   transition: transform .5s;
 }
 
-.button-wrapper.fourth {
+.buttonWrapper.fourth {
+  height: var(--heightB) ;
   transform: rotate(var(--buttonRotD));
   transition: transform .5s;
 }
 
-.button-inside {
+.buttonInside {
   border-radius: 50%;  
   width: 5vw;
   height: 5vw;
@@ -472,19 +476,19 @@ table
   right: .5vw;  
 }
 
-.button-inside.first {
+.buttonInside.first {
    background-color: #ff0033;
 } 
 
-.button-inside.second {
+.buttonInside.second {
   background-color: #ff0033;
 }
 
-.button-inside.third {
+.buttonInside.third {
   background-color: #ff0033;
 }
 
-.button-inside.fourth {
+.buttonInside.fourth {
   background-color: #ff0033;  
 }
 
