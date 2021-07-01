@@ -45,7 +45,7 @@
     margin-top: 40%;
 }
 
-@media only screen and (max-width: 800px) {
+/* @media only screen and (max-width: 800px) {
     .tuca embed {
         position: absolute;
         height: 60vh!important;
@@ -87,7 +87,7 @@
         height: 50vh;
         width: 50vh;
         margin: 100px auto;
-        margin-left: 26%;
+        margin-left: 31%;
         margin-top: 7%;
     }
 }
@@ -100,7 +100,7 @@
         margin: 100px auto;
         margin-top: 40%;
     }
-}
+} */
 
 .sk-cube-grid .sk-cube {
     width: 33%;
@@ -182,3 +182,85 @@
     }
 }
 
+
+
+
+// Extra small devices (portrait phones, less than 576px)
+// No media query for `xs` since this is the default in Bootstrap
+
+// Small devices (landscape phones, 576px and up)
+@media (min-width: 576px) {
+
+  .tuca embed {
+      position: absolute;
+      height: 70vh;
+      width: 70vh;
+      margin: 100px auto;
+      margin-left: 5%!important
+      margin-top: 7%;
+  }
+
+ }
+
+// Medium devices (tablets, 768px and up)
+@media (min-width: 768px) {
+  .tuca embed {
+      position: absolute;
+      height: 50vh;
+      width: 70vh;
+      margin: 100px auto;
+      margin-left: 15%!important
+      margin-top: 7%;
+  }
+
+  .sk-cube-grid {
+      position: absolute;
+      width: 10vh;
+      height: 10vh;
+      margin: 100px auto;
+      margin-top: 20%;
+  }
+
+}
+
+// Large devices (desktops, 992px and up)
+@media (min-width: 992px) {
+
+  .tuca embed {
+      position: absolute;
+      height: 50vh;
+      width: 70vh;
+      margin: 100px auto;
+      margin-left: 5%!important
+      margin-top: 7%;
+  }
+ }
+
+// Extra large devices (large desktops, 1200px and up)
+@media (min-width: 1200px) {
+
+  .tuca embed {
+      position: absolute;
+      height: 50vh;
+      width: 70vh;
+      margin: 100px auto;
+      margin-left: 15%!important
+      margin-top: 7%;
+  }
+
+ }
+
+
+ // Extra large devices (large desktops, 1200px and up)
+ @media (min-width: 1024px) {
+
+   .tuca embed {
+       position: absolute;
+       height: 50vh;
+       width: 70vh;
+       margin: 100px auto;
+       margin-left: 5%!important
+       margin-top: 7%;
+   }
+
+  }
