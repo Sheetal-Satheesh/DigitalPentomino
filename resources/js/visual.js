@@ -541,7 +541,7 @@ class Visual {
                     var element = elements[i];
                     var id = element.id;
                     /**
-                     * when piece is moved back to tray reset Pentomio inTray variable to 1 and place the 
+                     * when piece is moved back to tray reset Pentomio inTray variable to 1 and place the
                      * piece in Tray */
                     if (id == 'tray') {
                         let piece = data[1];
@@ -848,7 +848,7 @@ class Visual {
                     let hintColumn = hintCommand._nextPosition[1];
                     let fieldvalue;
                     let prevBackground = [];
-
+                    let destinationColor = "#a9a9a9";
                     //show destination position (and fade away)
                     let piecePos = this.getOccupiedPositions(tempHintinPen, hintCommand);
                     let randomCellPos = this.calculateNeighbour(piecePos, hintCommand);
@@ -862,7 +862,12 @@ class Visual {
                                         for (let i = 0; i < randomCell; i++) {
                                             fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
                                             prevBackground[i] = fieldvalue.style.background;
-                                            fieldvalue.style.background = pentominoColor;
+                                            if(SettingsSingleton.getInstance().getSettings().hinting.hintingVariants === ("Show destination")){
+                                              fieldvalue.style.background = destinationColor;
+                                            }
+                                            else{
+                                                fieldvalue.style.background = pentominoColor;
+                                            }
                                             this.hide(piecePos, prevBackground, timeoutFrame);
                                         }
                                         break;
@@ -872,7 +877,12 @@ class Visual {
                                         for (let i = 0; i < cellsToIndicate.length; i++) {
                                             fieldvalue = document.getElementById("field_" + cellsToIndicate[i][0] + "," + cellsToIndicate[i][1]);
                                             prevBackground[i] = fieldvalue.style.background;
-                                            fieldvalue.style.background = pentominoColor;
+                                            if(SettingsSingleton.getInstance().getSettings().hinting.hintingVariants === ("Show destination")){
+                                              fieldvalue.style.background = destinationColor;
+                                            }
+                                            else{
+                                                fieldvalue.style.background = pentominoColor;
+                                            }
                                             this.hideMostOccupiedNeighbors(cellsToIndicate, prevBackground, timeoutFrame);
                                         }
                                         break;
@@ -884,7 +894,12 @@ class Visual {
                                 for (let i = 0; i < 5; i++) {
                                     fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
                                     prevBackground[i] = fieldvalue.style.background;
-                                    fieldvalue.style.background = pentominoColor;
+                                    if(SettingsSingleton.getInstance().getSettings().hinting.hintingVariants === ("Show destination")){
+                                      fieldvalue.style.background = destinationColor;
+                                    }
+                                    else{
+                                        fieldvalue.style.background = pentominoColor;
+                                    }
                                     this.hide(piecePos, prevBackground, timeoutFrame);
                                 }
                                 break;
@@ -894,7 +909,12 @@ class Visual {
                                     let areaPos = this.indicateAreaCells(hintinPen, hintCommand)[0];
                                     fieldvalue = document.getElementById("field_" + areaPos[i][0] + "," + areaPos[i][1]);
                                     prevBackground[i] = fieldvalue.style.background;
-                                    fieldvalue.style.background = pentominoColor;
+                                    if(SettingsSingleton.getInstance().getSettings().hinting.hintingVariants === ("Show destination")){
+                                      fieldvalue.style.background = destinationColor;
+                                    }
+                                    else{
+                                        fieldvalue.style.background = pentominoColor;
+                                    }
                                 }
 
                                 this.hideArea(areaPos, prevBackground, timeoutFrame);
@@ -903,7 +923,7 @@ class Visual {
                                 console.error("Hinting strategy unknown!");
                         }
                     }
-                    
+
                     break;
 
                 case "Remove":
