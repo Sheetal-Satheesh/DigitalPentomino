@@ -512,7 +512,7 @@ class Visual {
                         container.style.left = 'calc(' + x + 'px - ' + (width * 2.5) + 'vw)';
                         container.style.top = 'calc(' + y + 'px - ' + (width * 2.5) + 'vw)';
                         container.style.transformOrigin = '50% 50%';
-                        //container.style.zIndex = 100;
+                        container.style.zIndex = 100;
                         container.style.setProperty("--magnification", 1);
                     }
                 }
