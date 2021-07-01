@@ -35,6 +35,6 @@ class SettingsVisibility {
             throw new Error("Unknown settings entry: " + heading + "." + subheading);
         }
 
-        return this.visibility[heading].subheadings[subheading] === true;
+        return this.visibility[heading].isVisible === true && this.visibility[heading].subheadings[subheading] === true;
     }
 }
