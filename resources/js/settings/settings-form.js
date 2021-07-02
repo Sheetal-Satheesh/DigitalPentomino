@@ -450,7 +450,8 @@ class SettingsForm {
                         }
                         break;
                     case "custom":
-                        SettingsForm.updateCustomFormEntry(heading, subheading, schemaEntry, settings[heading][subheading], formElement);
+                        let customSettingsEntry = CustomSettingsEntrySingleton.getInstance().get(heading, subheading);
+                        customSettingsEntry.update(heading, subheading, schemaEntry, settings[heading][subheading], formElement);
                         break;
                     default:
                         throw new Error("Schema Error: Unknown type: " + schemaEntry.type);
@@ -466,18 +467,6 @@ class SettingsForm {
                     inputElement.checked = settings.visibility.isVisible(heading, subheading);
                 }
             }
-        }
-    }
-
-    static updateCustomFormEntry(heading, subheading, schemaEntry, selectedValue, formElement) {
-        switch (heading) {
-            case "boardCustomization":
-                switch (subheading) {
-                    case "initialPiecePos":
-                        // TODO
-                        break;
-                }
-                break;
         }
     }
 
