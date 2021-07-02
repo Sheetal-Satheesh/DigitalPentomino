@@ -3,10 +3,13 @@
   --rotationY: 0;
   --rotationZ: 0;
   --magnification:1;
-  --buttonRotA:0deg;
-  --buttonRotB:0deg;
-  --buttonRotC:0deg;
-  --buttonRotD:0deg;
+  --buttonRotA: 0deg;
+  --buttonRotB: 0deg;
+  --buttonRotC: 0deg;
+  --buttonRotD: 0deg;
+  --rotateH: 0deg;
+  --rotateV: 0deg;
+  --heightB: 0vw;
 }
 
 #game {
@@ -150,22 +153,6 @@ margin: 0.4vw;
 margin-top: 2%;
 width: 4vw;
 height: 4vw;
-}
-
-#pieceManipulation table tr td div{
-margin:14px;
-margin-top: 2px;
-}
-
-#pieceManipulation  img{
-  width:5vw;
-  height:5vw;
-
-}
-#pieceManipulation{
- position: absolute;
- display: none;
- z-index: 10;
 }
 
 .trayPosition {
@@ -458,113 +445,111 @@ table
 
 /* Style for Button Manipulation */
 .main-wrapper {
-  width: 2px;
-  height: 2px;
-  position: relative;   
+  width: .7vw;
+  height: .1vw;
+  position: relative;  
 }
 
-.button-wrapper {
-  border-radius: 50%;
-  width: 0px;
-  height: 280px;
-  position: absolute;
+.buttonWrapper {
+  border-radius: 50%;   
+  position: absolute;  
   bottom: 0;
-  right: 0;  
-  transition: transform .2s;   
+  right: 0;
+  transition: transform .2s;  
+  z-index: 12 ;
 }
 
-.button-wrapper.first {
+.buttonWrapper.first {
+  height: var(--heightB) ;
   transform: rotate(var(--buttonRotA));
   transition: transform .5s;
 }
 
-.button-wrapper.second {
+.buttonWrapper.second {
+  height: var(--heightB) ;
   transform: rotate(var(--buttonRotB)) ;
   transition: transform .5s;
 }
 
-.button-wrapper.third {
+.buttonWrapper.third {
+  height: var(--heightB) ;
   transform: rotate(var(--buttonRotC)) ;
   transition: transform .5s;
 }
 
-.button-wrapper.fourth {
+.buttonWrapper.fourth {
+  height: var(--heightB) ;
   transform: rotate(var(--buttonRotD));
   transition: transform .5s;
 }
 
-.button-inside {
-  border-radius: 50%;
-  width: 44px;
-  height: 44px;
+.buttonInside {
+  border-radius: 50%;  
+  width: 5vw;
+  height: 5vw;
   position: absolute;
-  bottom: 3px;
-  right: 3px;
+  bottom: .5vw;
+  right: .5vw;  
 }
 
-.button-inside.first {
+.buttonInside.first {
    background-color: #ff0033;
 } 
 
-.button-inside.second {
+.buttonInside.second {
   background-color: #ff0033;
 }
 
-.button-inside.third {
+.buttonInside.third {
   background-color: #ff0033;
 }
 
-.button-inside.fourth {
-  background-color: #ff0033;
+.buttonInside.fourth {
+  background-color: #ff0033;  
 }
 
 
-.icon-rotateLeft:before {  
-  width: 34px;
-  height: 34px;
-  position: absolute;
-  bottom: 1px;
-  right: 1px;
-  font-size:24px ;
+.icon-rotateLeft {
+  border-radius: 50%;     
+  position: absolute; 
+  vertical-align: middle;   
+  font-size: 5vw;
   transform: 0deg;
+  z-index: 12;
 }
 
-.icon-rotateRight {  
-  width: 34px;
-  height: 34px;
-  position: absolute;
-  bottom: 1px;
-  right: 1px;
-  font-size:24px ;
+.icon-rotateRight { 
+  border-radius: 50%;     
+  position: absolute; 
+  vertical-align: middle;   
+  font-size: 5vw;
   transform: 0deg;
+  z-index: 12;
 }
 
-.icon-flipHorizontally {  
-  width: 34px;
-  height: 34px;
-  position: absolute;
-  bottom: 3px;
-  right: 3px;
-  font-size:24px ;
-  transform: rotate(var(--buttonRotA)); 
+.icon-flip1 {        
+  position: absolute; 
+  vertical-align: middle;   
+  font-size: 5vw;  
+  transform: rotate(var(--rotateH));;
+  z-index: 12; 
 }
 
-.icon-flipVertically {  
-  width: 34px;
-  height: 34px;
-  position: absolute;
-  bottom: 1px;
-  right: 1px;
-  font-size:24px ;     
+.icon-flip2 {        
+  position: absolute; 
+  vertical-align: middle;   
+  font-size: 5vw;  
+  transform: rotate(var(--rotateV));;
+  z-index: 12;  
 }
 
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?qgib2i');
-  src:  url('fonts/icomoon.eot?qgib2i#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?qgib2i') format('truetype'),
-    url('fonts/icomoon.woff?qgib2i') format('woff'),
-    url('fonts/icomoon.svg?qgib2i#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?b3zpni');
+  src:  url('fonts/icomoon.eot?b3zpni#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?b3zpni') format('truetype'),
+    url('fonts/icomoon.woff?b3zpni') format('woff'),
+    url('fonts/icomoon.svg?b3zpni#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -585,14 +570,17 @@ table
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-flipHorizontally:before {
-  content: "\61";
+.icon-flip1:before {
+  content: "\e902";
 }
-.icon-flipVertically:before {
-  content: "\62";
+.icon-flip2:before {
+  content: "\e903";
 }
-.icon-select:before {
-  content: "\67";
+.icon-flip:before {
+  content: "\e900";
+}
+.icon-flipV:before {
+  content: "\e901";
 }
 .icon-rotateRight:before {
   content: "\63";

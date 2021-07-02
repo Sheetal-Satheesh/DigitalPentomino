@@ -358,44 +358,58 @@ class Visual {
         let [x2Position, y2Position] = [clientRect.right + clientRect.width / 2, clientRect.bottom + clientRect.height / 2];
         let width = UIProperty.WindowWidth / this.pd.gameWidth;
         let gameWidth = document.getElementById("game").clientWidth;
-        let gameHeight = document.getElementById("game").clientHeight;
+        let gameHeight = document.getElementById("game").clientHeight;        
 
-        let pieceMan = document.getElementById('pieceManipulation').querySelectorAll("[class^='button-inside']");
+        if(gameHeight > gameWidth) {
+            document.documentElement.style.setProperty('--heightB','36vw');
+        }
+        else{
+            document.documentElement.style.setProperty('--heightB','43vh');
+        }
+
+        let pieceMan = document.getElementById('pieceManipulation').querySelectorAll("[class^='buttonInside']");
         for (let i = 0; i < pieceMan.length; i++) {
             let colorR = this.hexToRgb(this.selected.color).r;
             let colorG = this.hexToRgb(this.selected.color).g;
             let colorB = this.hexToRgb(this.selected.color).b;
             pieceMan[i].style.background = "rgba(" + [colorR, colorG, colorB, 0.5].join(',') + ")";
-
         }        
 
-        if ((x + 170 > gameWidth)) {
-            if ((y2Position > 0) && (y2Position < gameHeight)) {
-                document.getElementById('pieceManipulation').style.left = 'calc(' + x1Position + 'px - ' + (width * 1) + 'vw)';
+        if ((x + 280 > gameWidth)) {
+            /* Right Most Manipulation Button */
+            if ((y1Position > 0) && (y1Position < gameHeight)) {                
+                document.getElementById('pieceManipulation').style.left = 'calc(' + x1Position + 'px - ' + (width * -.09) + 'vw)';
                 document.getElementById('pieceManipulation').style.top = 'calc(' + y2Position + 'px - ' + (width * 2) + 'vw)';
-                document.getElementById('pieceManipulation').style.display = 'block';
-                document.documentElement.style.setProperty("--buttonRotA", "68deg");
-                document.documentElement.style.setProperty("--buttonRotB", "100deg");
-                document.documentElement.style.setProperty("--buttonRotC", "136deg");
-                document.documentElement.style.setProperty("--buttonRotD", "168deg");
+                document.getElementById('pieceManipulation').style.display = 'block';                
+                document.documentElement.style.setProperty("--rotateV","-133deg");
+                document.documentElement.style.setProperty("--rotateH","-28deg");
+                document.documentElement.style.setProperty("--buttonRotA", "28deg");
+                document.documentElement.style.setProperty("--buttonRotB", "63deg");
+                document.documentElement.style.setProperty("--buttonRotC", "98deg");
+                document.documentElement.style.setProperty("--buttonRotD", "133deg");
             }
-        } else if ((x > 0) && (x < 130)) {
-            document.getElementById('pieceManipulation').style.left = 'calc(' + x1Position + 'px - ' + (width * -1) + 'vw)';
-            document.getElementById('pieceManipulation').style.top = 'calc(' + y2Position + 'px - ' + (width * 1) + 'vw)';
+        } else if ((x > 0) && (x < 170)) {
+            /* Left Most Manipulation Button */            
+            document.getElementById('pieceManipulation').style.left = 'calc(' + x1Position + 'px - ' + (width * -0.09) + 'vw)';
+            document.getElementById('pieceManipulation').style.top = 'calc(' + y2Position + 'px - ' + (width * 2) + 'vw)';
             document.getElementById('pieceManipulation').style.display = 'block';
-            document.documentElement.style.setProperty("--buttonRotA", "-98deg");
-            document.documentElement.style.setProperty("--buttonRotB", "-68deg");
-            document.documentElement.style.setProperty("--buttonRotC", "-128deg");
-            document.documentElement.style.setProperty("--buttonRotD", "-38deg");
+            document.documentElement.style.setProperty("--rotateV","168deg");
+            document.documentElement.style.setProperty("--rotateH","48deg");
+            document.documentElement.style.setProperty("--buttonRotA", "-48deg"); 
+            document.documentElement.style.setProperty("--buttonRotB", "-88deg"); 
+            document.documentElement.style.setProperty("--buttonRotC", "-128deg");            
+            document.documentElement.style.setProperty("--buttonRotD", "-168deg");            
         }
-        else {
-            document.getElementById('pieceManipulation').style.left = 'calc(' + x1Position + 'px - ' + (width *-1.5) + 'vw)';
-            document.getElementById('pieceManipulation').style.top = 'calc(' + y2Position + 'px - ' + (width * 1) + 'vw)';
-            document.documentElement.style.setProperty("--buttonRotA", "-88deg");
-            document.documentElement.style.setProperty("--buttonRotB", "-118deg");
-            document.documentElement.style.setProperty("--buttonRotC", "-148deg");
-            document.documentElement.style.setProperty("--buttonRotD", "-178deg");
-            document.getElementById('pieceManipulation').style.display = 'block';            
+        else {            
+            document.getElementById('pieceManipulation').style.left = 'calc(' + x1Position + 'px - ' + (width * 0.05) + 'vw)';
+            document.getElementById('pieceManipulation').style.top = 'calc(' + y2Position + 'px - ' + (width * 2) + 'vw)';
+            document.getElementById('pieceManipulation').style.display = 'block';
+            document.documentElement.style.setProperty("--rotateV","-228deg");
+            document.documentElement.style.setProperty("--rotateH","-108deg"); 
+            document.documentElement.style.setProperty("--buttonRotA", "108deg"); 
+            document.documentElement.style.setProperty("--buttonRotB", "148deg");
+            document.documentElement.style.setProperty("--buttonRotC", "188deg");          
+            document.documentElement.style.setProperty("--buttonRotD", "228deg");                                                           
         }
         
     }
@@ -447,7 +461,7 @@ class Visual {
             let settingsEnabled = false;
             for (let j in elements) {
                 let precheck = elements[j].className;
-                if (precheck == 'controlButton') {
+                if (precheck.startsWith('icon-')) {
                     buttonOverPiece = true;
                 }
                 if (precheck == 'settings-popup') {
