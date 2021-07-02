@@ -4,11 +4,11 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
     }
 
     create(settingsEntry) {
-        // TODO
+        return document.createTextNode("TODO - implement me");
     }
 
     collect(formElement) {
-        // TODO
+        return undefined;
     }
 
     update(heading, subheading, schemaEntry, selectedValue, formElement) {

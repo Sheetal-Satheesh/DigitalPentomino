@@ -3,11 +3,11 @@ class CustomSettingsEntry {
         this._name = heading + "." + subheading;
     }
 
-    create(settingsEntry);
+    create(settingsEntry) {}
 
-    collect(formElement);
+    collect(formElement) {}
 
-    update(heading, subheading, schemaEntry, selectedValue, formElement);
+    update(heading, subheading, schemaEntry, selectedValue, formElement) {}
 
     getName() {
         return this._name;

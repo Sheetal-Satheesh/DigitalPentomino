@@ -1,20 +1,3 @@
-const CustomSettingsEntrySingleton = (function () {
-    let instance;
-
-    function createInstance() {
-        return new CustomSettingsEntryMaster();
-    }
-
-    return {
-        getInstance: function () {
-            if (!instance) {
-                instance = createInstance();
-            }
-            return instance;
-        }
-    };
-})();
-
 class CustomSettingsEntryMaster {
     constructor() {
         this.customSettingsEntries = {};
@@ -24,7 +7,7 @@ class CustomSettingsEntryMaster {
     }
 
     addEntry(newEntry) {
-        if (!(this.customSettingsEntries[newEntry.getName()] === undefined)) {
+        if (this.customSettingsEntries[newEntry.getName()] === undefined) {
             this.customSettingsEntries[newEntry.getName()] = newEntry;
         } else {
             console.error("Custom settings entry already defined: " + newEntry.getName());
@@ -40,3 +23,5 @@ class CustomSettingsEntryMaster {
         return this.customSettingsEntries[name];
     }
 }
+
+const customSettingsEntryMaster = new CustomSettingsEntryMaster();
