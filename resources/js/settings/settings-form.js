@@ -128,8 +128,9 @@ class SettingsForm {
                     case "custom":
                         let customInputElementLabel = SettingsForm.createLabel(settingsEntry.title);
                         div.appendChild(customInputElementLabel);
-                        // TODO
-                        // div.appendChild(TODO);
+                        let customSettingsEntry = CustomSettingsEntrySingleton.getInstance().get(heading, key);
+                        let customSettingsElement = customSettingsEntry.create(settingsEntry);
+                        div.appendChild(customSettingsElement);
                         break;
                     default:
                         throw new Error("Unknown type: " + settingsEntryType);
@@ -406,6 +407,10 @@ class SettingsForm {
                     case "number":
                         let numberInputElement = $(formElement).find("input[name='" + name + "']")[0];
                         result[heading][key] = parseFloat(numberInputElement.value);
+                        break;
+                    case "custom":
+                        let customSettingsEntry = CustomSettingsEntrySingleton.getInstance().get(heading, key);
+                        customSettingsEntry.collect(formElement);
                         break;
                     default:
                         throw new Error("Unknown type: " + settingsEntryType);

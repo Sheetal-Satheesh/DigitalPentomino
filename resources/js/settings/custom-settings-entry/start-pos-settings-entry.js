@@ -3,11 +3,11 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
         super("boardCustomization", "initialPiecePos");
     }
 
-    create() {
+    create(settingsEntry) {
         // TODO
     }
 
-    collect() {
+    collect(formElement) {
         // TODO
     }
 
