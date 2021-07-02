@@ -1,16 +1,14 @@
 class SettingsForm {
 
-    // === === === GENERATE FORM === === ===
-    static generateForm(formElement, onSubmit, onExport) {
+  // === === === GENERATE FORM === === ===
+    static generateForm(formElement, onSubmit, onExport, onLicense) {
         let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
         let settings = SettingsSingleton.getInstance().getSettings();
 
         SettingsForm.createForm(formElement, schema, settings);
 
         formElement.appendChild(document.createElement("br"));
-        formElement.appendChild(document.createElement("br"));
-
-        if (settings.teachersMode) {
+        formElement.appendChild(document.createElement("br"));        if (settings.teachersMode) {
             let useInClassButton = SettingsForm.createButton("Share");
             useInClassButton.addEventListener("click", function() {
                 let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
@@ -19,8 +17,10 @@ class SettingsForm {
             });
             formElement.appendChild(useInClassButton);
         }
-
+        let licenseButton = SettingsForm.createLicenseButton();
+        licenseButton.id = "licenseButton";
         formElement.appendChild(SettingsForm.createSubmitButton());
+        formElement.appendChild(licenseButton);
 
         $(formElement).submit(function(event) {
             let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
@@ -29,6 +29,11 @@ class SettingsForm {
             console.log(settingsClone);
             event.preventDefault();
             onSubmit(false, settingsClone);
+        });
+        licenseButton.addEventListener("click", event => {
+            let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+            let settings = SettingsSingleton.getInstance().getSettings();
+            onLicense(SettingsForm.collectDataFromForm(formElement, schema, settings));
         });
     }
 
@@ -165,7 +170,7 @@ class SettingsForm {
             let value = selectedOption.getAttribute('value');
             let partial = $(formElement).find('select[name="hinting.partialHintingStragety"]');
             let hintingStrategy = $(formElement).find('select[name="hinting.hintingStrategy"]');
-            //levels flexible to change help functionality 
+            //levels flexible to change help functionality
             switch (value) {
                 case "Easy":
                     //activate full hint
@@ -364,6 +369,14 @@ class SettingsForm {
             type: "submit"
         });
     }
+
+    static createLicenseButton() {
+        return SettingsForm.createButton("Licenses", {
+            type: "button"
+        });
+    }
+
+
 
     // --- --- --- Data Collection --- --- ---
     static collectDataFromForm(formElement, schema, settings) {
