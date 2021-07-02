@@ -70,10 +70,9 @@
             <div class="sk-cube sk-cube9"></div>
         </div>
 </div>
-<body onload="touchStartup(); initialize()" class="page">
+<body onload="touchStartup(); initialize(); buttonManipulation();" class="page">
     <audio id="audioTukaScream" src="resources/audio/tuka-scream.mp3"></audio>
     <audio id="bgMusic" src="resources/audio/chee-zee-beach-by-kevin-macleod-from-filmmusic-io.mp3" loop></audio>
-
     <canvas id="canvas" width="auto" height="auto"></canvas>
     <div id="seedingCover"></div>
     <div id="seeding" class="seed">
@@ -82,7 +81,6 @@
                 src="resources/images/icons/seed.png">
     </div>
     <div class="cGame">
-
         <div id="game">
             <div id="tray"></div> <!-- tray -->
             <div id="playarea" class="FlashOff">
@@ -122,7 +120,6 @@
                             <h3 id="modalTitleID"></h3>
                             <div class="modalButtons" id="modalButtonsID"></div>
                             <div class="modalBody" id="modalBodyID"></div>
-
                         </div>
                     </form>
                 </div>
@@ -175,34 +172,28 @@
             </div>
 
         </div>
-
-        <div class="cPieceManipulation" id="pieceManipulation">
-            <table>
-                <tr>
-                    <td>
-                        <button type="button" class="controlButton" id='OpRotateLeft' onclick="rotateAntiClkWise()">
-                            <img src="resources/images/icons/rotate_left.png">
-                        </button>
-                    </td>
-                    <td>
-                        <button type="button" class="controlButton" id='OpRotateRight' onclick="rotateClkWise()">
-                            <img src="resources/images/icons/rotate_right.png">
-                        </button>
-                    </td>
-                    <td>
-                        <button type="button" class="controlButton" id='OpflipV' onclick="flipV()">
-                            <img src="resources/images/icons/flip_vertically.png">
-                        </button>
-                    </td>
-                    <td>
-                        <button type="button" class="controlButton" id='OpflipH' onclick="flipH()">
-                            <img src="resources/images/icons/flip_horizontally.png">
-                        </button>
-                    </td>
-                </tr>
-            </table>
-
-        </div> <!-- cPieceManipulation -->
+        <div class="main-wrapper" id ="pieceManipulation">        
+            <div class="buttonWrapper first">
+                <div class="buttonInside first" id="insideWrapperFirst" onclick="flipH()">
+                    <span class="icon-flip1" id="OpflipH"></span>
+                </div>                
+            </div>
+            <div class="buttonWrapper second">
+                <div class="buttonInside second" id="insideWrapperSecond" onclick="rotateAntiClkWise()">
+                    <span class="icon-rotateLeft" id="OpRotateLeft" ></span>
+                </div>                
+            </div>
+            <div class="buttonWrapper third">
+                <div class="buttonInside third" id="insideWrapperThird" onclick="rotateClkWise()">
+                    <span class="icon-rotateRight" id="OpRotateRight"></span>
+                </div>
+            </div>
+            <div class="buttonWrapper fourth">
+                <div class="buttonInside fourth" id="insideWrapperFourth" onclick="flipV()">
+                    <span class="icon-flip2" id="OpflipV"></span>
+                </div>
+            </div>
+        </div> <!---Button Manipulation Ends-->
     </div>
 
     <script type="text/javascript">
@@ -219,6 +210,31 @@
                 settings,
                 null);
             processChangesToSettings(initialChanges, settings);
+        }
+
+        function buttonManipulation() {
+            let btn = document.querySelector('.mainWrapper');
+            let buttonWrapper = document.querySelectorAll('.buttonWrapper');
+
+            if(btn) {
+                btn.addEventListener('click', function() {
+
+                    if(btn.classList.contains('animation')) {
+                        btn.classList.remove('animation');
+                    } else {
+                        btn.classList.add('animation');
+                    }
+
+                    for (i = 0; i < buttonWrapper.length; i++ ) {
+                        if(buttonWrapper[i].classList.contains('animation')) {
+                            buttonWrapper[i].classList.remove('animation');
+                        } else {
+                            buttonWrapper[i].classList.add('animation');
+                        }
+                    }
+                });
+            }
+                                
         }
 
         function loadBoardList() {
