@@ -788,11 +788,10 @@ class Visual {
 
     blinkCells(cells) {
         let menu = [];
-        let bgColor;
+        let boardColor = document.getElementsByClassName("boardarea");
         for (let i = 0; i < cells.length; i++) {
             let fv = document.getElementById("field_" + cells[i][0] + "," + cells[i][1]);
-            bgColor = fv.style.background;
-            fv.style.background = "url(resources/images/icons/warning.png) center center";
+            fv.style.background = "#eceaea url(resources/images/icons/warning.png) center center";
             fv.style.backgroundSize = "cover";
             menu.push(fv);
         }
@@ -802,9 +801,9 @@ class Visual {
         blinkInterval = setInterval(function () {
             for (let j = 0; j < menu.length; j++) {
                 if (counter % 2 === 0) {
-                    menu[j].style.background = bgColor;
+                    menu[j].style.background = "#eceaea";
                 } else {
-                    menu[j].style.background = "url(resources/images/icons/warning.png) center center";
+                    menu[j].style.background = "#eceaea url(resources/images/icons/warning.png) center center";
                     menu[j].style.backgroundSize = "cover";
                 }
             }
@@ -812,7 +811,7 @@ class Visual {
             if (counter > 4) {
                 clearInterval(blinkInterval);
             }
-        }, 100);
+        }, 500);
     }
 
     checkHintCommandsForPlaceCommand(hintCommands) {
