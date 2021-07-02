@@ -89,6 +89,20 @@ class SettingsSchema {
                     },
                 }
             },
+            boardCustomization: {
+                "type": "object",
+                "title": titles.boardCustomization.title[lang],
+                "advanced": false,
+                "pupilModeVisibleOnDefault": false,
+                "properties": {
+                    initialPiecePos: {
+                        "type": "custom",
+                        "title": titles.boardCustomization.initialPiecePos.title[lang],
+                        "description": titles.boardCustomization.initialPiecePos.description[lang],
+                        "default": false
+                    },
+                }
+            },
             showSolvedBoardScreen: {
                 "type": "object",
                 "title": titles.showSolvedBoardScreen.title[lang],

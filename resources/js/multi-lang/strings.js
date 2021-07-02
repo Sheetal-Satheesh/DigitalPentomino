@@ -168,6 +168,13 @@ const strings = {
                 description: ["General theme of the application.", "Grundlegendes Design der Applikation"]
             }
         },
+        boardCustomization: {
+            title: ["Board Customization", "Spielbrett Anpassung"],
+            initialPiecePos: {
+                title: ["Predefine pentomino start positions", "Setze Pentomino-Startpositionen"],
+                description: ["When starting the app, pieces will be at their current position.", "Wenn ein Brett geladen wird, befinden sich die Pentominoes bereits an ihre momentane Position."]
+            }
+        },
         errors: {
             lowerThanMin: ["This shouldn't be smaller than", "Dieser Eintrag darf nicht kleiner sein als"],
             higherThanMax: ["This shouldn't be greater than", "Dieser Eintrag darf nicht größer sein als"],

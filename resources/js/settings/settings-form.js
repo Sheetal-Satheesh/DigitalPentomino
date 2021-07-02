@@ -125,6 +125,12 @@ class SettingsForm {
                         });
                         div.appendChild(numberInputElement);
                         break;
+                    case "custom":
+                        let customInputElementLabel = SettingsForm.createLabel(settingsEntry.title);
+                        div.appendChild(customInputElementLabel);
+                        // TODO
+                        // div.appendChild(TODO);
+                        break;
                     default:
                         throw new Error("Unknown type: " + settingsEntryType);
                 }
@@ -443,6 +449,9 @@ class SettingsForm {
                             SettingsForm.updateImgSelectElement(heading, subheading, schemaEntry, settings[heading][subheading], formElement);
                         }
                         break;
+                    case "custom":
+                        SettingsForm.updateCustomFormEntry(heading, subheading, schemaEntry, settings[heading][subheading], formElement);
+                        break;
                     default:
                         throw new Error("Schema Error: Unknown type: " + schemaEntry.type);
                 }
@@ -457,6 +466,18 @@ class SettingsForm {
                     inputElement.checked = settings.visibility.isVisible(heading, subheading);
                 }
             }
+        }
+    }
+
+    static updateCustomFormEntry(heading, subheading, schemaEntry, selectedValue, formElement) {
+        switch (heading) {
+            case "boardCustomization":
+                switch (subheading) {
+                    case "initialPiecePos":
+                        // TODO
+                        break;
+                }
+                break;
         }
     }
 
