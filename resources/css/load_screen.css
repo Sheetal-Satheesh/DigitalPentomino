@@ -214,7 +214,7 @@
   }
 
   .sk-cube-grid {
-      position: absolute;
+      position: relative!important
       width: 10vh;
       height: 10vh;
       margin: 100px auto;
