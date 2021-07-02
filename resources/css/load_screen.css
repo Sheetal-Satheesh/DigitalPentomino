@@ -203,7 +203,7 @@
  }
 
 // Medium devices (tablets, 768px and up)
-@media (min-width: 768px) {
+@media (max-width: 768px) {
   .tuca embed {
       position: absolute;
       height: 50vh;
