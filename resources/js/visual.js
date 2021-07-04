@@ -446,7 +446,6 @@ class Visual {
          */
 
         document.onpointerdown = function (event) {//clicking or moving begins
-            console.log('in pointerdown');
             var elements = document.elementsFromPoint(event.clientX, event.clientY);
             onpointerdownX = event.clientX;
             onpointerdownY = event.clientY;
@@ -542,7 +541,6 @@ class Visual {
              * in case of just a click operation (not move operation) piece should not move
              */
 
-            console.log('in onpointer up');
             if (onpointerdownX == event.clientX &&
                 onpointerdownY == event.clientY &&
                 window.currentlyMoving) {
@@ -679,10 +677,9 @@ class Visual {
                         var coords = (id.split('_')[1].split(','));
                         that.removeFromTray(data[1]);
                         that.placePentomino(data[1], coords[0], coords[1]);
-                        console.log('pentomino placed in the field');
                         var selectedPiece = document.getElementById('piece_'+ data[1].name);
-                        console.log('new data1--->', data[1]);
-                        console.log('selectedPiece.classList--->', selectedPiece.classList);
+                        // console.log('new data1--->', data[1]);
+                        // console.log('selectedPiece.classList--->', selectedPiece.classList);
                         if(!data[1].inTray){
                             //if($('#piece_'+ data[1].name).parent().find('.pieceWrapper').length == 0 ){
                             //Original Funtion 
@@ -802,9 +799,7 @@ class Visual {
             let pieceDiv = document.getElementById("piece_" + piece.name);
             let flipped = pieceDiv.getAttribute("flipped") * 1;
             let currentRot = pieceDiv.style.getPropertyValue("--rotationX").split(/(-?\d+)/)[1] * 1; //converts string value to int
-            console.log('currentRotation--->', currentRot);
             let newRot = currentRot + 180;
-            console.log('newRot--->', newRot);
             pieceDiv.style.setProperty("--rotationX", newRot.toString() + "deg");       
             this.gameController.mirrorPentominoH(piece, cmdProperty)
             this.positionPiece(piece);       
@@ -1573,8 +1568,6 @@ class Visual {
         for (let i = 0; i < randomSolution.length; ++i) {
             [piecePosition, piece] = this.getRandomPiece(randomSolution, pickedPieces);
             pickedPieces[piece.name] = 1;
-            console.log("Piece position: ");
-            console.log(piecePosition);
             currentAnchor = [piecePosition.boardPosition[0],
             piecePosition.boardPosition[1]];
             for (let j = 0; j < positions.length; ++j) {
@@ -1596,7 +1589,6 @@ class Visual {
             positions.push(currentAnchor);
             this.removeFromTray(piece);
             piece.updateTrayValue(0);
-            console.log("Anchor for placement of " + piece + " is " + currentAnchor[0] + "," + currentAnchor[1]);
             this.placePentomino(piece, currentAnchor[0], currentAnchor[1]);
         }
 
