@@ -279,6 +279,13 @@ class GameController {
         return this.splitBoard().loadSplit_V2();
     }
 
+    partitionHasUnoccupiedPosition(pentomino) {
+        if (this.game() === null) {
+            throw new Error("Game is not set");
+        }
+        return this.splitBoard().partitionHasUnoccupiedPosition(pentomino);
+    }
+
     getSolutions() {
         return this.hintAI().getSolutions();
     }

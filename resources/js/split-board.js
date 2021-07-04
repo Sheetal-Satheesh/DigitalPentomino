@@ -10,19 +10,24 @@ class SplitBoard {
 
     constructor(game) {
         this._game = game;
-        this._solutions = Solutions.getGamesFromSolutionsConfig(game.getName());        
+        this._solutions = Solutions.getGamesFromSolutionsConfig(game.getName());
+        this._finalSolution;
+        this._partionedArray;
+        this.count = 0;
     }
 
     loadSplit() {
         let game = this._game;
-        let possibleSolutions = this._getPossibleSolutions(game, this._solutions);
+        let possibleSolutions = this._getPossibleSolutions(game, this._solutions);        
         let closestSolution;
 
         if (possibleSolutions.length > 0) {
-            closestSolution = possibleSolutions[0];            
+            closestSolution = possibleSolutions[0];
+            this._finalSolution = closestSolution;
         }
         else {
-            closestSolution = this._getClosesSolution(game, this._solutions);            
+            closestSolution = this._getClosesSolution(game, this._solutions);
+            this._finalSolution = closestSolution;
         }
 
         let pentominoAnchors = this._getPentominoesAndAnchorPos(closestSolution);
@@ -35,36 +40,21 @@ class SplitBoard {
     loadSplit_V2() {
         let game = this._game;
         let possibleSolutions = this._getPossibleSolutions(game, this._solutions);
-        let closestSolution;        
-        closestSolution = possibleSolutions[0];               
+        let closestSolution;
+        closestSolution = possibleSolutions[0];
+        this._finalSolution = closestSolution;
         let pentominoAnchors = this._getPentominoesAndAnchorPos(closestSolution);
         let orderPieces = this._sortPiecesBasedOnAnchor(pentominoAnchors);
         let relativePosOfPieceWithAnchorPos = this._getRelativePositionOfPieceWithAnchorPosition(game, closestSolution, orderPieces);
-        let partitionedArray = this._splitArrayIntoChunks(relativePosOfPieceWithAnchorPos);                     
+        let partitionedArray = this._splitArrayIntoChunks(relativePosOfPieceWithAnchorPos);
+        this._partionedArray = partitionedArray;
         return partitionedArray;
     }
 
-    // _partitionHasUnoccupiedPosition(partitionedSpace) {
-    //     let pentominoesOnBoard = game.getAllPentominoes().filter(p => game.isPlacedOnBoard(p));
-    //     for (var solPentominoes = 0; solPentominoes < partitionedSpace._board._pentominoes.length; solPentominoes++) {
-    //       let solPentominoName = closestSolution._board._pentominoes[solPentominoes].name;
-    //       let solPentominoPos = closestSolution._board._pentominoes[solPentominoes].sRepr;
-
-    //       for (var j = 0; j < pentominoesOnBoard.length; j++) {
-    //         let pentominoesOnBoardName = pentominoesOnBoard[j].name;
-    //         let pentominoesOnBoardPos = pentominoesOnBoard[j].sRepr;
-
-    //         if (solPentominoName === pentominoesOnBoardName ) {
-    //           if (solPentominoPos != pentominoesOnBoardPos) {
-    //             return new RemoveCommand( game.getPentominoByName(pentominoesOnBoardName),
-    //                                       game.getPosition(game.getPentominoByName(pentominoesOnBoardName)));
-    //           }
-    //         }
-    //       }
-    //     }
-    //     return null;
-
-    // }  
+    partitionHasUnoccupiedPosition(pentomino) {       
+        let val = this._isPerfectPentomino(this._game, this._finalSolution, pentomino.name);               
+        return val;
+    }
 
     /** ---------------  Solutions-------------*/
     getSolutions() {
@@ -100,7 +90,7 @@ class SplitBoard {
             let pentominoAnchor = closestSolution._board.getPosition(solutionPentomino);
             return [pent.name, pentominoAnchor];
         });
-        
+
         return pentominoAnchorPos;
     }
 
@@ -142,7 +132,7 @@ class SplitBoard {
      * @param sortedarray
      * @returns [*]
      */
-     _getRelativePositionOfPieceWithAnchorPosition(game, closestSolution, orderPieces) {
+    _getRelativePositionOfPieceWithAnchorPosition(game, closestSolution, orderPieces) {
         let finalPosAndPiece = [];
         for (let i = 0; i < orderPieces.length; i++) {
             closestSolution._board._pentominoes.forEach(pent => {

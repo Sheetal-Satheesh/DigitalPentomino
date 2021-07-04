@@ -26,6 +26,8 @@ const alternateColor = ["#77C9D4", "#57B390", "#015249"];
 const backGroundColor = '#959DAC';
 
 let lastHintedPentName = null;
+let splitPartition ;
+let splitCounter = -1;
 let randomCell;
 class Visual {
 
@@ -399,7 +401,8 @@ class Visual {
 
             //check if a button is clicked
             let buttonOverPiece = false;
-            let settingsEnabled = false;
+            let settingsEnabled = false;            
+            let flagCheckPartitionSolved = false;
             for (let j in elements) {
                 let precheck = elements[j].className;
                 if (precheck == 'controlButton') {
@@ -432,6 +435,11 @@ class Visual {
                 var piece = that.pieces.find(p => { return p.name === piece; });
                 window.currentlyMoving = [container, piece];
                 break;
+            }
+            flagCheckPartitionSolved = that.checkPartitionSolved();
+            if(flagCheckPartitionSolved) {
+                that.blockPartition();
+                that.displaySplit_V2(splitPartition, alternateColor)
             }
             return;
 
@@ -644,11 +652,18 @@ class Visual {
     }
 
     callSplitBoard_V2() {
-        let partitionedArray = pd.gameController.loadSplit_V2();         
-        let lengthOfPartitionedArray = partitionedArray.length;
-        for(let partition = 0; partition <= lengthOfPartitionedArray; partition++) {
-            this.displaySplit_V2(partitionedArray[partition], alternateColor);              
-        }
+        let partitionedArray = pd.gameController.loadSplit_V2();  
+        splitPartition = partitionedArray;  
+        this.displaySplit_V2(alternateColor);     
+        // let lengthOfPartitionedArray = partitionedArray.length;
+        // let checkPartition = false;
+        
+        // for(let partition = 0; partition < lengthOfPartitionedArray; partition++) {
+        //     this.displaySplit_V2(partitionedArray[partition], alternateColor);
+        //     // checkPartition = this.checkPentomino(partitionedArray[partition]);
+                                                 
+            
+        // }
                 
     }
 
@@ -699,7 +714,10 @@ class Visual {
         }        
     }
 
-    displaySplit_V2(partitionedArray, alternateColor) { 
+    
+    displaySplit_V2(alternateColor) { 
+        splitCounter++
+        let partitionedArray = splitPartition[splitCounter]
         let piecesDisplayed = [];
         for (let i = 0; i < partitionedArray.length; i++) {
             for (let j = 0; j < partitionedArray[i][1].length; j++) {                
@@ -717,6 +735,43 @@ class Visual {
                 }                                                      
         });   
               
+    }
+
+    checkPartitionSolved() {
+        let piecesDisplayed = [];
+        let partitionCheck = false;
+        
+        if (!splitPartition) {
+            return false;   
+        }
+
+        let partitionedArray = splitPartition[splitCounter]
+        for (let i = 0; i < partitionedArray.length; i++) {            
+            piecesDisplayed.push(partitionedArray[i][0].name);                     
+        } 
+        
+        let temp = [];
+        for (let i = 0; i < piecesDisplayed.length; i++) {            
+            temp.push(false);                     
+        } 
+
+        this.pieces.forEach(piece => {
+            if(this.gameController.isPlacedOnBoard(piece)) {
+                let containsDisplayedPieceName = piecesDisplayed.indexOf(piece.name)
+                if(containsDisplayedPieceName >= 0) {
+                    let result = this.pd.gameController.partitionHasUnoccupiedPosition(piece);                                                                    
+                    temp[containsDisplayedPieceName] = result;
+                    let checker = temp.every(v => v === true);
+                    if (checker) {
+                        partitionCheck = true;
+                        return partitionCheck; 
+                    }
+                }
+            }
+                            
+        });     
+        return partitionCheck;    
+        
     }
 
 
@@ -1456,7 +1511,8 @@ class Visual {
                 throw new Error("Can not undo");
 
         }
-    }
+    }   
+
 
     getCmdState(stateType) {
         if (stateType == "start") {
