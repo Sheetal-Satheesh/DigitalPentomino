@@ -654,36 +654,36 @@
 
         // called when license button is clicked in settings
         function handleClickedOnLicenses(settings) {
-            // this.hideManipulationButtons();
-            // this.closeBoardSelector();
-            // this.disablePointerEventsOnPieces();
-            // var modal = document.getElementById('modalTop');
-            // let modalFormContent = document.getElementsByClassName('modalFormContent');
-            // modal.style.display = "block";
-            // modal.style.background = "transparent";
-            // document.querySelector(".modalFormContent").style.display = "block";
-            // document.querySelector(".innerGrid").style.display = "none";
-            // template.clearContent("#modalButtonsID");
-            // template.clearContent("#modalTitleID");
-            // template.clearContent("#modalBodyID");
-            // template.clearContent("#innerGridForm");
-            // modalBodyID.style.width="100%";
-            // //modal.style.background="#dcf0ed";
-            // modalContainerID.style.borderColor="#dcf0ed";
-            // let div1 = document.createElement("div");
-            // let h5 = document.createElement("h3");
-            // var t1 = document.createTextNode("Licences");
-            // h5.appendChild(t1);
-            // div1.appendChild(h5);
-            // modalBodyID.appendChild(div1);
-            // //show back button
-            // let btn = document.getElementById("backButton");
-            // btn.style.display = "block";
-            // btn.onclick = function () {
-            // openSettings();
-            // SettingsForm.updateForm($('#innerGridForm')[0], settings);
-            // btn.style.display = "none";
-            // };
+            this.hideManipulationButtons();
+            this.closeBoardSelector();
+            this.disablePointerEventsOnPieces();
+            var modal = document.getElementById('modalTop');
+            let modalFormContent = document.getElementsByClassName('modalFormContent');
+            modal.style.display = "block";
+            modal.style.background = "transparent";
+            document.querySelector(".modalFormContent").style.display = "block";
+            document.querySelector(".innerGrid").style.display = "none";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent("#innerGridForm");
+            modalBodyID.style.width="100%";
+            //modal.style.background="#dcf0ed";
+            modalContainerID.style.borderColor="#dcf0ed";
+            let div1 = document.createElement("div");
+            let h5 = document.createElement("h3");
+            var t1 = document.createTextNode("Licences");
+            h5.appendChild(t1);
+            div1.appendChild(h5);
+            modalBodyID.appendChild(div1);
+            //show back button
+            let btn = document.getElementById("backButton");
+            btn.style.display = "block";
+            btn.onclick = function () {
+            openSettings();
+            SettingsForm.updateForm($('#innerGridForm')[0], settings);
+            btn.style.display = "none";
+            };
             // let teacherURLLabel = document.createElement("label");
             // let pupilURLLabel = document.createElement("label");
             // let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
@@ -701,17 +701,24 @@
             // modalBodyID.appendChild(document.createElement("br"));
             // modalBodyID.appendChild(document.createTextNode("5. (author: Alexis Bailey) present :https://www.freepngimg.com/png/19721-wizard-free-png-image"));
             // modalBodyID.appendChild(document.createElement("br"));
-
-              let solvedScreenMagician = licensesConfig.solvedScreenMagician;
+            // Start our HTML
+            let table = "<table id='licenseTable' ><tbody>";
                for (let heading in licensesConfig ) {
                let subSettings = licensesConfig[heading];
                 for (let key in subSettings) {
                     let licensesEntry = subSettings[key];
                     // T0:se licensisEntry.name and licensisEntry.url to generate table
-                    console.log(solvedScreenMagician);
-                    console.log(licensesEntry);
+                    console.log("heading.specifiedName ", "key ====>", key, "", licensesEntry);
+                    // Add our row:
+                    table += "<tr><th>" + key + "</th><td>" + subSettings[key] + "</td></tr>";
+                  // table += "<tr><th>" + key + "</th><td>" + subSettings[key] + "</td></tr>";
+                    console.log(licensesEntry, heading);
                 }
         }
+        // Finish the table:
+        table += "</tbody></table>";
+          document.getElementById('modalBodyID').innerHTML = table;
+            
 
                // for (let heading in licensesConfig ) {
                //      console.log("heading", heading);
@@ -723,9 +730,28 @@
                // Finish the table:
               // html += "</tbody></table>";
               // modalbodyID.appendChild(html);
-               console.log(this.getAllLicences());
         }
 
+
+
+        function createTable ( object ) {
+            // Check type
+            if ( typeof object !== 'object' ) return false;
+
+            // Start our HTML
+            var table = "<table><tbody>";
+            // Loop through members of the object
+            for ( var key in object ) {
+                // https://jslinterrors.com/the-body-of-a-for-in-should-be-wrapped-in-an-if-statement
+                if ( !object.hasOwnProperty(key) ) continue;
+                // Add our row:
+                table += "<tr><th>" + key + "</th><td>" + object[key] + "</td><td>" + object[key] + "</td></tr>";
+            }
+            // Finish the table:
+            table += "</tbody></table>";
+            // Return the table
+            return table;
+        }
 
 
         function handleShareSettings(settings) {

@@ -46,7 +46,7 @@
 #field {
   position: fixed;
   left: 0vw;
-  top: 10vw;  
+  top: 10vw;
   bottom: 10vw;
   background: transparent;
   width: 100%;
@@ -124,7 +124,7 @@
 #labelNumberSolutionsContainerChild{
   height: 100%;
   text-align: center;
-  vertical-align: middle; 
+  vertical-align: middle;
   font-size: 1.5vw;
 }
 
@@ -343,8 +343,8 @@ table
 
      table tr td div:active {
       box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
-     }  
-   
+     }
+
 
   table tr td button{
     background:rgb(141, 160, 157);
@@ -366,7 +366,7 @@ table
     border-radius: 10%;
     border: 0;
     padding: 0px;
-   } 
+   }
 
   #logo{
   height:7vw!important;
@@ -431,15 +431,15 @@ table
 .main-wrapper {
   width: .7vw;
   height: .1vw;
-  position: relative;  
+  position: relative;
 }
 
 .buttonWrapper {
-  border-radius: 50%;   
-  position: absolute;  
+  border-radius: 50%;
+  position: absolute;
   bottom: 0;
   right: 0;
-  transition: transform .2s;  
+  transition: transform .2s;
   z-index: 12 ;
 }
 
@@ -468,17 +468,17 @@ table
 }
 
 .buttonInside {
-  border-radius: 50%;  
+  border-radius: 50%;
   width: 5vw;
   height: 5vw;
   position: absolute;
   bottom: .5vw;
-  right: .5vw;  
+  right: .5vw;
 }
 
 .buttonInside.first {
    background-color: #ff0033;
-} 
+}
 
 .buttonInside.second {
   background-color: #ff0033;
@@ -489,42 +489,42 @@ table
 }
 
 .buttonInside.fourth {
-  background-color: #ff0033;  
+  background-color: #ff0033;
 }
 
 
 .icon-rotateLeft {
-  border-radius: 50%;     
-  position: absolute; 
-  vertical-align: middle;   
+  border-radius: 50%;
+  position: absolute;
+  vertical-align: middle;
   font-size: 5vw;
   transform: 0deg;
   z-index: 12;
 }
 
-.icon-rotateRight { 
-  border-radius: 50%;     
-  position: absolute; 
-  vertical-align: middle;   
+.icon-rotateRight {
+  border-radius: 50%;
+  position: absolute;
+  vertical-align: middle;
   font-size: 5vw;
   transform: 0deg;
   z-index: 12;
 }
 
-.icon-flip1 {        
-  position: absolute; 
-  vertical-align: middle;   
-  font-size: 5vw;  
+.icon-flip1 {
+  position: absolute;
+  vertical-align: middle;
+  font-size: 5vw;
   transform: rotate(var(--rotateH));;
-  z-index: 12; 
+  z-index: 12;
 }
 
-.icon-flip2 {        
-  position: absolute; 
-  vertical-align: middle;   
-  font-size: 5vw;  
+.icon-flip2 {
+  position: absolute;
+  vertical-align: middle;
+  font-size: 5vw;
   transform: rotate(var(--rotateV));;
-  z-index: 12;  
+  z-index: 12;
 }
 
 @font-face {
