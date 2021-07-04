@@ -28,6 +28,7 @@
     <script src="resources/js/command-history/command-manager.js"></script>
     <script src="resources/js/command-history/command-tree.js"></script>
     <script src="resources/js/configs/baseConfigs.js"></script>
+    <script src="resources/js/configs/licensesConfig.js"></script>
     <script src="resources/js/configs/boardConfigs.js"></script>
     <script src="resources/js/configs/solutionsConfig.js"></script>
     <script src="resources/js/game-solution.js"></script>
@@ -653,54 +654,79 @@
 
         // called when license button is clicked in settings
         function handleClickedOnLicenses(settings) {
-            this.hideManipulationButtons();
-            this.closeBoardSelector();
-            this.disablePointerEventsOnPieces();
-            var modal = document.getElementById('modalTop');
-            let modalFormContent = document.getElementsByClassName('modalFormContent');
-            modal.style.display = "block";
-            modal.style.background = "transparent";
-            document.querySelector(".modalFormContent").style.display = "block";
-            document.querySelector(".innerGrid").style.display = "none";
-            template.clearContent("#modalButtonsID");
-            template.clearContent("#modalTitleID");
-            template.clearContent("#modalBodyID");
-            template.clearContent("#innerGridForm");
-            modalBodyID.style.width="100%";
-            //modal.style.background="#dcf0ed";
-            modalContainerID.style.borderColor="#dcf0ed";
-            let div1 = document.createElement("div");
-            let h5 = document.createElement("h3");
-            var t1 = document.createTextNode("Licences");
-            h5.appendChild(t1);
-            div1.appendChild(h5);
-            modalBodyID.appendChild(div1);
-            //show back button
-            let btn = document.getElementById("backButton");
-            btn.style.display = "block";
-            btn.onclick = function () {
-            openSettings();
-            SettingsForm.updateForm($('#innerGridForm')[0], settings);
-            btn.style.display = "none";
-            };
-            let teacherURLLabel = document.createElement("label");
-            let pupilURLLabel = document.createElement("label");
-            let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
-            let seed = SettingsParser.parseSettingsToSeed(schema, settings);
-            modalBodyID.appendChild(document.createElement("br"));
-            modalBodyID.appendChild(document.createTextNode("1. Background Music 'Chee Zee Beach' by Kevin MacLeod\n" +
-            "Link: https://incompetech.filmmusic.io/song/3490-chee-zee-beach\n" +
-            "License: https://filmmusic.io/standard-license"));
-            modalBodyID.appendChild(document.createElement("br"));
-            modalBodyID.appendChild(document.createTextNode("2. Wood music link : https://www.zapsplat.com/sound-effect-category/wood/ \n" + "License :https://www.zapsplat.com/license-type/standard-license/"));
-            modalBodyID.appendChild(document.createElement("br"));
-            modalBodyID.appendChild(document.createTextNode("3. (author: Edicionesnaza) jboy-2 : https://www.deviantart.com/edicionesnaza/art/Boy-and-Girl-Icon-gif-By-alfreditha-394021423"+"\n"));
-            modalBodyID.appendChild(document.createElement("br"));
-            modalBodyID.appendChild(document.createTextNode("4. (author: Ahkâm) present :https://www.freeiconspng.com/img/39913    \n"));
-            modalBodyID.appendChild(document.createElement("br"));
-            modalBodyID.appendChild(document.createTextNode("5. (author: Alexis Bailey) present :https://www.freepngimg.com/png/19721-wizard-free-png-image"));
-            modalBodyID.appendChild(document.createElement("br"));
+            // this.hideManipulationButtons();
+            // this.closeBoardSelector();
+            // this.disablePointerEventsOnPieces();
+            // var modal = document.getElementById('modalTop');
+            // let modalFormContent = document.getElementsByClassName('modalFormContent');
+            // modal.style.display = "block";
+            // modal.style.background = "transparent";
+            // document.querySelector(".modalFormContent").style.display = "block";
+            // document.querySelector(".innerGrid").style.display = "none";
+            // template.clearContent("#modalButtonsID");
+            // template.clearContent("#modalTitleID");
+            // template.clearContent("#modalBodyID");
+            // template.clearContent("#innerGridForm");
+            // modalBodyID.style.width="100%";
+            // //modal.style.background="#dcf0ed";
+            // modalContainerID.style.borderColor="#dcf0ed";
+            // let div1 = document.createElement("div");
+            // let h5 = document.createElement("h3");
+            // var t1 = document.createTextNode("Licences");
+            // h5.appendChild(t1);
+            // div1.appendChild(h5);
+            // modalBodyID.appendChild(div1);
+            // //show back button
+            // let btn = document.getElementById("backButton");
+            // btn.style.display = "block";
+            // btn.onclick = function () {
+            // openSettings();
+            // SettingsForm.updateForm($('#innerGridForm')[0], settings);
+            // btn.style.display = "none";
+            // };
+            // let teacherURLLabel = document.createElement("label");
+            // let pupilURLLabel = document.createElement("label");
+            // let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+            // let seed = SettingsParser.parseSettingsToSeed(schema, settings);
+            // modalBodyID.appendChild(document.createElement("br"));
+            // modalBodyID.appendChild(document.createTextNode("1. Background Music 'Chee Zee Beach' by Kevin MacLeod\n" +
+            // "Link: https://incompetech.filmmusic.io/song/3490-chee-zee-beach\n" +
+            // "License: https://filmmusic.io/standard-license"));
+            // modalBodyID.appendChild(document.createElement("br"));
+            // modalBodyID.appendChild(document.createTextNode("2. Wood music link : https://www.zapsplat.com/sound-effect-category/wood/ \n" + "License :https://www.zapsplat.com/license-type/standard-license/"));
+            // modalBodyID.appendChild(document.createElement("br"));
+            // modalBodyID.appendChild(document.createTextNode("3. (author: Edicionesnaza) jboy-2 : https://www.deviantart.com/edicionesnaza/art/Boy-and-Girl-Icon-gif-By-alfreditha-394021423"+"\n"));
+            // modalBodyID.appendChild(document.createElement("br"));
+            // modalBodyID.appendChild(document.createTextNode("4. (author: Ahkâm) present :https://www.freeiconspng.com/img/39913    \n"));
+            // modalBodyID.appendChild(document.createElement("br"));
+            // modalBodyID.appendChild(document.createTextNode("5. (author: Alexis Bailey) present :https://www.freepngimg.com/png/19721-wizard-free-png-image"));
+            // modalBodyID.appendChild(document.createElement("br"));
+
+              let solvedScreenMagician = licensesConfig.solvedScreenMagician;
+               for (let heading in licensesConfig ) {
+               let subSettings = licensesConfig[heading];
+                for (let key in subSettings) {
+                    let licensesEntry = subSettings[key];
+                    // T0:se licensisEntry.name and licensisEntry.url to generate table
+                    console.log(solvedScreenMagician);
+                    console.log(licensesEntry);
+                }
         }
+
+               // for (let heading in licensesConfig ) {
+               //      console.log("heading", heading);
+               //     // https://jslinterrors.com/the-body-of-a-for-in-should-be-wrapped-in-an-if-statement
+               //     if ( !licensesConfig.hasOwnProperty(heading) ) continue;
+               //     // Add our row:
+               //     html += "<tr><th>" + heading + "</th><td>" + licensesConfig[heading] + "</td></tr>";
+               // }
+               // Finish the table:
+              // html += "</tbody></table>";
+              // modalbodyID.appendChild(html);
+               console.log(this.getAllLicences());
+        }
+
+
 
         function handleShareSettings(settings) {
             this.hideManipulationButtons();
@@ -738,7 +764,7 @@
 
             let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
             let seed = SettingsParser.parseSettingsToSeed(schema, settings);
-
+            console.log("baseConfigs.url", baseConfigs.url);
             let teacherUrl = baseConfigs.url + "?" + baseConfigs.seedUrlParamName + "=" + seed;
             let pupilUrl = baseConfigs.url + "?" + baseConfigs.seedUrlParamName + "=2" + seed.substr(1, seed.length);
             teacherURLLabel.innerHTML = teacherUrl;
