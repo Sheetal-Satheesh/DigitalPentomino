@@ -705,20 +705,21 @@
             let table = "<table id='licenseTable' ><tbody>";
                for (let heading in licensesConfig ) {
                let subSettings = licensesConfig[heading];
+               table += "<tr><th>" + heading + "</th></tr>";
                 for (let key in subSettings) {
                     let licensesEntry = subSettings[key];
                     // T0:se licensisEntry.name and licensisEntry.url to generate table
-                    console.log("heading.specifiedName ", "key ====>", key, "", licensesEntry);
+                    console.log(licensesEntry);
                     // Add our row:
-                    table += "<tr><th>" + key + "</th><td>" + subSettings[key] + "</td></tr>";
+                    table += "<tr><td>" + licensesEntry + "</td></tr>";
                   // table += "<tr><th>" + key + "</th><td>" + subSettings[key] + "</td></tr>";
-                    console.log(licensesEntry, heading);
+                    //console.log(licensesEntry, heading);
                 }
         }
         // Finish the table:
         table += "</tbody></table>";
           document.getElementById('modalBodyID').innerHTML = table;
-            
+
 
                // for (let heading in licensesConfig ) {
                //      console.log("heading", heading);
