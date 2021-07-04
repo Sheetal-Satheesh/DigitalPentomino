@@ -361,6 +361,22 @@ class Visual {
     disableManipulations() {
         document.getElementById('pieceManipulation').style.display = 'none';
     }
+
+    blockPartition() {        
+        let partitionedArray = splitPartition[splitCounter]
+        let piecesDisplayed = [];        
+        for (let i = 0; i < partitionedArray.length; i++) {           
+            piecesDisplayed.push(partitionedArray[i][0].name);                     
+        } 
+        this.pieces.forEach(piece => {
+            let containsDisplayedPieceName = piecesDisplayed.indexOf(piece.name)
+                if(containsDisplayedPieceName >= 0 ) {                    
+                    document.getElementById('piece_'+ piece.name).classList.add("disabledbutton");                
+                }                                                      
+        }); 
+        
+
+    }
     // 	save(piece) {
     // 		console.log("insave::",piece)
     // 	  	localStorage.setItem('piece',piece);
@@ -439,7 +455,7 @@ class Visual {
             flagCheckPartitionSolved = that.checkPartitionSolved();
             if(flagCheckPartitionSolved) {
                 that.blockPartition();
-                that.displaySplit_V2(splitPartition, alternateColor)
+                that.displaySplit_V2(splitPartition, alternateColor);
             }
             return;
 
@@ -713,27 +729,33 @@ class Visual {
             }
         }        
     }
-
     
     displaySplit_V2(alternateColor) { 
         splitCounter++
-        let partitionedArray = splitPartition[splitCounter]
-        let piecesDisplayed = [];
-        for (let i = 0; i < partitionedArray.length; i++) {
-            for (let j = 0; j < partitionedArray[i][1].length; j++) {                
-                    let fieldValue = partitionedArray[i][1];                    
-                    let fieldID = document.getElementById("field_" + fieldValue[j][0] + "," + fieldValue[j][1]);
-                    fieldID.style.background = alternateColor[0];
-                    fieldID.style.opacity = .8;                                  
+        if(splitPartition.length > splitCounter) {
+            let partitionedArray = splitPartition[splitCounter]
+            let piecesDisplayed = [];
+            for (let i = 0; i < partitionedArray.length; i++) {
+                for (let j = 0; j < partitionedArray[i][1].length; j++) {                
+                        let fieldValue = partitionedArray[i][1];                    
+                        let fieldID = document.getElementById("field_" + fieldValue[j][0] + "," + fieldValue[j][1]);
+                        fieldID.style.background = alternateColor[0];
+                        fieldID.style.opacity = .8;                                  
+                } 
+                piecesDisplayed.push(partitionedArray[i][0].name);                     
             } 
-            piecesDisplayed.push(partitionedArray[i][0].name);                     
-        } 
-        this.pieces.forEach(piece => {
-            let containsDisplayedPieceName = piecesDisplayed.indexOf(piece.name)
-                if(containsDisplayedPieceName === -1) {
-                    document.getElementById('piece_'+ piece.name).style.display = 'none';
-                }                                                      
-        });   
+            this.pieces.forEach(piece => {
+                let containsDisplayedPieceName = piecesDisplayed.indexOf(piece.name)
+                    if(containsDisplayedPieceName === -1 ) {
+                        if(!document.getElementById('piece_'+ piece.name).classList.contains('disabledbutton')){
+                            document.getElementById('piece_'+ piece.name).style.display = 'none';
+                        }                                       
+                    }
+                    else if (containsDisplayedPieceName >=0) {
+                        document.getElementById('piece_'+ piece.name).style.display = 'block';
+                    }                                                                      
+            });           
+        }
               
     }
 
@@ -764,6 +786,7 @@ class Visual {
                     let checker = temp.every(v => v === true);
                     if (checker) {
                         partitionCheck = true;
+                        this.checkIfGameWon();
                         return partitionCheck; 
                     }
                 }

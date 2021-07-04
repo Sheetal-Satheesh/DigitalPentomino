@@ -144,6 +144,12 @@
   padding-left: 5%;
 }
 
+.disabledbutton {
+  pointer-events: none;
+  opacity: 0.6;
+  display:none;
+}
+
 .cActionBtn img {
   float: center;
   width:  3vw;
