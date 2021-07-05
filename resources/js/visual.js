@@ -726,7 +726,8 @@ class Visual {
 
     showNumberOfPossibleSolutions() {
         let labelPossibleSolutions = document.getElementById("labelNumberSolutions");
-        labelPossibleSolutions.innerText = this.gameController.getHint().getPossibleSolutions().length;
+        let lang = SettingsSingleton.getInstance().getSettings().general.language;
+        labelPossibleSolutions.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
     }
 
     callHintAI() {

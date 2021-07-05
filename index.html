@@ -167,15 +167,11 @@
                     <img src="resources/images/icons/tidy_up_v2.png"></button>
             </div>
 
-            <div id="labelNumberSolutionsContainer">
-                <div id="labelNumberSolutionsContainerChild">
-                    <div id="labelNumberOfSolutionsText">Number of solutions:</div>
-                    <div id="labelNumberSolutions">?</div>
-                </div>
+            <div id="bubbleContainer">
+                <div class="speechBubble"><div id="labelNumberSolutions">Number of solutions: ?</div></div>
             </div>
-
             <div id="birdContainer">
-                <img src="resources/images/icons/tuca_bird_left.png"></imgsrc>
+                <img src="resources/images/icons/tuca_bird_left.png"></img>
             </div>
 
         </div>
@@ -574,13 +570,13 @@
 
                 if (heading === "general" && key === "language") {
                     let lang = settings[heading][key];
-                    document.getElementById("labelNumberOfSolutionsText").textContent = strings.numberOfPossibleSolutions[lang];
+                    document.getElementById("labelNumberSolutions").textContent = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
                 } else if (heading === "hinting" && key === "enableHinting") {
                     let hintingEnabled = settings[heading][key];
                     document.getElementById("hintButton").style.visibility = hintingEnabled ? "visible" : "hidden";
                 } else if (heading === "hinting" && key === "showNumberOfPossibleSolutions") {
                     let showNumberOfPossibleSolutions = settings[heading][key];
-                    document.getElementById("labelNumberSolutionsContainer").style.visibility = showNumberOfPossibleSolutions ? "visible" : "hidden";
+                    document.getElementById("bubbleContainer").style.visibility = showNumberOfPossibleSolutions ? "visible" : "hidden";
                 } else if (heading === "prefilling" && key === "enablePrefilling") {
                     let visible = settings[heading][key];
                     document.getElementById("prefillBoard").style.visibility = visible ? "visible" : "hidden";

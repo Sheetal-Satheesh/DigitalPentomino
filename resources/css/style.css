@@ -138,6 +138,47 @@
   height: 100%;
 }
 
+#bubbleContainer{
+  pointer-events: none;
+  position: fixed;
+  height: 18vw;
+  width: 25vw;
+  justify-content: center;
+  display: table-cell;
+  right: 11vw;
+  bottom: 1vw;
+  z-index:500;
+}
+
+.speechBubble {
+  width: 20vw;
+  height: 10vw;
+  border: 1px solid black;
+  border-radius: 2vw;
+  background: rgb(238, 236, 236);
+  padding: 2vw;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: normal;
+  font-size: 2vw;
+  color: black;
+  font-family: arial;
+  position:relative;
+}
+
+.speechBubble:before {
+  content: "";
+  width: 0vw;
+  height: 0vw;
+  position: absolute;
+  border-left: 2vw solid rgb(238, 236, 236);
+  border-right: 2vw solid transparent;
+  border-top: 2vw solid rgb(238, 236, 236);
+  border-bottom: 2vw solid transparent;
+  right: -1.9vw;
+  top: 1vw;
+}
+
 
 #operations {
   display: inline-block;
