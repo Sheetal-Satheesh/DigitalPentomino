@@ -672,10 +672,7 @@
             modalContainerID.style.borderColor="#dcf0ed";
             let div1 = document.createElement("div");
             let h5 = document.createElement("h3");
-            var t1 = document.createTextNode("Licences");
-            h5.appendChild(t1);
-            div1.appendChild(h5);
-            modalBodyID.appendChild(div1);
+
             //show back button
             let btn = document.getElementById("backButton");
             btn.style.display = "block";
@@ -702,6 +699,15 @@
             // modalBodyID.appendChild(document.createTextNode("5. (author: Alexis Bailey) present :https://www.freepngimg.com/png/19721-wizard-free-png-image"));
             // modalBodyID.appendChild(document.createElement("br"));
             // Start our HTML
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+            let textNode = {
+                class: "modalText",
+                text: strings.License[lang]
+            };
+            template.attachText("#modalBodyID", textNode);
+            modalBodyID.appendChild(document.createElement("br"));
+            modalBodyID.appendChild(document.createElement("br"));
+
             let table = "<table id='licenseTable' ><tbody>";
                for (let heading in licensesConfig ) {
                let subSettings = licensesConfig[heading];
@@ -709,11 +715,9 @@
                 for (let key in subSettings) {
                     let licensesEntry = subSettings[key];
                     // T0:se licensisEntry.name and licensisEntry.url to generate table
-                    console.log(licensesEntry);
                     // Add our row:
                     table += "<tr><td>" + key + "</td><td>" + licensesEntry + "</td></tr>";
                   // table += "<tr><th>" + key + "</th><td>" + subSettings[key] + "</td></tr>";
-                    console.log(key);
                 }
         }
         // Finish the table:
@@ -735,24 +739,24 @@
 
 
 
-        function createTable ( object ) {
-            // Check type
-            if ( typeof object !== 'object' ) return false;
-
-            // Start our HTML
-            var table = "<table><tbody>";
-            // Loop through members of the object
-            for ( var key in object ) {
-                // https://jslinterrors.com/the-body-of-a-for-in-should-be-wrapped-in-an-if-statement
-                if ( !object.hasOwnProperty(key) ) continue;
-                // Add our row:
-                table += "<tr><th>" + key + "</th><td>" + object[key] + "</td><td>" + object[key] + "</td></tr>";
-            }
-            // Finish the table:
-            table += "</tbody></table>";
-            // Return the table
-            return table;
-        }
+        // function createTable ( object ) {
+        //     // Check type
+        //     if ( typeof object !== 'object' ) return false;
+        //
+        //     // Start our HTML
+        //     var table = "<table><tbody>";
+        //     // Loop through members of the object
+        //     for ( var key in object ) {
+        //         // https://jslinterrors.com/the-body-of-a-for-in-should-be-wrapped-in-an-if-statement
+        //         if ( !object.hasOwnProperty(key) ) continue;
+        //         // Add our row:
+        //         table += "<tr><th>" + key + "</th><td>" + object[key] + "</td><td>" + object[key] + "</td></tr>";
+        //     }
+        //     // Finish the table:
+        //     table += "</tbody></table>";
+        //     // Return the table
+        //     return table;
+        // }
 
 
         function handleShareSettings(settings) {

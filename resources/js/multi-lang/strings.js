@@ -12,6 +12,7 @@ const strings = {
         Excellent: ["Excellent ! Now continue with the next task on your assignment", "Ausgezeichnet! Fahren Sie jetzt mit der nächsten Aufgabe Ihres Auftrags fort"]
     },
     numberOfPossibleSolutions: ["Number of solutions", "Anzahl Lösungen"],
+    License: ["LICENSES", "LIZENZEN"],
     settings: {
         header: ["Game settings", "Spieleinstellungen"],
         advanced: {
