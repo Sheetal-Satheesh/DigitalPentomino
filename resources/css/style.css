@@ -133,6 +133,7 @@
 }
 
 #birdContainer:active{
+  pointer-events:visiblePainted;
   pointer-events:none; /* only allow hover events on the container */
 }
 
@@ -148,12 +149,12 @@
 
 #bubbleContainer{
   position: fixed;
-  height: 18vw;
+  height: 12vw;
   width: 25vw;
   justify-content: center;
   display: table-cell;
   right: 11vw;
-  bottom: 1vw;
+  bottom: 7vw;
   z-index:500;
 }
 
@@ -162,8 +163,8 @@
 }
 
 #bubbleContainer:hover{
-  transform: rotate(-2deg);
-  -webkit-transform: rotate(-2deg);
+  transform: scale(105%);
+  -webkit-transform: scale(105%);
 }
 
 .speechBubble {

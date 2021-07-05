@@ -570,7 +570,7 @@
 
                 if (heading === "general" && key === "language") {
                     let lang = settings[heading][key];
-                    document.getElementById("labelNumberSolutions").textContent = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
+                    document.getElementById("labelNumberSolutions").textContent = strings.numberOfPossibleSolutions[lang] + ': ?';
                 } else if (heading === "hinting" && key === "enableHinting") {
                     let hintingEnabled = settings[heading][key];
                     document.getElementById("hintButton").style.visibility = hintingEnabled ? "visible" : "hidden";
