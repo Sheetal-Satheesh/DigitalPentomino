@@ -54,6 +54,7 @@
     <script src="resources/js/hint-ai.js"></script>
     <script src="resources/js/help/hinting/command-sequence-list.js"></script>
     <script src="resources/js/load_screen.js"></script>
+    <script src="resources/js/split-board.js"></script>
 </head>
 <!-- Preloader section -->
 <div class="preloader">
@@ -159,6 +160,13 @@
                 </button>
                 <button type="button" id='reset' class="cActionBtn" onclick="resetGame()">
                     <img src="resources/images/icons/tidy_up_v2.png"></button>
+                <div class= "toggle" >
+                    <h6><B>Toggle To Split The Board</B></h6>
+                    <label class= "toggleSplitBoard">
+                    <input id="toggleswitch" type="checkbox" onclick = "callSplitBoard()" >
+                    <span class="slider"></span>
+                    </label>
+                </div> <!--Toggle-->
             </div>
 
             <div id="labelNumberSolutionsContainer">
@@ -190,7 +198,7 @@
                     <span class="icon-flip2" id="OpflipV"></span>
                 </div>
             </div>
-        </div> <!---Button Manipulation Ends-->
+        </div> <!---Button Manipulation Ends-->        
     </div>
 
     <script type="text/javascript">
@@ -494,6 +502,26 @@
                 // TODO - handle, e.g. shake hint button
                 console.log("Game is already solved. Cannot display hint");
             }
+        }
+
+        function callSplitBoard() {
+            let input = document.getElementById('toggleswitch');            
+
+            input.addEventListener('change', function () {
+                if (this.checked) {                   
+                    if (!pd.gameController.game()._board.isSolved()) {
+                        pd.visual.callSplitBoard_V2();                        
+                    } else {
+                        console.log("Game is already solved");
+                    }
+                } else {
+                    if (!pd.gameController.game()._board.isSolved()) {                        
+                        pd.visual.undoSplit();                    
+                    } else {                     
+                        console.log("Game is already solved");
+                    }                
+                }
+            });
         }
 
         function rotateClkWise() {

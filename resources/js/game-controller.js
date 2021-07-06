@@ -4,6 +4,7 @@ if (typeof require != 'undefined') {
     CommandPath = require('./command-history/command-path.js');
     CommandManager = require('./command-history/command-manager.js');
     HintAI = require('./hint-ai.js');
+    SplitBoard = require('./split-board.js');
 }
 
 /**
@@ -87,6 +88,10 @@ class GameController {
 
     hintAI() {
         return this._gameLoader.hintAI();
+    }
+
+    splitBoard() {
+        return this._gameLoader.splitBoard();
     }
 
     getStartCmdKey() {
@@ -246,6 +251,39 @@ class GameController {
         }
 
         return this.hintAI().getHint(this.game());
+    }
+        
+    //--- --- --- Split Board --- --- --
+    loadSplit() {
+        if (this.game() === null) {
+            throw new Error("Game is not set");
+        }
+
+        if (this.splitBoard() === null) {
+            console.error(" not initialized");
+        }
+
+        return this.splitBoard().loadSplit();
+    }
+
+    //--- --- --- Split Board V2 --- --- ---
+    loadSplit_V2() {
+        if (this.game() === null) {
+            throw new Error("Game is not set");
+        }
+
+        if (this.splitBoard() === null) {
+            console.error(" not initialized");
+        }
+
+        return this.splitBoard().loadSplit_V2();
+    }
+
+    partitionHasUnoccupiedPosition(pentomino) {
+        if (this.game() === null) {
+            throw new Error("Game is not set");
+        }
+        return this.splitBoard().partitionHasUnoccupiedPosition(pentomino);
     }
 
     getSolutions() {

@@ -20,8 +20,12 @@ function updateCommandAttr(cmdType, cmdSeq) {
 }
 
 const cmdAttrDefault = updateCommandAttr(CommandTypes.Original, CommandSeq.Forward);
+const alternateColor = ["#77C9D4", "#57B390", "#015249"];
+const backGroundColor = '#959DAC';
 
 let lastHintedPentName = null;
+let splitPartition ;
+let splitCounter = -1;
 let randomCell;
 class Visual {
 
@@ -33,7 +37,6 @@ class Visual {
         this.pieces = this.gameController.getAllPentominoes();
         this.selected = false;
         this.overlapBlock = new OverlapBlock();
-
         this.renderBoard();
         this.renderPieces();
         this.disablePrefillButton(false);
@@ -417,6 +420,22 @@ class Visual {
     disableManipulations() {
         document.getElementById('pieceManipulation').style.display = 'none';
     }
+
+    blockPartition() {        
+        let partitionedArray = splitPartition[splitCounter]
+        let piecesDisplayed = [];        
+        for (let i = 0; i < partitionedArray.length; i++) {           
+            piecesDisplayed.push(partitionedArray[i][0].name);                     
+        } 
+        this.pieces.forEach(piece => {
+            let containsDisplayedPieceName = piecesDisplayed.indexOf(piece.name)
+                if(containsDisplayedPieceName >= 0 ) {                    
+                    document.getElementById('piece_'+ piece.name).classList.add("disabledbutton");                
+                }                                                      
+        }); 
+        
+
+    }
     // 	save(piece) {
     // 		console.log("insave::",piece)
     // 	  	localStorage.setItem('piece',piece);
@@ -457,7 +476,8 @@ class Visual {
 
             //check if a button is clicked
             let buttonOverPiece = false;
-            let settingsEnabled = false;
+            let settingsEnabled = false;            
+            let flagCheckPartitionSolved = false;
             for (let j in elements) {
                 let precheck = elements[j].className;
                 if (precheck.startsWith('icon-')) {
@@ -490,6 +510,11 @@ class Visual {
                 var piece = that.pieces.find(p => { return p.name === piece; });
                 window.currentlyMoving = [container, piece];
                 break;
+            }
+            flagCheckPartitionSolved = that.checkPartitionSolved();
+            if(flagCheckPartitionSolved) {
+                that.blockPartition();
+                that.displaySplit_V2(splitPartition, alternateColor);
             }
             return;
 
@@ -785,6 +810,116 @@ class Visual {
             hintButton.disabled = false;
         }, 1000);
     }
+
+    callSplitBoard() {
+        let partitionedArray = pd.gameController.loadSplit();        
+        this.displaySplit(partitionedArray, alternateColor);        
+    }
+
+    callSplitBoard_V2() {
+        let partitionedArray = pd.gameController.loadSplit_V2();  
+        splitPartition = partitionedArray;  
+        this.displaySplit_V2(alternateColor);                     
+    }    
+
+    undoSplit() {        
+        Array.prototype.forEach.call(document.getElementsByClassName("gamearea boardarea"), function (element) {            
+            element.style.background = backGroundColor;
+        });
+        this.pieces.forEach(piece => {
+            Array.prototype.forEach.call(document.getElementById('piece_' + piece.name).getElementsByClassName("bmPoint"), function (element) {
+                element.style.background = piece.color
+            });
+        });
+    }
+
+    displaySplit(partitionedArray, alternateColor) {
+        for (var i = 0; i < partitionedArray.length; i++) {
+            for (var j = 0; j < partitionedArray[i].length; j++) {
+                if (partitionedArray[i][j][1]) {
+                    let fieldValue = partitionedArray[i][j][1];
+                    for (var k = 0; k < fieldValue.length; k++) {
+                        let fieldID = document.getElementById("field_" + fieldValue[k][0] + "," + fieldValue[k][1]);
+                        fieldID.style.background = alternateColor[i];
+                        fieldID.style.opacity = .8;
+                    }
+                }
+                var piece = partitionedArray[i][j][0]
+                piece.alternateColor = alternateColor[i];
+                Array.prototype.forEach.call(document.getElementById('piece_' + piece.name).getElementsByClassName("bmPoint"), function (element) {
+                    element.style.background = alternateColor[i];
+                });
+            }
+        }        
+    }
+    
+    displaySplit_V2(alternateColor) { 
+        splitCounter++
+        if(splitPartition.length > splitCounter) {
+            let partitionedArray = splitPartition[splitCounter]
+            let piecesDisplayed = [];
+            for (let i = 0; i < partitionedArray.length; i++) {
+                for (let j = 0; j < partitionedArray[i][1].length; j++) {                
+                        let fieldValue = partitionedArray[i][1];                    
+                        let fieldID = document.getElementById("field_" + fieldValue[j][0] + "," + fieldValue[j][1]);
+                        fieldID.style.background = alternateColor[0];
+                        fieldID.style.opacity = .8;                                  
+                } 
+                piecesDisplayed.push(partitionedArray[i][0].name);                     
+            } 
+            this.pieces.forEach(piece => {
+                let containsDisplayedPieceName = piecesDisplayed.indexOf(piece.name)
+                    if(containsDisplayedPieceName === -1 ) {
+                        if(!document.getElementById('piece_'+ piece.name).classList.contains('disabledbutton')){
+                            document.getElementById('piece_'+ piece.name).style.display = 'none';
+                        }                                       
+                    }
+                    else if (containsDisplayedPieceName >=0) {
+                        document.getElementById('piece_'+ piece.name).style.display = 'block';
+                    }                                                                      
+            });           
+        }
+              
+    }
+
+    checkPartitionSolved() {
+        let piecesDisplayed = [];
+        let partitionCheck = false;
+        
+        if (!splitPartition) {
+            return false;   
+        }
+
+        let partitionedArray = splitPartition[splitCounter]
+        for (let i = 0; i < partitionedArray.length; i++) {            
+            piecesDisplayed.push(partitionedArray[i][0].name);                     
+        } 
+        
+        let temp = [];
+        for (let i = 0; i < piecesDisplayed.length; i++) {            
+            temp.push(false);                     
+        } 
+
+        this.pieces.forEach(piece => {
+            if(this.gameController.isPlacedOnBoard(piece)) {
+                let containsDisplayedPieceName = piecesDisplayed.indexOf(piece.name)
+                if(containsDisplayedPieceName >= 0) {
+                    let result = this.pd.gameController.partitionHasUnoccupiedPosition(piece);                                                                    
+                    temp[containsDisplayedPieceName] = result;
+                    let checker = temp.every(v => v === true);
+                    if (checker) {
+                        partitionCheck = true;
+                        this.checkIfGameWon();
+                        return partitionCheck; 
+                    }
+                }
+            }
+                            
+        });     
+        return partitionCheck;    
+        
+    }
+
 
     blinkCells(cells) {
         let menu = [];
@@ -1574,7 +1709,8 @@ class Visual {
                 throw new Error("Can not undo");
 
         }
-    }
+    }   
+
 
     getCmdState(stateType) {
         if (stateType == "start") {
