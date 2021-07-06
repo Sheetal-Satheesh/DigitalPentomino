@@ -309,6 +309,25 @@ class Visual {
             htmlElement.style.top = top + 'vw';
             htmlElement.style.transformOrigin = 'center';
             htmlElement.style.setProperty("--magnification", 1);
+
+            //code for adding pieceWrapper
+            let wrapper = "pieceWrapper_" + piece.name;
+            if(!$('#piece_'+ piece.name).parent().attr('#'+wrapper)){
+                let wrapperClassString = "<div class = 'pieceWrapper' id = "+wrapper+"></div>";
+                //console.log('--->',$(htmlElement).parent().attr('class')); 
+                if($(htmlElement).parent().attr('class') != 'pieceWrapper'){
+                    $(htmlElement).wrap(wrapperClassString);
+                }
+                    let pieceWrapper = document.getElementById(wrapper);
+                    //console.log('pieceWrapper--->',pieceWrapper);
+                    pieceWrapper.style.zIndex= this.overlapBlock.getZIndex(piece);
+                    console.log('pieceWrapper new zindex----------->', pieceWrapper.style.zIndex= this.overlapBlock.getZIndex(piece));
+                    //TODO: set zindex to zero of pieceWrapper after piece is put down
+                    //if(this.pieceWrapper.parent.find('pieceWrapper').length == 1)
+                    //console.log('true');
+                
+            }
+
         }
         if (htmlElement.style.getPropertyValue("--rotationX") === "") {
             htmlElement.style.setProperty("--rotationX", "0deg");
@@ -505,6 +524,7 @@ class Visual {
                 var x = event.clientX;
                 var y = event.clientY;
                 var container = window.currentlyMoving[0];
+                //console.log('container------->', container);
 
                 //resize object to full size while moving and attach their center to the pointer
                 var width = UIProperty.WindowWidth / that.pd.gameWidth;
@@ -526,6 +546,8 @@ class Visual {
                         container.style.top = 'calc(' + y + 'px - ' + (width * 2.5) + 'vw)';
                         container.style.transformOrigin = '50% 50%';
                         container.style.zIndex = 100;
+                        container.parentNode.style.zIndex = 100;
+                        //console.log(container.parentNode)
                         container.style.setProperty("--magnification", 1);
                     }
                 }
@@ -604,6 +626,7 @@ class Visual {
                     // }
                  });
                  */
+
                 window.currentlyMoving = false;
                 var elements = document.elementsFromPoint(event.clientX, event.clientY); //determine the target
                 for (let i in elements) {
@@ -681,6 +704,7 @@ class Visual {
                         // console.log('new data1--->', data[1]);
                         // console.log('selectedPiece.classList--->', selectedPiece.classList);
                         if(!data[1].inTray){
+
                             //if($('#piece_'+ data[1].name).parent().find('.pieceWrapper').length == 0 ){
                             //Original Funtion 
                             /*   
@@ -696,9 +720,9 @@ class Visual {
                             }// end original function
                             */
 
-                            if(!$('#piece_'+ data[1].name).parent().hasClass('pieceWrapper')){
-                                $(selectedPiece).wrap("<div class = 'pieceWrapper' id = 'pieceWrapper'></div>");
-                            }
+                            // if(!$('#piece_'+ data[1].name).parent().hasClass('pieceWrapper')){
+                            //     $(selectedPiece).wrap("<div class = 'pieceWrapper' id = 'pieceWrapper'></div>");
+                            // }
                         }
                         // else{
                         //     console.log('In else');

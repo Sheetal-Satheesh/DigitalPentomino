@@ -30,10 +30,10 @@ class Block {
         }
         currCell._next = new Cell(pentomino, currCell._zindex + 10);
         ++this._cellCounter;
-        console.log('currCell--->', currCell ,  'zindex-->', currCell._zindex );
-        console.log('currecell.next-->', currCell._next ,  'zindex-->', currCell._next._zindex);
-        console.log('in add');
-        console.log('currCell-->', currCell._pentomino);
+        // console.log('currCell--->', currCell ,  'zindex-->', currCell._zindex );
+        // console.log('currecell.next-->', currCell._next ,  'zindex-->', currCell._next._zindex);
+        // console.log('in add');
+        // console.log('currCell-->', currCell._pentomino);
     }
 
     remove(pentomino) {
