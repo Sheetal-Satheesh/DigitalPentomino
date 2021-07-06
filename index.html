@@ -668,8 +668,8 @@
             template.clearContent("#modalBodyID");
             template.clearContent("#innerGridForm");
             modalBodyID.style.width="100%";
-            //modal.style.background="#dcf0ed";
-            modalContainerID.style.borderColor="#dcf0ed";
+            modal.style.background="#dcf0ed";
+          //  modalContainerID.style.borderColor="#dcf0ed";
             let div1 = document.createElement("div");
             let h5 = document.createElement("h3");
 
@@ -705,24 +705,73 @@
                 text: strings.License[lang]
             };
             template.attachText("#modalBodyID", textNode);
-            modalBodyID.appendChild(document.createElement("br"));
-            modalBodyID.appendChild(document.createElement("br"));
-
-            let table = "<table id='licenseTable' ><tbody>";
-               for (let heading in licensesConfig ) {
-               let subSettings = licensesConfig[heading];
-               table += "<tr><th>" + heading + "</th></tr>";
-                for (let key in subSettings) {
-                    let licensesEntry = subSettings[key];
-                    // T0:se licensisEntry.name and licensisEntry.url to generate table
-                    // Add our row:
-                    table += "<tr><td>" + key + "</td><td>" + licensesEntry + "</td></tr>";
-                  // table += "<tr><th>" + key + "</th><td>" + subSettings[key] + "</td></tr>";
+            modal.appendChild(document.createElement("br"));
+            modal.appendChild(document.createElement("br"));
+            let div5 = document.createElement("div");
+            div5.style.marginTop ="1vh";
+            let ConfigKeys = [];
+            for (let h in licensesConfig ){
+              let i = licensesConfig[h];
+                for(let r in i){
+                  console.log(r);
+                  ConfigKeys.push(r);
                 }
+            }
+            ConfigKeys = pd.visual.unique(ConfigKeys);
+            ConfigKeys = ConfigKeys.reverse();
+            let specifiedName = ConfigKeys[0].split(',')[0];
+            let link = ConfigKeys[1].split(',')[0];
+            let licenses = ConfigKeys[2].split(',')[0];
+            ConfigKeys.length = 0;
+            ConfigKeys.push(specifiedName);
+            ConfigKeys.push(link);
+            ConfigKeys.push(licenses);
+            let table = document.createElement("table");
+            table.width="100%";
+            let tbody = document.createElement("tbody");
+            let tr1 = document.createElement("tr");
+            let th1 = document.createElement("th");
+            th1.innerHTML=specifiedName;
+            th1.style.marginRight = "5px";
+            tr1.appendChild(th1);
+            let th2 = document.createElement("th");
+            th2.innerHTML=link;
+            th2.style.marginRight = "5px";
+            tr1.appendChild(th2);
+            let th3 = document.createElement("th");
+            th3.innerHTML=licenses;
+            th3.style.marginRight = "5px";
+            tr1.appendChild(th3);
+            tbody.appendChild(tr1);
+            table.appendChild(tbody);
+            for (let heading in licensesConfig ) {
+              let subSettings = licensesConfig[heading];
+
+              for (let key in subSettings) {
+                  let licensisEntry = subSettings[key];
+                  //: Use licensisEntry.name and licensisEntry.url to generate table
+              }
         }
-        // Finish the table:
-        table += "</tbody></table>";
-          document.getElementById('modalBodyID').innerHTML = table;
+
+
+
+             console.log(table);
+        //     let table = "<table id='licenseTable' ><tbody>";
+        //        for (let heading in licensesConfig ) {
+        //           table += "<tr><th>" + specifiedName + "</th><th>" + link + "</th><th>" + licenses + "</th></tr>";
+        //        let subSettings = licensesConfig[heading];
+        //         for (let key in subSettings) {
+        //             let licensesEntry = subSettings[key];
+        //             // T0:se licensisEntry.name and licensisEntry.url to generate table
+        //             // Add our row:
+        //             table += "<tr><td>" + licensesEntry + "</td></tr>";
+        //           // table += "<tr><th>" + key + "</th><td>" + subSettings[key] + "</td></tr>";
+        //         }
+        // }
+
+         div5.appendChild(table);
+         modalTop.appendChild(div5);
+          //document.getElementById('modalTop').innerHTML = table;
 
 
                // for (let heading in licensesConfig ) {
