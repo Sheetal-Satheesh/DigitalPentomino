@@ -7,7 +7,6 @@ baseConfigs = {
     boardShape: "Block",
     languages: { ENGLISH: 0, GERMAN: 1 },
     defaultLanguage: 0,
-    defaultPrefillStrategy: "distance",
     seedUrlParamName: "t",
     url: "https://pentomino-digital.de/V5/index.html"
 };

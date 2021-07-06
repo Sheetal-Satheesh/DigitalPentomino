@@ -69,6 +69,12 @@ class SettingsForm {
                 let settingsEntry = subSettings[key];
                 let settingsEntryType = settingsEntry.type;
 
+                if (heading === "prefilling" && key == "distanceValue" && settings.hasOwnProperty("prefilling") &&
+                    settings.prefilling.hasOwnProperty("prefillingStrategy")) {
+                    let strat = settings.prefilling.prefillingStrategy;
+                    settingsEntry.enumText = settingsEntry._enumText[strat];
+                }
+
                 let elementIsVisible = settings.teachersMode || settings.visibility.isVisible(heading, key);
 
                 let div = document.createElement("div");
@@ -153,11 +159,11 @@ class SettingsForm {
         if (settings.visibility.isVisible("hinting", "hintingLevels") === true)
             SettingsForm.addDifficultyLevelsListener(formElement);
         // if (settings.visibility.isVisible("prefilling", "distanceValue") === true)
-        SettingsForm.addPrefillChangeListener(formElement, settings);
+        SettingsForm.addPrefillChangeListener();
         // further modifications of behavior
     }
 
-    static addPrefillChangeListener(formElement, settings) {
+    static addPrefillChangeListener() {
         let prefillStratSelectElem = document.getElementById("prefilling.prefillingStrategy");
 
         prefillStratSelectElem.addEventListener("change", (evt) => {
