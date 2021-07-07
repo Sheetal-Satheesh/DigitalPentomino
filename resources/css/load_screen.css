@@ -28,12 +28,12 @@
     margin-bottom: 50px;
 }
 
-.tuca embed {
+.tuca img {
     position: absolute;
-    height: 70vh;
-    width: 70vh;
+    height: 100%;
+    width: 100%;
     margin: 100px auto;
-    margin-left: 35%;
+    margin-left: 5%;
     margin-top: 7%;
 }
 
@@ -181,86 +181,3 @@
         transform: scale3D(0, 0, 1);
     }
 }
-
-
-
-
-// Extra small devices (portrait phones, less than 576px)
-// No media query for `xs` since this is the default in Bootstrap
-
-// Small devices (landscape phones, 576px and up)
-@media (min-width: 576px) {
-
-  .tuca embed {
-      position: absolute;
-      height: 70vh;
-      width: 70vh;
-      margin: 100px auto;
-      margin-left: 5%!important
-      margin-top: 7%;
-  }
-
- }
-
-// Medium devices (tablets, 768px and up)
-@media (max-width: 768px) {
-  .tuca embed {
-      position: absolute;
-      height: 50vh;
-      width: 70vh;
-      margin: 100px auto;
-      margin-left: 15%!important
-      margin-top: 7%;
-  }
-
-  .sk-cube-grid {
-      position: relative!important
-      width: 10vh;
-      height: 10vh;
-      margin: 100px auto;
-      margin-top: 20%;
-  }
-
-}
-
-// Large devices (desktops, 992px and up)
-@media (min-width: 992px) {
-
-  .tuca embed {
-      position: absolute;
-      height: 50vh;
-      width: 70vh;
-      margin: 100px auto;
-      margin-left: 5%!important
-      margin-top: 7%;
-  }
- }
-
-// Extra large devices (large desktops, 1200px and up)
-@media (min-width: 1200px) {
-
-  .tuca embed {
-      position: absolute;
-      height: 50vh;
-      width: 70vh;
-      margin: 100px auto;
-      margin-left: 15%!important
-      margin-top: 7%;
-  }
-
- }
-
-
- // Extra large devices (large desktops, 1200px and up)
- @media (min-width: 1024px) {
-
-   .tuca embed {
-       position: absolute;
-       height: 50vh;
-       width: 70vh;
-       margin: 100px auto;
-       margin-left: 5%!important
-       margin-top: 7%;
-   }
-
-  }
