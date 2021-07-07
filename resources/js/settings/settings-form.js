@@ -139,7 +139,7 @@ class SettingsForm {
                     case "custom":
                         let customInputElementLabel = SettingsForm.createLabel(settingsEntry.title);
                         div.appendChild(customInputElementLabel);
-                        let customSettingsEntry = customSettingsEntryMaster.get(heading, key);
+                        let customSettingsEntry = CustomSettingsEntrySingleton.getInstance().get(heading, key);
                         let customSettingsElement = customSettingsEntry.create(settingsEntry);
                         div.appendChild(customSettingsElement);
                         break;
@@ -452,7 +452,7 @@ class SettingsForm {
                         result[heading][key] = parseFloat(numberInputElement.value);
                         break;
                     case "custom":
-                        let customSettingsEntry = customSettingsEntryMaster.get(heading, key);
+                        let customSettingsEntry = CustomSettingsEntrySingleton.getInstance().get(heading, key);
                         customSettingsEntry.collect(formElement);
                         break;
                     default:
@@ -498,7 +498,7 @@ class SettingsForm {
                         }
                         break;
                     case "custom":
-                        let customSettingsEntry = customSettingsEntryMaster.get(heading, subheading);
+                        let customSettingsEntry = CustomSettingsEntrySingleton.getInstance().get(heading, subheading);
                         customSettingsEntry.update(heading, subheading, schemaEntry, settings[heading][subheading], formElement);
                         break;
                     default:

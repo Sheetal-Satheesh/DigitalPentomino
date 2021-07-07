@@ -14,4 +14,12 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
     update(heading, subheading, schemaEntry, selectedValue, formElement) {
         // TODO
     }
+
+    parseSettingsToSeed(schemaEntry, settingsValue) {
+        // TODO
+    }
+
+    parseFromSeed(schemaEntry, remainingSeed, settingsEntry, key, seed) {
+        // TODO
+    }
 }
