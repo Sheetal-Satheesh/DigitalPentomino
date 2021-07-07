@@ -705,10 +705,11 @@
                 text: strings.License[lang]
             };
             template.attachText("#modalBodyID", textNode);
-            modal.appendChild(document.createElement("br"));
-            modal.appendChild(document.createElement("br"));
+            modalBodyID.appendChild(document.createElement("br"));
+            modalBodyID.appendChild(document.createElement("br"));
             let div5 = document.createElement("div");
-            div5.style.marginTop ="1vh";
+            div5.style.marginTop ="10vh";
+            div5.style.marginRight ="5vh";
             let ConfigKeys = [];
             for (let h in licensesConfig ){
               let i = licensesConfig[h];
@@ -732,15 +733,15 @@
             let tr1 = document.createElement("tr");
             let th1 = document.createElement("th");
             th1.innerHTML=specifiedName;
-            th1.style.marginRight = "5px";
+            th1.style.marginRight = "0.5vh";
             tr1.appendChild(th1);
             let th2 = document.createElement("th");
             th2.innerHTML=link;
-            th2.style.marginRight = "5px";
+            th2.style.marginRight = "0.5vh";
             tr1.appendChild(th2);
             let th3 = document.createElement("th");
             th3.innerHTML=licenses;
-            th3.style.marginRight = "5px";
+            th3.style.marginRight = "0.5vh";
             tr1.appendChild(th3);
             tbody.appendChild(tr1);
             table.appendChild(tbody);
@@ -770,7 +771,7 @@
         // }
 
          div5.appendChild(table);
-         modalTop.appendChild(div5);
+         modalBodyID.appendChild(div5);
           //document.getElementById('modalTop').innerHTML = table;
 
 
