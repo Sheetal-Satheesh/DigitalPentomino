@@ -30,11 +30,11 @@
 
 .tuca img {
     position: absolute;
-    height: 100%;
-    width: 100%;
+    height: 40vh;
+    width: 70vh;
     margin: 100px auto;
-    margin-left: 5%;
-    margin-top: 7%;
+    margin-left: 35%;
+    margin-top: 15%;
 }
 
 .sk-cube-grid {
