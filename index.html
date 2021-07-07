@@ -667,17 +667,30 @@
             template.clearContent("#modalTitleID");
             template.clearContent("#modalBodyID");
             template.clearContent("#innerGridForm");
-            modalBodyID.style.width="100%";
+          modalBodyID.style.width="100%";
             modal.style.background="#dcf0ed";
-          //  modalContainerID.style.borderColor="#dcf0ed";
+           modalContainerID.style.borderColor="#dcf0ed";
             let div1 = document.createElement("div");
             let h5 = document.createElement("h3");
 
             //show back button
             let btn = document.getElementById("backButton");
             btn.style.display = "block";
+
+            $( ".close" ).click(function() {
+              div5.style.display="none";
+              if($("#licencesTable")){
+                document.getElementById("licencesTable").style.display="none";
+              }
+            });
+
+
             btn.onclick = function () {
             openSettings();
+            div5.style.display="none";
+            if($("#licencesTable")){
+              document.getElementById("licencesTable").style.display="none";
+            }
             SettingsForm.updateForm($('#innerGridForm')[0], settings);
             btn.style.display = "none";
             };
@@ -705,8 +718,8 @@
                 text: strings.License[lang]
             };
             template.attachText("#modalBodyID", textNode);
-            modalBodyID.appendChild(document.createElement("br"));
-            modalBodyID.appendChild(document.createElement("br"));
+            modal.appendChild(document.createElement("br"));
+            modal.appendChild(document.createElement("br"));
             let div5 = document.createElement("div");
             div5.style.marginTop ="10vh";
             div5.style.marginRight ="5vh";
@@ -728,20 +741,18 @@
             ConfigKeys.push(link);
             ConfigKeys.push(licenses);
             let table = document.createElement("table");
+            table.id = "licencesTable";
             table.width="100%";
             let tbody = document.createElement("tbody");
             let tr1 = document.createElement("tr");
             let th1 = document.createElement("th");
             th1.innerHTML=specifiedName;
-            th1.style.marginRight = "0.5vh";
             tr1.appendChild(th1);
             let th2 = document.createElement("th");
             th2.innerHTML=link;
-            th2.style.marginRight = "0.5vh";
             tr1.appendChild(th2);
             let th3 = document.createElement("th");
             th3.innerHTML=licenses;
-            th3.style.marginRight = "0.5vh";
             tr1.appendChild(th3);
             tbody.appendChild(tr1);
             table.appendChild(tbody);
@@ -771,7 +782,7 @@
         // }
 
          div5.appendChild(table);
-         modalBodyID.appendChild(div5);
+         modal.appendChild(div5);
           //document.getElementById('modalTop').innerHTML = table;
 
 
