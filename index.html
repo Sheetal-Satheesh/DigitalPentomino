@@ -157,9 +157,6 @@
                 <button type="button" id='replay' class="cActionBtn" onclick="execReplay()">
                     <img src="resources/images/icons/replay.svg">
                 </button>
-                <button type="button" id='license' class="cActionBtn" onclick="openLicense()"> <img
-                        src="resources/images/icons/license.png">
-                </button>
                 <button type="button" id='reset' class="cActionBtn" onclick="resetGame()">
                     <img src="resources/images/icons/tidy_up_v2.png"></button>
             </div>
@@ -172,16 +169,16 @@
             </div>
 
         </div>
-        <div class="main-wrapper" id ="pieceManipulation">        
+        <div class="main-wrapper" id ="pieceManipulation">
             <div class="buttonWrapper first">
                 <div class="buttonInside first" id="insideWrapperFirst" onclick="flipH()">
                     <span class="icon-flip1" id="OpflipH"></span>
-                </div>                
+                </div>
             </div>
             <div class="buttonWrapper second">
                 <div class="buttonInside second" id="insideWrapperSecond" onclick="rotateAntiClkWise()">
                     <span class="icon-rotateLeft" id="OpRotateLeft" ></span>
-                </div>                
+                </div>
             </div>
             <div class="buttonWrapper third">
                 <div class="buttonInside third" id="insideWrapperThird" onclick="rotateClkWise()">
@@ -234,7 +231,7 @@
                     }
                 });
             }
-                                
+
         }
 
         function loadBoardList() {
@@ -647,12 +644,64 @@
             SettingsForm.generateForm(
                 $('#innerGridForm')[0],
                 this.handleJsonFormSubmit,
-                this.handleShareSettings
+                this.handleShareSettings,
+                this.handleClickedOnLicenses
             );
 
             let settings = SettingsSingleton.getInstance().getSettings();
             SettingsForm.updateForm($('#innerGridForm')[0], settings);
             // this.postProcessSettingsForm(SettingsSingleton.getInstance().getSettings());
+        }
+
+        // called when license button is clicked in settings
+        function handleClickedOnLicenses(settings) {
+            this.hideManipulationButtons();
+            this.closeBoardSelector();
+            this.disablePointerEventsOnPieces();
+            var modal = document.getElementById('modalTop');
+            let modalFormContent = document.getElementsByClassName('modalFormContent');
+            modal.style.display = "block";
+            modal.style.background = "transparent";
+            document.querySelector(".modalFormContent").style.display = "block";
+            document.querySelector(".innerGrid").style.display = "none";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent("#innerGridForm");
+            modalBodyID.style.width="100%";
+            //modal.style.background="#dcf0ed";
+            modalContainerID.style.borderColor="#dcf0ed";
+            let div1 = document.createElement("div");
+            let h5 = document.createElement("h3");
+            var t1 = document.createTextNode("Licences");
+            h5.appendChild(t1);
+            div1.appendChild(h5);
+            modalBodyID.appendChild(div1);
+            //show back button
+            let btn = document.getElementById("backButton");
+            btn.style.display = "block";
+            btn.onclick = function () {
+            openSettings();
+            SettingsForm.updateForm($('#innerGridForm')[0], settings);
+            btn.style.display = "none";
+            };
+            let teacherURLLabel = document.createElement("label");
+            let pupilURLLabel = document.createElement("label");
+            let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+            let seed = SettingsParser.parseSettingsToSeed(schema, settings);
+            modalBodyID.appendChild(document.createElement("br"));
+            modalBodyID.appendChild(document.createTextNode("1. Background Music 'Chee Zee Beach' by Kevin MacLeod\n" +
+            "Link: https://incompetech.filmmusic.io/song/3490-chee-zee-beach\n" +
+            "License: https://filmmusic.io/standard-license"));
+            modalBodyID.appendChild(document.createElement("br"));
+            modalBodyID.appendChild(document.createTextNode("2. Wood music link : https://www.zapsplat.com/sound-effect-category/wood/ \n" + "License :https://www.zapsplat.com/license-type/standard-license/"));
+            modalBodyID.appendChild(document.createElement("br"));
+            modalBodyID.appendChild(document.createTextNode("3. (author: Edicionesnaza) jboy-2 : https://www.deviantart.com/edicionesnaza/art/Boy-and-Girl-Icon-gif-By-alfreditha-394021423"+"\n"));
+            modalBodyID.appendChild(document.createElement("br"));
+            modalBodyID.appendChild(document.createTextNode("4. (author: Ahkâm) present :https://www.freeiconspng.com/img/39913    \n"));
+            modalBodyID.appendChild(document.createElement("br"));
+            modalBodyID.appendChild(document.createTextNode("5. (author: Alexis Bailey) present :https://www.freepngimg.com/png/19721-wizard-free-png-image"));
+            modalBodyID.appendChild(document.createElement("br"));
         }
 
         function handleShareSettings(settings) {
@@ -678,7 +727,7 @@
             modalBodyID.appendChild(div1);
 
             //show back button
-            let btn = document.getElementById("backButton"); 
+            let btn = document.getElementById("backButton");
             btn.style.display = "block";
             btn.onclick = function () {
                 openSettings();
@@ -919,7 +968,7 @@
             pd.visual.deleteGameImage(key);
             showGameImages();
         }
-        
+
         function generateRandomColor() {
             /**
              * https://stackoverflow.com/questions/1152024/

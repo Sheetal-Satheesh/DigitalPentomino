@@ -891,11 +891,10 @@ class Visual {
 
     blinkCells(cells) {
         let menu = [];
-        let bgColor;
+        let boardColor = document.getElementsByClassName("boardarea");
         for (let i = 0; i < cells.length; i++) {
             let fv = document.getElementById("field_" + cells[i][0] + "," + cells[i][1]);
-            bgColor = fv.style.background;
-            fv.style.background = "url(resources/images/icons/warning.png) center center";
+            fv.style.background = "#eceaea url(resources/images/icons/warning.png) center center";
             fv.style.backgroundSize = "cover";
             menu.push(fv);
         }
@@ -905,9 +904,9 @@ class Visual {
         blinkInterval = setInterval(function () {
             for (let j = 0; j < menu.length; j++) {
                 if (counter % 2 === 0) {
-                    menu[j].style.background = bgColor;
+                    menu[j].style.background = "#eceaea";
                 } else {
-                    menu[j].style.background = "url(resources/images/icons/warning.png) center center";
+                    menu[j].style.background = "#eceaea url(resources/images/icons/warning.png) center center";
                     menu[j].style.backgroundSize = "cover";
                 }
             }
@@ -915,7 +914,7 @@ class Visual {
             if (counter > 4) {
                 clearInterval(blinkInterval);
             }
-        }, 100);
+        }, 500);
     }
 
     checkHintCommandsForPlaceCommand(hintCommands) {
@@ -1507,6 +1506,12 @@ class Visual {
     }
 
     prefillBasedOnAdjacentPieces(randomSolution, threshold) {
+        let thresholdMap = {
+            "easy": 3,
+            "medium": 2,
+            "hard": 1,
+            "extreme":0
+        };
         let currentAnchor = [];
         let piece = undefined;
         let piecePosition = undefined;
@@ -1555,7 +1560,7 @@ class Visual {
 
             bOverlap = false;
             Object.keys(blockedCellsTemp).forEach(pieceName => {
-                if (blockedCellsTemp[pieceName].nearbyPentominos > threshold) bOverlap = true;
+                if (blockedCellsTemp[pieceName].nearbyPentominos > thresholdMap[threshold]) bOverlap = true;
             });
 
             if (!bOverlap) {
@@ -1581,6 +1586,12 @@ class Visual {
     }
 
     prefillBasedOnDistance(randomSolution, threshold) {
+        let thresholdMap = {
+            "easy": 2,
+            "medium": 3,
+            "hard": 4,
+            "extreme": 5
+        };
         let positions = [];
         let currentAnchor = [];
         let candidateAnchor = [];
@@ -1599,7 +1610,7 @@ class Visual {
                 candidateAnchor = [positions[j][0], positions[j][1]];
                 if (Math.sqrt(
                     Math.pow((currentAnchor[0] - candidateAnchor[0]), 2) +
-                    Math.pow((currentAnchor[1] - candidateAnchor[1]), 2)) < threshold) {
+                    Math.pow((currentAnchor[1] - candidateAnchor[1]), 2)) < thresholdMap[threshold]) {
                     bOverlap = true;
                     break;
                 }

@@ -1,16 +1,14 @@
 class SettingsForm {
 
-    // === === === GENERATE FORM === === ===
-    static generateForm(formElement, onSubmit, onExport) {
+  // === === === GENERATE FORM === === ===
+    static generateForm(formElement, onSubmit, onExport, onLicense) {
         let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
         let settings = SettingsSingleton.getInstance().getSettings();
 
         SettingsForm.createForm(formElement, schema, settings);
 
         formElement.appendChild(document.createElement("br"));
-        formElement.appendChild(document.createElement("br"));
-
-        if (settings.teachersMode) {
+        formElement.appendChild(document.createElement("br"));        if (settings.teachersMode) {
             let useInClassButton = SettingsForm.createButton("Share");
             useInClassButton.addEventListener("click", function() {
                 let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
@@ -19,8 +17,10 @@ class SettingsForm {
             });
             formElement.appendChild(useInClassButton);
         }
-
+        let licenseButton = SettingsForm.createLicenseButton();
+        licenseButton.id = "licenseButton";
         formElement.appendChild(SettingsForm.createSubmitButton());
+        formElement.appendChild(licenseButton);
 
         $(formElement).submit(function(event) {
             let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
@@ -29,6 +29,11 @@ class SettingsForm {
             console.log(settingsClone);
             event.preventDefault();
             onSubmit(false, settingsClone);
+        });
+        licenseButton.addEventListener("click", event => {
+            let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+            let settings = SettingsSingleton.getInstance().getSettings();
+            onLicense(SettingsForm.collectDataFromForm(formElement, schema, settings));
         });
     }
 
@@ -68,6 +73,12 @@ class SettingsForm {
 
                 let settingsEntry = subSettings[key];
                 let settingsEntryType = settingsEntry.type;
+
+                if (heading === "prefilling" && key == "distanceValue" && settings.hasOwnProperty("prefilling") &&
+                    settings.prefilling.hasOwnProperty("prefillingStrategy")) {
+                    let strat = settings.prefilling.prefillingStrategy;
+                    settingsEntry.enumText = settingsEntry._enumText[strat];
+                }
 
                 let elementIsVisible = settings.teachersMode || settings.visibility.isVisible(heading, key);
 
@@ -152,8 +163,32 @@ class SettingsForm {
     static addDynamicBehaviorOfSettingsForm(formElement, settings) {
         if (settings.visibility.isVisible("hinting", "hintingLevels") === true)
             SettingsForm.addDifficultyLevelsListener(formElement);
-
+        // if (settings.visibility.isVisible("prefilling", "distanceValue") === true)
+        SettingsForm.addPrefillChangeListener();
         // further modifications of behavior
+    }
+
+    static addPrefillChangeListener() {
+        let prefillStratSelectElem = document.getElementById("prefilling.prefillingStrategy");
+
+        prefillStratSelectElem.addEventListener("change", (evt) => {
+            let distValSelectElem = document.getElementById("prefilling.distanceValue");
+            let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+            let enumTexts = strings.settings.prefilling.distanceValue.enumTitles[evt.target.value];
+            let enumElements = schema.prefilling.properties.distanceValue.enum;
+            
+            //Remove the existing elements in the lsit
+            for(let i = distValSelectElem.options.length -1; i >= 0; --i) {
+                distValSelectElem.remove(i);
+            }
+
+            for (let i = 0; i < enumElements.length; i++) {
+                let optionElement = document.createElement("option");
+                optionElement.innerHTML = enumTexts[i];
+                optionElement.value = enumElements[i];
+                distValSelectElem.appendChild(optionElement);
+            }
+        });
     }
 
     static addDifficultyLevelsListener(formElement) {
@@ -165,7 +200,7 @@ class SettingsForm {
             let value = selectedOption.getAttribute('value');
             let partial = $(formElement).find('select[name="hinting.partialHintingStragety"]');
             let hintingStrategy = $(formElement).find('select[name="hinting.hintingStrategy"]');
-            //levels flexible to change help functionality 
+            //levels flexible to change help functionality
             switch (value) {
                 case "Easy":
                     //activate full hint
@@ -364,6 +399,14 @@ class SettingsForm {
             type: "submit"
         });
     }
+
+    static createLicenseButton() {
+        return SettingsForm.createButton("Licenses", {
+            type: "button"
+        });
+    }
+
+
 
     // --- --- --- Data Collection --- --- ---
     static collectDataFromForm(formElement, schema, settings) {
