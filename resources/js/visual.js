@@ -302,30 +302,21 @@ class Visual {
                 top = UIProperty.TrayHeight + width * (positionY - 2);
             }
 
-            //HERE
-
             htmlElement.style.zIndex = this.overlapBlock.getZIndex(piece);
             htmlElement.style.left = left + 'vw';
             htmlElement.style.top = top + 'vw';
             htmlElement.style.transformOrigin = 'center';
             htmlElement.style.setProperty("--magnification", 1);
 
-            //code for adding pieceWrapper
+            //code for adding pieceWrapper for resolving the zindex issue on ipad. Important, do not modify.
             let wrapper = "pieceWrapper_" + piece.name;
             if(!$('#piece_'+ piece.name).parent().attr('#'+wrapper)){
                 let wrapperClassString = "<div class = 'pieceWrapper' id = "+wrapper+"></div>";
-                //console.log('--->',$(htmlElement).parent().attr('class')); 
                 if($(htmlElement).parent().attr('class') != 'pieceWrapper'){
                     $(htmlElement).wrap(wrapperClassString);
                 }
                     let pieceWrapper = document.getElementById(wrapper);
-                    //console.log('pieceWrapper--->',pieceWrapper);
-                    pieceWrapper.style.zIndex= this.overlapBlock.getZIndex(piece);
-                    console.log('pieceWrapper new zindex----------->', pieceWrapper.style.zIndex= this.overlapBlock.getZIndex(piece));
-                    //TODO: set zindex to zero of pieceWrapper after piece is put down
-                    //if(this.pieceWrapper.parent.find('pieceWrapper').length == 1)
-                    //console.log('true');
-                
+                    pieceWrapper.style.zIndex= this.overlapBlock.getZIndex(piece);               
             }
 
         }
@@ -524,8 +515,6 @@ class Visual {
                 var x = event.clientX;
                 var y = event.clientY;
                 var container = window.currentlyMoving[0];
-                //console.log('container------->', container);
-
                 //resize object to full size while moving and attach their center to the pointer
                 var width = UIProperty.WindowWidth / that.pd.gameWidth;
                 //set new style for left and top value of element, BUT do not cross borders
@@ -547,7 +536,6 @@ class Visual {
                         container.style.transformOrigin = '50% 50%';
                         container.style.zIndex = 100;
                         container.parentNode.style.zIndex = 100;
-                        //console.log(container.parentNode)
                         container.style.setProperty("--magnification", 1);
                     }
                 }
@@ -580,53 +568,7 @@ class Visual {
                     about that movement (which in turn  repositions the element so it snaps to the grid)
                 */
                 var data = window.currentlyMoving;
-                //console.log('window.currentnlyMoving-->', window.currentlyMoving);
                 let trayPos = 0;
-                //console.log('data------>', data[1].name);
-               
-             
-             /*
-                if(!data[1].inTray){
-                    $(selectedPiece).wrap("<div class = 'pieceWrapper'></div>");
-                    console.log(selectedPiece + 'not in tray');
-                }
-                else{
-                    console.log(selectedPiece + ' in tray');
-                    $(selectedPiece).unwrap("<div class = 'pieceWrapper'></div>");
-                }
-                */
-                //console.log('selectedPiece--->', selectedPiece);
-                // let pentominoList = that.gameController.getAllPentominoes();
-               /* pentominoList.forEach( function(item) {
-                 
-                    
-                    if(!item.inTray){
-                        var outTrayPieceDiv = document.getElementById("piece_" + item.name);
-                        console.log('-------->', outTrayPieceDiv.classList[0]);
-                        //console.log('outTrayPieceDiv---->', outTrayPieceDiv);
-                        //console.log(" not in tray");
-                        // @author: saurabh raut
-                        //adding and removing wrapper class. It resolves zindex isue for ipad. Do not remove!
-                        //let movingPiece = item;
-                        //console.log('movingPiece--->', item);
-                         //outTrayPieceDiv.classList.add("pieceWrapper");
-
-
-                         // wrapping using jquery wrap method:
-                         //$('.'+ outTrayPieceDiv.classList[0]).wrap("<div class = 'pieceWrapper'></div>");
-
-
-                        // console.log('--->', movingPieceDiv);
-                    }
-                    // if(item.inTray){
-                    //     var inTrayPieceDiv = document.getElementById("piece_" + item.name);
-                    //     if($('.'+ inTrayPieceDiv.classList[0]).wrap("<div class = 'pieceWrapper'></div>")){
-                    //         $('.'+ inTrayPieceDiv.classList[0]).unwrap();
-                    //     }
-                    // }
-                 });
-                 */
-
                 window.currentlyMoving = false;
                 var elements = document.elementsFromPoint(event.clientX, event.clientY); //determine the target
                 for (let i in elements) {
@@ -701,34 +643,6 @@ class Visual {
                         that.removeFromTray(data[1]);
                         that.placePentomino(data[1], coords[0], coords[1]);
                         var selectedPiece = document.getElementById('piece_'+ data[1].name);
-                        // console.log('new data1--->', data[1]);
-                        // console.log('selectedPiece.classList--->', selectedPiece.classList);
-                        if(!data[1].inTray){
-
-                            //if($('#piece_'+ data[1].name).parent().find('.pieceWrapper').length == 0 ){
-                            //Original Funtion 
-                            /*   
-                            if($('#piece_'+ data[1].name).parent().hasClass('pieceWrapper')){
-                                $(selectedPiece).unwrap("<div class = 'pieceWrapper'></div>");
-                                console.log('wrapper already there, thus removed!!!');
-                            }
-                            else{
-                                console.log('Has Wrapper?---->', $('#piece_'+ data[1].name).hasClass('pieceWrapper'));
-                                $(selectedPiece).wrap("<div class = 'pieceWrapper'></div>");
-                                console.log('wrapper added');
-
-                            }// end original function
-                            */
-
-                            // if(!$('#piece_'+ data[1].name).parent().hasClass('pieceWrapper')){
-                            //     $(selectedPiece).wrap("<div class = 'pieceWrapper' id = 'pieceWrapper'></div>");
-                            // }
-                        }
-                        // else{
-                        //     console.log('In else');
-                        //     console.log(selectedPiece + ' in tray');
-                        //     $(selectedPiece).unwrap("<div class = 'pieceWrapper'></div>");
-                        // }
                         if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
                             that.showNumberOfPossibleSolutions();
                         }
@@ -846,12 +760,9 @@ class Visual {
             let currentRot = pieceDiv.style.getPropertyValue("--rotationY").split(/(-?\d+)/)[1] * 1; //converts string value to int
             let newRot = currentRot + 180;
             // Update the backend
-            // pieceDiv.style.transform='scaleY(-1)';
-		    // pieceDiv.style.transition='transform 0.5s';
             this.gameController.mirrorPentominoV(piece, cmdProperty);
             this.positionPiece(piece);
             pieceDiv.style.setProperty("--rotationY", newRot.toString() + "deg");
-            //pieceDiv.style.zIndex += document.getElementsByClassName("boardarea gamearea").style.zIndex;
             pieceDiv.setAttribute("flipped", 1 - flipped);
             if (cmdProperty.cmdType != CommandTypes.Shadow) {
                 this.checkIfGameWon();
