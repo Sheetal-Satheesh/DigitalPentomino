@@ -30,7 +30,6 @@
   background-color: #e2e0e0;
   display: flex;
   overflow-x: auto;
-
 }
 
 #playarea {
@@ -172,6 +171,7 @@ height: 4vw;
   user-select: none;
   text-align: center;
   /*outline: 1px solid #eee;*/
+  --webkit-transform: translate3d(0,0,0);
 }
 
 .boardarea {
@@ -181,7 +181,22 @@ height: 4vw;
   bottom: 0;
   left: 0;
   right: 0;
+  /* -webkit-transform: scale3d(); */
+  /* transform-style: preserve-3d; */
 }
+
+/* .gamearea boardarea {
+   transform-style: preserve-3d;
+   
+} */
+
+.pieceWrapper {
+  transform: translate(0, 0);
+  -webkit-transform: translate(0, 0);
+  position: fixed;
+  top: 0;
+}
+
 
 .blockedcell {
 background: repeating-linear-gradient(
@@ -200,6 +215,7 @@ rgba(0, 0, 0, 0.3) 20px
   height: 9vw;
   transform: scale(var(--magnification)) rotateX(var(--rotationX)) rotateY(var(--rotationY)) rotateZ(var(--rotationZ));
   transition: transform .2s;
+  /* transform:rotate(0.0rad); */
 }
 
 .bmAround {
@@ -243,7 +259,7 @@ right: 0;
 bottom: 0;
 left: 0;
 overflow:none;
---webkit-transform: translate3d(0,0,0);
+/* --webkit-transform: translate3d(0,0,0); */
 }
 
 img#logo{
@@ -618,11 +634,12 @@ table
   visibility: visible;
   filter: alpha(opacity=65);
   opacity: .6;
+}
 
 html {
 	-webkit-text-size-adjust: none;
 	touch-action: manipulation;
-
+}
 
 /**shake animation reference : https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_image_shake **/
 .horizTranslate {

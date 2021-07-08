@@ -302,13 +302,23 @@ class Visual {
                 top = UIProperty.TrayHeight + width * (positionY - 2);
             }
 
-            //HERE
-
             htmlElement.style.zIndex = this.overlapBlock.getZIndex(piece);
             htmlElement.style.left = left + 'vw';
             htmlElement.style.top = top + 'vw';
             htmlElement.style.transformOrigin = 'center';
             htmlElement.style.setProperty("--magnification", 1);
+
+            //code for adding pieceWrapper for resolving the zindex issue on ipad. Important, do not modify.
+            let wrapper = "pieceWrapper_" + piece.name;
+            if(!$('#piece_'+ piece.name).parent().attr('#'+wrapper)){
+                let wrapperClassString = "<div class = 'pieceWrapper' id = "+wrapper+"></div>";
+                if($(htmlElement).parent().attr('class') != 'pieceWrapper'){
+                    $(htmlElement).wrap(wrapperClassString);
+                }
+                    let pieceWrapper = document.getElementById(wrapper);
+                    pieceWrapper.style.zIndex= this.overlapBlock.getZIndex(piece);               
+            }
+
         }
         if (htmlElement.style.getPropertyValue("--rotationX") === "") {
             htmlElement.style.setProperty("--rotationX", "0deg");
@@ -505,7 +515,6 @@ class Visual {
                 var x = event.clientX;
                 var y = event.clientY;
                 var container = window.currentlyMoving[0];
-
                 //resize object to full size while moving and attach their center to the pointer
                 var width = UIProperty.WindowWidth / that.pd.gameWidth;
                 //set new style for left and top value of element, BUT do not cross borders
@@ -526,6 +535,7 @@ class Visual {
                         container.style.top = 'calc(' + y + 'px - ' + (width * 2.5) + 'vw)';
                         container.style.transformOrigin = '50% 50%';
                         container.style.zIndex = 100;
+                        container.parentNode.style.zIndex = 100;
                         container.style.setProperty("--magnification", 1);
                     }
                 }
@@ -550,7 +560,7 @@ class Visual {
                 that.select(data_[1], event.clientX, event.clientY);
                 return;
             }
-
+            let pentominoList = that.gameController.getAllPentominoes();
             if (window.currentlyMoving) {
 
                 /*  In case an object was in the process of being moved, this changes the movement.
@@ -559,7 +569,6 @@ class Visual {
                 */
                 var data = window.currentlyMoving;
                 let trayPos = 0;
-                let pentominoList = that.gameController.getAllPentominoes();
                 window.currentlyMoving = false;
                 var elements = document.elementsFromPoint(event.clientX, event.clientY); //determine the target
                 for (let i in elements) {
@@ -633,6 +642,7 @@ class Visual {
                         var coords = (id.split('_')[1].split(','));
                         that.removeFromTray(data[1]);
                         that.placePentomino(data[1], coords[0], coords[1]);
+                        var selectedPiece = document.getElementById('piece_'+ data[1].name);
                         if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
                             that.showNumberOfPossibleSolutions();
                         }
@@ -722,25 +732,29 @@ class Visual {
 
     flipH(cmdProperty = cmdAttrDefault) {
         let piece = this.selected;
-        if (piece) {
+        if (!piece) return
+            //debugger
             let pieceDiv = document.getElementById("piece_" + piece.name);
             let flipped = pieceDiv.getAttribute("flipped") * 1;
             let currentRot = pieceDiv.style.getPropertyValue("--rotationX").split(/(-?\d+)/)[1] * 1; //converts string value to int
             let newRot = currentRot + 180;
-            // Update the backend
-            this.gameController.mirrorPentominoH(piece, cmdProperty);
-            this.positionPiece(piece);
-            pieceDiv.style.setProperty("--rotationX", newRot.toString() + "deg");
+            pieceDiv.style.setProperty("--rotationX", newRot.toString() + "deg");       
+            this.gameController.mirrorPentominoH(piece, cmdProperty)
+            this.positionPiece(piece);       
+            this.positionPiece(piece);       
+            this.positionPiece(piece);       
+            this.positionPiece(piece);       
+            this.positionPiece(piece);                  
             pieceDiv.setAttribute("flipped", 1 - flipped);
             if (cmdProperty.cmdType != CommandTypes.Shadow) {
                 this.checkIfGameWon();
             }
-        }
     }
 
     flipV(cmdProperty = cmdAttrDefault) {
         let piece = this.selected;
-        if (piece) {
+        if (!piece) return
+            
             let pieceDiv = document.getElementById("piece_" + piece.name);
             let flipped = pieceDiv.getAttribute("flipped") * 1;
             let currentRot = pieceDiv.style.getPropertyValue("--rotationY").split(/(-?\d+)/)[1] * 1; //converts string value to int
@@ -753,7 +767,7 @@ class Visual {
             if (cmdProperty.cmdType != CommandTypes.Shadow) {
                 this.checkIfGameWon();
             }
-        }
+        
     }
 
     showNumberOfPossibleSolutions() {
