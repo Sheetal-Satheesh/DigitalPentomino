@@ -267,6 +267,8 @@
                 this.closeModal();
             } else {
                 openScanQrCode();
+                this.disablePointerEventsOnPieces();
+                this.hideManipulationButtons();
             }
         }
 
