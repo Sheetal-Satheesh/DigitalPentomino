@@ -642,3 +642,13 @@ html {
         transform: scale(1,1);
     }
 }
+
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+table.center {
+  margin-left: auto;
+  margin-right: auto;
+}
