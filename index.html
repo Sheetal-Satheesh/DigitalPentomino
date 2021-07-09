@@ -733,7 +733,7 @@
             }
             ConfigKeys = pd.visual.unique(ConfigKeys);
             ConfigKeys = ConfigKeys.reverse();
-            console.log("ConfigKeys[1]",ConfigKeys[1]);
+            //console.log("ConfigKeys[1]",ConfigKeys[1]);
             let specifiedName = ConfigKeys[0].split(',')[0];
             let link = ConfigKeys[1].split(',')[0];
             let licenses = ConfigKeys[2].split(',')[0];
@@ -752,6 +752,9 @@
             table.appendChild(tableBody);
             var tr = document.createElement('TR');
             tableBody.appendChild(tr);
+            var td2 = document.createElement('TH');
+            td2.appendChild(document.createTextNode("Name"));
+            tr.appendChild(td2);
             for (var i = 0; i < ConfigKeys.length; i++) {
               var td = document.createElement('TH');
               td.style.width = '70px';
@@ -761,12 +764,60 @@
               td.appendChild(document.createTextNode(ConfigKeys[i]));
               tr.appendChild(td);
             }
+
+
+
+            let textNode1 = {
+                class: "modalText",
+                text: strings.settings.license[lang]
+            };
+let titles = strings.settings;
+  let names=[];
+  for(let name in strings.settings.license){
+    let n = strings.settings.license[name];
+  //  names.push(n);
+    let l = name[lang];
+    //console.log( titles.license.enumTitles[lang]);
+    //td3.appendChild(document.createTextNode(name));
+  }
+
+  let noo = titles.license.enumTitles[lang];
+  let no;
+
+  for(let o in noo){
+    let no = noo[o];
+      //console.log(no);
+      names.push(no);
+  }
+  names.forEach(function(element){
+    //  console.log(element);
+      if($(".nameId")){
+        console.log($(".nameId"));
+    }
+  });
+
+    //console.log(names);
+
             for (let heading in licensesConfig) {
               let subSettings = licensesConfig[heading];
+              var td3 = document.createElement('TH');
+              td3.classList.add("nameId");
+              td3.style.width = '70px';
+              td3.style.padding="10px";
+              td3.border = '1px solid black';
+              td3.style.borderCollapse="collapse";
+
+                //td3.appendChild(document.createTextNode("names"));
+
+
+
+              //td3.appendChild(document.createTextNode(names[0]));
+
               var tr1 = document.createElement('TR');
+              tr1.appendChild(td3);
               tableBody.appendChild(tr1);
                 for (let key in subSettings) {
-                  console.log("o",  subSettings[key]);
+                  //console.log("o",  subSettings[key]);
                   var td = document.createElement('TH');
                   td.style.width = '70px';
                   td.style.padding="10px";
@@ -776,6 +827,8 @@
                   tr1.appendChild(td);
                 }
             }
+
+
 
             for (let heading in licensesConfig ) {
               let subSettings = licensesConfig[heading];
@@ -794,7 +847,7 @@
 
 
 
-             console.log(table);
+             //console.log(table);
         //     let table = "<table id='licenseTable' ><tbody>";
         //        for (let heading in licensesConfig ) {
         //           table += "<tr><th>" + specifiedName + "</th><th>" + link + "</th><th>" + licenses + "</th></tr>";
@@ -807,7 +860,7 @@
         //           // table += "<tr><th>" + key + "</th><td>" + subSettings[key] + "</td></tr>";
         //         }
         // }
-         console.log(this.addTable());
+         console.log(table);
          div5.appendChild(table);
          modal.appendChild(div5);
           //document.getElementById('modalTop').innerHTML = table;

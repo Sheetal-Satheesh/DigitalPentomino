@@ -37,13 +37,15 @@ const strings = {
             }
         },
         license: {
-             title: ["LICENSES", "LIZENZEN"],
-             backgroundImg: ["Background image", "Hintergrundbild"],
+            enumTitles: [["Solved Screen Magician image", "Solved screen boy image", "Solved Screen Gift image","Background Music",
+            "Functions Music"], ["Gelöstes Screen Magician-Bild", "Gelöster Bildschirm Junge Bild", "Gelöst Bildschirm Geschenkbild",
+            "Hintergrundmusik","Funktionen Musik"]],
              solvedScreenMagician: ["Solved Screen Magician image", "Gelöstes Screen Magician-Bild"],
              solvedScreenBoy: ["Solved screen boy image", "Gelöster Bildschirm Junge Bild"],
              solvedScreenGift: ["Solved Screen Gift image", "Gelöst Bildschirm Geschenkbild"],
              backgroundMusic: ["Background Music", "Hintergrundmusik"],
              functionsMusic: ["Functions Music","Funktionen Musik"]
+            // backgroundImg: ["Background image", "Hintergrundbild"],
         },
         hinting: {
             title: ["Hints (Experimental)", "Hinweise (Experimentell)"],
