@@ -249,6 +249,13 @@
   background-color: lightblue;
 }
 
+.modalContainer h4 {
+  left: 0;
+  width: 100vw;
+  padding: 1vw;
+  background-color: lightgrey;
+}
+
 .modalContainer .btn {
   border: 1px solid black;
   width: 28vw;
@@ -256,6 +263,9 @@
   text-align: center;
   font-size: 2vw;
   margin-top: 2vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .imgButton {
@@ -274,6 +284,7 @@
   margin-left: 1vw;
   margin-top: 1vw;
   margin-bottom: 1vw;
+  margin-right: 2vw;
   /* Double-sized Checkboxes */
   -ms-transform: scale(2); /* IE */
   -moz-transform: scale(2); /* FF */
@@ -283,8 +294,8 @@
 }
 
 .modalContainer label {
-  margin-left: 2vw;
   font-size: 1.7vw;
+  margin-left: 0.5vw;
 }
 
 #modalTitleID {
@@ -294,17 +305,18 @@
   background-color: transparent;
 }
 
-.modalContainer select {
+.modalContainer select:not(.StateSelect) { /* TODO: remove StateSelect exclusion in future by giving it specific styling */
   -moz-appearance: none;
   -webkit-appearance: none;
   appearance: none;
   border: none;
   width: 20vw;
+  font-weight: bold;
   height: 4vw;
   -moz-padding-start: calc(10px - 3px);
   padding-left: 1vw;
   background: url(fff-0-2.png) repeat;
-  color: rgb(92, 92, 194);
+  color: rgb(96, 96, 190);
   font-size: 1.7vw;
   outline: none;
   cursor: pointer;

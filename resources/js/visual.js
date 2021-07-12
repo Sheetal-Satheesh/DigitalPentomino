@@ -1124,7 +1124,7 @@ class Visual {
                     textContent: strings.general.yes[lang]
                 };
                 let div2 = document.createElement("div");
-                let text = document.createElement("h4");
+                let text = document.createElement("h5");
                 text.innerHTML = "\n";
                 div2.appendChild(text);
                 //attach div

@@ -42,6 +42,7 @@ class SettingsForm {
         let creatingNormalSettings = true;
         let advancedSettingsDiv = document.createElement("div");
         advancedSettingsDiv.style.display = "none";
+        advancedSettingsDiv.id = "advancedSettings";
 
         let htmlElement = formElement;
 
