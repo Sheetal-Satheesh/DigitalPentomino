@@ -16,6 +16,19 @@
     align-items: center;
     background-color: #fff;
     display: flex;
+
+    position: fixed;
+ left: 0;
+ top: 0;
+ width: 100%;
+ height: 100%;
+ margin: 0;
+ padding: 0;
+ z-index = 99999;
+ text-align: center;
+ display: flex;
+ align-items: center;
+ justify-content: center;
 }
 
 .tuca {
@@ -29,12 +42,12 @@
 }
 
 .tuca img {
-    position: absolute;
+    position: relative;
     height: 40vh;
     width: 70vh;
     margin: 100px auto;
-    margin-left: 35%;
     margin-top: 15%;
+    margin-left: 5%;
 }
 
 .sk-cube-grid {
@@ -45,19 +58,19 @@
     margin-top: 40%;
 }
 
-/* @media only screen and (max-width: 800px) {
-    .tuca embed {
+ @media only screen and (max-width: 800px) {
+    /* .tuca embed {
         position: absolute;
         height: 60vh!important;
         width: 60vh!important;
         margin: 100px auto;
         margin-left: 35%;
         margin-top: 7%;
-    }
+    } */
 }
 
 @media only screen and (max-width: 1176px) {
-    .sk-cube-grid {
+    /* .sk-cube-grid {
         position: absolute;
         width: 40px;
         height: 40px;
@@ -71,11 +84,11 @@
         margin: 100px auto;
         margin-left: 35%;
         margin-top: 7%;
-    }
+    } */
 }
 
 @media only screen and (max-width: 600px) {
-    .sk-cube-grid {
+    /* .sk-cube-grid {
         position: absolute;
         width: 40px;
         height: 40px;
@@ -89,18 +102,18 @@
         margin: 100px auto;
         margin-left: 31%;
         margin-top: 7%;
-    }
+    } */
 }
 
 @media only screen and (max-height: 600px) {
-    .sk-cube-grid {
+    /* .sk-cube-grid {
         position: absolute;
         width: 40px;
         height: 40px;
         margin: 100px auto;
         margin-top: 40%;
-    }
-} */
+    } */
+}
 
 .sk-cube-grid .sk-cube {
     width: 33%;
