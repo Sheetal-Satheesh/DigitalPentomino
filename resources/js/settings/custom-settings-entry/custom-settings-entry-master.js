@@ -32,7 +32,7 @@ class CustomSettingsEntryMaster {
     }
 
     get(heading, subheading) {
-        let name = heading + "_" + subheading;
+        let name = SettingsForm.generateSettingsEntryName(heading, subheading);
         if (this.customSettingsEntries[name] === undefined) {
             console.error("Custom settings entry undefined: " + name);
         }

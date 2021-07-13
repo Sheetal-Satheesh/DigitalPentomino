@@ -413,7 +413,9 @@ class SettingsForm {
         });
     }
 
-
+    static generateSettingsEntryName(heading, subheading) {
+        return heading + "_" + subheading;
+    }
 
     // --- --- --- Data Collection --- --- ---
     static collectDataFromForm(formElement, schema, settings) {

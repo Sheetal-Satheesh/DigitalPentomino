@@ -1,6 +1,6 @@
 class CustomSettingsEntry {
     constructor(heading, subheading) {
-        this._name = heading + "_" + subheading;
+        this._name = SettingsForm.generateSettingsEntryName(heading, subheading);
     }
 
     create(settingsEntry) {
