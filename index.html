@@ -699,14 +699,14 @@
             div5.style.marginTop ="10vh";
             div5.style.marginRight ="5vh";
             let ConfigKeys = [];
-            for (let h in licensesConfig ){
-              let i = licensesConfig[h];
-                for(let r in i){
-                  ConfigKeys.push(r);
-                }
+            for (let h in strings.settings.license.enumTitles ){
+              let i = strings.settings.license.enumTitles[h][lang];
+
+                  ConfigKeys.push(i);
+
             }
-            ConfigKeys = pd.visual.unique(ConfigKeys);
-            ConfigKeys = ConfigKeys.reverse();
+            //ConfigKeys = pd.visual.unique(ConfigKeys);
+            //ConfigKeys = ConfigKeys.reverse();
             modal.appendChild(document.createElement(strings.License[lang]));
             var table = document.createElement('TABLE');
             table.id="licencesTable"

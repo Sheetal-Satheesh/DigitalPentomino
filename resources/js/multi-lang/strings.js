@@ -37,9 +37,13 @@ const strings = {
             }
         },
         license: {
-            enumTitles: [["Solved Screen Magician image", "Solved screen boy image", "Solved Screen Gift image","Background Music",
-            "Functions Music"], ["Gelöstes Screen Magician-Bild", "Gelöster Bildschirm Junge Bild", "Gelöst Bildschirm Geschenkbild",
-            "Hintergrundmusik","Funktionen Musik"]],
+            // enumTitles: [["Solved Screen Magician image", "Solved screen boy image", "Solved Screen Gift image","Background Music",
+            // "Functions Music"], ["Gelöstes Screen Magician-Bild", "Gelöster Bildschirm Junge Bild", "Gelöst Bildschirm Geschenkbild",
+            // "Hintergrundmusik","Funktionen Musik"]],
+            enumTitles: [["Name", "Name"], ["Author", "Autor"],["Link", "Link"], ["License", "Lizenz"]],
+             Name:["Name", "Naame"],
+             Link:["Link", "Lannka"],
+             License:["License", "Lizenzen"],
              solvedScreenMagician: ["Solved Screen Magician image", "Gelöstes Screen Magician-Bild"],
              solvedScreenBoy: ["Solved screen boy image", "Gelöster Bildschirm Junge Bild"],
              solvedScreenGift: ["Solved Screen Gift image", "Gelöst Bildschirm Geschenkbild"],
