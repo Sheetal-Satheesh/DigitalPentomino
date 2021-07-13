@@ -55,7 +55,7 @@
     width: 10vh;
     height: 10vh;
     margin: 100px auto;
-    margin-top: 40%;
+    margin-top: 30%;
 }
 
  @media only screen and (max-width: 800px) {
@@ -193,4 +193,15 @@
         -webkit-transform: scale3D(0, 0, 1);
         transform: scale3D(0, 0, 1);
     }
+}
+
+#myProgress {
+  width: 100%;
+  background-color: #ddd;
+}
+
+#myBar {
+  width: 1%;
+  height: 30px;
+  background-color: #04AA6D;
 }

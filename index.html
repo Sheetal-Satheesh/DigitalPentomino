@@ -53,6 +53,39 @@
     <script src="resources/js/hint-ai.js"></script>
     <script src="resources/js/help/hinting/command-sequence-list.js"></script>
     <script src="resources/js/load_screen.js"></script>
+    <script>
+    var i = 0;
+    function move() {
+      if (i == 0) {
+        i = 1;
+        var elem = document.getElementById("myBar");
+        var width = 1;
+        var id = setInterval(frame, 10);
+        function frame() {
+          if (width >= 100) {
+            clearInterval(id);
+            i = 0;
+          } else {
+            width++;
+            elem.style.width = width + "%";
+          }
+        }
+      }
+    }
+
+    </script>
+    <style>
+#myProgress {
+  width: 100%;
+  background-color: #ddd;
+}
+
+#myBar {
+  width: 1%;
+  height: 30px;
+  background-color: #04AA6D;
+}
+</style>
 </head>
 <!-- Preloader section -->
 <div class="preloader d-flex">
@@ -60,19 +93,13 @@
         <img src="resources/images/icons/tuca.png" type="image/svg+xml" />
     </div>
     <div class="sk-cube-grid">
-        <div class="sk-cube sk-cube1"></div>
-        <div class="sk-cube sk-cube2"></div>
-        <div class="sk-cube sk-cube3"></div>
-        <div class="sk-cube sk-cube4"></div>
-        <div class="sk-cube sk-cube5"></div>
-        <div class="sk-cube sk-cube6"></div>
-        <div class="sk-cube sk-cube7"></div>
-        <div class="sk-cube sk-cube8"></div>
-        <div class="sk-cube sk-cube9"></div>
+      <div id="myProgress">
+        <div id="myBar"></div>
+      </div>
     </div>
 </div>
 
-<body onload="touchStartup(); initialize()" class="page">
+<body onload="touchStartup(); initialize()" onload="move()">
     <audio id="audioTukaScream" src="resources/audio/tuka-scream.mp3"></audio>
     <audio id="bgMusic" src="resources/audio/chee-zee-beach-by-kevin-macleod-from-filmmusic-io.mp3" loop></audio>
 
