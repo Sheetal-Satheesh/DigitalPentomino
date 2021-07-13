@@ -698,15 +698,6 @@
             let div5 = document.createElement("div");
             div5.style.marginTop ="10vh";
             div5.style.marginRight ="5vh";
-            let ConfigKeys = [];
-            for (let h in licensesConfig ){
-              let i = licensesConfig[h];
-                for(let r in i){
-                  ConfigKeys.push(r);
-                }
-            }
-            ConfigKeys = pd.visual.unique(ConfigKeys);
-            ConfigKeys = ConfigKeys.reverse();
             modal.appendChild(document.createElement(strings.License[lang]));
             var table = document.createElement('TABLE');
             table.id="licencesTable"
@@ -718,31 +709,47 @@
             table.appendChild(tableBody);
             var tr = document.createElement('TR');
             tableBody.appendChild(tr);
-            for (var i = 0; i < ConfigKeys.length; i++) {
-              var td = document.createElement('TH');
-              td.style.width = '70px';
-              td.style.padding="10px";
-              td.border = '1px solid black';
-              td.style.borderCollapse="collapse";
-              td.appendChild(document.createTextNode(ConfigKeys[i]));
-              tr.appendChild(td);
-            }
+            let th1 = createTableHeadingEntry("Name");
+            tr.appendChild(th1);
+            // let td = createTableHeadingEntry("Author's name");
+            let th2 = createTableHeadingEntry("Link");
+            tr.appendChild(th2);
+            let th3 = createTableHeadingEntry("License");
+            tr.appendChild(th3);
+
             for (let heading in licensesConfig) {
               let subSettings = licensesConfig[heading];
-              var tr1 = document.createElement('TR');
+              let tr1 = document.createElement('TR');
               tableBody.appendChild(tr1);
               for (let key in subSettings) {
-                var td = document.createElement('TH');
-                td.style.width = '70px';
-                td.style.padding="10px";
-                td.border = '1px solid black';
-                td.style.borderCollapse="collapse";
-                td.appendChild(document.createTextNode(subSettings[key]));
-                tr1.appendChild(td);
+                  let entryText;
+                  if (key === "name") {
+                       entryText = subSettings[key][lang];
+                  } else {
+                      entryText = subSettings[key];
+                  }
+
+                  let td = document.createElement('TH');
+                  td.style.width = '70px';
+                  td.style.padding="10px";
+                  td.border = '1px solid black';
+                  td.style.borderCollapse="collapse";
+                  td.appendChild(document.createTextNode(entryText));
+                  tr1.appendChild(td);
               }
             }
          div5.appendChild(table);
          modal.appendChild(div5);
+        }
+
+        function createTableHeadingEntry(text) {
+            let td = document.createElement('TH');
+            td.style.width = '70px';
+            td.style.padding="10px";
+            td.border = '1px solid black';
+            td.style.borderCollapse="collapse";
+            td.appendChild(document.createTextNode(text));
+            return td;
         }
 
         function handleShareSettings(settings) {
