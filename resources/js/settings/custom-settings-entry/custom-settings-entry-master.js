@@ -20,7 +20,7 @@ class CustomSettingsEntryMaster {
         this.customSettingsEntries = {};
 
         // register handlers
-        this.addEntry(new StartPosSettingsEntry());
+        this.addEntry(new StartPosSettingsEntry("boardCustomization", "initialPiecePos"));
     }
 
     addEntry(newEntry) {
@@ -32,7 +32,7 @@ class CustomSettingsEntryMaster {
     }
 
     get(heading, subheading) {
-        let name = heading + "." + subheading;
+        let name = heading + "_" + subheading;
         if (this.customSettingsEntries[name] === undefined) {
             console.error("Custom settings entry undefined: " + name);
         }

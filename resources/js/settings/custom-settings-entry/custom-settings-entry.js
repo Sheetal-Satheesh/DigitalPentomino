@@ -1,6 +1,6 @@
 class CustomSettingsEntry {
     constructor(heading, subheading) {
-        this._name = heading + "." + subheading;
+        this._name = heading + "_" + subheading;
     }
 
     create(settingsEntry) {

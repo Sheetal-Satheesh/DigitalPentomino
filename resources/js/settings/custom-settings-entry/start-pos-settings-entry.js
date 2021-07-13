@@ -1,6 +1,8 @@
+const NO_POS_SELECTED = "-";
+
 class StartPosSettingsEntry extends CustomSettingsEntry {
-    constructor() {
-        super("boardCustomization", "initialPiecePos");
+    constructor(heading, subheading) {
+        super(heading, subheading);
     }
 
     create(settingsEntry) {
@@ -17,7 +19,7 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
         div.appendChild(clearButton);
         div.appendChild(document.createElement("br"));
         div.appendChild(SettingsForm.createLabel("Start positions: "));
-        let resultLabel = SettingsForm.createLabel("None saved");
+        let resultLabel = SettingsForm.createLabel(NO_POS_SELECTED);
         resultLabel.id = "startPiecePosLabel";
         resultLabel.name = "startPiecePosLabel";
         div.appendChild(resultLabel);
@@ -43,11 +45,18 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
     }
 
     handleClickedOnClear(event, div) {
-        console.log("clear");
+        let resultLabel = $(div).find("#startPiecePosLabel")[0];
+        resultLabel.innerHTML = NO_POS_SELECTED;
     }
 
     collect(formElement) {
-        return undefined;
+        let div = $(formElement).find("#" + this._name)[0];
+        let resultLabel = $(div).find("#startPiecePosLabel")[0];
+        if (!(resultLabel.textContent === NO_POS_SELECTED)) {
+            return resultLabel.textContent;
+        } else {
+            return "";
+        }
     }
 
     update(heading, subheading, schemaEntry, selectedValue, formElement) {

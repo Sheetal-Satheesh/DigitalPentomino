@@ -453,7 +453,7 @@ class SettingsForm {
                         break;
                     case "custom":
                         let customSettingsEntry = CustomSettingsEntrySingleton.getInstance().get(heading, key);
-                        customSettingsEntry.collect(formElement);
+                        result[heading][key] = customSettingsEntry.collect(formElement);
                         break;
                     default:
                         throw new Error("Unknown type: " + settingsEntryType);
