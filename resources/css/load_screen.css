@@ -52,67 +52,45 @@
 
 .sk-cube-grid {
     position: absolute;
-    width: 10vh;
-    height: 10vh;
-    margin: 100px auto;
-    margin-top: 30%;
+    display: flex;
+    margin-left: 0vh;
+    margin-top:60vh;
 }
 
- @media only screen and (max-width: 800px) {
-    /* .tuca embed {
-        position: absolute;
-        height: 60vh!important;
-        width: 60vh!important;
-        margin: 100px auto;
-        margin-left: 35%;
-        margin-top: 7%;
-    } */
+ @media only screen and (max-width: 995px) {
+   .sk-cube-grid {
+       position: absolute;
+       display: flex;
+       margin-left: 0vh;
+       margin-top:40vh!important
+   }
 }
 
-@media only screen and (max-width: 1176px) {
-    /* .sk-cube-grid {
-        position: absolute;
-        width: 40px;
-        height: 40px;
-        margin: 100px auto;
-        margin-top: 50%;
-    }
-    .tuca embed {
-        position: absolute;
-        height: 70vh;
-        width: 70vh;
-        margin: 100px auto;
-        margin-left: 35%;
-        margin-top: 7%;
-    } */
+@media only screen and (max-width: 1028px) {
+  .sk-cube-grid {
+      position: absolute;
+      display: flex;
+      margin-left: 0vh;
+      margin-top:20vh;
+  }
 }
 
 @media only screen and (max-width: 600px) {
-    /* .sk-cube-grid {
-        position: absolute;
-        width: 40px;
-        height: 40px;
-        margin: 100px auto;
-        margin-top: 60%;
-    }
-    .tuca embed {
-        position: absolute;
-        height: 50vh;
-        width: 50vh;
-        margin: 100px auto;
-        margin-left: 31%;
-        margin-top: 7%;
-    } */
+  .sk-cube-grid {
+      position: absolute;
+      display: flex;
+      margin-left: 0vh;
+      margin-top:15vh;
+  }
 }
 
-@media only screen and (max-height: 600px) {
-    /* .sk-cube-grid {
-        position: absolute;
-        width: 40px;
-        height: 40px;
-        margin: 100px auto;
-        margin-top: 40%;
-    } */
+@media only screen and (max-height: 1455px) {
+  .sk-cube-grid {
+      position: absolute;
+      display: flex;
+      margin-left: 0vh;
+      margin-top:60vh;
+  }
 }
 
 .sk-cube-grid .sk-cube {
