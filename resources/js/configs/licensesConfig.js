@@ -1,11 +1,5 @@
 let lang = SettingsSingleton.getInstance().getSettings().general.language;
 licensesConfig = {
-    // "backgroundImg1": {
-    //     "name": strings.license.backgroundImg[lang],
-    //     "specifiedName": "",
-    //     "link": "",
-    //     "license": ""
-    // },
     "solvedScreenMagician": {
         "name": strings.settings.license.solvedScreenMagician,
         "Author": "Alexis Bailey",
