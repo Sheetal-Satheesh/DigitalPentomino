@@ -668,7 +668,7 @@
             template.clearContent("#modalBodyID");
             template.clearContent("#innerGridForm");
             modal.style.background="#dcf0ed";
-          document.getElementById("modalFormContainerID").style.border = "none";
+            document.getElementById("modalFormContainerID").style.border = "none";
             //show back button
             let btn = document.getElementById("backButton");
             btn.style.display = "block";
@@ -701,12 +701,8 @@
             let ConfigKeys = [];
             for (let h in strings.settings.license.enumTitles ){
               let i = strings.settings.license.enumTitles[h][lang];
-
-                  ConfigKeys.push(i);
-
+              ConfigKeys.push(i);
             }
-            //ConfigKeys = pd.visual.unique(ConfigKeys);
-            //ConfigKeys = ConfigKeys.reverse();
             modal.appendChild(document.createElement(strings.License[lang]));
             var table = document.createElement('TABLE');
             table.id="licencesTable"
@@ -732,7 +728,6 @@
               var tr1 = document.createElement('TR');
               tableBody.appendChild(tr1);
               for (let key in subSettings) {
-
                 if(key==="name"){
                   var td = document.createElement('TH');
                   let entry = subSettings[key][lang];
