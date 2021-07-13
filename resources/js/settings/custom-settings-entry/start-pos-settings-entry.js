@@ -27,7 +27,19 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
     }
 
     handleClickedOnSave(event, div) {
-        console.log("save");
+        let resultLabel = $(div).find("#startPiecePosLabel")[0];
+
+        let game = new FrontController().controller.game();
+        let pentominoesOnBoard = game.getPentominoesInGmArea().filter(pentomino => game.isPlacedOnBoard(pentomino));
+
+        let resultText = "";
+
+        pentominoesOnBoard.forEach(pentomino => {
+            let pos = game.getPosition(pentomino);
+            resultText += pentomino.name + "(" + pos[0] + ", " + pos[1] + ") ";
+        });
+
+        resultLabel.innerHTML = resultText;
     }
 
     handleClickedOnClear(event, div) {
