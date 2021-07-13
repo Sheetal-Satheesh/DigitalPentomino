@@ -673,16 +673,16 @@
             let btn = document.getElementById("backButton");
             btn.style.display = "block";
             $( ".close" ).click(function() {
-              div5.style.display="none";
-              if($("#licencesTable")){
-                document.getElementById("licencesTable").style.display="none";
-              }
+                div5.style.display="none";
+                if($("#licencesTable")){
+                  document.getElementById("licencesTable").style.display="none";
+                }
             });
             btn.onclick = function () {
             openSettings();
             div5.style.display="none";
             if($("#licencesTable")){
-              document.getElementById("licencesTable").style.display="none";
+                document.getElementById("licencesTable").style.display="none";
             }
             SettingsForm.updateForm($('#innerGridForm')[0], settings);
             btn.style.display = "none";
@@ -700,8 +700,8 @@
             div5.style.marginRight ="5vh";
             let ConfigKeys = [];
             for (let h in strings.settings.license.enumTitles ){
-              let i = strings.settings.license.enumTitles[h][lang];
-              ConfigKeys.push(i);
+                let i = strings.settings.license.enumTitles[h][lang];
+                ConfigKeys.push(i);
             }
             modal.appendChild(document.createElement(strings.License[lang]));
             var table = document.createElement('TABLE');
@@ -715,39 +715,39 @@
             var tr = document.createElement('TR');
             tableBody.appendChild(tr);
             for (var i = 0; i < ConfigKeys.length; i++) {
-              var td = document.createElement('TH');
-              td.style.width = '70px';
-              td.style.padding="10px";
-              td.border = '1px solid black';
-              td.style.borderCollapse="collapse";
-              td.appendChild(document.createTextNode(ConfigKeys[i]));
-              tr.appendChild(td);
+                var td = document.createElement('TH');
+                td.style.width = '70px';
+                td.style.padding="10px";
+                td.border = '1px solid black';
+                td.style.borderCollapse="collapse";
+                td.appendChild(document.createTextNode(ConfigKeys[i]));
+                tr.appendChild(td);
             }
             for (let heading in licensesConfig) {
-              let subSettings = licensesConfig[heading];
-              var tr1 = document.createElement('TR');
-              tableBody.appendChild(tr1);
-              for (let key in subSettings) {
-                if(key==="name"){
-                  var td = document.createElement('TH');
-                  let entry = subSettings[key][lang];
-                  td.style.width = '70px';
-                  td.style.padding="10px";
-                  td.border = '1px solid black';
-                  td.style.borderCollapse="collapse";
-                  td.appendChild(document.createTextNode(entry));
+                let subSettings = licensesConfig[heading];
+                var tr1 = document.createElement('TR');
+                tableBody.appendChild(tr1);
+                for (let key in subSettings) {
+                    if(key==="name"){
+                        var td = document.createElement('TH');
+                        let entry = subSettings[key][lang];
+                        td.style.width = '70px';
+                        td.style.padding="10px";
+                        td.border = '1px solid black';
+                        td.style.borderCollapse="collapse";
+                        td.appendChild(document.createTextNode(entry));
+                    }
+                    else{
+                        var td = document.createElement('TH');
+                        entry = subSettings[key];
+                        td.style.width = '70px';
+                        td.style.padding="10px";
+                        td.border = '1px solid black';
+                        td.style.borderCollapse="collapse";
+                        td.appendChild(document.createTextNode(entry));
+                    }
+                    tr1.appendChild(td);
                 }
-                else{
-                  var td = document.createElement('TH');
-                  entry = subSettings[key];
-                  td.style.width = '70px';
-                  td.style.padding="10px";
-                  td.border = '1px solid black';
-                  td.style.borderCollapse="collapse";
-                  td.appendChild(document.createTextNode(entry));
-                }
-                tr1.appendChild(td);
-              }
             }
          div5.appendChild(table);
          modal.appendChild(div5);
