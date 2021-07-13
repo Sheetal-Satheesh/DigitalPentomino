@@ -55,12 +55,14 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
         if (!(resultLabel.textContent === NO_POS_SELECTED)) {
             return resultLabel.textContent;
         } else {
-            return "";
+            return NO_POS_SELECTED;
         }
     }
 
     update(heading, subheading, schemaEntry, selectedValue, formElement) {
-        // TODO
+        let div = $(formElement).find("#" + this._name)[0];
+        let resultLabel = $(div).find("#startPiecePosLabel")[0];
+        resultLabel.textContent = selectedValue;
     }
 
     parseSettingsToSeed(schemaEntry, settingsValue) {
