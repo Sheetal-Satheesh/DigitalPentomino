@@ -705,6 +705,7 @@
             }
             modal.appendChild(document.createElement(strings.License[lang]));
             var table = document.createElement('TABLE');
+            console.log(table);
             table.id="licencesTable"
             table.border = '1px solid black';
             table.style.textAlign = "center";
@@ -714,36 +715,71 @@
             table.appendChild(tableBody);
             var tr = document.createElement('TR');
             tableBody.appendChild(tr);
+            var x = window.matchMedia("(max-width: 860px)")
             for (var i = 0; i < ConfigKeys.length; i++) {
                 var td = document.createElement('TH');
-                td.style.width = '70px';
-                td.style.padding="10px";
-                td.border = '1px solid black';
+                td.classList.add("TableHead");
+                td.style.width = '35vw';
+                td.style.padding="1vw";
+                td.border = '0.5vw solid black';
                 td.style.borderCollapse="collapse";
+                if (x.matches)
+                { // If media query matches
+                    td.style.fontSize="0.5vw";
+                    td.style.width = '10vw';
+                }
+                else
+                {
+                   td.style.fontSize="1vw";
+                   td.style.width = '10vw';
+                }
                 td.appendChild(document.createTextNode(ConfigKeys[i]));
                 tr.appendChild(td);
             }
             for (let heading in licensesConfig) {
                 let subSettings = licensesConfig[heading];
                 var tr1 = document.createElement('TR');
+                var x = window.matchMedia("(max-width: 700px)");
                 tableBody.appendChild(tr1);
                 for (let key in subSettings) {
                     if(key==="name"){
                         var td = document.createElement('TH');
+                        td.classList.add("TableNameCell");
                         let entry = subSettings[key][lang];
-                        td.style.width = '70px';
-                        td.style.padding="10px";
-                        td.border = '1px solid black';
+                        td.style.width = '35vw';
+                        td.style.padding="1vw";
+                        td.border = '0.5vw solid black';
                         td.style.borderCollapse="collapse";
+                        if (x.matches)
+                        { // If media query matches
+                            td.style.fontSize="0.5vw";
+                            td.style.width = '10vw';
+                        }
+                        else
+                        {
+                           td.style.fontSize="1vw";
+                           td.style.width = '10vw';
+                        }
                         td.appendChild(document.createTextNode(entry));
                     }
                     else{
                         var td = document.createElement('TH');
+                        td.classList.add("TableDataCell");
                         entry = subSettings[key];
-                        td.style.width = '70px';
-                        td.style.padding="10px";
-                        td.border = '1px solid black';
+                        td.style.width = '35vw';
+                        td.style.padding="1vw";
+                        td.border = '0.5vw solid black';
                         td.style.borderCollapse="collapse";
+                        if (x.matches)
+                        { // If media query matches
+                            td.style.fontSize="0.5vw";
+                            td.style.width = '10vw';
+                        }
+                        else
+                        {
+                           td.style.fontSize="1vw";
+                           td.style.width = '10vw';
+                        }
                         td.appendChild(document.createTextNode(entry));
                     }
                     tr1.appendChild(td);
