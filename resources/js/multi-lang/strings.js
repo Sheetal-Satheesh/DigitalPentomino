@@ -161,7 +161,13 @@ const strings = {
                     "<li><b>Nachbar-Einschränkung:</b> Ein Pentomino hat maximal so viele benachbarte Pentominoes wie spezifiziert in <i>Distanz-Wert</i>.</li>" +
                     "</ul>"]
             },
-            distanceValue: ["Distance value", "Distanz-Wert"]
+            distanceValue: {
+                title: ["Distance value", "Distanz-Wert"],
+                enumTitles: {
+                    distance: [["2"], ["3"], ["4"], ["5"]],
+                    pieces: [["3"], ["2"], ["1"], ["0"]]
+                }
+            }
         },
         theming: {
             title: ["Application theme", "Applikationsdesign"],

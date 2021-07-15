@@ -302,13 +302,23 @@ class Visual {
                 top = UIProperty.TrayHeight + width * (positionY - 2);
             }
 
-            //HERE
-
             htmlElement.style.zIndex = this.overlapBlock.getZIndex(piece);
             htmlElement.style.left = left + 'vw';
             htmlElement.style.top = top + 'vw';
             htmlElement.style.transformOrigin = 'center';
             htmlElement.style.setProperty("--magnification", 1);
+
+            //code for adding pieceWrapper for resolving the zindex issue on ipad. Important, do not modify.
+            let wrapper = "pieceWrapper_" + piece.name;
+            if(!$('#piece_'+ piece.name).parent().attr('#'+wrapper)){
+                let wrapperClassString = "<div class = 'pieceWrapper' id = "+wrapper+"></div>";
+                if($(htmlElement).parent().attr('class') != 'pieceWrapper'){
+                    $(htmlElement).wrap(wrapperClassString);
+                }
+                    let pieceWrapper = document.getElementById(wrapper);
+                    pieceWrapper.style.zIndex= this.overlapBlock.getZIndex(piece);               
+            }
+
         }
         if (htmlElement.style.getPropertyValue("--rotationX") === "") {
             htmlElement.style.setProperty("--rotationX", "0deg");
@@ -321,7 +331,7 @@ class Visual {
         htmlElement.style.display = 'block';
     }
 
-    select(piece, xPosition, yPosition) {
+    select(piece, x, y) {
         this.selected = piece;
         if (piece.inTray) {
             this.disableManipulations();
@@ -330,7 +340,7 @@ class Visual {
             this.disableManipulations();
         }
         else {
-            this.showManipulations(xPosition, yPosition);
+            this.showManipulations(piece, x, y);
         }
     }
 
@@ -349,38 +359,69 @@ class Visual {
             b: parseInt(rgbFormat[3], 16)
         } : null;
     }
+
     //Enable or Disable manipulation buttons
 
-    showManipulations(xPosition, yPosition) {
-        var pieceMan = document.getElementById('pieceManipulation').firstElementChild;
-        var pieceManip = pieceMan.firstElementChild;
-        var pieceManipul = pieceManip.firstElementChild;
-        var clr = pieceManipul.children;
-        for (let i = 0; i < clr.length; i++) {
-            var btnClr = clr[i].firstElementChild;
-            var colorR = this.hexToRgb(this.selected.color).r;
-            var colorG = this.hexToRgb(this.selected.color).g;
-            var colorB = this.hexToRgb(this.selected.color).b;
-            btnClr.style.background = "rgba(" + [colorR, colorG, colorB, 0.5].join(',') + ")";
+    showManipulations(piece, x, y) {
+        let clientRect = document.getElementById("piece_" + piece.name).getBoundingClientRect();
+        let [x1Position, y1Position] = [clientRect.x + clientRect.width / 2, clientRect.y + clientRect.height / 2];
+        let [x2Position, y2Position] = [clientRect.right + clientRect.width / 2, clientRect.bottom + clientRect.height / 2];
+        let width = UIProperty.WindowWidth / this.pd.gameWidth;
+        let gameWidth = document.getElementById("game").clientWidth;
+        let gameHeight = document.getElementById("game").clientHeight;        
+
+        if(gameHeight > gameWidth) {
+            document.documentElement.style.setProperty('--heightB','36vw');
+        }
+        else{
+            document.documentElement.style.setProperty('--heightB','43vh');
         }
 
-        //set style for left and top value of element, but do not cross borders
-        var width = UIProperty.WindowWidth / this.pd.gameWidth;
-        var gameWidth = document.getElementById("game").clientWidth;
-        var gameHeight = document.getElementById("game").clientHeight;
+        let pieceMan = document.getElementById('pieceManipulation').querySelectorAll("[class^='buttonInside']");
+        for (let i = 0; i < pieceMan.length; i++) {
+            let colorR = this.hexToRgb(this.selected.color).r;
+            let colorG = this.hexToRgb(this.selected.color).g;
+            let colorB = this.hexToRgb(this.selected.color).b;
+            pieceMan[i].style.background = "rgba(" + [colorR, colorG, colorB, 0.5].join(',') + ")";
+        }        
 
-        if ((xPosition + 15 > gameWidth)) {
-            if ((yPosition > 0) && (yPosition < gameHeight)) {
-                document.getElementById('pieceManipulation').style.left = 'calc(' + xPosition + 'px - ' + (width * 3) + 'vw)';
-                document.getElementById('pieceManipulation').style.top = 'calc(' + yPosition + 'px - ' + (width * 1) + 'vw)';
-                document.getElementById('pieceManipulation').style.display = 'block';
+        if ((x + 280 > gameWidth)) {
+            /* Right Most Manipulation Button */
+            if ((y1Position > 0) && (y1Position < gameHeight)) {                
+                document.getElementById('pieceManipulation').style.left = 'calc(' + x1Position + 'px - ' + (width * -.09) + 'vw)';
+                document.getElementById('pieceManipulation').style.top = 'calc(' + y2Position + 'px - ' + (width * 2) + 'vw)';
+                document.getElementById('pieceManipulation').style.display = 'block';                
+                document.documentElement.style.setProperty("--rotateV","-133deg");
+                document.documentElement.style.setProperty("--rotateH","-28deg");
+                document.documentElement.style.setProperty("--buttonRotA", "28deg");
+                document.documentElement.style.setProperty("--buttonRotB", "63deg");
+                document.documentElement.style.setProperty("--buttonRotC", "98deg");
+                document.documentElement.style.setProperty("--buttonRotD", "133deg");
             }
-        } else {
+        } else if ((x > 0) && (x < 170)) {
+            /* Left Most Manipulation Button */            
+            document.getElementById('pieceManipulation').style.left = 'calc(' + x1Position + 'px - ' + (width * -0.09) + 'vw)';
+            document.getElementById('pieceManipulation').style.top = 'calc(' + y2Position + 'px - ' + (width * 2) + 'vw)';
             document.getElementById('pieceManipulation').style.display = 'block';
-            document.getElementById('pieceManipulation').style.left = xPosition + 'px';
-            document.getElementById('pieceManipulation').style.top = 'calc(' + yPosition + 'px - ' + (width * 2.5) + 'vw)';
+            document.documentElement.style.setProperty("--rotateV","168deg");
+            document.documentElement.style.setProperty("--rotateH","48deg");
+            document.documentElement.style.setProperty("--buttonRotA", "-48deg"); 
+            document.documentElement.style.setProperty("--buttonRotB", "-88deg"); 
+            document.documentElement.style.setProperty("--buttonRotC", "-128deg");            
+            document.documentElement.style.setProperty("--buttonRotD", "-168deg");            
         }
-
+        else {            
+            document.getElementById('pieceManipulation').style.left = 'calc(' + x1Position + 'px - ' + (width * 0.05) + 'vw)';
+            document.getElementById('pieceManipulation').style.top = 'calc(' + y2Position + 'px - ' + (width * 2) + 'vw)';
+            document.getElementById('pieceManipulation').style.display = 'block';
+            document.documentElement.style.setProperty("--rotateV","-228deg");
+            document.documentElement.style.setProperty("--rotateH","-108deg"); 
+            document.documentElement.style.setProperty("--buttonRotA", "108deg"); 
+            document.documentElement.style.setProperty("--buttonRotB", "148deg");
+            document.documentElement.style.setProperty("--buttonRotC", "188deg");          
+            document.documentElement.style.setProperty("--buttonRotD", "228deg");                                                           
+        }
+        
     }
 
     disableManipulations() {
@@ -429,7 +470,7 @@ class Visual {
             let settingsEnabled = false;
             for (let j in elements) {
                 let precheck = elements[j].className;
-                if (precheck == 'controlButton') {
+                if (precheck.startsWith('icon-')) {
                     buttonOverPiece = true;
                 }
                 if (precheck == 'settings-popup') {
@@ -474,7 +515,6 @@ class Visual {
                 var x = event.clientX;
                 var y = event.clientY;
                 var container = window.currentlyMoving[0];
-
                 //resize object to full size while moving and attach their center to the pointer
                 var width = UIProperty.WindowWidth / that.pd.gameWidth;
                 //set new style for left and top value of element, BUT do not cross borders
@@ -483,6 +523,7 @@ class Visual {
                 var trayHeight = document.getElementById("tray").clientHeight;
                 var fieldHeight = document.getElementById("field").clientHeight;
                 var functionsHeight = document.getElementById("functions_navbar").clientHeight;
+                that.disableManipulations();
 
                 var diff = gameHeight - (fieldHeight + trayHeight);
 
@@ -494,6 +535,7 @@ class Visual {
                         container.style.top = 'calc(' + y + 'px - ' + (width * 2.5) + 'vw)';
                         container.style.transformOrigin = '50% 50%';
                         container.style.zIndex = 100;
+                        container.parentNode.style.zIndex = 100;
                         container.style.setProperty("--magnification", 1);
                     }
                 }
@@ -518,7 +560,7 @@ class Visual {
                 that.select(data_[1], event.clientX, event.clientY);
                 return;
             }
-
+            let pentominoList = that.gameController.getAllPentominoes();
             if (window.currentlyMoving) {
 
                 /*  In case an object was in the process of being moved, this changes the movement.
@@ -527,7 +569,6 @@ class Visual {
                 */
                 var data = window.currentlyMoving;
                 let trayPos = 0;
-                let pentominoList = that.gameController.getAllPentominoes();
                 window.currentlyMoving = false;
                 var elements = document.elementsFromPoint(event.clientX, event.clientY); //determine the target
                 for (let i in elements) {
@@ -541,7 +582,7 @@ class Visual {
                     var element = elements[i];
                     var id = element.id;
                     /**
-                     * when piece is moved back to tray reset Pentomio inTray variable to 1 and place the 
+                     * when piece is moved back to tray reset Pentomio inTray variable to 1 and place the
                      * piece in Tray */
                     if (id == 'tray') {
                         let piece = data[1];
@@ -601,6 +642,7 @@ class Visual {
                         var coords = (id.split('_')[1].split(','));
                         that.removeFromTray(data[1]);
                         that.placePentomino(data[1], coords[0], coords[1]);
+                        var selectedPiece = document.getElementById('piece_'+ data[1].name);
                         if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
                             that.showNumberOfPossibleSolutions();
                         }
@@ -618,7 +660,7 @@ class Visual {
                 var elements = document.elementsFromPoint(event.clientX, event.clientY);
                 for (var i in elements) {
                     var element = elements[i];
-                    if (element.id == 'functions_navbar' || element.id == 'pieceManipulation') return; //do not unselect if operations have been applied to the functions panel
+                    if (element.id == 'functions_navbar' || element.id.startsWith('insideWrapper')) return; //do not unselect if operations have been applied to the functions panel                    
                 }
                 that.deleteSelection();
             }
@@ -690,25 +732,29 @@ class Visual {
 
     flipH(cmdProperty = cmdAttrDefault) {
         let piece = this.selected;
-        if (piece) {
+        if (!piece) return
+            //debugger
             let pieceDiv = document.getElementById("piece_" + piece.name);
             let flipped = pieceDiv.getAttribute("flipped") * 1;
             let currentRot = pieceDiv.style.getPropertyValue("--rotationX").split(/(-?\d+)/)[1] * 1; //converts string value to int
             let newRot = currentRot + 180;
-            // Update the backend
-            this.gameController.mirrorPentominoH(piece, cmdProperty);
-            this.positionPiece(piece);
-            pieceDiv.style.setProperty("--rotationX", newRot.toString() + "deg");
+            pieceDiv.style.setProperty("--rotationX", newRot.toString() + "deg");       
+            this.gameController.mirrorPentominoH(piece, cmdProperty)
+            this.positionPiece(piece);       
+            this.positionPiece(piece);       
+            this.positionPiece(piece);       
+            this.positionPiece(piece);       
+            this.positionPiece(piece);                  
             pieceDiv.setAttribute("flipped", 1 - flipped);
             if (cmdProperty.cmdType != CommandTypes.Shadow) {
                 this.checkIfGameWon();
             }
-        }
     }
 
     flipV(cmdProperty = cmdAttrDefault) {
         let piece = this.selected;
-        if (piece) {
+        if (!piece) return
+            
             let pieceDiv = document.getElementById("piece_" + piece.name);
             let flipped = pieceDiv.getAttribute("flipped") * 1;
             let currentRot = pieceDiv.style.getPropertyValue("--rotationY").split(/(-?\d+)/)[1] * 1; //converts string value to int
@@ -721,7 +767,7 @@ class Visual {
             if (cmdProperty.cmdType != CommandTypes.Shadow) {
                 this.checkIfGameWon();
             }
-        }
+        
     }
 
     showNumberOfPossibleSolutions() {
@@ -757,11 +803,10 @@ class Visual {
 
     blinkCells(cells) {
         let menu = [];
-        let bgColor;
+        let boardColor = document.getElementsByClassName("boardarea");
         for (let i = 0; i < cells.length; i++) {
             let fv = document.getElementById("field_" + cells[i][0] + "," + cells[i][1]);
-            bgColor = fv.style.background;
-            fv.style.background = "url(resources/images/icons/warning.png) center center";
+            fv.style.background = "#eceaea url(resources/images/icons/warning.png) center center";
             fv.style.backgroundSize = "cover";
             menu.push(fv);
         }
@@ -771,9 +816,9 @@ class Visual {
         blinkInterval = setInterval(function () {
             for (let j = 0; j < menu.length; j++) {
                 if (counter % 2 === 0) {
-                    menu[j].style.background = bgColor;
+                    menu[j].style.background = "#eceaea";
                 } else {
-                    menu[j].style.background = "url(resources/images/icons/warning.png) center center";
+                    menu[j].style.background = "#eceaea url(resources/images/icons/warning.png) center center";
                     menu[j].style.backgroundSize = "cover";
                 }
             }
@@ -781,7 +826,7 @@ class Visual {
             if (counter > 4) {
                 clearInterval(blinkInterval);
             }
-        }, 100);
+        }, 500);
     }
 
     checkHintCommandsForPlaceCommand(hintCommands) {
@@ -849,7 +894,7 @@ class Visual {
                     let hintColumn = hintCommand._nextPosition[1];
                     let fieldvalue;
                     let prevBackground = [];
-
+                    let destinationColor = "#a9a9a9";
                     //show destination position (and fade away)
                     let piecePos = this.getOccupiedPositions(tempHintinPen, hintCommand);
                     let randomCellPos = this.calculateNeighbour(piecePos, hintCommand);
@@ -863,7 +908,12 @@ class Visual {
                                         for (let i = 0; i < randomCell; i++) {
                                             fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
                                             prevBackground[i] = fieldvalue.style.background;
-                                            fieldvalue.style.background = pentominoColor;
+                                            if(SettingsSingleton.getInstance().getSettings().hinting.hintingVariants === ("Show destination")){
+                                              fieldvalue.style.background = destinationColor;
+                                            }
+                                            else{
+                                                fieldvalue.style.background = pentominoColor;
+                                            }
                                             this.hide(piecePos, prevBackground, timeoutFrame);
                                         }
                                         break;
@@ -873,7 +923,12 @@ class Visual {
                                         for (let i = 0; i < cellsToIndicate.length; i++) {
                                             fieldvalue = document.getElementById("field_" + cellsToIndicate[i][0] + "," + cellsToIndicate[i][1]);
                                             prevBackground[i] = fieldvalue.style.background;
-                                            fieldvalue.style.background = pentominoColor;
+                                            if(SettingsSingleton.getInstance().getSettings().hinting.hintingVariants === ("Show destination")){
+                                              fieldvalue.style.background = destinationColor;
+                                            }
+                                            else{
+                                                fieldvalue.style.background = pentominoColor;
+                                            }
                                             this.hideMostOccupiedNeighbors(cellsToIndicate, prevBackground, timeoutFrame);
                                         }
                                         break;
@@ -885,7 +940,12 @@ class Visual {
                                 for (let i = 0; i < 5; i++) {
                                     fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
                                     prevBackground[i] = fieldvalue.style.background;
-                                    fieldvalue.style.background = pentominoColor;
+                                    if(SettingsSingleton.getInstance().getSettings().hinting.hintingVariants === ("Show destination")){
+                                      fieldvalue.style.background = destinationColor;
+                                    }
+                                    else{
+                                        fieldvalue.style.background = pentominoColor;
+                                    }
                                     this.hide(piecePos, prevBackground, timeoutFrame);
                                 }
                                 break;
@@ -895,7 +955,12 @@ class Visual {
                                     let areaPos = this.indicateAreaCells(hintinPen, hintCommand)[0];
                                     fieldvalue = document.getElementById("field_" + areaPos[i][0] + "," + areaPos[i][1]);
                                     prevBackground[i] = fieldvalue.style.background;
-                                    fieldvalue.style.background = pentominoColor;
+                                    if(SettingsSingleton.getInstance().getSettings().hinting.hintingVariants === ("Show destination")){
+                                      fieldvalue.style.background = destinationColor;
+                                    }
+                                    else{
+                                        fieldvalue.style.background = pentominoColor;
+                                    }
                                 }
 
                                 this.hideArea(areaPos, prevBackground, timeoutFrame);
@@ -904,7 +969,7 @@ class Visual {
                                 console.error("Hinting strategy unknown!");
                         }
                     }
-                    
+
                     break;
 
                 case "Remove":
@@ -1353,6 +1418,12 @@ class Visual {
     }
 
     prefillBasedOnAdjacentPieces(randomSolution, threshold) {
+        let thresholdMap = {
+            "easy": 3,
+            "medium": 2,
+            "hard": 1,
+            "extreme":0
+        };
         let currentAnchor = [];
         let piece = undefined;
         let piecePosition = undefined;
@@ -1401,7 +1472,7 @@ class Visual {
 
             bOverlap = false;
             Object.keys(blockedCellsTemp).forEach(pieceName => {
-                if (blockedCellsTemp[pieceName].nearbyPentominos > threshold) bOverlap = true;
+                if (blockedCellsTemp[pieceName].nearbyPentominos > thresholdMap[threshold]) bOverlap = true;
             });
 
             if (!bOverlap) {
@@ -1427,6 +1498,12 @@ class Visual {
     }
 
     prefillBasedOnDistance(randomSolution, threshold) {
+        let thresholdMap = {
+            "easy": 2,
+            "medium": 3,
+            "hard": 4,
+            "extreme": 5
+        };
         let positions = [];
         let currentAnchor = [];
         let candidateAnchor = [];
@@ -1438,8 +1515,6 @@ class Visual {
         for (let i = 0; i < randomSolution.length; ++i) {
             [piecePosition, piece] = this.getRandomPiece(randomSolution, pickedPieces);
             pickedPieces[piece.name] = 1;
-            console.log("Piece position: ");
-            console.log(piecePosition);
             currentAnchor = [piecePosition.boardPosition[0],
             piecePosition.boardPosition[1]];
             for (let j = 0; j < positions.length; ++j) {
@@ -1447,7 +1522,7 @@ class Visual {
                 candidateAnchor = [positions[j][0], positions[j][1]];
                 if (Math.sqrt(
                     Math.pow((currentAnchor[0] - candidateAnchor[0]), 2) +
-                    Math.pow((currentAnchor[1] - candidateAnchor[1]), 2)) < threshold) {
+                    Math.pow((currentAnchor[1] - candidateAnchor[1]), 2)) < thresholdMap[threshold]) {
                     bOverlap = true;
                     break;
                 }
@@ -1461,7 +1536,6 @@ class Visual {
             positions.push(currentAnchor);
             this.removeFromTray(piece);
             piece.updateTrayValue(0);
-            console.log("Anchor for placement of " + piece + " is " + currentAnchor[0] + "," + currentAnchor[1]);
             this.placePentomino(piece, currentAnchor[0], currentAnchor[1]);
         }
 

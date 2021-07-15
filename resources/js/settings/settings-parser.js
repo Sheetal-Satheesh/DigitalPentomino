@@ -26,6 +26,11 @@ class SettingsParser {
 
                 switch (schemaEntry.type) {
                     case "string":
+                        if (heading === "prefilling" && settings.hasOwnProperty("prefilling") &&
+                            settings.prefilling.hasOwnProperty("prefillingStrategy")) {
+                            let strat = settings.prefilling.prefillingStrategy;
+                            schemaEntry.enumText = schemaEntry._enumText[strat];
+                        }
                         lastElement = SettingsParser.parseStringFromSeed(schemaEntry, remainingSeed, settingsEntry, key, seed);
                         break;
                     case "number":
