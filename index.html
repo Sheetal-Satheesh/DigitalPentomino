@@ -64,6 +64,7 @@
         <img src="https://i.gifer.com/YCZH.gif" />
     </div>
 </div>
+
 <body onload="touchStartup(); initialize(); buttonManipulation();" class="page">
     <audio id="audioTukaScream" src="resources/audio/tuka-scream.mp3"></audio>
     <audio id="bgMusic" src="resources/audio/chee-zee-beach-by-kevin-macleod-from-filmmusic-io.mp3" loop></audio>
@@ -118,50 +119,52 @@
                     </form>
                 </div>
             </div>
-    </div>
-    <!--modal end-->
+            <!--modal end-->
 
-    <div id="functions_navbar" class="nav" onclick="hideManipulationButtons">
-        <button type="button" id='btnSettingsForm' class="cActionBtn" onclick="selectSettings()">
+            <div id="functions_navbar" class="nav" onclick="hideManipulationButtons">
+                <button type="button" id='btnSettingsForm' class="cActionBtn" onclick="selectSettings()">
                     <img src="resources/images/icons/settings_v2.png">
                 </button>
-        <button type="button" id='btnBoardSelect' class="cActionBtn" onclick="selectBoard()"> <img
-                    src="resources/images/icons/board_v2.png">
+                <button type="button" id='btnBoardSelect' class="cActionBtn" onclick="selectBoard()"> <img
+                        src="resources/images/icons/board_v2.png">
                 </button>
-        <button type="button" id='prefillBoard' class="cActionBtn" onclick="prefillBoard()" disabled>
+                <button type="button" id='prefillBoard' class="cActionBtn" onclick="prefillBoard()" disabled>
                     <img src="resources/images/icons/prefill.png">
                 </button>
                 <button type="button" id='qrCodeButton' class="cActionBtn" onclick="clickedOnScanQrCode()">
                     <img src="resources/images/icons/qr-code.png">
                 </button>
                 <button type="button" id='hintButton' class="cActionBtn" onclick="callHintAI()"> <img
-                    src="resources/images/icons/help_v2.png">
+                        src="resources/images/icons/help_v2.png">
                 </button>
-        <button type="button" id='undo' class="cActionBtn" onclick="execUndo()">
+                <button type="button" id='undo' class="cActionBtn" onclick="execUndo()">
                     <img src="resources/images/icons/undo_v2.png">
                 </button>
-        <button type="button" id='redo' class="cActionBtn" onclick="execRedo()"><img
-                    src="resources/images/icons/redo_v2.png">
+                <button type="button" id='redo' class="cActionBtn" onclick="execRedo()"><img
+                        src="resources/images/icons/redo_v2.png">
                 </button>
-        <button type="button" id='screenshot' class="cActionBtn" onclick="saveGameImage()">
+                <button type="button" id='screenshot' class="cActionBtn" onclick="saveGameImage()">
                     <img src="resources/images/icons/screenshot_v2.png">
                 </button>
-        <button type="button" id='gallery' class="cActionBtn" onclick="showGameImages()">
+                <button type="button" id='gallery' class="cActionBtn" onclick="showGameImages()">
                     <img src="resources/images/icons/gallery_v2.png">
                 </button>
-        <button type="button" id='replay' class="cActionBtn" onclick="execReplay()">
+                <button type="button" id='replay' class="cActionBtn" onclick="execReplay()">
                     <img src="resources/images/icons/replay.svg">
                 </button>
                 <button type="button" id='reset' class="cActionBtn" onclick="resetGame()">
                     <img src="resources/images/icons/tidy_up_v2.png"></button>
-    </div>
+            </div>
 
-    <div id="labelNumberSolutionsContainer">
-        <div id="labelNumberSolutionsContainerChild">
-            <div id="labelNumberOfSolutionsText">Number of solutions:</div>
-            <div id="labelNumberSolutions">?</div>
+            <div id="labelNumberSolutionsContainer">
+                <div id="labelNumberSolutionsContainerChild">
+                    <div id="labelNumberOfSolutionsText">Number of solutions:</div>
+                    <div id="labelNumberSolutions">?</div>
+                </div>
+            </div>
+
         </div>
-        <div class="main-wrapper" id ="pieceManipulation">
+        <div class="main-wrapper" id="pieceManipulation">
             <div class="buttonWrapper first">
                 <div class="buttonInside first" id="insideWrapperFirst" onclick="flipH()">
                     <span class="icon-flip1" id="OpflipH"></span>
@@ -169,7 +172,7 @@
             </div>
             <div class="buttonWrapper second">
                 <div class="buttonInside second" id="insideWrapperSecond" onclick="rotateAntiClkWise()">
-                    <span class="icon-rotateLeft" id="OpRotateLeft" ></span>
+                    <span class="icon-rotateLeft" id="OpRotateLeft"></span>
                 </div>
             </div>
             <div class="buttonWrapper third">
@@ -182,7 +185,8 @@
                     <span class="icon-flip2" id="OpflipV"></span>
                 </div>
             </div>
-        </div> <!---Button Manipulation Ends-->
+        </div>
+        <!---Button Manipulation Ends-->
     </div>
 
     <script type="text/javascript">
@@ -205,17 +209,17 @@
             let btn = document.querySelector('.mainWrapper');
             let buttonWrapper = document.querySelectorAll('.buttonWrapper');
 
-            if(btn) {
-                btn.addEventListener('click', function() {
+            if (btn) {
+                btn.addEventListener('click', function () {
 
-                    if(btn.classList.contains('animation')) {
+                    if (btn.classList.contains('animation')) {
                         btn.classList.remove('animation');
                     } else {
                         btn.classList.add('animation');
                     }
 
-                    for (i = 0; i < buttonWrapper.length; i++ ) {
-                        if(buttonWrapper[i].classList.contains('animation')) {
+                    for (i = 0; i < buttonWrapper.length; i++) {
+                        if (buttonWrapper[i].classList.contains('animation')) {
                             buttonWrapper[i].classList.remove('animation');
                         } else {
                             buttonWrapper[i].classList.add('animation');
@@ -301,10 +305,10 @@
             qrScanner.start();
 
             // Draw video on canvas with rectangle
-            videoElement.onplay = function() {
-                setTimeout(function() {
+            videoElement.onplay = function () {
+                setTimeout(function () {
                     drawVideoToCanvas(videoElement, canvasElem);
-                } , 300);
+                }, 300);
             };
 
             //onQrCodeScanned("https://pentomino-digital.de/V5/index.html?t=2010101110111011101110121");
@@ -312,7 +316,7 @@
         }
 
         // from https://stackoverflow.com/questions/59702127/draw-rectangle-over-html-5-tag-video first answer
-        function drawVideoToCanvas(video, canvas){
+        function drawVideoToCanvas(video, canvas) {
             let ctx = canvas.getContext('2d');
 
             canvas.width = video.videoWidth;
@@ -320,7 +324,7 @@
 
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-            let rectWidth = Math.min(canvas.width * (2/3), canvas.height * (2/3));
+            let rectWidth = Math.min(canvas.width * (2 / 3), canvas.height * (2 / 3));
 
             let centerX = canvas.width / 2;
             let centerY = canvas.height / 2;
@@ -328,12 +332,12 @@
             let pX = centerX - rectWidth / 2;
             let pY = centerY - rectWidth / 2;
 
-            ctx.rect(pX,pY,rectWidth,rectWidth);
+            ctx.rect(pX, pY, rectWidth, rectWidth);
             ctx.lineWidth = "6";
             ctx.strokeStyle = "red";
             ctx.stroke();
 
-            setTimeout(function() {
+            setTimeout(function () {
                 drawVideoToCanvas(video, canvas);
             }, 100);
         }
@@ -378,7 +382,8 @@
             let modal = document.getElementById('modalTop');
             if ($(modal).is(':visible')) {
                 this.closeModal();
-            } else {
+            }
+            else {
                 this.disableSnapshotButton();
                 this.hideManipulationButtons();
                 this.closeBoardSelector();
@@ -427,7 +432,8 @@
             var modal = document.getElementById('modalTop');
             if ($(modal).is(':visible')) {
                 this.closeModal();
-            } else {
+            }
+            else {
                 this.disableSnapshotButton();
                 this.hideManipulationButtons();
                 this.closeBoardSelector();
@@ -525,7 +531,8 @@
                 this.closeBoardSelector();
                 this.enableSnapshotButton();
                 //this.closeModal();
-            } else {
+            }
+            else {
                 boardSelectorPopup.style.display = "block";
                 this.hideManipulationButtons();
                 this.closeSettings();
@@ -540,9 +547,7 @@
                 let searchParams = new URLSearchParams(window.location.search);
                 searchParams.set(key, value);
                 let newURL = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + searchParams.toString();
-                window.history.pushState({
-                    path: newURL
-                }, '', newURL);
+                window.history.pushState({ path: newURL }, '', newURL);
             }
         }
 
@@ -661,9 +666,9 @@
             template.clearContent("#modalTitleID");
             template.clearContent("#modalBodyID");
             template.clearContent("#innerGridForm");
-            modalBodyID.style.width="100%";
+            modalBodyID.style.width = "100%";
             //modal.style.background="#dcf0ed";
-            modalContainerID.style.borderColor="#dcf0ed";
+            modalContainerID.style.borderColor = "#dcf0ed";
             let div1 = document.createElement("div");
             let h5 = document.createElement("h3");
             var t1 = document.createTextNode("Licences");
@@ -674,9 +679,9 @@
             let btn = document.getElementById("backButton");
             btn.style.display = "block";
             btn.onclick = function () {
-            openSettings();
-            SettingsForm.updateForm($('#innerGridForm')[0], settings);
-            btn.style.display = "none";
+                openSettings();
+                SettingsForm.updateForm($('#innerGridForm')[0], settings);
+                btn.style.display = "none";
             };
             let teacherURLLabel = document.createElement("label");
             let pupilURLLabel = document.createElement("label");
@@ -684,12 +689,12 @@
             let seed = SettingsParser.parseSettingsToSeed(schema, settings);
             modalBodyID.appendChild(document.createElement("br"));
             modalBodyID.appendChild(document.createTextNode("1. Background Music 'Chee Zee Beach' by Kevin MacLeod\n" +
-            "Link: https://incompetech.filmmusic.io/song/3490-chee-zee-beach\n" +
-            "License: https://filmmusic.io/standard-license"));
+                "Link: https://incompetech.filmmusic.io/song/3490-chee-zee-beach\n" +
+                "License: https://filmmusic.io/standard-license"));
             modalBodyID.appendChild(document.createElement("br"));
             modalBodyID.appendChild(document.createTextNode("2. Wood music link : https://www.zapsplat.com/sound-effect-category/wood/ \n" + "License :https://www.zapsplat.com/license-type/standard-license/"));
             modalBodyID.appendChild(document.createElement("br"));
-            modalBodyID.appendChild(document.createTextNode("3. (author: Edicionesnaza) jboy-2 : https://www.deviantart.com/edicionesnaza/art/Boy-and-Girl-Icon-gif-By-alfreditha-394021423"+"\n"));
+            modalBodyID.appendChild(document.createTextNode("3. (author: Edicionesnaza) jboy-2 : https://www.deviantart.com/edicionesnaza/art/Boy-and-Girl-Icon-gif-By-alfreditha-394021423" + "\n"));
             modalBodyID.appendChild(document.createElement("br"));
             modalBodyID.appendChild(document.createTextNode("4. (author: Ahkâm) present :https://www.freeiconspng.com/img/39913    \n"));
             modalBodyID.appendChild(document.createElement("br"));
@@ -722,7 +727,7 @@
             //show back button
             let btn = document.getElementById("backButton");
             btn.style.display = "block";
-            btn.onclick = function() {
+            btn.onclick = function () {
                 openSettings();
                 SettingsForm.updateForm($('#innerGridForm')[0], settings);
                 btn.style.display = "none";
@@ -780,7 +785,7 @@
 
             modalBodyID.appendChild(document.createElement("br"));
             let printButton = SettingsForm.createButton("Print");
-            printButton.addEventListener("click", function() {
+            printButton.addEventListener("click", function () {
                 window.print();
             });
             modalBodyID.appendChild(printButton);
@@ -849,15 +854,14 @@
         }
 
         let piecesIdArray = ['piece_X', 'piece_Y', 'piece_F', 'piece_I', 'piece_L', 'piece_N', 'piece_P', 'piece_T', 'piece_U', 'piece_V', 'piece_W', 'piece_Z'];
-
         function disablePointerEventsOnPieces() {
-            piecesIdArray.forEach(function(piece) {
+            piecesIdArray.forEach(function (piece) {
                 document.getElementById(piece).style.pointerEvents = "none";
             });
         }
 
         function enablePointerEventsOnPiece() {
-            piecesIdArray.forEach(function(piece) {
+            piecesIdArray.forEach(function (piece) {
                 document.getElementById(piece).style.pointerEvents = "auto";
             });
         }
@@ -923,7 +927,7 @@
             let element = document.querySelector("#" + elementId);
             element.classList.add('FlashOn');
             var millisecondsToWait = 100;
-            setTimeout(function() {
+            setTimeout(function () {
                 element.classList.remove('FlashOn');
             }, millisecondsToWait);
         }
@@ -933,7 +937,7 @@
             let gameImage = undefined;
             let gameElem = document.getElementById('playarea');
 
-            html2canvas(gameElem).then(function(screeshot) {
+            html2canvas(gameElem).then(function (screeshot) {
                 screeshot.setAttribute("class", "screenshot");
                 screeshot.style.width = '25vw';
                 screeshot.style.height = '15vw';
@@ -958,7 +962,6 @@
         function enableSnapshotButton() {
             $('#screenshot').prop('disabled', false);
         }
-
         function deleteGameImage(key) {
             pd.visual.deleteGameImage(key);
             showGameImages();
@@ -968,7 +971,7 @@
             /**
              * https://stackoverflow.com/questions/1152024/
              * best-way-to-generate-a-random-color-in-javascript/1152508
-             */
+            */
 
             return '#' + (0x1000000 + Math.random() * 0xffffff).toString(16).substr(1, 6);
 
@@ -1010,7 +1013,7 @@
                 let loadBtn = document.createElement("button");
                 loadBtn.setAttribute("class", "imageButton imageLoadBtn");
                 loadBtn.textContent = "Load";
-                loadBtn.addEventListener('click', function() {
+                loadBtn.addEventListener('click', function () {
                     loadGameImage(imgKey);
                 }, false);
 
@@ -1018,7 +1021,7 @@
                 let deleteBtn = document.createElement("button");
                 deleteBtn.setAttribute("class", "imageButton imageDeleteBtn");
                 deleteBtn.textContent = "Delete";
-                deleteBtn.addEventListener('click', function() {
+                deleteBtn.addEventListener('click', function () {
                     deleteGameImage(imgKey);
                 }, false);
 
@@ -1038,7 +1041,8 @@
             var modal = document.getElementById('modalTop');
             if ($('.modalFormContainer').is(':visible')) {
                 this.closeModal();
-            } else {
+            }
+            else {
                 this.disableSnapshotButton();
                 this.hideManipulationButtons();
                 this.disablePointerEventsOnPieces();
@@ -1087,7 +1091,8 @@
                     if (allGameState[index] == startGameState) {
                         optStart.selected = "selected";
                         optStart.setAttribute("class", "selected");
-                    } else if (allGameState[index] == currGameState) {
+                    }
+                    else if (allGameState[index] == currGameState) {
                         optTarget.selected = "selected";
                         optTarget.setAttribute("class", "selected");
 
@@ -1105,7 +1110,7 @@
                 submit.setAttribute("value", "Submit");
                 submit.setAttribute("class", "submitReplay");
                 submit.setAttribute("style", "margin: 0 .5vw;background-color:rgb(149, 172, 170);");
-                submit.onclick = function() {
+                submit.onclick = function () {
                     let replayId = document.getElementById("replay");
                     let replayImg = replayId.children[0];
                     replayImg.setAttribute('src', 'resources/images/icons/pause.png');
