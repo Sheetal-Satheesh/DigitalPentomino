@@ -30,7 +30,6 @@
   background-color: #e2e0e0;
   display: flex;
   overflow-x: auto;
-
 }
 
 #playarea {
@@ -122,10 +121,88 @@
 }
 
 #labelNumberSolutionsContainerChild{
-  height: 100%;
   text-align: center;
   vertical-align: middle;
   font-size: 1.5vw;
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  padding: 1vw;
+}
+
+#birdContainer{
+  position: fixed;
+  height: 18vw;
+  width: 18vw;
+  justify-content: center;
+  display: table-cell;
+  right: 0;
+  bottom: 4vw;
+  z-index:500;
+}
+
+#birdContainer:active{
+  pointer-events:visiblePainted;
+  pointer-events:none; /* only allow hover events on the container */
+}
+
+#birdContainer img{
+  width: 100%;
+  height: 100%;
+}
+
+#birdContainer img:hover {
+  transform: rotate(5deg);
+  -webkit-transform: rotate(5deg);
+}
+
+#bubbleContainer{
+  position: fixed;
+  height: 12vw;
+  width: 25vw;
+  justify-content: center;
+  display: table-cell;
+  right: 11vw;
+  bottom: 7vw;
+  z-index:500;
+}
+
+#bubbleContainer:active{
+  pointer-events:none; /* only allow hover events on the container */
+}
+
+#bubbleContainer:hover{
+  transform: scale(105%);
+  -webkit-transform: scale(105%);
+}
+
+.speechBubble {
+  width: 20vw;
+  height: 10vw;
+  border: 1px solid black;
+  border-radius: 2vw;
+  background: rgb(238, 236, 236);
+  padding: 2vw;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: normal;
+  font-size: 2vw;
+  color: black;
+  font-family: arial;
+  position:relative;
+}
+
+.speechBubble:before {
+  content: "";
+  width: 0vw;
+  height: 0vw;
+  position: absolute;
+  border-left: 2vw solid rgb(238, 236, 236);
+  border-right: 2vw solid transparent;
+  border-top: 2vw solid rgb(238, 236, 236);
+  border-bottom: 2vw solid transparent;
+  right: -1.9vw;
+  top: 1vw;
 }
 
 
@@ -172,6 +249,7 @@ height: 4vw;
   user-select: none;
   text-align: center;
   /*outline: 1px solid #eee;*/
+  --webkit-transform: translate3d(0,0,0);
 }
 
 .boardarea {
@@ -181,7 +259,22 @@ height: 4vw;
   bottom: 0;
   left: 0;
   right: 0;
+  /* -webkit-transform: scale3d(); */
+  /* transform-style: preserve-3d; */
 }
+
+/* .gamearea boardarea {
+   transform-style: preserve-3d;
+   
+} */
+
+.pieceWrapper {
+  transform: translate(0, 0);
+  -webkit-transform: translate(0, 0);
+  position: fixed;
+  top: 0;
+}
+
 
 .blockedcell {
 background: repeating-linear-gradient(
@@ -200,6 +293,7 @@ rgba(0, 0, 0, 0.3) 20px
   height: 9vw;
   transform: scale(var(--magnification)) rotateX(var(--rotationX)) rotateY(var(--rotationY)) rotateZ(var(--rotationZ));
   transition: transform .2s;
+  /* transform:rotate(0.0rad); */
 }
 
 .bmAround {
@@ -243,7 +337,7 @@ right: 0;
 bottom: 0;
 left: 0;
 overflow:none;
---webkit-transform: translate3d(0,0,0);
+/* --webkit-transform: translate3d(0,0,0); */
 }
 
 img#logo{
@@ -618,11 +712,12 @@ table
   visibility: visible;
   filter: alpha(opacity=65);
   opacity: .6;
+}
 
 html {
 	-webkit-text-size-adjust: none;
 	touch-action: manipulation;
-
+}
 
 /**shake animation reference : https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_image_shake **/
 .horizTranslate {
