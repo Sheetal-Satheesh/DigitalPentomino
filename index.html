@@ -54,27 +54,6 @@
     <script src="resources/js/hint-ai.js"></script>
     <script src="resources/js/help/hinting/command-sequence-list.js"></script>
     <script src="resources/js/load_screen.js"></script>
-    <script>
-    var i = 0;
-    function move() {
-      if (i == 0) {
-        i = 1;
-        var elem = document.getElementById("myBar");
-        var width = 1;
-        var id = setInterval(frame, 10);
-        function frame() {
-          if (width >= 100) {
-            clearInterval(id);
-            i = 0;
-          } else {
-            width++;
-            elem.style.width = width + "%";
-          }
-        }
-      }
-    }
-
-</script>
 </head>
 <!-- Preloader section -->
 <div class="preloader d-flex">
@@ -138,8 +117,7 @@
                         </div>
                     </form>
                 </div>
-            </form>
-        </div>
+            </div>
     </div>
     <!--modal end-->
 
