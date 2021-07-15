@@ -4,5 +4,5 @@
  const perfData = window.performance.timing;
 const pageLoadTime = perfData.loadEventEnd - perfData.navigationStart;
  $(window).load(function() {
-     $('.preloader').fadeOut(pageLoadTime); // set duration in brackets
+     $('.preloader').fadeOut(20000000); // set duration in brackets
  });
