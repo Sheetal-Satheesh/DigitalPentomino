@@ -167,7 +167,7 @@
                 </div>
             </div>
             <div id="bubbleContainer">
-                <div class="speechBubble"><div id="labelNumberSolutions">Number of solutions: ?</div></div>
+                <div class="speechBubble"><div id="speechBubbleText">Number of solutions: ?</div></div>
             </div>
             <div id="birdContainer">
                 <img src="resources/images/icons/tuca_bird_left.png"></img>
@@ -591,6 +591,7 @@
                 if (heading === "general" && key === "language") {
                     let lang = settings[heading][key];
                     document.getElementById("labelNumberSolutions").textContent = strings.numberOfPossibleSolutions[lang] + ': ?';
+                    document.getElementById("speechBubbleText").textContent = strings.numberOfPossibleSolutions[lang] + ': ?';
                 } else if (heading === "hinting" && key === "enableHinting") {
                     let hintingEnabled = settings[heading][key];
                     document.getElementById("hintButton").style.visibility = hintingEnabled ? "visible" : "hidden";
