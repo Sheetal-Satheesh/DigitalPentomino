@@ -34,6 +34,9 @@ const strings = {
             },
             enableBgMusic: {
                 title: ["Enable Background Music", "Hintergrundmusik einschalten"]
+            },
+            enableBird: {
+                title: ["Show tucan as helper", "Tucan als Helfer anzeigen"]
             }
         },
         hinting: {

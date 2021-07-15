@@ -167,6 +167,11 @@
                     <img src="resources/images/icons/tidy_up_v2.png"></button>
             </div>
 
+            <div id="labelNumberSolutionsContainer">
+                <div id="labelNumberSolutionsContainerChild">
+                    <div id="labelNumberSolutions">Number of solutions: ?</div>
+                </div>
+            </div>
             <div id="bubbleContainer">
                 <div class="speechBubble"><div id="labelNumberSolutions">Number of solutions: ?</div></div>
             </div>
@@ -592,6 +597,17 @@
                             bgMusicAudio.pause();
                             bgMusicAudio.currentTime = 0;
                         }
+                    }
+                } else if (heading === "general" && key === "enableBird") {
+                    let birdEnabled = settings[heading][key];
+                    if (birdEnabled){
+                        document.getElementById("birdContainer").style.display = "block";
+                        document.getElementById("bubbleContainer").style.display = "block";
+                        document.getElementById("labelNumberSolutionsContainer").style.display = "none";
+                    } else {
+                        document.getElementById("birdContainer").style.display = "none";
+                        document.getElementById("bubbleContainer").style.display = "none";
+                        document.getElementById("labelNumberSolutionsContainer").style.display = "block";
                     }
                 }
             });

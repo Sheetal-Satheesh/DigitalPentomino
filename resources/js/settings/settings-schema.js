@@ -70,6 +70,12 @@ class SettingsSchema {
                         "title": titles.general.enableBgMusic.title[lang],
                         "default": false,
                         "pupilModeVisibleOnDefault": false
+                    },
+                    enableBird: {
+                        "type": "boolean",
+                        "title": titles.general.enableBird.title[lang],
+                        "default": true,
+                        "pupilModeVisibleOnDefualt": true
                     }
                 }
             },
