@@ -267,8 +267,8 @@ class SettingsForm {
                 let settingsEntry = subSettings[key];
 
                 let checkBoxElement = SettingsForm.createInputElement("checkbox", "teachers." + elementName);
-                useInClassElement.appendChild(SettingsForm.createLabel(settingsEntry.title, { for: checkBoxElement.id }));
                 useInClassElement.appendChild(checkBoxElement);
+                useInClassElement.appendChild(SettingsForm.createLabel(settingsEntry.title, { for: checkBoxElement.id }));
                 useInClassElement.appendChild(document.createElement("br"));
             }
         }
