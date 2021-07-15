@@ -34,11 +34,11 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
         let game = new FrontController().controller.game();
         let pentominoesOnBoard = game.getPentominoesInGmArea().filter(pentomino => game.isPlacedOnBoard(pentomino));
 
-        let resultText = "";
+        let resultText = "" + pentominoesOnBoard.length;
 
         pentominoesOnBoard.forEach(pentomino => {
             let pos = game.getPosition(pentomino);
-            resultText += pentomino.name + "(" + pos[0] + ", " + pos[1] + ") ";
+            resultText += pentomino.name + "(" + pos[0] + "," + pos[1] + ") ";
         });
 
         resultLabel.innerHTML = resultText;
@@ -66,10 +66,32 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
     }
 
     parseSettingsToSeed(schemaEntry, settingsValue) {
-        // TODO
+        let result = "";
+
+        let n = settingsValue[0];
+        result += this.pad(n, 2);
+        let rest = settingsValue.substr(1, settingsValue.length - 1);
+        let split = rest.split(" ");
+        for (let i = 0; i < n; i++) {
+            let pentominoName = split[i][0];
+            result += pentominoName;
+            let splitNoName = split[i].substr(1, split[i].length - 1);
+            let element = splitNoName.substr(1, splitNoName.length - 2).split(",");
+            result += this.pad(element[0], 2);
+            result += this.pad(element[1], 2);
+        }
+
+        return result;
     }
 
     parseFromSeed(schemaEntry, remainingSeed, settingsEntry, key, seed) {
         // TODO
+    }
+
+    // from https://stackoverflow.com/questions/2998784/how-to-output-numbers-with-leading-zeros-in-javascript
+    pad(num, minDecimals) {
+        num = num.toString();
+        while (num.length < minDecimals) num = "0" + num;
+        return num;
     }
 }
