@@ -4,7 +4,6 @@
 }
 
 
-
 /* Button used to open the board selection form - fixed at the bottom of the page */
 .open-button {
   background-color: #555;
@@ -326,4 +325,44 @@
   outline: none;
   border: none;
   padding-left: 1vw;
+}
+
+.formButton {
+  width: 11vw;
+  height: 4vw;
+  margin: 0.5vw;
+  background-color: lightblue;
+  color: black;
+  border: 1px solid black;
+  border-radius: 1vw;
+}
+
+#licenseButton {
+  right: 3.5vw;
+  bottom: 11vw;
+  background-color: lightgray;
+  position: fixed;
+}
+
+#btnSettingsSubmit {
+  left: 3.5vw;
+  bottom: 11vw;
+  position: fixed;
+}
+
+#btnSettingsShare {
+  left: 17vw;
+  bottom: 11vw;
+  background-color: lightgray;
+  position: fixed;
+}
+
+button.collapsible {
+  width: 11vw;
+}
+
+#divPlaceholder{
+  width: 100%;
+  height: 4vw;
+  color: black;
 }

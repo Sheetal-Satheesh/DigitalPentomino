@@ -10,6 +10,8 @@ class SettingsForm {
         formElement.appendChild(document.createElement("br"));
         formElement.appendChild(document.createElement("br"));        if (settings.teachersMode) {
             let useInClassButton = SettingsForm.createButton("Share");
+            useInClassButton.className = "formButton";
+            useInClassButton.id = "btnSettingsShare";
             useInClassButton.addEventListener("click", function() {
                 let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
                 let settings = SettingsSingleton.getInstance().getSettings();
@@ -19,6 +21,7 @@ class SettingsForm {
         }
         let licenseButton = SettingsForm.createLicenseButton();
         licenseButton.id = "licenseButton";
+        licenseButton.className = "formButton"
         formElement.appendChild(SettingsForm.createSubmitButton());
         formElement.appendChild(licenseButton);
 
@@ -35,6 +38,12 @@ class SettingsForm {
             let settings = SettingsSingleton.getInstance().getSettings();
             onLicense(SettingsForm.collectDataFromForm(formElement, schema, settings));
         });
+
+        //add placeholder div at bottom of settings
+        let placeholder = document.createElement("div");
+        placeholder.id = "divPlaceholder";
+        formElement.appendChild(placeholder);
+
     }
 
     // --- --- --- Form Creation --- --- ---
@@ -389,7 +398,9 @@ class SettingsForm {
 
     static createSubmitButton() {
         return SettingsForm.createButton("Submit", {
-            type: "submit"
+            type: "submit",
+            class: "formButton",
+            id: "btnSettingsSubmit"
         });
     }
 

@@ -27,7 +27,8 @@ button:hover {
     right: 0vw;
     bottom: 10vw;
     /*border: 1px solid rgb(18, 122, 114);*/
-    overflow: auto;
+    overflow: hidden;
+    overflow-y:scroll;
 }
 
   /* The Modal (background) */
@@ -71,9 +72,9 @@ button:hover {
 
   .modal .close {
     z-index: 100;
-    position: relative;
+    position: fixed;
     right: 1vw;
-    top: 1vw;
+    top: 11vw;
     width: 5vw;
     height: 5vw;
     background-color:white;
