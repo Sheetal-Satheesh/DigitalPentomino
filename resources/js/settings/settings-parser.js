@@ -26,6 +26,11 @@ class SettingsParser {
 
                 switch (schemaEntry.type) {
                     case "string":
+                        if (heading === "prefilling" && settings.hasOwnProperty("prefilling") &&
+                            settings.prefilling.hasOwnProperty("prefillingStrategy")) {
+                            let strat = settings.prefilling.prefillingStrategy;
+                            schemaEntry.enumText = schemaEntry._enumText[strat];
+                        }
                         lastElement = SettingsParser.parseStringFromSeed(schemaEntry, remainingSeed, settingsEntry, key, seed);
                         break;
                     case "number":
@@ -269,7 +274,11 @@ class SettingsParser {
             settings[heading] = {};
             for (let key in subSettings) {
                 settings[heading][key] = schema[heading].properties[key].default;
-                settings.visibility.setVisible(heading, key, true);
+                let headingVisible = schema[heading].pupilModeVisibleOnDefault;
+                let subheadingVisible = schema[heading].properties[key].pupilModeVisibleOnDefault;
+                let isVisible = !(headingVisible === false) && !(subheadingVisible === false)
+                    && !(headingVisible === undefined && subheadingVisible === undefined);
+                settings.visibility.setVisible(heading, key, isVisible);
             }
         }
         SettingsParser.applyNumericalLanguageRepr(settings);

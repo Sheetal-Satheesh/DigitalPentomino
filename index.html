@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#009578">
-    <title>Digital Pentomino v5</title>
+    <title>TUCA</title>
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="resources/images/icons/dp_192.png">
     <link rel="stylesheet" href="resources/css/style.css">
@@ -18,6 +18,7 @@
     <script src="resources/index.js"></script>
     <script src="resources/js/ui-template.js"></script>
     <script src="resources/js/board.js"></script>
+    <script src="resources/js/visual.js"></script>
     <script src="resources/js/overlapping.js"></script>
     <script src="resources/js/pentomino.js"></script>
     <script src="resources/js/game-controller.js"></script>
@@ -39,7 +40,6 @@
     <script src="resources/js/settings/settings-visibility.js"></script>
     <script src="resources/js/multi-lang/strings.js"></script>
     <script src="resources/js/pd.js"></script>
-    <script src="resources/js/visual.js"></script>
     <script src="resources/js/handleMobile.js"></script>
     <script type="text/javascript" src="resources/jsonform/jquery.min.js"></script>
     <script type="text/javascript" src="resources/jsonform/underscore.js"></script>
@@ -48,6 +48,7 @@
     <script type="text/javascript" src="resources/jsonform/html2canvas.js"></script>
     <script type="text/javascript" src="resources/jsonform/loadash.js"></script>
     <script type="text/javascript" src="resources/jsonform/jquery.qrcode.min.js"></script>
+    <script type="text/javascript" src="resources/jsonform/qr-scanner.umd.min.js"></script>
     <script type="text/javascript" src="resources/js/util.js"></script>
     <script src="resources/js/hint.js"></script>
     <script src="resources/js/hint-ai.js"></script>
@@ -84,11 +85,9 @@
         <img src="https://i.gifer.com/YCZH.gif" />
     </div>
 </div>
-
-<body onload="touchStartup(); initialize()"">
+<body onload="touchStartup(); initialize(); buttonManipulation();" class="page">
     <audio id="audioTukaScream" src="resources/audio/tuka-scream.mp3"></audio>
     <audio id="bgMusic" src="resources/audio/chee-zee-beach-by-kevin-macleod-from-filmmusic-io.mp3" loop></audio>
-
     <canvas id="canvas" width="auto" height="auto"></canvas>
     <div id="seedingCover"></div>
     <div id="seeding" class="seed">
@@ -97,7 +96,6 @@
                 src="resources/images/icons/seed.png">
     </div>
     <div class="cGame">
-
         <div id="game">
             <div id="tray"></div> <!-- tray -->
             <div id="playarea" class="FlashOff">
@@ -127,17 +125,18 @@
             <div id="modalTop" class="modal">
                 <span onclick="closeModal()" class="close" title="Close Modal">x</span>
                 <button id="backButton" class="back" style="display:none">&#8249;</button>
-        <div class="modalContainer" id="modalContainerID">
-            <div class="outerGrid">
-                <div class="innerGrid" id="innerGrid"></div>
-                <form id="innerGridForm"></form>
-            </div>
-            <form class="modalFormContent">
-                <div class="modalFormContainer" id="modalFormContainerID">
-                    <h3 id="modalTitleID"></h3>
-                    <div class="modalButtons" id="modalButtonsID"></div>
-                    <div class="modalBody" id="modalBodyID"></div>
-
+                <div class="modalContainer" id="modalContainerID">
+                    <div class="outerGrid">
+                        <div class="innerGrid" id="innerGrid"></div>
+                        <form id="innerGridForm"></form>
+                    </div>
+                    <form class="modalFormContent">
+                        <div class="modalFormContainer" id="modalFormContainerID">
+                            <h3 id="modalTitleID"></h3>
+                            <div class="modalButtons" id="modalButtonsID"></div>
+                            <div class="modalBody" id="modalBodyID"></div>
+                        </div>
+                    </form>
                 </div>
             </form>
         </div>
@@ -154,7 +153,10 @@
         <button type="button" id='prefillBoard' class="cActionBtn" onclick="prefillBoard()" disabled>
                     <img src="resources/images/icons/prefill.png">
                 </button>
-        <button type="button" id='hintButton' class="cActionBtn" onclick="callHintAI()"> <img
+                <button type="button" id='qrCodeButton' class="cActionBtn" onclick="clickedOnScanQrCode()">
+                    <img src="resources/images/icons/qr-code.png">
+                </button>
+                <button type="button" id='hintButton' class="cActionBtn" onclick="callHintAI()"> <img
                     src="resources/images/icons/help_v2.png">
                 </button>
         <button type="button" id='undo' class="cActionBtn" onclick="execUndo()">
@@ -172,10 +174,7 @@
         <button type="button" id='replay' class="cActionBtn" onclick="execReplay()">
                     <img src="resources/images/icons/replay.svg">
                 </button>
-        <button type="button" id='license' class="cActionBtn" onclick="openLicense()"> <img
-                        src="resources/images/icons/license.png">
-                </button>
-        <button type="button" id='reset' class="cActionBtn" onclick="resetGame()">
+                <button type="button" id='reset' class="cActionBtn" onclick="resetGame()">
                     <img src="resources/images/icons/tidy_up_v2.png"></button>
     </div>
 
@@ -184,38 +183,28 @@
             <div id="labelNumberOfSolutionsText">Number of solutions:</div>
             <div id="labelNumberSolutions">?</div>
         </div>
-    </div>
-
-    </div>
-
-    <div class="cPieceManipulation" id="pieceManipulation">
-        <table>
-            <tr>
-                <td>
-                    <button type="button" class="controlButton" id='OpRotateLeft' onclick="rotateAntiClkWise()">
-                            <img src="resources/images/icons/rotate_left.png">
-                        </button>
-                </td>
-                <td>
-                    <button type="button" class="controlButton" id='OpRotateRight' onclick="rotateClkWise()">
-                            <img src="resources/images/icons/rotate_right.png">
-                        </button>
-                </td>
-                <td>
-                    <button type="button" class="controlButton" id='OpflipV' onclick="flipV()">
-                            <img src="resources/images/icons/flip_vertically.png">
-                        </button>
-                </td>
-                <td>
-                    <button type="button" class="controlButton" id='OpflipH' onclick="flipH()">
-                            <img src="resources/images/icons/flip_horizontally.png">
-                        </button>
-                </td>
-            </tr>
-        </table>
-
-    </div>
-    <!-- cPieceManipulation -->
+        <div class="main-wrapper" id ="pieceManipulation">
+            <div class="buttonWrapper first">
+                <div class="buttonInside first" id="insideWrapperFirst" onclick="flipH()">
+                    <span class="icon-flip1" id="OpflipH"></span>
+                </div>
+            </div>
+            <div class="buttonWrapper second">
+                <div class="buttonInside second" id="insideWrapperSecond" onclick="rotateAntiClkWise()">
+                    <span class="icon-rotateLeft" id="OpRotateLeft" ></span>
+                </div>
+            </div>
+            <div class="buttonWrapper third">
+                <div class="buttonInside third" id="insideWrapperThird" onclick="rotateClkWise()">
+                    <span class="icon-rotateRight" id="OpRotateRight"></span>
+                </div>
+            </div>
+            <div class="buttonWrapper fourth">
+                <div class="buttonInside fourth" id="insideWrapperFourth" onclick="flipV()">
+                    <span class="icon-flip2" id="OpflipV"></span>
+                </div>
+            </div>
+        </div> <!---Button Manipulation Ends-->
     </div>
 
     <script type="text/javascript">
@@ -232,6 +221,31 @@
                 settings,
                 null);
             processChangesToSettings(initialChanges, settings);
+        }
+
+        function buttonManipulation() {
+            let btn = document.querySelector('.mainWrapper');
+            let buttonWrapper = document.querySelectorAll('.buttonWrapper');
+
+            if(btn) {
+                btn.addEventListener('click', function() {
+
+                    if(btn.classList.contains('animation')) {
+                        btn.classList.remove('animation');
+                    } else {
+                        btn.classList.add('animation');
+                    }
+
+                    for (i = 0; i < buttonWrapper.length; i++ ) {
+                        if(buttonWrapper[i].classList.contains('animation')) {
+                            buttonWrapper[i].classList.remove('animation');
+                        } else {
+                            buttonWrapper[i].classList.add('animation');
+                        }
+                    }
+                });
+            }
+
         }
 
         function loadBoardList() {
@@ -256,6 +270,130 @@
                 boardimageDiv.appendChild(imageElement);
                 boardimageGrid.appendChild(boardimageDiv);
             }
+        }
+
+        function clickedOnScanQrCode() {
+            let modal = document.getElementById('modalTop');
+            if ($(modal).is(':visible')) {
+                this.closeModal();
+            } else {
+                openScanQrCode();
+                this.disablePointerEventsOnPieces();
+                this.hideManipulationButtons();
+            }
+        }
+
+        function openScanQrCode() {
+            let modal = document.getElementById('modalTop');
+            modal.style.display = "block";
+            modal.style.background = "rgb(220, 240, 237)";
+
+            document.querySelector(".modalFormContent").style.display = "none";
+            document.querySelector(".innerGrid").style.display = "block";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent(".innerGrid")
+            template.clearContent("#innerGridForm");
+
+            let parent = $('#innerGridForm')[0];
+
+            let heading = document.createElement("h4");
+            heading.innerHTML = "Scan QR-code";
+            parent.appendChild(heading);
+
+            let videoElement = parent.appendChild(document.createElement("video"));
+            videoElement.id = "webCamera";
+            videoElement.style.display = "none";
+            parent.appendChild(videoElement);
+
+            let canvasElem = parent.appendChild(document.createElement("canvas"));
+            canvasElem.id = "videoCanvas";
+
+            QrScanner.WORKER_PATH = 'resources/jsonform/qr-scanner-worker.min.js';
+
+            const qrScanner = new QrScanner(videoElement, result => {
+                let success = onQrCodeScanned(result);
+                if (success) {
+                    qrScanner.stop();
+                    this.closeModal();
+                }
+            });
+
+            qrScanner.start();
+
+            // Draw video on canvas with rectangle
+            videoElement.onplay = function() {
+                setTimeout(function() {
+                    drawVideoToCanvas(videoElement, canvasElem);
+                } , 300);
+            };
+
+            //onQrCodeScanned("https://pentomino-digital.de/V5/index.html?t=2010101110111011101110121");
+            //this.closeModal();
+        }
+
+        // from https://stackoverflow.com/questions/59702127/draw-rectangle-over-html-5-tag-video first answer
+        function drawVideoToCanvas(video, canvas){
+            let ctx = canvas.getContext('2d');
+
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            let rectWidth = Math.min(canvas.width * (2/3), canvas.height * (2/3));
+
+            let centerX = canvas.width / 2;
+            let centerY = canvas.height / 2;
+
+            let pX = centerX - rectWidth / 2;
+            let pY = centerY - rectWidth / 2;
+
+            ctx.rect(pX,pY,rectWidth,rectWidth);
+            ctx.lineWidth = "6";
+            ctx.strokeStyle = "red";
+            ctx.stroke();
+
+            setTimeout(function() {
+                drawVideoToCanvas(video, canvas);
+            }, 100);
+        }
+
+        function onQrCodeScanned(qrCode) {
+            let url;
+            try {
+                url = new URL(qrCode);
+            } catch (_) {
+                // TODO: display error-msg to user in better way
+                alert("Scanned in wrong QR-code.");
+                console.error("Scanned code is not a url: " + qrCode);
+                return false;
+            }
+
+            let seed = url.searchParams.get(baseConfigs.seedUrlParamName);
+
+            if (seed === null) {
+                // TODO: display error-msg to user in better way
+                // No parameter for seed found
+                alert("Scanned in wrong QR-code.");
+                console.error("Scanned url does not contain TUCA seed: " + qrCode);
+                return false;
+            }
+
+            let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+            let newSettings = SettingsParser.parseSettingsFromSeed(schema, seed);
+
+            if (newSettings === null) {
+                // TODO: display error-msg to user in better way
+                alert("Scanned in wrong QR-code.");
+                console.error("Scanned seed could not be parsed into a settings configuration: " + seed);
+                return false;
+            }
+
+            applyNewSettingsObjToApp(newSettings);
+            insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
+            return true;
         }
 
         function openLicense() {
@@ -440,15 +578,17 @@
                 // console.log("JsonForm: Submitted values:");
                 // console.log(values);
                 closeSettings();
-
-                let oldSettings = SettingsSingleton.getInstance().getSettings();
-                let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
-                let changesToSettings = SettingsParser.compareSettings(schema, oldSettings, values);
-
-                SettingsSingleton.getInstance().setSettings(values);
-                processChangesToSettings(changesToSettings, values);
-
+                applyNewSettingsObjToApp(values);
             }
+        }
+
+        function applyNewSettingsObjToApp(settings) {
+            let oldSettings = SettingsSingleton.getInstance().getSettings();
+            let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+            let changesToSettings = SettingsParser.compareSettings(schema, oldSettings, settings);
+
+            SettingsSingleton.getInstance().setSettings(settings);
+            processChangesToSettings(changesToSettings, settings);
         }
 
         function processChangesToSettings(changes, settings) {
@@ -491,6 +631,8 @@
                 this.closeModal();
             } else {
                 openSettings();
+                this.disablePointerEventsOnPieces();
+                this.hideManipulationButtons();
             }
         }
 
@@ -517,7 +659,8 @@
             SettingsForm.generateForm(
                 $('#innerGridForm')[0],
                 this.handleJsonFormSubmit,
-                this.handleSettingsExport
+                this.handleShareSettings,
+                this.handleClickedOnLicenses
             );
 
             let settings = SettingsSingleton.getInstance().getSettings();
@@ -525,7 +668,58 @@
             // this.postProcessSettingsForm(SettingsSingleton.getInstance().getSettings());
         }
 
-        function handleSettingsExport(settings) {
+        // called when license button is clicked in settings
+        function handleClickedOnLicenses(settings) {
+            this.hideManipulationButtons();
+            this.closeBoardSelector();
+            this.disablePointerEventsOnPieces();
+            var modal = document.getElementById('modalTop');
+            let modalFormContent = document.getElementsByClassName('modalFormContent');
+            modal.style.display = "block";
+            modal.style.background = "transparent";
+            document.querySelector(".modalFormContent").style.display = "block";
+            document.querySelector(".innerGrid").style.display = "none";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent("#innerGridForm");
+            modalBodyID.style.width="100%";
+            //modal.style.background="#dcf0ed";
+            modalContainerID.style.borderColor="#dcf0ed";
+            let div1 = document.createElement("div");
+            let h5 = document.createElement("h3");
+            var t1 = document.createTextNode("Licences");
+            h5.appendChild(t1);
+            div1.appendChild(h5);
+            modalBodyID.appendChild(div1);
+            //show back button
+            let btn = document.getElementById("backButton");
+            btn.style.display = "block";
+            btn.onclick = function () {
+            openSettings();
+            SettingsForm.updateForm($('#innerGridForm')[0], settings);
+            btn.style.display = "none";
+            };
+            let teacherURLLabel = document.createElement("label");
+            let pupilURLLabel = document.createElement("label");
+            let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+            let seed = SettingsParser.parseSettingsToSeed(schema, settings);
+            modalBodyID.appendChild(document.createElement("br"));
+            modalBodyID.appendChild(document.createTextNode("1. Background Music 'Chee Zee Beach' by Kevin MacLeod\n" +
+            "Link: https://incompetech.filmmusic.io/song/3490-chee-zee-beach\n" +
+            "License: https://filmmusic.io/standard-license"));
+            modalBodyID.appendChild(document.createElement("br"));
+            modalBodyID.appendChild(document.createTextNode("2. Wood music link : https://www.zapsplat.com/sound-effect-category/wood/ \n" + "License :https://www.zapsplat.com/license-type/standard-license/"));
+            modalBodyID.appendChild(document.createElement("br"));
+            modalBodyID.appendChild(document.createTextNode("3. (author: Edicionesnaza) jboy-2 : https://www.deviantart.com/edicionesnaza/art/Boy-and-Girl-Icon-gif-By-alfreditha-394021423"+"\n"));
+            modalBodyID.appendChild(document.createElement("br"));
+            modalBodyID.appendChild(document.createTextNode("4. (author: Ahkâm) present :https://www.freeiconspng.com/img/39913    \n"));
+            modalBodyID.appendChild(document.createElement("br"));
+            modalBodyID.appendChild(document.createTextNode("5. (author: Alexis Bailey) present :https://www.freepngimg.com/png/19721-wizard-free-png-image"));
+            modalBodyID.appendChild(document.createElement("br"));
+        }
+
+        function handleShareSettings(settings) {
             this.hideManipulationButtons();
             this.closeBoardSelector();
             this.disablePointerEventsOnPieces();
@@ -612,6 +806,13 @@
                 window.print();
             });
             modalBodyID.appendChild(printButton);
+            let downloadImageButton = document.createElement("a");
+            downloadImageButton.innerHTML = "Download image";
+            downloadImageButton.addEventListener("click", function () {
+                handleDownloadImage(downloadImageButton, pupilQrCodeElement.firstElementChild);
+            });
+            downloadImageButton.download = "Canvas.png";
+            modalBodyID.appendChild(downloadImageButton);
             modalBodyID.appendChild(document.createElement("br"));
             modalBodyID.appendChild(document.createElement("br"));
 
@@ -621,6 +822,15 @@
 
             modalBodyID.appendChild(collapsibleButton);
             modalBodyID.appendChild(divToHide);
+        }
+
+        function handleDownloadImage(downloadImageButton, canvasElement) {
+            dlCanvas(downloadImageButton, canvasElement);
+        }
+
+        function dlCanvas(downloadImageButton, canvasElem) {
+            let dt = canvasElem.toDataURL('image/png');
+            downloadImageButton.href = dt;
         }
 
         /*function generateQrTrElement(teacherUrl, pupilUrl) {
@@ -943,6 +1153,8 @@
         function closeForm() {
             document.getElementById("board_selection_form").style.display = "none";
         }
+
+
     </script>
     <script src="./registerSW.js"></script>
 

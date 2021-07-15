@@ -3,7 +3,7 @@ class Cell {
     constructor(pentomino, zIndex = 0) {
         this._pentomino = pentomino;
         this._next = undefined;
-        this._zindex = zIndex;
+        this._zindex = zIndex ;
     }
 }
 
@@ -28,8 +28,12 @@ class Block {
             currCell = currCell._next;
             ++itr;
         }
-        currCell._next = new Cell(pentomino, currCell._zindex + 1);
+        currCell._next = new Cell(pentomino, currCell._zindex + 10);
         ++this._cellCounter;
+        // console.log('currCell--->', currCell ,  'zindex-->', currCell._zindex );
+        // console.log('currecell.next-->', currCell._next ,  'zindex-->', currCell._next._zindex);
+        // console.log('in add');
+        // console.log('currCell-->', currCell._pentomino);
     }
 
     remove(pentomino) {
