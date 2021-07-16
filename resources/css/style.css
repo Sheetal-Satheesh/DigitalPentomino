@@ -737,3 +737,24 @@ html {
         transform: scale(1,1);
     }
 }
+
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+}
+
+table {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+@media screen and (max-width: 860px) {
+
+
+  .TableNameCell .TableDataCell .TableHead{
+    font-size: 0.5em !important
+  }
+}
