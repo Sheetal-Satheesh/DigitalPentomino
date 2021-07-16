@@ -610,6 +610,13 @@
                         }
                     }
                 }
+
+                let allCustomSettings = CustomSettingsEntrySingleton.getInstance().getAll();
+                allCustomSettings.forEach(customSettings => {
+                    if (customSettings.getName() === SettingsForm.generateSettingsEntryName(heading, key)) {
+                        customSettings.processChangesToSettings(settings[heading][key], pd);
+                    }
+                });
             });
         }
 

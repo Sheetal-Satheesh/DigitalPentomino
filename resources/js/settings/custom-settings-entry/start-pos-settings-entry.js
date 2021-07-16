@@ -85,7 +85,9 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
     }
 
     parseFromSeed(schemaEntry, remainingSeed, settingsEntry, key, seed) {
-        // TODO
+        let n = parseInt(remainingSeed.substr(0, 2));
+        settingsEntry[key] = remainingSeed.substr(0, n * 5 + 2);
+        return n * 5 + 1;
     }
 
     // from https://stackoverflow.com/questions/2998784/how-to-output-numbers-with-leading-zeros-in-javascript
@@ -93,5 +95,11 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
         num = num.toString();
         while (num.length < minDecimals) num = "0" + num;
         return num;
+    }
+
+    processChangesToSettings(settingsValue, pd) {
+        let visual = pd.visual;
+        visual.placePentomino(new Pentomino('T'), 7, 4);
+        visual.renderPieces();
     }
 }

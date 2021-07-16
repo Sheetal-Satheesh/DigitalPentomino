@@ -23,6 +23,10 @@ class CustomSettingsEntry {
         throw new Error("This function should be overwritten");
     }
 
+    processChangesToSettings(settingsValue, pd) {
+        throw new Error("This function should be overwritten");
+    }
+
     getName() {
         return this._name;
     }

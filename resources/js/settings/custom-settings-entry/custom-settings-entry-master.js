@@ -39,4 +39,8 @@ class CustomSettingsEntryMaster {
 
         return this.customSettingsEntries[name];
     }
+
+    getAll() {
+        return Object.values(this.customSettingsEntries);
+    }
 }
