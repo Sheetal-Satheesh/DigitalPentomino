@@ -771,8 +771,14 @@ class Visual {
     }
 
     showNumberOfPossibleSolutions() {
+        //Fill solutions label text
         let labelPossibleSolutions = document.getElementById("labelNumberSolutions");
-        labelPossibleSolutions.innerText = this.gameController.getHint().getPossibleSolutions().length;
+        let lang = SettingsSingleton.getInstance().getSettings().general.language;
+        labelPossibleSolutions.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
+
+        //Fill speech bubble text
+        let speechBubbleText = document.getElementById("speechBubbleText");
+        speechBubbleText.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
     }
 
     callHintAI() {
