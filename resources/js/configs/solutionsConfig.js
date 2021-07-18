@@ -2836,5 +2836,10 @@ solutionsConfig = {
         solutionsArray: [
             ".................PP. ...............WWPPP ..............WW.... .............XW..... ............XXX..... .......UUY.FFX...... ....NNNUYYYYFF...... ...NNLTUUVVVF....... IIIIILTTTVZZ........ .....LT..VZ......... .....LL..ZZ........."
         ]
+    },
+    "board_8x11":
+    {
+
+        solutionsArray: ["VVV.....PPN VUUU.X.TPPN VUYUXXXTPNN .YYYYXTTTN. ..WWIIIII.. .WWFFLLLLZ. .WFF.L.ZZZ. ...F...Z..."]
     }
 };
