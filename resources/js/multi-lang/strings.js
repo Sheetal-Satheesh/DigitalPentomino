@@ -11,8 +11,8 @@ const strings = {
         WellDone: ["Well done! Please wait for your Teacher to continue", "Gut gemacht! Bitte warten Sie auf Ihren Lehrer, um fortzufahren"],
         Excellent: ["Excellent ! Now continue with the next task on your assignment", "Ausgezeichnet! Fahren Sie jetzt mit der nächsten Aufgabe Ihres Auftrags fort"]
     },
-    license: ["LICENSES", "LIZENZEN"],
     numberOfPossibleSolutions: ["Number of solutions", "Anzahl Lösungen"],
+    License: ["licenses", "lizenzen"],
     settings: {
         header: ["Game settings", "Spieleinstellungen"],
         advanced: {
@@ -34,7 +34,18 @@ const strings = {
             },
             enableBgMusic: {
                 title: ["Enable Background Music", "Hintergrundmusik einschalten"]
+            },
+            enableBird: {
+                title: ["Show tucan as helper", "Tucan als Helfer anzeigen"]
             }
+        },
+        license: {
+            enumTitles: [["Name", "Name"], ["Author", "Autor"],["Link", "Link"], ["License", "Lizenz"]],
+             solvedScreenMagician: ["Solved Screen Magician image", "Gelöstes Screen Magician-Bild"],
+             solvedScreenBoy: ["Solved screen boy image", "Gelöster Bildschirm Junge Bild"],
+             solvedScreenGift: ["Solved Screen Gift image", "Gelöst Bildschirm Geschenkbild"],
+             backgroundMusic: ["Background Music", "Hintergrundmusik"],
+             functionsMusic: ["Functions Music","Funktionen Musik"]
         },
         hinting: {
             title: ["Hints (Experimental)", "Hinweise (Experimentell)"],
@@ -119,7 +130,7 @@ const strings = {
                 },
                 SolvedScreens: {
                     title: ["Different solved screens", "Unterschiedlich gelöste Bildschirme"],
-                    enumTitles: [["Play again?", "Well done! Please wait for your Teacher to continue", "Excellent ! Now continue with the next task on your assignment"], 
+                    enumTitles: [["Play again?", "Well done! Please wait for your Teacher to continue", "Excellent ! Now continue with the next task on your assignment"],
                                 ["Noch einmal spielen?", "Gut gemacht! Bitte warten Sie auf Ihren Lehrer, um fortzufahren", "Ausgezeichnet! Fahren Sie jetzt mit der nächsten Aufgabe Ihres Auftrags fort"]],
                     description: [
                     "The selected board is applied when the game is fully solved"+
