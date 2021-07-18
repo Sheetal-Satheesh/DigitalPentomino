@@ -111,9 +111,9 @@ button:hover {
 
 .modal .back {
   z-index: 100;
-  position: relative;
+  position: fixed;
   left: 1vw;
-  top: 1vw;
+  top: 11vw;
   width: 5vw;
   height: 5vw;
   background-color:white;
