@@ -896,6 +896,7 @@
 
             modalBodyID.appendChild(document.createElement("br"));
             let printButton = SettingsForm.createButton("Print");
+            printButton.setAttribute("id", "printQRCode");
             printButton.addEventListener("click", function () {
                 window.print();
             });
