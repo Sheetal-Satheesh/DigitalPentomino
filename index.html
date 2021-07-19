@@ -37,7 +37,6 @@
     <script src="resources/js/command-history/command-tree.js"></script>
     <script src="resources/js/configs/baseConfigs.js"></script>
     <script src="resources/js/configs/licensesConfig.js"></script>
-    <script src="resources/js/configs/boardConfigs.js"></script>
     <script src="resources/js/configs/solutionsConfig.js"></script>
     <script src="resources/js/game-solution.js"></script>
     <script src="resources/js/pd.js"></script>
@@ -105,9 +104,9 @@
 
             <div id="modalTop" class="modal">
                 <button onclick="closeModal()" class="close" title="Close Modal"><img class="closeBtn"
-                    src="resources/images/icons/close.png"></button>
+                        src="resources/images/icons/close.png"></button>
                 <button id="backButton" class="back" style="display:none"><img class="backBtn"
-                    src="resources/images/icons/back.png"></button>
+                        src="resources/images/icons/back.png"></button>
                 <div class="modalContainer" id="modalContainerID">
                     <div class="outerGrid">
                         <div class="innerGrid" id="innerGrid"></div>
@@ -165,7 +164,9 @@
                 </div>
             </div>
             <div id="bubbleContainer">
-                <div class="speechBubble"><div id="speechBubbleText">Number of solutions: ?</div></div>
+                <div class="speechBubble">
+                    <div id="speechBubbleText">Number of solutions: ?</div>
+                </div>
             </div>
             <div id="birdContainer">
                 <img src="resources/images/icons/tuca_bird_left.png"></img>
@@ -619,7 +620,7 @@
                     }
                 } else if (heading === "general" && key === "enableBird") {
                     let birdEnabled = settings[heading][key];
-                    if (birdEnabled){
+                    if (birdEnabled) {
                         document.getElementById("birdContainer").style.display = "block";
                         document.getElementById("bubbleContainer").style.display = "block";
                         document.getElementById("labelNumberSolutionsContainer").style.display = "none";
@@ -691,25 +692,25 @@
             template.clearContent("#modalTitleID");
             template.clearContent("#modalBodyID");
             template.clearContent("#innerGridForm");
-            modal.style.background="#dcf0ed";
+            modal.style.background = "#dcf0ed";
             document.getElementById("modalFormContainerID").style.border = "none";
             //show back button
             let btn = document.getElementById("backButton");
             btn.style.display = "block";
-            $( ".close" ).click(function() {
-                div5.style.display="none";
-                if($("#licencesTable")){
-                  document.getElementById("licencesTable").style.display="none";
+            $(".close").click(function () {
+                div5.style.display = "none";
+                if ($("#licencesTable")) {
+                    document.getElementById("licencesTable").style.display = "none";
                 }
             });
             btn.onclick = function () {
-            openSettings();
-            div5.style.display="none";
-            if($("#licencesTable")){
-                document.getElementById("licencesTable").style.display="none";
-            }
-            SettingsForm.updateForm($('#innerGridForm')[0], settings);
-            btn.style.display = "none";
+                openSettings();
+                div5.style.display = "none";
+                if ($("#licencesTable")) {
+                    document.getElementById("licencesTable").style.display = "none";
+                }
+                SettingsForm.updateForm($('#innerGridForm')[0], settings);
+                btn.style.display = "none";
             };
             let lang = SettingsSingleton.getInstance().getSettings().general.language;
             let textNode = {
@@ -720,21 +721,21 @@
             modal.appendChild(document.createElement("br"));
             modal.appendChild(document.createElement("br"));
             let div5 = document.createElement("div");
-            div5.style.marginTop ="10vh";
-            div5.style.marginRight ="5vh";
+            div5.style.marginTop = "10vh";
+            div5.style.marginRight = "5vh";
             let ConfigKeys = [];
-            for (let h in strings.settings.license.enumTitles ){
+            for (let h in strings.settings.license.enumTitles) {
                 let i = strings.settings.license.enumTitles[h][lang];
                 ConfigKeys.push(i);
             }
             modal.appendChild(document.createElement(strings.License[lang]));
             var table = document.createElement('TABLE');
             console.log(table);
-            table.id="licencesTable"
+            table.id = "licencesTable"
             table.border = '1px solid black';
             table.style.textAlign = "center";
-            table.style.marginLeft="auto";
-            table.style.marginRight="auto";
+            table.style.marginLeft = "auto";
+            table.style.marginRight = "auto";
             var tableBody = document.createElement('TBODY');
             table.appendChild(tableBody);
             var tr = document.createElement('TR');
@@ -744,18 +745,16 @@
                 var td = document.createElement('TH');
                 td.classList.add("TableHead");
                 td.style.width = '35vw';
-                td.style.padding="1vw";
+                td.style.padding = "1vw";
                 td.border = '0.5vw solid black';
-                td.style.borderCollapse="collapse";
-                if (x.matches)
-                { // If media query matches
-                    td.style.fontSize="0.5vw";
+                td.style.borderCollapse = "collapse";
+                if (x.matches) { // If media query matches
+                    td.style.fontSize = "0.5vw";
                     td.style.width = '10vw';
                 }
-                else
-                {
-                   td.style.fontSize="1vw";
-                   td.style.width = '10vw';
+                else {
+                    td.style.fontSize = "1vw";
+                    td.style.width = '10vw';
                 }
                 td.appendChild(document.createTextNode(ConfigKeys[i]));
                 tr.appendChild(td);
@@ -766,51 +765,47 @@
                 var x = window.matchMedia("(max-width: 700px)");
                 tableBody.appendChild(tr1);
                 for (let key in subSettings) {
-                    if(key==="name"){
+                    if (key === "name") {
                         var td = document.createElement('TH');
                         td.classList.add("TableNameCell");
                         let entry = subSettings[key][lang];
                         td.style.width = '35vw';
-                        td.style.padding="1vw";
+                        td.style.padding = "1vw";
                         td.border = '0.5vw solid black';
-                        td.style.borderCollapse="collapse";
-                        if (x.matches)
-                        { // If media query matches
-                            td.style.fontSize="0.5vw";
+                        td.style.borderCollapse = "collapse";
+                        if (x.matches) { // If media query matches
+                            td.style.fontSize = "0.5vw";
                             td.style.width = '10vw';
                         }
-                        else
-                        {
-                           td.style.fontSize="1vw";
-                           td.style.width = '10vw';
+                        else {
+                            td.style.fontSize = "1vw";
+                            td.style.width = '10vw';
                         }
                         td.appendChild(document.createTextNode(entry));
                     }
-                    else{
+                    else {
                         var td = document.createElement('TH');
                         td.classList.add("TableDataCell");
                         entry = subSettings[key];
                         td.style.width = '35vw';
-                        td.style.padding="1vw";
+                        td.style.padding = "1vw";
                         td.border = '0.5vw solid black';
-                        td.style.borderCollapse="collapse";
-                        if (x.matches)
-                        { // If media query matches
-                            td.style.fontSize="0.5vw";
+                        td.style.borderCollapse = "collapse";
+                        if (x.matches) { // If media query matches
+                            td.style.fontSize = "0.5vw";
                             td.style.width = '10vw';
                         }
-                        else
-                        {
-                           td.style.fontSize="1vw";
-                           td.style.width = '10vw';
+                        else {
+                            td.style.fontSize = "1vw";
+                            td.style.width = '10vw';
                         }
                         td.appendChild(document.createTextNode(entry));
                     }
                     tr1.appendChild(td);
                 }
             }
-         div5.appendChild(table);
-         modal.appendChild(div5);
+            div5.appendChild(table);
+            modal.appendChild(div5);
         }
 
         function handleShareSettings(settings) {
