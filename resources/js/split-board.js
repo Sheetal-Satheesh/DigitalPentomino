@@ -40,7 +40,7 @@ class SplitBoard {
     loadSplit_V2() {
         let game = this._game;
         let possibleSolutions = this._getPossibleSolutions(game, this._solutions);
-        let closestSolution;
+        let closestSolution;        
         closestSolution = possibleSolutions[Math.floor(Math.random() * possibleSolutions.length)];
         this._finalSolution = closestSolution;
         let pentominoAnchors = this._getPentominoesAndAnchorPos(closestSolution);

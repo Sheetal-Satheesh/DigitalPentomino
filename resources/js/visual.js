@@ -477,8 +477,7 @@ class Visual {
 
             //check if a button is clicked
             let buttonOverPiece = false;
-            let settingsEnabled = false;            
-            let flagCheckPartitionSolved = false;
+            let settingsEnabled = false;                       
             for (let j in elements) {
                 let precheck = elements[j].className;
                 if (precheck.startsWith('icon-')) {
@@ -511,14 +510,8 @@ class Visual {
                 var piece = that.pieces.find(p => { return p.name === piece; });
                 window.currentlyMoving = [container, piece];
                 break;
-            }
-            flagCheckPartitionSolved = that.checkPartitionSolved();
-            if(flagCheckPartitionSolved) {
-                that.blockPartition();
-                that.displaySplit_V2();
-            }
+            }            
             return;
-
         }
 
         /**
@@ -585,6 +578,7 @@ class Visual {
                 */
                 var data = window.currentlyMoving;
                 let trayPos = 0;
+                let flagCheckPartitionSolved = false;
                 let pentominoList = that.gameController.getAllPentominoes();
                 window.currentlyMoving = false;
                 var elements = document.elementsFromPoint(event.clientX, event.clientY); //determine the target
@@ -668,6 +662,12 @@ class Visual {
                          * TODO: Make buttons disappear/appear if nothing/something is selected
                          */
                         that.select(data[1], event.clientX, event.clientY);
+                        flagCheckPartitionSolved = that.checkPartitionSolved();
+                        if(flagCheckPartitionSolved) {
+                            that.blockPartition();
+                            that.displaySplit_V2();
+                        }
+
                         return;
                     }
                 }
@@ -939,8 +939,12 @@ class Visual {
         if(splitPartition.length === 0) {
             return false;
         }
-
+        
         let partitionedArray = splitPartition[splitCounter]
+        
+        if(!partitionedArray) {
+            return false;
+        }
         for (let i = 0; i < partitionedArray.length; i++) {            
             piecesDisplayed.push(partitionedArray[i][0].name);                     
         } 
