@@ -98,8 +98,21 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
     }
 
     processChangesToSettings(settingsValue, pd) {
-        let visual = pd.visual;
-        visual.placePentomino(new Pentomino('T'), 7, 4);
-        visual.renderPieces();
+        let n = parseInt(settingsValue.substr(0, 2));
+
+        for (let i = 0; i < n; i++) {
+            let name = settingsValue.substr(i * 5 + 2, 1);
+            let row = parseInt(settingsValue.substr(i * 5 + 2 + 1, 2));
+            let col = parseInt(settingsValue.substr(i * 5 + 2 + 3, 2));
+            this.placePiece(name, row, col);
+        }
+
+        pd.visual.renderPieces();
+    }
+
+    placePiece(pieceName, row, col) {
+        let piece = pd.visual.pieces.filter(p => p.name === pieceName)[0];
+        piece.updateTrayValue(0);
+        pd.gameController.placePentomino(piece, row, col);
     }
 }
