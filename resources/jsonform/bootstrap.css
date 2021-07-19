@@ -5845,16 +5845,16 @@ button.list-group-item-danger.active:focus {
   line-height: 1;
   color: #000;
   text-shadow: 0 1px 0 #fff;
-  filter: alpha(opacity=20);
-  opacity: .2;
+  filter: alpha(opacity=50);
+  opacity: .5;
 }
 .close:hover,
 .close:focus {
   color: #000;
   text-decoration: none;
   cursor: pointer;
-  filter: alpha(opacity=50);
-  opacity: .5;
+  filter: alpha(opacity=70);
+  opacity: .7;
 }
 button.close {
   -webkit-appearance: none;

@@ -27,8 +27,8 @@ button:hover {
     right: 0vw;
     bottom: 10vw;
     /*border: 1px solid rgb(18, 122, 114);*/
-    overflow: auto;
-    border-radius: 2vw;
+    overflow: hidden;
+    overflow-y:scroll;
 }
 
   /* The Modal (background) */
@@ -54,7 +54,7 @@ button:hover {
     left: 28vw;
     width: 35vw;
     padding-bottom: 2vw;;
-    background-color: rgb(220, 240, 237);
+    background-color: #eceaea;
     border: .2vw solid rgb(2, 71, 62) ;
 
 }
@@ -67,19 +67,35 @@ button:hover {
     overflow:hidden;
 
 }  
+
   /* The Modal Close Button (x) */
- .modal .close {
-    position: relative;
-    right: 1vw;
-    top: 0vw;
-    font-size: 4vw;
-    font-family: 'Times New Roman', Times, serif;
-    font-weight: 900;
-    border-style: double;
-    border-color: #f30808;
-    color: #f30808;
-    background: solid rgb(1, 26, 22) ;
+
+  .modal .close {
     z-index: 100;
+    position: fixed;
+    right: 1vw;
+    top: 11vw;
+    width: 5vw;
+    height: 5vw;
+    background-color:white;
+    border-radius: 50%;
+    border: 1px solid black;
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+    font-size: 2vw;
+    color: #000;
+    text-shadow: 0 1px 0 #fff;
+    filter: alpha(opacity=50);
+    opacity: .5;
+  }
+
+  .modal .close .closeBtn {
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+    margin: auto;
+    padding: 25%;
   }
   
   .close:hover,
@@ -94,15 +110,39 @@ button:hover {
 /* The modal back button (<<) */
 
 .modal .back {
-  position: relative;
+  z-index: 100;
+  position: fixed;
   left: 1vw;
-  top: 1vw;
-  width: 4vw;
-  height: 4vw;
+  top: 11vw;
+  width: 5vw;
+  height: 5vw;
+  background-color:white;
   border-radius: 50%;
   border: 1px solid black;
   display: inline-block;
+  vertical-align: middle;
   text-align: center;
+  color: #000;
+  text-shadow: 0 1px 0 #fff;
+  filter: alpha(opacity=50);
+  opacity: .5;
+}
+
+.modal .back .backBtn {
+  display: inline-block;
+  height: 100%;
+  width: 100%;
+  margin: auto;
+  padding: 25%;
+}
+
+.back:hover,
+.back:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+  filter: alpha(opacity=70);
+  opacity: .7;
 }
 
 /* */
