@@ -41,7 +41,7 @@ class SplitBoard {
         let game = this._game;
         let possibleSolutions = this._getPossibleSolutions(game, this._solutions);
         let closestSolution;
-        closestSolution = possibleSolutions[0];
+        closestSolution = possibleSolutions[Math.floor(Math.random() * possibleSolutions.length)];
         this._finalSolution = closestSolution;
         let pentominoAnchors = this._getPentominoesAndAnchorPos(closestSolution);
         let orderPieces = this._sortPiecesBasedOnAnchor(pentominoAnchors);
@@ -51,9 +51,33 @@ class SplitBoard {
         return partitionedArray;
     }
 
-    partitionHasUnoccupiedPosition(pentomino) {       
-        let val = this._isPerfectPentomino(this._game, this._finalSolution, pentomino.name);               
-        return val;
+    partitionHasUnoccupiedPosition(pentomino) {               
+        let game = this._game;
+        let solution = this._finalSolution; 
+        let pentominoName = pentomino.name;
+        
+        let gamePentomino = game.getPentominoByName(pentominoName);
+        let solutionPentomino = solution.getPentominoByName(pentominoName);        
+        
+        if (gamePentomino === null) {
+            return !solution.isPlacedOnBoard(solutionPentomino);
+        }
+
+        if (solutionPentomino === null) {
+            return !game.isPlacedOnBoard(gamePentomino);
+        }
+
+        if (!game.isPlacedOnBoard(gamePentomino))
+            return !solution.isPlacedOnBoard(solutionPentomino);
+        else if (solution.isPlacedOnBoard(solutionPentomino)) {
+            let gamePentominoPosition = game.getPosition(gamePentomino);
+            let solutionPentominoPosition = solution.getPosition(solutionPentomino);            
+            return gamePentominoPosition[0] === solutionPentominoPosition[0]
+                && gamePentominoPosition[1] === solutionPentominoPosition[1]
+                && gamePentomino.sRepr.localeCompare(solutionPentomino.sRepr) === 0;
+        } else {
+            return false;
+        }        
     }
 
     /** ---------------  Solutions-------------*/
@@ -253,13 +277,7 @@ class SplitBoard {
                     let pentominoRelPositions = solutionPentomino.getRelPentominoPositions();
                     let pentominoPositions = pentominoRelPositions.map(relPosition => {
                         return solutionPentomino.getCoordinatePosition(pentominoAnchor, relPosition)
-                    });
-                    let pentominoGamePosition = pentominoPositions.map(position => {
-                        return [
-                            position[0] + game._board._boardSRows,
-                            position[1] + game._board._boardSCols
-                        ];
-                    });
+                    });                    
                     finalPosAndPiece.push([solutionPentomino, pentominoPositions, orderPieces[i][1]]);
                 }
             });
@@ -359,40 +377,7 @@ class SplitBoard {
     }
 
 
-    _isPerfectPentomino(game, solution, pentominoName) {
-        let gamePentomino = game.getPentominoByName(pentominoName);
-        let solutionPentomino = solution.getPentominoByName(pentominoName);
-
-        if (gamePentomino === null && solutionPentomino === null) {
-            // FIXME - should return the pentomino if its in the tray and not return null
-            //throw new Error("Pentomino '" + pentominoName + "' does neither exist in the game nor in the solution");
-            return true;
-        }
-
-        if (gamePentomino === null) {
-            return !solution.isPlacedOnBoard(solutionPentomino);
-        }
-
-        if (solutionPentomino === null) {
-            return !game.isPlacedOnBoard(gamePentomino);
-        }
-
-        if (!game.isPlacedOnBoard(gamePentomino))
-            return !solution.isPlacedOnBoard(solutionPentomino);
-        else if (solution.isPlacedOnBoard(solutionPentomino)) {
-            let gamePentominoPosition = game.getPosition(gamePentomino);
-            let solutionPentominoPosition = solution.getPosition(solutionPentomino);
-            let solutionPentominoRelPosition = [
-                solutionPentominoPosition[0] + game._board._boardSRows,
-                solutionPentominoPosition[1] + game._board._boardSCols
-            ]
-            return gamePentominoPosition[0] === solutionPentominoRelPosition[0]
-                && gamePentominoPosition[1] === solutionPentominoRelPosition[1]
-                && gamePentomino.sRepr.localeCompare(solutionPentomino.sRepr) === 0;
-        } else {
-            return false;
-        }
-    }
+    
 }
 
 if (typeof module != 'undefined') {

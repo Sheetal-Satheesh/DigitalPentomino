@@ -21,10 +21,11 @@ function updateCommandAttr(cmdType, cmdSeq) {
 
 const cmdAttrDefault = updateCommandAttr(CommandTypes.Original, CommandSeq.Forward);
 const alternateColor = ["#77C9D4", "#57B390", "#015249"];
-const backGroundColor = '#959DAC';
+const backGroundColor = '#eceaea';
 
 let lastHintedPentName = null;
-let splitPartition ;
+let splitPartition = [];
+let styleBlocks;
 let splitCounter = -1;
 let randomCell;
 class Visual {
@@ -514,7 +515,7 @@ class Visual {
             flagCheckPartitionSolved = that.checkPartitionSolved();
             if(flagCheckPartitionSolved) {
                 that.blockPartition();
-                that.displaySplit_V2(splitPartition, alternateColor);
+                that.displaySplit_V2();
             }
             return;
 
@@ -569,10 +570,10 @@ class Visual {
             if (onpointerdownX == event.clientX &&
                 onpointerdownY == event.clientY &&
                 window.currentlyMoving) {
-                let data_ = window.currentlyMoving;
+                let data_ = window.currentlyMoving;               
                 window.currentlyMoving = false;
                 that.positionPiece(data_[1]);
-                that.select(data_[1], event.clientX, event.clientY);
+                that.select(data_[1], event.clientX, event.clientY);                
                 return;
             }
 
@@ -811,26 +812,50 @@ class Visual {
         }, 1000);
     }
 
+    resize(arr, newSize) {
+        let partionLength = 0;
+        let counter = 0;
+        if(splitPartition.length != 0) {
+            while(splitPartition.length === 0){
+                arr.pop();
+            }
+        }
+        partionLength = splitPartition.length;
+        splitCounter = -1;
+        while(partionLength < newSize) {
+            splitPartition.push(arr[counter]);
+            counter++;
+            partionLength++;
+        }                    
+    }
+
     callSplitBoard() {
         let partitionedArray = pd.gameController.loadSplit();        
         this.displaySplit(partitionedArray, alternateColor);        
     }
 
     callSplitBoard_V2() {
-        let partitionedArray = pd.gameController.loadSplit_V2();  
-        splitPartition = partitionedArray;  
-        this.displaySplit_V2(alternateColor);                     
+        let partitionedArray = pd.gameController.loadSplit_V2();        
+        this.resize(partitionedArray, partitionedArray.length)
+        let styleElement = document.querySelector('.boardarea');
+        let styleValue = window.getComputedStyle(styleElement);  
+        styleBlocks = styleValue.backgroundColor;
+        this.displaySplit_V2();                     
     }    
 
     undoSplit() {        
         Array.prototype.forEach.call(document.getElementsByClassName("gamearea boardarea"), function (element) {            
-            element.style.background = backGroundColor;
+            element.style.backgroundColor = "";
+            element.style.opacity ="";
         });
         this.pieces.forEach(piece => {
             Array.prototype.forEach.call(document.getElementById('piece_' + piece.name).getElementsByClassName("bmPoint"), function (element) {
-                element.style.background = piece.color
+                element.style.background = piece.color ;                 
             });
         });
+        this.pieces.forEach(piece => {            
+            document.getElementById('piece_'+ piece.name).style.display = 'block';                                                                                           
+        }); 
     }
 
     displaySplit(partitionedArray, alternateColor) {
@@ -841,7 +866,7 @@ class Visual {
                     for (var k = 0; k < fieldValue.length; k++) {
                         let fieldID = document.getElementById("field_" + fieldValue[k][0] + "," + fieldValue[k][1]);
                         fieldID.style.background = alternateColor[i];
-                        fieldID.style.opacity = .8;
+                        fieldID.style.opacity = .5;
                     }
                 }
                 var piece = partitionedArray[i][j][0]
@@ -853,7 +878,7 @@ class Visual {
         }        
     }
     
-    displaySplit_V2(alternateColor) { 
+    displaySplit_V2() { 
         splitCounter++
         if(splitPartition.length > splitCounter) {
             let partitionedArray = splitPartition[splitCounter]
@@ -862,8 +887,8 @@ class Visual {
                 for (let j = 0; j < partitionedArray[i][1].length; j++) {                
                         let fieldValue = partitionedArray[i][1];                    
                         let fieldID = document.getElementById("field_" + fieldValue[j][0] + "," + fieldValue[j][1]);
-                        fieldID.style.background = alternateColor[0];
-                        fieldID.style.opacity = .8;                                  
+                        fieldID.style.background = "#77C9D4";
+                        fieldID.style.opacity = .5;                                                          
                 } 
                 piecesDisplayed.push(partitionedArray[i][0].name);                     
             } 
@@ -882,12 +907,35 @@ class Visual {
               
     }
 
+    unblockPartition() {
+        Array.prototype.forEach.call(document.getElementsByClassName("gamearea boardarea"), function (element) {            
+            element.style.background = backGroundColor;
+            element.style.opacity ="";
+        });
+        this.pieces.forEach(piece => {
+            Array.prototype.forEach.call(document.getElementById('piece_' + piece.name).getElementsByClassName("bmPoint"), function (element) {
+                element.style.display = 'block';                
+            });
+                        
+            if(document.getElementById('piece_'+ piece.name).classList.contains('disabledbutton')){                
+                document.getElementById('piece_'+ piece.name).classList.remove("disabledbutton");
+            }                                                                                            
+            
+        });
+
+
+    }
+
     checkPartitionSolved() {
         let piecesDisplayed = [];
         let partitionCheck = false;
         
         if (!splitPartition) {
             return false;   
+        }
+
+        if(splitPartition.length === 0) {
+            return false;
         }
 
         let partitionedArray = splitPartition[splitCounter]
@@ -909,7 +957,9 @@ class Visual {
                     let checker = temp.every(v => v === true);
                     if (checker) {
                         partitionCheck = true;
-                        this.checkIfGameWon();
+                        if(this.checkIfGameWon()){
+                            this.unblockPartition();
+                        }                        
                         return partitionCheck; 
                     }
                 }
