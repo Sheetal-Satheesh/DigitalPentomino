@@ -84,7 +84,7 @@
                 <div id="piecearea"></div> <!-- piecearea -->
             </div>
             <div id="boardmodalTop" class="boardmodal"
-                style="background: rgb(220, 240, 237) none repeat scroll 0% 0%; display: none;">
+                style="background: #eceaea none repeat scroll 0% 0%; display: none;">
                 <span onclick="closeModal()" class="boardclose" title="Close Modal">x</span>
                 <div class="boardmodalContainer" id="boardmodalContainerID">
                     <div class="boardouterGrid">
@@ -104,8 +104,10 @@
             <!--board modal end-->
 
             <div id="modalTop" class="modal">
-                <span onclick="closeModal()" class="close" title="Close Modal">x</span>
-                <button id="backButton" class="back" style="display:none">&#8249;</button>
+                <button onclick="closeModal()" class="close" title="Close Modal"><img class="closeBtn"
+                    src="resources/images/icons/close.png"></button>
+                <button id="backButton" class="back" style="display:none"><img class="backBtn"
+                    src="resources/images/icons/back.png"></button>
                 <div class="modalContainer" id="modalContainerID">
                     <div class="outerGrid">
                         <div class="innerGrid" id="innerGrid"></div>
@@ -274,7 +276,7 @@
         function openScanQrCode() {
             let modal = document.getElementById('modalTop');
             modal.style.display = "block";
-            modal.style.background = "rgb(220, 240, 237)";
+            modal.style.background = "#eceaea";
 
             document.querySelector(".modalFormContent").style.display = "none";
             document.querySelector(".innerGrid").style.display = "block";
@@ -640,7 +642,7 @@
         function openSettings() {
             let modal = document.getElementById('modalTop');
             modal.style.display = "block";
-            modal.style.background = "rgb(220, 240, 237)";
+            modal.style.background = "#eceaea";
 
             document.querySelector(".modalFormContent").style.display = "none";
             document.querySelector(".innerGrid").style.display = "block";
@@ -822,7 +824,7 @@
             template.clearContent("#innerGridForm");
 
             let div1 = document.createElement("div");
-            let h5 = document.createElement("h3");
+            let h5 = document.createElement("h2");
             var t1 = document.createTextNode("Share");
             h5.appendChild(t1);
             div1.appendChild(h5);
@@ -903,7 +905,7 @@
             modalBodyID.appendChild(document.createElement("br"));
             modalBodyID.appendChild(document.createElement("br"));
 
-            let collapsibleButton = SettingsForm.createCollapsibleButton("SHOW ADVANCED SHARE OPTIONS", "HIDE ADVANCED SHARE OPTIONS");
+            let collapsibleButton = SettingsForm.createCollapsibleButton("Show advanced share options", "Hide advanced share options");
             let divToHide = document.createElement("div");
             divToHide.appendChild(document.createTextNode("Test"));
 
@@ -1086,7 +1088,7 @@
             var modal = document.getElementById('modalTop');
             this.disablePointerEventsOnPieces();
             this.hideManipulationButtons();
-            modal.style.background = " rgb(220, 240, 237)";
+            modal.style.background = " #eceaea";
             modal.style.display = "block";
 
             document.querySelector(".modalFormContent").style.display = "none";

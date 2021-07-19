@@ -1,3 +1,8 @@
+/* -- General styling in settings form -- */
+#modalContainerID label {
+  font-weight: normal;
+}
+
 
 /* Button used to open the board selection form - fixed at the bottom of the page */
 .open-button {
@@ -222,11 +227,151 @@
 }
 
 .selected {
-  border-radius: 30%;
   font-size: 80px;
   color: #fff;
   text-align: center;
   -webkit-animation: glow 1s ease-in-out infinite alternate;
   -moz-animation: glow 1s ease-in-out infinite alternate;
   animation: glow 1s ease-in-out infinite alternate;
+}
+
+/* Styling within settings */
+
+#general.language {
+  margin: 3vw; 
+}
+
+.modalContainer h3 {
+  left: 0;
+  width: 100vw;
+  padding: 3vw;
+  background-color: lightblue;
+  font-size: 3vw;
+}
+
+.modalContainer h4 {
+  left: 0;
+  width: 100vw;
+  padding: 1vw;
+  background-color: lightgrey;
+  font-size: 2vw;
+}
+
+.modalContainer .btn {
+  border: 1px solid black;
+  width: 28vw;
+  height: 6vw;
+  text-align: center;
+  font-size: 2vw;
+  margin-top: 2vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.imgButton {
+  margin: 1vw;
+  width: 15vw;
+  height: 9vw;
+  background-size: 100%;
+}
+
+.imgButton:not(.selected){
+  filter: grayscale(100%);
+}
+
+.modalContainer input[type="checkbox"] {
+  cursor: pointer;
+  margin-left: 1vw;
+  margin-top: 0.5vw;
+  margin-bottom: 0.5vw;
+  margin-right: 2vw;
+  /* Double-sized Checkboxes */
+  width: 2.1vw;
+  height: 2.1vw;
+  vertical-align: middle;
+}
+
+.modalContainer label {
+  font-size: 1.7vw;
+  margin-left: 0.5vw;
+  vertical-align: middle;
+  display: inline;
+}
+
+#modalTitleID {
+  left: 0;
+  right: 0;
+  width: 35vw !important;
+  display: block !important;
+  padding: 0;
+  background-color: transparent;
+}
+
+.modalContainer select:not(.StateSelect) { /* TODO: remove StateSelect exclusion in future by giving it specific styling */
+  cursor: pointer;
+  width: 20vw;
+  height: 3.5vw;
+  margin-left: 1vw;
+  border-radius: 1vw; 
+  font-size: 1.7vw;
+  outline: none;
+  border: none;
+  padding-left: 0.5vw;
+}
+
+.modalContainer input[type="number"] {
+  width: 20vw;
+  height: 3.5vw;
+  margin-left: 1vw;
+  border-radius: 1vw; 
+  font-size: 1.7vw;
+  outline: none;
+  border: none;
+  padding-left: 1vw;
+}
+
+.modalContainer div{
+  width: 100%;
+}
+
+.formButton {
+  width: 11vw;
+  height: 4vw;
+  margin: 0.5vw;
+  background-color: lightblue;
+  color: black;
+  border: 1px solid black;
+  border-radius: 1vw;
+  font-size: 1.7vw;
+}
+
+#licenseButton {
+  right: 3.5vw;
+  bottom: 11vw;
+  background-color: lightgray;
+  position: fixed;
+}
+
+#btnSettingsSubmit {
+  left: 3.5vw;
+  bottom: 11vw;
+  position: fixed;
+}
+
+#btnSettingsShare {
+  left: 17vw;
+  bottom: 11vw;
+  background-color: lightgray;
+  position: fixed;
+}
+
+button.collapsible {
+  width: 11vw;
+}
+
+#divPlaceholder{
+  width: 100%;
+  height: 4vw;
+  background-color: transparent;
 }

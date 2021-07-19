@@ -243,7 +243,7 @@ height: 4vw;
 }
 
 .gamearea {
-  justify-content:;
+  justify-content: normal;
   display: block;
   float: left;
   user-select: none;
