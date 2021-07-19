@@ -830,7 +830,9 @@ class Visual {
     }
 
     callSplitBoard() {
-        let partitionedArray = pd.gameController.loadSplit();        
+        let partitionedArray = pd.gameController.loadSplit();
+        splitPartition = [];
+        splitCounter = -1;
         this.displaySplit(partitionedArray, alternateColor);        
     }
 
