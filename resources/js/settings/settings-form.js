@@ -32,7 +32,9 @@ class SettingsForm {
             console.log(settingsClone);
             event.preventDefault();
             onSubmit(false, settingsClone);
-            document.getElementById('bubbleContainer').style.display = "block";
+            if ($('#birdContainer').is(':visible')){
+                document.getElementById('bubbleContainer').style.display = "block";
+            }
         });
         licenseButton.addEventListener("click", event => {
             let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();

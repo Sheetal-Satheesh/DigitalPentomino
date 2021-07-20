@@ -271,7 +271,9 @@
                 openScanQrCode();
                 this.disablePointerEventsOnPieces();
                 this.hideManipulationButtons();
-                this.hideBubbleContainer();
+                if ($('#birdContainer').is(':visible')) {
+                    this.hideBubbleContainer();
+                }
             }
         }
 
@@ -493,7 +495,9 @@
             document.getElementById('boardmodalTop').style.display = 'none';
             this.closeModalContainer();
             this.enableSnapshotButton();
-            this.showBubbleContainer();
+            if ($('#birdContainer').is(':visible')){
+                this.showBubbleContainer();
+            }           
         }
 
         function callHintAI() {
