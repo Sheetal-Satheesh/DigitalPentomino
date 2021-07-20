@@ -1,4 +1,4 @@
-const NO_POS_SELECTED = "-";
+const NO_POS_SELECTED = "00";
 
 class StartPosSettingsEntry extends CustomSettingsEntry {
     constructor(heading, subheading) {
@@ -34,14 +34,18 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
         let game = new FrontController().controller.game();
         let pentominoesOnBoard = game.getPentominoesInGmArea().filter(pentomino => game.isPlacedOnBoard(pentomino));
 
-        let resultText = "" + pentominoesOnBoard.length;
+        let pentominoesAndPos = [];
 
         pentominoesOnBoard.forEach(pentomino => {
             let pos = game.getPosition(pentomino);
-            resultText += pentomino.name + "(" + pos[0] + "," + pos[1] + ") ";
+
+            pentominoesAndPos.push({
+                pentomino: pentomino,
+                position: pos
+            });
         });
 
-        resultLabel.innerHTML = resultText;
+        resultLabel.innerHTML = this.parseFromObjectsToSeed(pentominoesAndPos);
     }
 
     handleClickedOnClear(event, div) {
@@ -52,11 +56,7 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
     collect(formElement) {
         let div = $(formElement).find("#" + this._name)[0];
         let resultLabel = $(div).find("#startPiecePosLabel")[0];
-        if (!(resultLabel.textContent === NO_POS_SELECTED)) {
-            return resultLabel.textContent;
-        } else {
-            return NO_POS_SELECTED;
-        }
+        return resultLabel.textContent;
     }
 
     update(heading, subheading, schemaEntry, selectedValue, formElement) {
@@ -66,22 +66,7 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
     }
 
     parseSettingsToSeed(schemaEntry, settingsValue) {
-        let result = "";
-
-        let n = settingsValue[0];
-        result += this.pad(n, 2);
-        let rest = settingsValue.substr(1, settingsValue.length - 1);
-        let split = rest.split(" ");
-        for (let i = 0; i < n; i++) {
-            let pentominoName = split[i][0];
-            result += pentominoName;
-            let splitNoName = split[i].substr(1, split[i].length - 1);
-            let element = splitNoName.substr(1, splitNoName.length - 2).split(",");
-            result += this.pad(element[0], 2);
-            result += this.pad(element[1], 2);
-        }
-
-        return result;
+        return settingsValue;
     }
 
     parseFromSeed(schemaEntry, remainingSeed, settingsEntry, key, seed) {
@@ -90,22 +75,15 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
         return n * 5 + 1;
     }
 
-    // from https://stackoverflow.com/questions/2998784/how-to-output-numbers-with-leading-zeros-in-javascript
-    pad(num, minDecimals) {
-        num = num.toString();
-        while (num.length < minDecimals) num = "0" + num;
-        return num;
-    }
-
     processChangesToSettings(settingsValue, pd) {
-        let n = parseInt(settingsValue.substr(0, 2));
+        let pentominoesAndPos = this.parseFromSeedToObjects(settingsValue);
 
-        for (let i = 0; i < n; i++) {
-            let name = settingsValue.substr(i * 5 + 2, 1);
-            let row = parseInt(settingsValue.substr(i * 5 + 2 + 1, 2));
-            let col = parseInt(settingsValue.substr(i * 5 + 2 + 3, 2));
-            this.placePiece(name, row, col);
-        }
+        pentominoesAndPos.forEach(pentominoesAndPos => {
+            let pentomino = pentominoesAndPos.pentomino;
+            let pos = pentominoesAndPos.position;
+
+            this.placePiece(pentomino.name, pos[0], pos[1]);
+        });
 
         pd.visual.renderPieces();
     }
@@ -114,5 +92,47 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
         let piece = pd.visual.pieces.filter(p => p.name === pieceName)[0];
         piece.updateTrayValue(0);
         pd.gameController.placePentomino(piece, row, col);
+    }
+
+    // === === === PARSE HELPER === === ===
+    parseFromSeedToObjects(seed) {
+        let pentominoesAndPos = [];
+
+        let n = parseInt(seed.substr(0, 2));
+
+        for (let i = 0; i < n; i++) {
+            let name = seed.substr(i * 5 + 2, 1);
+            let row = parseInt(seed.substr(i * 5 + 2 + 1, 2));
+            let col = parseInt(seed.substr(i * 5 + 2 + 3, 2));
+            pentominoesAndPos.push({
+                pentomino: new Pentomino(name),
+                position: [row, col]
+            });
+        }
+
+        return pentominoesAndPos;
+    }
+
+    parseFromObjectsToSeed(pentominoesAndPos) {
+        let n = pentominoesAndPos.length;
+        let result = this.pad(n, 2);
+
+        pentominoesAndPos.forEach(pentominoesAndPos => {
+            let pentomino = pentominoesAndPos.pentomino;
+            let pos = pentominoesAndPos.position;
+
+            result += pentomino.name;
+            result += this.pad(pos[0], 2);
+            result += this.pad(pos[1], 2);
+        });
+
+        return result;
+    }
+
+    // from https://stackoverflow.com/questions/2998784/how-to-output-numbers-with-leading-zeros-in-javascript
+    pad(num, minDecimals) {
+        num = num.toString();
+        while (num.length < minDecimals) num = "0" + num;
+        return num;
     }
 }
