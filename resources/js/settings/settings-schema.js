@@ -99,7 +99,7 @@ class SettingsSchema {
                         "type": "custom",
                         "title": titles.boardCustomization.initialPiecePos.title[lang],
                         "description": titles.boardCustomization.initialPiecePos.description[lang],
-                        "default": false
+                        "default": NO_POS_SELECTED
                     },
                 }
             },
