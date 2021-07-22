@@ -711,6 +711,11 @@
                 var x = window.matchMedia("(max-width: 700px)");
                 tableBody.appendChild(tr1);
                 var td1 = document.createElement('TH');
+                var imageElement = document.createElement("img");
+                imageElement.setAttribute("style", "width: 10vw; height: 10vw; border: 2px solid black; text-align: center");
+                var img_src = "resources/images/licenses/licenses" + [i] +".ico";
+                imageElement.setAttribute("src", img_src);
+
                 td1.classList.add("TableImageCell");
                 td1.style.width = '35vw';
                 td1.style.padding = "1vw";
@@ -724,7 +729,7 @@
                     td1.style.fontSize = "1vw";
                     td1.style.width = '10vw';
                 }
-                td1.appendChild(document.createTextNode("entry"));
+                td1.appendChild((imageElement));
                 tr1.appendChild(td1);
                 for (let key in subSettings) {
                     if (key === "name") {
