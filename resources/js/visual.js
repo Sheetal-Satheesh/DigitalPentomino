@@ -1112,7 +1112,7 @@ class Visual {
                     class: "modalText",
                     text: strings.showSolved.play[lang]
                 };
-                img.src = "resources/images/icons/jboy-2.ico";
+                img.src = "resources/images/licenses/solvedScreenBoy.ico";
                 img.style.cursor = "none";
                 div1.appendChild(img);
                 modalBodyID.appendChild(div1);
@@ -1153,7 +1153,7 @@ class Visual {
                     class: "modalText",
                     text: strings.showSolved.WellDone[lang]
                 };
-                img.src = "resources/images/icons/wizard.ico";
+                img.src = "resources/images/licenses/solvedScreenMagician.ico";
                 div1.appendChild(img);
                 modalBodyID.appendChild(div1);
                 template.attachText("#modalBodyID", textNode2);
@@ -1164,7 +1164,7 @@ class Visual {
                     class: "modalText",
                     text: strings.showSolved.Excellent[lang]
                 };
-                img.src = "resources/images/icons/present.ico";
+                img.src = "resources/images/licenses/solvedScreenGift.ico";
                 div1.appendChild(img);
                 modalBodyID.appendChild(div1);
                 template.attachText("#modalBodyID", textNode2);

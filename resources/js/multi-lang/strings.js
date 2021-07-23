@@ -40,7 +40,7 @@ const strings = {
             }
         },
         license: {
-            enumTitles: [["Image", "Bild"], ["Name", "Name"], ["Author", "Autor"],["Link", "Link"], ["License", "Lizenz"]],
+            enumTitles: [["Name", "Name"], ["Author", "Autor"],["Link", "Link"], ["License", "Lizenz"]],
              solvedScreenMagician: ["Solved Screen Magician image", "Gelöstes Screen Magician-Bild"],
              solvedScreenBoy: ["Solved screen boy image", "Gelöster Bildschirm Junge Bild"],
              solvedScreenGift: ["Solved Screen Gift image", "Gelöst Bildschirm Geschenkbild"],
