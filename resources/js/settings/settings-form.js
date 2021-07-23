@@ -10,6 +10,8 @@ class SettingsForm {
         formElement.appendChild(document.createElement("br"));
         formElement.appendChild(document.createElement("br"));        if (settings.teachersMode) {
             let useInClassButton = SettingsForm.createButton("Share");
+            useInClassButton.className = "formButton";
+            useInClassButton.id = "btnSettingsShare";
             useInClassButton.addEventListener("click", function() {
                 let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
                 let settings = SettingsSingleton.getInstance().getSettings();
@@ -19,6 +21,7 @@ class SettingsForm {
         }
         let licenseButton = SettingsForm.createLicenseButton();
         licenseButton.id = "licenseButton";
+        licenseButton.className = "formButton"
         formElement.appendChild(SettingsForm.createSubmitButton());
         formElement.appendChild(licenseButton);
 
@@ -35,6 +38,12 @@ class SettingsForm {
             let settings = SettingsSingleton.getInstance().getSettings();
             onLicense(SettingsForm.collectDataFromForm(formElement, schema, settings));
         });
+
+        //add placeholder div at bottom of settings
+        let placeholder = document.createElement("div");
+        placeholder.id = "divPlaceholder";
+        formElement.appendChild(placeholder);
+
     }
 
     // --- --- --- Form Creation --- --- ---
@@ -42,6 +51,7 @@ class SettingsForm {
         let creatingNormalSettings = true;
         let advancedSettingsDiv = document.createElement("div");
         advancedSettingsDiv.style.display = "none";
+        advancedSettingsDiv.id = "advancedSettings";
 
         let htmlElement = formElement;
 
@@ -240,7 +250,7 @@ class SettingsForm {
 
     // Element Creation
     static createCollapsibleButton(showText, hideText) {
-        let buttonElement = SettingsForm.createButton(showText.toUpperCase(), {
+        let buttonElement = SettingsForm.createButton(showText, {
             "class": "collapsible btn btn-primary btn-lg"
         });
 
@@ -249,10 +259,10 @@ class SettingsForm {
             let content = this.nextElementSibling;
             if (content.style.display === "block") {
                 content.style.display = "none";
-                buttonElement.innerHTML = showText.toUpperCase();
+                buttonElement.innerHTML = showText;
             } else {
                 content.style.display = "block";
-                buttonElement.innerHTML = hideText.toUpperCase();
+                buttonElement.innerHTML = hideText;
             }
         });
 
@@ -273,8 +283,8 @@ class SettingsForm {
                 let settingsEntry = subSettings[key];
 
                 let checkBoxElement = SettingsForm.createInputElement("checkbox", "teachers." + elementName);
-                useInClassElement.appendChild(SettingsForm.createLabel(settingsEntry.title, { for: checkBoxElement.id }));
                 useInClassElement.appendChild(checkBoxElement);
+                useInClassElement.appendChild(SettingsForm.createLabel(settingsEntry.title, { for: checkBoxElement.id }));
                 useInClassElement.appendChild(document.createElement("br"));
             }
         }
@@ -359,16 +369,8 @@ class SettingsForm {
         let i = 0;
         imgPaths.forEach(imgPath => {
             let buttonElement = SettingsForm.createButton(undefined, {
-                style: "background:url(" + imgPath + ");background-size: 100%;",
+                style: "background:url(" + imgPath + ");background-size: 100%;", class: "imgButton"
             });
-
-            // FIXME: quick fix
-            let image = new Image();
-            image.src = imgPath;
-            image.onload = () => {
-                buttonElement.style.height = image.height + "px";
-                buttonElement.style.width = image.width + "px";
-            };
 
             let enumElement = enumElements[i];
             buttonElement.addEventListener("click", (event) => {
@@ -403,7 +405,9 @@ class SettingsForm {
 
     static createSubmitButton() {
         return SettingsForm.createButton("Submit", {
-            type: "submit"
+            type: "submit",
+            class: "formButton",
+            id: "btnSettingsSubmit"
         });
     }
 

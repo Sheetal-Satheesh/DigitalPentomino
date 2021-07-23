@@ -7,10 +7,45 @@ class UtilitiesClass {
         return undefined;
     }
 
+    static instr(str, keyword, occurance) {
+        if (occurance == 1)
+            return str.indexOf(keyword, occurance - 1);
+        return str.indexOf(keyword, this.instr(str, keyword, occurance - 1) + 1);
+    }
+
     /*
     * Returns a game object of the selected/default game that can be used to draw the board
     */
     static getGameUISettings(boardName) {
+        // Dynamically deriving board parameters from solution config
+        let solutString = solutionsConfig[boardName].solutionsArray[0];
+        let sizeX = ((solutString.match(/ /g) || []).length) + 1;
+        let sizeY = solutString.indexOf(' ');
+
+        let boardSize = [sizeX, sizeY];
+        let blockedCells = [];
+        let gameCellPattern = "gamearea";
+
+        if (solutString.includes('.')) {
+            let arr = solutString.split(" ");
+            for (let i = 0; i < arr.length; i++) {
+                let count = ((arr[i].match(/\./g) || []).length)
+                let temp = [i, arr[i].indexOf('.', 0)];
+
+                if (count == 1) {
+                    temp = [i, arr[i].indexOf('.', 0)];
+                    blockedCells.push(temp);
+                }
+                else {
+                    for (let j = 1; j <= count; j++) {
+                        let temp = [i, this.instr(arr[i], '.', j)];
+                        blockedCells.push(temp);
+                    }
+                }
+            }
+            gameCellPattern = "blockedCell";
+        }
+
 
         //read gameWidth and gameHeight dynamically from board
         let fieldHTML = document.getElementById('field');
@@ -19,13 +54,13 @@ class UtilitiesClass {
 
         //calculate needed blocks in width based on available height
         //TODO: if height > width invert!
-        let blockAmountHeight = boardConfigs[boardName].boardSize[0] + 4;
+        let blockAmountHeight = boardSize[0] + 4;
         let absHeightPerBlock = heightField / blockAmountHeight;
         let ratioFieldWidthHeight = widthField / heightField;
         let blockAmountWidth = Math.round(blockAmountHeight * ratioFieldWidthHeight);
         //check if wide enough to display full board, else increase boardWidth
-        if (blockAmountWidth < boardConfigs[boardName].boardSize[1] + 4){
-            blockAmountWidth = boardConfigs[boardName].boardSize[1] + 4;
+        if (blockAmountWidth < boardSize[1] + 4) {
+            blockAmountWidth = boardSize[1] + 4;
         }
         baseConfigs.gameHeight = blockAmountHeight;
         baseConfigs.gameWidth = blockAmountWidth;
@@ -33,9 +68,10 @@ class UtilitiesClass {
         return {
             gameHeight: baseConfigs.gameHeight,
             gameWidth: baseConfigs.gameWidth,
-            boardSize: boardConfigs[boardName].boardSize,
-            blockedCells: boardConfigs[boardName].blockedCells || undefined,
-            boardShape: boardConfigs[boardName].boardShape || baseConfigs.boardShape
+            boardSize: boardSize,
+            blockedCells: blockedCells || undefined,
+            // boardShape: boardConfigs[boardName].boardShape || baseConfigs.boardShape
+            gameCellPattern: gameCellPattern
         };
     }
 
