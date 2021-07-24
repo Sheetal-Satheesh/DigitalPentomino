@@ -638,7 +638,12 @@
             template.clearContent("#modalBodyID");
             template.clearContent("#innerGridForm");
             modal.style.background = "#dcf0ed";
+            document.getElementById("modalFormContainerID").style.backgroundColor = "#dcf0ed";
             document.getElementById("modalFormContainerID").style.border = "none";
+            console.log(document.getElementsByTagName("form"));
+            
+            //$("#modalFormContainerID").style.display="none";
+
             //show back button
             let btn = document.getElementById("backButton");
             btn.style.display = "block";
@@ -658,13 +663,13 @@
                 btn.style.display = "none";
             };
             let lang = SettingsSingleton.getInstance().getSettings().general.language;
-            let textNode = {
-                class: "modalText",
-                text: strings.License[lang]
-            };
-            template.attachText("#modalBodyID", textNode);
-            modal.appendChild(document.createElement("br"));
-            modal.appendChild(document.createElement("br"));
+            // let textNode = {
+            //     class: "modalText",
+            //     text: strings.License[lang]
+            // };
+            // template.attachText("#modalBodyID", textNode);
+            // modal.appendChild(document.createElement("br"));
+            // modal.appendChild(document.createElement("br"));
             let div5 = document.createElement("div");
             div5.style.marginTop = "10vh";
             div5.style.marginRight = "5vh";
@@ -679,7 +684,7 @@
             table.id = "licencesTable"
             table.border = '1px solid black';
             table.style.textAlign = "center";
-            table.style.marginLeft = "auto";
+            table.style.marginLeft = "2vh";
             table.style.marginRight = "auto";
             var tableBody = document.createElement('TBODY');
             table.appendChild(tableBody);
@@ -694,7 +699,7 @@
                 td.border = '0.5vw solid black';
                 td.style.borderCollapse = "collapse";
                 if (x.matches) { // If media query matches
-                    td.style.fontSize = "0.5vw";
+                    td.style.fontSize = "1vw";
                     td.style.width = '10vw';
                 }
                 else {
@@ -741,7 +746,7 @@
                         td.classList.add("TableDataCell");
                         entry = subSettings[key];
                         td.style.width = '35vw';
-                        td.style.padding = "1vw";
+                        td.style.padding = "0.5vw";
                         td.border = '0.5vw solid black';
                         td.style.borderCollapse = "collapse";
                         if (x.matches) { // If media query matches
