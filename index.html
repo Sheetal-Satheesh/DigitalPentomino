@@ -641,9 +641,6 @@
             document.getElementById("modalFormContainerID").style.backgroundColor = "#dcf0ed";
             document.getElementById("modalFormContainerID").style.border = "none";
             $(".modalFormContent").css( "display", "none" );
-
-            //$("#modalFormContainerID").style.display="none";
-
             //show back button
             let btn = document.getElementById("backButton");
             btn.style.display = "block";
@@ -664,7 +661,7 @@
             };
             let lang = SettingsSingleton.getInstance().getSettings().general.language;
             let licenceHeading = strings.License[lang];
-            let h4 = document.createElement("h4");
+            let h4 = document.createElement("h1");
             h4.innerHTML = strings.License[lang];
             h4.style.textAlign = "center";
             modal.appendChild(h4);
