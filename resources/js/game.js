@@ -516,6 +516,10 @@ class Game {
         return this._board.getPentominoes().concat(this._pentominosOutside);
     }
 
+    getPentominoesOnBoard() {
+        return this._board.getPentominoes();
+    }
+
     getPentominoByName(name) {
         let pentominoOnBoard = this._board.getPentominoByName(name);
         if (pentominoOnBoard === null)

@@ -1,4 +1,5 @@
 const NO_POS_SELECTED = "00";
+const BOARD_NAME_DECIMALS_MIN = 3;
 
 class StartPosSettingsEntry extends CustomSettingsEntry {
     constructor(heading, subheading) {
@@ -32,20 +33,7 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
         let resultLabel = $(div).find("#startPiecePosLabel")[0];
 
         let game = new FrontController().controller.game();
-        let pentominoesOnBoard = game.getPentominoesInGmArea().filter(pentomino => game.isPlacedOnBoard(pentomino));
-
-        let pentominoesAndPos = [];
-
-        pentominoesOnBoard.forEach(pentomino => {
-            let pos = game.getPosition(pentomino);
-
-            pentominoesAndPos.push({
-                pentomino: pentomino,
-                position: pos
-            });
-        });
-
-        resultLabel.innerHTML = this.parseFromObjectsToSeed(pentominoesAndPos);
+        resultLabel.innerHTML = this.parseFromGameToSeed(game);
     }
 
     handleClickedOnClear(event, div) {
@@ -70,19 +58,18 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
     }
 
     parseFromSeed(schemaEntry, remainingSeed, settingsEntry, key, seed) {
-        let n = parseInt(remainingSeed.substr(0, 2));
-        settingsEntry[key] = remainingSeed.substr(0, n * 5 + 2);
-        return n * 5 + 1;
+        let n = parseInt(remainingSeed.substr(this.getBoardNameDecimals(), 2));
+        let seedEntryLength = this.getBoardNameDecimals() + 2 + n * 5;
+        settingsEntry[key] = remainingSeed.substr(0, seedEntryLength);
+        return seedEntryLength - 1;
     }
 
     processChangesToSettings(settingsValue, pd) {
-        let pentominoesAndPos = this.parseFromSeedToObjects(settingsValue);
+        let game = this.parseFromSeedToGame(settingsValue);
 
-        pentominoesAndPos.forEach(pentominoesAndPos => {
-            let pentomino = pentominoesAndPos.pentomino;
-            let pos = pentominoesAndPos.position;
-
-            this.placePiece(pentomino.name, pos[0], pos[1]);
+        game.getPentominoesOnBoard().forEach(p => {
+            let pos = game.getPosition(p);
+            this.placePiece(p.name, pos[0], pos[1]);
         });
 
         pd.visual.renderPieces();
@@ -95,38 +82,42 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
     }
 
     // === === === PARSE HELPER === === ===
-    parseFromSeedToObjects(seed) {
-        let pentominoesAndPos = [];
+    parseFromSeedToGame(seed) {
+        let boardNameDecimals = this.getBoardNameDecimals();
+        let boardName = this.parseIndexToBoardName(parseInt(seed.substr(0, boardNameDecimals)));
 
-        let n = parseInt(seed.substr(0, 2));
+        let game = new Game(new Board([0, 0], [100, 100]), boardName);
+
+        let n = parseInt(seed.substr(boardNameDecimals, 2));
 
         for (let i = 0; i < n; i++) {
-            let name = seed.substr(i * 5 + 2, 1);
-            let row = parseInt(seed.substr(i * 5 + 2 + 1, 2));
-            let col = parseInt(seed.substr(i * 5 + 2 + 3, 2));
-            pentominoesAndPos.push({
-                pentomino: new Pentomino(name),
-                position: [row, col]
-            });
+            let offset = boardNameDecimals + 2;
+            let name = seed.substr(i * 5 + offset, 1);
+            let row = parseInt(seed.substr(i * 5 + offset + 1, 2));
+            let col = parseInt(seed.substr(i * 5 + offset + 3, 2));
+            game.placePentomino(new Pentomino(name), row,col);
         }
 
-        return pentominoesAndPos;
+        return game;
     }
 
-    parseFromObjectsToSeed(pentominoesAndPos) {
-        let n = pentominoesAndPos.length;
-        let result = this.pad(n, 2);
+    parseFromGameToSeed(game) {
+        let seed = "";
 
-        pentominoesAndPos.forEach(pentominoesAndPos => {
-            let pentomino = pentominoesAndPos.pentomino;
-            let pos = pentominoesAndPos.position;
+        seed += this.pad(this.parseBoardNameToIndex(game.getName()), this.getBoardNameDecimals());
 
-            result += pentomino.name;
-            result += this.pad(pos[0], 2);
-            result += this.pad(pos[1], 2);
+        let pentominoesOnBoard = game.getPentominoesOnBoard();
+        seed += this.pad(pentominoesOnBoard.length, 2);
+
+        pentominoesOnBoard.forEach(p => {
+            let pos = game.getPosition(p);
+
+            seed += p.name;
+            seed += this.pad(pos[0], 2);
+            seed += this.pad(pos[1], 2);
         });
 
-        return result;
+        return seed;
     }
 
     // from https://stackoverflow.com/questions/2998784/how-to-output-numbers-with-leading-zeros-in-javascript
@@ -134,5 +125,18 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
         num = num.toString();
         while (num.length < minDecimals) num = "0" + num;
         return num;
+    }
+
+    parseBoardNameToIndex(boardName) {
+        let allBoardNames = baseConfigs.boards;
+        return allBoardNames.findIndex(n => n === boardName);
+    }
+
+    parseIndexToBoardName(index) {
+        return baseConfigs.boards[index];
+    }
+
+    getBoardNameDecimals() {
+        return Math.max(BOARD_NAME_DECIMALS_MIN, SettingsParser.getNumOfDigits(baseConfigs.boards.length));
     }
 }
