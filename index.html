@@ -640,8 +640,8 @@
             modal.style.background = "#dcf0ed";
             document.getElementById("modalFormContainerID").style.backgroundColor = "#dcf0ed";
             document.getElementById("modalFormContainerID").style.border = "none";
-            console.log(document.getElementsByTagName("form"));
-            
+            $(".modalFormContent").css( "display", "none" );
+
             //$("#modalFormContainerID").style.display="none";
 
             //show back button
@@ -663,13 +663,16 @@
                 btn.style.display = "none";
             };
             let lang = SettingsSingleton.getInstance().getSettings().general.language;
-            // let textNode = {
-            //     class: "modalText",
-            //     text: strings.License[lang]
-            // };
+            let licenceHeading = strings.License[lang];
+
             // template.attachText("#modalBodyID", textNode);
-            // modal.appendChild(document.createElement("br"));
-            // modal.appendChild(document.createElement("br"));
+            //modal.appendChild(textNode);
+            let h4 = document.createElement("h4");
+            h4.innerHTML = strings.License[lang];
+            h4.style.textAlign = "center";
+            modal.appendChild(h4);
+             // modal.appendChild(document.createElement("br"));
+             // modal.appendChild(document.createElement("br"));
             let div5 = document.createElement("div");
             div5.style.marginTop = "10vh";
             div5.style.marginRight = "5vh";
