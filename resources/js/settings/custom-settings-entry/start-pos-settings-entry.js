@@ -103,7 +103,7 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
     processChangesToSettings(settingsValue, pd) {
         let game = this.parseFromSeedToGame(settingsValue);
 
-        pd.reset();
+        pd.loadBoard(game.getName());
 
         if (game !== null) {
             game.getPentominoesOnBoard().forEach(p => {
