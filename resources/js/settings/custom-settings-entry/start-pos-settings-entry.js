@@ -1,4 +1,4 @@
-const NO_POS_SELECTED = "00";
+const NO_POS_SELECTED = "";
 const BOARD_NAME_DECIMALS_MIN = 3;
 
 class StartPosSettingsEntry extends CustomSettingsEntry {
@@ -11,15 +11,15 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
         div.id = this._name;
         div.name = this._name;
 
-        let saveButton = SettingsForm.createButton("Use current positions", {});
+        let saveButton = SettingsForm.createButton("Save current board", {});
         saveButton.onclick = (event) => this.handleClickedOnSave(event, div);
         div.appendChild(saveButton);
         div.appendChild(document.createElement("br"));
-        let clearButton = SettingsForm.createButton("Clear", {});
+        let clearButton = SettingsForm.createButton("Discard saved board", {});
         clearButton.onclick = (event) => this.handleClickedOnClear(event, div);
         div.appendChild(clearButton);
         div.appendChild(document.createElement("br"));
-        div.appendChild(SettingsForm.createLabel("Start positions: "));
+        div.appendChild(SettingsForm.createLabel("Saved board: "));
         let resultLabel = SettingsForm.createLabel(NO_POS_SELECTED);
         resultLabel.id = "startPiecePosLabel";
         resultLabel.name = "startPiecePosLabel";
