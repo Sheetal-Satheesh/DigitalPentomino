@@ -349,89 +349,21 @@
 #licenseButton {
   right: 3.5vw;
   bottom: 11vw;
+  background-color: lightgray;
   position: fixed;
-  display: block;
-  margin: 0 auto;
-  width: 15vw;
-  height: 6vh;
-  font-family: Helvetica;
-  border-bottom: 0.5vh solid #173814;
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  background: linear-gradient(#3b3606,#442f09);
-  color: white;
-  border-radius: 1vh;
-  transition: 150ms ease;
-  text-align: center;
-  font-weight: bold;
-}
-
-#licenseButton:active {
-  border: none;
-  border-bottom: 2px solid steelblue;
-  box-shadow: 0px 1px 5px grey;
-  background: linear-gradient(#55480f,#6f8315);
-  color: #FFF;
 }
 
 #btnSettingsSubmit {
   left: 3.5vw;
   bottom: 11vw;
   position: fixed;
-  display: block;
-  margin: 0 auto;
-  width: 15vw;
-  height: 6vh;
-  font-family: Helvetica;
-  border-bottom: 0.5vh solid #173814;
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  background: linear-gradient(#469e3f,#255b20);
-  color: white;
-  border-radius: 1vh;
-  transition: 150ms ease;
-  text-align: center;
-  font-weight: bold;
-}
-
-#btnSettingsSubmit:active {
-  border: none;
-  border-bottom: 2px solid steelblue;
-  box-shadow: 0px 1px 5px grey;
-  background: linear-gradient(#255b20,#469e3f);
-  color: #FFF;
 }
 
 #btnSettingsShare {
-  left: 20vw;
+  left: 17vw;
   bottom: 11vw;
+  background-color: lightgray;
   position: fixed;
-  display: block;
-  margin: 0 auto;
-  width: 15vw;
-  height: 6vh;
-  font-family: Helvetica;
-  border-bottom: 0.5vh solid #173814;
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  background: linear-gradient(#094f5c,#08414b);
-  color: white;
-  border-radius: 1vh;
-  box-shadow: 0px 2px 10px grey;
-  transition: 150ms ease;
-  text-align: center;
-  font-weight: bold;
-}
-
-#btnSettingsShare:active {
-  border: none;
-  border-bottom: 2px solid steelblue;
-  box-shadow: 0px 1px 5px grey;
-  background: linear-gradient(#16696e,#1b626e);
-  color: #FFF;
 }
 
 #divPlaceholder{
@@ -440,35 +372,9 @@
   background-color: transparent;
 }
 
-#printQRCode{
-  left: 20vw;
-  bottom: 11vw;
-  /* position: fixed; */
-  display: block;
-  margin: 0 auto;
-  width: 10vw;
-  height: 4.5vh;
-  font-family: Helvetica;
-  border-bottom: 1vh solid #173814;
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  background: linear-gradient(#094f5c,#08414b);
-  color: white;
-  border-radius: 0.8vh;
-  transition: 150ms ease;
-  /* text-align: center; */
-  line-height: 1.5vh;
-  font-weight: bold;
-  margin-bottom: 1vh;
-  text-align: center;
+button.collapsible {
+  width: 11vw;
 }
 
-#printQRCode:active {
-  border: none;
-  /* border-bottom: 2px solid steelblue; */
-  box-shadow: 0px 1px 5px grey;
-  background: linear-gradient(#16696e,#1b626e);
-  color: #FFF;
-}
+
 
