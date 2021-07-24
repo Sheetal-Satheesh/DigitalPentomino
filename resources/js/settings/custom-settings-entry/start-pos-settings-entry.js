@@ -1,4 +1,4 @@
-const NO_POS_SELECTED = "";
+const NO_BOARD_SELECTED = "";
 const BOARD_NAME_DECIMALS_MIN = 3;
 
 class StartPosSettingsEntry extends CustomSettingsEntry {
@@ -20,7 +20,13 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
         div.appendChild(clearButton);
         div.appendChild(document.createElement("br"));
         div.appendChild(SettingsForm.createLabel("Saved board: "));
-        let resultLabel = SettingsForm.createLabel(NO_POS_SELECTED);
+        let boardLabel = SettingsForm.createLabel("-");
+        boardLabel.id = "boardLabel";
+        boardLabel.name = "boardLabel";
+        div.appendChild(boardLabel);
+
+        let resultLabel = SettingsForm.createLabel(NO_BOARD_SELECTED);
+        resultLabel.style.display = 'none';
         resultLabel.id = "startPiecePosLabel";
         resultLabel.name = "startPiecePosLabel";
         div.appendChild(resultLabel);
@@ -33,12 +39,19 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
         let resultLabel = $(div).find("#startPiecePosLabel")[0];
 
         let game = new FrontController().controller.game();
-        resultLabel.innerHTML = this.parseFromGameToSeed(game);
+        let seed = this.parseFromGameToSeed(game);
+        resultLabel.innerHTML = seed;
+
+        this.display(div, seed);
     }
 
     handleClickedOnClear(event, div) {
+        let selectedValue = NO_BOARD_SELECTED;
+
         let resultLabel = $(div).find("#startPiecePosLabel")[0];
-        resultLabel.innerHTML = NO_POS_SELECTED;
+        resultLabel.innerHTML = selectedValue;
+
+        this.display(div, selectedValue);
     }
 
     collect(formElement) {
@@ -51,6 +64,29 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
         let div = $(formElement).find("#" + this._name)[0];
         let resultLabel = $(div).find("#startPiecePosLabel")[0];
         resultLabel.textContent = selectedValue;
+
+        this.display(div, selectedValue);
+    }
+
+    display(div, selectedValue) {
+        let boardLabel = $(div).find("#boardLabel")[0];
+
+        let text = "";
+
+        let game = this.parseFromSeedToGame(selectedValue);
+
+        if (game !== null) {
+            text += game.getName() + " ";
+
+            game.getPentominoesOnBoard().forEach(p => {
+                let pos = game.getPosition(p);
+                text += p.name + "[" + pos[0] + "," + pos[1] + "] ";
+            });
+        } else {
+            text += "-";
+        }
+
+        boardLabel.innerHTML = text;
     }
 
     parseSettingsToSeed(schemaEntry, settingsValue) {
@@ -67,10 +103,14 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
     processChangesToSettings(settingsValue, pd) {
         let game = this.parseFromSeedToGame(settingsValue);
 
-        game.getPentominoesOnBoard().forEach(p => {
-            let pos = game.getPosition(p);
-            this.placePiece(p.name, pos[0], pos[1]);
-        });
+        pd.reset();
+
+        if (game !== null) {
+            game.getPentominoesOnBoard().forEach(p => {
+                let pos = game.getPosition(p);
+                this.placePiece(p.name, pos[0], pos[1]);
+            });
+        }
 
         pd.visual.renderPieces();
     }
@@ -83,25 +123,30 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
 
     // === === === PARSE HELPER === === ===
     parseFromSeedToGame(seed) {
-        let boardNameDecimals = this.getBoardNameDecimals();
-        let boardName = this.parseIndexToBoardName(parseInt(seed.substr(0, boardNameDecimals)));
+        if (seed === NO_BOARD_SELECTED) return null;
+        else {
+            let boardNameDecimals = this.getBoardNameDecimals();
+            let boardName = this.parseIndexToBoardName(parseInt(seed.substr(0, boardNameDecimals)));
 
-        let game = new Game(new Board([0, 0], [100, 100]), boardName);
+            let game = new Game(new Board([0, 0], [100, 100]), boardName);
 
-        let n = parseInt(seed.substr(boardNameDecimals, 2));
+            let n = parseInt(seed.substr(boardNameDecimals, 2));
 
-        for (let i = 0; i < n; i++) {
-            let offset = boardNameDecimals + 2;
-            let name = seed.substr(i * 5 + offset, 1);
-            let row = parseInt(seed.substr(i * 5 + offset + 1, 2));
-            let col = parseInt(seed.substr(i * 5 + offset + 3, 2));
-            game.placePentomino(new Pentomino(name), row,col);
+            for (let i = 0; i < n; i++) {
+                let offset = boardNameDecimals + 2;
+                let name = seed.substr(i * 5 + offset, 1);
+                let row = parseInt(seed.substr(i * 5 + offset + 1, 2));
+                let col = parseInt(seed.substr(i * 5 + offset + 3, 2));
+                game.placePentomino(new Pentomino(name), row,col);
+            }
+
+            return game;
         }
-
-        return game;
     }
 
     parseFromGameToSeed(game) {
+        if (game === null) return NO_BOARD_SELECTED;
+
         let seed = "";
 
         seed += this.pad(this.parseBoardNameToIndex(game.getName()), this.getBoardNameDecimals());
