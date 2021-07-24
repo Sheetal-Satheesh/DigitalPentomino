@@ -664,15 +664,10 @@
             };
             let lang = SettingsSingleton.getInstance().getSettings().general.language;
             let licenceHeading = strings.License[lang];
-
-            // template.attachText("#modalBodyID", textNode);
-            //modal.appendChild(textNode);
             let h4 = document.createElement("h4");
             h4.innerHTML = strings.License[lang];
             h4.style.textAlign = "center";
             modal.appendChild(h4);
-             // modal.appendChild(document.createElement("br"));
-             // modal.appendChild(document.createElement("br"));
             let div5 = document.createElement("div");
             div5.style.marginTop = "10vh";
             div5.style.marginRight = "5vh";
@@ -731,7 +726,7 @@
                         td.border = '0.5vw solid black';
                         td.style.borderCollapse = "collapse";
                         if (x.matches) { // If media query matches
-                            td.style.fontSize = "0.5vw";
+                            td.style.fontSize = "1vw";
                             td.style.width = '10vw';
                         }
                         else {
@@ -753,7 +748,7 @@
                         td.border = '0.5vw solid black';
                         td.style.borderCollapse = "collapse";
                         if (x.matches) { // If media query matches
-                            td.style.fontSize = "0.5vw";
+                            td.style.fontSize = "1vw";
                             td.style.width = '10vw';
                         }
                         else {
