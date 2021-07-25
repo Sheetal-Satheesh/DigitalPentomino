@@ -645,10 +645,10 @@
             let btn = document.getElementById("backButton");
             btn.style.display = "block";
             $(".close").click(function () {
-                document.getElementById("tableLicenseDiv").style.display = "none";
                 if ($("#licencesTable")) {
                     document.getElementById("licencesTable").style.display = "none";
                     document.getElementById("licenseHeading").style.display = "none";
+                    document.getElementById("tableLicenseDiv").style.display = "none";
                 }
             });
             btn.onclick = function () {
