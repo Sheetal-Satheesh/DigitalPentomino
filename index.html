@@ -661,10 +661,10 @@
             };
             let lang = SettingsSingleton.getInstance().getSettings().general.language;
             let licenceHeading = strings.License[lang];
-            let h4 = document.createElement("h1");
-            h4.innerHTML = strings.License[lang];
-            h4.style.textAlign = "center";
-            modal.appendChild(h4);
+            let h2 = document.createElement("h2");
+            h2.innerHTML = strings.License[lang];
+            h2.style.textAlign = "center";
+            modal.appendChild(h2);
             let div5 = document.createElement("div");
             div5.style.marginTop = "10vh";
             div5.style.marginRight = "5vh";
