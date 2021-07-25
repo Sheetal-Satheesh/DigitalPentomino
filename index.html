@@ -271,6 +271,9 @@
                 openScanQrCode();
                 this.disablePointerEventsOnPieces();
                 this.hideManipulationButtons();
+                if ($('#birdContainer').is(':visible')) {
+                    this.hideBubbleContainer();
+                }
             }
         }
 
@@ -443,6 +446,7 @@
                 this.closeModal();
             }
             else {
+                this.hideBubbleContainer();
                 this.disableSnapshotButton();
                 this.hideManipulationButtons();
                 this.closeBoardSelector();
@@ -491,6 +495,9 @@
             document.getElementById('boardmodalTop').style.display = 'none';
             this.closeModalContainer();
             this.enableSnapshotButton();
+            if ($('#birdContainer').is(':visible')){
+                this.showBubbleContainer();
+            }           
         }
 
         function callHintAI() {
@@ -539,7 +546,7 @@
             if ($(boardSelectorPopup).is(':visible')) {
                 this.closeBoardSelector();
                 this.enableSnapshotButton();
-                //this.closeModal();
+                this.closeModal();
             }
             else {
                 boardSelectorPopup.style.display = "block";
@@ -547,6 +554,7 @@
                 this.closeSettings();
                 this.disablePointerEventsOnPieces();
                 this.disableSnapshotButton();
+                this.hideBubbleContainer();
             }
         }
 
@@ -637,6 +645,7 @@
                 openSettings();
                 this.disablePointerEventsOnPieces();
                 this.hideManipulationButtons();
+                this.hideBubbleContainer();
             }
         }
 
@@ -886,6 +895,7 @@
 
             modalBodyID.appendChild(document.createElement("br"));
             let printButton = SettingsForm.createButton("Print");
+            printButton.setAttribute("id", "printQRCode");
             printButton.addEventListener("click", function () {
                 window.print();
             });
@@ -1083,6 +1093,7 @@
             var modal = document.getElementById('modalTop');
             this.disablePointerEventsOnPieces();
             this.hideManipulationButtons();
+            this.hideBubbleContainer();
             modal.style.background = " #eceaea";
             modal.style.display = "block";
 
@@ -1237,6 +1248,14 @@
 
         function closeForm() {
             document.getElementById("board_selection_form").style.display = "none";
+        }
+
+        function showBubbleContainer(){
+            document.getElementById('bubbleContainer').style.display = "block";
+        }
+
+        function hideBubbleContainer(){
+            document.getElementById('bubbleContainer').style.display = "none";
         }
 
 
