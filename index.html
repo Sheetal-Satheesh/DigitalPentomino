@@ -718,10 +718,15 @@
                         var td = document.createElement('TH');
                         td.classList.add("TableNameCell");
                         let entry = subSettings[key][lang];
-                        var imageElement = document.createElement("img");
-                        imageElement.setAttribute("style", "width: 10vw; height: 10vw; border: 2px solid black; text-align: center; border:transparent");
-                        var img_src = "resources/images/licenses/" + heading +".ico";
-                        imageElement.setAttribute("src", img_src);
+                        let imageElement;
+                        const subString = "image";
+                        if(entry.includes(subString)){
+                          imageElement = document.createElement("img");
+                          imageElement.setAttribute("style", "width: 10vw; height: 10vw; border: 2px solid black; text-align: center; border:transparent");
+                          let img_src = "resources/images/licenses/" + heading +".ico";
+                          imageElement.setAttribute("src", img_src);
+                          td.appendChild(imageElement);
+                        }
                         td.style.width = '35vw';
                         td.style.padding = "1vw";
                         td.border = '0.5vw solid black';
@@ -733,9 +738,6 @@
                         else {
                             td.style.fontSize = "1vw";
                             td.style.width = '10vw';
-                        }
-                        if(imageElement){
-                          td.appendChild(imageElement);
                         }
                         td.appendChild(document.createElement("br"));
                         td.appendChild(document.createTextNode(entry));
