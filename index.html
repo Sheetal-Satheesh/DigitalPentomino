@@ -640,23 +640,29 @@
             modal.style.background = "#dcf0ed";
             document.getElementById("modalFormContainerID").style.backgroundColor = "#dcf0ed";
             document.getElementById("modalFormContainerID").style.border = "none";
+            let y = document.getElementsByClassName("cActionBtn");
+            for(let i = 0; i< y.length; i++){ y[i].style.pointerEvents = "none"; }
             $(".modalFormContent").css( "display", "none" );
             //show back button
             let btn = document.getElementById("backButton");
             btn.style.display = "block";
             $(".close").click(function () {
+              document.getElementById("tableLicenseDiv").style.display = "none";
                 if ($("#licencesTable")) {
                     document.getElementById("licencesTable").style.display = "none";
                     document.getElementById("licenseHeading").style.display = "none";
                     document.getElementById("tableLicenseDiv").style.display = "none";
+                    for(let i = 0; i< y.length; i++){ y[i].style.pointerEvents = "auto"; }
                 }
             });
             btn.onclick = function () {
                 openSettings();
+                document.getElementById("tableLicenseDiv").style.display = "none";
                 if ($("#licencesTable")) {
                     document.getElementById("licencesTable").style.display = "none";
                     document.getElementById("licenseHeading").style.display = "none";
                     document.getElementById("tableLicenseDiv").style.display = "none";
+                    for(let i = 0; i< y.length; i++){ y[i].style.pointerEvents = "auto"; }
                 }
                 SettingsForm.updateForm($('#innerGridForm')[0], settings);
                 btn.style.display = "none";
@@ -693,7 +699,7 @@
             for (var i = 0; i < ConfigKeys.length; i++) {
                 var td = document.createElement('TH');
                 td.classList.add("TableHead");
-                td.style.width = '35vw';
+                td.style.width = '20vw';
                 td.style.padding = "1vw";
                 td.border = '0.5vw solid black';
                 td.style.borderCollapse = "collapse";
@@ -727,7 +733,7 @@
                           imageElement.setAttribute("src", img_src);
                           td.appendChild(imageElement);
                         }
-                        td.style.width = '35vw';
+                        td.style.width = '20vw';
                         td.style.padding = "1vw";
                         td.border = '0.5vw solid black';
                         td.style.borderCollapse = "collapse";
@@ -746,7 +752,7 @@
                         var td = document.createElement('TH');
                         td.classList.add("TableDataCell");
                         entry = subSettings[key];
-                        td.style.width = '35vw';
+                        td.style.width = '20vw';
                         td.style.padding = "0.5vw";
                         td.border = '0.5vw solid black';
                         td.style.borderCollapse = "collapse";
