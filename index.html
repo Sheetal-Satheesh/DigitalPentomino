@@ -390,56 +390,6 @@
             return true;
         }
 
-        function openLicense() {
-            let modal = document.getElementById('modalTop');
-            if ($(modal).is(':visible')) {
-                this.closeModal();
-            }
-            else {
-                this.disableSnapshotButton();
-                this.hideManipulationButtons();
-                this.closeBoardSelector();
-                this.disablePointerEventsOnPieces();
-                modal.style.display = "block";
-                modal.style.background = "transparent";
-
-                document.querySelector(".modalFormContent").style.display = "block";
-                document.querySelector(".innerGrid").style.display = "none";
-                template.clearContent("#modalButtonsID");
-                template.clearContent("#modalTitleID");
-                template.clearContent("#modalBodyID");
-                template.clearContent("#innerGridForm");
-
-                let div1 = document.createElement("div");
-                let h5 = document.createElement("h5");
-                let lang = SettingsSingleton.getInstance().getSettings().general.language;
-                let t1 = document.createTextNode(strings.license[lang]);
-                h5.appendChild(t1);
-                div1.appendChild(h5);
-
-                let hBgMusic = document.createElement("h6");
-                let bgMusicLicense = document.createTextNode("Background Music 'Chee Zee Beach' by Kevin MacLeod\n" +
-                    "Link: https://incompetech.filmmusic.io/song/3490-chee-zee-beach\n" +
-                    "License: https://filmmusic.io/standard-license");
-                hBgMusic.appendChild(bgMusicLicense);
-                div1.appendChild(hBgMusic);
-
-                let birdMusic = document.createElement("h6");
-                let birdSoundsLicense = document.createTextNode("link : https://www.zapsplat.com/sound-effect-category/wood/\n" + "License :https://www.zapsplat.com/license-type/standard-license/");
-                birdMusic.appendChild(birdSoundsLicense);
-                div1.appendChild(birdMusic);
-                let h6 = document.createElement("h6");
-                let t2 = document.createTextNode("(author: Edicionesnaza) jboy-2 : https://www.deviantart.com/edicionesnaza/art/Boy-and-Girl-Icon-gif-By-alfreditha-394021423" + "\n");
-                let t3 = document.createTextNode("(author: Ahkâm) present :https://www.freeiconspng.com/img/39913    \n");
-                let t4 = document.createTextNode("(author: Alexis Bailey) present :https://www.freepngimg.com/png/19721-wizard-free-png-image");
-                h6.appendChild(t2);
-                h6.appendChild(t3);
-                h6.appendChild(t4);
-                div1.appendChild(h6);
-                modalBodyID.appendChild(div1);
-            }
-        }
-
         function resetGame() {
             var modal = document.getElementById('modalTop');
             if ($(modal).is(':visible')) {
@@ -697,34 +647,44 @@
             template.clearContent("#modalBodyID");
             template.clearContent("#innerGridForm");
             modal.style.background = "#dcf0ed";
+            document.getElementById("modalFormContainerID").style.backgroundColor = "#dcf0ed";
             document.getElementById("modalFormContainerID").style.border = "none";
+            let y = document.getElementsByClassName("cActionBtn");
+            for(let i = 0; i< y.length; i++){ y[i].style.pointerEvents = "none"; }
+            $(".modalFormContent").css( "display", "none" );
             //show back button
             let btn = document.getElementById("backButton");
             btn.style.display = "block";
             $(".close").click(function () {
-                div5.style.display = "none";
+              document.getElementById("tableLicenseDiv").style.display = "none";
                 if ($("#licencesTable")) {
                     document.getElementById("licencesTable").style.display = "none";
+                    document.getElementById("licenseHeading").style.display = "none";
+                    document.getElementById("tableLicenseDiv").style.display = "none";
+                    for(let i = 0; i< y.length; i++){ y[i].style.pointerEvents = "auto"; }
                 }
             });
             btn.onclick = function () {
                 openSettings();
-                div5.style.display = "none";
+                document.getElementById("tableLicenseDiv").style.display = "none";
                 if ($("#licencesTable")) {
                     document.getElementById("licencesTable").style.display = "none";
+                    document.getElementById("licenseHeading").style.display = "none";
+                    document.getElementById("tableLicenseDiv").style.display = "none";
+                    for(let i = 0; i< y.length; i++){ y[i].style.pointerEvents = "auto"; }
                 }
                 SettingsForm.updateForm($('#innerGridForm')[0], settings);
                 btn.style.display = "none";
             };
             let lang = SettingsSingleton.getInstance().getSettings().general.language;
-            let textNode = {
-                class: "modalText",
-                text: strings.License[lang]
-            };
-            template.attachText("#modalBodyID", textNode);
-            modal.appendChild(document.createElement("br"));
-            modal.appendChild(document.createElement("br"));
+            let licenceHeading = strings.License[lang];
+            let h2 = document.createElement("h2");
+            h2.id = "licenseHeading";
+            h2.innerHTML = strings.License[lang];
+            h2.style.textAlign = "center";
+            modal.appendChild(h2);
             let div5 = document.createElement("div");
+            div5.id = "tableLicenseDiv";
             div5.style.marginTop = "10vh";
             div5.style.marginRight = "5vh";
             let ConfigKeys = [];
@@ -738,7 +698,7 @@
             table.id = "licencesTable"
             table.border = '1px solid black';
             table.style.textAlign = "center";
-            table.style.marginLeft = "auto";
+            table.style.marginLeft = "2vh";
             table.style.marginRight = "auto";
             var tableBody = document.createElement('TBODY');
             table.appendChild(tableBody);
@@ -748,12 +708,12 @@
             for (var i = 0; i < ConfigKeys.length; i++) {
                 var td = document.createElement('TH');
                 td.classList.add("TableHead");
-                td.style.width = '35vw';
+                td.style.width = '20vw';
                 td.style.padding = "1vw";
                 td.border = '0.5vw solid black';
                 td.style.borderCollapse = "collapse";
                 if (x.matches) { // If media query matches
-                    td.style.fontSize = "0.5vw";
+                    td.style.fontSize = "1vw";
                     td.style.width = '10vw';
                 }
                 else {
@@ -773,30 +733,40 @@
                         var td = document.createElement('TH');
                         td.classList.add("TableNameCell");
                         let entry = subSettings[key][lang];
-                        td.style.width = '35vw';
+                        let imageElement;
+                        const subString = "image";
+                        if(entry.includes(subString)){
+                          imageElement = document.createElement("img");
+                          imageElement.setAttribute("style", "width: 10vw; height: 10vw; border: 2px solid black; text-align: center; border:transparent");
+                          let img_src = "resources/images/icons/" + heading +".ico";
+                          imageElement.setAttribute("src", img_src);
+                          td.appendChild(imageElement);
+                        }
+                        td.style.width = '20vw';
                         td.style.padding = "1vw";
                         td.border = '0.5vw solid black';
                         td.style.borderCollapse = "collapse";
                         if (x.matches) { // If media query matches
-                            td.style.fontSize = "0.5vw";
+                            td.style.fontSize = "1vw";
                             td.style.width = '10vw';
                         }
                         else {
                             td.style.fontSize = "1vw";
                             td.style.width = '10vw';
                         }
+                        td.appendChild(document.createElement("br"));
                         td.appendChild(document.createTextNode(entry));
                     }
                     else {
                         var td = document.createElement('TH');
                         td.classList.add("TableDataCell");
                         entry = subSettings[key];
-                        td.style.width = '35vw';
-                        td.style.padding = "1vw";
+                        td.style.width = '20vw';
+                        td.style.padding = "0.5vw";
                         td.border = '0.5vw solid black';
                         td.style.borderCollapse = "collapse";
                         if (x.matches) { // If media query matches
-                            td.style.fontSize = "0.5vw";
+                            td.style.fontSize = "1vw";
                             td.style.width = '10vw';
                         }
                         else {
@@ -805,6 +775,7 @@
                         }
                         td.appendChild(document.createTextNode(entry));
                     }
+                    //tr1.appendChild(td1);
                     tr1.appendChild(td);
                 }
             }
