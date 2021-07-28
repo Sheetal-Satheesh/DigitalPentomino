@@ -447,7 +447,7 @@
             this.enableSnapshotButton();
             if ($('#birdContainer').is(':visible')){
                 this.showBubbleContainer();
-            }
+            }           
         }
 
         function callHintAI() {
@@ -1073,6 +1073,7 @@
 
             document.querySelector(".modalFormContent").style.display = "none";
             document.querySelector(".innerGrid").style.display = "block";
+
             let imageList = pd.visual.showGameImages();
             let imageGrid = document.getElementById('innerGrid');
             template.clearContent(".innerGrid");
