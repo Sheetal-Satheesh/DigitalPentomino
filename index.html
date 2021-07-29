@@ -667,14 +667,15 @@
             btn.onclick = function () {
                 openSettings();
                 document.getElementById("tableLicenseDiv").style.display = "none";
+                if ($("#licencesTable")) {
+                    document.getElementById("licencesTable").style.display = "none";
+                    document.getElementById("licenseHeading").style.display = "none";
+                    document.getElementById("tableLicenseDiv").style.display = "none";
+                    for(let i = 0; i< y.length; i++){ y[i].style.pointerEvents = "auto"; }
+                }
                 document.getElementById("licenseHeading").style.display = "none";
                 if(div5){
                   div5.style.display = "none";
-                }
-                if ($("#licencesTable")) {
-                    document.getElementById("licencesTable").style.display = "none";
-                    document.getElementById("tableLicenseDiv").style.display = "none";
-                    for(let i = 0; i< y.length; i++){ y[i].style.pointerEvents = "auto"; }
                 }
                 SettingsForm.updateForm($('#innerGridForm')[0], settings);
                 btn.style.display = "none";
