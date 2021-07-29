@@ -656,7 +656,7 @@
             let btn = document.getElementById("backButton");
             btn.style.display = "block";
             $(".close").click(function () {
-              document.getElementById("tableLicenseDiv").style.display = "none";
+              document.getElementById("modalTop").style.display = "none";
                 if ($("#licencesTable")) {
                     document.getElementById("licencesTable").style.display = "none";
                     document.getElementById("licenseHeading").style.display = "none";
@@ -673,6 +673,10 @@
                     document.getElementById("tableLicenseDiv").style.display = "none";
                     for(let i = 0; i< y.length; i++){ y[i].style.pointerEvents = "auto"; }
                 }
+                document.getElementById("licenseHeading").style.display = "none";
+                if(div5){
+                  div5.style.display = "none";
+                }
                 SettingsForm.updateForm($('#innerGridForm')[0], settings);
                 btn.style.display = "none";
             };
@@ -682,11 +686,11 @@
             h2.id = "licenseHeading";
             h2.innerHTML = strings.License[lang];
             h2.style.textAlign = "center";
-            modal.appendChild(h2);
             let div5 = document.createElement("div");
             div5.id = "tableLicenseDiv";
             div5.style.marginTop = "10vh";
             div5.style.marginRight = "5vh";
+            div5.appendChild(h2);
             let ConfigKeys = [];
             for (let h in strings.settings.license.enumTitles) {
                 let i = strings.settings.license.enumTitles[h][lang];
