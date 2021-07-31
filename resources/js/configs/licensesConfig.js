@@ -1,4 +1,7 @@
-let lang = SettingsSingleton.getInstance().getSettings().general.language;
+//Instructions to add licences : creating licences requires adding details in this file
+//after adding details here, add images in the licences folder, keep the name of the images similar to the headings in this file
+//because the images get dynamically loaded into the licences table.
+//Also add lanuage translations in the license section of strings.js file
 licensesConfig = {
     "solvedScreenMagician": {
         "name": strings.settings.license.solvedScreenMagician,

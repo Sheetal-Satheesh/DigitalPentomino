@@ -243,7 +243,7 @@
 
 .modalContainer h3 {
   left: 0;
-  width: 100vw;
+  width: 96vw;
   padding: 3vw;
   background-color: lightblue;
   font-size: 3vw;
@@ -366,12 +366,15 @@
   position: fixed;
 }
 
-button.collapsible {
-  width: 11vw;
-}
-
 #divPlaceholder{
   width: 100%;
   height: 4vw;
   background-color: transparent;
 }
+
+button.collapsible {
+  width: 11vw;
+}
+
+
+

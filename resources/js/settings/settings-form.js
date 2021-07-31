@@ -32,6 +32,9 @@ class SettingsForm {
             console.log(settingsClone);
             event.preventDefault();
             onSubmit(false, settingsClone);
+            if ($('#birdContainer').is(':visible')){
+                document.getElementById('bubbleContainer').style.display = "block";
+            }
         });
         licenseButton.addEventListener("click", event => {
             let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
@@ -253,6 +256,7 @@ class SettingsForm {
         let buttonElement = SettingsForm.createButton(showText, {
             "class": "collapsible btn btn-primary btn-lg"
         });
+        buttonElement.setAttribute("id", "showAdvanceSettingsBtn")
 
         buttonElement.addEventListener("click", function(event) {
             this.classList.toggle("active");
