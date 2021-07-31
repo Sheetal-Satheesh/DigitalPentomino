@@ -19,6 +19,9 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
         clearButton.onclick = (event) => this.handleClickedOnClear(event, div);
         div.appendChild(clearButton);
         div.appendChild(document.createElement("br"));
+        let boardImg = SettingsForm.createImg("boardImg", {src: undefined, alt: "none"});
+        boardImg.style.width = '30vw';
+        div.appendChild(boardImg);
         div.appendChild(SettingsForm.createLabel("Saved board: "));
         let boardLabel = SettingsForm.createLabel("-");
         boardLabel.id = "boardLabel";
@@ -51,6 +54,10 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
         let resultLabel = $(div).find("#startPiecePosLabel")[0];
         resultLabel.innerHTML = selectedValue;
 
+        let boardImg = $(div).find("#boardImg")[0];
+        boardImg.src = undefined;
+        boardImg.alt = "none";
+
         this.display(div, selectedValue);
     }
 
@@ -70,6 +77,7 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
 
     display(div, selectedValue) {
         let boardLabel = $(div).find("#boardLabel")[0];
+        let boardImg = $(div).find("#boardImg")[0];
 
         let text = "";
 
@@ -79,6 +87,9 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
         let game = this.parseFromSeedToGame(selectedValue);
 
         if (game !== null) {
+            boardImg.src = "resources/images/boards/" + game.getName() + ".png";
+            boardImg.alt = game.getName();
+
             text += game.getName() + " ";
 
             game.getPentominoesOnBoard().forEach(p => {

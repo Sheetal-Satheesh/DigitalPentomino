@@ -345,6 +345,20 @@ class SettingsForm {
         return labelElement;
     }
 
+    static createImg(id, src, options) {
+        let imgElement = document.createElement("img");
+        imgElement.id = id;
+        imgElement.src = src;
+
+        if (!(options === undefined)) {
+            for (let [key, value] of Object.entries(options)) {
+                imgElement.setAttribute(key, value);
+            }
+        }
+
+        return imgElement;
+    }
+
     static createSelectElement(name, enumElements, enumTexts) {
         let selectElement = document.createElement("select");
         selectElement.name = name;
