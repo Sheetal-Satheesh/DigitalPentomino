@@ -73,6 +73,9 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
 
         let text = "";
 
+        let boardSRows= new FrontController().controller.game().getBoard()._boardSRows;
+        let boardSCols = new FrontController().controller.game().getBoard()._boardSCols;
+
         let game = this.parseFromSeedToGame(selectedValue);
 
         if (game !== null) {
@@ -80,7 +83,7 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
 
             game.getPentominoesOnBoard().forEach(p => {
                 let pos = game.getPosition(p);
-                text += p.name + "[" + pos[0] + "," + pos[1] + "] ";
+                text += p.name + "[" + (pos[0] + boardSRows) + "," + (pos[1] + boardSCols) + "] ";
             });
         } else {
             text += "-";
@@ -106,9 +109,12 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
         if (game !== null) {
             pd.loadBoard(game.getName());
 
+            let boardSRows = new FrontController().controller.game().getBoard()._boardSRows;
+            let boardSCols = new FrontController().controller.game().getBoard()._boardSCols;
+
             game.getPentominoesOnBoard().forEach(p => {
                 let pos = game.getPosition(p);
-                this.placePiece(p.name, pos[0], pos[1]);
+                this.placePiece(p.name, pos[0] + boardSRows, pos[1] + boardSCols);
             });
         } else {
             pd.reset();
@@ -156,12 +162,15 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
         let pentominoesOnBoard = game.getPentominoesOnBoard();
         seed += this.pad(pentominoesOnBoard.length, 2);
 
+        let boardSRows= new FrontController().controller.game().getBoard()._boardSRows;
+        let boardSCols = new FrontController().controller.game().getBoard()._boardSCols;
+
         pentominoesOnBoard.forEach(p => {
             let pos = game.getPosition(p);
 
             seed += p.name;
-            seed += this.pad(pos[0], 2);
-            seed += this.pad(pos[1], 2);
+            seed += this.pad(pos[0] - boardSRows, 2);
+            seed += this.pad(pos[1] - boardSCols, 2);
         });
 
         return seed;

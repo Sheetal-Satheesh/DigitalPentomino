@@ -624,6 +624,10 @@ class Game {
         return [this._board._boardRows, this._board._boardCols];
     }
 
+    getBoard() {
+        return this._board;
+    }
+
     getName() {
         return this._name;
     }
