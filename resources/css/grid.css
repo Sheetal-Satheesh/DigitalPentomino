@@ -16,13 +16,14 @@ h1 {
    top:13vw;
    bottom:10vw;
    left: 3vw;
-   width: 10vw;
+   width: 11vw;
    overflow-x: hidden;
 }
 
 .filterGrid .fimageDiv {
    position: relative;
-   width: 10vw;
+   width: 11vw;
+   margin-right: .1vw;
    /* border: .2vw solid rgb(2, 71, 62);
    border-style: solid; */
 }
@@ -100,8 +101,9 @@ h1 {
 
   .fimageDiv:hover {
      opacity: 0.6;
-     background-color: aqua;
   }
+
+
 
   .imageButton {
     color: white;

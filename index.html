@@ -1083,13 +1083,14 @@
 
         }
 
-        function renderGallery(images) {
+        function renderGallery(gameId) {
 
             document.querySelector(".innerGrid").style.display = "block";
             let imageGrid = document.getElementById('innerGrid');
             template.clearContent(".innerGrid");
             template.clearContent("#innerGridForm");
 
+            let images = pd.visual.getImagesByGameId(gameId);
             images.forEach((item) => {
                 let imgKey = Object.keys(item)[0];
                 let image = item[imgKey];
@@ -1142,18 +1143,18 @@
             let currGmKey = pd.visual.getCurrentGameKey();
             let gameIds = pd.visual.getAllGameIds();
 
-            gameIds.forEach((id) => {
-                let img = pd.visual.getLastGameimages(id);
+            gameIds.forEach((gameId) => {
+                let img = pd.visual.getLastGameimages(gameId);
                 if (img == undefined) {
                     return;
                 }
 
-                if (id == currGmKey) {
+                if (gameId == currGmKey) {
                     img.style.filter = "brightness(120%) saturate(120%)";
-                    img.style.border = "dotted";
-
+                    img.style.border = ".2vw solid rgb(2, 71, 62)";
+                    img.style.background = "yellow";
                     let images = pd.visual.getImagesByGameId(currGmKey)
-                    renderGallery(images);
+                    renderGallery(gameId);
                 }
                 else {
                     img.style.border = "0";
@@ -1163,12 +1164,12 @@
                 img.setAttribute("class", "filterImage");
                 img.style.width = "10vw";
                 img.style.height = "5.5vw";
+
                 let fImgDiv = document.createElement("div");
                 fImgDiv.setAttribute("class", "fimageDiv");
 
                 img.addEventListener('click', function () {
-                    let images = pd.visual.getImagesByGameId(id)
-                    renderGallery(images);
+                    renderGallery(gameId);
                 }, false);
 
                 fImgDiv.appendChild(img);
