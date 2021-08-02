@@ -5,19 +5,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#009578">
-    <title>Digital Pentomino v5</title>
+    <title>TUCA</title>
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="resources/images/icons/dp_192.png">
     <link rel="stylesheet" href="resources/css/style.css">
     <link rel="stylesheet" href="resources/css/board_selection.css">
     <link rel="stylesheet" href="resources/css/modal.css">
+    <link rel="stylesheet" href="resources/css/load_screen.css">
     <link rel="stylesheet" href="resources/css/grid.css">
     <link rel="stylesheet" href="resources/css/settings_form.css">
     <link rel="stylesheet" style="text/css" href="resources/jsonform/bootstrap.css" />
-
+    <script src="resources/js/multi-lang/strings.js"></script>
+    <script src="resources/js/settings/settings-schema.js"></script>
+    <script src="resources/js/settings/settings.js"></script>
+    <script src="resources/js/settings/settings-parser.js"></script>
+    <script src="resources/js/settings/translator.js"></script>
+    <script src="resources/js/settings/settings-form.js"></script>
+    <script src="resources/js/settings/settings-visibility.js"></script>
     <script src="resources/index.js"></script>
     <script src="resources/js/ui-template.js"></script>
     <script src="resources/js/board.js"></script>
+    <script src="resources/js/visual.js"></script>
     <script src="resources/js/overlapping.js"></script>
     <script src="resources/js/pentomino.js"></script>
     <script src="resources/js/game-controller.js"></script>
@@ -28,18 +36,10 @@
     <script src="resources/js/command-history/command-manager.js"></script>
     <script src="resources/js/command-history/command-tree.js"></script>
     <script src="resources/js/configs/baseConfigs.js"></script>
-    <script src="resources/js/configs/boardConfigs.js"></script>
+    <script src="resources/js/configs/licensesConfig.js"></script>
     <script src="resources/js/configs/solutionsConfig.js"></script>
     <script src="resources/js/game-solution.js"></script>
-    <script src="resources/js/settings/settings-schema.js"></script>
-    <script src="resources/js/settings/settings.js"></script>
-    <script src="resources/js/settings/settings-parser.js"></script>
-    <script src="resources/js/settings/translator.js"></script>
-    <script src="resources/js/settings/settings-form.js"></script>
-    <script src="resources/js/settings/settings-visibility.js"></script>
-    <script src="resources/js/multi-lang/strings.js"></script>
     <script src="resources/js/pd.js"></script>
-    <script src="resources/js/visual.js"></script>
     <script src="resources/js/handleMobile.js"></script>
     <script type="text/javascript" src="resources/jsonform/jquery.min.js"></script>
     <script type="text/javascript" src="resources/jsonform/underscore.js"></script>
@@ -48,16 +48,26 @@
     <script type="text/javascript" src="resources/jsonform/html2canvas.js"></script>
     <script type="text/javascript" src="resources/jsonform/loadash.js"></script>
     <script type="text/javascript" src="resources/jsonform/jquery.qrcode.min.js"></script>
+    <script type="text/javascript" src="resources/jsonform/qr-scanner.umd.min.js"></script>
     <script type="text/javascript" src="resources/js/util.js"></script>
     <script src="resources/js/hint.js"></script>
     <script src="resources/js/hint-ai.js"></script>
     <script src="resources/js/help/hinting/command-sequence-list.js"></script>
+    <script src="resources/js/load_screen.js"></script>
 </head>
+<!-- Preloader section -->
+<div class="preloader d-flex">
+    <div class="tuca">
+        <img src="resources/images/icons/tuca.png" type="image/svg+xml" />
+    </div>
+    <div class="sk-cube-grid">
+        <img src="https://i.gifer.com/YCZH.gif" />
+    </div>
+</div>
 
-<body onload="touchStartup(); initialize()">
+<body onload="touchStartup(); initialize(); buttonManipulation();" class="page">
     <audio id="audioTukaScream" src="resources/audio/tuka-scream.mp3"></audio>
     <audio id="bgMusic" src="resources/audio/chee-zee-beach-by-kevin-macleod-from-filmmusic-io.mp3" loop></audio>
-
     <canvas id="canvas" width="auto" height="auto"></canvas>
     <div id="seedingCover"></div>
     <div id="seeding" class="seed">
@@ -66,7 +76,6 @@
                 src="resources/images/icons/seed.png">
     </div>
     <div class="cGame">
-
         <div id="game">
             <div id="tray"></div> <!-- tray -->
             <div id="playarea" class="FlashOff">
@@ -74,7 +83,7 @@
                 <div id="piecearea"></div> <!-- piecearea -->
             </div>
             <div id="boardmodalTop" class="boardmodal"
-                style="background: rgb(220, 240, 237) none repeat scroll 0% 0%; display: none;">
+                style="background: #eceaea none repeat scroll 0% 0%; display: none;">
                 <span onclick="closeModal()" class="boardclose" title="Close Modal">x</span>
                 <div class="boardmodalContainer" id="boardmodalContainerID">
                     <div class="boardouterGrid">
@@ -94,8 +103,10 @@
             <!--board modal end-->
 
             <div id="modalTop" class="modal">
-                <span onclick="closeModal()" class="close" title="Close Modal">x</span>
-                <button id="backButton" class="back" style="display:none">&#8249;</button>
+                <button onclick="closeModal()" class="close" title="Close Modal"><img class="closeBtn"
+                        src="resources/images/icons/close.png"></button>
+                <button id="backButton" class="back" style="display:none"><img class="backBtn"
+                        src="resources/images/icons/back.png"></button>
                 <div class="modalContainer" id="modalContainerID">
                     <div class="outerGrid">
                         <div class="filterGrid" id="filterGrid"></div>
@@ -107,7 +118,6 @@
                             <h3 id="modalTitleID"></h3>
                             <div class="modalButtons" id="modalButtonsID"></div>
                             <div class="modalBody" id="modalBodyID"></div>
-
                         </div>
                     </form>
                 </div>
@@ -123,6 +133,9 @@
                 </button>
                 <button type="button" id='prefillBoard' class="cActionBtn" onclick="prefillBoard()" disabled>
                     <img src="resources/images/icons/prefill.png">
+                </button>
+                <button type="button" id='qrCodeButton' class="cActionBtn" onclick="clickedOnScanQrCode()">
+                    <img src="resources/images/icons/qr-code.png">
                 </button>
                 <button type="button" id='hintButton' class="cActionBtn" onclick="callHintAI()"> <img
                         src="resources/images/icons/help_v2.png">
@@ -142,49 +155,48 @@
                 <button type="button" id='replay' class="cActionBtn" onclick="execReplay()">
                     <img src="resources/images/icons/replay.svg">
                 </button>
-                <button type="button" id='license' class="cActionBtn" onclick="openLicense()"> <img
-                        src="resources/images/icons/license.png">
-                </button>
                 <button type="button" id='reset' class="cActionBtn" onclick="resetGame()">
                     <img src="resources/images/icons/tidy_up_v2.png"></button>
             </div>
 
             <div id="labelNumberSolutionsContainer">
                 <div id="labelNumberSolutionsContainerChild">
-                    <div id="labelNumberOfSolutionsText">Number of solutions:</div>
-                    <div id="labelNumberSolutions">?</div>
+                    <div id="labelNumberSolutions">Number of solutions: ?</div>
                 </div>
+            </div>
+            <div id="bubbleContainer">
+                <div class="speechBubble">
+                    <div id="speechBubbleText">Number of solutions: ?</div>
+                </div>
+            </div>
+            <div id="birdContainer">
+                <img src="resources/images/icons/tuca_bird_left.png"></img>
             </div>
 
         </div>
-
-        <div class="cPieceManipulation" id="pieceManipulation">
-            <table>
-                <tr>
-                    <td>
-                        <button type="button" class="controlButton" id='OpRotateLeft' onclick="rotateAntiClkWise()">
-                            <img src="resources/images/icons/rotate_left.png">
-                        </button>
-                    </td>
-                    <td>
-                        <button type="button" class="controlButton" id='OpRotateRight' onclick="rotateClkWise()">
-                            <img src="resources/images/icons/rotate_right.png">
-                        </button>
-                    </td>
-                    <td>
-                        <button type="button" class="controlButton" id='OpflipV' onclick="flipV()">
-                            <img src="resources/images/icons/flip_vertically.png">
-                        </button>
-                    </td>
-                    <td>
-                        <button type="button" class="controlButton" id='OpflipH' onclick="flipH()">
-                            <img src="resources/images/icons/flip_horizontally.png">
-                        </button>
-                    </td>
-                </tr>
-            </table>
-
-        </div> <!-- cPieceManipulation -->
+        <div class="main-wrapper" id="pieceManipulation">
+            <div class="buttonWrapper first">
+                <div class="buttonInside first" id="insideWrapperFirst" onclick="flipH()">
+                    <span class="icon-flip1" id="OpflipH"></span>
+                </div>
+            </div>
+            <div class="buttonWrapper second">
+                <div class="buttonInside second" id="insideWrapperSecond" onclick="rotateAntiClkWise()">
+                    <span class="icon-rotateLeft" id="OpRotateLeft"></span>
+                </div>
+            </div>
+            <div class="buttonWrapper third">
+                <div class="buttonInside third" id="insideWrapperThird" onclick="rotateClkWise()">
+                    <span class="icon-rotateRight" id="OpRotateRight"></span>
+                </div>
+            </div>
+            <div class="buttonWrapper fourth">
+                <div class="buttonInside fourth" id="insideWrapperFourth" onclick="flipV()">
+                    <span class="icon-flip2" id="OpflipV"></span>
+                </div>
+            </div>
+        </div>
+        <!---Button Manipulation Ends-->
     </div>
 
     <script type="text/javascript">
@@ -201,6 +213,31 @@
                 settings,
                 null);
             processChangesToSettings(initialChanges, settings);
+        }
+
+        function buttonManipulation() {
+            let btn = document.querySelector('.mainWrapper');
+            let buttonWrapper = document.querySelectorAll('.buttonWrapper');
+
+            if (btn) {
+                btn.addEventListener('click', function () {
+
+                    if (btn.classList.contains('animation')) {
+                        btn.classList.remove('animation');
+                    } else {
+                        btn.classList.add('animation');
+                    }
+
+                    for (i = 0; i < buttonWrapper.length; i++) {
+                        if (buttonWrapper[i].classList.contains('animation')) {
+                            buttonWrapper[i].classList.remove('animation');
+                        } else {
+                            buttonWrapper[i].classList.add('animation');
+                        }
+                    }
+                });
+            }
+
         }
 
         function loadBoardList() {
@@ -227,55 +264,131 @@
             }
         }
 
-        function openLicense() {
+        function clickedOnScanQrCode() {
             let modal = document.getElementById('modalTop');
             if ($(modal).is(':visible')) {
                 this.closeModal();
-            }
-            else {
-                this.disableSnapshotButton();
-                this.hideManipulationButtons();
-                this.closeBoardSelector();
+            } else {
+                openScanQrCode();
                 this.disablePointerEventsOnPieces();
-                modal.style.display = "block";
-                modal.style.background = "transparent";
-
-                document.querySelector(".modalFormContent").style.display = "block";
-                document.querySelector(".innerGrid").style.display = "none";
-                template.clearContent("#modalButtonsID");
-                template.clearContent("#modalTitleID");
-                template.clearContent("#modalBodyID");
-                template.clearContent("#innerGridForm");
-                template.clearContent("#filterGrid");
-
-                let div1 = document.createElement("div");
-                let h5 = document.createElement("h5");
-                let lang = SettingsSingleton.getInstance().getSettings().general.language;
-                let t1 = document.createTextNode(strings.license[lang]);
-                h5.appendChild(t1);
-                div1.appendChild(h5);
-
-                let hBgMusic = document.createElement("h6");
-                let bgMusicLicense = document.createTextNode("Background Music 'Chee Zee Beach' by Kevin MacLeod\n" +
-                    "Link: https://incompetech.filmmusic.io/song/3490-chee-zee-beach\n" +
-                    "License: https://filmmusic.io/standard-license");
-                hBgMusic.appendChild(bgMusicLicense);
-                div1.appendChild(hBgMusic);
-
-                let birdMusic = document.createElement("h6");
-                let birdSoundsLicense = document.createTextNode("link : https://www.zapsplat.com/sound-effect-category/wood/\n" + "License :https://www.zapsplat.com/license-type/standard-license/");
-                birdMusic.appendChild(birdSoundsLicense);
-                div1.appendChild(birdMusic);
-                let h6 = document.createElement("h6");
-                let t2 = document.createTextNode("(author: Edicionesnaza) jboy-2 : https://www.deviantart.com/edicionesnaza/art/Boy-and-Girl-Icon-gif-By-alfreditha-394021423" + "\n");
-                let t3 = document.createTextNode("(author: Ahkâm) present :https://www.freeiconspng.com/img/39913    \n");
-                let t4 = document.createTextNode("(author: Alexis Bailey) present :https://www.freepngimg.com/png/19721-wizard-free-png-image");
-                h6.appendChild(t2);
-                h6.appendChild(t3);
-                h6.appendChild(t4);
-                div1.appendChild(h6);
-                modalBodyID.appendChild(div1);
+                this.hideManipulationButtons();
+                if ($('#birdContainer').is(':visible')) {
+                    this.hideBubbleContainer();
+                }
             }
+        }
+
+        function openScanQrCode() {
+            let modal = document.getElementById('modalTop');
+            modal.style.display = "block";
+            modal.style.background = "#eceaea";
+
+            document.querySelector(".modalFormContent").style.display = "none";
+            document.querySelector(".innerGrid").style.display = "block";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent(".innerGrid")
+            template.clearContent("#innerGridForm");
+
+            let parent = $('#innerGridForm')[0];
+
+            let heading = document.createElement("h4");
+            heading.innerHTML = "Scan QR-code";
+            parent.appendChild(heading);
+
+            let videoElement = parent.appendChild(document.createElement("video"));
+            videoElement.id = "webCamera";
+            videoElement.style.display = "none";
+            parent.appendChild(videoElement);
+
+            let canvasElem = parent.appendChild(document.createElement("canvas"));
+            canvasElem.id = "videoCanvas";
+
+            QrScanner.WORKER_PATH = 'resources/jsonform/qr-scanner-worker.min.js';
+
+            const qrScanner = new QrScanner(videoElement, result => {
+                let success = onQrCodeScanned(result);
+                if (success) {
+                    qrScanner.stop();
+                    this.closeModal();
+                }
+            });
+
+            qrScanner.start();
+
+            // Draw video on canvas with rectangle
+            videoElement.onplay = function () {
+                setTimeout(function () {
+                    drawVideoToCanvas(videoElement, canvasElem);
+                }, 300);
+            };
+
+            //onQrCodeScanned("https://pentomino-digital.de/V5/index.html?t=2010101110111011101110121");
+            //this.closeModal();
+        }
+
+        // from https://stackoverflow.com/questions/59702127/draw-rectangle-over-html-5-tag-video first answer
+        function drawVideoToCanvas(video, canvas) {
+            let ctx = canvas.getContext('2d');
+
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            let rectWidth = Math.min(canvas.width * (2 / 3), canvas.height * (2 / 3));
+
+            let centerX = canvas.width / 2;
+            let centerY = canvas.height / 2;
+
+            let pX = centerX - rectWidth / 2;
+            let pY = centerY - rectWidth / 2;
+
+            ctx.rect(pX, pY, rectWidth, rectWidth);
+            ctx.lineWidth = "6";
+            ctx.strokeStyle = "red";
+            ctx.stroke();
+
+            setTimeout(function () {
+                drawVideoToCanvas(video, canvas);
+            }, 100);
+        }
+
+        function onQrCodeScanned(qrCode) {
+            let url;
+            try {
+                url = new URL(qrCode);
+            } catch (_) {
+                // TODO: display error-msg to user in better way
+                alert("Scanned in wrong QR-code.");
+                console.error("Scanned code is not a url: " + qrCode);
+                return false;
+            }
+
+            let seed = url.searchParams.get(baseConfigs.seedUrlParamName);
+
+            if (seed === null) {
+                // TODO: display error-msg to user in better way
+                // No parameter for seed found
+                alert("Scanned in wrong QR-code.");
+                console.error("Scanned url does not contain TUCA seed: " + qrCode);
+                return false;
+            }
+
+            let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+            let newSettings = SettingsParser.parseSettingsFromSeed(schema, seed);
+
+            if (newSettings === null) {
+                // TODO: display error-msg to user in better way
+                alert("Scanned in wrong QR-code.");
+                console.error("Scanned seed could not be parsed into a settings configuration: " + seed);
+                return false;
+            }
+
+            applyNewSettingsObjToApp(newSettings);
+            insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
+            return true;
         }
 
         function resetGame() {
@@ -284,6 +397,7 @@
                 this.closeModal();
             }
             else {
+                this.hideBubbleContainer();
                 this.disableSnapshotButton();
                 this.hideManipulationButtons();
                 this.closeBoardSelector();
@@ -333,6 +447,9 @@
             document.getElementById('boardmodalTop').style.display = 'none';
             this.closeModalContainer();
             this.enableSnapshotButton();
+            if ($('#birdContainer').is(':visible')){
+                this.showBubbleContainer();
+            }           
         }
 
         function callHintAI() {
@@ -381,7 +498,7 @@
             if ($(boardSelectorPopup).is(':visible')) {
                 this.closeBoardSelector();
                 this.enableSnapshotButton();
-                //this.closeModal();
+                this.closeModal();
             }
             else {
                 boardSelectorPopup.style.display = "block";
@@ -389,6 +506,7 @@
                 this.closeSettings();
                 this.disablePointerEventsOnPieces();
                 this.disableSnapshotButton();
+                this.hideBubbleContainer();
             }
         }
 
@@ -412,15 +530,17 @@
                 // console.log("JsonForm: Submitted values:");
                 // console.log(values);
                 closeSettings();
-
-                let oldSettings = SettingsSingleton.getInstance().getSettings();
-                let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
-                let changesToSettings = SettingsParser.compareSettings(schema, oldSettings, values);
-
-                SettingsSingleton.getInstance().setSettings(values);
-                processChangesToSettings(changesToSettings, values);
-
+                applyNewSettingsObjToApp(values);
             }
+        }
+
+        function applyNewSettingsObjToApp(settings) {
+            let oldSettings = SettingsSingleton.getInstance().getSettings();
+            let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+            let changesToSettings = SettingsParser.compareSettings(schema, oldSettings, settings);
+
+            SettingsSingleton.getInstance().setSettings(settings);
+            processChangesToSettings(changesToSettings, settings);
         }
 
         function processChangesToSettings(changes, settings) {
@@ -430,13 +550,14 @@
 
                 if (heading === "general" && key === "language") {
                     let lang = settings[heading][key];
-                    document.getElementById("labelNumberOfSolutionsText").textContent = strings.numberOfPossibleSolutions[lang];
+                    document.getElementById("labelNumberSolutions").textContent = strings.numberOfPossibleSolutions[lang] + ': ?';
+                    document.getElementById("speechBubbleText").textContent = strings.numberOfPossibleSolutions[lang] + ': ?';
                 } else if (heading === "hinting" && key === "enableHinting") {
                     let hintingEnabled = settings[heading][key];
                     document.getElementById("hintButton").style.visibility = hintingEnabled ? "visible" : "hidden";
                 } else if (heading === "hinting" && key === "showNumberOfPossibleSolutions") {
                     let showNumberOfPossibleSolutions = settings[heading][key];
-                    document.getElementById("labelNumberSolutionsContainer").style.visibility = showNumberOfPossibleSolutions ? "visible" : "hidden";
+                    document.getElementById("bubbleContainer").style.visibility = showNumberOfPossibleSolutions ? "visible" : "hidden";
                 } else if (heading === "prefilling" && key === "enablePrefilling") {
                     let visible = settings[heading][key];
                     document.getElementById("prefillBoard").style.visibility = visible ? "visible" : "hidden";
@@ -453,6 +574,17 @@
                             bgMusicAudio.currentTime = 0;
                         }
                     }
+                } else if (heading === "general" && key === "enableBird") {
+                    let birdEnabled = settings[heading][key];
+                    if (birdEnabled) {
+                        document.getElementById("birdContainer").style.display = "block";
+                        document.getElementById("bubbleContainer").style.display = "block";
+                        document.getElementById("labelNumberSolutionsContainer").style.display = "none";
+                    } else {
+                        document.getElementById("birdContainer").style.display = "none";
+                        document.getElementById("bubbleContainer").style.display = "none";
+                        document.getElementById("labelNumberSolutionsContainer").style.display = "block";
+                    }
                 }
             });
         }
@@ -463,13 +595,16 @@
                 this.closeModal();
             } else {
                 openSettings();
+                this.disablePointerEventsOnPieces();
+                this.hideManipulationButtons();
+                this.hideBubbleContainer();
             }
         }
 
         function openSettings() {
             let modal = document.getElementById('modalTop');
             modal.style.display = "block";
-            modal.style.background = "rgb(220, 240, 237)";
+            modal.style.background = "#eceaea";
 
             document.querySelector(".modalFormContent").style.display = "none";
             document.querySelector(".innerGrid").style.display = "block";
@@ -490,7 +625,8 @@
             SettingsForm.generateForm(
                 $('#innerGridForm')[0],
                 this.handleJsonFormSubmit,
-                this.handleSettingsExport
+                this.handleShareSettings,
+                this.handleClickedOnLicenses
             );
 
             let settings = SettingsSingleton.getInstance().getSettings();
@@ -498,7 +634,163 @@
             // this.postProcessSettingsForm(SettingsSingleton.getInstance().getSettings());
         }
 
-        function handleSettingsExport(settings) {
+        // called when license button is clicked in settings
+        function handleClickedOnLicenses(settings) {
+            this.hideManipulationButtons();
+            this.closeBoardSelector();
+            this.disablePointerEventsOnPieces();
+            var modal = document.getElementById('modalTop');
+            let modalFormContent = document.getElementsByClassName('modalFormContent');
+            modal.style.display = "block";
+            modal.style.background = "transparent";
+            document.querySelector(".modalFormContent").style.display = "block";
+            document.querySelector(".innerGrid").style.display = "none";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent("#innerGridForm");
+            modal.style.background = "#dcf0ed";
+            document.getElementById("modalFormContainerID").style.backgroundColor = "#dcf0ed";
+            document.getElementById("modalFormContainerID").style.border = "none";
+            let y = document.getElementsByClassName("cActionBtn");
+            for(let i = 0; i< y.length; i++){ y[i].style.pointerEvents = "none"; }
+            $(".modalFormContent").css( "display", "none" );
+            //show back button
+            let btn = document.getElementById("backButton");
+            btn.style.display = "block";
+            $(".close").click(function () {
+              document.getElementById("modalTop").style.display = "none";
+                if ($("#licencesTable")) {
+                    document.getElementById("licencesTable").style.display = "none";
+                    document.getElementById("licenseHeading").style.display = "none";
+                    document.getElementById("tableLicenseDiv").style.display = "none";
+                    for(let i = 0; i< y.length; i++){ y[i].style.pointerEvents = "auto"; }
+                }
+            });
+            btn.onclick = function () {
+                openSettings();
+                document.getElementById("tableLicenseDiv").style.display = "none";
+                if ($("#licencesTable")) {
+                    document.getElementById("licencesTable").style.display = "none";
+                    document.getElementById("licenseHeading").style.display = "none";
+                    document.getElementById("tableLicenseDiv").style.display = "none";
+                    for(let i = 0; i< y.length; i++){ y[i].style.pointerEvents = "auto"; }
+                }
+                document.getElementById("licenseHeading").style.display = "none";
+                if(div5){
+                  div5.style.display = "none";
+                }
+                SettingsForm.updateForm($('#innerGridForm')[0], settings);
+                btn.style.display = "none";
+            };
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+            let licenceHeading = strings.License[lang];
+            let h2 = document.createElement("h2");
+            h2.id = "licenseHeading";
+            h2.innerHTML = strings.License[lang];
+            h2.style.textAlign = "center";
+            let div5 = document.createElement("div");
+            div5.id = "tableLicenseDiv";
+            div5.style.marginTop = "10vh";
+            div5.style.marginRight = "5vh";
+            div5.appendChild(h2);
+            let ConfigKeys = [];
+            for (let h in strings.settings.license.enumTitles) {
+                let i = strings.settings.license.enumTitles[h][lang];
+                ConfigKeys.push(i);
+            }
+            modal.appendChild(document.createElement(strings.License[lang]));
+            var table = document.createElement('TABLE');
+            console.log(table);
+            table.id = "licencesTable"
+            table.border = '1px solid black';
+            table.style.textAlign = "center";
+            table.style.marginLeft = "2vh";
+            table.style.marginRight = "auto";
+            var tableBody = document.createElement('TBODY');
+            table.appendChild(tableBody);
+            var tr = document.createElement('TR');
+            tableBody.appendChild(tr);
+            var x = window.matchMedia("(max-width: 860px)")
+            for (var i = 0; i < ConfigKeys.length; i++) {
+                var td = document.createElement('TH');
+                td.classList.add("TableHead");
+                td.style.width = '20vw';
+                td.style.padding = "1vw";
+                td.border = '0.5vw solid black';
+                td.style.borderCollapse = "collapse";
+                if (x.matches) { // If media query matches
+                    td.style.fontSize = "1vw";
+                    td.style.width = '10vw';
+                }
+                else {
+                    td.style.fontSize = "1vw";
+                    td.style.width = '10vw';
+                }
+                td.appendChild(document.createTextNode(ConfigKeys[i]));
+                tr.appendChild(td);
+            }
+            for (let heading in licensesConfig) {
+                let subSettings = licensesConfig[heading];
+                var tr1 = document.createElement('TR');
+                var x = window.matchMedia("(max-width: 700px)");
+                tableBody.appendChild(tr1);
+                for (let key in subSettings) {
+                    if (key === "name") {
+                        var td = document.createElement('TH');
+                        td.classList.add("TableNameCell");
+                        let entry = subSettings[key][lang];
+                        let imageElement;
+                        const subString = "image";
+                        if(entry.includes(subString)){
+                          imageElement = document.createElement("img");
+                          imageElement.setAttribute("style", "width: 10vw; height: 10vw; border: 2px solid black; text-align: center; border:transparent");
+                          let img_src = "resources/images/icons/" + heading +".ico";
+                          imageElement.setAttribute("src", img_src);
+                          td.appendChild(imageElement);
+                        }
+                        td.style.width = '20vw';
+                        td.style.padding = "1vw";
+                        td.border = '0.5vw solid black';
+                        td.style.borderCollapse = "collapse";
+                        if (x.matches) { // If media query matches
+                            td.style.fontSize = "1vw";
+                            td.style.width = '10vw';
+                        }
+                        else {
+                            td.style.fontSize = "1vw";
+                            td.style.width = '10vw';
+                        }
+                        td.appendChild(document.createElement("br"));
+                        td.appendChild(document.createTextNode(entry));
+                    }
+                    else {
+                        var td = document.createElement('TH');
+                        td.classList.add("TableDataCell");
+                        entry = subSettings[key];
+                        td.style.width = '20vw';
+                        td.style.padding = "0.5vw";
+                        td.border = '0.5vw solid black';
+                        td.style.borderCollapse = "collapse";
+                        if (x.matches) { // If media query matches
+                            td.style.fontSize = "1vw";
+                            td.style.width = '10vw';
+                        }
+                        else {
+                            td.style.fontSize = "1vw";
+                            td.style.width = '10vw';
+                        }
+                        td.appendChild(document.createTextNode(entry));
+                    }
+                    //tr1.appendChild(td1);
+                    tr1.appendChild(td);
+                }
+            }
+            div5.appendChild(table);
+            modal.appendChild(div5);
+        }
+
+        function handleShareSettings(settings) {
             this.hideManipulationButtons();
             this.closeBoardSelector();
             this.disablePointerEventsOnPieces();
@@ -515,7 +807,7 @@
             template.clearContent("#filterGrid");
 
             let div1 = document.createElement("div");
-            let h5 = document.createElement("h3");
+            let h5 = document.createElement("h2");
             var t1 = document.createTextNode("Share");
             h5.appendChild(t1);
             div1.appendChild(h5);
@@ -535,7 +827,7 @@
 
             let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
             let seed = SettingsParser.parseSettingsToSeed(schema, settings);
-
+            console.log("baseConfigs.url", baseConfigs.url);
             let teacherUrl = baseConfigs.url + "?" + baseConfigs.seedUrlParamName + "=" + seed;
             let pupilUrl = baseConfigs.url + "?" + baseConfigs.seedUrlParamName + "=2" + seed.substr(1, seed.length);
             teacherURLLabel.innerHTML = teacherUrl;
@@ -582,20 +874,38 @@
 
             modalBodyID.appendChild(document.createElement("br"));
             let printButton = SettingsForm.createButton("Print");
+            printButton.setAttribute("id", "printQRCode");
             printButton.addEventListener("click", function () {
                 window.print();
             });
             modalBodyID.appendChild(printButton);
+            let downloadImageButton = document.createElement("a");
+            downloadImageButton.innerHTML = "Download image";
+            downloadImageButton.addEventListener("click", function () {
+                handleDownloadImage(downloadImageButton, pupilQrCodeElement.firstElementChild);
+            });
+            downloadImageButton.download = "Canvas.png";
+            modalBodyID.appendChild(downloadImageButton);
             modalBodyID.appendChild(document.createElement("br"));
             modalBodyID.appendChild(document.createElement("br"));
 
-            let collapsibleButton = SettingsForm.createCollapsibleButton("SHOW ADVANCED SHARE OPTIONS", "HIDE ADVANCED SHARE OPTIONS");
+            let collapsibleButton = SettingsForm.createCollapsibleButton("Show advanced share options", "Hide advanced share options");
             let divToHide = document.createElement("div");
             divToHide.appendChild(document.createTextNode("Test"));
 
             modalBodyID.appendChild(collapsibleButton);
             modalBodyID.appendChild(divToHide);
         }
+
+        function handleDownloadImage(downloadImageButton, canvasElement) {
+            dlCanvas(downloadImageButton, canvasElement);
+        }
+
+        function dlCanvas(downloadImageButton, canvasElem) {
+            let dt = canvasElem.toDataURL('image/png');
+            downloadImageButton.href = dt;
+        }
+
 
         /*function generateQrTrElement(teacherUrl, pupilUrl) {
             // Generate QR
@@ -966,6 +1276,15 @@
         function closeForm() {
             document.getElementById("board_selection_form").style.display = "none";
         }
+
+        function showBubbleContainer(){
+            document.getElementById('bubbleContainer').style.display = "block";
+        }
+
+        function hideBubbleContainer(){
+            document.getElementById('bubbleContainer').style.display = "none";
+        }
+
 
     </script>
     <script src="./registerSW.js"></script>

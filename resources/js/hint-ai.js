@@ -27,7 +27,7 @@ class HintAI {
         if (possibleSolutions.length > 0) {
             let closestSolution = possibleSolutions[0];
             let commandSequenceList = this._getCommandSequenceListToSolution(game, closestSolution);
-            let commands = this._getBestNextCommandsMaxCorners(game, closestSolution, commandSequenceList);
+            let commands = this._getNextHint(game, closestSolution, commandSequenceList);
             return new Hint(commands, possibleSolutions);
         } else {
             // Pursue closest game state, which has at least one possible solution
@@ -45,7 +45,7 @@ class HintAI {
                     if (misplacedPentominos) {
                         return new Hint([misplacedPentominos], possibleSolutions);
                     }
-                    let commands = this._getBestNextCommandsMaxCorners(game, closestSolution, commandSequenceList);
+                    let commands = this._getNextHint(game, closestSolution, commandSequenceList);
                     return new Hint(commands, possibleSolutions);
                 } else {
                     let command = this._getCommandBasedOnUnreachableCellsSkill(game, closestSolution, bestUnreachableCellSpace);
@@ -587,6 +587,7 @@ class HintAI {
         let bestNextCommands = null;
         let bestAdjacentPentominos = 0;
         let lockedPieceCommand = null;
+        let INF = Number.MAX_SAFE_INTEGER;
 
         if (commandSequenceList.getAllCommandSequences().length == 0) {
             return null;
@@ -594,7 +595,7 @@ class HintAI {
 
         lockedPieceCommand = this._getLockedPieceCommand(game, closestSolution, commandSequenceList);
         if (lockedPieceCommand) {
-            return lockedPieceCommand;
+            return [lockedPieceCommand, INF];
         }
 
         commandSequenceList.getAllCommandSequences().forEach(commandSequence => {
@@ -609,7 +610,6 @@ class HintAI {
 
             pentominoPositions.forEach(position => {
 
-                // FIXME: Increase count only if cell occupied by different pentomino
                 if (game._board.positionIsValid(position[0] + 1, position[1]) &&
                     game._board.isOccupied(position[0] + 1, position[1])) {
                     currAdjacentPentominos++;
@@ -636,7 +636,7 @@ class HintAI {
             let bestNextCommandSequence = UtilitiesClass.getRandomElementFromArray(commandSequenceList.getAllCommandSequences());
             bestNextCommands = bestNextCommandSequence["commands"];
         }
-        return bestNextCommands;
+        return [bestNextCommands, bestAdjacentPentominos];
     }
 
     _getBestNextCommandsMaxCorners(game, closestSolution, commandSequenceList) {
@@ -644,6 +644,7 @@ class HintAI {
         let bestAdjacentPentominos = 0;
         let lockedPieceCommand = null;
         let that = this;
+        let INF = Number.MAX_SAFE_INTEGER;
 
         if (commandSequenceList.getAllCommandSequences().length == 0) {
             return null;
@@ -651,7 +652,7 @@ class HintAI {
 
         lockedPieceCommand = this._getLockedPieceCommand(game, closestSolution, commandSequenceList);
         if (lockedPieceCommand) {
-            return lockedPieceCommand;
+            return [lockedPieceCommand, INF];
         }
 
         commandSequenceList.getAllCommandSequences().forEach(commandSequence => {
@@ -673,11 +674,8 @@ class HintAI {
                 bestAdjacentPentominos = currAdjacentPentominos;
             }
         });
-        if (!bestNextCommands) {
-            let bestNextCommandSequence = UtilitiesClass.getRandomElementFromArray(commandSequenceList.getAllCommandSequences());
-            bestNextCommands = bestNextCommandSequence["commands"];
-        }
-        return bestNextCommands;
+
+        return [bestNextCommands, bestAdjacentPentominos];
     }
 
     _getLockedPieceCommand(game, closestSolution, commandSequenceList) {
@@ -810,6 +808,16 @@ class HintAI {
             return false;
         }
         return false;
+    }
+
+    _getNextHint(game, closestSolution, commandSequenceList) {
+        let bestNextCommands = null,
+            objFuncValue = null;
+        [bestNextCommands, objFuncValue] = this._getBestNextCommandsMaxCorners(game, closestSolution, commandSequenceList);
+        if(objFuncValue < 7) {
+            return this._getBestNextCommandsMaxOccupiedNeighbors(game, closestSolution, commandSequenceList);
+        }
+        return bestNextCommands;
     }
 
     // --- --- --- Helper functions --- --- ---

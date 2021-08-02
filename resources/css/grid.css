@@ -95,7 +95,7 @@ h1 {
   }
 
   .imageDiv:hover .imageBtnDiv {
-    opacity: 1;
+    opacity: .5;
   }
 
   .fimageDiv:hover {

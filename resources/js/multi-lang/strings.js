@@ -11,8 +11,8 @@ const strings = {
         WellDone: ["Well done! Please wait for your Teacher to continue", "Gut gemacht! Bitte warten Sie auf Ihren Lehrer, um fortzufahren"],
         Excellent: ["Excellent ! Now continue with the next task on your assignment", "Ausgezeichnet! Fahren Sie jetzt mit der nächsten Aufgabe Ihres Auftrags fort"]
     },
-    license: ["LICENSES", "LIZENZEN"],
     numberOfPossibleSolutions: ["Number of solutions", "Anzahl Lösungen"],
+    License: ["LICENSES", "LIZENZEN"],
     settings: {
         header: ["Game settings", "Spieleinstellungen"],
         advanced: {
@@ -34,7 +34,18 @@ const strings = {
             },
             enableBgMusic: {
                 title: ["Enable Background Music", "Hintergrundmusik einschalten"]
+            },
+            enableBird: {
+                title: ["Show tucan as helper", "Tucan als Helfer anzeigen"]
             }
+        },
+        license: {
+            enumTitles: [["Name", "Name"], ["Author", "Autor"],["Link", "Link"], ["License", "Lizenz"]],
+             solvedScreenMagician: ["Solved Screen Magician image", "Gelöstes Screen Magician-Bild"],
+             solvedScreenBoy: ["Solved screen boy image", "Gelöster Bildschirm Junge Bild"],
+             solvedScreenGift: ["Solved Screen Gift image", "Gelöst Bildschirm Geschenkbild"],
+             backgroundMusic: ["Background Music", "Hintergrundmusik"],
+             functionsMusic: ["Functions Music","Funktionen Musik"]
         },
         hinting: {
             title: ["Hints (Experimental)", "Hinweise (Experimentell)"],
@@ -42,6 +53,12 @@ const strings = {
                 title: ["Enable hints", "Hinweise einschalten"],
                 description: ["Hints suggest pentomino-actions to the user, which bring the board closer to a solution.",
                     "Hinweise schlagen dem Spieler Züge vor, die ihn/sie näher zur Lösung bringen."]
+            },
+            hintingLevels: {
+                title: ["Levels", "Levels"],
+                enumTitles: [["Easy", "Medium", "Difficult","Custom"], ["Leicht", "Mittel", "Schwierig", "Benutzerdefiniert"]],
+                description: ["TODO",
+                    "TODO"]
             },
             showNumberOfPossibleSolutions: {
                 title: ["Show number of possible solutions", "Zeige Anzahl der möglichen Lösungen an"],
@@ -85,6 +102,23 @@ const strings = {
                 title: ["Enable exact Hints?", "Exakte Hinweise aktivieren?"],
                 description: ["If enabled, Rotate, Flip and Move-actions that should be performed on one pentomino are three separate hints. Otherwise these actions are combined into one hint.",
                     "Aktiviert: Drehen, Spiegeln und Bewege-Aktionen, die auf ein Pentomino angewandt werden müssen sind drei separate Hinweise. Deaktiviert: Aktionen werden in einem Hinweis zusammengefasst."]
+            },
+            hintingVariants: {
+                title: ["Hinting variants", "Hinweismöglichkeiten"],
+                enumTitles: [
+                    ["Show pentominoes", "Show destination", "Show both"],
+                    ["Pentomino anzeigen", "Ziel anzeigen", "Beides anzeigen"]
+                ],
+                description: ["Hinting variants have different options:" +
+                    "Show pentominoes: Hinting will only indicate pentomino to pickup" +
+                    "Show destination: Hinting will indicate only destination to place pentomino" +
+                    "Show both : Hinting will show both = pentomino to pickup and the detination to place",
+                    "Hinting-Varianten haben verschiedene Optionen: " +
+                    "Pentomino anzeigen: Hinting zeigt nur Pentomino zum Aufnehmen an " +
+                    "Ziel anzeigen: Hinting zeigt nur das Ziel an, um Pentomino zu platzieren " +
+                    "Beides anzeigen: Hinting zeigt beides an = Pentomino zum Aufnehmen und das Ziel zum Ablegen"
+                ]
+
             }
         },
         showSolvedBoardScreen:{
@@ -96,7 +130,7 @@ const strings = {
                 },
                 SolvedScreens: {
                     title: ["Different solved screens", "Unterschiedlich gelöste Bildschirme"],
-                    enumTitles: [["Play again?", "Well done! Please wait for your Teacher to continue", "Excellent ! Now continue with the next task on your assignment"], 
+                    enumTitles: [["Play again?", "Well done! Please wait for your Teacher to continue", "Excellent ! Now continue with the next task on your assignment"],
                                 ["Noch einmal spielen?", "Gut gemacht! Bitte warten Sie auf Ihren Lehrer, um fortzufahren", "Ausgezeichnet! Fahren Sie jetzt mit der nächsten Aufgabe Ihres Auftrags fort"]],
                     description: [
                     "The selected board is applied when the game is fully solved"+
@@ -135,7 +169,13 @@ const strings = {
                     "<li><b>Nachbar-Einschränkung:</b> Ein Pentomino hat maximal so viele benachbarte Pentominoes wie spezifiziert in <i>Distanz-Wert</i>.</li>" +
                     "</ul>"]
             },
-            distanceValue: ["Distance value", "Distanz-Wert"]
+            distanceValue: {
+                title: ["Distance value", "Distanz-Wert"],
+                enumTitles: {
+                    distance: [["2"], ["3"], ["4"], ["5"]],
+                    pieces: [["3"], ["2"], ["1"], ["0"]]
+                }
+            }
         },
         theming: {
             title: ["Application theme", "Applikationsdesign"],
