@@ -19,7 +19,7 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
         clearButton.onclick = (event) => this.handleClickedOnClear(event, div);
         div.appendChild(clearButton);
         div.appendChild(document.createElement("br"));
-        let boardImg = SettingsForm.createImg("boardImg", {src: undefined, alt: "none"});
+        let boardImg = SettingsForm.createImg("boardImg", undefined, {alt: "none"});
         boardImg.style.width = '30vw';
         div.appendChild(boardImg);
         div.appendChild(SettingsForm.createLabel("Saved board: "));

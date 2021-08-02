@@ -188,8 +188,8 @@ const strings = {
         boardCustomization: {
             title: ["Board Customization", "Spielbrett Anpassung"],
             initialPiecePos: {
-                title: ["Predefine pentomino start positions", "Setze Pentomino-Startpositionen"],
-                description: ["When starting the app, pieces will be at their current position.", "Wenn ein Brett geladen wird, befinden sich die Pentominoes bereits an ihre momentane Position."]
+                title: ["Predefine start game", "Wähle das Start-Spielbrett"],
+                description: ["When starting the app, the saved board will be selected and pieces loaded at their saved position.", "Wenn die App gestartet wird, wird das gespeicherte Spielbrett geladen und die Spielsteine starten an ihrer gespeicherten Position."]
             }
         },
         errors: {
