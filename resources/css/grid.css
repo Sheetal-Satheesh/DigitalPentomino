@@ -1,9 +1,11 @@
 * {
    box-sizing: border-box;
 }
+
 h1 {
    text-align: center;
 }
+
 .outerGrid {
    left: 1vw;
    position: relative;
@@ -12,9 +14,9 @@ h1 {
 }
 
 .filterGrid {
-   position:fixed;
-   top:13vw;
-   bottom:10vw;
+   position: fixed;
+   top: 13vw;
+   bottom: 10vw;
    left: 3vw;
    width: 11vw;
    overflow-x: hidden;
@@ -29,9 +31,9 @@ h1 {
 }
 
 .innerGrid {
-   position:fixed;
-   top:12vw;
-   bottom:10vw;
+   position: fixed;
+   top: 12vw;
+   bottom: 10vw;
    float: left;
    display: flex;
    flex-wrap: wrap;
@@ -39,8 +41,8 @@ h1 {
    margin-left: 15vw;
    /* padding: 0 4px; */
    overflow-x: hidden;
- 
 }
+
 .innerGrid .imageDiv {
    position: relative;
    float: left;
@@ -56,6 +58,7 @@ h1 {
       max-width: 50vw;
    }
 }
+
 @media screen and (max-width: 600px) {
    .innerGrid {
       flex: 100vw;
@@ -64,62 +67,60 @@ h1 {
 }
 
 .imageDiv {
-    position: relative;
-    width: 20%;
-    margin: 5px;
-  }
+   position: relative;
+   width: 20%;
+   margin: 5px;
+}
 
 .screenshot {
-    opacity: 1;
-    display: block;
-    width: 100%;
-    height: auto;
-    transition: .5s ease;
-    backface-visibility: hidden;
-  }
+   opacity: 1;
+   display: block;
+   width: 100%;
+   height: auto;
+   transition: .5s ease;
+   backface-visibility: hidden;
+}
 
-  .imageBtnDiv {
-    transition: .5s ease;
-    opacity: 0;
-    position: absolute;
-    float: left;
-    padding-left: 1vw;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    -ms-transform: translate(-50%, -50%);
-  
-  }
+.imageBtnDiv {
+   transition: .5s ease;
+   opacity: 0;
+   position: absolute;
+   float: left;
+   padding-left: 1vw;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+   -ms-transform: translate(-50%, -50%);
+}
 
-  .imageDiv:hover .screenshot {
-    opacity: 0.2;
-  }
+.imageDiv:hover .screenshot {
+   opacity: 0.2;
+}
 
-  .imageDiv:hover .imageBtnDiv {
-    opacity: .5;
-  }
+.imageDiv:hover .imageBtnDiv {
+   opacity: .5;
+}
 
-  .fimageDiv:hover {
-     opacity: 0.6;
-  }
+.fimageDiv:hover {
+   opacity: 0.6;
+}
 
-
-
-  .imageButton {
-    color: white;
-    /* font-size: 10px;
+.imageButton {
+   color: white;
+   /* font-size: 10px;
     padding: 10px 20px;
     float: left;
     padding-left: 5vw;*/
-    width: 5vw;
-    margin-left:.3vw;
-    text-align: center;
-    border-radius: .3vw;
-  }
+   width: 5vw;
+   margin-left: .3vw;
+   text-align: center;
+   border-radius: .3vw;
+}
 
-  .imageLoadBtn {
-    background-color: #43c062;
-  }
-  .imageDeleteBtn {
-    background-color: #d34944;
-  }
+.imageLoadBtn {
+   background-color: #43c062;
+}
+
+.imageDeleteBtn {
+   background-color: #d34944;
+}
