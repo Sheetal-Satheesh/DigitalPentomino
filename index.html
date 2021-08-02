@@ -1068,9 +1068,9 @@
         function enableSnapshotButton() {
             $('#screenshot').prop('disabled', false);
         }
-        function deleteGameImage(key) {
-            pd.visual.deleteGameImage(key);
-            showGameImages();
+        function deleteGameImage(imgKey, gameId){
+            pd.visual.deleteGameImage(imgKey);
+            renderGallery(gameId);
         }
 
         function generateRandomColor() {
@@ -1091,6 +1091,10 @@
             template.clearContent("#innerGridForm");
 
             let images = pd.visual.getImagesByGameId(gameId);
+            if(images == undefined) {
+                return;
+            }
+            
             images.forEach((item) => {
                 let imgKey = Object.keys(item)[0];
                 let image = item[imgKey];
@@ -1111,7 +1115,7 @@
                 deleteBtn.setAttribute("class", "imageButton imageDeleteBtn");
                 deleteBtn.textContent = "Delete";
                 deleteBtn.addEventListener('click', function () {
-                    deleteGameImage(imgKey);
+                    deleteGameImage(imgKey, gameId);
                 }, false);
 
                 buttonDiv.appendChild(loadBtn);
