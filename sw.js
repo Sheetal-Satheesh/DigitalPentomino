@@ -1,3 +1,5 @@
+/* This implementation is adopted from Nicolas Bevacqua https://css-tricks.com/serviceworker-for-offline/ */
+
 var version = 'v1::';
 
 self.addEventListener("install", function(event) {
