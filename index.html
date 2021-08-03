@@ -152,7 +152,7 @@
                 <button type="button" id='gallery' class="cActionBtn" onclick="showGameImages()">
                     <img src="resources/images/icons/gallery_v2.png">
                 </button>
-                <button type="button" id='replay' class="cActionBtn" onclick="execReplay()">
+                <button type="button" id='replay' class="cActionBtn" onclick="showReplayUI()">
                     <img src="resources/images/icons/replay.svg">
                 </button>
                 <button type="button" id='reset' class="cActionBtn" onclick="resetGame()">
@@ -1083,7 +1083,32 @@
 
         }
 
-        function renderGallery(gameId) {
+        function addReplyFilterImage(img, stateType) {
+            let targetDiv;
+            if (stateType == "start") {
+                targetDiv = document.querySelector(".ftextDivStart");
+            } else {
+                targetDiv = document.querySelector(".ftextDivEnd");
+            }
+
+            targetDiv.innerHTML = "";
+            let childs = targetDiv.childNodes;
+            childs.forEach((item) => {
+                targetDiv.removeChild(item);
+            });
+
+            html2canvas(img).then(function (cloneImg) {
+                cloneImg.setAttribute("class", "screenshot");
+                cloneImg.style.width = '10vw';
+                cloneImg.style.height = '5.5vw';
+                cloneImg.value = img.value;
+                targetDiv.appendChild(cloneImg);
+                console.log(cloneImg.value);
+            });
+
+        }
+
+        function renderGallery(gameId, callerType = "Snapshot") {
 
             document.querySelector(".innerGrid").style.display = "block";
             let imageGrid = document.getElementById('innerGrid');
@@ -1098,37 +1123,40 @@
             images.forEach((item) => {
                 let imgKey = Object.keys(item)[0];
                 let image = item[imgKey];
+                image.value = imgKey;
                 let imageDiv = document.createElement("div");
-
-                imageDiv.addEventListener('click', function () {
-                    imageDiv.selected=true;
-                }, false);
-
                 imageDiv.setAttribute("class", "imageDiv");
-
-                let buttonDiv = document.createElement("div");
-                buttonDiv.setAttribute("class", "imageBtnDiv");
-
-                let loadBtn = document.createElement("button");
-                loadBtn.setAttribute("class", "imageButton imageLoadBtn");
-                loadBtn.textContent = "Load";
-                loadBtn.addEventListener('click', function () {
-                    loadGameImage(imgKey);
-                }, false);
-
-                let deleteBtn = document.createElement("button");
-                deleteBtn.setAttribute("class", "imageButton imageDeleteBtn");
-                deleteBtn.textContent = "Delete";
-                deleteBtn.addEventListener('click', function () {
-                    deleteGameImage(imgKey, gameId);
-                }, false);
-
-                buttonDiv.appendChild(loadBtn);
-                buttonDiv.appendChild(deleteBtn);
-
                 imageDiv.appendChild(image);
-                imageDiv.appendChild(buttonDiv);
                 imageGrid.appendChild(imageDiv);
+
+                if (callerType == "Snapshot") {
+                    let buttonDiv = document.createElement("div");
+                    buttonDiv.setAttribute("class", "imageBtnDiv");
+
+                    let loadBtn = document.createElement("button");
+                    loadBtn.setAttribute("class", "imageButton imageLoadBtn");
+                    loadBtn.textContent = "Load";
+                    loadBtn.addEventListener('click', function () {
+                        loadGameImage(imgKey);
+                    }, false);
+
+                    let deleteBtn = document.createElement("button");
+                    deleteBtn.setAttribute("class", "imageButton imageDeleteBtn");
+                    deleteBtn.textContent = "Delete";
+                    deleteBtn.addEventListener('click', function () {
+                        deleteGameImage(imgKey, gameId);
+                    }, false);
+
+                    buttonDiv.appendChild(loadBtn);
+                    buttonDiv.appendChild(deleteBtn);
+                    imageDiv.appendChild(buttonDiv);
+                }
+                else if (callerType.includes("Replay")) {
+                    let stateType = callerType.split(':');
+                    imageDiv.addEventListener('click', function () {
+                        addReplyFilterImage(imageDiv.childNodes[0], stateType[1]);
+                    }, false);
+                }
             });
         }
 
@@ -1186,9 +1214,23 @@
             });
         }
 
-        function execReplay() {
+        function execReplay(startGameState, currGameState) {
+            var modal = document.getElementById('modalTop');
+            modal.style.display = "none";
+
+            pd.replay(startGameState, currGameState);
+            this.enableSnapshotButton();
+        }
+
+
+        function showReplayUI() {
             let textStartState = "Choose Start State",
                 textEndState = "Choose End State";
+
+            if ($('.modalFormContainer').is(':visible')) {
+                this.closeModal();
+            }
+           
             this.disableSnapshotButton();
             this.disablePointerEventsOnPieces();
             this.hideManipulationButtons();
@@ -1213,7 +1255,7 @@
             fTextDiv.innerHTML += textStartState;
             fTextDiv.addEventListener('click', function () {
                 let gameId = pd.visual.getCurrentGameId();
-                renderGallery(gameId);
+                renderGallery(gameId, "Replay:start");
             }, false);
 
             imgFilterGrid.appendChild(fTextDiv);
@@ -1225,15 +1267,7 @@
             fTextDiv.innerHTML += textEndState;
             fTextDiv.addEventListener('click', function () {
                 let gameId = pd.visual.getCurrentGameId();
-                renderGallery(gameId);
-                let imgDivs = imageGrid.childNodes;
-                imgDivs.forEach((item) => {
-                    img = item.childNodes[0];
-                    if(item.selected){
-                        alert(img);
-                    }
-                    
-                });
+                renderGallery(gameId, "Replay:end");
             }, false);
 
             imgFilterGrid.appendChild(fTextDiv);
@@ -1251,16 +1285,13 @@
             replyBtn.setAttribute("class", "imageButton imageLoadBtn");
             replyBtn.style.position = "center";
             replyBtn.textContent = "Replay";
-            // loadBtn.addEventListener('click', function () {
-            //     loadGameImage(imgKey);
-            // }, false);
-            fButtonDiv.appendChild(replyBtn);
+            replyBtn.addEventListener('click', function () {
+                let startCmdKey = document.querySelector(".ftextDivStart").childNodes[0].value;
+                let endCmdKey = document.querySelector(".ftextDivEnd").childNodes[0].value;
 
-
-            fTextDiv.addEventListener('click', function () {
-                let gameId = pd.visual.getCurrentGameId();
-                renderGallery(gameId);
+                execReplay(startCmdKey, endCmdKey);
             }, false);
+            fButtonDiv.appendChild(replyBtn);
 
 
 
@@ -1284,76 +1315,7 @@
             //     template.clearContent("#innerGridForm");
             //     template.clearContent("#filterGrid");
 
-            //     let startGameState = pd.getGameState("start");
-            //     let currGameState = pd.getGameState("current");
 
-            //     if (startGameState == undefined) {
-            //         let textNode = {
-            //             name: "modalText",
-            //             text: "Game Not Started Yet ",
-            //         }
-
-            //         template.attachText("#modalTitleID", textNode);
-            //         return;
-            //     }
-
-            //     let allGameState = pd.getAllGameStates();
-
-            //     let selectStartElem = document.createElement("select");
-            //     selectStartElem.setAttribute("class", "StateSelect");
-            //     selectStartElem.setAttribute("id", "startStateOptions");
-            //     selectStartElem.setAttribute("style", "margin: 0 .5vw;");
-
-            //     let selectTargetElem = document.createElement("select");
-            //     selectTargetElem.setAttribute("class", "StateSelect");
-            //     selectTargetElem.setAttribute("id", "targetStateOptions");
-            //     selectTargetElem.setAttribute("style", "margin: 0 .5vw;");
-
-            //     for (let index = 0; index < allGameState.length; ++index) {
-            //         let optStart = document.createElement('option');
-            //         let optTarget = document.createElement('option');
-            //         optStart.value = allGameState[index];
-            //         optTarget.value = allGameState[index];
-            //         optStart.innerHTML = allGameState[index];
-            //         optTarget.innerHTML = allGameState[index];
-
-            //         if (allGameState[index] == startGameState) {
-            //             optStart.selected = "selected";
-            //             optStart.setAttribute("class", "selected");
-            //         }
-            //         else if (allGameState[index] == currGameState) {
-            //             optTarget.selected = "selected";
-            //             optTarget.setAttribute("class", "selected");
-
-            //         }
-
-            //         selectStartElem.appendChild(optStart);
-            //         selectTargetElem.appendChild(optTarget);
-            //     }
-
-            //     document.getElementById("modalBodyID").appendChild(selectStartElem);
-            //     document.getElementById("modalBodyID").appendChild(selectTargetElem);
-
-            //     var submit = document.createElement("input");
-            //     submit.setAttribute("type", "button");
-            //     submit.setAttribute("value", "Submit");
-            //     submit.setAttribute("class", "submitReplay");
-            //     submit.setAttribute("style", "margin: 0 .5vw;background-color:rgb(149, 172, 170);");
-            //     submit.onclick = function () {
-            //         let replayId = document.getElementById("replay");
-            //         let replayImg = replayId.children[0];
-            //         replayImg.setAttribute('src', 'resources/images/icons/pause.png');
-            //         let sValue = document.getElementById("startStateOptions").value;
-            //         let eValue = document.getElementById("targetStateOptions").value;
-            //         console.log(sValue);
-            //         console.log(eValue);
-            //         pd.replay(sValue, eValue);
-            //         modal.style.display = "none";
-
-            //     }
-            //     document.getElementById("modalBodyID").appendChild(submit);
-            //     this.enableSnapshotButton();
-            // }
         }
 
         function loadBoard(selectedBoard) {
