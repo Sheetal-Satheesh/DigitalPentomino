@@ -1218,6 +1218,10 @@
             var modal = document.getElementById('modalTop');
             modal.style.display = "none";
 
+            let replayId = document.getElementById("replay");
+            let replayImg = replayId.children[0];
+            replayImg.setAttribute('src', 'resources/images/icons/pause.png');
+
             pd.replay(startGameState, currGameState);
             this.enableSnapshotButton();
         }
@@ -1230,7 +1234,7 @@
             if ($('.modalFormContainer').is(':visible')) {
                 this.closeModal();
             }
-           
+
             this.disableSnapshotButton();
             this.disablePointerEventsOnPieces();
             this.hideManipulationButtons();
