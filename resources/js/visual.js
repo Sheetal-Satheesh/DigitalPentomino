@@ -1091,6 +1091,8 @@ class Visual {
         template.clearContent("#modalTitleID");
         template.clearContent("#modalBodyID");
         template.clearContent("#innerGridForm");
+        template.clearContent("#filterGrid");
+
         let lang = SettingsSingleton.getInstance().getSettings().general.language;
         //create div for image
         let textNode1 = {
