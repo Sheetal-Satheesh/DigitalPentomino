@@ -377,15 +377,6 @@ class GameLoader {
     }
 
     loadGameState(startStateKey, targetStateKey) {
-
-        // let currCmddKey = this._commandManager.CurrentCmdKey();
-        // if (this._game.getCmdKey() == undefined) {
-        //     let startCmdKey = this._commandManager.StartCmdKey();
-        //     let [cmdSequences, seqType] = this._commandManager.CmdSequences(startCmdKey, currCmddKey);
-        //     this.jumpToGameState(cmdSequences, seqType);
-        // }
-
-        // currCmddKey = this._commandManager.CurrentCmdKey();
         let [cmdSequences, seqType] = this._commandManager.CmdSequences(startStateKey, targetStateKey);
         this.jumpToGameState(cmdSequences, seqType);
 
