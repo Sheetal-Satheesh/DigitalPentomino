@@ -278,25 +278,23 @@ class GameLoader {
     }
 
     loadGame(targetCmdKey) {
-        for (let gameId in this._gameList) {
-            if (this.inCurrentGame(gameId)) {
-                this.loadGameState(this._commandManager.CurrentCmdKey(),
-                    targetCmdKey);
-                break;
-            }
-            else {
-                if (this._gameList.hasOwnProperty(gameId)) {
-                    for (let key in this._gameList[gameId].cmdKey) {
-                        if (this._gameList[gameId].cmdKey[key] == targetCmdKey) {
-                            this.setCmdManager(this._gameList[gameId].cmdManager);
-                            this.setGame(this._gameList[gameId].game);
-                            this.setHintAI(this._gameList[gameId].hintAI);
-                            this.loadGameState(this._commandManager.StartCmdKey(),
-                                this._commandManager.LastCmdKey());
-                            this.loadGameState(this._commandManager.CurrentCmdKey(),
-                                targetCmdKey);
-                            break;
-                        }
+        let targetGameId = this.getGameIdByKey(targetCmdKey);
+        if (this.inCurrentGame(targetGameId)) {
+            this.loadGameState(this._commandManager.CurrentCmdKey(),
+                targetCmdKey);
+        }
+        else {
+            if (this._gameList.hasOwnProperty(targetGameId)) {
+                for (let key in this._gameList[targetGameId].cmdKey) {
+                    if (this._gameList[targetGameId].cmdKey[key] == targetCmdKey) {
+                        this.setCmdManager(this._gameList[targetGameId].cmdManager);
+                        this.setGame(this._gameList[targetGameId].game);
+                        this.setHintAI(this._gameList[targetGameId].hintAI);
+                        this.loadGameState(this._commandManager.StartCmdKey(),
+                            this._commandManager.LastCmdKey());
+                        this.loadGameState(this._commandManager.LastCmdKey(),
+                            targetCmdKey);
+                        break;
                     }
                 }
             }
