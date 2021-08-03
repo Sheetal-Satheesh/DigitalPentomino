@@ -1228,7 +1228,10 @@
 
 
         function showReplayUI() {
-            let textStartState = "Choose Start State",
+            /*
+            TODO: Text should support multi language
+            */
+            let textStartState = "Choose Start State", 
                 textEndState = "Choose End State";
 
             if ($('.modalFormContainer').is(':visible')) {
@@ -1254,10 +1257,18 @@
 
             let fTextDiv = document.createElement("div");
             fTextDiv.setAttribute("class", "fTextDiv ftextDivStart");
-            fTextDiv.style.width = "10vw";
-            fTextDiv.style.height = "5.5vw";
+            fTextDiv.style.width = "10vw"; //TODO: add into grid.css
+            fTextDiv.style.height = "5.5vw"; //TODO: add into grid.css
             fTextDiv.innerHTML += textStartState;
             fTextDiv.addEventListener('click', function () {
+                let fDivStart = document.querySelector(".ftextDivStart");
+                fDivStart.style.border="2px dotted black";
+                fDivStart.style.color = "white";
+
+                let fDivEnd = document.querySelector(".ftextDivEnd");
+                fDivEnd.style.border="0";
+                fDivEnd.style.color="black";
+
                 let gameId = pd.visual.getCurrentGameId();
                 renderGallery(gameId, "Replay:start");
             }, false);
@@ -1266,10 +1277,18 @@
 
             fTextDiv = document.createElement("div");
             fTextDiv.setAttribute("class", "fTextDiv ftextDivEnd");
-            fTextDiv.style.width = "10vw";
-            fTextDiv.style.height = "5.5vw";
+            fTextDiv.style.width = "10vw"; //TODO: add into grid.css
+            fTextDiv.style.height = "5.5vw"; //TODO: add into grid.css
             fTextDiv.innerHTML += textEndState;
             fTextDiv.addEventListener('click', function () {
+                let fDivStart = document.querySelector(".ftextDivEnd");
+                fDivStart.style.border="2px dotted black";
+                fDivStart.style.color = "white";
+
+                let fDivEnd = document.querySelector(".ftextDivStart");
+                fDivEnd.style.border="0";
+                fDivEnd.style.color="black";
+
                 let gameId = pd.visual.getCurrentGameId();
                 renderGallery(gameId, "Replay:end");
             }, false);
@@ -1278,8 +1297,8 @@
 
             fButtonDiv = document.createElement("div");
             fButtonDiv.setAttribute("class", "fTextDiv");
-            fButtonDiv.style.width = "10vw";
-            fButtonDiv.style.height = "2vw";
+            fButtonDiv.style.width = "10vw"; //TODO: add into grid.css
+            fButtonDiv.style.height = "2vw"; //TODO: add into grid.css
             fButtonDiv.style.backgroundColor = "inherit";
             fButtonDiv.style.border = "0";
 
