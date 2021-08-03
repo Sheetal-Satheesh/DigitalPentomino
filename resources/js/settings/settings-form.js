@@ -189,7 +189,7 @@ class SettingsForm {
             let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
             let enumTexts = strings.settings.prefilling.distanceValue.enumTitles[evt.target.value];
             let enumElements = schema.prefilling.properties.distanceValue.enum;
-            
+
             //Remove the existing elements in the lsit
             for(let i = distValSelectElem.options.length -1; i >= 0; --i) {
                 distValSelectElem.remove(i);
@@ -216,10 +216,13 @@ class SettingsForm {
             //levels flexible to change help functionality
             switch (value) {
                 case "Easy":
+                    let v= $("select[name='hinting.hintingLevels']").find("option[value='Easy']");
+                    v.click(function() {
+                      //check exact hints
+                      $("input[name='hinting.exactHints']").prop('checked', true);
+                    });
                     //activate full hint
                     hintingStrategy.find('option[value="full"]').attr("selected", true);
-                    //check exact hints
-                    $(formElement).find("input[name='hinting.exactHints']").prop('checked', true);
                     //disable partial hinting
                     $(formElement).find("input[name='hinting.partialHintingStragety']").prop('checked', false);
                     //enable prefilling
@@ -228,12 +231,15 @@ class SettingsForm {
                 case "Medium":
                     //activate area hint
                     hintingStrategy.find('option[value="area"]').attr("selected", true);
+                    $("input[name='hinting.exactHints']").prop('checked', false);
                     break;
                 case "Difficult":
                     //activate partail hint
                     hintingStrategy.find('option[value="partial"]').attr("selected", true);
                     //disable prefilling
                     $(formElement).find("input[name='prefilling.enablePrefilling']").prop('checked', false);
+                    $("input[name='hinting.exactHints']").prop('checked', false);
+                    console.log("changes");
                     break;
                 case "Custom":
                     break;
