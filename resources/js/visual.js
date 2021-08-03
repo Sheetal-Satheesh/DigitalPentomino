@@ -1092,7 +1092,6 @@ class Visual {
         template.clearContent("#modalBodyID");
         template.clearContent("#innerGridForm");
         template.clearContent("#filterGrid");
-
         let lang = SettingsSingleton.getInstance().getSettings().general.language;
         //create div for image
         let textNode1 = {
@@ -1657,6 +1656,9 @@ class Visual {
 
     getLastGameimages(gameId) {
         return this.gameController.getLastGameimages(gameId);
+    }
+    getCurrentGameId(){
+        return this.gameController.getCurrentGameId();
     }
 
     saveGameImage(image) {

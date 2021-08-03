@@ -124,3 +124,23 @@ h1 {
 .imageDeleteBtn {
    background-color: #d34944;
 }
+
+.fTextDiv {
+   position: relative;
+   border: 1px solid green;
+   font: bold;
+   font-family: "Times New Roman", Times, serif;
+   font-size: 100%;
+   font-style: oblique;
+   font-weight: bold;
+   margin: 1vw;
+   width: 10%;
+   text-align: center;
+   align-items: center;
+   justify-content: center;
+   background-color: #12a805;
+}
+
+.fTextDiv:active{
+   background-color: #d34944;
+}

@@ -152,7 +152,7 @@
                 <button type="button" id='gallery' class="cActionBtn" onclick="showGameImages()">
                     <img src="resources/images/icons/gallery_v2.png">
                 </button>
-                <button type="button" id='replay' class="cActionBtn" onclick="execReplay()">
+                <button type="button" id='replay' class="cActionBtn" onclick="showReplayUI()">
                     <img src="resources/images/icons/replay.svg">
                 </button>
                 <button type="button" id='reset' class="cActionBtn" onclick="resetGame()">
@@ -447,9 +447,9 @@
             document.getElementById('boardmodalTop').style.display = 'none';
             this.closeModalContainer();
             this.enableSnapshotButton();
-            if ($('#birdContainer').is(':visible')){
+            if ($('#birdContainer').is(':visible')) {
                 this.showBubbleContainer();
-            }           
+            }
         }
 
         function callHintAI() {
@@ -653,18 +653,18 @@
             document.getElementById("modalFormContainerID").style.backgroundColor = "#dcf0ed";
             document.getElementById("modalFormContainerID").style.border = "none";
             let y = document.getElementsByClassName("cActionBtn");
-            for(let i = 0; i< y.length; i++){ y[i].style.pointerEvents = "none"; }
-            $(".modalFormContent").css( "display", "none" );
+            for (let i = 0; i < y.length; i++) { y[i].style.pointerEvents = "none"; }
+            $(".modalFormContent").css("display", "none");
             //show back button
             let btn = document.getElementById("backButton");
             btn.style.display = "block";
             $(".close").click(function () {
-              document.getElementById("modalTop").style.display = "none";
+                document.getElementById("modalTop").style.display = "none";
                 if ($("#licencesTable")) {
                     document.getElementById("licencesTable").style.display = "none";
                     document.getElementById("licenseHeading").style.display = "none";
                     document.getElementById("tableLicenseDiv").style.display = "none";
-                    for(let i = 0; i< y.length; i++){ y[i].style.pointerEvents = "auto"; }
+                    for (let i = 0; i < y.length; i++) { y[i].style.pointerEvents = "auto"; }
                 }
             });
             btn.onclick = function () {
@@ -674,11 +674,11 @@
                     document.getElementById("licencesTable").style.display = "none";
                     document.getElementById("licenseHeading").style.display = "none";
                     document.getElementById("tableLicenseDiv").style.display = "none";
-                    for(let i = 0; i< y.length; i++){ y[i].style.pointerEvents = "auto"; }
+                    for (let i = 0; i < y.length; i++) { y[i].style.pointerEvents = "auto"; }
                 }
                 document.getElementById("licenseHeading").style.display = "none";
-                if(div5){
-                  div5.style.display = "none";
+                if (div5) {
+                    div5.style.display = "none";
                 }
                 SettingsForm.updateForm($('#innerGridForm')[0], settings);
                 btn.style.display = "none";
@@ -742,12 +742,12 @@
                         let entry = subSettings[key][lang];
                         let imageElement;
                         const subString = "image";
-                        if(entry.includes(subString)){
-                          imageElement = document.createElement("img");
-                          imageElement.setAttribute("style", "width: 10vw; height: 10vw; border: 2px solid black; text-align: center; border:transparent");
-                          let img_src = "resources/images/icons/" + heading +".ico";
-                          imageElement.setAttribute("src", img_src);
-                          td.appendChild(imageElement);
+                        if (entry.includes(subString)) {
+                            imageElement = document.createElement("img");
+                            imageElement.setAttribute("style", "width: 10vw; height: 10vw; border: 2px solid black; text-align: center; border:transparent");
+                            let img_src = "resources/images/icons/" + heading + ".ico";
+                            imageElement.setAttribute("src", img_src);
+                            td.appendChild(imageElement);
                         }
                         td.style.width = '20vw';
                         td.style.padding = "1vw";
@@ -1068,7 +1068,7 @@
         function enableSnapshotButton() {
             $('#screenshot').prop('disabled', false);
         }
-        function deleteGameImage(imgKey, gameId){
+        function deleteGameImage(imgKey, gameId) {
             pd.visual.deleteGameImage(imgKey);
             renderGallery(gameId);
         }
@@ -1083,7 +1083,32 @@
 
         }
 
-        function renderGallery(gameId) {
+        function addReplyFilterImage(img, stateType) {
+            let targetDiv;
+            if (stateType == "start") {
+                targetDiv = document.querySelector(".ftextDivStart");
+            } else {
+                targetDiv = document.querySelector(".ftextDivEnd");
+            }
+
+            targetDiv.innerHTML = "";
+            let childs = targetDiv.childNodes;
+            childs.forEach((item) => {
+                targetDiv.removeChild(item);
+            });
+
+            html2canvas(img).then(function (cloneImg) {
+                cloneImg.setAttribute("class", "screenshot");
+                cloneImg.style.width = '10vw';
+                cloneImg.style.height = '5.5vw';
+                cloneImg.value = img.value;
+                targetDiv.appendChild(cloneImg);
+                console.log(cloneImg.value);
+            });
+
+        }
+
+        function renderGallery(gameId, callerType = "Snapshot") {
 
             document.querySelector(".innerGrid").style.display = "block";
             let imageGrid = document.getElementById('innerGrid');
@@ -1091,39 +1116,47 @@
             template.clearContent("#innerGridForm");
 
             let images = pd.visual.getImagesByGameId(gameId);
-            if(images == undefined) {
+            if (images == undefined) {
                 return;
             }
-            
+
             images.forEach((item) => {
                 let imgKey = Object.keys(item)[0];
                 let image = item[imgKey];
+                image.value = imgKey;
                 let imageDiv = document.createElement("div");
                 imageDiv.setAttribute("class", "imageDiv");
-
-                let buttonDiv = document.createElement("div");
-                buttonDiv.setAttribute("class", "imageBtnDiv");
-
-                let loadBtn = document.createElement("button");
-                loadBtn.setAttribute("class", "imageButton imageLoadBtn");
-                loadBtn.textContent = "Load";
-                loadBtn.addEventListener('click', function () {
-                    loadGameImage(imgKey);
-                }, false);
-
-                let deleteBtn = document.createElement("button");
-                deleteBtn.setAttribute("class", "imageButton imageDeleteBtn");
-                deleteBtn.textContent = "Delete";
-                deleteBtn.addEventListener('click', function () {
-                    deleteGameImage(imgKey, gameId);
-                }, false);
-
-                buttonDiv.appendChild(loadBtn);
-                buttonDiv.appendChild(deleteBtn);
-
                 imageDiv.appendChild(image);
-                imageDiv.appendChild(buttonDiv);
                 imageGrid.appendChild(imageDiv);
+
+                if (callerType == "Snapshot") {
+                    let buttonDiv = document.createElement("div");
+                    buttonDiv.setAttribute("class", "imageBtnDiv");
+
+                    let loadBtn = document.createElement("button");
+                    loadBtn.setAttribute("class", "imageButton imageLoadBtn");
+                    loadBtn.textContent = "Load";
+                    loadBtn.addEventListener('click', function () {
+                        loadGameImage(imgKey);
+                    }, false);
+
+                    let deleteBtn = document.createElement("button");
+                    deleteBtn.setAttribute("class", "imageButton imageDeleteBtn");
+                    deleteBtn.textContent = "Delete";
+                    deleteBtn.addEventListener('click', function () {
+                        deleteGameImage(imgKey, gameId);
+                    }, false);
+
+                    buttonDiv.appendChild(loadBtn);
+                    buttonDiv.appendChild(deleteBtn);
+                    imageDiv.appendChild(buttonDiv);
+                }
+                else if (callerType.includes("Replay")) {
+                    let stateType = callerType.split(':');
+                    imageDiv.addEventListener('click', function () {
+                        addReplyFilterImage(imageDiv.childNodes[0], stateType[1]);
+                    }, false);
+                }
             });
         }
 
@@ -1181,95 +1214,112 @@
             });
         }
 
-        function execReplay() {
+        function execReplay(startGameState, currGameState) {
             var modal = document.getElementById('modalTop');
+            modal.style.display = "none";
+
+            let replayId = document.getElementById("replay");
+            let replayImg = replayId.children[0];
+            replayImg.setAttribute('src', 'resources/images/icons/pause.png');
+
+            pd.replay(startGameState, currGameState);
+            this.enableSnapshotButton();
+        }
+
+
+        function showReplayUI() {
+            let textStartState = "Choose Start State",
+                textEndState = "Choose End State";
+
             if ($('.modalFormContainer').is(':visible')) {
                 this.closeModal();
             }
-            else {
-                this.disableSnapshotButton();
-                this.hideManipulationButtons();
-                this.disablePointerEventsOnPieces();
-                modal.style.display = "block";
-                modal.style.background = "transparent";
-                document.querySelector(".modalFormContent").style.display = "block";
-                document.querySelector(".innerGrid").style.display = "none";
-                template.clearContent("#modalButtonsID");
-                template.clearContent("#modalTitleID");
-                template.clearContent("#modalBodyID");
-                template.clearContent("#innerGridForm");
-                template.clearContent("#filterGrid");
 
-                let startGameState = pd.getGameState("start");
-                let currGameState = pd.getGameState("current");
+            this.disableSnapshotButton();
+            this.disablePointerEventsOnPieces();
+            this.hideManipulationButtons();
 
-                if (startGameState == undefined) {
-                    let textNode = {
-                        name: "modalText",
-                        text: "Game Not Started Yet ",
-                    }
+            var modal = document.getElementById('modalTop');
+            modal.style.background = " rgb(220, 240, 237)";
+            modal.style.display = "block";
 
-                    template.attachText("#modalTitleID", textNode);
-                    return;
-                }
+            document.querySelector(".modalFormContent").style.display = "none";
+            document.querySelector(".outerGrid").style.display = "block";
 
-                let allGameState = pd.getAllGameStates();
+            let imageGrid = document.getElementById('innerGrid');
+            let imgFilterGrid = document.getElementById('filterGrid');
+            template.clearContent(".innerGrid");
+            template.clearContent("#innerGridForm");
+            template.clearContent("#filterGrid");
 
-                let selectStartElem = document.createElement("select");
-                selectStartElem.setAttribute("class", "StateSelect");
-                selectStartElem.setAttribute("id", "startStateOptions");
-                selectStartElem.setAttribute("style", "margin: 0 .5vw;");
+            let fTextDiv = document.createElement("div");
+            fTextDiv.setAttribute("class", "fTextDiv ftextDivStart");
+            fTextDiv.style.width = "10vw";
+            fTextDiv.style.height = "5.5vw";
+            fTextDiv.innerHTML += textStartState;
+            fTextDiv.addEventListener('click', function () {
+                let gameId = pd.visual.getCurrentGameId();
+                renderGallery(gameId, "Replay:start");
+            }, false);
 
-                let selectTargetElem = document.createElement("select");
-                selectTargetElem.setAttribute("class", "StateSelect");
-                selectTargetElem.setAttribute("id", "targetStateOptions");
-                selectTargetElem.setAttribute("style", "margin: 0 .5vw;");
+            imgFilterGrid.appendChild(fTextDiv);
 
-                for (let index = 0; index < allGameState.length; ++index) {
-                    let optStart = document.createElement('option');
-                    let optTarget = document.createElement('option');
-                    optStart.value = allGameState[index];
-                    optTarget.value = allGameState[index];
-                    optStart.innerHTML = allGameState[index];
-                    optTarget.innerHTML = allGameState[index];
+            fTextDiv = document.createElement("div");
+            fTextDiv.setAttribute("class", "fTextDiv ftextDivEnd");
+            fTextDiv.style.width = "10vw";
+            fTextDiv.style.height = "5.5vw";
+            fTextDiv.innerHTML += textEndState;
+            fTextDiv.addEventListener('click', function () {
+                let gameId = pd.visual.getCurrentGameId();
+                renderGallery(gameId, "Replay:end");
+            }, false);
 
-                    if (allGameState[index] == startGameState) {
-                        optStart.selected = "selected";
-                        optStart.setAttribute("class", "selected");
-                    }
-                    else if (allGameState[index] == currGameState) {
-                        optTarget.selected = "selected";
-                        optTarget.setAttribute("class", "selected");
+            imgFilterGrid.appendChild(fTextDiv);
 
-                    }
+            fButtonDiv = document.createElement("div");
+            fButtonDiv.setAttribute("class", "fTextDiv");
+            fButtonDiv.style.width = "10vw";
+            fButtonDiv.style.height = "2vw";
+            fButtonDiv.style.backgroundColor = "inherit";
+            fButtonDiv.style.border = "0";
 
-                    selectStartElem.appendChild(optStart);
-                    selectTargetElem.appendChild(optTarget);
-                }
+            imgFilterGrid.appendChild(fButtonDiv);
 
-                document.getElementById("modalBodyID").appendChild(selectStartElem);
-                document.getElementById("modalBodyID").appendChild(selectTargetElem);
+            let replyBtn = document.createElement("button");
+            replyBtn.setAttribute("class", "imageButton imageLoadBtn");
+            replyBtn.style.position = "center";
+            replyBtn.textContent = "Replay";
+            replyBtn.addEventListener('click', function () {
+                let startCmdKey = document.querySelector(".ftextDivStart").childNodes[0].value;
+                let endCmdKey = document.querySelector(".ftextDivEnd").childNodes[0].value;
 
-                var submit = document.createElement("input");
-                submit.setAttribute("type", "button");
-                submit.setAttribute("value", "Submit");
-                submit.setAttribute("class", "submitReplay");
-                submit.setAttribute("style", "margin: 0 .5vw;background-color:rgb(149, 172, 170);");
-                submit.onclick = function () {
-                    let replayId = document.getElementById("replay");
-                    let replayImg = replayId.children[0];
-                    replayImg.setAttribute('src', 'resources/images/icons/pause.png');
-                    let sValue = document.getElementById("startStateOptions").value;
-                    let eValue = document.getElementById("targetStateOptions").value;
-                    console.log(sValue);
-                    console.log(eValue);
-                    pd.replay(sValue, eValue);
-                    modal.style.display = "none";
+                execReplay(startCmdKey, endCmdKey);
+            }, false);
+            fButtonDiv.appendChild(replyBtn);
 
-                }
-                document.getElementById("modalBodyID").appendChild(submit);
-                this.enableSnapshotButton();
-            }
+
+
+
+            // var modal = document.getElementById('modalTop');
+            // if ($('.modalFormContainer').is(':visible')) {
+            //     this.closeModal();
+            // }
+            // else {
+            //     this.disableSnapshotButton();
+            //     this.hideManipulationButtons();
+            //     this.disablePointerEventsOnPieces();
+            //     modal.style.display = "block";
+            //     modal.style.background = "transparent";
+            //     document.querySelector(".modalFormContent").style.display = "none";
+            //     document.querySelector(".outerGrid").style.display = "block";
+
+            //     let imageGrid = document.getElementById('innerGrid');
+            //     let imgFilterGrid = document.getElementById('filterGrid');
+            //     template.clearContent(".innerGrid");
+            //     template.clearContent("#innerGridForm");
+            //     template.clearContent("#filterGrid");
+
+
         }
 
         function loadBoard(selectedBoard) {
@@ -1282,11 +1332,11 @@
             document.getElementById("board_selection_form").style.display = "none";
         }
 
-        function showBubbleContainer(){
+        function showBubbleContainer() {
             document.getElementById('bubbleContainer').style.display = "block";
         }
 
-        function hideBubbleContainer(){
+        function hideBubbleContainer() {
             document.getElementById('bubbleContainer').style.display = "none";
         }
 
