@@ -25,6 +25,7 @@ class GameLoader {
          */
         this._gameList = {};
         this._gameImages = [];
+        this._gameLastImages = {};
 
         /**[
          *  gameId : {
@@ -50,8 +51,49 @@ class GameLoader {
         return this._game;
     }
 
+    getCurrentGameKey() {
+        return this._game.getId();
+    }
+
     getGameImages() {
         return this._gameImages;
+    }
+
+    getImagesByGameId(gameId) {
+        if (!this._gameList.hasOwnProperty(gameId)) {
+            return false;
+        }
+        
+        let cmdKeys = this._gameList[gameId].cmdKey;
+        let localImages = [];
+        cmdKeys.forEach((item) => {
+            this._gameImages.forEach((gameImg) => {
+                if (Object.keys(gameImg) == item) {
+                    localImages.push(gameImg);
+                }
+            });
+        }, this);
+
+        return localImages;
+    }
+
+    getAllGameIds() {
+        let gameIds = [];
+        for (let gameEntry in this._gameList) {
+            gameIds.push(gameEntry);
+        }
+        return gameIds;
+    }
+
+    getLastGameimages(gameId) {
+        let gameIds = this.getAllGameIds();
+        if (gameIds.find(id => id === gameId)) {
+            return this._gameLastImages[gameId];
+        }
+        else {
+            console.error("Game Id:" + gameId + "not found in gameList");
+            return undefined;
+        }
     }
 
     getGames() {
@@ -173,11 +215,18 @@ class GameLoader {
 
             this._gameList[gameId].cmdKey = this._gameList[gameId].cmdKey.filter(
                 (cmdKey) => cmdKey !== undefined);
+
+            return true;
         }
         else {
+            if (this._gameList[gameId].cmdKey.find(key => key == cmdKey)) {
+                return false;
+            }
             this._gameList[gameId].cmdKey.push(cmdKey);
             this._gameList[gameId].cmdManager = cmdManagerClone;
             this._gameList[gameId].hintAI = hintAIClone;
+
+            return true;
         }
     }
 
@@ -192,6 +241,7 @@ class GameLoader {
             this._gameList[gmId].cmdKey = this._gameList[gmId].cmdKey.filter(item => item !== key);
             if (this._gameList[gmId].cmdKey.length == 0) {
                 delete this._gameList[gmId];
+                delete this._gameLastImages[gmId];
                 break;
             }
         }
@@ -202,8 +252,17 @@ class GameLoader {
         if (cmdKey == undefined) {
             return;
         }
+        let currGameId = this._game.getId();
+        const imgType = image.getAttribute('type');
+        if (imgType === "copy") {
+            this._gameLastImages[currGameId] = image;
+            return;
+        }
 
-        this.saveGame();
+        let verdict = this.saveGame();
+        if (verdict == false) {
+            return;
+        }
         this._gameImages.push({
             [cmdKey]: image
         });

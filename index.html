@@ -109,6 +109,7 @@
                         src="resources/images/icons/back.png"></button>
                 <div class="modalContainer" id="modalContainerID">
                     <div class="outerGrid">
+                        <div class="filterGrid" id="filterGrid"></div>
                         <div class="innerGrid" id="innerGrid"></div>
                         <form id="innerGridForm"></form>
                     </div>
@@ -410,6 +411,7 @@
                 template.clearContent("#modalTitleID");
                 template.clearContent("#modalBodyID");
                 template.clearContent("#innerGridForm");
+                template.clearContent("#filterGrid");
 
                 let lang = SettingsSingleton.getInstance().getSettings().general.language;
 
@@ -611,6 +613,7 @@
             template.clearContent("#modalBodyID");
             template.clearContent(".innerGrid")
             template.clearContent("#innerGridForm");
+            template.clearContent("#filterGrid");
 
             //add form to attach settings to
             //$('#innerGridForm').jsonForm({
@@ -801,6 +804,7 @@
             template.clearContent("#modalTitleID");
             template.clearContent("#modalBodyID");
             template.clearContent("#innerGridForm");
+            template.clearContent("#filterGrid");
 
             let div1 = document.createElement("div");
             let h5 = document.createElement("h2");
@@ -1026,10 +1030,25 @@
 
             html2canvas(gameElem).then(function (screeshot) {
                 screeshot.setAttribute("class", "screenshot");
+                screeshot.setAttribute("type", "original");
                 screeshot.style.width = '25vw';
                 screeshot.style.height = '15vw';
                 screeshot.style.border = "2px solid black";
                 gameImage = screeshot;
+                pd.visual.saveGameImage(gameImage);
+            });
+
+            /* 
+                This duplicate has bad consequences in performance respect to times.
+                Optimization required in future.
+            */
+            html2canvas(gameElem).then(function (screeshotCopy) {
+                screeshotCopy.setAttribute("class", "screeshot");
+                screeshotCopy.setAttribute("type", "copy");
+                screeshotCopy.style.width = '25vw';
+                screeshotCopy.style.height = '15vw';
+                screeshotCopy.style.border = "2px solid black";
+                gameImage = screeshotCopy;
                 pd.visual.saveGameImage(gameImage);
             });
         }
@@ -1049,9 +1068,9 @@
         function enableSnapshotButton() {
             $('#screenshot').prop('disabled', false);
         }
-        function deleteGameImage(key) {
-            pd.visual.deleteGameImage(key);
-            showGameImages();
+        function deleteGameImage(imgKey, gameId){
+            pd.visual.deleteGameImage(imgKey);
+            renderGallery(gameId);
         }
 
         function generateRandomColor() {
@@ -1064,36 +1083,23 @@
 
         }
 
-        function showGameImages() {
-            var modal = document.getElementById('modalTop');
-            this.disablePointerEventsOnPieces();
-            this.hideManipulationButtons();
-            this.hideBubbleContainer();
-            modal.style.background = " #eceaea";
-            modal.style.display = "block";
+        function renderGallery(gameId) {
 
-            document.querySelector(".modalFormContent").style.display = "none";
             document.querySelector(".innerGrid").style.display = "block";
-
-            let imageList = pd.visual.showGameImages();
             let imageGrid = document.getElementById('innerGrid');
             template.clearContent(".innerGrid");
             template.clearContent("#innerGridForm");
-            let gameId = undefined;
-            let borderColor = generateRandomColor();
 
-            imageList.forEach((item) => {
+            let images = pd.visual.getImagesByGameId(gameId);
+            if(images == undefined) {
+                return;
+            }
+            
+            images.forEach((item) => {
                 let imgKey = Object.keys(item)[0];
                 let image = item[imgKey];
                 let imageDiv = document.createElement("div");
                 imageDiv.setAttribute("class", "imageDiv");
-
-                if (gameId != pd.visual.getGameIdByKey(imgKey)) {
-                    gameId = pd.visual.getGameIdByKey(imgKey);
-                    borderColor = generateRandomColor();
-                }
-                imageDiv.style.borderWidth = "3px";
-                imageDiv.style.borderColor = borderColor;
 
                 let buttonDiv = document.createElement("div");
                 buttonDiv.setAttribute("class", "imageBtnDiv");
@@ -1105,14 +1111,12 @@
                     loadGameImage(imgKey);
                 }, false);
 
-
                 let deleteBtn = document.createElement("button");
                 deleteBtn.setAttribute("class", "imageButton imageDeleteBtn");
                 deleteBtn.textContent = "Delete";
                 deleteBtn.addEventListener('click', function () {
-                    deleteGameImage(imgKey);
+                    deleteGameImage(imgKey, gameId);
                 }, false);
-
 
                 buttonDiv.appendChild(loadBtn);
                 buttonDiv.appendChild(deleteBtn);
@@ -1120,9 +1124,61 @@
                 imageDiv.appendChild(image);
                 imageDiv.appendChild(buttonDiv);
                 imageGrid.appendChild(imageDiv);
-
             });
+        }
 
+        function showGameImages() {
+            var modal = document.getElementById('modalTop');
+            this.disableSnapshotButton();
+            this.disablePointerEventsOnPieces();
+            this.hideManipulationButtons();
+            modal.style.background = " rgb(220, 240, 237)";
+            modal.style.display = "block";
+
+            document.querySelector(".modalFormContent").style.display = "none";
+            document.querySelector(".outerGrid").style.display = "block";
+
+            let imageGrid = document.getElementById('innerGrid');
+            let imgFilterGrid = document.getElementById('filterGrid');
+            template.clearContent(".innerGrid");
+            template.clearContent("#innerGridForm");
+            template.clearContent("#filterGrid");
+
+            let currGmKey = pd.visual.getCurrentGameKey();
+            let gameIds = pd.visual.getAllGameIds();
+
+            gameIds.forEach((gameId) => {
+                let img = pd.visual.getLastGameimages(gameId);
+                if (img == undefined) {
+                    return;
+                }
+
+                if (gameId == currGmKey) {
+                    img.style.filter = "brightness(120%) saturate(120%)";
+                    img.style.border = ".2vw solid rgb(2, 71, 62)";
+                    img.style.background = "yellow";
+                    let images = pd.visual.getImagesByGameId(currGmKey)
+                    renderGallery(gameId);
+                }
+                else {
+                    img.style.border = "0";
+                }
+
+                /* All css property should be aligned with generic IPad design perspective*/
+                img.setAttribute("class", "filterImage");
+                img.style.width = "10vw";
+                img.style.height = "5.5vw";
+
+                let fImgDiv = document.createElement("div");
+                fImgDiv.setAttribute("class", "fimageDiv");
+
+                img.addEventListener('click', function () {
+                    renderGallery(gameId);
+                }, false);
+
+                fImgDiv.appendChild(img);
+                imgFilterGrid.appendChild(fImgDiv);
+            });
         }
 
         function execReplay() {
@@ -1142,6 +1198,7 @@
                 template.clearContent("#modalTitleID");
                 template.clearContent("#modalBodyID");
                 template.clearContent("#innerGridForm");
+                template.clearContent("#filterGrid");
 
                 let startGameState = pd.getGameState("start");
                 let currGameState = pd.getGameState("current");

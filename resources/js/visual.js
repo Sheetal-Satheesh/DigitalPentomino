@@ -102,7 +102,7 @@ class Visual {
 
     placePentomino(pentomino, posX, posY, cmdProperty = cmdAttrDefault) {
         this.gameController.placePentomino(pentomino, posX, posY, cmdProperty);
-        if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
+        if (SettingsSingleton.getInstance().getSettings().general.enableAudio) {
             let audio = new Audio('resources/audio/snap.wav');
             audio.play();
         }
@@ -280,7 +280,7 @@ class Visual {
             if (collisonFnd) {
                 let collisonPentomino = this.gameController.getCollisionOfPentominoes(piece).pop();
                 this.overlapBlock.add(piece, collisonPentomino);
-                if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
+                if (SettingsSingleton.getInstance().getSettings().general.enableAudio) {
                     let audio = new Audio('resources/audio/collision.mp3');
                     audio.play();
                 }
@@ -796,7 +796,7 @@ class Visual {
         }
         let hintCommand = hint.getCommands()[commandNumber];
         let hintinPen = hintCommand._pentomino;
-        if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
+        if (SettingsSingleton.getInstance().getSettings().general.enableAudio) {
             let audio = new Audio('resources/audio/hinting.mp3');
             audio.play();
         }
@@ -1091,6 +1091,8 @@ class Visual {
         template.clearContent("#modalTitleID");
         template.clearContent("#modalBodyID");
         template.clearContent("#innerGridForm");
+        template.clearContent("#filterGrid");
+
         let lang = SettingsSingleton.getInstance().getSettings().general.language;
         //create div for image
         let textNode1 = {
@@ -1352,7 +1354,7 @@ class Visual {
 
     prefillBoard() {
         this.readyForPrefilling();
-        if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
+        if (SettingsSingleton.getInstance().getSettings().general.enableAudio) {
             let audio = new Audio('resources/audio/prefill.mp3');
             audio.play();
         }
@@ -1644,6 +1646,19 @@ class Visual {
     getGameIdByKey(key) {
         return this.gameController.getGameIdByKey(key);
     }
+
+    getAllGameIds() {
+        return this.gameController.getAllGameIds();
+    }
+
+    getImagesByGameId(gameId) {
+        return this.gameController.getImagesByGameId(gameId);
+    }
+
+    getLastGameimages(gameId) {
+        return this.gameController.getLastGameimages(gameId);
+    }
+
     saveGameImage(image) {
         this.gameController.saveGameImage(image);
     }
@@ -1655,6 +1670,10 @@ class Visual {
 
     deleteGameImage(key) {
         this.gameController.deleteGameImage(key);
+    }
+
+    getCurrentGameKey() {
+        return this.gameController.getCurrentGameKey();
     }
 
     loadGame(key) {

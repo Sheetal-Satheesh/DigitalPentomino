@@ -77,8 +77,16 @@ class GameController {
         return this._gameLoader.getGameImages();
     }
 
+    getLastGameimages(gameId) {
+        return this._gameLoader.getLastGameimages(gameId);
+    }
+
     loadGame(key) {
         this._gameLoader.loadGame(key);
+    }
+
+    getCurrentGameKey() {
+        return this._gameLoader.getCurrentGameKey();
     }
 
     cmdManager() {
@@ -119,6 +127,14 @@ class GameController {
 
     getGameIdByKey(key) {
         return this._gameLoader.getGameIdByKey(key);
+    }
+
+    getAllGameIds() {
+        return this._gameLoader.getAllGameIds();
+    }
+
+    getImagesByGameId(gameId) {
+        return this._gameLoader.getImagesByGameId(gameId);
     }
 
     exceptionHandler(pentomino) {
