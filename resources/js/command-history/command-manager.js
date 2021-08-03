@@ -99,6 +99,10 @@ class CommandManager {
         return this._cmdTree.CurrentCmdKey();
     }
 
+    NodeCount(){
+        return this._cmdTree.NodeCount();
+    }
+
     IsKeyFound(key) {
         let retNode = this._cmdTree.SearchCmdNode(
             this._cmdTree.Root(), key);

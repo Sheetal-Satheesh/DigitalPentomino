@@ -1215,6 +1215,12 @@
         }
 
         function execReplay(startGameState, currGameState) {
+
+            if(startGameState == undefined ||
+            currGameState == undefined){
+                console.warning("Start Or End game state not selected");
+                return;
+            }
             var modal = document.getElementById('modalTop');
             modal.style.display = "none";
 

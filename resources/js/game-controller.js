@@ -109,6 +109,10 @@ class GameController {
         return this.cmdManager().CurrentCmdKey();
     }
 
+    getOperationCount(){
+        return this.cmdManager().NodeCount();
+    }
+
     getCmdSequences(startKey, endKey) {
         if (this.cmdManager().IsKeyFound(startKey) == false) {
             throw new Error("Selected Game State Not Found :(");

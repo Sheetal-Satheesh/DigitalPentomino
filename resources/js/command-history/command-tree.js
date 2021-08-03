@@ -95,6 +95,19 @@ class CommandTree {
         return retNode;
     }
 
+    NodeCount(currentNode=this._rootCmdNode) {
+        if (currentNode == undefined) {
+            return 0;
+        }
+
+        for (let indx = 0; indx < currentNode.Children().length; ++indx) {
+            let childs = currentNode.Children();
+            return (1 + this.NodeCount(childs[indx]));
+        }
+
+        return 1;
+    }
+
     CollectCmdKeySequences(
         currNode,
         startKey,

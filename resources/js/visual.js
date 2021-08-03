@@ -100,6 +100,23 @@ class Visual {
         }
     }
 
+    takeSnapshot(){
+        if(this.gameController.getOperationCount() == 1){
+            let gameImage = undefined;
+            let gameElem = document.getElementById('playarea');
+            let visObj = this;
+
+            html2canvas(gameElem).then(function (screeshot) {
+                screeshot.setAttribute("class", "screenshot");
+                screeshot.setAttribute("type", "original");
+                screeshot.style.width = '25vw';
+                screeshot.style.height = '15vw';
+                screeshot.style.border = "2px solid black";
+                gameImage = screeshot;
+                visObj.saveGameImage(gameImage);
+            });
+        }
+    }
     placePentomino(pentomino, posX, posY, cmdProperty = cmdAttrDefault) {
         this.gameController.placePentomino(pentomino, posX, posY, cmdProperty);
         if (SettingsSingleton.getInstance().getSettings().general.enableAudio) {
@@ -109,6 +126,12 @@ class Visual {
         this.positionPiece(pentomino);
         if (cmdProperty.cmdType != CommandTypes.Shadow) {
             this.checkIfGameWon();
+            /** TODO:
+             * This is only for first snapshot, must restructure when supporting 
+             * Auto snapshots
+             * */
+            
+            this.takeSnapshot();
         }
     }
 
