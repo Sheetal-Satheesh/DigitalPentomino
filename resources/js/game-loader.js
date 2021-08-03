@@ -51,6 +51,13 @@ class GameLoader {
         return this._game;
     }
 
+    inCurrentGame(gameId) {
+        return (this._game != undefined) ? (this._game.getId() == gameId) : false;
+    }
+    getCurrentGameCmdKey() {
+        return this._game.getCmdKey();
+    }
+
     getCurrentGameKey() {
         return this._game.getId();
     }
@@ -270,22 +277,30 @@ class GameLoader {
         this.deleteGame(key);
     }
 
-    loadGame(cmdKey) {
-        for (let gameKey in this._gameList) {
-            if (this._gameList.hasOwnProperty(gameKey)) {
-                for (let key in this._gameList[gameKey].cmdKey) {
-                    if (this._gameList[gameKey].cmdKey[key] == cmdKey) {
-                        this.setCmdManager(this._gameList[gameKey].cmdManager);
-                        this.setGame(this._gameList[gameKey].game);
-                        this.setHintAI(this._gameList[gameKey].hintAI);
-                        this.loadGameState(cmdKey);
-                        return;
+    loadGame(targetCmdKey) {
+        for (let gameId in this._gameList) {
+            if (this.inCurrentGame(gameId)) {
+                this.loadGameState(this._commandManager.CurrentCmdKey(),
+                    targetCmdKey);
+                break;
+            }
+            else {
+                if (this._gameList.hasOwnProperty(gameId)) {
+                    for (let key in this._gameList[gameId].cmdKey) {
+                        if (this._gameList[gameId].cmdKey[key] == targetCmdKey) {
+                            this.setCmdManager(this._gameList[gameId].cmdManager);
+                            this.setGame(this._gameList[gameId].game);
+                            this.setHintAI(this._gameList[gameId].hintAI);
+                            this.loadGameState(this._commandManager.StartCmdKey(),
+                                this._commandManager.LastCmdKey());
+                            this.loadGameState(this._commandManager.CurrentCmdKey(),
+                                targetCmdKey);
+                            break;
+                        }
                     }
                 }
             }
         }
-
-        console.error("commandKey not found");
     }
 
     jumpToGameState(cmdSequences, seqType) {
@@ -363,17 +378,17 @@ class GameLoader {
         }
     }
 
-    loadGameState(targetStateKey) {
+    loadGameState(startStateKey, targetStateKey) {
 
-        let currCmddKey = this._commandManager.CurrentCmdKey();
-        if (this._game.getCmdKey() == undefined) {
-            let startCmdKey = this._commandManager.StartCmdKey();
-            let [cmdSequences, seqType] = this._commandManager.CmdSequences(startCmdKey, currCmddKey);
-            this.jumpToGameState(cmdSequences, seqType);
-        }
+        // let currCmddKey = this._commandManager.CurrentCmdKey();
+        // if (this._game.getCmdKey() == undefined) {
+        //     let startCmdKey = this._commandManager.StartCmdKey();
+        //     let [cmdSequences, seqType] = this._commandManager.CmdSequences(startCmdKey, currCmddKey);
+        //     this.jumpToGameState(cmdSequences, seqType);
+        // }
 
-        currCmddKey = this._commandManager.CurrentCmdKey();
-        let [cmdSequences, seqType] = this._commandManager.CmdSequences(currCmddKey, targetStateKey);
+        // currCmddKey = this._commandManager.CurrentCmdKey();
+        let [cmdSequences, seqType] = this._commandManager.CmdSequences(startStateKey, targetStateKey);
         this.jumpToGameState(cmdSequences, seqType);
 
     }
