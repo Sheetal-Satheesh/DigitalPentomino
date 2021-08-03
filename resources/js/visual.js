@@ -1657,6 +1657,9 @@ class Visual {
     getLastGameimages(gameId) {
         return this.gameController.getLastGameimages(gameId);
     }
+    getCurrentGameId(){
+        return this.gameController.getCurrentGameId();
+    }
 
     saveGameImage(image) {
         this.gameController.saveGameImage(image);

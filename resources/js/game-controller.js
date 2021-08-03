@@ -137,6 +137,10 @@ class GameController {
         return this._gameLoader.getImagesByGameId(gameId);
     }
 
+    getCurrentGameId(){
+        return this._gameLoader.getGame().getId();
+    }
+
     exceptionHandler(pentomino) {
         if (this.game() === null) {
             throw new Error("Game is not set");
