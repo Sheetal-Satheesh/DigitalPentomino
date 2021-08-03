@@ -67,6 +67,10 @@ class GameLoader {
     }
 
     getImagesByGameId(gameId) {
+        if (!this._gameList.hasOwnProperty(gameId)) {
+            return false;
+        }
+        
         let cmdKeys = this._gameList[gameId].cmdKey;
         let localImages = [];
         cmdKeys.forEach((item) => {

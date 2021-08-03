@@ -376,5 +376,6 @@ button.collapsible {
   width: 11vw;
 }
 
-
-
+#videoCanvas {
+  width: 95%;
+}

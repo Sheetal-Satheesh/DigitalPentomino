@@ -22,7 +22,7 @@ button:hover {
 }
 
 #modalTop {
-    top: 10vw;
+    top: 0vw;
     left: 0vw;
     right: 0vw;
     bottom: 10vw;
@@ -50,8 +50,8 @@ button:hover {
   /* Modal Content/Box */
 .modalFormContent {
     position:relative;
-    top:5vw;
-    left: 28vw;
+    top: 15vw;
+    left: 31vw;
     width: 35vw;
     padding-bottom: 2vw;;
     background-color: #eceaea;
@@ -74,7 +74,7 @@ button:hover {
     z-index: 100;
     position: fixed;
     right: 1vw;
-    top: 11vw;
+    top: 1vw;
     width: 5vw;
     height: 5vw;
     background-color:white;
@@ -130,7 +130,7 @@ button:hover {
   z-index: 100;
   position: fixed;
   left: 1vw;
-  top: 11vw;
+  top: 1vw;
   width: 5vw;
   height: 5vw;
   background-color:white;
