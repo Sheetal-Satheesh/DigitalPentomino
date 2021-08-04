@@ -232,7 +232,7 @@ class SettingsForm {
                               break;
                           case "Difficult":
                               //activate partial hint
-                              $('select[name="hinting.hintingStrategy"]').find('option[value="partial"]').attr("selected", true);
+                              $('select[name="hinting.hintingStrategy"]').find('option[value="partial"]').attr("selected", true); 
                               //disable prefilling
                               $("input[name='prefilling.enablePrefilling']").prop('checked', false);
                               //uncheck exact hints
