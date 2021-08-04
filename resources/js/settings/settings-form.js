@@ -174,7 +174,7 @@ class SettingsForm {
 
     // Dynamic Behavior
     static addDynamicBehaviorOfSettingsForm(formElement, settings) {
-        if (settings.visibility.isVisible("hinting", "hintingLevels") === true)
+        //if (settings.visibility.isVisible("hinting", "hintingLevels") === true)
             //SettingsForm.addDifficultyLevelsListener(formElement);
         // if (settings.visibility.isVisible("prefilling", "distanceValue") === true)
         SettingsForm.addPrefillChangeListener();
@@ -205,7 +205,7 @@ class SettingsForm {
     }
 
     static addDifficultyLevelsListener(formElement) {
-      $( "select[name='hinting.hintingLevels']" ).change(function() {
+      $( "select[name='general.hintingLevels']" ).change(function() {
             let select = event.target;
             let selectedOption = select.options[select.selectedIndex];
             let value = selectedOption.getAttribute('value');
@@ -232,7 +232,7 @@ class SettingsForm {
                               break;
                           case "Difficult":
                               //activate partial hint
-                              $('select[name="hinting.hintingStrategy"]').find('option[value="partial"]').attr("selected", true); 
+                              $('select[name="hinting.hintingStrategy"]').find('option[value="partial"]').attr("selected", true);
                               //disable prefilling
                               $("input[name='prefilling.enablePrefilling']").prop('checked', false);
                               //uncheck exact hints

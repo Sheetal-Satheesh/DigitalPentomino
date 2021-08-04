@@ -75,7 +75,16 @@ class SettingsSchema {
                         "type": "boolean",
                         "title": titles.general.enableBird.title[lang],
                         "default": true,
-                        "pupilModeVisibleOnDefualt": true
+                        "pupilModeVisibleOnDefault": true
+                    },
+                    hintingLevels: {
+                        "type": "string",
+                        "title": titles.hinting.hintingLevels.title[lang],
+                        "description": titles.hinting.hintingLevels.description[lang],
+                        "enum": ["Easy", "Medium", "Difficult", "Custom"],
+                        "enumText": titles.hinting.hintingLevels.enumTitles[lang],
+                        "default": "Easy",
+                        "pupilModeVisibleOnDefault": false
                     }
                 }
             },
@@ -123,15 +132,6 @@ class SettingsSchema {
                 "pupilModeVisibleOnDefault": false,
                 "advanced": true,
                 "properties": {
-                    hintingLevels: {
-                        "type": "string",
-                        "title": titles.hinting.hintingLevels.title[lang],
-                        "description": titles.hinting.hintingLevels.description[lang],
-                        "enum": ["Easy", "Medium", "Difficult", "Custom"],
-                        "enumText": titles.hinting.hintingLevels.enumTitles[lang],
-                        "default": "Easy"
-                    },
-
                     showNumberOfPossibleSolutions: {
                         "type": "boolean",
                         "title": titles.hinting.showNumberOfPossibleSolutions.title[lang],
