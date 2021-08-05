@@ -203,6 +203,15 @@
         let pd;
         let template;
 
+        const SnapshotType = {
+            "FilterOnly": 0,
+            "Original": 1,
+            "Auto": 1 << 1,
+            "Original_Auto": (1 | (1 << 1)),
+            "Undefined": (1 & (1 << 1))
+        }
+        Object.freeze(SnapshotType);
+
         function initialize() {
             pd = new PD();
             template = new Template();
@@ -1027,30 +1036,7 @@
             addFlash("playarea");
             let gameImage = undefined;
             let gameElem = document.getElementById('playarea');
-
-            html2canvas(gameElem).then(function (screeshot) {
-                screeshot.setAttribute("class", "screenshot");
-                screeshot.setAttribute("type", "original");
-                screeshot.style.width = '25vw';
-                screeshot.style.height = '15vw';
-                screeshot.style.border = "2px solid black";
-                gameImage = screeshot;
-                pd.visual.saveGameImage(gameImage);
-            });
-
-            /* 
-                This duplicate has bad consequences in performance respect to times.
-                Optimization required in future.
-            */
-            html2canvas(gameElem).then(function (screeshotCopy) {
-                screeshotCopy.setAttribute("class", "screeshot");
-                screeshotCopy.setAttribute("type", "copy");
-                screeshotCopy.style.width = '25vw';
-                screeshotCopy.style.height = '15vw';
-                screeshotCopy.style.border = "2px solid black";
-                gameImage = screeshotCopy;
-                pd.visual.saveGameImage(gameImage);
-            });
+            pd.visual.saveGameImage(SnapshotType.Original);
         }
 
         function loadGameImage(key) {
@@ -1137,7 +1123,7 @@
                     loadBtn.setAttribute("class", "imageButton imageLoadBtn");
                     loadBtn.textContent = "Load";
                     loadBtn.addEventListener('click', function () {
-                        loadGameImage(imgKey);
+                        loadGameImage(image.value);
                     }, false);
 
                     let deleteBtn = document.createElement("button");
@@ -1170,18 +1156,19 @@
 
             document.querySelector(".modalFormContent").style.display = "none";
             document.querySelector(".outerGrid").style.display = "block";
-
+            // this.saveGameImage("auto");
             let imageGrid = document.getElementById('innerGrid');
             let imgFilterGrid = document.getElementById('filterGrid');
             template.clearContent(".innerGrid");
             template.clearContent("#innerGridForm");
             template.clearContent("#filterGrid");
 
+            pd.visual.saveGameImage(SnapshotType.Auto);
             let currGmKey = pd.visual.getCurrentGameKey();
             let gameIds = pd.visual.getAllGameIds();
 
             gameIds.forEach((gameId) => {
-                let img = pd.visual.getLastGameimages(gameId);
+                let img = pd.visual.getLastGameimage(gameId);
                 if (img == undefined) {
                     return;
                 }
@@ -1216,8 +1203,8 @@
 
         function execReplay(startGameState, currGameState) {
 
-            if(startGameState == undefined ||
-            currGameState == undefined){
+            if (startGameState == undefined ||
+                currGameState == undefined) {
                 console.warning("Start Or End game state not selected");
                 return;
             }
@@ -1237,7 +1224,7 @@
             /*
             TODO: Text should support multi language
             */
-            let textStartState = "Choose Start State", 
+            let textStartState = "Choose Start State",
                 textEndState = "Choose End State";
 
             if ($('.modalFormContainer').is(':visible')) {
@@ -1247,6 +1234,7 @@
             this.disableSnapshotButton();
             this.disablePointerEventsOnPieces();
             this.hideManipulationButtons();
+            this.saveGameImage(SnapshotType.Auto);
 
             var modal = document.getElementById('modalTop');
             modal.style.background = " rgb(220, 240, 237)";
@@ -1268,12 +1256,12 @@
             fTextDiv.innerHTML += textStartState;
             fTextDiv.addEventListener('click', function () {
                 let fDivStart = document.querySelector(".ftextDivStart");
-                fDivStart.style.border="2px dotted black";
+                fDivStart.style.border = "2px dotted black";
                 fDivStart.style.color = "white";
 
                 let fDivEnd = document.querySelector(".ftextDivEnd");
-                fDivEnd.style.border="0";
-                fDivEnd.style.color="black";
+                fDivEnd.style.border = "0";
+                fDivEnd.style.color = "black";
 
                 let gameId = pd.visual.getCurrentGameId();
                 renderGallery(gameId, "Replay:start");
@@ -1288,12 +1276,12 @@
             fTextDiv.innerHTML += textEndState;
             fTextDiv.addEventListener('click', function () {
                 let fDivStart = document.querySelector(".ftextDivEnd");
-                fDivStart.style.border="2px dotted black";
+                fDivStart.style.border = "2px dotted black";
                 fDivStart.style.color = "white";
 
                 let fDivEnd = document.querySelector(".ftextDivStart");
-                fDivEnd.style.border="0";
-                fDivEnd.style.color="black";
+                fDivEnd.style.border = "0";
+                fDivEnd.style.color = "black";
 
                 let gameId = pd.visual.getCurrentGameId();
                 renderGallery(gameId, "Replay:end");
