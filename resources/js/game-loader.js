@@ -266,8 +266,9 @@ class GameLoader {
         }
 
         let verdict = this.saveGame(cmdKey);
-        if (verdict == false &&
-            (imgType == SnapshotType.Auto)) {
+        if (verdict == false){
+            let saveImgCmdKey = this._gameImages[cmdKey];
+             this._gameImages[saveImgCmdKey]= image;
             return;
         }
 
