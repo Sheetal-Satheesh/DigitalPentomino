@@ -1034,8 +1034,6 @@
 
         function saveGameImage() {
             addFlash("playarea");
-            let gameImage = undefined;
-            let gameElem = document.getElementById('playarea');
             pd.visual.saveGameImage(SnapshotType.Original);
         }
 
@@ -1071,10 +1069,24 @@
 
         function addReplyFilterImage(img, stateType) {
             let targetDiv;
+            let fTextDivStart = document.querySelector(".ftextDivStart");
+            let fTextDivEnd = document.querySelector(".ftextDivEnd");
+
+            if (fTextDivStart.getAttribute('type') == "image") {
+                stateType = "end";
+            }
             if (stateType == "start") {
-                targetDiv = document.querySelector(".ftextDivStart");
+                fTextDivStart.style.border = 0;
+                fTextDivEnd.style.border = "3px dotted black";
+                fTextDivStart.setAttribute('type', "image");
+                finishBlink(fTextDivStart);
+                blink(fTextDivEnd);
+                targetDiv = fTextDivStart;
             } else {
-                targetDiv = document.querySelector(".ftextDivEnd");
+                fTextDivStart.style.border = 0;
+                //fTextDivStart.style.border = "4px dotted black"
+                targetDiv = fTextDivEnd;
+                finishBlink(fTextDivEnd);
             }
 
             targetDiv.innerHTML = "";
@@ -1156,7 +1168,6 @@
 
             document.querySelector(".modalFormContent").style.display = "none";
             document.querySelector(".outerGrid").style.display = "block";
-            // this.saveGameImage("auto");
             let imageGrid = document.getElementById('innerGrid');
             let imgFilterGrid = document.getElementById('filterGrid');
             template.clearContent(".innerGrid");
@@ -1219,16 +1230,46 @@
             this.enableSnapshotButton();
         }
 
+        function changeReplayFilterUI(startElem, endElem, contentType) {
+            startElem.style.border = "3px dotted black";
+            startElem.style.color = "white";
+
+            let fDivEnd = document.querySelector(".ftextDivEnd");
+            endElem.style.border = "0";
+            endElem.style.color = "black";
+
+            let gameId = pd.visual.getCurrentGameId();
+            renderGallery(gameId, contentType);
+        }
+
+        function blink(element) {
+
+            element.animate([
+                { color: "white" }, { color: "red" }],
+                {
+                    duration: 1000,
+                    iterations: Infinity
+                });
+        }
+
+        function finishBlink(element) {
+            element.getAnimations().forEach(
+                function (animation) {
+                    return animation.pause();
+                }
+            );
+        }
 
         function showReplayUI() {
             /*
             TODO: Text should support multi language
             */
-            let textStartState = "Choose Start State",
-                textEndState = "Choose End State";
+            let textStartState = "Start State",
+                textEndState = "End State";
 
             if ($('.modalFormContainer').is(':visible')) {
                 this.closeModal();
+                document.getElementById('filterGrid').style.backgroundColor = "none";
             }
 
             this.disableSnapshotButton();
@@ -1249,90 +1290,53 @@
             template.clearContent("#innerGridForm");
             template.clearContent("#filterGrid");
 
-            let fTextDiv = document.createElement("div");
-            fTextDiv.setAttribute("class", "fTextDiv ftextDivStart");
-            fTextDiv.style.width = "10vw"; //TODO: add into grid.css
-            fTextDiv.style.height = "5.5vw"; //TODO: add into grid.css
-            fTextDiv.innerHTML += textStartState;
-            fTextDiv.addEventListener('click', function () {
-                let fDivStart = document.querySelector(".ftextDivStart");
-                fDivStart.style.border = "2px dotted black";
-                fDivStart.style.color = "white";
+            imgFilterGrid.style.backgroundColor = "rgb(20, 70, 63)";
 
-                let fDivEnd = document.querySelector(".ftextDivEnd");
-                fDivEnd.style.border = "0";
-                fDivEnd.style.color = "black";
+            let fTextDivStart = document.createElement("div");
+            fTextDivStart.setAttribute("class", "fTextDiv ftextDivStart");
+            fTextDivStart.setAttribute("type", "text");
+            fTextDivStart.innerHTML += textStartState;
+            imgFilterGrid.appendChild(fTextDivStart);
 
-                let gameId = pd.visual.getCurrentGameId();
-                renderGallery(gameId, "Replay:start");
-            }, false);
 
-            imgFilterGrid.appendChild(fTextDiv);
 
-            fTextDiv = document.createElement("div");
-            fTextDiv.setAttribute("class", "fTextDiv ftextDivEnd");
-            fTextDiv.style.width = "10vw"; //TODO: add into grid.css
-            fTextDiv.style.height = "5.5vw"; //TODO: add into grid.css
-            fTextDiv.innerHTML += textEndState;
-            fTextDiv.addEventListener('click', function () {
-                let fDivStart = document.querySelector(".ftextDivEnd");
-                fDivStart.style.border = "2px dotted black";
-                fDivStart.style.color = "white";
+            let fTextDivEnd = document.createElement("div");
+            fTextDivEnd.setAttribute("class", "fTextDiv ftextDivEnd");
+            fTextDivEnd.setAttribute("type", "text");
+            fTextDivEnd.innerHTML += textEndState;
+            imgFilterGrid.appendChild(fTextDivEnd);
 
-                let fDivEnd = document.querySelector(".ftextDivStart");
-                fDivEnd.style.border = "0";
-                fDivEnd.style.color = "black";
-
-                let gameId = pd.visual.getCurrentGameId();
-                renderGallery(gameId, "Replay:end");
-            }, false);
-
-            imgFilterGrid.appendChild(fTextDiv);
 
             fButtonDiv = document.createElement("div");
-            fButtonDiv.setAttribute("class", "fTextDiv");
-            fButtonDiv.style.width = "10vw"; //TODO: add into grid.css
-            fButtonDiv.style.height = "2vw"; //TODO: add into grid.css
+            fButtonDiv.setAttribute("class", "fTextDiv fTextbutton");
             fButtonDiv.style.backgroundColor = "inherit";
             fButtonDiv.style.border = "0";
 
             imgFilterGrid.appendChild(fButtonDiv);
 
             let replyBtn = document.createElement("button");
-            replyBtn.setAttribute("class", "imageButton imageLoadBtn");
-            replyBtn.style.position = "center";
+            replyBtn.setAttribute("class", "imageButton imageLoadBtn replayBtn");
             replyBtn.textContent = "Replay";
+
+
+            fButtonDiv.appendChild(replyBtn);
+
+            blink(fTextDivStart);
+            changeReplayFilterUI(fTextDivStart, fTextDivEnd, "Replay:start");
+            fTextDivStart.addEventListener('click', function () {
+                changeReplayFilterUI(fTextDivStart, fTextDivEnd, "Replay:start");
+            }, false);
+
+            fTextDivEnd.addEventListener('click', function () {
+                changeReplayFilterUI(fTextDivEnd, fTextDivStart, "Replay:end");
+            }, false);
+
             replyBtn.addEventListener('click', function () {
                 let startCmdKey = document.querySelector(".ftextDivStart").childNodes[0].value;
                 let endCmdKey = document.querySelector(".ftextDivEnd").childNodes[0].value;
 
                 execReplay(startCmdKey, endCmdKey);
             }, false);
-            fButtonDiv.appendChild(replyBtn);
-
-
-
-
-            // var modal = document.getElementById('modalTop');
-            // if ($('.modalFormContainer').is(':visible')) {
-            //     this.closeModal();
-            // }
-            // else {
-            //     this.disableSnapshotButton();
-            //     this.hideManipulationButtons();
-            //     this.disablePointerEventsOnPieces();
-            //     modal.style.display = "block";
-            //     modal.style.background = "transparent";
-            //     document.querySelector(".modalFormContent").style.display = "none";
-            //     document.querySelector(".outerGrid").style.display = "block";
-
-            //     let imageGrid = document.getElementById('innerGrid');
-            //     let imgFilterGrid = document.getElementById('filterGrid');
-            //     template.clearContent(".innerGrid");
-            //     template.clearContent("#innerGridForm");
-            //     template.clearContent("#filterGrid");
-
-
         }
 
         function loadBoard(selectedBoard) {
