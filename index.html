@@ -1226,6 +1226,7 @@
             replayImg.setAttribute('src', 'resources/images/icons/pause.png');
 
             pd.replay(startGameState, currGameState);
+            pd.visual.setReplayStatus(true);
             this.enableSnapshotButton();
         }
 
@@ -1269,6 +1270,10 @@
             if ($('.modalFormContainer').is(':visible')) {
                 this.closeModal();
                 document.getElementById('filterGrid').style.backgroundColor = "none";
+            }
+            if(pd.visual.isRelayRunning()){
+                pd.visual.setReplayStatus(false);
+                return;
             }
 
             this.disableSnapshotButton();
