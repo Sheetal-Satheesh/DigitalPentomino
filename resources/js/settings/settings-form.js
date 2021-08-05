@@ -210,15 +210,15 @@ class SettingsForm {
             let selectedOption = select.options[select.selectedIndex];
             let value = selectedOption.getAttribute('value');
             switch (value) {
-                          case "Easy":
-                              //activate full hint
+                case "Easy":
+                    //activate full hint
                               $('select[name="hinting.hintingStrategy"]').find('option[value="full"]').attr("selected", true);
-                              //check exact hints
-                              $("input[name='hinting.exactHints']").prop('checked', true);
+                   //check exact hints
+                    $("input[name='hinting.exactHints']").prop('checked', true);
                               //uncheck partial hinting
                               $("input[name='teachers.hinting.partialHintingStragety']").prop('checked', false);
-                              //enable prefilling
-                              $("input[name='prefilling.enablePrefilling']").prop('checked', true);
+                    //enable prefilling
+                    $("input[name='prefilling.enablePrefilling']").prop('checked', true);
                               //check hintingVariants
                               $("input[name='teachers.hinting.hintingVariants']").prop('checked', true);
                               //enable both hinting hintingVariants
@@ -239,13 +239,13 @@ class SettingsForm {
                               $("input[name='hinting.exactHints']").prop('checked', false);
                               //check partial hinting strategy
                               $("input[name='teachers.hinting.partialHintingStragety']").prop('checked', true);
-                              break;
-                          case "Custom":
-                              break;
-                          default:
-                              console.log("Level unknown");
-                      }
-            });
+                    break;
+                case "Custom":
+                    break;
+                default:
+                    console.log("Level unknown");
+            }
+        });
     }
 
     // Element Creation
