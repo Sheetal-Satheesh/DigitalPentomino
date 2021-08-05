@@ -19,6 +19,8 @@ h1 {
    bottom: 10vw;
    left: 3vw;
    width: 11vw;
+   max-width: 11vw;
+   height: 23vw;
    overflow-x: hidden;
 }
 
@@ -48,7 +50,7 @@ h1 {
    float: left;
    width: 25.5vw;
    padding: .1vw;
-   border: .1vw solid rgb(2, 71, 62);
+   border: .1vw solid rgb(20, 70, 63);
    border-style: dashed;
 }
 
@@ -118,7 +120,7 @@ h1 {
 }
 
 .imageLoadBtn {
-   background-color: #43c062;
+   background-color: #43c08c;
 }
 
 .imageDeleteBtn {
@@ -130,17 +132,31 @@ h1 {
    border: 1px solid green;
    font: bold;
    font-family: "Times New Roman", Times, serif;
-   font-size: 100%;
+   font-size: 20px;
    font-style: oblique;
    font-weight: bold;
-   margin: 1vw;
-   width: 10%;
+   margin: 1.5vw .5vw 1.5vw .5vw;
+   padding-right: 1vw;
+   max-width: 10vw;
+   height: 5.5vw;
    text-align: center;
    align-items: center;
    justify-content: center;
-   background-color: #12a805;
+   background-color: #2f8f82;
 }
 
-.fTextDiv:active{
+.fTextDiv:active {
    background-color: #d34944;
+}
+
+.fTextDiv .fTextbutton {
+   padding-top: 2vw;
+   height: 2vw;
+}
+
+.fTextDiv .replayBtn {
+   width: fit-content;
+   position: "center";
+   content: "Replay";
+   background-color: #2f8f82;;
 }

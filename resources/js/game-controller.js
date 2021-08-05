@@ -77,8 +77,8 @@ class GameController {
         return this._gameLoader.getGameImages();
     }
 
-    getLastGameimages(gameId) {
-        return this._gameLoader.getLastGameimages(gameId);
+    getLastGameimage(gameId) {
+        return this._gameLoader.getLastGameimage(gameId);
     }
 
     loadGame(key) {
@@ -107,6 +107,10 @@ class GameController {
 
     getCurrentCmdKey() {
         return this.cmdManager().CurrentCmdKey();
+    }
+
+    getOperationCount(){
+        return this.cmdManager().NodeCount();
     }
 
     getCmdSequences(startKey, endKey) {

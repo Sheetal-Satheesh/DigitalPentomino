@@ -99,6 +99,25 @@ class CommandManager {
         return this._cmdTree.CurrentCmdKey();
     }
 
+    NodeCount(){
+        return this._cmdTree.NodeCount();
+    }
+
+    CurrentCmdOrder() {
+        if (this.CurrentCmdKey() == undefined) {
+            return 1;
+        }
+        else if (this.CurrentCmdKey() == this.RootCmdKey) {
+            return 1<<1;
+        }
+        else if (this.CurrentCmdKey() == this.LastCmdKey()) {
+            return 1<<2;
+        }
+        else {
+            return 1<<3;
+        }
+    }
+
     IsKeyFound(key) {
         let retNode = this._cmdTree.SearchCmdNode(
             this._cmdTree.Root(), key);

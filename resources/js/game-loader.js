@@ -25,7 +25,7 @@ class GameLoader {
          */
         this._gameList = {};
         this._gameImages = [];
-        this._gameLastImages = {};
+        this._gameLastImage = {};
 
         /**[
          *  gameId : {
@@ -68,7 +68,7 @@ class GameLoader {
 
     getImagesByGameId(gameId) {
         if (!this._gameList.hasOwnProperty(gameId)) {
-            return false;
+            return undefined;
         }
         
         let cmdKeys = this._gameList[gameId].cmdKey;
@@ -92,10 +92,10 @@ class GameLoader {
         return gameIds;
     }
 
-    getLastGameimages(gameId) {
+    getLastGameimage(gameId) {
         let gameIds = this.getAllGameIds();
         if (gameIds.find(id => id === gameId)) {
-            return this._gameLastImages[gameId];
+            return this._gameLastImage[gameId];
         }
         else {
             console.error("Game Id:" + gameId + "not found in gameList");
@@ -204,8 +204,7 @@ class GameLoader {
             gameName);
     }
 
-    saveGame() {
-        let cmdKey = this._game.getCmdKey();
+    saveGame(cmdKey) {
         let gameId = this._game._id;
 
         let gameClone = _.cloneDeep(this._game);
@@ -248,28 +247,41 @@ class GameLoader {
             this._gameList[gmId].cmdKey = this._gameList[gmId].cmdKey.filter(item => item !== key);
             if (this._gameList[gmId].cmdKey.length == 0) {
                 delete this._gameList[gmId];
-                delete this._gameLastImages[gmId];
+                delete this._gameLastImage[gmId];
                 break;
             }
         }
     }
 
     saveGameImage(image) {
-        let cmdKey = this._game.getCmdKey();
+        let cmdKey = image.value;
         if (cmdKey == undefined) {
             return;
         }
         let currGameId = this._game.getId();
-        const imgType = image.getAttribute('type');
-        if (imgType === "copy") {
-            this._gameLastImages[currGameId] = image;
+        let imgType = parseInt(image.getAttribute('type'));
+        if(imgType == SnapshotType.FilterOnly){
+            this._gameLastImage[currGameId] = image;
             return;
         }
 
-        let verdict = this.saveGame();
-        if (verdict == false) {
+        let verdict = this.saveGame(cmdKey);
+        if (verdict == false){
+            let saveImgCmdKey = this._gameImages[cmdKey];
+             this._gameImages[saveImgCmdKey]= image;
             return;
         }
+
+        if (this._gameImages.length != 0) {
+            let lastGameImg = Object.values(this._gameImages[this._gameImages.length - 1])[0];
+            if (lastGameImg != undefined) {
+                let lastGameImgType = parseInt(lastGameImg.getAttribute('type'));
+                if ((lastGameImgType == SnapshotType.Auto)) {
+                    this.deleteGameImage(lastGameImg.value);
+                }
+            }
+        }
+
         this._gameImages.push({
             [cmdKey]: image
         });

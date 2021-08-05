@@ -44,6 +44,7 @@ class Template {
             element = document.querySelector(element);
         }
         element.innerHTML = '';
+        element.style.backgroundColor = "";
     }
 
     createDiv(attribute) {
