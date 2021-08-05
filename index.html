@@ -1077,14 +1077,13 @@
             }
             if (stateType == "start") {
                 fTextDivStart.style.border = 0;
-                fTextDivEnd.style.border = "3px dotted black";
+                fTextDivEnd.style.border = "3px dotted white";
                 fTextDivStart.setAttribute('type', "image");
                 finishBlink(fTextDivStart);
                 blink(fTextDivEnd);
                 targetDiv = fTextDivStart;
             } else {
-                fTextDivStart.style.border = 0;
-                //fTextDivStart.style.border = "4px dotted black"
+                fTextDivEnd.style.border = 0;
                 targetDiv = fTextDivEnd;
                 finishBlink(fTextDivEnd);
             }
@@ -1231,7 +1230,7 @@
         }
 
         function changeReplayFilterUI(startElem, endElem, contentType) {
-            startElem.style.border = "3px dotted black";
+            startElem.style.border = "3px dotted white";
             startElem.style.color = "white";
 
             let fDivEnd = document.querySelector(".ftextDivEnd");
@@ -1245,7 +1244,7 @@
         function blink(element) {
 
             element.animate([
-                { color: "white" }, { color: "red" }],
+                { color: "yellow" }, { color: "red" }],
                 {
                     duration: 1000,
                     iterations: Infinity
@@ -1324,10 +1323,12 @@
             blink(fTextDivStart);
             changeReplayFilterUI(fTextDivStart, fTextDivEnd, "Replay:start");
             fTextDivStart.addEventListener('click', function () {
+                fTextDivStart.setAttribute("type", "text");
                 changeReplayFilterUI(fTextDivStart, fTextDivEnd, "Replay:start");
             }, false);
 
             fTextDivEnd.addEventListener('click', function () {
+                fTextDivEnd.setAttribute("type", "text");
                 changeReplayFilterUI(fTextDivEnd, fTextDivStart, "Replay:end");
             }, false);
 
