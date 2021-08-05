@@ -189,7 +189,7 @@ class SettingsForm {
             let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
             let enumTexts = strings.settings.prefilling.distanceValue.enumTitles[evt.target.value];
             let enumElements = schema.prefilling.properties.distanceValue.enum;
-
+            
             //Remove the existing elements in the lsit
             for(let i = distValSelectElem.options.length -1; i >= 0; --i) {
                 distValSelectElem.remove(i);
