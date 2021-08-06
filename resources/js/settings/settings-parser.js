@@ -67,7 +67,7 @@ class SettingsParser {
                         visibility.setVisible(heading, key, true);
                         break;
                     default:
-                        console.warn("Unknown visibility qualifier: " + remainingSeed[0]);
+                        console.error(heading + "." + key + ": Unknown visibility qualifier: " + remainingSeed[0]);
                         return null;
                 }
 

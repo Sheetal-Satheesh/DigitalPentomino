@@ -270,7 +270,16 @@
             let modal = document.getElementById('modalTop');
             if ($(modal).is(':visible')) {
                 this.closeModal();
+            } else if (SettingsSingleton.getInstance().getSettings().teachersMode) {
+                // teacher has the choice between share and scan
+                openImportOrExportDialog();
+                this.disablePointerEventsOnPieces();
+                this.hideManipulationButtons();
+                if ($('#birdContainer').is(':visible')) {
+                    this.hideBubbleContainer();
+                }
             } else {
+                // pupils can only scan
                 openScanQrCode();
                 this.disablePointerEventsOnPieces();
                 this.hideManipulationButtons();
@@ -278,6 +287,26 @@
                     this.hideBubbleContainer();
                 }
             }
+        }
+
+        function openImportOrExportDialog() {
+            let modal = document.getElementById('modalTop');
+            modal.style.display = "block";
+            modal.style.background = "#eceaea";
+
+            document.querySelector(".modalFormContent").style.display = "none";
+            document.querySelector(".innerGrid").style.display = "block";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent(".innerGrid")
+            template.clearContent("#innerGridForm");
+
+            let parent = $('#innerGridForm')[0];
+
+            let heading = document.createElement("h4");
+            heading.innerHTML = "Scan or share?";
+            parent.appendChild(heading);
         }
 
         function openScanQrCode() {
