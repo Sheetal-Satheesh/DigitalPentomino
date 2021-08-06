@@ -1751,6 +1751,9 @@ class Visual {
 
             setTimeout(function (that, command) {
                 that.execShadowCmd(command, seqType);
+                if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
+                    that.showNumberOfPossibleSolutions();
+                }
             }, timeInterval += 500, that, command);
         }
         this.setReplayStatus(false);
