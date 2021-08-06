@@ -40,8 +40,9 @@ class SplitBoard {
     loadSplit_V2() {
         let game = this._game;
         let possibleSolutions = this._getPossibleSolutions(game, this._solutions);
-        let closestSolution;        
-        closestSolution = possibleSolutions[Math.floor(Math.random() * possibleSolutions.length)];
+        let closestSolution;  
+        closestSolution = possibleSolutions[0]      
+        // closestSolution = possibleSolutions[Math.floor(Math.random() * possibleSolutions.length)];
         this._finalSolution = closestSolution;
         let pentominoAnchors = this._getPentominoesAndAnchorPos(closestSolution);
         let orderPieces = this._sortPiecesBasedOnAnchor(pentominoAnchors);
@@ -49,6 +50,44 @@ class SplitBoard {
         let partitionedArray = this._splitArrayIntoChunks(relativePosOfPieceWithAnchorPos);
         this._partionedArray = partitionedArray;
         return partitionedArray;
+    }
+
+    /**
+     * Assumes that pentomino is placed on the board
+     * @param game
+     * @param solution
+     * @param gamePentomino
+     */
+     _isPerfectPentomino(game, solution, pentominoName) {
+        let gamePentomino = game.getPentominoByName(pentominoName);
+        let solutionPentomino = solution.getPentominoByName(pentominoName);
+
+        if (gamePentomino === null && solutionPentomino === null) {
+            // FIXME - should return the pentomino if its in the tray and not return null
+            //throw new Error("Pentomino '" + pentominoName + "' does neither exist in the game nor in the solution");
+            return true;
+        }
+
+        if (gamePentomino === null) {
+            return !solution.isPlacedOnBoard(solutionPentomino);
+        }
+
+        if (solutionPentomino === null) {
+            return !game.isPlacedOnBoard(gamePentomino);
+        }
+
+        if (!game.isPlacedOnBoard(gamePentomino))
+            return !solution.isPlacedOnBoard(solutionPentomino);
+        else if (solution.isPlacedOnBoard(solutionPentomino)) {
+            let gamePentominoPosition = game.getPosition(gamePentomino);
+            let solutionPentominoPosition = solution.getPosition(solutionPentomino);
+            
+            return gamePentominoPosition[0] === solutionPentominoPosition[0]
+                && gamePentominoPosition[1] === solutionPentominoPosition[1]
+                && gamePentomino.sRepr.localeCompare(solutionPentomino.sRepr) === 0;
+        } else {
+            return false;
+        }
     }
 
     partitionHasUnoccupiedPosition(pentomino) {               

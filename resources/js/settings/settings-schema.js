@@ -217,7 +217,24 @@ class SettingsSchema {
                         "maximum": 10
                     }
                 }
+            },
+            splitPartition: {
+                "type": "object",
+                "advanced": true,
+                "title": titles.splitPartition.title[lang],
+                "visible": false,
+                "pupilModeVisibleOnDefault": false,
+                "properties": {
+                    splitStrategy: {
+                        "type": "string",
+                        "title": titles.splitPartition.splitStrategy.title[lang],                       
+                        "enum": ["color","one-by-one"],
+                        "enumText": titles.splitPartition.splitStrategy.enumTitles[lang],
+                        "default": "color"
+                    }
+                }
             }
+
         };
     }
 }

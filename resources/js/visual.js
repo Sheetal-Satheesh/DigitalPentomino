@@ -25,6 +25,7 @@ const backGroundColor = '#eceaea';
 
 let lastHintedPentName = null;
 let splitPartition = [];
+let piecesSelectedForPartition = [];
 let styleBlocks;
 let splitCounter = -1;
 let randomCell;
@@ -143,6 +144,7 @@ class Visual {
         this.pieces = this.gameController.getAllPentominoes();
         this.pd.visual.disableManipulations();
         this.renderPieces();
+        this.undoSplit();
     }
 
     renderBoard() {
@@ -269,14 +271,27 @@ class Visual {
         if (piece.inTray) {
             var widthVW = 100 / 12 * piece.trayPosition; //UIProperty.TrayCSSLeft + (piece.trayPosition) * width;
             var magnification = 8 / (5 * width);
-            htmlElement.style.left = widthVW + 'vw';
+            htmlElement.style.left = widthVW + 'vw';piece.name
             htmlElement.style.top = '' + 0.1 * UIProperty.TrayHeight + 'vw'; //position pieces in tray around 20% from top
             htmlElement.style.transformOrigin = 'left top';
             htmlElement.style.setProperty("--magnification", magnification);
             htmlElement.style.setProperty("--rotationX", "0deg");
             htmlElement.style.setProperty("--rotationY", "0deg");
             htmlElement.style.setProperty("--rotationZ", "0deg");
-
+            if(piecesSelectedForPartition.length != 0) {
+                let containsDisplayedPieceName = this.piecesSelectedForPartition.indexOf()
+                if(containsDisplayedPieceName) {
+                    if(containsDisplayedPieceName === -1 ) {
+                        htmlElement.style.display = 'none';
+                                                                
+                    }
+                    else if (containsDisplayedPieceName >=0) {
+                        htmlElement.style.display = 'block';
+                    } 
+                }
+            }
+            
+            
         }
         else {
             var bCellsFnd = this.isPentominoInBlockCells(piece);
@@ -664,7 +679,7 @@ class Visual {
                         that.select(data[1], event.clientX, event.clientY);
                         flagCheckPartitionSolved = that.checkPartitionSolved();
                         if(flagCheckPartitionSolved) {
-                            that.blockPartition();
+                            that.blockPartition();                            
                             that.displaySplit_V2();
                         }
 
@@ -829,7 +844,27 @@ class Visual {
         }                    
     }
 
-    callSplitBoard() {
+    splitTheBoard() {               
+        let splitCategory = SettingsSingleton.getInstance().getSettings().splitPartition.splitStrategy;        
+        switch (splitCategory) {
+            case "color":
+                this.undoSplit();
+                this.callSplitBoardViaColor();
+                break;
+            case "one-by-one":
+                this.readyForSplitting();
+                this.callSplitBoard_V2();
+                break;
+        }              
+    }
+
+    readyForSplitting() {
+        this.reset();        
+        this.undoSplit();
+    }
+
+
+    callSplitBoardViaColor() {
         let partitionedArray = pd.gameController.loadSplit();
         splitPartition = [];
         splitCounter = -1;
@@ -837,11 +872,13 @@ class Visual {
     }
 
     callSplitBoard_V2() {
+        // this.reset();
+        // this.undoSplit();
         let partitionedArray = pd.gameController.loadSplit_V2();        
         this.resize(partitionedArray, partitionedArray.length)
         let styleElement = document.querySelector('.boardarea');
         let styleValue = window.getComputedStyle(styleElement);  
-        styleBlocks = styleValue.backgroundColor;
+        styleBlocks = styleValue.backgroundColor;              
         this.displaySplit_V2();                     
     }    
 
@@ -881,7 +918,7 @@ class Visual {
     }
     
     displaySplit_V2() { 
-        splitCounter++
+        splitCounter++;
         if(splitPartition.length > splitCounter) {
             let partitionedArray = splitPartition[splitCounter]
             let piecesDisplayed = [];
@@ -894,6 +931,10 @@ class Visual {
                 } 
                 piecesDisplayed.push(partitionedArray[i][0].name);                     
             } 
+            for (let elm =0; elm < piecesDisplayed.length; elm++){
+                piecesSelectedForPartition.push(piecesDisplayed[elm]) ;
+            }
+            
             this.pieces.forEach(piece => {
                 let containsDisplayedPieceName = piecesDisplayed.indexOf(piece.name)
                     if(containsDisplayedPieceName === -1 ) {

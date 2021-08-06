@@ -160,7 +160,9 @@
                 </button>
                 <button type="button" id='reset' class="cActionBtn" onclick="resetGame()">
                     <img src="resources/images/icons/tidy_up_v2.png"></button>
-                <div class= "toggle" >
+                <button type="button" id='splitBoard' class="cActionBtn" onclick="splitTheBoard()">
+                    <img src="resources/images/icons/dp_512.png"></button>
+                <!-- <div class= "toggle" >
                     <h6><B>Split Via Partition</B></h6>
                     <label class= "toggleSplitBoard">
                     <input id="toggleSwitchPartition" type="checkbox" onclick = "callSplitBoard_V2()" >
@@ -173,7 +175,7 @@
                     <input id="toggleSwitchColor" type="checkbox" onclick = "callSplitBoard()" >
                     <span class="slider"></span>
                     </label>
-                </div> <!--Toggle-->
+                </div> Toggle -->
             </div>
 
             <div id="labelNumberSolutionsContainer">
@@ -509,6 +511,14 @@
                 // TODO - handle, e.g. shake hint button
                 console.log("Game is already solved. Cannot display hint");
             }
+        }
+        function splitTheBoard(){
+            if (!pd.gameController.game()._board.isSolved()) {
+                    pd.visual.splitTheBoard();                        
+                    
+                } else {
+                    console.log("Game is already solved");
+                }
         }
 
         function callSplitBoard_V2() {
