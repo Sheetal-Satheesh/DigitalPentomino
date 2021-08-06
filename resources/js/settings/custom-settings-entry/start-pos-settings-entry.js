@@ -1,9 +1,13 @@
-const NO_BOARD_SELECTED = "";
+let BOARD_CUSTOMIZATION_DEFAULT;
 const BOARD_NAME_DECIMALS_MIN = 3;
+const BOARD_PENTOMINO_NUM_DECIMALS = 2;
+const BOARD_POSITION_DECIMALS = 2;
 
 class StartPosSettingsEntry extends CustomSettingsEntry {
     constructor(heading, subheading) {
         super(heading, subheading);
+        let defaultBoardIndex = this.parseBoardNameToIndex("board_6x10");
+        BOARD_CUSTOMIZATION_DEFAULT = this.pad(0, BOARD_PENTOMINO_NUM_DECIMALS) + this.pad(defaultBoardIndex, this.getBoardNameDecimals());
     }
 
     create(settingsEntry) {
@@ -28,7 +32,7 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
         boardLabel.name = "boardLabel";
         div.appendChild(boardLabel);
 
-        let resultLabel = SettingsForm.createLabel(NO_BOARD_SELECTED);
+        let resultLabel = SettingsForm.createLabel("");
         resultLabel.style.display = 'none';
         resultLabel.id = "startPiecePosLabel";
         resultLabel.name = "startPiecePosLabel";
@@ -49,7 +53,7 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
     }
 
     handleClickedOnClear(event, div) {
-        let selectedValue = NO_BOARD_SELECTED;
+        let selectedValue = BOARD_CUSTOMIZATION_DEFAULT;
 
         let resultLabel = $(div).find("#startPiecePosLabel")[0];
         resultLabel.innerHTML = selectedValue;
@@ -79,37 +83,31 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
         let boardLabel = $(div).find("#boardLabel")[0];
         let boardImg = $(div).find("#boardImg")[0];
 
-        let text = "";
-
         let boardSRows= new FrontController().controller.game().getBoard()._boardSRows;
         let boardSCols = new FrontController().controller.game().getBoard()._boardSCols;
 
         let game = this.parseFromSeedToGame(selectedValue);
 
-        if (game !== null) {
-            boardImg.src = "resources/images/boards/" + game.getName() + ".png";
-            boardImg.alt = game.getName();
+        boardImg.src = "resources/images/boards/" + game.getName() + ".png";
+        boardImg.alt = game.getName();
 
-            text += game.getName() + " ";
+        let text = game.getName() + " ";
 
-            game.getPentominoesOnBoard().forEach(p => {
-                let pos = game.getPosition(p);
-                text += p.name + "[" + (pos[0] + boardSRows) + "," + (pos[1] + boardSCols) + "] ";
-            });
-        } else {
-            text += "-";
-        }
+        game.getPentominoesOnBoard().forEach(p => {
+            let pos = game.getPosition(p);
+            text += p.name + "[" + (pos[0] + boardSRows) + "," + (pos[1] + boardSCols) + "] ";
+        });
 
         boardLabel.innerHTML = text;
     }
 
     parseSettingsToSeed(schemaEntry, settingsValue) {
-        return settingsValue;
+        return settingsValue === "" ? BOARD_CUSTOMIZATION_DEFAULT : settingsValue;
     }
 
     parseFromSeed(schemaEntry, remainingSeed, settingsEntry, key, seed) {
-        let n = parseInt(remainingSeed.substr(this.getBoardNameDecimals(), 2));
-        let seedEntryLength = this.getBoardNameDecimals() + 2 + n * 5;
+        let n = parseInt(remainingSeed.substr(this.getBoardNameDecimals(), BOARD_PENTOMINO_NUM_DECIMALS));
+        let seedEntryLength = this.getBoardNameDecimals() + BOARD_PENTOMINO_NUM_DECIMALS + n * 5;
         settingsEntry[key] = remainingSeed.substr(0, seedEntryLength);
         return seedEntryLength - 1;
     }
@@ -117,19 +115,15 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
     processChangesToSettings(settingsValue, pd) {
         let game = this.parseFromSeedToGame(settingsValue);
 
-        if (game !== null) {
-            pd.loadBoard(game.getName());
+        pd.loadBoard(game.getName());
 
-            let boardSRows = new FrontController().controller.game().getBoard()._boardSRows;
-            let boardSCols = new FrontController().controller.game().getBoard()._boardSCols;
+        let boardSRows = new FrontController().controller.game().getBoard()._boardSRows;
+        let boardSCols = new FrontController().controller.game().getBoard()._boardSCols;
 
-            game.getPentominoesOnBoard().forEach(p => {
-                let pos = game.getPosition(p);
-                this.placePiece(p.name, pos[0] + boardSRows, pos[1] + boardSCols);
-            });
-        } else {
-            pd.reset();
-        }
+        game.getPentominoesOnBoard().forEach(p => {
+            let pos = game.getPosition(p);
+            this.placePiece(p.name, pos[0] + boardSRows, pos[1] + boardSCols);
+        });
 
         pd.visual.renderPieces();
     }
@@ -142,36 +136,31 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
 
     // === === === PARSE HELPER === === ===
     parseFromSeedToGame(seed) {
-        if (seed === NO_BOARD_SELECTED) return null;
-        else {
-            let boardNameDecimals = this.getBoardNameDecimals();
-            let boardName = this.parseIndexToBoardName(parseInt(seed.substr(0, boardNameDecimals)));
+        let boardNameDecimals = this.getBoardNameDecimals();
+        let boardName = this.parseIndexToBoardName(parseInt(seed.substr(0, boardNameDecimals)));
 
-            let game = new Game(new Board([0, 0], [100, 100]), boardName);
+        let game = new Game(new Board([0, 0], [100, 100]), boardName);
 
-            let n = parseInt(seed.substr(boardNameDecimals, 2));
+        let n = parseInt(seed.substr(boardNameDecimals, BOARD_PENTOMINO_NUM_DECIMALS));
 
-            for (let i = 0; i < n; i++) {
-                let offset = boardNameDecimals + 2;
-                let name = seed.substr(i * 5 + offset, 1);
-                let row = parseInt(seed.substr(i * 5 + offset + 1, 2));
-                let col = parseInt(seed.substr(i * 5 + offset + 3, 2));
-                game.placePentomino(new Pentomino(name), row,col);
-            }
-
-            return game;
+        for (let i = 0; i < n; i++) {
+            let offset = boardNameDecimals + BOARD_PENTOMINO_NUM_DECIMALS;
+            let name = seed.substr(i * 5 + offset, 1);
+            let row = parseInt(seed.substr(i * 5 + offset + 1, BOARD_POSITION_DECIMALS));
+            let col = parseInt(seed.substr(i * 5 + offset + 3, BOARD_POSITION_DECIMALS));
+            game.placePentomino(new Pentomino(name), row,col);
         }
+
+        return game;
     }
 
     parseFromGameToSeed(game) {
-        if (game === null) return NO_BOARD_SELECTED;
-
         let seed = "";
 
         seed += this.pad(this.parseBoardNameToIndex(game.getName()), this.getBoardNameDecimals());
 
         let pentominoesOnBoard = game.getPentominoesOnBoard();
-        seed += this.pad(pentominoesOnBoard.length, 2);
+        seed += this.pad(pentominoesOnBoard.length, BOARD_PENTOMINO_NUM_DECIMALS);
 
         let boardSRows= new FrontController().controller.game().getBoard()._boardSRows;
         let boardSCols = new FrontController().controller.game().getBoard()._boardSCols;
@@ -180,8 +169,8 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
             let pos = game.getPosition(p);
 
             seed += p.name;
-            seed += this.pad(pos[0] - boardSRows, 2);
-            seed += this.pad(pos[1] - boardSCols, 2);
+            seed += this.pad(pos[0] - boardSRows, BOARD_POSITION_DECIMALS);
+            seed += this.pad(pos[1] - boardSCols, BOARD_POSITION_DECIMALS);
         });
 
         return seed;
