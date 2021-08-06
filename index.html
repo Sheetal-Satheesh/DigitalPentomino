@@ -1177,7 +1177,7 @@
             let currGmKey = pd.visual.getCurrentGameKey();
             let gameIds = pd.visual.getAllGameIds();
 
-            gameIds.forEach((gameId) => {
+            gameIds.reverse().forEach((gameId) => {
                 let img = pd.visual.getLastGameimage(gameId);
                 if (img == undefined) {
                     return;
