@@ -32,6 +32,7 @@ class Visual {
         this.boardY = pd.boardStartY;
         this.pieces = this.gameController.getAllPentominoes();
         this.selected = false;
+        this.replayRunning = false;
         this.overlapBlock = new OverlapBlock();
 
         this.renderBoard();
@@ -45,6 +46,7 @@ class Visual {
         this.boardY = pd.boardStartY;
         this.pieces = this.gameController.getAllPentominoes();
         this.selected = false;
+        this.replayRunning = false;
         this.overlapBlock = new OverlapBlock();
 
         this.renderBoard();
@@ -1743,7 +1745,7 @@ class Visual {
 
 
         let timeInterval = 100;
-        for (let indx = 0; indx < cmdSequences.length; indx++) {
+        for (let indx = 0; indx < cmdSequences.length && (!this.replayRunning); indx++) {
             let command = cmdSequences[indx];
             var that = this;
 
@@ -1751,6 +1753,7 @@ class Visual {
                 that.execShadowCmd(command, seqType);
             }, timeInterval += 500, that, command);
         }
+        this.setReplayStatus(false);
 
         const pause = function () {
             let replayId = document.getElementById("replay");
@@ -1759,6 +1762,20 @@ class Visual {
         };
         setTimeout(pause, timeInterval);
 
+    }
+
+    setReplayStatus(verdict) {
+        this.replayRunning = verdict;
+    }
+
+    /**
+     * 
+     * @returns
+     *  true: replay is running
+     *  false: no replay 
+     */
+    isRelayRunning() {
+        return (this.replayRunning == true) ? true : false;
     }
 
     disablePointerEventsOnPieces() {
