@@ -1215,7 +1215,7 @@
 
             if (startGameState == undefined ||
                 currGameState == undefined) {
-                console.warning("Start Or End game state not selected");
+                console.warn("Start Or End game state not selected");
                 return;
             }
             var modal = document.getElementById('modalTop');
@@ -1271,7 +1271,8 @@
                 this.closeModal();
                 document.getElementById('filterGrid').style.backgroundColor = "none";
             }
-            if(pd.visual.isRelayRunning()){
+
+            if (pd.visual.isRelayRunning()) {
                 pd.visual.setReplayStatus(false);
                 return;
             }
@@ -1290,12 +1291,29 @@
 
             let imageGrid = document.getElementById('innerGrid');
             let imgFilterGrid = document.getElementById('filterGrid');
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
             template.clearContent(".innerGrid");
             template.clearContent("#innerGridForm");
             template.clearContent("#filterGrid");
 
-            imgFilterGrid.style.backgroundColor = "rgb(20, 70, 63)";
+            let startGameState = pd.getGameState("start");
+            let currGameState = pd.getGameState("current");
 
+            if (startGameState == undefined) {
+                document.querySelector(".modalFormContent").style.display = "block";
+                document.querySelector(".outerGrid").style.display = "none";
+                let textNode = {
+                    name: "modalText",
+                    text: "Game Not Started Yet ",
+                }
+
+                template.attachText("#modalTitleID", textNode);
+                return;
+            }
+
+            imgFilterGrid.style.backgroundColor = "rgb(20, 70, 63)";
             let fTextDivStart = document.createElement("div");
             fTextDivStart.setAttribute("class", "fTextDiv ftextDivStart");
             fTextDivStart.setAttribute("type", "text");
