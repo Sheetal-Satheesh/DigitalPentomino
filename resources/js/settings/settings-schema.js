@@ -43,6 +43,10 @@ class SettingsSchema {
         let lang = this._language;
         let titles = strings.settings;
 
+        let defaultBoardIndex = StartPosSettingsEntry.parseBoardNameToIndex("board_6x10");
+        let boardCustomizationDefault = StartPosSettingsEntry.pad(defaultBoardIndex, StartPosSettingsEntry.getBoardNameDecimals()) +
+            StartPosSettingsEntry.pad(0, BOARD_PENTOMINO_NUM_DECIMALS);
+
         return this._schema = {
             general: {
                 "type": "object",
@@ -105,7 +109,7 @@ class SettingsSchema {
                         "type": "custom",
                         "title": titles.boardCustomization.initialPiecePos.title[lang],
                         "description": titles.boardCustomization.initialPiecePos.description[lang],
-                        "default": ""
+                        "default": boardCustomizationDefault
                     },
                 }
             },

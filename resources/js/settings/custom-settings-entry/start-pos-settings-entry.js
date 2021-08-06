@@ -1,4 +1,3 @@
-let BOARD_CUSTOMIZATION_DEFAULT;
 const BOARD_NAME_DECIMALS_MIN = 3;
 const BOARD_PENTOMINO_NUM_DECIMALS = 2;
 const BOARD_POSITION_DECIMALS = 2;
@@ -6,8 +5,6 @@ const BOARD_POSITION_DECIMALS = 2;
 class StartPosSettingsEntry extends CustomSettingsEntry {
     constructor(heading, subheading) {
         super(heading, subheading);
-        let defaultBoardIndex = this.parseBoardNameToIndex("board_6x10");
-        BOARD_CUSTOMIZATION_DEFAULT = this.pad(0, BOARD_PENTOMINO_NUM_DECIMALS) + this.pad(defaultBoardIndex, this.getBoardNameDecimals());
     }
 
     create(settingsEntry) {
@@ -53,7 +50,7 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
     }
 
     handleClickedOnClear(event, div) {
-        let selectedValue = BOARD_CUSTOMIZATION_DEFAULT;
+        let selectedValue = SettingsSchemaSingleton.getInstance().getSettingsSchema().boardCustomization.initialPiecePos.default;
 
         let resultLabel = $(div).find("#startPiecePosLabel")[0];
         resultLabel.innerHTML = selectedValue;
@@ -102,12 +99,12 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
     }
 
     parseSettingsToSeed(schemaEntry, settingsValue) {
-        return settingsValue === "" ? BOARD_CUSTOMIZATION_DEFAULT : settingsValue;
+        return settingsValue;
     }
 
     parseFromSeed(schemaEntry, remainingSeed, settingsEntry, key, seed) {
-        let n = parseInt(remainingSeed.substr(this.getBoardNameDecimals(), BOARD_PENTOMINO_NUM_DECIMALS));
-        let seedEntryLength = this.getBoardNameDecimals() + BOARD_PENTOMINO_NUM_DECIMALS + n * 5;
+        let n = parseInt(remainingSeed.substr(StartPosSettingsEntry.getBoardNameDecimals(), BOARD_PENTOMINO_NUM_DECIMALS));
+        let seedEntryLength = StartPosSettingsEntry.getBoardNameDecimals() + BOARD_PENTOMINO_NUM_DECIMALS + n * 5;
         settingsEntry[key] = remainingSeed.substr(0, seedEntryLength);
         return seedEntryLength - 1;
     }
@@ -136,8 +133,8 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
 
     // === === === PARSE HELPER === === ===
     parseFromSeedToGame(seed) {
-        let boardNameDecimals = this.getBoardNameDecimals();
-        let boardName = this.parseIndexToBoardName(parseInt(seed.substr(0, boardNameDecimals)));
+        let boardNameDecimals = StartPosSettingsEntry.getBoardNameDecimals();
+        let boardName = StartPosSettingsEntry.parseIndexToBoardName(parseInt(seed.substr(0, boardNameDecimals)));
 
         let game = new Game(new Board([0, 0], [100, 100]), boardName);
 
@@ -157,10 +154,10 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
     parseFromGameToSeed(game) {
         let seed = "";
 
-        seed += this.pad(this.parseBoardNameToIndex(game.getName()), this.getBoardNameDecimals());
+        seed += StartPosSettingsEntry.pad(StartPosSettingsEntry.parseBoardNameToIndex(game.getName()), StartPosSettingsEntry.getBoardNameDecimals());
 
         let pentominoesOnBoard = game.getPentominoesOnBoard();
-        seed += this.pad(pentominoesOnBoard.length, BOARD_PENTOMINO_NUM_DECIMALS);
+        seed += StartPosSettingsEntry.pad(pentominoesOnBoard.length, BOARD_PENTOMINO_NUM_DECIMALS);
 
         let boardSRows= new FrontController().controller.game().getBoard()._boardSRows;
         let boardSCols = new FrontController().controller.game().getBoard()._boardSCols;
@@ -169,30 +166,30 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
             let pos = game.getPosition(p);
 
             seed += p.name;
-            seed += this.pad(pos[0] - boardSRows, BOARD_POSITION_DECIMALS);
-            seed += this.pad(pos[1] - boardSCols, BOARD_POSITION_DECIMALS);
+            seed += StartPosSettingsEntry.pad(pos[0] - boardSRows, BOARD_POSITION_DECIMALS);
+            seed += StartPosSettingsEntry.pad(pos[1] - boardSCols, BOARD_POSITION_DECIMALS);
         });
 
         return seed;
     }
 
     // from https://stackoverflow.com/questions/2998784/how-to-output-numbers-with-leading-zeros-in-javascript
-    pad(num, minDecimals) {
+    static pad(num, minDecimals) {
         num = num.toString();
         while (num.length < minDecimals) num = "0" + num;
         return num;
     }
 
-    parseBoardNameToIndex(boardName) {
+    static parseBoardNameToIndex(boardName) {
         let allBoardNames = baseConfigs.boards;
         return allBoardNames.findIndex(n => n === boardName);
     }
 
-    parseIndexToBoardName(index) {
+    static parseIndexToBoardName(index) {
         return baseConfigs.boards[index];
     }
 
-    getBoardNameDecimals() {
+    static getBoardNameDecimals() {
         return Math.max(BOARD_NAME_DECIMALS_MIN, SettingsParser.getNumOfDigits(baseConfigs.boards.length));
     }
 }
