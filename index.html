@@ -307,6 +307,38 @@
             let heading = document.createElement("h4");
             heading.innerHTML = "Scan or share?";
             parent.appendChild(heading);
+
+            // Add scan / share buttons
+            let scanButton = SettingsForm.createButton("Scan");
+            scanButton.addEventListener("click", (event) => openScanQrCode());
+            parent.appendChild(scanButton);
+            let shareButton = SettingsForm.createButton("Share");
+            shareButton.addEventListener("click", (event) => openShareScreen());
+            parent.appendChild(shareButton);
+        }
+
+        function openShareScreen() {
+            let modal = document.getElementById('modalTop');
+            modal.style.display = "block";
+            modal.style.background = "#eceaea";
+
+            document.querySelector(".modalFormContent").style.display = "none";
+            document.querySelector(".innerGrid").style.display = "block";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent(".innerGrid")
+            template.clearContent("#innerGridForm");
+
+            let parent = $('#innerGridForm')[0];
+
+            let heading = document.createElement("h4");
+            heading.innerHTML = "Share";
+            parent.appendChild(heading);
+
+            // TODO
+
+            console.log("Clicked on share");
         }
 
         function openScanQrCode() {
