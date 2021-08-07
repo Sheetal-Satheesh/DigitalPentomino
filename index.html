@@ -213,6 +213,7 @@
     <script type="text/javascript">
         let pd;
         let template;
+        let isPlaying = false;
 
         function initialize() {
             pd = new PD();
@@ -512,54 +513,20 @@
                 console.log("Game is already solved. Cannot display hint");
             }
         }
-        function splitTheBoard(){
-            if (!pd.gameController.game()._board.isSolved()) {
-                    pd.visual.splitTheBoard();                        
-                    
+        function splitTheBoard() {
+            if(!isPlaying) {
+                if (!pd.gameController.game()._board.isSolved()) {
+                    pd.visual.splitTheBoard();                                            
                 } else {
                     console.log("Game is already solved");
+                    pd.visual.unblockPartition();
                 }
-        }
-
-        function callSplitBoard_V2() {
-            let input = document.getElementById('toggleSwitchPartition');            
-
-            input.addEventListener('change', function () {
-                if (this.checked) {                   
-                    if (!pd.gameController.game()._board.isSolved()) {
-                        pd.visual.callSplitBoard_V2();                        
-                    } else {
-                        console.log("Game is already solved");
-                    }
-                } else {
-                    if (!pd.gameController.game()._board.isSolved()) {                        
-                        pd.visual.undoSplit();                    
-                    } else {                     
-                        console.log("Game is already solved");
-                        pd.visual.unblockPartition();
-                    }                
-                }
-            });
-        }
-
-        function callSplitBoard() {
-            let input = document.getElementById('toggleSwitchColor');            
-
-            input.addEventListener('change', function () {
-                if (this.checked) {                   
-                    if (!pd.gameController.game()._board.isSolved()) {
-                        pd.visual.callSplitBoard();                        
-                    } else {
-                        console.log("Game is already solved");
-                    }
-                } else {
-                    if (!pd.gameController.game()._board.isSolved()) {                        
-                        pd.visual.undoSplit();                    
-                    } else {                     
-                        console.log("Game is already solved");                                               
-                    }                
-                }
-            });
+                isPlaying = true;
+            } else {
+                pd.visual.undoSplit();
+                isPlaying = false;
+            }
+            
         }
 
         function rotateClkWise() {
@@ -1186,7 +1153,6 @@
                     console.log(eValue);
                     pd.replay(sValue, eValue);
                     modal.style.display = "none";
-
                 }
                 document.getElementById("modalBodyID").appendChild(submit);
                 this.enableSnapshotButton();

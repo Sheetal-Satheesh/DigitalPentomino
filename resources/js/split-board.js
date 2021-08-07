@@ -32,7 +32,7 @@ class SplitBoard {
 
         let pentominoAnchors = this._getPentominoesAndAnchorPos(closestSolution);
         let orderPieces = this._sortPiecesBasedOnAnchor(pentominoAnchors);
-        let relativePosAndPiece = this._getRelativePositionAndPiece(game, closestSolution, orderPieces);
+        let relativePosAndPiece = this._getRelativePositionAndPiece(closestSolution, orderPieces);
         let partionedArray = this._splitArrayIntoChunks(relativePosAndPiece);
         return partionedArray;
     }
@@ -42,7 +42,7 @@ class SplitBoard {
         let possibleSolutions = this._getPossibleSolutions(game, this._solutions);
         let closestSolution;  
         closestSolution = possibleSolutions[0]      
-        // closestSolution = possibleSolutions[Math.floor(Math.random() * possibleSolutions.length)];
+        closestSolution = possibleSolutions[Math.floor(Math.random() * possibleSolutions.length)];
         this._finalSolution = closestSolution;
         let pentominoAnchors = this._getPentominoesAndAnchorPos(closestSolution);
         let orderPieces = this._sortPiecesBasedOnAnchor(pentominoAnchors);
@@ -164,7 +164,7 @@ class SplitBoard {
      * @param sortedarray
      * @returns [*]
      */
-    _getRelativePositionAndPiece(game, closestSolution, orderPieces) {
+    _getRelativePositionAndPiece(closestSolution, orderPieces) {
         let finalPosAndPiece = [];
         for (let i = 0; i < orderPieces.length; i++) {
             closestSolution._board._pentominoes.forEach(pent => {
@@ -181,122 +181,7 @@ class SplitBoard {
             });
         }
         return finalPosAndPiece;
-    }
-
-    
-    _getOuterCorners([row, column], game, pentominoName) {
-        let corners = 0;
-        let row1 = 0, row2 = 0, col1 = 0, col2 = 0;
-
-        row1 = row + 1;
-        col1 = column;
-        row2 = row;
-        col2 = column + 1;
-        if ((!game._board.positionIsValid(row1, col1) || game._board.isBlockedCell(row1, col1) ||
-            (game._board.isOccupied(row1, col1) && !this._isSamePentomino(row1, col1, game, pentominoName))) &&
-            (!game._board.positionIsValid(row2, col2) || game._board.isBlockedCell(row2, col2) ||
-            (game._board.isOccupied(row2, col2) && !this._isSamePentomino(row2, col2, game, pentominoName)))) {
-            ++corners;
-        }
-
-        row1 = row;
-        col1 = column + 1;
-        row2 = row - 1;
-        col2 = column;
-        if ((!game._board.positionIsValid(row1, col1) || game._board.isBlockedCell(row1, col1) ||
-            (game._board.isOccupied(row1, col1) && !this._isSamePentomino(row1, col1, game, pentominoName))) &&
-            (!game._board.positionIsValid(row2, col2) || game._board.isBlockedCell(row2, col2) ||
-            (game._board.isOccupied(row2, col2) && !this._isSamePentomino(row1, col1, game, pentominoName)))) {
-            ++corners;
-        }
-
-        row1 = row - 1;
-        col1 = column;
-        row2 = row;
-        col2 = column - 1;
-        if ((!game._board.positionIsValid(row1, col1) || game._board.isBlockedCell(row1, col1) ||
-            (game._board.isOccupied(row1, col1) && !this._isSamePentomino(row1, col1, game, pentominoName))) &&
-            (!game._board.positionIsValid(row2, col2) || game._board.isBlockedCell(row2, col2) ||
-            (game._board.isOccupied(row2, col2) && !this._isSamePentomino(row1, col1, game, pentominoName)))) {
-            ++corners;
-        }
-
-        row1 = row;
-        col1 = column - 1;
-        row2 = row + 1;
-        col2 = column;
-        if ((!game._board.positionIsValid(row1, col1) || game._board.isBlockedCell(row1, col1) ||
-            (game._board.isOccupied(row1, col1) && !this._isSamePentomino(row1, col1, game, pentominoName))) &&
-            (!game._board.positionIsValid(row2, col2) || game._board.isBlockedCell(row2, col2) ||
-            (game._board.isOccupied(row2, col2) && !this._isSamePentomino(row1, col1, game, pentominoName)))) {
-            ++corners;
-        }
-
-        return corners;
-    }
-
-    _getInnerCorners([row, column], solutionGame, game, pentominoName) {
-        let corners = 0;
-        let row1 = 0, row2 = 0, col1 = 0, col2 = 0;
-
-        row1 = row + 1;
-        col1 = column;
-        row2 = row;
-        col2 = column + 1;
-        if (this._isSamePentomino(row1, col1, solutionGame, pentominoName) &&
-            this._isSamePentomino(row2, col2, solutionGame, pentominoName) &&
-            game._board.isOccupied(row1, col2) &&
-            !this._isSamePentomino(row1, col2, solutionGame, pentominoName)) {
-            ++corners;
-        }
-
-        row1 = row;
-        col1 = column + 1;
-        row2 = row - 1;
-        col2 = column;
-        if (this._isSamePentomino(row1, col1, solutionGame, pentominoName) &&
-            this._isSamePentomino(row2, col2, solutionGame, pentominoName) &&
-            game._board.isOccupied(row2, col1) &&
-            !this._isSamePentomino(row2, col1, solutionGame, pentominoName)) {
-            ++corners;
-        }
-
-        row1 = row - 1;
-        col1 = column;
-        row2 = row;
-        col2 = column - 1;
-        if (this._isSamePentomino(row1, col1, solutionGame, pentominoName) &&
-            this._isSamePentomino(row2, col2, solutionGame, pentominoName) &&
-            game._board.isOccupied(row1, col2) &&
-            !this._isSamePentomino(row1, col2, solutionGame, pentominoName)) {
-            ++corners;
-        }
-
-        row1 = row;
-        col1 = column - 1;
-        row2 = row + 1;
-        col2 = column;
-        if (this._isSamePentomino(row1, col1, solutionGame, pentominoName) &&
-            this._isSamePentomino(row2, col2, solutionGame, pentominoName) &&
-            game._board.isOccupied(row2, col1) &&
-            !this._isSamePentomino(row2, col1, solutionGame, pentominoName)) {
-            ++corners;
-        }
-
-        return corners;
-    }
-
-    _isSamePentomino(row, col, game, pentominoName) {
-        try {
-            let testPento = game._board.getPentominoesAtPosition(row, col)[0];
-            if(testPento.name == pentominoName) {
-                return true;
-            }
-        } catch(error) {
-            return false;
-        }
-        return false;
-    }
+    }   
 
 
     // --- --- --- Calculate Position In Game --- --- ---
@@ -411,12 +296,8 @@ class SplitBoard {
                 possibleSolutions.push(solution);
             }
         });
-
         return possibleSolutions;
-    }
-
-
-    
+    }    
 }
 
 if (typeof module != 'undefined') {

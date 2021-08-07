@@ -278,8 +278,8 @@ class Visual {
             htmlElement.style.setProperty("--rotationX", "0deg");
             htmlElement.style.setProperty("--rotationY", "0deg");
             htmlElement.style.setProperty("--rotationZ", "0deg");
-            if(piecesSelectedForPartition.length != 0) {
-                let containsDisplayedPieceName = this.piecesSelectedForPartition.indexOf()
+            if(piecesSelectedForPartition.length != 0 && splitCounter <= 1 ) {
+                let containsDisplayedPieceName = this.piecesSelectedForPartition.indexOf(piece.name);
                 if(containsDisplayedPieceName) {
                     if(containsDisplayedPieceName === -1 ) {
                         htmlElement.style.display = 'none';
@@ -863,7 +863,6 @@ class Visual {
         this.undoSplit();
     }
 
-
     callSplitBoardViaColor() {
         let partitionedArray = pd.gameController.loadSplit();
         splitPartition = [];
@@ -871,9 +870,7 @@ class Visual {
         this.displaySplit(partitionedArray, alternateColor);        
     }
 
-    callSplitBoard_V2() {
-        // this.reset();
-        // this.undoSplit();
+    callSplitBoard_V2() {       
         let partitionedArray = pd.gameController.loadSplit_V2();        
         this.resize(partitionedArray, partitionedArray.length)
         let styleElement = document.querySelector('.boardarea');
@@ -1013,8 +1010,7 @@ class Visual {
             }
                             
         });     
-        return partitionCheck;    
-        
+        return partitionCheck;            
     }
 
 
