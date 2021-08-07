@@ -743,7 +743,7 @@ class Visual {
         
         setTimeout(function (that, piece) {
             that.updateDOMWithPentomino(piece);
-        }, 500, this, piece);
+        }, 200, this, piece);
     }
 
     rotateAntiClkWise(cmdProperty = cmdAttrDefault) {
@@ -764,7 +764,7 @@ class Visual {
         
         setTimeout(function (that, piece) {
             that.updateDOMWithPentomino(piece);
-        }, 500, this, piece);
+        }, 200, this, piece);
     }
 
     flipH(cmdProperty = cmdAttrDefault) {
@@ -789,7 +789,7 @@ class Visual {
         
         setTimeout(function (that, piece) {
             that.updateDOMWithPentomino(piece);
-        }, 500, this, piece);
+        }, 200, this, piece);
     }
 
     flipV(cmdProperty = cmdAttrDefault) {
@@ -811,7 +811,7 @@ class Visual {
         
         setTimeout(function (that, piece) {
             that.updateDOMWithPentomino(piece);
-        }, 500, this, piece);
+        }, 200, this, piece);
     }
 
     showNumberOfPossibleSolutions() {
