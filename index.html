@@ -340,12 +340,22 @@
             let yesButton = SettingsForm.createButton("Yes");
             yesButton.addEventListener("click", (event) => {
                 SettingsSingleton.getInstance().getSettings().boardCustomization.includePiecePos = true;
+
+                let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(),
+                    SettingsSingleton.getInstance().getSettings());
+                insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
+
                 handleShareSettings(SettingsSingleton.getInstance().getSettings());
             });
             parent.appendChild(yesButton);
             let noButton = SettingsForm.createButton("No");
             noButton.addEventListener("click", (event) => {
                 SettingsSingleton.getInstance().getSettings().boardCustomization.includePiecePos = false;
+
+                let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(),
+                    SettingsSingleton.getInstance().getSettings());
+                insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
+
                 handleShareSettings(SettingsSingleton.getInstance().getSettings());
             });
             parent.appendChild(noButton);
