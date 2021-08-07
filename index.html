@@ -336,7 +336,7 @@
             heading.innerHTML = "Share";
             parent.appendChild(heading);
 
-            // TODO
+            handleShareSettings(SettingsSingleton.getInstance().getSettings());
 
             console.log("Clicked on share");
         }
@@ -693,7 +693,6 @@
             SettingsForm.generateForm(
                 $('#innerGridForm')[0],
                 this.handleJsonFormSubmit,
-                this.handleShareSettings,
                 this.handleClickedOnLicenses
             );
 

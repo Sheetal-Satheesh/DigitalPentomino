@@ -1,24 +1,14 @@
 class SettingsForm {
 
   // === === === GENERATE FORM === === ===
-    static generateForm(formElement, onSubmit, onExport, onLicense) {
+    static generateForm(formElement, onSubmit, onLicense) {
         let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
         let settings = SettingsSingleton.getInstance().getSettings();
 
         SettingsForm.createForm(formElement, schema, settings);
 
         formElement.appendChild(document.createElement("br"));
-        formElement.appendChild(document.createElement("br"));        if (settings.teachersMode) {
-            let useInClassButton = SettingsForm.createButton("Share");
-            useInClassButton.className = "formButton";
-            useInClassButton.id = "btnSettingsShare";
-            useInClassButton.addEventListener("click", function() {
-                let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
-                let settings = SettingsSingleton.getInstance().getSettings();
-                onExport(SettingsForm.collectDataFromForm(formElement, schema, settings));
-            });
-            formElement.appendChild(useInClassButton);
-        }
+        formElement.appendChild(document.createElement("br"));
         let licenseButton = SettingsForm.createLicenseButton();
         licenseButton.id = "licenseButton";
         licenseButton.className = "formButton"
