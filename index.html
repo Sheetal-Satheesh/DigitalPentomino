@@ -342,8 +342,8 @@
                 strings.settings.boardCustomization.includePiecePos.title[lang]);
             parent.appendChild(includePiecesLabel);
             let includePiecesCheckbox = SettingsForm.createInputElement("checkbox", "includePiecesCheckBox");
-            includePiecesCheckbox.value =
-                SettingsSchemaSingleton.getInstance().getSettingsSchema().boardCustomization.includePiecePos;
+            includePiecesCheckbox.checked =
+                SettingsSingleton.getInstance().getSettings().boardCustomization.includePiecePos;
             parent.appendChild(includePiecesCheckbox);
 
             parent.appendChild(document.createElement("br"));
