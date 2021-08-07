@@ -236,11 +236,31 @@ class CommandManager {
     }
 
     Redo() {
-        let command = this._cmdTree.MoveDown();
-        if (command == undefined) {
+
+        let current = this._cmdTree.Current();
+        let commands = undefined;
+        if (current == undefined) {
+            if (this._cmdTree.Root() == undefined) {
+                console.error("Command Tree is Emty: Game is not Started");
+                return undefined;
+            }
+            else {
+                this.AdjustCurrCmd(this._cmdTree.Root().Key());
+                commands = this._cmdTree.Current().Command();
+                return commands.ExecValues();
+            }
+        }
+
+        if (current.Children().length == 0) {
+            console.error("Redo not possible");
             return undefined;
         }
-        return command.ExecValues();
+        else {
+            this.AdjustCurrCmd(current.ChildTopNode().Key());
+            commands = this._cmdTree.Current().Command();
+        }
+        return commands.ExecValues();
+
     }
 
     RedoCommandsAll() {
