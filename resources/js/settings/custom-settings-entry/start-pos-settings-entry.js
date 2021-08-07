@@ -114,15 +114,17 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
 
         pd.loadBoard(game.getName());
 
-        let boardSRows = new FrontController().controller.game().getBoard()._boardSRows;
-        let boardSCols = new FrontController().controller.game().getBoard()._boardSCols;
+        if (SettingsSingleton.getInstance().getSettings().boardCustomization.includePiecePos) {
+            let boardSRows = new FrontController().controller.game().getBoard()._boardSRows;
+            let boardSCols = new FrontController().controller.game().getBoard()._boardSCols;
 
-        game.getPentominoesOnBoard().forEach(p => {
-            let pos = game.getPosition(p);
-            this.placePiece(p.name, pos[0] + boardSRows, pos[1] + boardSCols);
-        });
+            game.getPentominoesOnBoard().forEach(p => {
+                let pos = game.getPosition(p);
+                this.placePiece(p.name, pos[0] + boardSRows, pos[1] + boardSCols);
+            });
 
-        pd.visual.renderPieces();
+            pd.visual.renderPieces();
+        }
     }
 
     placePiece(pieceName, row, col) {
