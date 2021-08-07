@@ -333,14 +333,23 @@
             let parent = $('#innerGridForm')[0];
 
             let heading = document.createElement("h4");
-            heading.innerHTML = "Include pentomino pieces placed on board?";
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+            heading.innerHTML = strings.settings.boardCustomization.shareThisBoard.title[lang];
             parent.appendChild(heading);
 
             // Add choice
+            let includePiecesLabel = SettingsForm.createLabel(
+                strings.settings.boardCustomization.includePiecePos.title[lang]);
+            parent.appendChild(includePiecesLabel);
+            let includePiecesCheckbox = SettingsForm.createInputElement("checkbox", "includePiecesCheckBox");
+            includePiecesCheckbox.value =
+                SettingsSchemaSingleton.getInstance().getSettingsSchema().boardCustomization.includePiecePos;
+            parent.appendChild(includePiecesCheckbox);
+
             let yesButton = SettingsForm.createButton("Yes");
             yesButton.addEventListener("click", (event) => {
-                SettingsSingleton.getInstance().getSettings().boardCustomization.includePiecePos = true;
-
+                let checkboxValue = includePiecesCheckbox.checked;
+                SettingsSingleton.getInstance().getSettings().boardCustomization.includePiecePos = checkboxValue;
                 let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(),
                     SettingsSingleton.getInstance().getSettings());
                 insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
@@ -348,17 +357,6 @@
                 handleShareSettings(SettingsSingleton.getInstance().getSettings());
             });
             parent.appendChild(yesButton);
-            let noButton = SettingsForm.createButton("No");
-            noButton.addEventListener("click", (event) => {
-                SettingsSingleton.getInstance().getSettings().boardCustomization.includePiecePos = false;
-
-                let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(),
-                    SettingsSingleton.getInstance().getSettings());
-                insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
-
-                handleShareSettings(SettingsSingleton.getInstance().getSettings());
-            });
-            parent.appendChild(noButton);
         }
 
         function openScanQrCode() {

@@ -194,6 +194,9 @@ const strings = {
             includePiecePos: {
                 title: ["Include pentomino pieces on board?", "Speichere Spielsteine auf dem Brett?"],
                 description: ["TODO", "TODO"]
+            },
+            shareThisBoard: {
+                title: ["Share this board?", "Teile dieses Brett?"]
             }
         },
         errors: {
