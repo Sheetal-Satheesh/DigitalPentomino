@@ -95,7 +95,7 @@ class CommandTree {
         return retNode;
     }
 
-    NodeCount(currentNode=this._rootCmdNode) {
+    NodeCount(currentNode = this._rootCmdNode) {
         if (currentNode == undefined) {
             return 0;
         }
@@ -299,6 +299,29 @@ class CommandTree {
         return [current, firstNode];
     }
 
+    LeftLeafNode(current) {
+        if (current == undefined) {
+            console.error("Command Tree is Emty: Game is not Started");
+            return undefined;
+        }
+
+        let siblings = current.Children();
+        if (siblings.length == 0) {
+            return current;
+        }
+        else if (siblings.length > 1) {
+            for (iter = 0; iter < siblings.length; iter++) {
+                if (siblings[iter].Key() == current.Key() && iter != 0) {
+                    return this.LeftMostLeafNode(siblings[iter - 1]);
+                }
+            }
+        }
+        else {
+            return undefined;
+        }
+
+
+    }
     /**
      * TODO:// extensive support 
      * @returns 
@@ -365,11 +388,11 @@ class CommandTree {
     }
 
     isAtRoot() {
-        return this._currentCmd === this._rootCmdNode;
+        return this._currentCmdNode === this._rootCmdNode;
     }
 
     isAtLeaf() {
-        return this._currentCmd.getChildren().length === 0;
+        return this._currentCmdNode.getChildren().length === 0;
     }
 
     Root() {
@@ -388,6 +411,10 @@ class CommandTree {
     }
 
     PositionCurrent(cmdKey) {
+        if (cmdKey == undefined) {
+            this._currentCmdNode = undefined;
+            return;
+        }
         this._currentCmdNode = this.SearchCmdNode(this._rootCmdNode, cmdKey);
     }
 

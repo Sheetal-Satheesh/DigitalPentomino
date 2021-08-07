@@ -1623,11 +1623,13 @@ class Visual {
     }
 
     undo() {
-        let command = this.gameController.undo();
-        if (command == undefined) {
+        let commandSeq = this.gameController.undo();
+        if (commandSeq == undefined) {
             return;
         }
-        this.execShadowCmd(command);
+        commandSeq.forEach((item) => {
+            this.execShadowCmd(item);
+        }, this);
         if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.showNumberOfPossibleSolutions();
         }

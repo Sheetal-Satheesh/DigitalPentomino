@@ -99,7 +99,7 @@ class CommandManager {
         return this._cmdTree.CurrentCmdKey();
     }
 
-    NodeCount(){
+    NodeCount() {
         return this._cmdTree.NodeCount();
     }
 
@@ -108,13 +108,13 @@ class CommandManager {
             return 1;
         }
         else if (this.CurrentCmdKey() == this.RootCmdKey) {
-            return 1<<1;
+            return 1 << 1;
         }
         else if (this.CurrentCmdKey() == this.LastCmdKey()) {
-            return 1<<2;
+            return 1 << 2;
         }
         else {
-            return 1<<3;
+            return 1 << 3;
         }
     }
 
@@ -198,12 +198,39 @@ class CommandManager {
     }
 
     Undo() {
-        let command = this._cmdTree.MoveUp();
-        if (command == undefined) {
+        let current = this._cmdTree.Current();
+        if (current == undefined) {
+            if (this._cmdTree.Root() == undefined) {
+                console.error("Command Tree is Emty: Game is not Started");
+            } else {
+                console.error("Undo not possible");
+            }
+
             return undefined;
         }
-        return command.ExecUndoValues();
 
+        let parent = current.Parent();
+        if (current.Key() === parent.Key()) {
+            this.AdjustCurrCmd(undefined);
+            return [current.Command().ExecUndoValues()];
+        }
+
+        let siblings = parent.Children();
+        if (siblings.length == 1) {
+            this.AdjustCurrCmd(parent.Key());
+            return [current.Command().ExecUndoValues()];
+        }
+        else {
+            let leaf = this._cmdTree.LeftLeafNode(this._cmdTree._currentCmdNode);
+            if (leaf == undefined) {
+                console.log("Error: Leaf node undefined");
+                return leaf;
+            }
+            this.AdjustCurrCmd(leaf.Key());
+            let [cmdSeq, seqType] = this.CmdSequences(this.CurrentCmdKey(), leaf.Key());
+            return cmdSeq;
+
+        }
     }
 
     Redo() {
