@@ -216,21 +216,23 @@ class CommandManager {
         }
 
         let siblings = parent.Children();
-        if (siblings.length == 1) {
+        if (siblings.length <= 1 || siblings[0] == current.Key()) {
             this.AdjustCurrCmd(parent.Key());
-            return [current.Command().ExecUndoValues()];
         }
         else {
-            let leaf = this._cmdTree.LeftLeafNode(this._cmdTree._currentCmdNode);
-            if (leaf == undefined) {
-                console.log("Error: Leaf node undefined");
-                return leaf;
+            for (let iter = 0; iter < siblings.length; ++iter) {
+                if (siblings[iter].Key() == current.Key() && iter != 0) {
+                    let leaf = this._cmdTree.LeafNode(siblings[iter - 1]);
+                    if (leaf == undefined) {
+                        console.log("Error: Leaf node undefined");
+                        return leaf;
+                    }
+                    this.AdjustCurrCmd(leaf.Key());
+                }
             }
-            this.AdjustCurrCmd(leaf.Key());
-            let [cmdSeq, seqType] = this.CmdSequences(this.CurrentCmdKey(), leaf.Key());
-            return cmdSeq;
-
         }
+
+        return [current.Command().ExecUndoValues()];
     }
 
     Redo() {

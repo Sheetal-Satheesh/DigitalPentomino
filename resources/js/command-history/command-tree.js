@@ -171,6 +171,13 @@ class CommandTree {
             return undefined;
         }
 
+        if(startKey == endKey){
+            return {
+                seqType: SearchStrategy.Top2Bottom,
+                commands: [this.SearchCmdNode(currNode, startKey).Command()]
+            };
+        }
+
         if (currNode.Key() == startKey) {
             searchType |= SearchStrategy.Top2Bottom;
             if ((SearchStrategy.BottomUp & searchType) != 0) {
@@ -299,25 +306,17 @@ class CommandTree {
         return [current, firstNode];
     }
 
-    LeftLeafNode(current) {
-        if (current == undefined) {
-            console.error("Command Tree is Emty: Game is not Started");
+    LeafNode(head) {
+        if (head == undefined) {
             return undefined;
         }
 
-        let siblings = current.Children();
+        let siblings = head.Children();
         if (siblings.length == 0) {
-            return current;
+            return head;
         }
-        else if (siblings.length > 1) {
-            for (iter = 0; iter < siblings.length; iter++) {
-                if (siblings[iter].Key() == current.Key() && iter != 0) {
-                    return this.LeftMostLeafNode(siblings[iter - 1]);
-                }
-            }
-        }
-        else {
-            return undefined;
+        else if (siblings.length >= 1) {
+            return this.LeafNode(head.ChildTopNode());
         }
 
 
