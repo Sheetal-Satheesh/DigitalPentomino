@@ -902,6 +902,13 @@
             let settings = SettingsSingleton.getInstance().getSettings();
 
             //show back button
+            let btn = document.getElementById("backButton");
+            btn.style.display = "block";
+            btn.onclick = function () {
+                openIncludePiecesScreen();
+                btn.style.display = "none";
+            };
+
             let teacherURLLabel = document.createElement("label");
             let pupilURLLabel = document.createElement("label");
 
