@@ -346,6 +346,8 @@
                 SettingsSchemaSingleton.getInstance().getSettingsSchema().boardCustomization.includePiecePos;
             parent.appendChild(includePiecesCheckbox);
 
+            parent.appendChild(document.createElement("br"));
+
             let yesButton = SettingsForm.createButton("Yes");
             yesButton.addEventListener("click", (event) => {
                 let checkboxValue = includePiecesCheckbox.checked;
@@ -354,7 +356,7 @@
                     SettingsSingleton.getInstance().getSettings());
                 insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
 
-                handleShareSettings(SettingsSingleton.getInstance().getSettings());
+                handleShareSettings();
             });
             parent.appendChild(yesButton);
         }
@@ -875,7 +877,7 @@
             modal.appendChild(div5);
         }
 
-        function handleShareSettings(settings) {
+        function handleShareSettings() {
             this.hideManipulationButtons();
             this.closeBoardSelector();
             this.disablePointerEventsOnPieces();
@@ -897,15 +899,9 @@
             div1.appendChild(h5);
             modalBodyID.appendChild(div1);
 
-            //show back button
-            let btn = document.getElementById("backButton");
-            btn.style.display = "block";
-            btn.onclick = function () {
-                openSettings();
-                SettingsForm.updateForm($('#innerGridForm')[0], settings);
-                btn.style.display = "none";
-            };
+            let settings = SettingsSingleton.getInstance().getSettings();
 
+            //show back button
             let teacherURLLabel = document.createElement("label");
             let pupilURLLabel = document.createElement("label");
 
