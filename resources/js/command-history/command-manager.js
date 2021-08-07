@@ -208,30 +208,28 @@ class CommandManager {
 
             return undefined;
         }
-
         let parent = current.Parent();
+        let branch = current.Branch();
+        if (branch != undefined) {
+            let leaf = this._cmdTree.LeafNode(branch);
+            let [cmdSeq, seqType] = this.CmdSequences(branch.Parent().Key(), leaf.Key());
+            current.AddBranch(undefined);
+            return cmdSeq;
+        }
+
         if (current.Key() === parent.Key()) {
             this.AdjustCurrCmd(undefined);
             return [current.Command().ExecUndoValues()];
         }
 
         let siblings = parent.Children();
-        if (siblings.length <= 1 || siblings[0] == current.Key()) {
-            this.AdjustCurrCmd(parent.Key());
-        }
-        else {
-            for (let iter = 0; iter < siblings.length; ++iter) {
-                if (siblings[iter].Key() == current.Key() && iter != 0) {
-                    let leaf = this._cmdTree.LeafNode(siblings[iter - 1]);
-                    if (leaf == undefined) {
-                        console.log("Error: Leaf node undefined");
-                        return leaf;
-                    }
-                    this.AdjustCurrCmd(leaf.Key());
-                }
+        for (let iter = 0; iter < siblings.length && siblings.length>1; ++iter) {
+            if (siblings[iter].Key() == current.Key() && iter != 0) {
+                parent.AddBranch(siblings[iter - 1]);
             }
         }
 
+        this.AdjustCurrCmd(parent.Key());
         return [current.Command().ExecUndoValues()];
     }
 
