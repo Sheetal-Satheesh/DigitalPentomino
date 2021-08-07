@@ -190,6 +190,10 @@ const strings = {
             initialPiecePos: {
                 title: ["Predefine start game", "Wähle das Start-Spielbrett"],
                 description: ["When starting the app, the saved board will be selected and pieces loaded at their saved position.", "Wenn die App gestartet wird, wird das gespeicherte Spielbrett geladen und die Spielsteine starten an ihrer gespeicherten Position."]
+            },
+            includePiecePos: {
+                title: ["Include pentomino pieces on board?", "Speichere Spielsteine auf dem Brett?"],
+                description: ["TODO", "TODO"]
             }
         },
         errors: {

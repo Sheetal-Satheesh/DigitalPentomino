@@ -111,6 +111,12 @@ class SettingsSchema {
                         "description": titles.boardCustomization.initialPiecePos.description[lang],
                         "default": boardCustomizationDefault
                     },
+                    includePiecePos: {
+                        "type": "boolean",
+                        "title": titles.boardCustomization.includePiecePos.title[lang],
+                        "description": titles.boardCustomization.includePiecePos.description[lang],
+                        "default": false
+                    }
                 }
             },
             showSolvedBoardScreen: {

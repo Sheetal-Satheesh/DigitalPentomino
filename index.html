@@ -313,11 +313,11 @@
             scanButton.addEventListener("click", (event) => openScanQrCode());
             parent.appendChild(scanButton);
             let shareButton = SettingsForm.createButton("Share");
-            shareButton.addEventListener("click", (event) => openShareScreen());
+            shareButton.addEventListener("click", (event) => openIncludePiecesScreen());
             parent.appendChild(shareButton);
         }
 
-        function openShareScreen() {
+        function openIncludePiecesScreen() {
             let modal = document.getElementById('modalTop');
             modal.style.display = "block";
             modal.style.background = "#eceaea";
@@ -333,12 +333,22 @@
             let parent = $('#innerGridForm')[0];
 
             let heading = document.createElement("h4");
-            heading.innerHTML = "Share";
+            heading.innerHTML = "Include pentomino pieces placed on board?";
             parent.appendChild(heading);
 
-            handleShareSettings(SettingsSingleton.getInstance().getSettings());
-
-            console.log("Clicked on share");
+            // Add choice
+            let yesButton = SettingsForm.createButton("Yes");
+            yesButton.addEventListener("click", (event) => {
+                SettingsSingleton.getInstance().getSettings().boardCustomization.includePiecePos = true;
+                handleShareSettings(SettingsSingleton.getInstance().getSettings());
+            });
+            parent.appendChild(yesButton);
+            let noButton = SettingsForm.createButton("No");
+            noButton.addEventListener("click", (event) => {
+                SettingsSingleton.getInstance().getSettings().boardCustomization.includePiecePos = false;
+                handleShareSettings(SettingsSingleton.getInstance().getSettings());
+            });
+            parent.appendChild(noButton);
         }
 
         function openScanQrCode() {
