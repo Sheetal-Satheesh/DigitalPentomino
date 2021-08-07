@@ -699,6 +699,31 @@ class Visual {
         return emptyTrayList;
     }
 
+    updateDOMWithPentomino(piece) {
+        let oldPieceDiv = document.getElementById("piece_" + piece.name);
+        let pieceBitMap = piece.getMatrixRepresentation();
+        let width = UIProperty.WindowWidth / this.pd.gameWidth;
+        let newDiv = document.createElement("div");
+        let out = '<div class="piece" id="piece_' + piece.name + '" style="width:' + (5 * width) + 'vw;height:' + (5 * width) + 'vw;display:block;z-index:0;">';
+
+        for (let i = 0; i < 5; ++i) {
+            for (let j = 0; j < 5; ++j) {
+                let set = pieceBitMap[i][j];
+                out += '<div style="display:block;float:left;width:' + width + 'vw;height:' + width + 'vw;' + ((set) ? 'background:' + piece.color : '') + '" class="' + ((set) ? 'bmPoint' : 'bmAround') + '"></div>';
+            }
+        }
+
+        newDiv.innerHTML = out;
+        let correctDiv = newDiv.firstElementChild;
+        correctDiv.style.setProperty("left", oldPieceDiv.style.left);
+        correctDiv.style.setProperty("top", oldPieceDiv.style.top);
+        correctDiv.style.setProperty("transformOrigin", oldPieceDiv.style.transformOrigin);
+        correctDiv.style.setProperty("--magnification", oldPieceDiv.style.getPropertyValue("--magnification"));
+        correctDiv.style.setProperty("--rotationX", "0deg");
+        correctDiv.style.setProperty("--rotationY", "0deg");
+        correctDiv.style.setProperty("--rotationZ", "0deg");
+        oldPieceDiv.replaceWith(correctDiv);
+    }
 
     rotateClkWise(cmdProperty = cmdAttrDefault) {
         let piece = this.selected;
@@ -715,6 +740,10 @@ class Visual {
                 this.checkIfGameWon();
             }
         }
+        
+        setTimeout(function (that, piece) {
+            that.updateDOMWithPentomino(piece);
+        }, 500, this, piece);
     }
 
     rotateAntiClkWise(cmdProperty = cmdAttrDefault) {
@@ -732,6 +761,10 @@ class Visual {
                 this.checkIfGameWon();
             }
         }
+        
+        setTimeout(function (that, piece) {
+            that.updateDOMWithPentomino(piece);
+        }, 500, this, piece);
     }
 
     flipH(cmdProperty = cmdAttrDefault) {
@@ -753,6 +786,10 @@ class Visual {
         if (cmdProperty.cmdType != CommandTypes.Shadow) {
             this.checkIfGameWon();
         }
+        
+        setTimeout(function (that, piece) {
+            that.updateDOMWithPentomino(piece);
+        }, 500, this, piece);
     }
 
     flipV(cmdProperty = cmdAttrDefault) {
@@ -771,7 +808,10 @@ class Visual {
         if (cmdProperty.cmdType != CommandTypes.Shadow) {
             this.checkIfGameWon();
         }
-
+        
+        setTimeout(function (that, piece) {
+            that.updateDOMWithPentomino(piece);
+        }, 500, this, piece);
     }
 
     showNumberOfPossibleSolutions() {
