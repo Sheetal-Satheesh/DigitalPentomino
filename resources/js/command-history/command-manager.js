@@ -33,12 +33,12 @@ class CommandManager {
             currNode = this._cmdTree.Insert(command);
         }
         else {
-            // if (cmdSeq == CommandSeq.Forward) {
-            //     this._cmdTree.MoveDown();
-            // }
-            // else if (cmdSeq == CommandSeq.Backward) {
-            //     this._cmdTree.MoveUp();
-            // }
+            if (cmdSeq == CommandSeq.Forward) {
+                this._cmdTree.MoveDown();
+            }
+            else if (cmdSeq == CommandSeq.Backward) {
+                this._cmdTree.MoveUp();
+            }
         }
 
         let cmdVal = command.ExecValues();
@@ -128,18 +128,6 @@ class CommandManager {
         }
     }
 
-    CmdKeySequences() {
-
-        let startKey = this._cmdTree.RootCmdKey();
-        let endKey = this._cmdTree.LeafCmdKey();
-        let cmdKeySeq = this._cmdTree.CollectCmdKeySequences(
-            this._cmdTree.Root(),
-            startKey,
-            endKey, 0);
-
-        return cmdKeySeq;
-    }
-
     CmdSequences(startKey, endKey) {
         if (startKey == undefined) {
             startKey = this.StartCmdKey();
@@ -207,15 +195,13 @@ class CommandManager {
             return undefined;
         }
 
-        // this._cmdTree.GetNodePath(this._cmdTree.Root(), current.Key());
-        // let cmdNodes = this._cmdTree.CmdSequences(this._cmdTree.Root().Key(),this._cmdTree.Leaf().Key());
         let parent = current.Parent();
         let branch = current.Branch();
         if (branch != undefined) {
             let leaf = this._cmdTree.LeafNode(branch);
             let [cmdSeq, seqType] = this.CmdSequences(branch.Key(), leaf.Key());
             current.AddBranch(undefined);
-            this.AdjustCurrCmd(branch.Key());
+            this.AdjustCurrCmd(leaf.Key());
             return cmdSeq;
         }
 
@@ -225,7 +211,7 @@ class CommandManager {
         }
 
         let siblings = parent.Children();
-        for (let iter = 0; iter < siblings.length && siblings.length>1; ++iter) {
+        for (let iter = 0; iter < siblings.length && siblings.length > 1; ++iter) {
             if (siblings[iter].Key() == current.Key() && iter != 0) {
                 parent.AddBranch(siblings[iter - 1]);
             }
@@ -247,19 +233,33 @@ class CommandManager {
             else {
                 this.AdjustCurrCmd(this._cmdTree.Root().Key());
                 commands = this._cmdTree.Current().Command();
-                return commands.ExecValues();
+                return [commands.ExecValues()];
             }
         }
+        let branch = current.Branch();
+        if (branch != undefined) {
+            current.AddBranch(undefined);
+            this.AdjustCurrCmd(branch.Key());
+            return [branch.Command().ExecValues()];
+        }
+
 
         if (current.Children().length == 0) {
-            console.error("Redo not possible");
-            return undefined;
+            let branchNode = this._cmdTree.NextBranchNode(current);
+            if (branchNode != undefined) {
+                branchNode.Parent().AddBranch(branchNode);
+                this.AdjustCurrCmd(branchNode.Parent().Key());
+                let currBranchTop = this._cmdTree.PrevBranchNode(branchNode);
+                let [cmdSeq, seqType] = this.CmdSequences(current.Key(), currBranchTop.Key());
+                return cmdSeq;
+            }
         }
         else {
-            this.AdjustCurrCmd(current.ChildTopNode().Key());
+            this.AdjustCurrCmd((current.Children())[0].Key());
             commands = this._cmdTree.Current().Command();
+            return [commands.ExecValues()];
         }
-        return commands.ExecValues();
+
 
     }
 

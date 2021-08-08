@@ -1617,11 +1617,6 @@ class Visual {
         }
     }
 
-    getGameStates() {
-        let cmdKeySequences = this.gameController.getCmdKeySequences();
-        return cmdKeySequences;
-    }
-
     undo() {
         let commandSeq = this.gameController.undo();
         if (commandSeq == undefined) {
@@ -1637,11 +1632,15 @@ class Visual {
     }
 
     redo() {
-        let command = this.gameController.redo();
-        if (command == undefined) {
+        let commandSeq = this.gameController.redo();
+        if (commandSeq == undefined) {
             return;
         }
-        this.execShadowCmd(command);
+        commandSeq.forEach((item) => {
+            this.execShadowCmd(item);
+        }, this);
+
+        
         if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.showNumberOfPossibleSolutions();
         }
