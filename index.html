@@ -351,9 +351,17 @@
             let yesButton = SettingsForm.createButton("Yes");
             yesButton.addEventListener("click", (event) => {
                 let checkboxValue = includePiecesCheckbox.checked;
-                SettingsSingleton.getInstance().getSettings().boardCustomization.includePiecePos = checkboxValue;
-                let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(),
-                    SettingsSingleton.getInstance().getSettings());
+
+                let settings = SettingsSingleton.getInstance().getSettings();
+                settings.boardCustomization.includePiecePos = checkboxValue;
+
+                let game = new FrontController().controller.game();
+                let customSettingsEntry = CustomSettingsEntrySingleton.getInstance()
+                    .get("boardCustomization", "initialPiecePos");
+                let piecePosSeedEntry = customSettingsEntry.parseFromGameToSeed(game);
+                settings.boardCustomization.initialPiecePos = piecePosSeedEntry;
+
+                let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), settings);
                 insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
 
                 handleShareSettings();
