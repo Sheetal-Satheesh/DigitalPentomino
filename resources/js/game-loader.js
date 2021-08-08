@@ -321,9 +321,9 @@ class GameLoader {
 
         let cmdProperty = updateCommandAttr(CommandTypes.Local, seqType);
         let cmdSeqLength = cmdSequences.length;
-        // if (seqType == CommandSeq.Backward) {
-        //     --cmdSeqLength;
-        // }
+        if (seqType == CommandSeq.Backward) {
+            --cmdSeqLength;
+        }
 
         for (let indx = 0; indx < cmdSeqLength; indx++) {
 

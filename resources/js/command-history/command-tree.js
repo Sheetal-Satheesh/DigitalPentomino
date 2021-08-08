@@ -411,43 +411,43 @@ class CommandTree {
         }
     }
 
-    NextBranchNode(current, target) {
-        let retCurrent, firstNode;
-        if (current == undefined) {
-            console.error("Node undefined");
-            return [undefined, firstNode];
-        }
-        else if (target == current) {
-            if (target.Children().length == 0) {
-                return [target, firstNode = true];
-            }
-            return [target.Children()[0], firstNode];
-        }
-        else if (current.Children().length == 0) {
-            return [current, firstNode];
-        }
+    // NextBranchNode(current, target) {
+    //     let retCurrent, firstNode;
+    //     if (current == undefined) {
+    //         console.error("Node undefined");
+    //         return [undefined, firstNode];
+    //     }
+    //     else if (target == current) {
+    //         if (target.Children().length == 0) {
+    //             return [target, firstNode = true];
+    //         }
+    //         return [target.Children()[0], firstNode];
+    //     }
+    //     else if (current.Children().length == 0) {
+    //         return [current, firstNode];
+    //     }
 
-        for (let prevIndex = 0, index = 0;
-            index < current.Children().length; ++index) {
+    //     for (let prevIndex = 0, index = 0;
+    //         index < current.Children().length; ++index) {
 
-            let child = current.Children();
-            if (index != prevIndex) {
-                if (firstNode == true) {
-                    return [child[index], firstNode];
-                }
-                if (child[index] == target) {
-                    return [target.Children()[0], firstNode];
-                }
-            }
-            [retCurrent, firstNode] = this.NextBranchNode(child[index], target, firstNode);
-            prevIndex = index;
-            if (retCurrent.Parent() == target) {
-                return [retCurrent, firstNode];
-            }
-        }
+    //         let child = current.Children();
+    //         if (index != prevIndex) {
+    //             if (firstNode == true) {
+    //                 return [child[index], firstNode];
+    //             }
+    //             if (child[index] == target) {
+    //                 return [target.Children()[0], firstNode];
+    //             }
+    //         }
+    //         [retCurrent, firstNode] = this.NextBranchNode(child[index], target, firstNode);
+    //         prevIndex = index;
+    //         if (retCurrent.Parent() == target) {
+    //             return [retCurrent, firstNode];
+    //         }
+    //     }
 
-        return [current, firstNode];
-    }
+    //     return [current, firstNode];
+    // }
 
     NextBranchNode(currNode) {
         if (currNode == undefined) {
