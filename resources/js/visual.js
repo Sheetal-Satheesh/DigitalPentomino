@@ -6,7 +6,7 @@ const UIProperty = {
 }
 Object.freeze(UIProperty);
 
-const CommandTypes = { "Original": 1, "Shadow": 2, "None": 3 };
+const CommandTypes = { "Original": 1, "Shadow": 2, "Local":3, "None": 4 };
 Object.freeze(CommandTypes);
 
 const CommandSeq = { "Forward": 1, "Backward": 2 };

@@ -32,7 +32,7 @@ class CommandManager {
         if (cmdType == CommandTypes.Original) {
             currNode = this._cmdTree.Insert(command);
         }
-        else {
+        else if(cmdType == CommandTypes.Local){
             if (cmdSeq == CommandSeq.Forward) {
                 this._cmdTree.MoveDown();
             }
@@ -136,9 +136,9 @@ class CommandManager {
             startKey,
             endKey);
 
-        if (cmdObj.seqType == 2) {
-            cmdObj.commands = cmdObj.commands.reverse();
-        }
+        // if (cmdObj.seqType == 2) {
+        //     cmdObj.commands = cmdObj.commands.reverse();
+        // }
 
         let cmdSequences = [];
         cmdObj.commands.forEach((command) => {

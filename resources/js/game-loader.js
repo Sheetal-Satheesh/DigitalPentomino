@@ -319,7 +319,7 @@ class GameLoader {
 
     jumpToGameState(cmdSequences, seqType) {
 
-        let cmdProperty = updateCommandAttr(CommandTypes.Shadow, seqType);
+        let cmdProperty = updateCommandAttr(CommandTypes.Local, seqType);
         let cmdSeqLength = cmdSequences.length;
         // if (seqType == CommandSeq.Backward) {
         //     --cmdSeqLength;
