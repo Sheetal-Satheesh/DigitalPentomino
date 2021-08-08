@@ -241,10 +241,10 @@ class CommandTree {
             else {
                 parentIndx = eIndx;
 
-                if((startPath[sIndx-1].ChildTopNode() == endPath[sIndx]) ||
-                (endPath[eIndx-1].ChildTopNode() == startPath[eIndx])
-                ){  
-                    parentIndx  = (parentIndx!=0)? parentIndx-1:0;
+                if ((startPath[sIndx - 1].ChildTopNode() == endPath[sIndx]) ||
+                    (endPath[eIndx - 1].ChildTopNode() == startPath[eIndx])
+                ) {
+                    parentIndx = (parentIndx != 0) ? parentIndx - 1 : 0;
                 }
                 break;
             }
@@ -437,7 +437,6 @@ class CommandTree {
         else if (siblings.length >= 1) {
             return this.LeafNode(head.ChildTopNode());
         }
-
 
     }
 
