@@ -171,9 +171,13 @@ class CommandTree {
         }
 
         let childs = currNode.Children();
-        let retNodes = [currNode];
+        let retNodes = [];
         for (let iter = 0; iter < childs.length; ++iter) {
             let node = this.GetNodePath(childs[iter], key);
+
+            if (node.length != 0) {
+                retNodes.push(currNode);
+            }
             retNodes = [...retNodes, ...node];
         }
 
@@ -206,6 +210,9 @@ class CommandTree {
         let seqType = -1;
         for (let indx = 0; indx < currNode.Children().length; ++indx) {
             let childs = currNode.Children();
+            if (seqType != -1) {
+                return seqType;
+            }
             seqType = this.GetSequeneType(
                 childs[indx],
                 startKey,
@@ -220,10 +227,6 @@ class CommandTree {
     CmdSequences(startKey, endKey) {
         let startPath = this.GetNodePath(this._rootCmdNode, startKey);
         let endPath = this.GetNodePath(this._rootCmdNode, endKey);
-       
-
-        let retCmds = [];
-
         let sIndx = 0,
             eIndx = 0,
             parentIndx = -1;
@@ -236,12 +239,18 @@ class CommandTree {
                 eIndx++;
             }
             else {
-                parentIndx = eIndx - 1;
+                parentIndx = eIndx;
+
+                if((startPath[sIndx-1].ChildTopNode() == endPath[sIndx]) ||
+                (endPath[eIndx-1].ChildTopNode() == startPath[eIndx])
+                ){  
+                    parentIndx  = (parentIndx!=0)? parentIndx-1:0;
+                }
                 break;
             }
         }
 
-        if(startKey == endKey){
+        if (startKey == endKey) {
             parentIndx = 0;
         }
 
@@ -251,15 +260,17 @@ class CommandTree {
         }
 
         let endBranch = [];
-        for (let indx = parentIndx+1; indx < endPath.length; indx++) {
+        for (let indx = parentIndx; indx < endPath.length; indx++) {
             endBranch.push(endPath[indx].Command());
         }
 
-        let sequnceType = this.GetSequeneType(this._rootCmdNode, startKey, endKey);
-        if(sequnceType == SearchStrategy.BottomUp){
-            endBranch = endBranch.reverse();
-           }
 
+        let sequnceType = this.GetSequeneType(this._rootCmdNode, startKey, endKey);
+        if (sequnceType == SearchStrategy.BottomUp) {
+            endBranch = endBranch.reverse();
+        }
+
+        let retCmds = [];
         retCmds = [...startBranch, ...endBranch];
         return {
             seqType: sequnceType,
