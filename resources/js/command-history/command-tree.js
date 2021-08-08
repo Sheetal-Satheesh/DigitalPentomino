@@ -160,6 +160,105 @@ class CommandTree {
         return cmdKeySeq;
     }
 
+    GetNodePath(currNode, key) {
+        if (currNode == undefined) {
+            return undefined;
+        }
+
+
+        if (currNode.Key() == key) {
+            return [currNode];
+        }
+
+        let childs = currNode.Children();
+        let retNodes = [currNode];
+        for (let iter = 0; iter < childs.length; ++iter) {
+            let node = this.GetNodePath(childs[iter], key);
+            retNodes = [...retNodes, ...node];
+        }
+
+        return retNodes;
+    }
+
+
+    GetSequeneType(currNode, startKey, endKey, searchType) {
+        if (currNode == undefined) {
+            return undefined;
+        }
+
+        if (startKey == endKey) {
+            return SearchStrategy.Top2Bottom;
+        }
+
+        if (currNode.Key() == startKey) {
+            searchType |= SearchStrategy.Top2Bottom;
+            if ((SearchStrategy.BottomUp & searchType) != 0) {
+                return SearchStrategy.BottomUp;
+            }
+        }
+
+        if (currNode.Key() == endKey) {
+            searchType |= SearchStrategy.BottomUp;
+            if ((SearchStrategy.Top2Bottom & searchType) != 0) {
+                return SearchStrategy.Top2Bottom;
+            }
+        }
+        let seqType = -1;
+        for (let indx = 0; indx < currNode.Children().length; ++indx) {
+            let childs = currNode.Children();
+            seqType = this.GetSequeneType(
+                childs[indx],
+                startKey,
+                endKey,
+                searchType
+            );
+        }
+
+        return seqType;
+    }
+
+    CmdSequences(startKey, endKey) {
+        let startPath = this.GetNodePath(this._rootCmdNode, startKey);
+        let endPath = this.GetNodePath(this._rootCmdNode, endKey);
+
+        let retCmds = [];
+
+        let sIndx = 0,
+            eIndx = 0,
+            parentIndx = -1;
+        let parent = undefined;
+        while (sIndx != startPath.length ||
+            eIndx != endPath.length) {
+            if (sIndx == eIndx &&
+                startPath[sIndx] == endPath[eIndx]) {
+                sIndx++;
+                eIndx++;
+            }
+            else {
+                parentIndx = eIndx - 1;
+                break;
+            }
+        }
+
+        let startBranch = [];
+        for (let indx = startPath.length - 1; indx > parentIndx; indx--) {
+            startBranch.push(startPath[indx].Command());
+        }
+
+        let endBranch = [];
+        for (let indx = parentIndx; indx < endPath.length; indx++) {
+            endBranch.push(endPath[indx].Command());
+        }
+
+        let seqType = this.GetSequeneType(this._rootCmdNode, startKey, endKey);
+        if(seqType == SearchStrategy.BottomUp){
+            endBranch = endBranch.reverse();
+           }
+
+        retCmds = [...startBranch, ...endBranch]
+        return retCmds;
+    }
+
     CollectCmdSequences(
         currNode,
         startKey,
@@ -171,7 +270,7 @@ class CommandTree {
             return undefined;
         }
 
-        if(startKey == endKey){
+        if (startKey == endKey) {
             return {
                 seqType: SearchStrategy.Top2Bottom,
                 commands: [this.SearchCmdNode(currNode, startKey).Command()]
@@ -212,6 +311,7 @@ class CommandTree {
                 endKey,
                 searchValue
             );
+
 
             if (searchType) {
                 if (!retObj.commands.find(cmd => cmd._pentomino === currNode.Command()._pentomino)) {
@@ -321,7 +421,7 @@ class CommandTree {
 
 
     }
-    
+
     /**
      * TODO:// extensive support 
      * @returns 

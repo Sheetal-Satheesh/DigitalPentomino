@@ -33,12 +33,12 @@ class CommandManager {
             currNode = this._cmdTree.Insert(command);
         }
         else {
-            if (cmdSeq == CommandSeq.Forward) {
-                this._cmdTree.MoveDown();
-            }
-            else if (cmdSeq == CommandSeq.Backward) {
-                this._cmdTree.MoveUp();
-            }
+            // if (cmdSeq == CommandSeq.Forward) {
+            //     this._cmdTree.MoveDown();
+            // }
+            // else if (cmdSeq == CommandSeq.Backward) {
+            //     this._cmdTree.MoveUp();
+            // }
         }
 
         let cmdVal = command.ExecValues();
@@ -208,12 +208,16 @@ class CommandManager {
 
             return undefined;
         }
+
+        // this._cmdTree.GetNodePath(this._cmdTree.Root(), current.Key());
+        // let cmdNodes = this._cmdTree.CmdSequences(this._cmdTree.Root().Key(),this._cmdTree.Leaf().Key());
         let parent = current.Parent();
         let branch = current.Branch();
         if (branch != undefined) {
             let leaf = this._cmdTree.LeafNode(branch);
-            let [cmdSeq, seqType] = this.CmdSequences(branch.Parent().Key(), leaf.Key());
+            let [cmdSeq, seqType] = this.CmdSequences(branch.Key(), leaf.Key());
             current.AddBranch(undefined);
+            this.AdjustCurrCmd(branch.Key());
             return cmdSeq;
         }
 

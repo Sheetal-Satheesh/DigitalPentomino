@@ -1554,7 +1554,7 @@ class Visual {
         return UtilitiesClass.getRandomElementFromArray(solution.filter(piece => !(pickedPieces[piece[0].name] == 1)));
     }
 
-    execShadowCmd(command, seqType) {
+    execShadowCmd(command, seqType=CommandSeq.Forward) {
         let cmdProperty = updateCommandAttr(CommandTypes.Shadow, seqType);
         switch (command.name) {
             case "Remove":
