@@ -220,6 +220,7 @@ class CommandTree {
     CmdSequences(startKey, endKey) {
         let startPath = this.GetNodePath(this._rootCmdNode, startKey);
         let endPath = this.GetNodePath(this._rootCmdNode, endKey);
+       
 
         let retCmds = [];
 
@@ -240,23 +241,30 @@ class CommandTree {
             }
         }
 
+        if(startKey == endKey){
+            parentIndx = 0;
+        }
+
         let startBranch = [];
         for (let indx = startPath.length - 1; indx > parentIndx; indx--) {
             startBranch.push(startPath[indx].Command());
         }
 
         let endBranch = [];
-        for (let indx = parentIndx; indx < endPath.length; indx++) {
+        for (let indx = parentIndx+1; indx < endPath.length; indx++) {
             endBranch.push(endPath[indx].Command());
         }
 
-        let seqType = this.GetSequeneType(this._rootCmdNode, startKey, endKey);
-        if(seqType == SearchStrategy.BottomUp){
+        let sequnceType = this.GetSequeneType(this._rootCmdNode, startKey, endKey);
+        if(sequnceType == SearchStrategy.BottomUp){
             endBranch = endBranch.reverse();
            }
 
-        retCmds = [...startBranch, ...endBranch]
-        return retCmds;
+        retCmds = [...startBranch, ...endBranch];
+        return {
+            seqType: sequnceType,
+            commands: retCmds
+        };
     }
 
     CollectCmdSequences(

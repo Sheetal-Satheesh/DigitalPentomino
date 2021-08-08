@@ -144,11 +144,9 @@ class CommandManager {
         if (startKey == undefined) {
             startKey = this.StartCmdKey();
         }
-
-        let cmdObj = this._cmdTree.CollectCmdSequences(
-            this._cmdTree.Root(),
+        let cmdObj = this._cmdTree.CmdSequences(
             startKey,
-            endKey, 0);
+            endKey);
 
         if (cmdObj.seqType == 2) {
             cmdObj.commands = cmdObj.commands.reverse();
