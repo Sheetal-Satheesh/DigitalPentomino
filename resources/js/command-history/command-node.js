@@ -7,7 +7,6 @@ class CommandNode {
         this._key = Math.random().toString(36).slice(-10); /* key length: 10 */
         this._command = command;
         this._parent = this;
-        this._takeBranch = undefined;
         this._takeBranchLeft = undefined;
         this._takeBranchRight = undefined;
         this._childMap = [];
