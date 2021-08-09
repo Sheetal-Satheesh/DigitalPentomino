@@ -59,11 +59,22 @@ class CommandTree {
     }
 
     Insert(command) {
+
+        if((this._currentCmdNode != undefined) && this._currentCmdNode.Children().length == 0){
+            let branchNext = this.NextBranchNode(this._currentCmdNode);
+            if(branchNext!= undefined){
+                let current = new CommandNode(command);
+                this._currentCmdNode.AddChild(current);
+                this._currentCmdNode = current;
+                return this._currentCmdNode;    
+            }
+        }
+
         this._rootCmdNode = this._insert(this._rootCmdNode, this._rootCmdNode, command);
         if (this._currentCmdNode == undefined) {
             this._currentCmdNode = this._rootCmdNode;
         }
-        this._lastComandNode = this._currentCmdNode;
+            this._lastComandNode = this._currentCmdNode;
         this._operationStatus &= ~REDO;
         this._operationStatus |= UNDO;
 

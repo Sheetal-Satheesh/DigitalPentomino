@@ -29,6 +29,13 @@ class CommandNode {
         this._takeBranchRight = source;
     }
 
+    MoveBranch(target){
+        target._takeBranchLeft = this._takeBranchLeft;
+        target._takeBranchRight = this._takeBranchRight;
+        this._takeBranchLeft = undefined;
+        this._takeBranchRight = undefined;
+    }
+
     ChildTopNode() {
         if (this._childMap.length == 0) {
             return undefined;
@@ -60,6 +67,10 @@ class CommandNode {
 
     BranchRight(){
         return this._takeBranchRight;
+    }
+
+    isAnyBranch(){
+        return ((this._takeBranchLeft != undefined) || (this._takeBranchRight != undefined));
     }
 
 }
