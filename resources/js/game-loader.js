@@ -405,16 +405,30 @@ class GameLoader {
 
         let seqType = this._commandManager.CmdKeySeqType(startStateKey, targetStateKey);
        
-        if(seqType == 2){
+        
             let cmdSeqs=[];
             while(this._commandManager.CurrentCmdKey() != targetStateKey){
-                let undoSeq = this._commandManager.Undo();
-                undoSeq.forEach((item) => {
+                let commands = undefined;
+                if (seqType == 2){
+                    commands = this._commandManager.Undo();
+                }
+                else if (seqType == 1){
+                    commands = this._commandManager.Redo();
+                    if(commands == undefined){
+                        break;
+                    }
+                }
+                else{
+                    console.error("Sequence not found in loadGameState(...)");
+                }
+
+                commands.forEach((item) => {
                     cmdSeqs.push(item);
                 });
             }
             this.jumpToGameState(cmdSeqs,seqType);
-        }
+       
+   
 
         
         return;
