@@ -410,6 +410,13 @@ class CommandTree {
         }
     }
 
+    /**
+     * Find the top parents branch next node, to remember
+     * Redo operations
+     * 
+     * @param {*} currNode 
+     * @returns 
+     */
     NextBranchNode(currNode) {
         if (currNode == undefined) {
             return undefined;
@@ -430,6 +437,16 @@ class CommandTree {
 
         return this.NextBranchNode(currNode.Parent());
     }
+
+    /**
+     * Find the top parents branch previous node, to remember
+     * undo operations
+     * 
+     * Can be achieved this by in place check
+     * 
+     * @param {*} currNode 
+     * @returns 
+     */
 
     PrevBranchNode(currNode) {
         if (currNode == undefined) {
@@ -452,6 +469,12 @@ class CommandTree {
         return this.PrevBranchNode(currNode.Parent());
     }
 
+    /**
+     * very recent branch leaf node
+     * @param {} head 
+     * @returns 
+     */
+
     LeafNode(head) {
         if (head == undefined) {
             return undefined;
@@ -467,6 +490,12 @@ class CommandTree {
 
     }
 
+    /**
+     *  Current branch top node
+     * 
+     * @param {*} leaf 
+     * @returns 
+     */
     TopNode(leaf) {
         if (leaf == undefined) {
             return undefined;
@@ -476,11 +505,11 @@ class CommandTree {
         }
 
 
-        let siblings = head.Children();
-        if (siblings.length == 0) {
-            return head;
+        let siblings = leaf.Parent().Children();
+        if (siblings.length > 1) {
+            return leaf;
         }
-        else if (siblings.length >= 1) {
+        else if (siblings.length <= 1) {
             return this.TopNode(leaf.Parent());
         }
     }

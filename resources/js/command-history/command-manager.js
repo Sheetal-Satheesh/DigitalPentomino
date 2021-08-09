@@ -2,6 +2,9 @@ if (typeof require != 'undefined') {
     CommandHistoryTree = require('./command-tree.js');
 }
 
+const NodeOrder = { "First": 1, "Middle": 1, "Last": -1, "UNKNOWN": 0 };
+Object.freeze(NodeOrder);
+
 class CommandManager {
     constructor() {
         this._cmdTree = new CommandTree();
@@ -103,21 +106,6 @@ class CommandManager {
         return this._cmdTree.NodeCount();
     }
 
-    CurrentCmdOrder() {
-        if (this.CurrentCmdKey() == undefined) {
-            return 1;
-        }
-        else if (this.CurrentCmdKey() == this.RootCmdKey) {
-            return 1 << 1;
-        }
-        else if (this.CurrentCmdKey() == this.LastCmdKey()) {
-            return 1 << 2;
-        }
-        else {
-            return 1 << 3;
-        }
-    }
-
     IsKeyFound(key) {
         let retNode = this._cmdTree.SearchCmdNode(
             this._cmdTree.Root(), key);
@@ -150,33 +138,6 @@ class CommandManager {
             }
         }, this);
         return [cmdSequences, cmdObj.seqType];
-    }
-
-    ExecCmdSequence(cmdSequence, onUndo, onRedo) {
-        if (cmdSequence.getStart() != this._cmdTree.getLastCommand()) {
-            throw new Error(
-                "State Error:" +
-                "Current state is not start state of cmdSequence");
-        }
-
-        for (let index = 0; index < cmdSequence.getNumOfUndoCommands(); index++) {
-            onUndo(this.undo());
-        }
-        cmdSequence.getRedoCommands().forEach(command => {
-            onRedo(this.redo(command));
-        });
-    }
-
-    JumptToCommand(command) {
-        let cmdSequence = this._cmdTree.getPathToCommand(command);
-        let executedCommands = [];
-        for (let i = 0; i < cmdSequence.getNumOfUndoCommands(); i++) {
-            executedCommands.push(this.undo());
-        }
-        cmdSequence.getRedoCommands().forEach(command => {
-            executedCommands.push(this.redo(command));
-        });
-        return executedCommands;
     }
 
     IsUndoPossible() {
@@ -257,7 +218,7 @@ class CommandManager {
             return [branch.Command().ExecValues()];
 
         }
-        
+
         if (current.Children().length == 0) {
             let branchNode = this._cmdTree.NextBranchNode(current);
             if (branchNode != undefined) {
