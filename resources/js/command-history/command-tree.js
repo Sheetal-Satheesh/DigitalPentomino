@@ -188,7 +188,7 @@ class CommandTree {
     }
 
 
-    GetSequeneType(currNode, startKey, endKey, searchType) {
+    GetSequeneType(currNode, startKey, endKey) {
         if (currNode == undefined) {
             return undefined;
         }
@@ -198,32 +198,24 @@ class CommandTree {
         }
 
         if (currNode.Key() == startKey) {
-            searchType |= SearchStrategy.Top2Bottom;
-            if ((SearchStrategy.BottomUp & searchType) != 0) {
-                return SearchStrategy.BottomUp;
-            }
-        }
+            return SearchStrategy.Top2Bottom;
+         }
 
         if (currNode.Key() == endKey) {
-            searchType |= SearchStrategy.BottomUp;
-            if ((SearchStrategy.Top2Bottom & searchType) != 0) {
-                return SearchStrategy.Top2Bottom;
-            }
+            return SearchStrategy.BottomUp;
         }
-        let seqType = -1;
+        let seqType=0;
         for (let indx = 0; indx < currNode.Children().length; ++indx) {
             let childs = currNode.Children();
-            if (seqType != -1) {
-                return seqType;
-            }
-            seqType = this.GetSequeneType(
+            seqType =  this.GetSequeneType(
                 childs[indx],
                 startKey,
-                endKey,
-                searchType
+                endKey
             );
+            if(seqType != 0){
+                return seqType;
+            }
         }
-
         return seqType;
     }
 

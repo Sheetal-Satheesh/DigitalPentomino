@@ -70,7 +70,7 @@ class GameLoader {
         if (!this._gameList.hasOwnProperty(gameId)) {
             return undefined;
         }
-        
+
         let cmdKeys = this._gameList[gameId].cmdKey;
         let localImages = [];
         cmdKeys.forEach((item) => {
@@ -260,15 +260,15 @@ class GameLoader {
         }
         let currGameId = this._game.getId();
         let imgType = parseInt(image.getAttribute('type'));
-        if(imgType == SnapshotType.FilterOnly){
+        if (imgType == SnapshotType.FilterOnly) {
             this._gameLastImage[currGameId] = image;
             return;
         }
 
         let verdict = this.saveGame(cmdKey);
-        if (verdict == false){
+        if (verdict == false) {
             let saveImgCmdKey = this._gameImages[cmdKey];
-             this._gameImages[saveImgCmdKey]= image;
+            this._gameImages[saveImgCmdKey] = image;
             return;
         }
 
@@ -319,11 +319,11 @@ class GameLoader {
 
     jumpToGameState(cmdSequences, seqType) {
 
-        let cmdProperty = updateCommandAttr(CommandTypes.Local, seqType);
+        let cmdProperty = updateCommandAttr(CommandTypes.Shadow, seqType);
         let cmdSeqLength = cmdSequences.length;
-        if (seqType == CommandSeq.Backward) {
-            --cmdSeqLength;
-        }
+        // if (seqType == CommandSeq.Backward) {
+        //     --cmdSeqLength;
+        // }
 
         for (let indx = 0; indx < cmdSeqLength; indx++) {
 
@@ -393,9 +393,31 @@ class GameLoader {
     }
 
     loadGameState(startStateKey, targetStateKey) {
-        let [cmdSequences, seqType] = this._commandManager.CmdSequences(startStateKey, targetStateKey);
-        this.jumpToGameState(cmdSequences, seqType);
+        // let [cmdSequences, seqType] = this._commandManager.CmdSequences(
+        //     this._commandManager.CurrentCmdKey(),
+        //     this._commandManager.StartCmdKey());
+        // this.jumpToGameState(cmdSequences, seqType);
 
+        // [cmdSequences, seqType] = this._commandManager.CmdSequences(
+        //     this._commandManager.StartCmdKey(),
+        //     targetStateKey);
+        // this.jumpToGameState(cmdSequences, seqType);
+
+        let seqType = this._commandManager.CmdKeySeqType(startStateKey, targetStateKey);
+       
+        if(seqType == 2){
+            let cmdSeqs=[];
+            while(this._commandManager.CurrentCmdKey() != targetStateKey){
+                let undoSeq = this._commandManager.Undo();
+                undoSeq.forEach((item) => {
+                    cmdSeqs.push(item);
+                });
+            }
+            this.jumpToGameState(cmdSeqs,seqType);
+        }
+
+        
+        return;
     }
 
 }

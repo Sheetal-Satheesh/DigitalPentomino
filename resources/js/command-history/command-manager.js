@@ -96,15 +96,27 @@ class CommandManager {
     }
 
     StartCmdKey() {
-        return this._cmdTree.Root().Key();
+        return (
+            (this._cmdTree.Root().Key() != undefined)
+                ? this._cmdTree.Root().Key()
+                : undefined
+        );
     }
 
     LastCmdKey() {
-        return this._cmdTree.Leaf().Key();
+        return (
+            (this._cmdTree.Leaf().Key() != undefined)
+                ? this._cmdTree.Leaf().Key()
+                : undefined
+        );
     }
 
     CurrentCmdKey() {
-        return this._cmdTree.Current().Key();
+        return (
+            (this._cmdTree.Current().Key() != undefined)
+                ? this._cmdTree.Current().Key()
+                : undefined
+        );
     }
 
     NodeCount() {
@@ -119,6 +131,10 @@ class CommandManager {
         } else {
             return false;
         }
+    }
+
+    CmdKeySeqType(startKey, endKey){
+        return this._cmdTree.GetSequeneType(this._cmdTree.Root(), startKey, endKey);
     }
 
     CmdSequences(startKey, endKey) {

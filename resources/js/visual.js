@@ -1717,6 +1717,7 @@ class Visual {
         if (currentCmdKey == undefined) {
             currentCmdKey = this.gameController.getStartCmdKey();
         }
+        //let [cmdSequences, seqType] = this.gameController.getCmdSequences(currentCmdKey, targetStateKey);
         let [cmdSequences, seqType] = this.gameController.getCmdSequences(currentCmdKey, targetStateKey);
         for (let indx = 0; indx < cmdSequences.length; indx++) {
             this.execShadowCmd(cmdSequences[indx], seqType);
