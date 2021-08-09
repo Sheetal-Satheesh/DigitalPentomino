@@ -8,6 +8,8 @@ class CommandNode {
         this._command = command;
         this._parent = this;
         this._takeBranch = undefined;
+        this._takeBranchLeft = undefined;
+        this._takeBranchRight = undefined;
         this._childMap = [];
     }
 
@@ -19,8 +21,12 @@ class CommandNode {
         this._childMap.push(commandNode);
     }
 
-    AddBranch(source){
-        this._takeBranch = source;
+    AddBranchLeft(source){
+        this._takeBranchLeft = source;
+    }
+
+    AddBranchRight(source){
+        this._takeBranchRight = source;
     }
 
     ChildTopNode() {
@@ -48,9 +54,14 @@ class CommandNode {
         return this._parent;
     }
 
-    Branch(){
-        return this._takeBranch;
+    BranchLeft(){
+        return this._takeBranchLeft;
     }
+
+    BranchRight(){
+        return this._takeBranchRight;
+    }
+
 }
 
 if (typeof module != 'undefined') {

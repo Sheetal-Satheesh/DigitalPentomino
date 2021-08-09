@@ -196,11 +196,12 @@ class CommandManager {
         }
 
         let parent = current.Parent();
-        let branch = current.Branch();
+        let branch = current.BranchLeft();
         if (branch != undefined) {
             let leaf = this._cmdTree.LeafNode(branch);
             let [cmdSeq, seqType] = this.CmdSequences(branch.Key(), leaf.Key());
-            current.AddBranch(undefined);
+            current.AddBranchLeft(undefined);
+            //current.AddBranchRight(branch);
             this.AdjustCurrCmd(leaf.Key());
             return cmdSeq;
         }
@@ -213,7 +214,8 @@ class CommandManager {
         let siblings = parent.Children();
         for (let iter = 0; iter < siblings.length && siblings.length > 1; ++iter) {
             if (siblings[iter].Key() == current.Key() && iter != 0) {
-                parent.AddBranch(siblings[iter - 1]);
+                parent.AddBranchLeft(siblings[iter - 1]);
+                parent.AddBranchRight(current);
             }
         }
 
@@ -236,18 +238,33 @@ class CommandManager {
                 return [commands.ExecValues()];
             }
         }
-        let branch = current.Branch();
+        let branch = undefined;
+        if(current.BranchLeft() != undefined){
+            branch = current.BranchLeft();
+
+        }else{
+            branch = current.BranchRight();
+
+        }
+
         if (branch != undefined) {
-            current.AddBranch(undefined);
+            let siblings = current.Children();
+            for (let iter = 0; iter < siblings.length ; ++iter) {
+                if (siblings[iter].Key() == current.Key() && iter != siblings.length) {
+                    current.AddBranchLeft(siblings[iter - 1]);
+                    current.AddBranchRight(undefined);
+                }
+            }
             this.AdjustCurrCmd(branch.Key());
             return [branch.Command().ExecValues()];
+
         }
 
 
         if (current.Children().length == 0) {
             let branchNode = this._cmdTree.NextBranchNode(current);
             if (branchNode != undefined) {
-                branchNode.Parent().AddBranch(branchNode);
+                branchNode.Parent().AddBranchRight(branchNode);
                 this.AdjustCurrCmd(branchNode.Parent().Key());
                 let currBranchTop = this._cmdTree.PrevBranchNode(branchNode);
                 let [cmdSeq, seqType] = this.CmdSequences(current.Key(), currBranchTop.Key());
