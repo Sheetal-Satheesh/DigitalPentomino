@@ -425,11 +425,11 @@ class CommandTree {
             return undefined;
         }
 
-        let siblings = currNode.Parent().Children();
+        let siblings = currNode.Siblings();
         if (siblings.length > 1) {
             for (let iter = 0; iter < siblings.length; ++iter) {
                 if (currNode.Key() == siblings[iter].Key() &&
-                    iter != (siblings.length - 1)) {
+                    this.NodePosition(currNode)!= NodeOrder.Last) {
                     return siblings[iter + 1];
                 }
             }
@@ -456,11 +456,11 @@ class CommandTree {
             return undefined;
         }
 
-        let siblings = currNode.Parent().Children();
+        let siblings = currNode.Siblings();
         if (siblings.length > 1) {
             for (let iter = 0; iter < siblings.length; ++iter) {
                 if (currNode.Key() == siblings[iter].Key() &&
-                    iter != 0) {
+                    (this.NodePosition(currNode)!= NodeOrder.First)) {
                     return siblings[iter - 1];
                 }
             }
@@ -515,31 +515,36 @@ class CommandTree {
     }
 
     /**
+     * Find the node order among the siblings
      * 
-     * 0: Node not found
-     * 1: first Node
-     * -1: Last Node
-     * others: middle
      */
     NodePosition(current) {
         if (current == undefined) {
-            return 0;
+            return NodeOrder.Unknown;
         }
 
         let siblings = current.Parent().Children();
         for (let iter = 0; iter < siblings.length; ++iter) {
             if (current.Key() == siblings[iter].Key()) {
                 if (iter == 0) {
-                    return 1;
+                    return NodeOrder.First;
                 }
                 else if (iter == (siblings.length - 1)) {
-                    return -1;
+                    return NodeOrder.Last;
                 }
                 else {
-                    return iter;
+                    return NodeOrder.Middle;
                 }
             }
         }
+    }
+
+    PositionCurrent(cmdKey) {
+        if (cmdKey == undefined) {
+            this._currentCmdNode = undefined;
+            return;
+        }
+        this._currentCmdNode = this.SearchCmdNode(this._rootCmdNode, cmdKey);
     }
 
     isEmpty() {
@@ -558,46 +563,12 @@ class CommandTree {
         return this._rootCmdNode;
     }
 
-    RootCmdKey() {
-        if (this._rootCmdNode != undefined) {
-            return this._rootCmdNode.Key();
-        }
-        return undefined;
-    }
-
     Current() {
         return this._currentCmdNode;
     }
 
-    PositionCurrent(cmdKey) {
-        if (cmdKey == undefined) {
-            this._currentCmdNode = undefined;
-            return;
-        }
-        this._currentCmdNode = this.SearchCmdNode(this._rootCmdNode, cmdKey);
-    }
-
-    CurrentCmdKey() {
-        if (this._currentCmdNode != undefined) {
-            return this._currentCmdNode.Key();
-        }
-        return undefined;
-    }
-
     Leaf() {
         return this._lastComandNode;
-    }
-
-    LeafCmdKey() {
-        if (this._lastComandNode != undefined) {
-            return this._lastComandNode.Key();
-        }
-        return undefined;
-    }
-
-    Flush() {
-        this._rootCmdNode = undefined;
-        this._currentCmdNode = undefined;
     }
 }
 

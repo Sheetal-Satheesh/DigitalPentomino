@@ -2,7 +2,12 @@ if (typeof require != 'undefined') {
     CommandHistoryTree = require('./command-tree.js');
 }
 
-const NodeOrder = { "First": 1, "Middle": 1, "Last": -1, "UNKNOWN": 0 };
+const NodeOrder = {
+    "First": 1,
+    "Middle": 2,
+    "Last": -1,
+    "Unknown": 0
+};
 Object.freeze(NodeOrder);
 
 class CommandManager {
@@ -91,15 +96,15 @@ class CommandManager {
     }
 
     StartCmdKey() {
-        return this._cmdTree.RootCmdKey();
+        return this._cmdTree.Root().Key();
     }
 
     LastCmdKey() {
-        return this._cmdTree.LeafCmdKey();
+        return this._cmdTree.Leaf().Key();
     }
 
     CurrentCmdKey() {
-        return this._cmdTree.CurrentCmdKey();
+        return this._cmdTree.Current().Key();
     }
 
     NodeCount() {
@@ -162,7 +167,7 @@ class CommandManager {
             let leaf = this._cmdTree.LeafNode(branch);
 
             current.AddBranchLeft(undefined);
-            if (this._cmdTree.NodePosition(branch) == 1) {
+            if (this._cmdTree.NodePosition(branch) == NodeOrder.First) {
                 current.AddBranchRight(branch);
             }
             this.AdjustCurrCmd(leaf.Key());
@@ -178,9 +183,10 @@ class CommandManager {
             return [current.Command().ExecUndoValues()];
         }
 
-        let siblings = parent.Children();
+        let siblings = current.Siblings();
         for (let iter = 0; iter < siblings.length && siblings.length > 1; ++iter) {
-            if (siblings[iter].Key() == current.Key() && iter != 0) {
+            if (siblings[iter].Key() == current.Key() &&
+                this._cmdTree.NodePosition(current) != NodeOrder.First) {
                 parent.AddBranchLeft(siblings[iter - 1]);
                 parent.AddBranchRight(current);
             }
@@ -193,7 +199,6 @@ class CommandManager {
     Redo() {
 
         let current = this._cmdTree.Current();
-        let commands = undefined;
         if (current == undefined) {
             if (this._cmdTree.Root() == undefined) {
                 console.error("Command Tree is Emty: Game is not Started");
@@ -201,16 +206,18 @@ class CommandManager {
             }
             else {
                 this.AdjustCurrCmd(this._cmdTree.Root().Key());
-                commands = this._cmdTree.Current().Command();
+                let commands = this._cmdTree.Current().Command();
                 return [commands.ExecValues()];
             }
         }
+
         let branch = current.BranchRight();
         if (branch != undefined) {
-            let siblings = current.Children();
-            for (let iter = 0; iter < siblings.length; ++iter) {
-                if (siblings[iter].Key() == current.Key() && iter != siblings.length) {
-                    current.AddBranchLeft(siblings[iter - 1]);
+            /** Take right branch*/
+            let childs = current.Children();
+            for (let iter = 0; iter < childs.length; ++iter) {
+                if (childs[iter].Key() == current.Key() && iter != childs.length) {
+                    current.AddBranchLeft(childs[iter - 1]);
                     current.AddBranchRight(undefined);
                 }
             }
@@ -234,11 +241,9 @@ class CommandManager {
         }
         else {
             this.AdjustCurrCmd((current.Children())[0].Key());
-            commands = this._cmdTree.Current().Command();
+            let commands = this._cmdTree.Current().Command();
             return [commands.ExecValues()];
         }
-
-
     }
 
     RedoCommandsAll() {
