@@ -321,9 +321,6 @@ class GameLoader {
 
         let cmdProperty = updateCommandAttr(CommandTypes.Shadow, seqType);
         let cmdSeqLength = cmdSequences.length;
-        // if (seqType == CommandSeq.Backward) {
-        //     --cmdSeqLength;
-        // }
 
         for (let indx = 0; indx < cmdSeqLength; indx++) {
 
@@ -392,46 +389,37 @@ class GameLoader {
         }
     }
 
-    loadGameState(startStateKey, targetStateKey) {
-        // let [cmdSequences, seqType] = this._commandManager.CmdSequences(
-        //     this._commandManager.CurrentCmdKey(),
-        //     this._commandManager.StartCmdKey());
-        // this.jumpToGameState(cmdSequences, seqType);
-
-        // [cmdSequences, seqType] = this._commandManager.CmdSequences(
-        //     this._commandManager.StartCmdKey(),
-        //     targetStateKey);
-        // this.jumpToGameState(cmdSequences, seqType);
-
+    cmdSequences(startStateKey, targetStateKey) {
         let seqType = this._commandManager.CmdKeySeqType(startStateKey, targetStateKey);
-       
-        
-            let cmdSeqs=[];
-            while(this._commandManager.CurrentCmdKey() != targetStateKey){
-                let commands = undefined;
-                if (seqType == 2){
-                    commands = this._commandManager.Undo();
-                }
-                else if (seqType == 1){
-                    commands = this._commandManager.Redo();
-                    if(commands == undefined){
-                        break;
-                    }
-                }
-                else{
-                    console.error("Sequence not found in loadGameState(...)");
-                }
 
-                commands.forEach((item) => {
-                    cmdSeqs.push(item);
-                });
+
+        let cmdSeqs = [];
+        while (this._commandManager.CurrentCmdKey() != targetStateKey) {
+            let commands = undefined;
+            if (seqType == 2) {
+                commands = this._commandManager.Undo();
             }
-            this.jumpToGameState(cmdSeqs,seqType);
-       
-   
+            else if (seqType == 1) {
+                commands = this._commandManager.Redo();
 
-        
-        return;
+            }
+            else {
+                console.error("Sequence not found in loadGameState(...)");
+            }
+            if (commands == undefined) {
+                break;
+            }
+            commands.forEach((item) => {
+                cmdSeqs.push(item);
+            });
+        }
+        return cmdSeqs;
+    }
+
+    loadGameState(startStateKey, targetStateKey) {
+        let seqType = this._commandManager.CmdKeySeqType(startStateKey, targetStateKey);
+        let cmdSeqs = this.cmdSequences(startStateKey, targetStateKey);
+        this.jumpToGameState(cmdSeqs, seqType);
     }
 
 }

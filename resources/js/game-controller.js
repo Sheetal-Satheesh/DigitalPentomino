@@ -122,7 +122,7 @@ class GameController {
             throw new Error("Selected Game State Not Found :(");
         }
 
-        return this.cmdManager().CmdSequences(startKey, endKey);
+        return this._gameLoader.cmdSequences(startKey, endKey);
     }
 
     getGameIdByKey(key) {

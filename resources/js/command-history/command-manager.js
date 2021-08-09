@@ -40,14 +40,6 @@ class CommandManager {
         if (cmdType == CommandTypes.Original) {
             currNode = this._cmdTree.Insert(command);
         }
-        else if (cmdType == CommandTypes.Local) {
-            if (cmdSeq == CommandSeq.Forward) {
-                this._cmdTree.MoveDown();
-            }
-            else if (cmdSeq == CommandSeq.Backward) {
-                this._cmdTree.MoveUp();
-            }
-        }
 
         let cmdVal = command.ExecValues();
         switch (command.Name()) {
@@ -133,32 +125,8 @@ class CommandManager {
         }
     }
 
-    CmdKeySeqType(startKey, endKey){
+    CmdKeySeqType(startKey, endKey) {
         return this._cmdTree.GetSequeneType(this._cmdTree.Root(), startKey, endKey);
-    }
-
-    CmdSequences(startKey, endKey) {
-        if (startKey == undefined) {
-            startKey = this.StartCmdKey();
-        }
-        let cmdObj = this._cmdTree.CmdSequences(
-            startKey,
-            endKey);
-
-        // if (cmdObj.seqType == 2) {
-        //     cmdObj.commands = cmdObj.commands.reverse();
-        // }
-
-        let cmdSequences = [];
-        cmdObj.commands.forEach((command) => {
-            if (cmdObj.seqType == 1) {
-                cmdSequences.push(command.ExecValues());
-
-            } else {
-                cmdSequences.push(command.ExecUndoValues());
-            }
-        }, this);
-        return [cmdSequences, cmdObj.seqType];
     }
 
     IsUndoPossible() {
@@ -273,7 +241,37 @@ class CommandManager {
     AdjustCurrCmd(key) {
         this._cmdTree.PositionCurrent(key);
     }
+
+    
+    /*** Code not used anymore */
+
+    CmdSequences(startKey, endKey) {
+        if (startKey == undefined) {
+            startKey = this.StartCmdKey();
+        }
+        let cmdObj = this._cmdTree.CmdSequences(
+            startKey,
+            endKey);
+
+        // if (cmdObj.seqType == 2) {
+        //     cmdObj.commands = cmdObj.commands.reverse();
+        // }
+
+        let cmdSequences = [];
+        cmdObj.commands.forEach((command) => {
+            if (cmdObj.seqType == 1) {
+                cmdSequences.push(command.ExecValues());
+
+            } else {
+                cmdSequences.push(command.ExecUndoValues());
+            }
+        }, this);
+        return [cmdSequences, cmdObj.seqType];
+    }
+
+    /*************************/
 }
+
 
 if (typeof module != 'undefined') {
     module.exports = CommandManager;

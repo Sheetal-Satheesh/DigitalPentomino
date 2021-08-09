@@ -6,7 +6,7 @@ const UIProperty = {
 }
 Object.freeze(UIProperty);
 
-const CommandTypes = { "Original": 1, "Shadow": 2, "Local":3, "None": 4 };
+const CommandTypes = { "Original": 1, "Shadow": 2, "None": 3 };
 Object.freeze(CommandTypes);
 
 const CommandSeq = { "Forward": 1, "Backward": 2 };
@@ -1717,10 +1717,9 @@ class Visual {
         if (currentCmdKey == undefined) {
             currentCmdKey = this.gameController.getStartCmdKey();
         }
-        //let [cmdSequences, seqType] = this.gameController.getCmdSequences(currentCmdKey, targetStateKey);
-        let [cmdSequences, seqType] = this.gameController.getCmdSequences(currentCmdKey, targetStateKey);
+        let cmdSequences = this.gameController.getCmdSequences(currentCmdKey, targetStateKey);
         for (let indx = 0; indx < cmdSequences.length; indx++) {
-            this.execShadowCmd(cmdSequences[indx], seqType);
+            this.execShadowCmd(cmdSequences[indx], CommandTypes.Shadow);
         }
     }
 
@@ -1741,18 +1740,16 @@ class Visual {
                 return;
             }
         }
-
-        let [cmdSequences, seqType] = this.gameController.getCmdSequences(startKey, targetKey);
         this.loadGameState(startKey);
-
-
+        let cmdSequences = this.gameController.getCmdSequences(startKey, targetKey);    
+       
         let timeInterval = 100;
-        for (let indx = 0; indx < cmdSequences.length && (!this.replayRunning); indx++) {
+        for (let indx = 0; indx < cmdSequences.length; indx++) {
             let command = cmdSequences[indx];
             var that = this;
 
             setTimeout(function (that, command) {
-                that.execShadowCmd(command, seqType);
+                that.execShadowCmd(command, CommandTypes.Shadow);
                 if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
                     that.showNumberOfPossibleSolutions();
                 }
