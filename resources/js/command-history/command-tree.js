@@ -250,10 +250,6 @@ class CommandTree {
             }
         }
 
-        if (startKey == endKey) {
-            parentIndx = 0;
-        }
-
         let startBranch = [];
         for (let indx = startPath.length - 1; indx > parentIndx; indx--) {
             startBranch.push(startPath[indx].Command());
@@ -524,7 +520,33 @@ class CommandTree {
         }
     }
 
+    /**
+     * 
+     * 0: Node not found
+     * 1: first Node
+     * -1: Last Node
+     * others: middle
+     */
+    NodePosition(current){
+        if(current == undefined){
+            return 0;
+        }
 
+        let siblings = current.Parent().Children();
+        for(let iter=0; iter < siblings.length; ++iter){
+            if(current.Key() == siblings[iter].Key()){
+                if(iter == 0){
+                    return 1;
+                }
+                else if(iter == (siblings.length-1)){
+                    return -1;
+                }
+                else{
+                    return iter;
+                }
+            }
+        }
+    }
     // CommandSequences(startKey, endKey) {
     //     let startNode = this.SearchCmdNode(this._rootCmdNode, startKey);
     //     if (startNode == undefined) {
