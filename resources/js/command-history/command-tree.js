@@ -55,6 +55,11 @@ class CommandTree {
 
     Insert(command) {
 
+        if (this._currentCmdNode == undefined &&
+            this._rootCmdNode != undefined) {
+            this._currentCmdNode = this._rootCmdNode;
+        }
+
         if (this._currentCmdNode != undefined &&
             this._currentCmdNode != this._lastComandNode) {
             let newCommand = new CommandNode(command);
