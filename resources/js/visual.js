@@ -1729,7 +1729,7 @@ class Visual {
     }
 
     replay(startKey, targetKey) {
-
+        this.disableManipulations();
         if (startKey.length == 0) {
             startKey = this.gameController.getStartCmdKey();
             if (startKey == undefined) {
@@ -1766,6 +1766,7 @@ class Visual {
             let replayId = document.getElementById("replay");
             let replayImg = replayId.children[0];
             replayImg.setAttribute('src', 'resources/images/icons/replay.svg');
+            this.enablePointerEventsOnPieces();
         };
         setTimeout(pause, timeInterval);
 
