@@ -306,9 +306,10 @@ class GameLoader {
                         this.setCmdManager(this._gameList[targetGameId].cmdManager);
                         this.setGame(this._gameList[targetGameId].game);
                         this.setHintAI(this._gameList[targetGameId].hintAI);
+                        this.loadGameState(this._commandManager.CurrentCmdKey(),
+                            this._commandManager.StartCmdKey());
+                        this._commandManager.Undo();
                         this.loadGameState(this._commandManager.StartCmdKey(),
-                            this._commandManager.LastCmdKey());
-                        this.loadGameState(this._commandManager.LastCmdKey(),
                             targetCmdKey);
                         break;
                     }
