@@ -1054,7 +1054,9 @@
         }
         function deleteGameImage(imgKey, gameId) {
             pd.visual.deleteGameImage(imgKey);
+            showGameImages();
             renderGallery(gameId);
+
         }
 
         function generateRandomColor() {
@@ -1279,7 +1281,7 @@
             }
 
             this.disableSnapshotButton();
-          //  this.disablePointerEventsOnPieces();//TODO: Fix this
+            //  this.disablePointerEventsOnPieces();//TODO: Fix this
             this.hideManipulationButtons();
             this.saveGameImage(SnapshotType.Auto);
 
