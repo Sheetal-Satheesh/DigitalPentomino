@@ -252,6 +252,44 @@ class GameLoader {
             }
         }
     }
+    /** Delete game if there are all auto images*/
+    delGameAutoImages() {
+
+        let currGameId = this._game.getId();
+
+        let gameIds = Object.keys(this._gameList);
+        for (let id in gameIds) {
+            let gmId = gameIds[id];
+            if (gmId == this._game.getId()) {
+                continue;
+            }
+            let cmdKeys = this._gameList[gmId].cmdKey;
+            cmdKeys.forEach((cmdKey) => {
+
+                let img = undefined;
+                for (let indx = 0; indx < this._gameImages.length; ++indx) {
+                    if (Object.keys(this._gameImages[indx])[0] == cmdKey) {
+                        img = (this._gameImages[indx])[cmdKey];
+                        break;
+                    }
+                }
+                if (img == undefined) {
+                    return;
+                }
+                // let img =this._gameImages[item];
+                let type = img.getAttribute('type');
+                type = parseInt(type);
+                if (type & SnapshotType.Auto) {
+                    let key = img.value;
+                    this.deleteGameImage(key);
+                }
+
+
+            }, this);
+
+        }
+
+    }
 
     saveGameImage(image) {
         let cmdKey = image.value;
@@ -267,8 +305,17 @@ class GameLoader {
 
         let verdict = this.saveGame(cmdKey);
         if (verdict == false) {
-            let saveImgCmdKey = this._gameImages[cmdKey];
-            this._gameImages[saveImgCmdKey] = image;
+            let saveImgCmdKey = undefined;
+            let img = undefined;
+            for (let indx = 0; indx < this._gameImages.length; ++indx) {
+                if (Object.keys(this._gameImages[indx])[0] == cmdKey) {
+                    saveImgCmdKey =cmdKey;
+                    img = (this._gameImages[indx])[cmdKey];
+                    img.setAttribute("type", imgType);
+                    break;
+                }
+            }
+            // this._gameImages[saveImgCmdKey].setAttribute("type", imgType);;
             return;
         }
 

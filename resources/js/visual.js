@@ -1695,7 +1695,12 @@ class Visual {
 
     }
 
+    delGameAutoImages(){
+        this.gameController.delGameAutoImages();
+    }
+
     showGameImages() {
+        delGameAutoImages();
         let gameImages = this.gameController.getGameImages();
         return gameImages;
     }

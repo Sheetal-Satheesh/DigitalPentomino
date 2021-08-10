@@ -1173,6 +1173,7 @@
             template.clearContent("#innerGridForm");
             template.clearContent("#filterGrid");
 
+            pd.visual.delGameAutoImages();
             pd.visual.saveGameImage(SnapshotType.Auto);
             let currGmKey = pd.visual.getCurrentGameKey();
             let gameIds = pd.visual.getAllGameIds();
