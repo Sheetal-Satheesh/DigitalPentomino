@@ -310,7 +310,9 @@ class GameLoader {
                 if (Object.keys(this._gameImages[indx])[0] == cmdKey) {
                     saveImgCmdKey =cmdKey;
                     img = (this._gameImages[indx])[cmdKey];
-                    img.setAttribute("type", imgType);
+                    let type = parseInt(image.getAttribute('type'));
+                    imgType |=type;
+                    img.setAttribute("type", imgType.toString());
                     break;
                 }
             }
