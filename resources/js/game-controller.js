@@ -77,8 +77,16 @@ class GameController {
         return this._gameLoader.getGameImages();
     }
 
+    getLastGameimage(gameId) {
+        return this._gameLoader.getLastGameimage(gameId);
+    }
+
     loadGame(key) {
         this._gameLoader.loadGame(key);
+    }
+
+    getCurrentGameKey() {
+        return this._gameLoader.getCurrentGameKey();
     }
 
     cmdManager() {
@@ -101,6 +109,10 @@ class GameController {
         return this.cmdManager().CurrentCmdKey();
     }
 
+    getOperationCount(){
+        return this.cmdManager().NodeCount();
+    }
+
     getCmdSequences(startKey, endKey) {
         if (this.cmdManager().IsKeyFound(startKey) == false) {
             throw new Error("Selected Game State Not Found :(");
@@ -119,6 +131,18 @@ class GameController {
 
     getGameIdByKey(key) {
         return this._gameLoader.getGameIdByKey(key);
+    }
+
+    getAllGameIds() {
+        return this._gameLoader.getAllGameIds();
+    }
+
+    getImagesByGameId(gameId) {
+        return this._gameLoader.getImagesByGameId(gameId);
+    }
+
+    getCurrentGameId(){
+        return this._gameLoader.getGame().getId();
     }
 
     exceptionHandler(pentomino) {

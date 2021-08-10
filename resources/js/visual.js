@@ -32,6 +32,7 @@ class Visual {
         this.boardY = pd.boardStartY;
         this.pieces = this.gameController.getAllPentominoes();
         this.selected = false;
+        this.replayRunning = false;
         this.overlapBlock = new OverlapBlock();
 
         this.renderBoard();
@@ -45,6 +46,7 @@ class Visual {
         this.boardY = pd.boardStartY;
         this.pieces = this.gameController.getAllPentominoes();
         this.selected = false;
+        this.replayRunning = false;
         this.overlapBlock = new OverlapBlock();
 
         this.renderBoard();
@@ -102,13 +104,16 @@ class Visual {
 
     placePentomino(pentomino, posX, posY, cmdProperty = cmdAttrDefault) {
         this.gameController.placePentomino(pentomino, posX, posY, cmdProperty);
-        if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
+        if (SettingsSingleton.getInstance().getSettings().general.enableAudio) {
             let audio = new Audio('resources/audio/snap.wav');
             audio.play();
         }
         this.positionPiece(pentomino);
         if (cmdProperty.cmdType != CommandTypes.Shadow) {
             this.checkIfGameWon();
+            if (this.gameController.getOperationCount() == 1) {
+                this.saveGameImage(SnapshotType.Original_Auto);
+            }
         }
     }
 
@@ -280,7 +285,7 @@ class Visual {
             if (collisonFnd) {
                 let collisonPentomino = this.gameController.getCollisionOfPentominoes(piece).pop();
                 this.overlapBlock.add(piece, collisonPentomino);
-                if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
+                if (SettingsSingleton.getInstance().getSettings().general.enableAudio) {
                     let audio = new Audio('resources/audio/collision.mp3');
                     audio.play();
                 }
@@ -310,15 +315,14 @@ class Visual {
 
             //code for adding pieceWrapper for resolving the zindex issue on ipad. Important, do not modify.
             let wrapper = "pieceWrapper_" + piece.name;
-            if(!$('#piece_'+ piece.name).parent().attr('#'+wrapper)){
-                let wrapperClassString = "<div class = 'pieceWrapper' id = "+wrapper+"></div>";
-                if($(htmlElement).parent().attr('class') != 'pieceWrapper'){
+            if (!$('#piece_' + piece.name).parent().attr('#' + wrapper)) {
+                let wrapperClassString = "<div class = 'pieceWrapper' id = " + wrapper + "></div>";
+                if ($(htmlElement).parent().attr('class') != 'pieceWrapper') {
                     $(htmlElement).wrap(wrapperClassString);
                 }
-                    let pieceWrapper = document.getElementById(wrapper);
-                    pieceWrapper.style.zIndex= this.overlapBlock.getZIndex(piece);
+                let pieceWrapper = document.getElementById(wrapper);
+                pieceWrapper.style.zIndex = this.overlapBlock.getZIndex(piece);
             }
-
         }
         if (htmlElement.style.getPropertyValue("--rotationX") === "") {
             htmlElement.style.setProperty("--rotationX", "0deg");
@@ -370,11 +374,11 @@ class Visual {
         let gameWidth = document.getElementById("game").clientWidth;
         let gameHeight = document.getElementById("game").clientHeight;
 
-        if(gameHeight > gameWidth) {
-            document.documentElement.style.setProperty('--heightB','36vw');
+        if (gameHeight > gameWidth) {
+            document.documentElement.style.setProperty('--heightB', '36vw');
         }
-        else{
-            document.documentElement.style.setProperty('--heightB','43vh');
+        else {
+            document.documentElement.style.setProperty('--heightB', '43vh');
         }
 
         let pieceMan = document.getElementById('pieceManipulation').querySelectorAll("[class^='buttonInside']");
@@ -391,8 +395,8 @@ class Visual {
                 document.getElementById('pieceManipulation').style.left = 'calc(' + x1Position + 'px - ' + (width * -.09) + 'vw)';
                 document.getElementById('pieceManipulation').style.top = 'calc(' + y2Position + 'px - ' + (width * 2) + 'vw)';
                 document.getElementById('pieceManipulation').style.display = 'block';
-                document.documentElement.style.setProperty("--rotateV","-133deg");
-                document.documentElement.style.setProperty("--rotateH","-28deg");
+                document.documentElement.style.setProperty("--rotateV", "-133deg");
+                document.documentElement.style.setProperty("--rotateH", "-28deg");
                 document.documentElement.style.setProperty("--buttonRotA", "28deg");
                 document.documentElement.style.setProperty("--buttonRotB", "63deg");
                 document.documentElement.style.setProperty("--buttonRotC", "98deg");
@@ -403,8 +407,8 @@ class Visual {
             document.getElementById('pieceManipulation').style.left = 'calc(' + x1Position + 'px - ' + (width * -0.09) + 'vw)';
             document.getElementById('pieceManipulation').style.top = 'calc(' + y2Position + 'px - ' + (width * 2) + 'vw)';
             document.getElementById('pieceManipulation').style.display = 'block';
-            document.documentElement.style.setProperty("--rotateV","168deg");
-            document.documentElement.style.setProperty("--rotateH","48deg");
+            document.documentElement.style.setProperty("--rotateV", "168deg");
+            document.documentElement.style.setProperty("--rotateH", "48deg");
             document.documentElement.style.setProperty("--buttonRotA", "-48deg");
             document.documentElement.style.setProperty("--buttonRotB", "-88deg");
             document.documentElement.style.setProperty("--buttonRotC", "-128deg");
@@ -414,8 +418,8 @@ class Visual {
             document.getElementById('pieceManipulation').style.left = 'calc(' + x1Position + 'px - ' + (width * 0.05) + 'vw)';
             document.getElementById('pieceManipulation').style.top = 'calc(' + y2Position + 'px - ' + (width * 2) + 'vw)';
             document.getElementById('pieceManipulation').style.display = 'block';
-            document.documentElement.style.setProperty("--rotateV","-228deg");
-            document.documentElement.style.setProperty("--rotateH","-108deg");
+            document.documentElement.style.setProperty("--rotateV", "-228deg");
+            document.documentElement.style.setProperty("--rotateH", "-108deg");
             document.documentElement.style.setProperty("--buttonRotA", "108deg");
             document.documentElement.style.setProperty("--buttonRotB", "148deg");
             document.documentElement.style.setProperty("--buttonRotC", "188deg");
@@ -642,7 +646,7 @@ class Visual {
                         var coords = (id.split('_')[1].split(','));
                         that.removeFromTray(data[1]);
                         that.placePentomino(data[1], coords[0], coords[1]);
-                        var selectedPiece = document.getElementById('piece_'+ data[1].name);
+                        var selectedPiece = document.getElementById('piece_' + data[1].name);
                         if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
                             that.showNumberOfPossibleSolutions();
                         }
@@ -733,40 +737,40 @@ class Visual {
     flipH(cmdProperty = cmdAttrDefault) {
         let piece = this.selected;
         if (!piece) return
-            //debugger
-            let pieceDiv = document.getElementById("piece_" + piece.name);
-            let flipped = pieceDiv.getAttribute("flipped") * 1;
-            let currentRot = pieceDiv.style.getPropertyValue("--rotationX").split(/(-?\d+)/)[1] * 1; //converts string value to int
-            let newRot = currentRot + 180;
-            pieceDiv.style.setProperty("--rotationX", newRot.toString() + "deg");
-            this.gameController.mirrorPentominoH(piece, cmdProperty)
-            this.positionPiece(piece);
-            this.positionPiece(piece);
-            this.positionPiece(piece);
-            this.positionPiece(piece);
-            this.positionPiece(piece);
-            pieceDiv.setAttribute("flipped", 1 - flipped);
-            if (cmdProperty.cmdType != CommandTypes.Shadow) {
-                this.checkIfGameWon();
-            }
+        //debugger
+        let pieceDiv = document.getElementById("piece_" + piece.name);
+        let flipped = pieceDiv.getAttribute("flipped") * 1;
+        let currentRot = pieceDiv.style.getPropertyValue("--rotationX").split(/(-?\d+)/)[1] * 1; //converts string value to int
+        let newRot = currentRot + 180;
+        pieceDiv.style.setProperty("--rotationX", newRot.toString() + "deg");
+        this.gameController.mirrorPentominoH(piece, cmdProperty)
+        this.positionPiece(piece);
+        this.positionPiece(piece);
+        this.positionPiece(piece);
+        this.positionPiece(piece);
+        this.positionPiece(piece);
+        pieceDiv.setAttribute("flipped", 1 - flipped);
+        if (cmdProperty.cmdType != CommandTypes.Shadow) {
+            this.checkIfGameWon();
+        }
     }
 
     flipV(cmdProperty = cmdAttrDefault) {
         let piece = this.selected;
         if (!piece) return
 
-            let pieceDiv = document.getElementById("piece_" + piece.name);
-            let flipped = pieceDiv.getAttribute("flipped") * 1;
-            let currentRot = pieceDiv.style.getPropertyValue("--rotationY").split(/(-?\d+)/)[1] * 1; //converts string value to int
-            let newRot = currentRot + 180;
-            // Update the backend
-            this.gameController.mirrorPentominoV(piece, cmdProperty);
-            this.positionPiece(piece);
-            pieceDiv.style.setProperty("--rotationY", newRot.toString() + "deg");
-            pieceDiv.setAttribute("flipped", 1 - flipped);
-            if (cmdProperty.cmdType != CommandTypes.Shadow) {
-                this.checkIfGameWon();
-            }
+        let pieceDiv = document.getElementById("piece_" + piece.name);
+        let flipped = pieceDiv.getAttribute("flipped") * 1;
+        let currentRot = pieceDiv.style.getPropertyValue("--rotationY").split(/(-?\d+)/)[1] * 1; //converts string value to int
+        let newRot = currentRot + 180;
+        // Update the backend
+        this.gameController.mirrorPentominoV(piece, cmdProperty);
+        this.positionPiece(piece);
+        pieceDiv.style.setProperty("--rotationY", newRot.toString() + "deg");
+        pieceDiv.setAttribute("flipped", 1 - flipped);
+        if (cmdProperty.cmdType != CommandTypes.Shadow) {
+            this.checkIfGameWon();
+        }
 
     }
 
@@ -796,7 +800,7 @@ class Visual {
         }
         let hintCommand = hint.getCommands()[commandNumber];
         let hintinPen = hintCommand._pentomino;
-        if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
+        if (SettingsSingleton.getInstance().getSettings().general.enableAudio) {
             let audio = new Audio('resources/audio/hinting.mp3');
             audio.play();
         }
@@ -904,7 +908,7 @@ class Visual {
                     let piecePos = this.getOccupiedPositions(tempHintinPen, hintCommand);
                     let randomCellPos = this.calculateNeighbour(piecePos, hintCommand);
                     //usage of random cell variable to indicate hinting
-                    if (!((SettingsSingleton.getInstance().getSettings().hinting.hintingVariants) === ("Show pentominoes"))){
+                    if (!((SettingsSingleton.getInstance().getSettings().hinting.hintingVariants) === ("Show pentominoes"))) {
                         switch (SettingsSingleton.getInstance().getSettings().hinting.hintingStrategy) {
                             case "partial":
                                 switch (SettingsSingleton.getInstance().getSettings().hinting.partialHintingStragety) {
@@ -913,10 +917,10 @@ class Visual {
                                         for (let i = 0; i < randomCell; i++) {
                                             fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
                                             prevBackground[i] = fieldvalue.style.background;
-                                            if(SettingsSingleton.getInstance().getSettings().hinting.hintingVariants === ("Show destination")){
-                                              fieldvalue.style.background = destinationColor;
+                                            if (SettingsSingleton.getInstance().getSettings().hinting.hintingVariants === ("Show destination")) {
+                                                fieldvalue.style.background = destinationColor;
                                             }
-                                            else{
+                                            else {
                                                 fieldvalue.style.background = pentominoColor;
                                             }
                                             this.hide(piecePos, prevBackground, timeoutFrame);
@@ -928,10 +932,10 @@ class Visual {
                                         for (let i = 0; i < cellsToIndicate.length; i++) {
                                             fieldvalue = document.getElementById("field_" + cellsToIndicate[i][0] + "," + cellsToIndicate[i][1]);
                                             prevBackground[i] = fieldvalue.style.background;
-                                            if(SettingsSingleton.getInstance().getSettings().hinting.hintingVariants === ("Show destination")){
-                                              fieldvalue.style.background = destinationColor;
+                                            if (SettingsSingleton.getInstance().getSettings().hinting.hintingVariants === ("Show destination")) {
+                                                fieldvalue.style.background = destinationColor;
                                             }
-                                            else{
+                                            else {
                                                 fieldvalue.style.background = pentominoColor;
                                             }
                                             this.hideMostOccupiedNeighbors(cellsToIndicate, prevBackground, timeoutFrame);
@@ -945,10 +949,10 @@ class Visual {
                                 for (let i = 0; i < 5; i++) {
                                     fieldvalue = document.getElementById("field_" + piecePos[i][0] + "," + piecePos[i][1]);
                                     prevBackground[i] = fieldvalue.style.background;
-                                    if(SettingsSingleton.getInstance().getSettings().hinting.hintingVariants === ("Show destination")){
-                                      fieldvalue.style.background = destinationColor;
+                                    if (SettingsSingleton.getInstance().getSettings().hinting.hintingVariants === ("Show destination")) {
+                                        fieldvalue.style.background = destinationColor;
                                     }
-                                    else{
+                                    else {
                                         fieldvalue.style.background = pentominoColor;
                                     }
                                     this.hide(piecePos, prevBackground, timeoutFrame);
@@ -960,10 +964,10 @@ class Visual {
                                     let areaPos = this.indicateAreaCells(hintinPen, hintCommand)[0];
                                     fieldvalue = document.getElementById("field_" + areaPos[i][0] + "," + areaPos[i][1]);
                                     prevBackground[i] = fieldvalue.style.background;
-                                    if(SettingsSingleton.getInstance().getSettings().hinting.hintingVariants === ("Show destination")){
-                                      fieldvalue.style.background = destinationColor;
+                                    if (SettingsSingleton.getInstance().getSettings().hinting.hintingVariants === ("Show destination")) {
+                                        fieldvalue.style.background = destinationColor;
                                     }
-                                    else{
+                                    else {
                                         fieldvalue.style.background = pentominoColor;
                                     }
                                 }
@@ -1091,6 +1095,7 @@ class Visual {
         template.clearContent("#modalTitleID");
         template.clearContent("#modalBodyID");
         template.clearContent("#innerGridForm");
+        template.clearContent("#filterGrid");
         let lang = SettingsSingleton.getInstance().getSettings().general.language;
         //create div for image
         let textNode1 = {
@@ -1112,7 +1117,7 @@ class Visual {
                     class: "modalText",
                     text: strings.showSolved.play[lang]
                 };
-                img.src = "resources/images/icons/jboy-2.ico";
+                img.src = "resources/images/icons/solvedScreenBoy.ico";
                 img.style.cursor = "none";
                 div1.appendChild(img);
                 modalBodyID.appendChild(div1);
@@ -1153,7 +1158,7 @@ class Visual {
                     class: "modalText",
                     text: strings.showSolved.WellDone[lang]
                 };
-                img.src = "resources/images/icons/wizard.ico";
+                img.src = "resources/images/icons/solvedScreenMagician.ico";
                 div1.appendChild(img);
                 modalBodyID.appendChild(div1);
                 template.attachText("#modalBodyID", textNode2);
@@ -1164,7 +1169,7 @@ class Visual {
                     class: "modalText",
                     text: strings.showSolved.Excellent[lang]
                 };
-                img.src = "resources/images/icons/present.ico";
+                img.src = "resources/images/icons/solvedScreenGift.ico";
                 div1.appendChild(img);
                 modalBodyID.appendChild(div1);
                 template.attachText("#modalBodyID", textNode2);
@@ -1352,7 +1357,7 @@ class Visual {
 
     prefillBoard() {
         this.readyForPrefilling();
-        if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
+        if (SettingsSingleton.getInstance().getSettings().general.enableAudio) {
             let audio = new Audio('resources/audio/prefill.mp3');
             audio.play();
         }
@@ -1425,7 +1430,7 @@ class Visual {
             "easy": 3,
             "medium": 2,
             "hard": 1,
-            "extreme":0
+            "extreme": 0
         };
         let currentAnchor = [];
         let piece = undefined;
@@ -1644,8 +1649,49 @@ class Visual {
     getGameIdByKey(key) {
         return this.gameController.getGameIdByKey(key);
     }
-    saveGameImage(image) {
-        this.gameController.saveGameImage(image);
+
+    getAllGameIds() {
+        return this.gameController.getAllGameIds();
+    }
+
+    getImagesByGameId(gameId) {
+        return this.gameController.getImagesByGameId(gameId);
+    }
+
+    getLastGameimage(gameId) {
+        return this.gameController.getLastGameimage(gameId);
+    }
+    getCurrentGameId() {
+        return this.gameController.getCurrentGameId();
+    }
+
+    saveGameImage(type = SnapshotType.Undefined) {
+        type = type.toString();
+        let gameCtrlr = this.gameController;
+        let gameElem = document.getElementById('playarea');
+        let currCmdKey = this.gameController.getCurrentCmdKey();
+
+
+        html2canvas(gameElem).then(function (screeshot) {
+            screeshot.setAttribute("class", "screenshot");
+            screeshot.setAttribute("type", type);
+            screeshot.value = currCmdKey;
+            screeshot.style.width = '25vw';
+            screeshot.style.height = '15vw';
+            screeshot.style.border = "2px solid black";
+            gameCtrlr.saveGameImage(screeshot);
+        });
+
+        html2canvas(gameElem).then(function (screeshot) {
+            screeshot.setAttribute("class", "screenshot");
+            screeshot.setAttribute("type", SnapshotType.FilterOnly);
+            screeshot.value = currCmdKey;
+            screeshot.style.width = '25vw';
+            screeshot.style.height = '15vw';
+            screeshot.style.border = "2px solid black";
+            gameCtrlr.saveGameImage(screeshot);
+        });
+
     }
 
     showGameImages() {
@@ -1655,6 +1701,10 @@ class Visual {
 
     deleteGameImage(key) {
         this.gameController.deleteGameImage(key);
+    }
+
+    getCurrentGameKey() {
+        return this.gameController.getCurrentGameKey();
     }
 
     loadGame(key) {
@@ -1695,14 +1745,18 @@ class Visual {
 
 
         let timeInterval = 100;
-        for (let indx = 0; indx < cmdSequences.length; indx++) {
+        for (let indx = 0; indx < cmdSequences.length && (!this.replayRunning); indx++) {
             let command = cmdSequences[indx];
             var that = this;
 
             setTimeout(function (that, command) {
                 that.execShadowCmd(command, seqType);
+                if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
+                    that.showNumberOfPossibleSolutions();
+                }
             }, timeInterval += 500, that, command);
         }
+        this.setReplayStatus(false);
 
         const pause = function () {
             let replayId = document.getElementById("replay");
@@ -1711,6 +1765,20 @@ class Visual {
         };
         setTimeout(pause, timeInterval);
 
+    }
+
+    setReplayStatus(verdict) {
+        this.replayRunning = verdict;
+    }
+
+    /**
+     * 
+     * @returns
+     *  true: replay is running
+     *  false: no replay 
+     */
+    isRelayRunning() {
+        return (this.replayRunning == true) ? true : false;
     }
 
     disablePointerEventsOnPieces() {

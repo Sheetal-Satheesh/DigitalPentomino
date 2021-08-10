@@ -25,6 +25,7 @@ class GameLoader {
          */
         this._gameList = {};
         this._gameImages = [];
+        this._gameLastImage = {};
 
         /**[
          *  gameId : {
@@ -50,8 +51,56 @@ class GameLoader {
         return this._game;
     }
 
+    inCurrentGame(gameId) {
+        return (this._game != undefined) ? (this._game.getId() == gameId) : false;
+    }
+    getCurrentGameCmdKey() {
+        return this._game.getCmdKey();
+    }
+
+    getCurrentGameKey() {
+        return this._game.getId();
+    }
+
     getGameImages() {
         return this._gameImages;
+    }
+
+    getImagesByGameId(gameId) {
+        if (!this._gameList.hasOwnProperty(gameId)) {
+            return undefined;
+        }
+        
+        let cmdKeys = this._gameList[gameId].cmdKey;
+        let localImages = [];
+        cmdKeys.forEach((item) => {
+            this._gameImages.forEach((gameImg) => {
+                if (Object.keys(gameImg) == item) {
+                    localImages.push(gameImg);
+                }
+            });
+        }, this);
+
+        return localImages;
+    }
+
+    getAllGameIds() {
+        let gameIds = [];
+        for (let gameEntry in this._gameList) {
+            gameIds.push(gameEntry);
+        }
+        return gameIds;
+    }
+
+    getLastGameimage(gameId) {
+        let gameIds = this.getAllGameIds();
+        if (gameIds.find(id => id === gameId)) {
+            return this._gameLastImage[gameId];
+        }
+        else {
+            console.error("Game Id:" + gameId + "not found in gameList");
+            return undefined;
+        }
     }
 
     getGames() {
@@ -155,8 +204,7 @@ class GameLoader {
             gameName);
     }
 
-    saveGame() {
-        let cmdKey = this._game.getCmdKey();
+    saveGame(cmdKey) {
         let gameId = this._game._id;
 
         let gameClone = _.cloneDeep(this._game);
@@ -173,11 +221,18 @@ class GameLoader {
 
             this._gameList[gameId].cmdKey = this._gameList[gameId].cmdKey.filter(
                 (cmdKey) => cmdKey !== undefined);
+
+            return true;
         }
         else {
+            if (this._gameList[gameId].cmdKey.find(key => key == cmdKey)) {
+                return false;
+            }
             this._gameList[gameId].cmdKey.push(cmdKey);
             this._gameList[gameId].cmdManager = cmdManagerClone;
             this._gameList[gameId].hintAI = hintAIClone;
+
+            return true;
         }
     }
 
@@ -192,18 +247,41 @@ class GameLoader {
             this._gameList[gmId].cmdKey = this._gameList[gmId].cmdKey.filter(item => item !== key);
             if (this._gameList[gmId].cmdKey.length == 0) {
                 delete this._gameList[gmId];
+                delete this._gameLastImage[gmId];
                 break;
             }
         }
     }
 
     saveGameImage(image) {
-        let cmdKey = this._game.getCmdKey();
+        let cmdKey = image.value;
         if (cmdKey == undefined) {
             return;
         }
+        let currGameId = this._game.getId();
+        let imgType = parseInt(image.getAttribute('type'));
+        if(imgType == SnapshotType.FilterOnly){
+            this._gameLastImage[currGameId] = image;
+            return;
+        }
 
-        this.saveGame();
+        let verdict = this.saveGame(cmdKey);
+        if (verdict == false){
+            let saveImgCmdKey = this._gameImages[cmdKey];
+             this._gameImages[saveImgCmdKey]= image;
+            return;
+        }
+
+        if (this._gameImages.length != 0) {
+            let lastGameImg = Object.values(this._gameImages[this._gameImages.length - 1])[0];
+            if (lastGameImg != undefined) {
+                let lastGameImgType = parseInt(lastGameImg.getAttribute('type'));
+                if ((lastGameImgType == SnapshotType.Auto)) {
+                    this.deleteGameImage(lastGameImg.value);
+                }
+            }
+        }
+
         this._gameImages.push({
             [cmdKey]: image
         });
@@ -215,22 +293,28 @@ class GameLoader {
         this.deleteGame(key);
     }
 
-    loadGame(cmdKey) {
-        for (let gameKey in this._gameList) {
-            if (this._gameList.hasOwnProperty(gameKey)) {
-                for (let key in this._gameList[gameKey].cmdKey) {
-                    if (this._gameList[gameKey].cmdKey[key] == cmdKey) {
-                        this.setCmdManager(this._gameList[gameKey].cmdManager);
-                        this.setGame(this._gameList[gameKey].game);
-                        this.setHintAI(this._gameList[gameKey].hintAI);
-                        this.loadGameState(cmdKey);
-                        return;
+    loadGame(targetCmdKey) {
+        let targetGameId = this.getGameIdByKey(targetCmdKey);
+        if (this.inCurrentGame(targetGameId)) {
+            this.loadGameState(this._commandManager.CurrentCmdKey(),
+                targetCmdKey);
+        }
+        else {
+            if (this._gameList.hasOwnProperty(targetGameId)) {
+                for (let key in this._gameList[targetGameId].cmdKey) {
+                    if (this._gameList[targetGameId].cmdKey[key] == targetCmdKey) {
+                        this.setCmdManager(this._gameList[targetGameId].cmdManager);
+                        this.setGame(this._gameList[targetGameId].game);
+                        this.setHintAI(this._gameList[targetGameId].hintAI);
+                        this.loadGameState(this._commandManager.StartCmdKey(),
+                            this._commandManager.LastCmdKey());
+                        this.loadGameState(this._commandManager.LastCmdKey(),
+                            targetCmdKey);
+                        break;
                     }
                 }
             }
         }
-
-        console.error("commandKey not found");
     }
 
     jumpToGameState(cmdSequences, seqType) {
@@ -308,17 +392,8 @@ class GameLoader {
         }
     }
 
-    loadGameState(targetStateKey) {
-
-        let currCmddKey = this._commandManager.CurrentCmdKey();
-        if (this._game.getCmdKey() == undefined) {
-            let startCmdKey = this._commandManager.StartCmdKey();
-            let [cmdSequences, seqType] = this._commandManager.CmdSequences(startCmdKey, currCmddKey);
-            this.jumpToGameState(cmdSequences, seqType);
-        }
-
-        currCmddKey = this._commandManager.CurrentCmdKey();
-        let [cmdSequences, seqType] = this._commandManager.CmdSequences(currCmddKey, targetStateKey);
+    loadGameState(startStateKey, targetStateKey) {
+        let [cmdSequences, seqType] = this._commandManager.CmdSequences(startStateKey, targetStateKey);
         this.jumpToGameState(cmdSequences, seqType);
 
     }
