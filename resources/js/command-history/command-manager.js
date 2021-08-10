@@ -89,7 +89,7 @@ class CommandManager {
 
     StartCmdKey() {
         return (
-            (this._cmdTree.Root().Key() != undefined)
+            (this._cmdTree.Root() != undefined)
                 ? this._cmdTree.Root().Key()
                 : undefined
         );
@@ -97,7 +97,7 @@ class CommandManager {
 
     LastCmdKey() {
         return (
-            (this._cmdTree.Leaf().Key() != undefined)
+            (this._cmdTree.Leaf() != undefined)
                 ? this._cmdTree.Leaf().Key()
                 : undefined
         );
@@ -105,7 +105,7 @@ class CommandManager {
 
     CurrentCmdKey() {
         return (
-            (this._cmdTree.Current().Key() != undefined)
+            (this._cmdTree.Current() != undefined)
                 ? this._cmdTree.Current().Key()
                 : undefined
         );

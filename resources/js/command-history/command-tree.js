@@ -55,14 +55,14 @@ class CommandTree {
 
     Insert(command) {
 
-        if ((this._currentCmdNode != undefined) && this._currentCmdNode.Children().length == 0) {
-            let branchNext = this.NextBranchNode(this._currentCmdNode);
-            if (branchNext != undefined) {
-                let current = new CommandNode(command);
-                this._currentCmdNode.AddChild(current);
-                this._currentCmdNode = current;
-                return this._currentCmdNode;
-            }
+        if (this._currentCmdNode != undefined &&
+            this._currentCmdNode != this._lastComandNode) {
+            let newCommand = new CommandNode(command);
+            this._currentCmdNode.AddChild(newCommand);
+            this._currentCmdNode = newCommand;
+            this._lastComandNode = this.TreeRightMost(this._rootCmdNode);
+            return this._currentCmdNode;
+
         }
 
         this._rootCmdNode = this._insert(this._rootCmdNode, this._rootCmdNode, command);
@@ -94,6 +94,19 @@ class CommandTree {
             if (retNode != undefined) {
                 return retNode;
             }
+        }
+
+        return retNode;
+    }
+
+    TreeRightMost(currNode) {
+        if (currNode == undefined) {
+            return undefined;
+        }
+
+        let retNode = this.TreeRightMost(currNode.ChildTopNode());
+        if (retNode == undefined) {
+            return currNode;
         }
 
         return retNode;
