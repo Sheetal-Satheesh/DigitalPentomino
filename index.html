@@ -678,10 +678,14 @@
             btn.style.display = "block";
             $(".close").click(function () {
                 document.getElementById("modalTop").style.display = "none";
+                $("#licencesTable").attr("style", "display:none");
+                $("#licenseHeading").attr("style", "display:none");
+                $("#tableLicenseDiv").attr("style", "display:none");
+                $("#tableLicenseDiv").remove();
                 if ($("#licencesTable")) {
-                    document.getElementById("licencesTable").style.display = "none";
-                    document.getElementById("licenseHeading").style.display = "none";
-                    document.getElementById("tableLicenseDiv").style.display = "none";
+                    $("#licencesTable").attr("style", "display:none");
+                    $("#licenseHeading").attr("style", "display:none");
+                    $("#tableLicenseDiv").attr("style", "display:none");
                     for (let i = 0; i < y.length; i++) { y[i].style.pointerEvents = "auto"; }
                 }
             });
@@ -698,7 +702,7 @@
                 if (div5) {
                     div5.style.display = "none";
                 }
-                SettingsForm.updateForm($('#innerGridForm')[0], settings);
+                //SettingsForm.updateForm($('#innerGridForm')[0], settings);
                 btn.style.display = "none";
             };
             let lang = SettingsSingleton.getInstance().getSettings().general.language;
@@ -719,7 +723,6 @@
             }
             modal.appendChild(document.createElement(strings.License[lang]));
             var table = document.createElement('TABLE');
-            console.log(table);
             table.id = "licencesTable"
             table.border = '1px solid black';
             table.style.textAlign = "center";
