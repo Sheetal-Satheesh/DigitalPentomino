@@ -255,7 +255,6 @@ class GameLoader {
     /** Delete game if there are all auto images*/
     delGameAutoImages() {
 
-        let currGameId = this._game.getId();
 
         let gameIds = Object.keys(this._gameList);
         for (let id in gameIds) {
@@ -323,7 +322,7 @@ class GameLoader {
             let lastGameImg = Object.values(this._gameImages[this._gameImages.length - 1])[0];
             if (lastGameImg != undefined) {
                 let lastGameImgType = parseInt(lastGameImg.getAttribute('type'));
-                if ((lastGameImgType == SnapshotType.Auto)) {
+                if (!(lastGameImgType & SnapshotType.Original)) {
                     this.deleteGameImage(lastGameImg.value);
                 }
             }
