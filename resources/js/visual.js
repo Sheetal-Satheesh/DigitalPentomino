@@ -775,6 +775,9 @@ class Visual {
     }
 
     showNumberOfPossibleSolutions() {
+      if (this.gameController.game()._board.isSolved()) {
+          return;
+      }
         //Fill solutions label text
         let labelPossibleSolutions = document.getElementById("labelNumberSolutions");
         let lang = SettingsSingleton.getInstance().getSettings().general.language;
@@ -1772,10 +1775,10 @@ class Visual {
     }
 
     /**
-     * 
+     *
      * @returns
      *  true: replay is running
-     *  false: no replay 
+     *  false: no replay
      */
     isRelayRunning() {
         return (this.replayRunning == true) ? true : false;
