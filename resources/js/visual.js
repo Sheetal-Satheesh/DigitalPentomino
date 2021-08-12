@@ -822,7 +822,6 @@ class Visual {
             let audio = new Audio('resources/audio/hinting.mp3');
             audio.play();
         }
-        this.indicateHint(hint, commandNumber);
         if(!(SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Textual" )){
            this.indicateHint(hint, commandNumber);
         }
