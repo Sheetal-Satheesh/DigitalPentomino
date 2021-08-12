@@ -222,7 +222,94 @@
                 settings,
                 null);
             processChangesToSettings(initialChanges, settings);
+            inactivityTime();
         }
+
+        function inactivityTime() {
+        let time;
+        let text;
+        let string1 = "Hello are you there ? ";
+        let string2 = "Welcome back";
+        // events
+        window.onload = resetTime;
+        window.onclick = resetTime;
+        window.onkeypress = resetTime;
+        window.ontouchstart = resetTime;
+        window.onmousemove = resetTime;
+        window.onmousedown = resetTime;
+        window.addEventListener('scroll', resetTime, true);
+
+        function alertUser() {
+            // do tasks
+            //wakeup user with bird sound
+            if(SettingsSingleton.getInstance().getSettings().autohinting.wakeUser){
+              let audio = new Audio('resources/audio/pingPong.mp3');
+              audio.play();
+            }
+            //speech bubble message : "I have a hint to continue"
+            setTimeout(function(){
+                   speechBubbleText.textContent=string1;
+               }, 1000);
+
+               //detect user if active again
+               document.onmousemove = function(){
+                   //if(speech bubble message : "I have a hint to continue") => display "welcome back"
+                     if(speechBubbleText.textContent === string1){
+                           setTimeout(function(){speechBubbleText.textContent = string2; }, 500);
+                           setTimeout(function(){
+                             document.getElementById('birdContainer').classList.add("anim");
+                            }, 1000);
+                           //if autohinting enabled continue with autoHint() function
+                           if(SettingsSingleton.getInstance().getSettings().general.enableAutoHinting){
+                                autoHint();
+                           }
+                           //if autohinting disabled => display "Continue with the game"
+                           else{
+                             setTimeout(function(){
+                                    speechBubbleText.textContent = string3;
+                                }, 2500);
+                           }
+                     }
+               };
+        }
+
+        function resetTime() {
+            clearTimeout(time);
+            time = setTimeout(alertUser, 1000 * 10); // 10 seconds
+        }
+        setTimeout(function(){
+          document.getElementById('birdContainer').classList.remove("anim");
+          count = 0;
+        }, 2000);
+    };
+
+    function autoHint(){
+      if((pd.visual.numberofPlacedPentominos() > (pd.visual.pieces.length/2))){
+        setTimeout(function(){
+               speechBubbleText.textContent = string3;
+           }, 2500);
+          pd.visual.numberofPlacedPentominos();
+          return;
+      }
+      if(!(SettingsSingleton.getInstance().getSettings().autohinting.autoHintVariants === "Time period")){
+        setTimeout(function(){
+               speechBubbleText.textContent = string3;
+           }, 2500);
+          return;
+      }
+        let str1 = "I have a hint";
+        let str2 = "Click on the hint button";
+        let hint = pd.gameController.getHint();
+        setTimeout(function(){
+               speechBubbleText.textContent= str1;
+           }, 3000);
+
+         if((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Visual" )){
+              setTimeout(function(){ speechBubbleText.textContent= str2; }, 5000);
+          }else{
+               setTimeout(function(){ pd.visual.hintText(hint); }, 5000);
+           }
+    }
 
         function buttonManipulation() {
             let btn = document.querySelector('.mainWrapper');

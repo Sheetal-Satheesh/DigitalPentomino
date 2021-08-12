@@ -23,6 +23,7 @@ const cmdAttrDefault = updateCommandAttr(CommandTypes.Original, CommandSeq.Forwa
 
 let lastHintedPentName = null;
 let randomCell;
+let count = 0;
 class Visual {
 
     constructor(pd, type = "reload") {
@@ -125,6 +126,10 @@ class Visual {
             }
         }
     }
+    numberofPlacedPentominos(){
+     let NumberOfPentominoes = this.gameController.game()._board._pentominoes.length;
+     return NumberOfPentominoes;
+   }
 
     removeFromTray(pentomino) {
         if (pentomino.inTray == 0) {
@@ -788,6 +793,12 @@ class Visual {
         //Fill speech bubble text
 
         speechBubbleText.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
+        if((this.gameController.getHint().getPossibleSolutions().length) === 0){
+            count+=1;
+            if(count > SettingsSingleton.getInstance().getSettings().autohinting.numberOfWrongMoves ){
+                this.autoHintWrongMoves();
+            }
+        }
     }
 
     callHintAI() {
@@ -810,10 +821,169 @@ class Visual {
             audio.play();
         }
         this.indicateHint(hint, commandNumber);
+        if(!(SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Textual" )){
+           this.indicateHint(hint, commandNumber);
+        }
+
+       if(!(SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Visual" )){
+         setTimeout(function(){ pd.visual.hintText(hint); }, 1000);
+       }
         setTimeout(function () {
             hintButton.disabled = false;
         }, 1000);
     }
+
+    autoHint(){
+       let hint = pd.gameController.getHint();
+     //document.getElementById("speechBubbleText").textContent = "first hint";
+       this.hintText(hint);
+
+       let autoHint = (SettingsSingleton.getInstance().getSettings().hinting.autohinting);
+
+       if(this.selected){
+         alert("indicate hints");
+       }
+       else{
+         alert("give a time delay");
+       }
+       switch(autoHint){
+         case "Visual" : console.log("visual");
+                         break;
+         case "Textual": console.log("textual");
+                         break;
+         case "Both": console.log("both");
+                      break;
+         default:  throw new Error("Error: unknown autohint option");
+       }
+   }
+
+    hintText(hint){
+      hint = pd.gameController.getHint();
+      let commandNumber = 0;
+      let hintCommand = hint.getCommands()[commandNumber];
+      let timeoutFrame = 1000;
+      let r;
+      let x = window.matchMedia("(max-width: 860px)");
+      //possible command names (place, remove, moveToPosition, rotateClkWise, rotateAntiClkWise, mirrorH, mirrorV)
+      let hintSkill = hint._skill;
+      let hintName = hintCommand._name;
+      r = document.getElementById("speechBubbleText");
+          switch (hintName) {
+            case "Remove":
+                this.text = "This doesn't look right. Why don't you remove pentomino " + hintCommand._pentomino.name;
+                document.getElementById("speechBubbleText").textContent = this.text;
+                if (x.matches){
+                    //$(".speechBubble")width:25vw;right:5vw;height:12vw;top:-2.3vw
+                }
+                else{
+
+                }
+                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+                    document.getElementById("labelNumberSolutions").innerText = this.text;
+                }
+                break;
+            case "MoveToPosition":
+                this.text = "Maybe try to move pentomino " + hintCommand._pentomino.name + " to position [" + hintCommand._row + "," + hintCommand._col + "]";
+                document.getElementById("speechBubbleText").textContent = this.text;
+                if (x.matches){
+
+                }
+                else{
+
+                }
+                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+                    document.getElementById("labelNumberSolutions").innerText = this.text;
+                }
+                break;
+            case "Place":
+                this.text = "Why don't you place pentomino " + hintCommand._pentomino.name + " at position [" + hintCommand._nextPosition[0] + "," + hintCommand._nextPosition[1] + "]";
+                document.getElementById("speechBubbleText").textContent = this.text;
+                if (x.matches){
+
+                }
+                else{
+
+                }
+                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+                    document.getElementById("labelNumberSolutions").innerText = this.text;
+                }
+                break;
+            case "RotateClkWise":
+                this.text = "Why don't you try to rotate pentomino " + hintCommand._pentomino.name + " clock-wise";
+                document.getElementById("speechBubbleText").textContent = this.text;
+                if (x.matches){
+
+                }
+                else{
+
+                }
+                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+                    document.getElementById("labelNumberSolutions").innerText = this.text;
+                }
+                break;
+            case "RotateAntiClkWise":
+                this.text = "Why don't you try to rotate pentomino " + hintCommand._pentomino.name + " anti-clock-wise";
+                document.getElementById("speechBubbleText").textContent = this.text;
+                if (x.matches){
+
+                }
+                else{
+
+                }
+                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+                    document.getElementById("labelNumberSolutions").innerText = this.text;
+                }
+                break;
+            case "MirrorH":
+                this.text = "Why don't you try to mirror pentomino " + hintCommand._pentomino.name + " horizontal";
+                document.getElementById("speechBubbleText").textContent = this.text;
+                if (x.matches){
+
+                }
+                else{
+
+                }
+                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+                    document.getElementById("labelNumberSolutions").innerText = this.text;
+                }
+                break;
+            case "MirrorV":
+                this.text = "Why don't you try to mirror pentomino " + hintCommand._pentomino.name + " vertical";
+                document.getElementById("speechBubbleText").textContent = this.text;
+                if (x.matches){
+
+                }
+                else{
+
+                }
+                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+                    document.getElementById("labelNumberSolutions").innerText = this.text;
+                }
+                break;
+            default:
+                this.text = "Error - unknown command with name '" + hintName + "'";
+                throw new Error("Error: unknown command with name " + hintName);
+        }
+    }
+
+
+    autoHintWrongMoves(){
+         if(!(SettingsSingleton.getInstance().getSettings().autohinting.autoHintVariants === "Wrong moves")){
+             return;
+         }
+         setTimeout(function(){
+           document.getElementById('birdContainer').classList.add("anim");
+          }, 1000);
+          this.wrongMoves();
+         document.getElementById("speechBubbleText").textContent = "Please stop ! wait for the hint";
+         setTimeout(function(){
+           this.callHintAI();
+         }, 3000);
+         setTimeout(function(){
+           document.getElementById('birdContainer').classList.remove("anim");
+           count = 0;
+         }, 2000);
+   }
 
     blinkCells(cells) {
         let menu = [];

@@ -50,6 +50,59 @@ const strings = {
              backgroundMusic: ["Background Music", "Hintergrundmusik"],
              functionsMusic: ["Functions Music","Funktionen Musik"]
         },
+        autohinting:{
+            title: ["Auto hinting", "Automatisches Hinting"],
+            wakeUser:{
+              title: [["Wakeup the player if inactive"],["Wecken Sie den Spieler, wenn er inaktiv ist"]],
+              description: ["Wakeup the player if inactive with a message",
+              "Wecken Sie den Spieler bei Inaktivität mit ein nachrichten"]
+            },
+
+            enableAutoHinting:{
+                title: ["Enable auto hinting", "Auto-Hinweis aktivieren"],
+                description: [["Enables auto-hinting", "Aktiviert Auto-Hinting"]]
+            },
+
+            autoHintVariants:{
+                title: ["Variants of auto-hinting", "Varianten von Auto-Hinting"],
+                enumTitles: [["Time period", "Wrong moves"], ["Zeitspanne", "Falsche Züge"]],
+                description: [
+                "Provides automatic hints :"  +
+                    "<ul>" +
+                        "<li><b>Time period:</b> Auto-hinting based on the in-active player time</li>" +
+                        "<li><b>Wrong moves:</b> Auto-hinting based on the number of wrong moves, here the user can only make 10 wrong moves</li>" +
+                    "</ul>",
+                    "Liefert automatische Hinweise :" +
+                        "<ul>" +
+                        "<li><b>Zeitspanne:</b> Automatisches Hinting basierend auf der Zeit des inaktiven Spielers</li>" +
+                        "<li><b>Falsche Züge:</b> Auto-Hinweis basierend auf der Anzahl der falschen Züge, hier kann der Benutzer nur 10 falsche Züge machen</li>" +
+                        "</ul>"]
+            },
+
+            numberOfWrongMoves: {
+                title: ["Number of wrong moves", "Anzahl der falschen Züge"],
+                  description: ["After how any number of wrong moves should the hint occur automatically",
+                  "Nach einer beliebigen Anzahl von falschen Zügen sollte der Hinweis automatisch erfolgen"]
+            },
+
+            typeOfHints:{
+                title: ["Type of hints for auto-hinting", "Art der Hinweise für das Auto-Hinting"],
+                enumTitles: [["Visual", "Textual", "Both"], ["Visuell", "Textuell", "Beides"]],
+                description: [
+                "Provides automatic hints :"  +
+                    "<ul>" +
+                        "<li><b>Visual:</b> Gives only visual hints.</li>" +
+                        "<li><b>Textual:</b> Gives only textual hints.</li>" +
+                        "<li><b>Both:</b> Gives both visual and textual hints</li>" +
+                    "</ul>",
+                    "Liefert automatische Hinweise :" +
+                        "<ul>" +
+                        "<li><b>Visuell:</b> Gibt nur visuelle Hinweise.</li>" +
+                        "<li><b>Textuell:</b> Gibt nur textuelle Hinweise.</li>" +
+                        "<li><b>Beide:</b> Gibt sowohl visuelle als auch textliche Hinweise</li>" +
+                        "</ul>"]
+            }
+        },
         hinting: {
             title: ["Hints (Experimental)", "Hinweise (Experimentell)"],
             enableHinting: {

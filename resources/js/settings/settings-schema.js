@@ -85,6 +85,12 @@ class SettingsSchema {
                         "enumText": titles.hinting.hintingLevels.enumTitles[lang],
                         "default": "Easy",
                         "pupilModeVisibleOnDefault": false
+                    },
+                    enableAutoHinting:{
+                      "type": "boolean",
+                      "title": titles.autohinting.enableAutoHinting.title[lang],
+                      "default": false,
+                      "pupilModeVisibleOnDefault": true
                     }
                 }
             },
@@ -124,6 +130,49 @@ class SettingsSchema {
                         "enumText": titles.showSolvedBoardScreen.SolvedScreens.enumTitles[lang],
                         "default": "Play again?"
                     }
+                }
+            },
+            autohinting: {
+                "type": "object",
+                "title": titles.autohinting.title[lang],
+                "pupilModeVisibleOnDefault": false,
+                "advanced": true,
+                "properties": {
+                  wakeUser:{
+                    "type": "boolean",
+                    "title": titles.autohinting.wakeUser.title[lang],
+                    "description": titles.autohinting.wakeUser.description[lang],
+                    "default": false
+                  },
+
+                  autoHintVariants:{
+                    "type": "string",
+                    "title": titles.autohinting.autoHintVariants.title[lang],
+                    "enum": ["Time period", "Wrong moves"],
+                    "enumText": titles.autohinting.autoHintVariants.enumTitles[lang],
+                    "description": titles.autohinting.autoHintVariants.description[lang],
+                    "default": "Wrong moves"
+                  },
+
+                  numberOfWrongMoves: {
+                      "step": 1,
+                      "type": "integer",
+                      "title": titles.autohinting.numberOfWrongMoves.title[lang],
+                      "description": titles.autohinting.numberOfWrongMoves.description[lang],
+                      "default": 5,
+                      "minimum": 5,
+                      "exclusiveMinimum": false,
+                      "maximum": 20
+                  },
+
+                  typeOfHints:{
+                    "type": "string",
+                    "title": titles.autohinting.typeOfHints.title[lang],
+                    "enum": ["Visual", "Textual", "Both"],
+                    "enumText": titles.autohinting.typeOfHints.enumTitles[lang],
+                    "description": titles.autohinting.typeOfHints.description[lang],
+                    "default": "Visual"
+                  }
                 }
             },
             hinting: {
