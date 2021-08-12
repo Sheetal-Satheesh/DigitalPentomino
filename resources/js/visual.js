@@ -775,13 +775,18 @@ class Visual {
     }
 
     showNumberOfPossibleSolutions() {
+      let speechBubbleText = document.getElementById("speechBubbleText");
+      let lang = SettingsSingleton.getInstance().getSettings().general.language;
         //Fill solutions label text
-        let labelPossibleSolutions = document.getElementById("labelNumberSolutions");
-        let lang = SettingsSingleton.getInstance().getSettings().general.language;
+      let labelPossibleSolutions = document.getElementById("labelNumberSolutions");
+      if (this.gameController.game()._board.isSolved()) {
+            speechBubbleText.innerText = strings.speechbubbleTexts.Solved[lang];
+          return;
+      }
         labelPossibleSolutions.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
 
         //Fill speech bubble text
-        let speechBubbleText = document.getElementById("speechBubbleText");
+
         speechBubbleText.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
     }
 
@@ -1784,10 +1789,10 @@ class Visual {
     }
 
     /**
-     * 
+     *
      * @returns
      *  true: replay is running
-     *  false: no replay 
+     *  false: no replay
      */
     isRelayRunning() {
         return (this.replayRunning == true) ? true : false;

@@ -11,6 +11,9 @@ const strings = {
         WellDone: ["Well done! Please wait for your Teacher to continue", "Gut gemacht! Bitte warten Sie auf Ihren Lehrer, um fortzufahren"],
         Excellent: ["Excellent ! Now continue with the next task on your assignment", "Ausgezeichnet! Fahren Sie jetzt mit der nächsten Aufgabe Ihres Auftrags fort"]
     },
+    speechbubbleTexts: {
+        Solved: ["Ya hoo !! You solved it !", "Juhu!! Du hast es gelöst!"]
+    },
     numberOfPossibleSolutions: ["Number of solutions", "Anzahl Lösungen"],
     License: ["LICENSES", "LIZENZEN"],
     replay:{
