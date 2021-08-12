@@ -793,13 +793,13 @@ class Visual {
         //Fill speech bubble text
 
         speechBubbleText.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
-        if((this.gameController.getHint().getPossibleSolutions().length) === 0){
-            count+=1;
-            if(SettingsSingleton.getInstance().getSettings().general.enableAutoHinting){
+        if(SettingsSingleton.getInstance().getSettings().general.enableAutoHinting){
+            if((this.gameController.getHint().getPossibleSolutions().length) === 0){
+                count+=1;
                 if(count > SettingsSingleton.getInstance().getSettings().autohinting.numberOfWrongMoves ){
                     this.autoHintWrongMoves();
                 }
-             }
+            }
         }
     }
 
