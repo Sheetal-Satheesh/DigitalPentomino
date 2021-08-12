@@ -879,7 +879,7 @@ class Visual {
                 }
                 break;
             case "Place":
-                this.text = strings.speechbubbleTexts.place[lang] + " pentomino " + hintCommand._pentomino.name + strings.speechbubbleTexts.atPosition[lang]  + " " +  "[" + hintCommand._nextPosition[0] + "," + hintCommand._nextPosition[1] + "]";
+                this.text = strings.speechbubbleTexts.place[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.atPosition[lang]  + " " +  "[" + hintCommand._nextPosition[0] + "," + hintCommand._nextPosition[1] + "]";
                 document.getElementById("speechBubbleText").textContent = this.text;
                 if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
                     document.getElementById("labelNumberSolutions").innerText = this.text;
