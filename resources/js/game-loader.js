@@ -304,11 +304,9 @@ class GameLoader {
 
         let verdict = this.saveGame(cmdKey);
         if (verdict == false) {
-            let saveImgCmdKey = undefined;
             let img = undefined;
             for (let indx = 0; indx < this._gameImages.length; ++indx) {
                 if (Object.keys(this._gameImages[indx])[0] == cmdKey) {
-                    saveImgCmdKey =cmdKey;
                     img = (this._gameImages[indx])[cmdKey];
                     img.setAttribute("type", imgType.toString());
                     break;
@@ -321,7 +319,7 @@ class GameLoader {
             let lastGameImg = Object.values(this._gameImages[this._gameImages.length - 1])[0];
             if (lastGameImg != undefined) {
                 let lastGameImgType = parseInt(lastGameImg.getAttribute('type'));
-                if (!(lastGameImgType & SnapshotType.Original)) {
+                if (lastGameImgType == SnapshotType.Auto) {
                     this.deleteGameImage(lastGameImg.value);
                 }
             }

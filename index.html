@@ -1115,6 +1115,7 @@
             template.clearContent("#innerGridForm");
 
             let images = pd.visual.getImagesByGameId(gameId);
+
             if (images == undefined) {
                 return;
             }
@@ -1168,7 +1169,7 @@
             modal.style.display = "block";
 
             document.querySelector(".modalFormContent").style.display = "none";
-            document.querySelector(".outerGrid").style.display = "block";
+            document.querySelector(".innerGrid").style.display = "block";
             let imageGrid = document.getElementById('innerGrid');
             let imgFilterGrid = document.getElementById('filterGrid');
             template.clearContent(".innerGrid");
@@ -1179,7 +1180,10 @@
             pd.visual.saveGameImage(SnapshotType.Auto);
             let currGmKey = pd.visual.getCurrentGameKey();
             let gameIds = pd.visual.getAllGameIds();
+            if (gameIds.length == 1 && pd.getGameState('start') == undefined) {
+                return;
 
+            }
             gameIds.reverse().forEach((gameId) => {
                 let img = pd.visual.getLastGameimage(gameId);
                 if (img == undefined) {
@@ -1285,11 +1289,11 @@
             this.saveGameImage(SnapshotType.Auto);
 
             var modal = document.getElementById('modalTop');
-             modal.style.backgroundColor = "#eceaea";
-             modal.style.display = "block";
+            modal.style.backgroundColor = "#eceaea";
+            modal.style.display = "block";
 
             document.querySelector(".modalFormContent").style.display = "none";
-            document.querySelector(".outerGrid").style.display = "block";
+            document.querySelector(".innerGrid").style.display = "block";
 
             let imageGrid = document.getElementById('innerGrid');
             let imgFilterGrid = document.getElementById('filterGrid');
@@ -1305,7 +1309,7 @@
 
             if (startGameState == undefined) {
                 document.querySelector(".modalFormContent").style.display = "block";
-                document.querySelector(".outerGrid").style.display = "none";
+                document.querySelector(".innerGrid").style.display = "none";
                 let textNode = {
                     name: "modalText",
                     text: "Game Not Started Yet ",
@@ -1315,7 +1319,7 @@
                 return;
             }
 
-           // imgFilterGrid.style.backgroundColor = "rgb(20, 70, 63)";
+            imgFilterGrid.style.backgroundColor = "#c7c3c3";
             let fTextDivStart = document.createElement("div");
             fTextDivStart.setAttribute("class", "fTextDiv ftextDivStart");
             fTextDivStart.setAttribute("type", "text");
