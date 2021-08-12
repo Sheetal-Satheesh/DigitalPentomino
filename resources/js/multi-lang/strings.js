@@ -86,13 +86,13 @@ const strings = {
                 description: [
                 "Provides automatic hints :"  +
                     "<ul>" +
-                        "<li><b>Time period:</b> Auto-hinting based on the in-active player time</li>" +
-                        "<li><b>Wrong moves:</b> Auto-hinting based on the number of wrong moves, here the user can only make 10 wrong moves</li>" +
+                        "<li><b>Time period:</b> Auto-hinting based on the in-active player time, in this case if the player is near to the solution hints are not provided. In case the user is far from the solution, hints are provided.</li>" +
+                        "<li><b>Wrong moves:</b> Auto-hinting based on the number of wrong moves, here the user can only make the number of wrong moves configured here in the settings, for every number of wrong moves, hint is provided.</li>" +
                     "</ul>",
                     "Liefert automatische Hinweise :" +
                         "<ul>" +
-                        "<li><b>Zeitspanne:</b> Automatisches Hinting basierend auf der Zeit des inaktiven Spielers</li>" +
-                        "<li><b>Falsche Züge:</b> Auto-Hinweis basierend auf der Anzahl der falschen Züge, hier kann der Benutzer nur 10 falsche Züge machen</li>" +
+                        "<li><b>Zeitspanne:</b> Auto-Hinting basierend auf der Zeit, in der der Spieler inaktiv ist. In diesem Fall werden keine Hinweise gegeben, wenn der Spieler sich in der Nähe der Lösung befindet. Befindet sich der Benutzer weit von der Lösung entfernt, werden Hinweise gegeben.</li>" +
+                        "<li><b>Falsche Züge:</b> Auto-Hinweis basierend auf der Anzahl der falschen Züge, hier kann der Benutzer nur die Anzahl der falschen Züge machen, die hier in den Einstellungen konfiguriert sind, für jede Anzahl von falschen Zügen wird ein Hinweis gegeben.</li>" +
                         "</ul>"]
             },
 
