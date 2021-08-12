@@ -314,7 +314,6 @@ class GameLoader {
                     break;
                 }
             }
-            // this._gameImages[saveImgCmdKey].setAttribute("type", imgType);;
             return;
         }
 

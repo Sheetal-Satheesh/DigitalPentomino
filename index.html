@@ -1264,11 +1264,10 @@
         }
 
         function showReplayUI() {
-            /*
-            TODO: Text should support multi language
-            */
-            let textStartState = "Start State",
-                textEndState = "End State";
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
+            let textStartState = strings.replay.startStateText[lang],
+                textEndState = strings.replay.endStateText[lang];
 
             if ($('.modalFormContainer').is(':visible')) {
                 this.closeModal();

@@ -13,6 +13,10 @@ const strings = {
     },
     numberOfPossibleSolutions: ["Number of solutions", "Anzahl Lösungen"],
     License: ["LICENSES", "LIZENZEN"],
+    replay:{
+        startStateText: ["Start State", "Wiederholung"],
+        endStateText: ["End State","Endzustand"]
+    },
     settings: {
         header: ["Game settings", "Spieleinstellungen"],
         advanced: {
