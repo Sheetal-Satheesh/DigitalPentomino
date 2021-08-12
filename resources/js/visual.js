@@ -1554,7 +1554,7 @@ class Visual {
         return UtilitiesClass.getRandomElementFromArray(solution.filter(piece => !(pickedPieces[piece[0].name] == 1)));
     }
 
-    execShadowCmd(command, seqType=CommandSeq.Forward) {
+    execShadowCmd(command, seqType = CommandSeq.Forward) {
         let cmdProperty = updateCommandAttr(CommandTypes.Shadow, seqType);
         switch (command.name) {
             case "Remove":
@@ -1640,7 +1640,7 @@ class Visual {
             this.execShadowCmd(item);
         }, this);
 
-        
+
         if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.showNumberOfPossibleSolutions();
         }
@@ -1672,6 +1672,13 @@ class Visual {
         let gameElem = document.getElementById('playarea');
         let currCmdKey = this.gameController.getCurrentCmdKey();
 
+        let gameId = pd.visual.getCurrentGameKey();
+        let img = pd.visual.getLastGameimage(gameId);
+        if (img != undefined &&
+            img.value == currCmdKey &&
+            type == SnapshotType.Autoo) {
+            return;
+        }
 
         html2canvas(gameElem).then(function (screeshot) {
             screeshot.setAttribute("class", "screenshot");
@@ -1695,7 +1702,7 @@ class Visual {
 
     }
 
-    delGameAutoImages(){
+    delGameAutoImages() {
         this.gameController.delGameAutoImages();
     }
 
@@ -1746,8 +1753,8 @@ class Visual {
             }
         }
         this.loadGameState(startKey);
-        let cmdSequences = this.gameController.getCmdSequences(startKey, targetKey);    
-       
+        let cmdSequences = this.gameController.getCmdSequences(startKey, targetKey);
+
         let timeInterval = 100;
         for (let indx = 0; indx < cmdSequences.length; indx++) {
             let command = cmdSequences[indx];

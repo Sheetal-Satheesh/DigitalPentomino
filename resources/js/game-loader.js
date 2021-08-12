@@ -310,6 +310,7 @@ class GameLoader {
                     img = (this._gameImages[indx])[cmdKey];
                     img.setAttribute("type", imgType.toString());
                     break;
+
                 }
             }
             return;
