@@ -1681,7 +1681,7 @@ class Visual {
         let img = pd.visual.getLastGameimage(gameId);
         if (img != undefined &&
             img.value == currCmdKey &&
-            type == SnapshotType.Autoo) {
+            type == SnapshotType.Auto) {
             return;
         }
 
