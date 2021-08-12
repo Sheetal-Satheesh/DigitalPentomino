@@ -1079,7 +1079,7 @@
             }
             if (stateType == "start") {
                 fTextDivStart.style.border = 0;
-                fTextDivEnd.style.border = "3px dotted white";
+                fTextDivEnd.style.border = "3px dotted gray";
                 fTextDivStart.setAttribute('type', "image");
                 finishBlink(fTextDivStart);
                 blink(fTextDivEnd);
@@ -1164,7 +1164,7 @@
             this.disableSnapshotButton();
             this.disablePointerEventsOnPieces();
             this.hideManipulationButtons();
-            modal.style.background = " rgb(220, 240, 237)";
+            modal.style.backgroundColor = "#eceaea";
             modal.style.display = "block";
 
             document.querySelector(".modalFormContent").style.display = "none";
@@ -1188,8 +1188,8 @@
 
                 if (gameId == currGmKey) {
                     img.style.filter = "brightness(120%) saturate(120%)";
-                    img.style.border = ".2vw solid rgb(2, 71, 62)";
-                    img.style.background = "yellow";
+                    img.style.border = ".3px dotted gray";
+                    img.style.background = "black";
                     let images = pd.visual.getImagesByGameId(currGmKey)
                     renderGallery(gameId);
                 }
@@ -1234,8 +1234,8 @@
         }
 
         function changeReplayFilterUI(startElem, endElem, contentType) {
-            startElem.style.border = "3px dotted white";
-            startElem.style.color = "white";
+            startElem.style.border = "3px dotted gray";
+            startElem.style.color = "#eceaea";
 
             let fDivEnd = document.querySelector(".ftextDivEnd");
             endElem.style.border = "0";
@@ -1286,8 +1286,8 @@
             this.saveGameImage(SnapshotType.Auto);
 
             var modal = document.getElementById('modalTop');
-            modal.style.background = " rgb(220, 240, 237)";
-            modal.style.display = "block";
+             modal.style.backgroundColor = "#eceaea";
+             modal.style.display = "block";
 
             document.querySelector(".modalFormContent").style.display = "none";
             document.querySelector(".outerGrid").style.display = "block";
@@ -1316,7 +1316,7 @@
                 return;
             }
 
-            imgFilterGrid.style.backgroundColor = "rgb(20, 70, 63)";
+           // imgFilterGrid.style.backgroundColor = "rgb(20, 70, 63)";
             let fTextDivStart = document.createElement("div");
             fTextDivStart.setAttribute("class", "fTextDiv ftextDivStart");
             fTextDivStart.setAttribute("type", "text");
