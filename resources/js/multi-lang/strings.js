@@ -12,7 +12,24 @@ const strings = {
         Excellent: ["Excellent ! Now continue with the next task on your assignment", "Ausgezeichnet! Fahren Sie jetzt mit der nächsten Aufgabe Ihres Auftrags fort"]
     },
     speechbubbleTexts: {
-        Solved: ["Ya hoo !! You solved it !", "Juhu!! Du hast es gelöst!"]
+        Solved: ["Ya hoo !! You solved it !", "Juhu!! Du hast es gelöst!"],
+        pleaseContinue: ["Please continue with the game", "Bitte fahren Sie mit dem Spiel fort"],
+        pleaseStop: ["Wait for the hint", "Auf den Hinweis warten"],
+        helloThere: ["Hello are you there ?", "Hallo, sind Sie noch dran?"],
+        welcomeBack:["Welcome back", "Willkommen zurück"],
+        iHaveAHint:["I have a hint", "Ich habe einen Tipp"],
+        clickHintbtn:["Click on the hint button", "Klicken Sie auf die Schaltfläche Hinweis"],
+        removePentomino:["Remove", "Entfernen"],
+        move:["Move", "Verschieben"],
+        MoveToPosition:["to position","zu positionieren"],
+        atPosition:["at position","an Ort und Stelle"],
+        place:["Place", "Ort"],
+        rotate:["Rotate", "Drehen Sie"],
+        clockwise:["clockwise","im Uhrzeigersinn"],
+        antiClockwise:["anti-clockwise", "linksdrehend"],
+        mirror:["Mirror","Spiegel"],
+        vertical:["vertical","vertikal"],
+        horizontal:["horizontal","horizontal"]
     },
     numberOfPossibleSolutions: ["Number of solutions", "Anzahl Lösungen"],
     License: ["LICENSES", "LIZENZEN"],

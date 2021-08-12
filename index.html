@@ -202,8 +202,6 @@
     <script type="text/javascript">
         let pd;
         let template;
-        let string3 = "Please continue with the game";
-        let speechBubbleText = document.getElementById('speechBubbleText');
         const SnapshotType = {
             "FilterOnly": 0,
             "Original": 1,
@@ -229,8 +227,8 @@
         function inactivityTime() {
         let time;
         let text;
-        let string1 = "Hello are you there ? ";
-        let string2 = "Welcome back";
+        let lang = SettingsSingleton.getInstance().getSettings().general.language;
+        let speechBubbleText = document.getElementById('speechBubbleText');
         // events
         window.onload = resetTime;
         window.onclick = resetTime;
@@ -241,6 +239,7 @@
         window.addEventListener('scroll', resetTime, true);
 
         function alertUser() {
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
             // do tasks
             //wakeup user with bird sound
             if(SettingsSingleton.getInstance().getSettings().autohinting.wakeUser){
@@ -249,14 +248,14 @@
             }
             //speech bubble message : "I have a hint to continue"
             setTimeout(function(){
-                   speechBubbleText.textContent=string1;
+                   speechBubbleText.textContent=strings.speechbubbleTexts.helloThere[lang];
                }, 1000);
 
                //detect user if active again
                document.onmousemove = function(){
                    //if(speech bubble message : "I have a hint to continue") => display "welcome back"
-                     if(speechBubbleText.textContent === string1){
-                           setTimeout(function(){speechBubbleText.textContent = string2; }, 500);
+                     if(speechBubbleText.textContent === strings.speechbubbleTexts.helloThere[lang]){
+                           setTimeout(function(){speechBubbleText.textContent = strings.speechbubbleTexts.welcomeBack[lang]; }, 500);
                            setTimeout(function(){
                              document.getElementById('birdContainer').classList.add("anim");
                             }, 1000);
@@ -267,7 +266,7 @@
                            //if autohinting disabled => display "Continue with the game"
                            else{
                              setTimeout(function(){
-                                    speechBubbleText.textContent = string3;
+                                    speechBubbleText.textContent = strings.speechbubbleTexts.pleaseContinue[lang];
                                 }, 2500);
                            }
                      }
@@ -285,28 +284,28 @@
     };
 
     function autoHint(){
+      let lang = SettingsSingleton.getInstance().getSettings().general.language;
+      let speechBubbleText = document.getElementById('speechBubbleText');
       if((pd.visual.numberofPlacedPentominos() > (pd.visual.pieces.length/2))){
         setTimeout(function(){
-               speechBubbleText.textContent = string3;
+               speechBubbleText.textContent = strings.speechbubbleTexts.pleaseContinue[lang];
            }, 2500);
           pd.visual.numberofPlacedPentominos();
           return;
       }
       if(!(SettingsSingleton.getInstance().getSettings().autohinting.autoHintVariants === "Time period")){
         setTimeout(function(){
-               speechBubbleText.textContent = string3;
+               speechBubbleText.textContent = strings.speechbubbleTexts.pleaseContinue[lang];
            }, 2500);
           return;
       }
-        let str1 = "I have a hint";
-        let str2 = "Click on the hint button";
         let hint = pd.gameController.getHint();
         setTimeout(function(){
-               speechBubbleText.textContent= str1;
+               speechBubbleText.textContent= strings.speechbubbleTexts.iHaveAHint[lang];
            }, 3000);
 
          if((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Visual" )){
-              setTimeout(function(){ speechBubbleText.textContent= str2; }, 5000);
+              setTimeout(function(){ speechBubbleText.textContent= strings.speechbubbleTexts.clickHintbtn[lang]; }, 5000);
           }else{
                setTimeout(function(){ pd.visual.hintText(hint); }, 5000);
            }

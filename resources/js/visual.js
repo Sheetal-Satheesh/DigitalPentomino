@@ -797,7 +797,6 @@ class Visual {
             count+=1;
             if(SettingsSingleton.getInstance().getSettings().general.enableAutoHinting){
                 if(count > SettingsSingleton.getInstance().getSettings().autohinting.numberOfWrongMoves ){
-                    console.log(count);
                     this.autoHintWrongMoves();
                 }
              }
@@ -842,13 +841,6 @@ class Visual {
        this.hintText(hint);
 
        let autoHint = (SettingsSingleton.getInstance().getSettings().hinting.autohinting);
-
-       if(this.selected){
-         alert("indicate hints");
-       }
-       else{
-         alert("give a time delay");
-       }
        switch(autoHint){
          case "Visual" : console.log("visual");
                          break;
@@ -862,6 +854,7 @@ class Visual {
 
     hintText(hint){
       hint = pd.gameController.getHint();
+      let lang = SettingsSingleton.getInstance().getSettings().general.language;
       let commandNumber = 0;
       let hintCommand = hint.getCommands()[commandNumber];
       let timeoutFrame = 1000;
@@ -873,49 +866,49 @@ class Visual {
       r = document.getElementById("speechBubbleText");
           switch (hintName) {
             case "Remove":
-                this.text = "Remove pentomino " + hintCommand._pentomino.name;
+                this.text = strings.speechbubbleTexts.removePentomino[lang]  + " pentomino " + hintCommand._pentomino.name;
                 document.getElementById("speechBubbleText").textContent = this.text;
                 if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
                     document.getElementById("labelNumberSolutions").innerText = this.text;
                 }
                 break;
             case "MoveToPosition":
-                this.text = "Move pentomino " + hintCommand._pentomino.name + " to position [" + hintCommand._row + "," + hintCommand._col + "]";
+                this.text = strings.speechbubbleTexts.move[lang] + " pentomino " + hintCommand._pentomino.name + strings.speechbubbleTexts.MoveToPosition[lang] + " " + "[" + hintCommand._row + "," + hintCommand._col + "]";
                 document.getElementById("speechBubbleText").textContent = this.text;
                 if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
                     document.getElementById("labelNumberSolutions").innerText = this.text;
                 }
                 break;
             case "Place":
-                this.text = "Place pentomino " + hintCommand._pentomino.name + " at position [" + hintCommand._nextPosition[0] + "," + hintCommand._nextPosition[1] + "]";
+                this.text = strings.speechbubbleTexts.place[lang] + " pentomino " + hintCommand._pentomino.name + strings.speechbubbleTexts.atPosition[lang]  + " " +  "[" + hintCommand._nextPosition[0] + "," + hintCommand._nextPosition[1] + "]";
                 document.getElementById("speechBubbleText").textContent = this.text;
                 if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
                     document.getElementById("labelNumberSolutions").innerText = this.text;
                 }
                 break;
             case "RotateClkWise":
-                this.text = "Rotate pentomino " + hintCommand._pentomino.name + " clock-wise";
+                this.text = strings.speechbubbleTexts.rotate[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.clockwise[lang];
                 document.getElementById("speechBubbleText").textContent = this.text;
                 if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
                     document.getElementById("labelNumberSolutions").innerText = this.text;
                 }
                 break;
             case "RotateAntiClkWise":
-                this.text = "Rotate pentomino " + hintCommand._pentomino.name + " anti-clock-wise";
+                this.text = strings.speechbubbleTexts.rotate[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.antiClockwise[lang];
                 document.getElementById("speechBubbleText").textContent = this.text;
                 if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
                     document.getElementById("labelNumberSolutions").innerText = this.text;
                 }
                 break;
             case "MirrorH":
-                this.text = "Mirror pentomino " + hintCommand._pentomino.name + " horizontal";
+                this.text = strings.speechbubbleTexts.mirror[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.horizontal[lang];
                 document.getElementById("speechBubbleText").textContent = this.text;
                 if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
                     document.getElementById("labelNumberSolutions").innerText = this.text;
                 }
                 break;
             case "MirrorV":
-                this.text = "Mirror pentomino " + hintCommand._pentomino.name + " vertical";
+                this.text = strings.speechbubbleTexts.mirror[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.vertical[lang];
                 document.getElementById("speechBubbleText").textContent = this.text;
                 if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
                     document.getElementById("labelNumberSolutions").innerText = this.text;
@@ -929,13 +922,14 @@ class Visual {
 
 
     autoHintWrongMoves(){
+         let lang = SettingsSingleton.getInstance().getSettings().general.language;
          if(!(SettingsSingleton.getInstance().getSettings().autohinting.autoHintVariants === "Wrong moves")){
              return;
          }
          setTimeout(function(){
            document.getElementById('birdContainer').classList.add("anim");
           }, 1000);
-         document.getElementById("speechBubbleText").textContent = "Please stop ! wait for the hint";
+         document.getElementById("speechBubbleText").textContent = strings.speechbubbleTexts.pleaseStop[lang];
          setTimeout(function(){
            this.callHintAI();
          }, 2000);
