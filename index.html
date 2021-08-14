@@ -295,9 +295,9 @@
 }
 
     function autoHint(){
-      let button = document.createElement("button");
-      button.id = "myButton";
-      button.innerText = "my button";
+      // let button = document.createElement("button");
+      // button.id = "myButton";
+      // button.innerText = "my button";
       let lang = SettingsSingleton.getInstance().getSettings().general.language;
       let speechBubbleText = document.getElementById('speechBubbleText');
       if((pd.visual.numberofPlacedPentominos() > (pd.visual.pieces.length/2))){
@@ -320,8 +320,8 @@
 
          if((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Visual" )){
               setTimeout(function(){
-                //speechBubbleText.textContent= strings.speechbubbleTexts.clickHintbtn[lang];
-                speechBubbleText.appendChild(button);
+                speechBubbleText.textContent= strings.speechbubbleTexts.clickHintbtn[lang];
+                //speechBubbleText.appendChild(button);
               }, 5000);
           }
           else{
