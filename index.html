@@ -255,23 +255,26 @@
                document.onmousemove = function(){
                    //if(speech bubble message : "I have a hint to continue") => display "welcome back"
                      if(speechBubbleText.textContent === strings.speechbubbleTexts.helloThere[lang]){
-                           setTimeout(function(){speechBubbleText.textContent = strings.speechbubbleTexts.welcomeBack[lang]; }, 500);
-                           setTimeout(function(){
-                             document.getElementById('birdContainer').classList.add("anim");
-                            }, 1000);
-                           //if autohinting enabled continue with autoHint() function
-                           if(SettingsSingleton.getInstance().getSettings().general.enableAutoHinting){
-                                autoHint();
-                           }
-                           //if autohinting disabled => display "Continue with the game"
-                           else{
-                             setTimeout(function(){
-                                    speechBubbleText.textContent = strings.speechbubbleTexts.pleaseContinue[lang];
-                                }, 2500);
-                           }
+                        setTimeout(function(){speechBubbleText.textContent = strings.speechbubbleTexts.welcomeBack[lang]; }, 500);
                      }
                };
+
+               setTimeout(function(){
+                 document.getElementById('birdContainer').classList.add("anim");
+                }, 1000);
+               //if autohinting enabled continue with autoHint() function
+               if(SettingsSingleton.getInstance().getSettings().general.enableAutoHinting){
+                    autoHint();
+                    console.log("running");
+               }
+               //if autohinting disabled => display "Continue with the game"
+               else{
+                 setTimeout(function(){
+                        speechBubbleText.textContent = strings.speechbubbleTexts.pleaseContinue[lang];
+                    }, 2500);
+               }
         }
+        //end of alert user
 
         function resetTime() {
             clearTimeout(time);
@@ -283,7 +286,18 @@
         }, 2000);
     };
 
+    function removeHandler() {
+  if (x.removeEventListener) {
+    x.removeEventListener("mousemove", myFunction);
+  } else if (x.detachEvent) {
+    x.detachEvent("onmousemove", myFunction);
+  }
+}
+
     function autoHint(){
+      let button = document.createElement("button");
+      button.id = "myButton";
+      button.innerText = "my button";
       let lang = SettingsSingleton.getInstance().getSettings().general.language;
       let speechBubbleText = document.getElementById('speechBubbleText');
       if((pd.visual.numberofPlacedPentominos() > (pd.visual.pieces.length/2))){
@@ -305,8 +319,12 @@
            }, 3000);
 
          if((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Visual" )){
-              setTimeout(function(){ speechBubbleText.textContent= strings.speechbubbleTexts.clickHintbtn[lang]; }, 5000);
-          }else{
+              setTimeout(function(){
+                //speechBubbleText.textContent= strings.speechbubbleTexts.clickHintbtn[lang];
+                speechBubbleText.appendChild(button);
+              }, 5000);
+          }
+          else{
                setTimeout(function(){ pd.visual.hintText(hint); }, 5000);
            }
     }
