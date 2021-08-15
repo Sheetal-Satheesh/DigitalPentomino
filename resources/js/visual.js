@@ -822,13 +822,7 @@ class Visual {
             let audio = new Audio('resources/audio/hinting.mp3');
             audio.play();
         }
-        if(!(SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Textual" )){
-           this.indicateHint(hint, commandNumber);
-        }
-
-       if(!(SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Visual" )){
-         setTimeout(function(){ pd.visual.hintText(hint); }, 1000);
-       }
+        this.indicateHint(hint, commandNumber);
         setTimeout(function () {
             hintButton.disabled = false;
         }, 1000);

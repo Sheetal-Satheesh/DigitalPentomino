@@ -246,28 +246,30 @@
               let audio = new Audio('resources/audio/pingPong.mp3');
               audio.play();
             }
-            //speech bubble message : "I have a hint to continue"
+            //speech bubble message : "hello There"
             setTimeout(function(){
                    speechBubbleText.textContent=strings.speechbubbleTexts.helloThere[lang];
                }, 1000);
 
-               //detect user if active again
+               //detect user if active again => onmouse move it says welcome back and the bird animaltion starts
                document.onmousemove = function(){
-                   //if(speech bubble message : "I have a hint to continue") => display "welcome back"
+                   //if(speech bubble message : "hello There ? ") => display "welcome back"
                      if(speechBubbleText.textContent === strings.speechbubbleTexts.helloThere[lang]){
                         setTimeout(function(){speechBubbleText.textContent = strings.speechbubbleTexts.welcomeBack[lang]; }, 500);
                      }
+                     //start bird animation
+                     setTimeout(function(){
+                       document.getElementById('birdContainer').classList.add("anim");
+                      }, 1000);
                };
 
-               setTimeout(function(){
-                 document.getElementById('birdContainer').classList.add("anim");
-                }, 1000);
+
                //if autohinting enabled continue with autoHint() function
                if(SettingsSingleton.getInstance().getSettings().general.enableAutoHinting){
                     autoHint();
                     console.log("running");
                }
-               //if autohinting disabled => display "Continue with the game"
+               //else if autohinting disabled => display "Continue with the game"
                else{
                  setTimeout(function(){
                         speechBubbleText.textContent = strings.speechbubbleTexts.pleaseContinue[lang];
@@ -276,30 +278,28 @@
         }
         //end of alert user
 
+        //reset timer and clear timeout to check user activity on the application
         function resetTime() {
             clearTimeout(time);
             time = setTimeout(alertUser, 1000 * 10); // 10 seconds
         }
+
+        //at the end remove the bird animation
         setTimeout(function(){
           document.getElementById('birdContainer').classList.remove("anim");
           count = 0;
-        }, 2000);
+        }, 6000);
     };
 
-    function removeHandler() {
-  if (x.removeEventListener) {
-    x.removeEventListener("mousemove", myFunction);
-  } else if (x.detachEvent) {
-    x.detachEvent("onmousemove", myFunction);
-  }
-}
-
+//runs if autohint is enabled (this function specific for time period based)
+//Time period based hinting is only enabled in case the user is far away from the final solution
     function autoHint(){
-      // let button = document.createElement("button");
-      // button.id = "myButton";
-      // button.innerText = "my button";
       let lang = SettingsSingleton.getInstance().getSettings().general.language;
       let speechBubbleText = document.getElementById('speechBubbleText');
+      let hint = pd.gameController.getHint();
+      let x = window.matchMedia("(max-width: 860px)");
+      //check if user is towards the solution or not
+      //in case if the user is towards the final solution  , the message "Please continue with the game" appears
       if((pd.visual.numberofPlacedPentominos() > (pd.visual.pieces.length/2))){
         setTimeout(function(){
                speechBubbleText.textContent = strings.speechbubbleTexts.pleaseContinue[lang];
@@ -307,27 +307,61 @@
           pd.visual.numberofPlacedPentominos();
           return;
       }
+      //check if time period based autohint is set or not
+      //in case if the time period is not selected  , the message "Please continue with the game" appears
       if(!(SettingsSingleton.getInstance().getSettings().autohinting.autoHintVariants === "Time period")){
         setTimeout(function(){
                speechBubbleText.textContent = strings.speechbubbleTexts.pleaseContinue[lang];
            }, 2500);
           return;
       }
-        let hint = pd.gameController.getHint();
-        setTimeout(function(){
-               speechBubbleText.textContent= strings.speechbubbleTexts.iHaveAHint[lang];
-           }, 3000);
-
+         //checks if visual hints are enabled.
+         //If enabled => the user can click on the button on the speech bubble to get the hint
          if((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Visual" )){
-              setTimeout(function(){
-                //speechBubbleText.textContent= strings.speechbubbleTexts.clickHintbtn[lang];
-                speechBubbleText.innerHTML = '<button id="btn" name="btn" onclick="btnClick()">Button</button>'
-                //speechBubbleText.appendChild(button);
+           //Speech bubble says : I have a hint
+           setTimeout(function(){
+                  speechBubbleText.textContent= strings.speechbubbleTexts.iHaveAHint[lang] ;
               }, 5000);
+              //Speech bubble asks show the hint or ignore
+              setTimeout(function(){
+                      speechBubbleText.innerHTML = '<button id="showHint" name="showHint" onclick="visualAutoHint()" style="font-size: 10px">showHint</button>' + '<button id="btn" name="btn" onclick="ignore()" style="font-size: 10px">Ignore</button>';
+                 }, 10000);
+                   if (x.matches) { // If media query matches
+                     document.getElementById("showHint").style.fontSize = "10px";
+                     document.getElementById("showHint").style.fontSize = "10px";
+                   }
           }
-          else{
-               setTimeout(function(){ pd.visual.hintText(hint); }, 5000);
+          //checks if Textual hints are enabled.
+          //If enabled => the user automatically gets a textul hint
+          else if((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Textual" )){
+            //Speech bubble says : I have a hint
+            setTimeout(function(){
+                   speechBubbleText.textContent= strings.speechbubbleTexts.iHaveAHint[lang] ;
+               }, 5000);
+                 //Speech bubble automatically shows the textual hint
+               setTimeout(function(){ pd.visual.hintText(hint); }, 10000);
            }
+           else if((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Both" )){
+             //Speech bubble says : I have a hint
+             setTimeout(function(){
+                    speechBubbleText.textContent= strings.speechbubbleTexts.iHaveAHint[lang] ;
+                }, 5000);
+                //Speech bubble asks show the hint or ignore
+                setTimeout(function(){
+                        speechBubbleText.innerHTML = '<button id="showHint" name="showHint" onclick="bothAutoHint()" style="font-size: 10px">showHint</button>' + '<button id="btn" name="btn" onclick="showHint()" style="font-size: 10px">Ignore</button>';
+                   }, 10000);
+           }
+    }
+
+    function ignore(){
+      let lang = SettingsSingleton.getInstance().getSettings().general.language;
+      document.getElementById('speechBubbleText').textContent = strings.speechbubbleTexts.pleaseContinue[lang];
+    }
+
+    function bothAutoHint(){
+      let hint = pd.gameController.getHint();
+      pd.visual.callHintAI();
+      pd.visual.hintText(hint);
     }
 
         function buttonManipulation() {
@@ -1502,8 +1536,8 @@
             document.getElementById('bubbleContainer').style.display = "none";
         }
 
-        function btnClick() {
-            document.getElementById("btn").innerHTML = "Button click done.";
+        function visualAutoHint() {
+            pd.visual.callHintAI();
         }
     </script>
     <script src="./registerSW.js"></script>
