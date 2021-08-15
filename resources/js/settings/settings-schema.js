@@ -31,9 +31,9 @@ class SettingsSchema {
     }
 
     getSettingsSchema() {
-        if (this._language === SettingsSingleton.getInstance().getSettings().general.language) {
+        if(this._language == SettingsSingleton.getInstance().getSettings().general.language)
             return this._schema;
-        } else {
+        else {
             this._language = SettingsSingleton.getInstance().getSettings().general.language;
             return this.createSchema();
         }
@@ -70,6 +70,21 @@ class SettingsSchema {
                         "title": titles.general.enableBgMusic.title[lang],
                         "default": false,
                         "pupilModeVisibleOnDefault": false
+                    },
+                    enableBird: {
+                        "type": "boolean",
+                        "title": titles.general.enableBird.title[lang],
+                        "default": true,
+                        "pupilModeVisibleOnDefault": true
+                    },
+                    hintingLevels: {
+                        "type": "string",
+                        "title": titles.hinting.hintingLevels.title[lang],
+                        "description": titles.hinting.hintingLevels.description[lang],
+                        "enum": ["Easy", "Medium", "Difficult", "Custom"],
+                        "enumText": titles.hinting.hintingLevels.enumTitles[lang],
+                        "default": "Easy",
+                        "pupilModeVisibleOnDefault": false
                     }
                 }
             },
@@ -94,14 +109,14 @@ class SettingsSchema {
                 "title": titles.showSolvedBoardScreen.title[lang],
                 "pupilModeVisibleOnDefault": false,
                 "advanced": false,
-                "properties":{
+                "properties": {
                     enableSolvedScreen: {
                         "type": "boolean",
                         "title": titles.showSolvedBoardScreen.enableSolvedScreen.title[lang],
                         "description": titles.showSolvedBoardScreen.enableSolvedScreen.description[lang],
                         "default": true
                     },
-                    SolvedScreens:{
+                    SolvedScreens: {
                         "type": "string",
                         "title": titles.showSolvedBoardScreen.SolvedScreens.title[lang],
                         "description": titles.showSolvedBoardScreen.SolvedScreens.description[lang],
@@ -117,15 +132,6 @@ class SettingsSchema {
                 "pupilModeVisibleOnDefault": false,
                 "advanced": true,
                 "properties": {
-                    hintingLevels: {
-                        "type": "string",
-                        "title": titles.hinting.hintingLevels.title[lang],
-                        "description": titles.hinting.hintingLevels.description[lang],
-                        "enum": ["Easy", "Medium", "Difficult","Custom"],
-                        "enumText": titles.hinting.hintingLevels.enumTitles[lang],
-                        "default": "Easy"
-                    },
-
                     showNumberOfPossibleSolutions: {
                         "type": "boolean",
                         "title": titles.hinting.showNumberOfPossibleSolutions.title[lang],
@@ -142,7 +148,7 @@ class SettingsSchema {
                         "type": "string",
                         "title": titles.hinting.hintingStrategy.title[lang],
                         "description": titles.hinting.hintingStrategy.description[lang],
-                        "enum": ["full","partial","area"],
+                        "enum": ["full", "partial", "area"],
                         "enumText": titles.hinting.hintingStrategy.enumTitles[lang],
                         "default": "partial"
                     },
@@ -150,7 +156,7 @@ class SettingsSchema {
                         "type": "string",
                         "title": titles.hinting.partialHintingStrategy.title[lang],
                         "description": titles.hinting.partialHintingStrategy.description[lang],
-                        "enum": ["random","mostOccupiedCells"],
+                        "enum": ["random", "mostOccupiedCells"],
                         "enumText": titles.hinting.partialHintingStrategy.enumTitles[lang],
                         "default": "mostOccupiedCells"
                     },
@@ -208,13 +214,12 @@ class SettingsSchema {
                         "default": "distance"
                     },
                     distanceValue: {
-                        "step": 1,
-                        "type": "integer",
-                        "title": titles.prefilling.distanceValue[lang],
-                        "default": 3,
-                        "minimum": 1,
-                        "exclusiveMinimum": false,
-                        "maximum": 10
+                        "type": "string",
+                        "title": titles.prefilling.distanceValue.title[lang],
+                        "default": "easy",
+                        "enum": ["easy", "medium", "hard", "extreme"],
+                        "enumText": [],
+                        "_enumText": titles.prefilling.distanceValue.enumTitles
                     }
                 }
             },

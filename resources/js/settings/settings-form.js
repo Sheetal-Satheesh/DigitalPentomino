@@ -10,6 +10,8 @@ class SettingsForm {
         formElement.appendChild(document.createElement("br"));
         formElement.appendChild(document.createElement("br"));        if (settings.teachersMode) {
             let useInClassButton = SettingsForm.createButton("Share");
+            useInClassButton.className = "formButton";
+            useInClassButton.id = "btnSettingsShare";
             useInClassButton.addEventListener("click", function() {
                 let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
                 let settings = SettingsSingleton.getInstance().getSettings();
@@ -19,6 +21,7 @@ class SettingsForm {
         }
         let licenseButton = SettingsForm.createLicenseButton();
         licenseButton.id = "licenseButton";
+        licenseButton.className = "formButton"
         formElement.appendChild(SettingsForm.createSubmitButton());
         formElement.appendChild(licenseButton);
 
@@ -29,12 +32,21 @@ class SettingsForm {
             console.log(settingsClone);
             event.preventDefault();
             onSubmit(false, settingsClone);
+            if ($('#birdContainer').is(':visible')){
+                document.getElementById('bubbleContainer').style.display = "block";
+            }
         });
         licenseButton.addEventListener("click", event => {
             let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
             let settings = SettingsSingleton.getInstance().getSettings();
             onLicense(SettingsForm.collectDataFromForm(formElement, schema, settings));
         });
+
+        //add placeholder div at bottom of settings
+        let placeholder = document.createElement("div");
+        placeholder.id = "divPlaceholder";
+        formElement.appendChild(placeholder);
+        SettingsForm.addDifficultyLevelsListener(formElement);
     }
 
     // --- --- --- Form Creation --- --- ---
@@ -42,6 +54,7 @@ class SettingsForm {
         let creatingNormalSettings = true;
         let advancedSettingsDiv = document.createElement("div");
         advancedSettingsDiv.style.display = "none";
+        advancedSettingsDiv.id = "advancedSettings";
 
         let htmlElement = formElement;
 
@@ -73,6 +86,12 @@ class SettingsForm {
 
                 let settingsEntry = subSettings[key];
                 let settingsEntryType = settingsEntry.type;
+
+                if (heading === "prefilling" && key == "distanceValue" && settings.hasOwnProperty("prefilling") &&
+                    settings.prefilling.hasOwnProperty("prefillingStrategy")) {
+                    let strat = settings.prefilling.prefillingStrategy;
+                    settingsEntry.enumText = settingsEntry._enumText[strat];
+                }
 
                 let elementIsVisible = settings.teachersMode || settings.visibility.isVisible(heading, key);
 
@@ -155,42 +174,71 @@ class SettingsForm {
 
     // Dynamic Behavior
     static addDynamicBehaviorOfSettingsForm(formElement, settings) {
-        if (settings.visibility.isVisible("hinting", "hintingLevels") === true)
-            SettingsForm.addDifficultyLevelsListener(formElement);
-
+        //if (settings.visibility.isVisible("hinting", "hintingLevels") === true)
+            //SettingsForm.addDifficultyLevelsListener(formElement);
+        // if (settings.visibility.isVisible("prefilling", "distanceValue") === true)
+        SettingsForm.addPrefillChangeListener();
         // further modifications of behavior
     }
 
+    static addPrefillChangeListener() {
+        let prefillStratSelectElem = document.getElementById("prefilling.prefillingStrategy");
+
+        prefillStratSelectElem.addEventListener("change", (evt) => {
+            let distValSelectElem = document.getElementById("prefilling.distanceValue");
+            let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+            let enumTexts = strings.settings.prefilling.distanceValue.enumTitles[evt.target.value];
+            let enumElements = schema.prefilling.properties.distanceValue.enum;
+            
+            //Remove the existing elements in the lsit
+            for(let i = distValSelectElem.options.length -1; i >= 0; --i) {
+                distValSelectElem.remove(i);
+            }
+
+            for (let i = 0; i < enumElements.length; i++) {
+                let optionElement = document.createElement("option");
+                optionElement.innerHTML = enumTexts[i];
+                optionElement.value = enumElements[i];
+                distValSelectElem.appendChild(optionElement);
+            }
+        });
+    }
+
     static addDifficultyLevelsListener(formElement) {
-        let hintingLevelSelectElem = $(formElement).find($('select[name="hinting.hintingLevels"]'))[0];
-        hintingLevelSelectElem.addEventListener("change", (event) => {
-            // Retrieve the select element from the event.
+      $( "select[name='general.hintingLevels']" ).change(function() {
             let select = event.target;
             let selectedOption = select.options[select.selectedIndex];
             let value = selectedOption.getAttribute('value');
-            let partial = $(formElement).find('select[name="hinting.partialHintingStragety"]');
-            let hintingStrategy = $(formElement).find('select[name="hinting.hintingStrategy"]');
-            //levels flexible to change help functionality
             switch (value) {
                 case "Easy":
                     //activate full hint
-                    hintingStrategy.find('option[value="full"]').attr("selected", true);
-                    //check exact hints
-                    $(formElement).find("input[name='hinting.exactHints']").prop('checked', true);
-                    //disable partial hinting
-                    $(formElement).find("input[name='hinting.partialHintingStragety']").prop('checked', false);
+                              $('select[name="hinting.hintingStrategy"]').find('option[value="full"]').attr("selected", true);
+                   //check exact hints
+                    $("input[name='hinting.exactHints']").prop('checked', true);
+                              //uncheck partial hinting
+                              $("input[name='teachers.hinting.partialHintingStragety']").prop('checked', false);
                     //enable prefilling
-                    $(formElement).find("input[name='prefilling.enablePrefilling']").prop('checked', true);
-                    break;
-                case "Medium":
-                    //activate area hint
-                    hintingStrategy.find('option[value="area"]').attr("selected", true);
-                    break;
-                case "Difficult":
-                    //activate partail hint
-                    hintingStrategy.find('option[value="partial"]').attr("selected", true);
-                    //disable prefilling
-                    $(formElement).find("input[name='prefilling.enablePrefilling']").prop('checked', false);
+                    $("input[name='prefilling.enablePrefilling']").prop('checked', true);
+                              //check hintingVariants
+                              $("input[name='teachers.hinting.hintingVariants']").prop('checked', true);
+                              //enable both hinting hintingVariants
+                              $("input[name='hinting.hintingVariants']").find('option[value="Show both"]').attr("selected", true);
+                              break;
+                          case "Medium":
+                              //activate area hint
+                              $('select[name="hinting.hintingStrategy"]').find('option[value="area"]').attr("selected", true);
+                              //uncheck exact hints
+                              $("input[name='hinting.exactHints']").prop('checked', false);
+                              break;
+                          case "Difficult":
+                              //activate partial hint
+                              $('select[name="hinting.hintingStrategy"]').find('option[value="partial"]').attr("selected", true);
+                              //disable prefilling
+                              $("input[name='prefilling.enablePrefilling']").prop('checked', false);
+                              //uncheck exact hints
+                              $("input[name='hinting.exactHints']").prop('checked', false);
+                              //check partial hinting strategy
+                              $("input[name='teachers.hinting.partialHintingStragety']").prop('checked', true);
                     break;
                 case "Custom":
                     break;
@@ -198,24 +246,24 @@ class SettingsForm {
                     console.log("Level unknown");
             }
         });
-
     }
 
     // Element Creation
     static createCollapsibleButton(showText, hideText) {
-        let buttonElement = SettingsForm.createButton(showText.toUpperCase(), {
+        let buttonElement = SettingsForm.createButton(showText, {
             "class": "collapsible btn btn-primary btn-lg"
         });
+        buttonElement.setAttribute("id", "showAdvanceSettingsBtn")
 
         buttonElement.addEventListener("click", function(event) {
             this.classList.toggle("active");
             let content = this.nextElementSibling;
             if (content.style.display === "block") {
                 content.style.display = "none";
-                buttonElement.innerHTML = showText.toUpperCase();
+                buttonElement.innerHTML = showText;
             } else {
                 content.style.display = "block";
-                buttonElement.innerHTML = hideText.toUpperCase();
+                buttonElement.innerHTML = hideText;
             }
         });
 
@@ -236,8 +284,8 @@ class SettingsForm {
                 let settingsEntry = subSettings[key];
 
                 let checkBoxElement = SettingsForm.createInputElement("checkbox", "teachers." + elementName);
-                useInClassElement.appendChild(SettingsForm.createLabel(settingsEntry.title, { for: checkBoxElement.id }));
                 useInClassElement.appendChild(checkBoxElement);
+                useInClassElement.appendChild(SettingsForm.createLabel(settingsEntry.title, { for: checkBoxElement.id }));
                 useInClassElement.appendChild(document.createElement("br"));
             }
         }
@@ -322,16 +370,8 @@ class SettingsForm {
         let i = 0;
         imgPaths.forEach(imgPath => {
             let buttonElement = SettingsForm.createButton(undefined, {
-                style: "background:url(" + imgPath + ");background-size: 100%;",
+                style: "background:url(" + imgPath + ");background-size: 100%;", class: "imgButton"
             });
-
-            // FIXME: quick fix
-            let image = new Image();
-            image.src = imgPath;
-            image.onload = () => {
-                buttonElement.style.height = image.height + "px";
-                buttonElement.style.width = image.width + "px";
-            };
 
             let enumElement = enumElements[i];
             buttonElement.addEventListener("click", (event) => {
@@ -366,7 +406,9 @@ class SettingsForm {
 
     static createSubmitButton() {
         return SettingsForm.createButton("Submit", {
-            type: "submit"
+            type: "submit",
+            class: "formButton",
+            id: "btnSettingsSubmit"
         });
     }
 

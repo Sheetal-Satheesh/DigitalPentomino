@@ -55,10 +55,10 @@ class PD {
     */
     getAllBoards() {
         let boardsWithConfig = [];
-        if (baseConfigs != undefined && boardConfigs != undefined) {
+        if (baseConfigs != undefined && solutionsConfig != undefined) {
             if (baseConfigs.hasOwnProperty("boards")) {
                 baseConfigs.boards.forEach(board => {
-                    if (boardConfigs.hasOwnProperty(board)) {
+                    if (solutionsConfig.hasOwnProperty(board)) {
                         boardsWithConfig.push(board);
                     }
                 });
@@ -79,7 +79,7 @@ class PD {
         this.gameHeight = gameObject.gameHeight;
         this.gameWidth = gameObject.gameWidth;
         this.blockedCells = gameObject.blockedCells;
-        this.gameCellPattern = boardConfigs[board].gameCellPattern;
+        this.gameCellPattern = gameObject.gameCellPattern;
 
         this.boardStartX = Math.floor((this.gameHeight - this.boardSize[0]) / 2);
         this.boardStartY = Math.floor((this.gameWidth - this.boardSize[1]) / 2);
