@@ -200,7 +200,7 @@
 }
 
 #bubbleContainer:active{
-  pointer-events:none; /* only allow hover events on the container */
+  pointer-events:all; /* only allow hover events on the container */
 }
 
 #bubbleContainer:hover{
