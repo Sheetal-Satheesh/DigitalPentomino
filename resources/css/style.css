@@ -180,6 +180,11 @@
   display:none;
 }
 
+.splitbuttonimg {
+  pointer-events: none;
+  opacity: 0.6;  
+}
+
 .boardarea {
   outline: 1px solid darkslategray;
   background: #eceaea;
@@ -188,6 +193,7 @@
   left: 0;
   right: 0;
 }
+
 
 .blockedcell {
   background: repeating-linear-gradient(

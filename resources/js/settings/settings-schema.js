@@ -228,7 +228,7 @@ class SettingsSchema {
                     splitStrategy: {
                         "type": "string",
                         "title": titles.splitPartition.splitStrategy.title[lang],                       
-                        "enum": ["color","one-by-one"],
+                        "enum": ["color","left-to-right"],
                         "enumText": titles.splitPartition.splitStrategy.enumTitles[lang],
                         "default": "color"
                     }

@@ -30,8 +30,7 @@ class SplitBoard {
             this._finalSolution = closestSolution;
         }
 
-        let pentominoAnchors = this._getPentominoesAndAnchorPos(closestSolution);
-        let orderPieces = this._sortPiecesBasedOnAnchor(pentominoAnchors);
+        let orderPieces = this._operationForSplitting(closestSolution);        
         let relativePosAndPiece = this._getRelativePositionAndPiece(closestSolution, orderPieces);
         let partionedArray = this._splitArrayIntoChunks(relativePosAndPiece);
         return partionedArray;
@@ -41,15 +40,21 @@ class SplitBoard {
         let game = this._game;
         let possibleSolutions = this._getPossibleSolutions(game, this._solutions);
         let closestSolution;  
-        closestSolution = possibleSolutions[0]      
+        // closestSolution = possibleSolutions[0]      
         closestSolution = possibleSolutions[Math.floor(Math.random() * possibleSolutions.length)];
-        this._finalSolution = closestSolution;
-        let pentominoAnchors = this._getPentominoesAndAnchorPos(closestSolution);
-        let orderPieces = this._sortPiecesBasedOnAnchor(pentominoAnchors);
-        let relativePosOfPieceWithAnchorPos = this._getRelativePositionOfPieceWithAnchorPosition(game, closestSolution, orderPieces);
+        this._finalSolution = closestSolution;  
+
+        let orderPieces = this._operationForSplitting(closestSolution); 
+        let relativePosOfPieceWithAnchorPos = this._getRelativePositionOfPieceWithAnchorPosition(closestSolution, orderPieces);
         let partitionedArray = this._splitArrayIntoChunks(relativePosOfPieceWithAnchorPos);
         this._partionedArray = partitionedArray;
         return partitionedArray;
+    }
+
+    _operationForSplitting(closestSolution) {
+        let pentominoAnchors = this._getPentominoesAndAnchorPos(closestSolution);
+        let orderPieces = this._sortPiecesBasedOnAnchor(pentominoAnchors);
+        return orderPieces; 
     }
 
     /**
@@ -90,6 +95,7 @@ class SplitBoard {
         }
     }
 
+     /** ---------------  Split Via Partition Checks- If Partition is Filled -------------*/
     partitionHasUnoccupiedPosition(pentomino) {               
         let game = this._game;
         let solution = this._finalSolution; 
@@ -118,6 +124,7 @@ class SplitBoard {
             return false;
         }        
     }
+
 
     /** ---------------  Solutions-------------*/
     getSolutions() {
@@ -158,8 +165,7 @@ class SplitBoard {
     }
 
     // --- --- --- Calculate Position In Game --- --- ---
-    /**     
-     * @param game
+    /**        
      * @param solutions
      * @param sortedarray
      * @returns [*]
@@ -191,7 +197,7 @@ class SplitBoard {
      * @param sortedarray
      * @returns [*]
      */
-    _getRelativePositionOfPieceWithAnchorPosition(game, closestSolution, orderPieces) {
+    _getRelativePositionOfPieceWithAnchorPosition(closestSolution, orderPieces) {
         let finalPosAndPiece = [];
         for (let i = 0; i < orderPieces.length; i++) {
             closestSolution._board._pentominoes.forEach(pent => {
@@ -252,18 +258,7 @@ class SplitBoard {
         return closestSolution;
     }
 
-    // --- --- --- Split Array Into Chunks --- --- ---
-    /**
-     *  Priority:
-     *  - Perfect pentominoes on the board (Correct position, correct angle, correct mirroring)
-     *  - Pentominoes that need one operation to be perfect
-     *  - Pentominoes that need two operations to be perfect
-     *  - etc.
-     * @param game
-     * @param solutions
-     * @returns {*}
-     */
-
+    // --- --- --- Split Array Into Chunks --- --- ---    
     _splitArrayIntoChunks(closestSolution) {
         const n = 3;
         const result = [[], [], []];

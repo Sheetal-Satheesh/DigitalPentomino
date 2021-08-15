@@ -278,17 +278,16 @@ class Visual {
             htmlElement.style.setProperty("--rotationX", "0deg");
             htmlElement.style.setProperty("--rotationY", "0deg");
             htmlElement.style.setProperty("--rotationZ", "0deg");
+
             if(piecesSelectedForPartition.length != 0 && splitCounter <= 1 ) {
-                let containsDisplayedPieceName = this.piecesSelectedForPartition.indexOf(piece.name);
-                if(containsDisplayedPieceName) {
-                    if(containsDisplayedPieceName === -1 ) {
-                        htmlElement.style.display = 'none';
-                                                                
-                    }
-                    else if (containsDisplayedPieceName >=0) {
-                        htmlElement.style.display = 'block';
-                    } 
+                let containsDisplayedPieceName = piecesSelectedForPartition.indexOf(piece.name);                
+                if(containsDisplayedPieceName === -1 ) {
+                    htmlElement.style.display = 'none';
+                                                            
                 }
+                else if (containsDisplayedPieceName >=0) {
+                    htmlElement.style.display = 'block';
+                }               
             }
             
             
@@ -338,6 +337,16 @@ class Visual {
 
         //making the element visible (see remark in renderPieces)
         htmlElement.style.display = 'block';
+
+        if(piecesSelectedForPartition.length != 0 && splitCounter <= 1 ) {
+            let containsDisplayedPieceName = piecesSelectedForPartition.indexOf(piece.name);            
+            if(containsDisplayedPieceName === -1 ) {
+                htmlElement.style.display = 'none';                                                            
+            }
+            else if (containsDisplayedPieceName >=0) {
+                htmlElement.style.display = 'block';
+            }            
+        }
     }
 
     select(piece, x, y) {
@@ -851,7 +860,7 @@ class Visual {
                 this.undoSplit();
                 this.callSplitBoardViaColor();
                 break;
-            case "one-by-one":
+            case "left-to-right":                
                 this.readyForSplitting();
                 this.callSplitBoard_V2();
                 break;
@@ -864,9 +873,7 @@ class Visual {
     }
 
     callSplitBoardViaColor() {
-        let partitionedArray = pd.gameController.loadSplit();
-        splitPartition = [];
-        splitCounter = -1;
+        let partitionedArray = pd.gameController.loadSplit();                
         this.displaySplit(partitionedArray, alternateColor);        
     }
 
@@ -892,6 +899,10 @@ class Visual {
         this.pieces.forEach(piece => {            
             document.getElementById('piece_'+ piece.name).style.display = 'block';                                                                                           
         }); 
+        piecesSelectedForPartition = [];
+        splitPartition = [];
+        splitCounter = -1;
+        this.unblockPartition();
     }
 
     displaySplit(partitionedArray, alternateColor) {
