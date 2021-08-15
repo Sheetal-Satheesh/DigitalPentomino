@@ -320,7 +320,8 @@
 
          if((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Visual" )){
               setTimeout(function(){
-                speechBubbleText.textContent= strings.speechbubbleTexts.clickHintbtn[lang];
+                //speechBubbleText.textContent= strings.speechbubbleTexts.clickHintbtn[lang];
+                speechBubbleText.innerHTML = '<button id="btn" name="btn">Button</button>'
                 //speechBubbleText.appendChild(button);
               }, 5000);
           }
