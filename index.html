@@ -281,7 +281,7 @@
         //reset timer and clear timeout to check user activity on the application
         function resetTime() {
             clearTimeout(time);
-            time = setTimeout(alertUser, 1000 * 10); // 10 seconds
+            time = setTimeout(alertUser, 1000 * 40); // 10 seconds
         }
 
         //at the end remove the bird animation
@@ -297,7 +297,7 @@
       let lang = SettingsSingleton.getInstance().getSettings().general.language;
       let speechBubbleText = document.getElementById('speechBubbleText');
       let hint = pd.gameController.getHint();
-      let x = window.matchMedia("(max-width: 860px)");
+      //let x = window.matchMedia("(max-width: 860px)");
       //check if user is towards the solution or not
       //in case if the user is towards the final solution  , the message "Please continue with the game" appears
       if((pd.visual.numberofPlacedPentominos() > (pd.visual.pieces.length/2))){
@@ -324,12 +324,16 @@
               }, 5000);
               //Speech bubble asks show the hint or ignore
               setTimeout(function(){
-                      speechBubbleText.innerHTML = '<button id="showHint" name="showHint" onclick="visualAutoHint()" style="font-size: 10px">showHint</button>' + '<button id="btn" name="btn" onclick="ignore()" style="font-size: 10px">Ignore</button>';
+                      speechBubbleText.innerHTML = '<button id="showVisualHint" name="showVisualHint" onclick="visualAutoHint()" >showHint</button>' + '<button id="hideVisualHint" name="hideVisualHint" onclick="ignore()">Ignore</button>';
                  }, 10000);
-                   if (x.matches) { // If media query matches
-                     document.getElementById("showHint").style.fontSize = "10px";
-                     document.getElementById("showHint").style.fontSize = "10px";
-                   }
+                 let x = window.matchMedia("(max-width: 860px)");
+                 if (x.matches) { // If media query matches
+                      $("#showVisualHint").css("fontSize", "90px");
+                      console.log(x.matches, x, $("#showVisualHint").css( "fontSize" ));
+                  }else{
+                    $("#showVisualHint").css("fontSize", "50px");
+                     console.log(x.matches, x);
+                  }
           }
           //checks if Textual hints are enabled.
           //If enabled => the user automatically gets a textul hint
@@ -338,8 +342,11 @@
             setTimeout(function(){
                    speechBubbleText.textContent= strings.speechbubbleTexts.iHaveAHint[lang] ;
                }, 5000);
-                 //Speech bubble automatically shows the textual hint
-               setTimeout(function(){ pd.visual.hintText(hint); }, 10000);
+                 //Speech bubble automatically shows textual hint
+                 //Speech bubble asks show the hint or ignore
+                 setTimeout(function(){
+                         speechBubbleText.innerHTML = '<button id="showTextualHint" name="showTextualHint" onclick="showTextualHint()">showHint</button>' + '<button id="hideTextualHint" name="hideTextualHint" onclick="ignore()">Ignore</button>';
+                    }, 10000);
            }
            else if((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Both" )){
              //Speech bubble says : I have a hint
@@ -348,10 +355,15 @@
                 }, 5000);
                 //Speech bubble asks show the hint or ignore
                 setTimeout(function(){
-                        speechBubbleText.innerHTML = '<button id="showHint" name="showHint" onclick="bothAutoHint()" style="font-size: 10px">showHint</button>' + '<button id="btn" name="btn" onclick="showHint()" style="font-size: 10px">Ignore</button>';
+                        speechBubbleText.innerHTML = '<button id="showBothHint" name="showBothHint" onclick="bothAutoHint()">showHint</button>' + '<button id="hideBothHint" name="hideBothHint" onclick="ignore()">Ignore</button>';
                    }, 10000);
            }
     }
+
+    function showTextualHint(){
+        let hint = pd.gameController.getHint();
+        pd.visual.hintText(hint);
+      }
 
     function ignore(){
       let lang = SettingsSingleton.getInstance().getSettings().general.language;
