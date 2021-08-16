@@ -365,7 +365,7 @@ class HintAI {
 
         let pentomino;
         if (backtracking) {
-            pentomino = game.getAllPentominoes().find(p => !this.(game, solution, p.name));
+            pentomino = game.getAllPentominoes().find(p => !this._isPerfectPentomino(game, solution, p.name));
         } else {
             let pentominoesOnBoard = game.getAllPentominoes().filter(p => game.isPlacedOnBoard(p));
             pentomino = pentominoesOnBoard.find(p => !this._isPerfectPentomino(game, solution, p.name));

@@ -216,14 +216,13 @@ class GameLoader {
 
         let gameClone = _.cloneDeep(this._game);
         let cmdManagerClone = _.cloneDeep(this._commandManager);
-        let hintAIClone = _.cloneDeep(this._hintAI);        
-
+        let hintAIClone = _.cloneDeep(this._hintAI);
         if (!this._gameList.hasOwnProperty(gameId)) {
             this._gameList[gameId] = {
                 "game": gameClone,
                 "cmdManager": cmdManagerClone,
                 "hintAI": hintAIClone,
-                "cmdKey": [cmdKey],                
+                "cmdKey": [cmdKey]                
             };
 
             this._gameList[gameId].cmdKey = this._gameList[gameId].cmdKey.filter(
