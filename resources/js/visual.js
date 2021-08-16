@@ -40,6 +40,7 @@ class Visual {
         this.selected = false;
         this.replayRunning = false;
         this.overlapBlock = new OverlapBlock();
+
         this.renderBoard();
         this.renderPieces();
         this.disablePrefillButton(false);
@@ -276,7 +277,7 @@ class Visual {
         if (piece.inTray) {
             var widthVW = 100 / 12 * piece.trayPosition; //UIProperty.TrayCSSLeft + (piece.trayPosition) * width;
             var magnification = 8 / (5 * width);
-            htmlElement.style.left = widthVW + 'vw';piece.name
+            htmlElement.style.left = widthVW + 'vw';
             htmlElement.style.top = '' + 0.1 * UIProperty.TrayHeight + 'vw'; //position pieces in tray around 20% from top
             htmlElement.style.transformOrigin = 'left top';
             htmlElement.style.setProperty("--magnification", magnification);
@@ -515,7 +516,7 @@ class Visual {
 
             //check if a button is clicked
             let buttonOverPiece = false;
-            let settingsEnabled = false;                       
+            let settingsEnabled = false;
             for (let j in elements) {
                 let precheck = elements[j].className;
                 if (precheck.startsWith('icon-')) {
@@ -548,8 +549,9 @@ class Visual {
                 var piece = that.pieces.find(p => { return p.name === piece; });
                 window.currentlyMoving = [container, piece];
                 break;
-            }            
+            }
             return;
+
         }
 
         /**
@@ -601,10 +603,10 @@ class Visual {
             if (onpointerdownX == event.clientX &&
                 onpointerdownY == event.clientY &&
                 window.currentlyMoving) {
-                let data_ = window.currentlyMoving;               
+                let data_ = window.currentlyMoving;
                 window.currentlyMoving = false;
                 that.positionPiece(data_[1]);
-                that.select(data_[1], event.clientX, event.clientY);                
+                that.select(data_[1], event.clientX, event.clientY);
                 return;
             }
             let pentominoList = that.gameController.getAllPentominoes();
@@ -1851,9 +1853,7 @@ class Visual {
                 throw new Error("Can not undo");
 
         }
-    }   
-
-
+    }
     getCmdState(stateType) {
         if (stateType == "start") {
             return this.gameController.getStartCmdKey();
