@@ -20,8 +20,14 @@ function updateCommandAttr(cmdType, cmdSeq) {
 }
 
 const cmdAttrDefault = updateCommandAttr(CommandTypes.Original, CommandSeq.Forward);
+const alternateColor = ["#77C9D4", "#57B390", "#015249"];
+const backGroundColor = '#eceaea';
 
 let lastHintedPentName = null;
+let splitPartition = [];
+let piecesSelectedForPartition = [];
+let styleBlocks;
+let splitCounter = -1;
 let randomCell;
 class Visual {
 
@@ -144,6 +150,7 @@ class Visual {
         this.pieces = this.gameController.getAllPentominoes();
         this.pd.visual.disableManipulations();
         this.renderPieces();
+        this.undoSplit();
     }
 
     renderBoard() {
@@ -278,6 +285,18 @@ class Visual {
             htmlElement.style.setProperty("--rotationY", "0deg");
             htmlElement.style.setProperty("--rotationZ", "0deg");
 
+            if(piecesSelectedForPartition.length != 0 && splitCounter <= 1 ) {
+                let containsDisplayedPieceName = piecesSelectedForPartition.indexOf(piece.name);                
+                if(containsDisplayedPieceName === -1 ) {
+                    htmlElement.style.display = 'none';
+                                                            
+                }
+                else if (containsDisplayedPieceName >=0) {
+                    htmlElement.style.display = 'block';
+                }               
+            }
+            
+            
         }
         else {
             var bCellsFnd = this.isPentominoInBlockCells(piece);
@@ -333,6 +352,16 @@ class Visual {
 
         //making the element visible (see remark in renderPieces)
         htmlElement.style.display = 'block';
+
+        if(piecesSelectedForPartition.length != 0 && splitCounter <= 1 ) {
+            let containsDisplayedPieceName = piecesSelectedForPartition.indexOf(piece.name);            
+            if(containsDisplayedPieceName === -1 ) {
+                htmlElement.style.display = 'none';                                                            
+            }
+            else if (containsDisplayedPieceName >=0) {
+                htmlElement.style.display = 'block';
+            }            
+        }
     }
 
     select(piece, x, y) {
@@ -430,6 +459,22 @@ class Visual {
 
     disableManipulations() {
         document.getElementById('pieceManipulation').style.display = 'none';
+    }
+
+    blockPartition() {        
+        let partitionedArray = splitPartition[splitCounter]
+        let piecesDisplayed = [];        
+        for (let i = 0; i < partitionedArray.length; i++) {           
+            piecesDisplayed.push(partitionedArray[i][0].name);                     
+        } 
+        this.pieces.forEach(piece => {
+            let containsDisplayedPieceName = piecesDisplayed.indexOf(piece.name)
+                if(containsDisplayedPieceName >= 0 ) {                    
+                    document.getElementById('piece_'+ piece.name).classList.add("disabledbutton");                
+                }                                                      
+        }); 
+        
+
     }
     // 	save(piece) {
     // 		console.log("insave::",piece)
@@ -573,6 +618,8 @@ class Visual {
                 */
                 var data = window.currentlyMoving;
                 let trayPos = 0;
+                let flagCheckPartitionSolved = false;
+                let pentominoList = that.gameController.getAllPentominoes();
                 window.currentlyMoving = false;
                 var elements = document.elementsFromPoint(event.clientX, event.clientY); //determine the target
                 for (let i in elements) {
@@ -656,6 +703,12 @@ class Visual {
                          * TODO: Make buttons disappear/appear if nothing/something is selected
                          */
                         that.select(data[1], event.clientX, event.clientY);
+                        flagCheckPartitionSolved = that.checkPartitionSolved();
+                        if(flagCheckPartitionSolved) {
+                            that.blockPartition();                            
+                            that.displaySplit_V2();
+                        }
+
                         return;
                     }
                 }
@@ -814,6 +867,195 @@ class Visual {
             hintButton.disabled = false;
         }, 1000);
     }
+
+    resize(arr, newSize) {
+        let partionLength = 0;
+        let counter = 0;
+        if(splitPartition.length != 0) {
+            while(splitPartition.length === 0){
+                arr.pop();
+            }
+        }
+        partionLength = splitPartition.length;
+        splitCounter = -1;
+        while(partionLength < newSize) {
+            splitPartition.push(arr[counter]);
+            counter++;
+            partionLength++;
+        }                    
+    }
+
+    splitTheBoard() {               
+        let splitCategory = SettingsSingleton.getInstance().getSettings().splitPartition.splitStrategy;        
+        switch (splitCategory) {
+            case "color":
+                this.undoSplit();
+                this.callSplitBoardViaColor();
+                break;
+            case "left-to-right":                
+                this.readyForSplitting();
+                this.callSplitBoard_V2();
+                break;
+        }              
+    }
+
+    readyForSplitting() {
+        this.reset();        
+        this.undoSplit();
+    }
+
+    callSplitBoardViaColor() {
+        let partitionedArray = pd.gameController.loadSplit();                
+        this.displaySplit(partitionedArray, alternateColor);        
+    }
+
+    callSplitBoard_V2() {       
+        let partitionedArray = pd.gameController.loadSplit_V2();        
+        this.resize(partitionedArray, partitionedArray.length)
+        let styleElement = document.querySelector('.boardarea');
+        let styleValue = window.getComputedStyle(styleElement);  
+        styleBlocks = styleValue.backgroundColor;              
+        this.displaySplit_V2();                     
+    }    
+
+    undoSplit() {        
+        Array.prototype.forEach.call(document.getElementsByClassName("gamearea boardarea"), function (element) {            
+            element.style.backgroundColor = "";
+            element.style.opacity ="";
+        });
+        this.pieces.forEach(piece => {
+            Array.prototype.forEach.call(document.getElementById('piece_' + piece.name).getElementsByClassName("bmPoint"), function (element) {
+                element.style.background = piece.color ;                 
+            });
+        });
+        this.pieces.forEach(piece => {            
+            document.getElementById('piece_'+ piece.name).style.display = 'block';                                                                                           
+        }); 
+        piecesSelectedForPartition = [];
+        splitPartition = [];
+        splitCounter = -1;
+        this.unblockPartition();
+    }
+
+    displaySplit(partitionedArray, alternateColor) {
+        for (var i = 0; i < partitionedArray.length; i++) {
+            for (var j = 0; j < partitionedArray[i].length; j++) {
+                if (partitionedArray[i][j][1]) {
+                    let fieldValue = partitionedArray[i][j][1];
+                    for (var k = 0; k < fieldValue.length; k++) {
+                        let fieldID = document.getElementById("field_" + fieldValue[k][0] + "," + fieldValue[k][1]);
+                        fieldID.style.background = alternateColor[i];
+                        fieldID.style.opacity = .5;
+                    }
+                }
+                var piece = partitionedArray[i][j][0]
+                piece.alternateColor = alternateColor[i];
+                Array.prototype.forEach.call(document.getElementById('piece_' + piece.name).getElementsByClassName("bmPoint"), function (element) {
+                    element.style.background = alternateColor[i];
+                });
+            }
+        }        
+    }
+    
+    displaySplit_V2() { 
+        splitCounter++;
+        if(splitPartition.length > splitCounter) {
+            let partitionedArray = splitPartition[splitCounter]
+            let piecesDisplayed = [];
+            for (let i = 0; i < partitionedArray.length; i++) {
+                for (let j = 0; j < partitionedArray[i][1].length; j++) {                
+                        let fieldValue = partitionedArray[i][1];                    
+                        let fieldID = document.getElementById("field_" + fieldValue[j][0] + "," + fieldValue[j][1]);
+                        fieldID.style.background = "#77C9D4";
+                        fieldID.style.opacity = .5;                                                          
+                } 
+                piecesDisplayed.push(partitionedArray[i][0].name);                     
+            } 
+            for (let elm =0; elm < piecesDisplayed.length; elm++){
+                piecesSelectedForPartition.push(piecesDisplayed[elm]) ;
+            }
+            
+            this.pieces.forEach(piece => {
+                let containsDisplayedPieceName = piecesDisplayed.indexOf(piece.name)
+                    if(containsDisplayedPieceName === -1 ) {
+                        if(!document.getElementById('piece_'+ piece.name).classList.contains('disabledbutton')){
+                            document.getElementById('piece_'+ piece.name).style.display = 'none';
+                        }                                       
+                    }
+                    else if (containsDisplayedPieceName >=0) {
+                        document.getElementById('piece_'+ piece.name).style.display = 'block';
+                    }                                                                      
+            });           
+        }
+              
+    }
+
+    unblockPartition() {
+        Array.prototype.forEach.call(document.getElementsByClassName("gamearea boardarea"), function (element) {            
+            element.style.background = backGroundColor;
+            element.style.opacity ="";
+        });
+        this.pieces.forEach(piece => {
+            Array.prototype.forEach.call(document.getElementById('piece_' + piece.name).getElementsByClassName("bmPoint"), function (element) {
+                element.style.display = 'block';                
+            });
+                        
+            if(document.getElementById('piece_'+ piece.name).classList.contains('disabledbutton')){                
+                document.getElementById('piece_'+ piece.name).classList.remove("disabledbutton");
+            }                                                                                            
+            
+        });
+
+
+    }
+
+    checkPartitionSolved() {
+        let piecesDisplayed = [];
+        let partitionCheck = false;
+        
+        if (!splitPartition) {
+            return false;   
+        }
+
+        if(splitPartition.length === 0) {
+            return false;
+        }
+        
+        let partitionedArray = splitPartition[splitCounter]
+        
+        if(!partitionedArray) {
+            return false;
+        }
+        for (let i = 0; i < partitionedArray.length; i++) {            
+            piecesDisplayed.push(partitionedArray[i][0].name);                     
+        } 
+        
+        let temp = [];
+        for (let i = 0; i < piecesDisplayed.length; i++) {            
+            temp.push(false);                     
+        } 
+
+        this.pieces.forEach(piece => {
+            if(this.gameController.isPlacedOnBoard(piece)) {
+                let containsDisplayedPieceName = piecesDisplayed.indexOf(piece.name)
+                if(containsDisplayedPieceName >= 0) {
+                    let result = this.pd.gameController.partitionHasUnoccupiedPosition(piece);                                                                    
+                    temp[containsDisplayedPieceName] = result;
+                    let checker = temp.every(v => v === true);
+                    if (checker) {
+                        partitionCheck = true;
+                        if(this.checkIfGameWon()){
+                            this.unblockPartition();
+                        }                        
+                        return partitionCheck; 
+                    }
+                }
+            }
+                            
+        });     
+        return partitionCheck;            
+    }
+
 
     blinkCells(cells) {
         let menu = [];
@@ -1612,7 +1854,6 @@ class Visual {
 
         }
     }
-
     getCmdState(stateType) {
         if (stateType == "start") {
             return this.gameController.getStartCmdKey();

@@ -54,6 +54,7 @@
     <script src="resources/js/hint-ai.js"></script>
     <script src="resources/js/help/hinting/command-sequence-list.js"></script>
     <script src="resources/js/load_screen.js"></script>
+    <script src="resources/js/split-board.js"></script>
 </head>
 <!-- Preloader section -->
 <div class="preloader d-flex">
@@ -157,6 +158,8 @@
                 </button>
                 <button type="button" id='reset' class="cActionBtn" onclick="resetGame()">
                     <img src="resources/images/icons/tidy_up_v2.png"></button>
+                <button type="button" id='splitBoard' class="cActionBtn" onclick="splitTheBoard()">
+                    <img id="splitBoardimg" src="resources/images/icons/dp_512.png"></button>                
             </div>
 
             <div id="labelNumberSolutionsContainer">
@@ -195,13 +198,13 @@
                     <span class="icon-flip2" id="OpflipV"></span>
                 </div>
             </div>
-        </div>
-        <!---Button Manipulation Ends-->
+        </div> <!---Button Manipulation Ends-->        
     </div>
 
     <script type="text/javascript">
         let pd;
         let template;
+        let isPlaying = false;
 
         const SnapshotType = {
             "FilterOnly": 0,
@@ -471,6 +474,24 @@
                 // TODO - handle, e.g. shake hint button
                 console.log("Game is already solved. Cannot display hint");
             }
+        }
+        function splitTheBoard() {
+            splitButton = document.getElementById("splitBoardimg")            
+            if(!isPlaying) {
+                splitButton.classList.add("splitbuttonimg");  
+                if (!pd.gameController.game()._board.isSolved()) {
+                    pd.visual.splitTheBoard();                                            
+                } else {
+                    console.log("Game is already solved");
+                    pd.visual.unblockPartition();
+                }
+                isPlaying = true;
+            } else {
+                splitButton.classList.remove("splitbuttonimg");
+                pd.visual.undoSplit();
+                isPlaying = false;
+            }
+            
         }
 
         function rotateClkWise() {

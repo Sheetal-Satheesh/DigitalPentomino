@@ -188,6 +188,13 @@ const strings = {
                 description: ["General theme of the application.", "Grundlegendes Design der Applikation"]
             }
         },
+        splitPartition: {
+            title: ["Split Board into Thirds", "TO DO"],
+            splitStrategy: {
+                title: ["Split Board into Partion By", "TO DO"],
+                enumTitles: [["Color","Left-to-Right"], ["TO DO", "TO DO"]],                
+            }
+        },
         errors: {
             lowerThanMin: ["This shouldn't be smaller than", "Dieser Eintrag darf nicht kleiner sein als"],
             higherThanMax: ["This shouldn't be greater than", "Dieser Eintrag darf nicht größer sein als"],
