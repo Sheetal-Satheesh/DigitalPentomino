@@ -281,7 +281,7 @@
         //reset timer and clear timeout to check user activity on the application
         function resetTime() {
             clearTimeout(time);
-            time = setTimeout(alertUser, 1000 * 40); // 10 seconds
+            time = setTimeout(alertUser, 1000 * 10); // 10 seconds
         }
 
         //at the end remove the bird animation
@@ -315,66 +315,10 @@
            }, 2500);
           return;
       }
-         //checks if visual hints are enabled.
-         //If enabled => the user can click on the button on the speech bubble to get the hint
-         if((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Visual" )){
-           //Speech bubble says : I have a hint
-           setTimeout(function(){
-                  speechBubbleText.textContent= strings.speechbubbleTexts.iHaveAHint[lang] ;
-              }, 5000);
-              //Speech bubble asks show the hint or ignore
-              setTimeout(function(){
-                      speechBubbleText.innerHTML = '<button id="showVisualHint" name="showVisualHint" onclick="visualAutoHint()" >showHint</button>' + '<button id="hideVisualHint" name="hideVisualHint" onclick="ignore()">Ignore</button>';
-                 }, 10000);
-                 let x = window.matchMedia("(max-width: 860px)");
-                 if (x.matches) { // If media query matches
-                      $("#showVisualHint").css("fontSize", "90px");
-                      console.log(x.matches, x, $("#showVisualHint").css( "fontSize" ));
-                  }else{
-                    $("#showVisualHint").css("fontSize", "50px");
-                     console.log(x.matches, x);
-                  }
-          }
-          //checks if Textual hints are enabled.
-          //If enabled => the user automatically gets a textul hint
-          else if((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Textual" )){
-            //Speech bubble says : I have a hint
-            setTimeout(function(){
-                   speechBubbleText.textContent= strings.speechbubbleTexts.iHaveAHint[lang] ;
-               }, 5000);
-                 //Speech bubble automatically shows textual hint
-                 //Speech bubble asks show the hint or ignore
-                 setTimeout(function(){
-                         speechBubbleText.innerHTML = '<button id="showTextualHint" name="showTextualHint" onclick="showTextualHint()">showHint</button>' + '<button id="hideTextualHint" name="hideTextualHint" onclick="ignore()">Ignore</button>';
-                    }, 10000);
-           }
-           else if((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Both" )){
-             //Speech bubble says : I have a hint
-             setTimeout(function(){
-                    speechBubbleText.textContent= strings.speechbubbleTexts.iHaveAHint[lang] ;
-                }, 5000);
-                //Speech bubble asks show the hint or ignore
-                setTimeout(function(){
-                        speechBubbleText.innerHTML = '<button id="showBothHint" name="showBothHint" onclick="bothAutoHint()">showHint</button>' + '<button id="hideBothHint" name="hideBothHint" onclick="ignore()">Ignore</button>';
-                   }, 10000);
-           }
+      pd.visual.configureAutoHints();
     }
 
-    function showTextualHint(){
-        let hint = pd.gameController.getHint();
-        pd.visual.hintText(hint);
-      }
 
-    function ignore(){
-      let lang = SettingsSingleton.getInstance().getSettings().general.language;
-      document.getElementById('speechBubbleText').textContent = strings.speechbubbleTexts.pleaseContinue[lang];
-    }
-
-    function bothAutoHint(){
-      let hint = pd.gameController.getHint();
-      pd.visual.callHintAI();
-      pd.visual.hintText(hint);
-    }
 
         function buttonManipulation() {
             let btn = document.querySelector('.mainWrapper');
@@ -1548,9 +1492,6 @@
             document.getElementById('bubbleContainer').style.display = "none";
         }
 
-        function visualAutoHint() {
-            pd.visual.callHintAI();
-        }
     </script>
     <script src="./registerSW.js"></script>
 

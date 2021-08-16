@@ -828,22 +828,6 @@ class Visual {
         }, 1000);
     }
 
-    autoHint(){
-       let hint = pd.gameController.getHint();
-     //document.getElementById("speechBubbleText").textContent = "first hint";
-       this.hintText(hint);
-
-       let autoHint = (SettingsSingleton.getInstance().getSettings().hinting.autohinting);
-       switch(autoHint){
-         case "Visual" : console.log("visual");
-                         break;
-         case "Textual": console.log("textual");
-                         break;
-         case "Both": console.log("both");
-                      break;
-         default:  throw new Error("Error: unknown autohint option");
-       }
-   }
 
     hintText(hint){
       hint = pd.gameController.getHint();
@@ -922,16 +906,76 @@ class Visual {
          setTimeout(function(){
            document.getElementById('birdContainer').classList.add("anim");
           }, 1000);
-         document.getElementById("speechBubbleText").textContent = strings.speechbubbleTexts.pleaseStop[lang];
-         setTimeout(function(){
-           this.callHintAI();
-         }, 2000);
+         document.getElementById("speechBubbleText").textContent = strings.speechbubbleTexts.iHaveAHint[lang] ;
+         //Speech bubble asks show the hint or ignore
+        pd.visual.configureAutoHints();
          setTimeout(function(){
            document.getElementById('birdContainer').classList.remove("anim");
            count = 0;
-         }, 2000);
+         }, 20000);
    }
 
+    showTextualHint(){
+       let hint = pd.gameController.getHint();
+       this.hintText(hint);
+     }
+
+    ignore(){
+       let lang = SettingsSingleton.getInstance().getSettings().general.language;
+       document.getElementById('speechBubbleText').textContent = strings.speechbubbleTexts.pleaseContinue[lang];
+   }
+
+    bothAutoHint(){
+       let hint = pd.gameController.getHint();
+       this.callHintAI();
+       this.hintText(hint);
+   }
+
+   visualAutoHint() {
+       this.callHintAI();
+   }
+
+
+   configureAutoHints(){
+     let lang = SettingsSingleton.getInstance().getSettings().general.language;
+     let speechBubbleText = document.getElementById('speechBubbleText');
+     let hint = pd.gameController.getHint();
+     //checks if visual hints are enabled.
+     //If enabled => the user can click on the button on the speech bubble to get the hint
+     if((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Visual" )){
+       //Speech bubble says : I have a hint
+       setTimeout(function(){
+              speechBubbleText.textContent= strings.speechbubbleTexts.iHaveAHint[lang] ;
+          }, 3000);
+          //Speech bubble asks show the hint or ignore
+          setTimeout(function(){
+                  speechBubbleText.innerHTML = '<button id="showVisualHint" name="showVisualHint" onclick="pd.visual.visualAutoHint()" >showHint</button>' + '<button id="hideVisualHint" name="hideVisualHint" onclick="pd.visual.ignore()">Ignore</button>';
+             }, 5000);
+      }
+      //checks if Textual hints are enabled.
+      //If enabled => the user automatically gets a textul hint
+      else if((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Textual" )){
+        //Speech bubble says : I have a hint
+        setTimeout(function(){
+               speechBubbleText.textContent= strings.speechbubbleTexts.iHaveAHint[lang] ;
+           }, 3000);
+             //Speech bubble automatically shows textual hint
+             //Speech bubble asks show the hint or ignore
+             setTimeout(function(){
+               pd.visual.hintText(hint);
+             }, 5000);
+       }
+       else if((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Both" )){
+         //Speech bubble says : I have a hint
+         setTimeout(function(){
+                speechBubbleText.textContent= strings.speechbubbleTexts.iHaveAHint[lang] ;
+            }, 3000);
+            //Speech bubble asks show the hint or ignore
+            setTimeout(function(){
+                    speechBubbleText.innerHTML = '<button id="showBothHint" name="showBothHint" onclick="pd.visual.bothAutoHint()">showHint</button>' + '<button id="hideBothHint" name="hideBothHint" onclick="pd.visual.ignore()">Ignore</button>';
+               }, 5000);
+       }
+   }
     blinkCells(cells) {
         let menu = [];
         let boardColor = document.getElementsByClassName("boardarea");
