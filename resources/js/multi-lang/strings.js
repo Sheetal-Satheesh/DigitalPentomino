@@ -79,6 +79,10 @@ const strings = {
                 title: ["Enable auto hinting", "Auto-Hinweis aktivieren"],
                 description: [["Enables auto-hinting", "Aktiviert Auto-Hinting"]]
             },
+            initiateActionsIfUserNotActive:{
+                title: ["Initiate actions if user not active", "Aktionen einleiten, wenn der Benutzer nicht aktiv ist"],
+                description: [["Initiates actions only if user is not active on the application", "Löst nur Aktionen aus, wenn der Benutzer nicht in der Anwendung aktiv ist"]]
+            },
 
             autoHintVariants:{
                 title: ["Variants of auto-hinting", "Varianten von Auto-Hinting"],

@@ -246,22 +246,33 @@
         function alertUser() {
             let lang = SettingsSingleton.getInstance().getSettings().general.language;
             // do tasks
-            //speech bubble message : "hello There"
-            setTimeout(function(){
-                   speechBubbleText.textContent=strings.speechbubbleTexts.helloThere[lang];
-               }, 1000);
-
-               //detect user if active again => onmouse move it says welcome back and the bird animaltion starts
-               document.onmousemove = function(){
-                   //if(speech bubble message : "hello There ? ") => display "welcome back"
-                     if(speechBubbleText.textContent === strings.speechbubbleTexts.helloThere[lang]){
-                        setTimeout(function(){speechBubbleText.textContent = strings.speechbubbleTexts.welcomeBack[lang]; }, 500);
-                     }
-                     //start bird animation
-                     setTimeout(function(){
-                       document.getElementById('birdContainer').classList.add("anim");
+            //this loop initiates actions if user inactive, this can be configurable from the settings
+            //Series of actions are : bubble speech message, and onmouse move the application says welcome back
+            //then simultaneously bird animation starts and then ends
+              if(SettingsSingleton.getInstance().getSettings().general.initiateActionsIfUserNotActive){
+                  //speech bubble message : "hello There"
+                  setTimeout(function(){
+                         speechBubbleText.textContent=strings.speechbubbleTexts.helloThere[lang];
                      }, 1000);
-               };
+
+                     //detect user if active again => onmouse move it says welcome back and the bird animaltion starts
+                     document.onmousemove = function(){
+                         //if(speech bubble message : "hello There ? ") => display "welcome back"
+                           if(speechBubbleText.textContent === strings.speechbubbleTexts.helloThere[lang]){
+                              setTimeout(function(){speechBubbleText.textContent = strings.speechbubbleTexts.welcomeBack[lang]; }, 500);
+                           }
+                           //start bird animation
+                           setTimeout(function(){
+                             document.getElementById('birdContainer').classList.add("anim");
+                           }, 1000);
+                     };
+
+                     //at the end remove the bird animation
+                     setTimeout(function(){
+                       document.getElementById('birdContainer').classList.remove("anim");
+                       count = 0;
+                     }, 10000);
+              }
 
                //if autohinting enabled continue with autoHint() function
                if(SettingsSingleton.getInstance().getSettings().general.enableAutoHinting){
@@ -271,7 +282,6 @@
                    audio.play();
                  }
                     autoHint();
-                    console.log("autohint running");
                }
                //else if autohinting disabled => display "Continue with the game"
                else{
@@ -289,12 +299,6 @@
             clearTimeout(time);
             time = setTimeout(alertUser, 1000 * userInactiveWaitTime()); // 10 seconds
         }
-
-        //at the end remove the bird animation
-        setTimeout(function(){
-          document.getElementById('birdContainer').classList.remove("anim");
-          count = 0;
-        }, 10000);
     };
 
 

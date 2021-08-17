@@ -91,6 +91,12 @@ class SettingsSchema {
                       "title": titles.autohinting.enableAutoHinting.title[lang],
                       "default": false,
                       "pupilModeVisibleOnDefault": true
+                    },
+                    initiateActionsIfUserNotActive:{
+                      "type": "boolean",
+                      "title": titles.autohinting.initiateActionsIfUserNotActive.title[lang],
+                      "default": true,
+                      "pupilModeVisibleOnDefault": true
                     }
                 }
             },
