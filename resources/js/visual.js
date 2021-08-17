@@ -1774,13 +1774,13 @@ class Visual {
         }
         this.setReplayStatus(false);
 
-        const pause = function () {
+        const pause = function (that) {
             let replayId = document.getElementById("replay");
             let replayImg = replayId.children[0];
             replayImg.setAttribute('src', 'resources/images/icons/replay.svg');
-            this.enablePointerEventsOnPieces();
+            that.enablePointerEventsOnPieces();
         };
-        setTimeout(pause, timeInterval);
+        setTimeout(pause, timeInterval, this);
 
     }
 

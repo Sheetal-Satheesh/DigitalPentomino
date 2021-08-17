@@ -1198,6 +1198,22 @@
                 return;
 
             }
+
+            let currGameId = pd.visual.getCurrentGameId();
+            let images = pd.visual.getImagesByGameId(currGameId);
+            let imageType = undefined;
+            images.forEach((item) => {
+                let imgKey = Object.keys(item)[0];
+                let image = item[imgKey];
+                let currImgType = parseInt(image.getAttribute('type'));
+                if (currImgType == SnapshotType.Original) {
+                    imageType = currImgType;
+                }
+            });
+
+            if (imageType == undefined) {
+                return;
+            }
             gameIds.reverse().forEach((gameId) => {
                 let img = pd.visual.getLastGameimage(gameId);
                 if (img == undefined) {
@@ -1208,7 +1224,6 @@
                     img.style.filter = "brightness(120%) saturate(120%)";
                     img.style.border = ".3px dotted gray";
                     img.style.background = "black";
-                    let images = pd.visual.getImagesByGameId(currGmKey)
                     renderGallery(gameId);
                 }
                 else {
@@ -1300,7 +1315,7 @@
             this.disableSnapshotButton();
             //this.disablePointerEventsOnPieces();//TODO: Fix this
             this.hideManipulationButtons();
-            this.saveGameImage(SnapshotType.Auto);
+            pd.visual.saveGameImage(SnapshotType.Auto);
 
             var modal = document.getElementById('modalTop');
             modal.style.backgroundColor = "#eceaea";
