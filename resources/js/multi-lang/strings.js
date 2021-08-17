@@ -106,7 +106,7 @@ const strings = {
             },
 
             timeForNoAction: {
-                title: ["Time to wait for not action", "Zeit zum Warten, nicht zum Handeln"],
+                title: ["Time to wait for no action", "Zeit zum Warten, nicht zum Handeln"],
                   enumTitles: [["Short", "Medium", "Long"], ["Kurz", "Mittel", "Lang"]],
                   description: [
                   "Provides Time delay for no action :"  +
