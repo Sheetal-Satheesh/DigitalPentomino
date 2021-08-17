@@ -1337,6 +1337,7 @@ class Visual {
         modalFormContainerID.style.display = "block";
         let modalBodyID = document.querySelector("#modalBodyID");
         modalBodyID.style.display = "block";
+        document.querySelector(".modalFullframeContainer").style.display = "none";
         document.querySelector(".innerGrid").style.display = "none";
         template.clearContent("#modalButtonsID");
         template.clearContent("#modalTitleID");
