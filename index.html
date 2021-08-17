@@ -233,7 +233,7 @@
         let text;
         let lang = SettingsSingleton.getInstance().getSettings().general.language;
         let speechBubbleText = document.getElementById('speechBubbleText');
-        // events
+        // initializing the resetTime function to the events in the DOM
         window.onload = resetTime;
         window.onclick = resetTime;
         window.onkeypress = resetTime;
@@ -243,6 +243,7 @@
         window.ontouchstart = resetTime;
         window.addEventListener('scroll', resetTime, true);
 
+        //alert user if not active
         function alertUser() {
             let lang = SettingsSingleton.getInstance().getSettings().general.language;
             // do tasks
@@ -277,7 +278,7 @@
                //if autohinting enabled continue with autoHint() function
                if(SettingsSingleton.getInstance().getSettings().general.enableAutoHinting){
                  //wakeup user with bird sound
-                 if(SettingsSingleton.getInstance().getSettings().autohinting.wakeUser){
+                  if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
                    let audio = new Audio('resources/audio/pingPong.mp3');
                    audio.play();
                  }

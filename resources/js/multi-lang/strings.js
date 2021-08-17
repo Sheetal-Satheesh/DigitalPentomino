@@ -69,12 +69,6 @@ const strings = {
         },
         autohinting:{
             title: ["Auto hinting", "Automatisches Hinting"],
-            wakeUser:{
-              title: [["Wakeup the player if inactive"],["Wecken Sie den Spieler, wenn er inaktiv ist"]],
-              description: ["Wakeup the player if inactive with a message",
-              "Wecken Sie den Spieler bei Inaktivität mit ein nachrichten"]
-            },
-
             enableAutoHinting:{
                 title: ["Enable auto hinting", "Auto-Hinweis aktivieren"],
                 description: [["Enables auto-hinting", "Aktiviert Auto-Hinting"]]

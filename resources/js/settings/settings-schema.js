@@ -144,13 +144,6 @@ class SettingsSchema {
                 "pupilModeVisibleOnDefault": false,
                 "advanced": true,
                 "properties": {
-                  wakeUser:{
-                    "type": "boolean",
-                    "title": titles.autohinting.wakeUser.title[lang],
-                    "description": titles.autohinting.wakeUser.description[lang],
-                    "default": false
-                  },
-
                   autoHintVariants:{
                     "type": "string",
                     "title": titles.autohinting.autoHintVariants.title[lang],

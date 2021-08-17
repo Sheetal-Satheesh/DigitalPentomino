@@ -955,7 +955,7 @@ class Visual {
         if(!(SettingsSingleton.getInstance().getSettings().autohinting.autoHintVariants === "Wrong moves")){
             return;
         }
-        
+
           document.getElementById('birdContainer').classList.add("anim");
 
         document.getElementById("speechBubbleText").textContent = strings.speechbubbleTexts.iHaveAHint[lang] ;
