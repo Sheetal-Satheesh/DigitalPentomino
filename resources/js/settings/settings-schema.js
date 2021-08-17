@@ -154,6 +154,13 @@ class SettingsSchema {
                     "default": "Wrong moves"
                   },
 
+                  enableTimePeriodBasedAutoHintInAnyCase:{
+                    "type": "boolean",
+                    "title": titles.autohinting.enableTimePeriodBasedAutoHintInAnyCase.title[lang],
+                    "description": titles.autohinting.enableTimePeriodBasedAutoHintInAnyCase.description[lang],
+                    "default": false
+                  },
+
                   numberOfWrongMoves: {
                       "step": 1,
                       "type": "integer",
@@ -163,6 +170,15 @@ class SettingsSchema {
                       "minimum": 5,
                       "exclusiveMinimum": false,
                       "maximum": 20
+                  },
+
+                  timeForNoAction: {
+                    "type": "string",
+                    "title": titles.autohinting.timeForNoAction.title[lang],
+                    "enum": ["Short", "Medium", "Long"],
+                    "enumText": titles.autohinting.timeForNoAction.enumTitles[lang],
+                    "description": titles.autohinting.timeForNoAction.description[lang],
+                    "default": "Short"
                   },
 
                   typeOfHints:{
@@ -281,7 +297,7 @@ class SettingsSchema {
                 "properties": {
                     splitStrategy: {
                         "type": "string",
-                        "title": titles.splitPartition.splitStrategy.title[lang],                       
+                        "title": titles.splitPartition.splitStrategy.title[lang],
                         "enum": ["color","left-to-right"],
                         "enumText": titles.splitPartition.splitStrategy.enumTitles[lang],
                         "default": "color"

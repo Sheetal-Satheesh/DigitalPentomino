@@ -955,9 +955,9 @@ class Visual {
         if(!(SettingsSingleton.getInstance().getSettings().autohinting.autoHintVariants === "Wrong moves")){
             return;
         }
-        setTimeout(function(){
+        
           document.getElementById('birdContainer').classList.add("anim");
-         }, 1000);
+
         document.getElementById("speechBubbleText").textContent = strings.speechbubbleTexts.iHaveAHint[lang] ;
         //Speech bubble asks show the hint or ignore
        pd.visual.configureAutoHints();

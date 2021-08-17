@@ -82,7 +82,7 @@ const strings = {
 
             autoHintVariants:{
                 title: ["Variants of auto-hinting", "Varianten von Auto-Hinting"],
-                enumTitles: [["Time period", "Wrong moves"], ["Zeitspanne", "Falsche Züge"]],
+                enumTitles: [["Time period", "Wrong actions"], ["Zeitspanne", "Falsche Maßnahmen"]],
                 description: [
                 "Provides automatic hints :"  +
                     "<ul>" +
@@ -95,11 +95,34 @@ const strings = {
                         "<li><b>Falsche Züge:</b> Auto-Hinweis basierend auf der Anzahl der falschen Züge, hier kann der Benutzer nur die Anzahl der falschen Züge machen, die hier in den Einstellungen konfiguriert sind, für jede Anzahl von falschen Zügen wird ein Hinweis gegeben.</li>" +
                         "</ul>"]
             },
+            enableTimePeriodBasedAutoHintInAnyCase:{
+              title: [["Enable time period based autohinting in any case"],["Aktivieren Sie in jedem Fall die zeitraumbasierte automatische Anzeige"]],
+              description: ["Enabling activates time period based hinting in any case. But disabling this option makes the time period based auto hinting inactive in case the user is towards the solution.",
+              "Wenn Sie diese Option aktivieren, wird der zeitraumbasierte Hinweis in jedem Fall aktiviert. Durch die Deaktivierung dieser Option wird der zeitraumbasierte automatische Hinweis jedoch inaktiv, wenn der Benutzer auf die Lösung zusteuert."]
+            },
 
             numberOfWrongMoves: {
-                title: ["Number of wrong moves", "Anzahl der falschen Züge"],
+                title: ["Number of wrong actions", "Anzahl der falschen Aktionen"],
                   description: ["After how any number of wrong moves should the hint occur automatically",
                   "Nach einer beliebigen Anzahl von falschen Zügen sollte der Hinweis automatisch erfolgen"]
+            },
+
+            timeForNoAction: {
+                title: ["Time to wait for not action", "Zeit zum Warten, nicht zum Handeln"],
+                  enumTitles: [["Short", "Medium", "Long"], ["Kurz", "Mittel", "Lang"]],
+                  description: [
+                  "Provides Time delay for no action :"  +
+                      "<ul>" +
+                          "<li><b>Short:</b> Short time : 30 seconds</li>" +
+                          "<li><b>Medium:</b> Medium time : 1 minute 30 seconds</li>" +
+                            "<li><b>Long:</b> Long time : 2 minute 30 seconds</li>" +
+                      "</ul>",
+                      "Bietet Zeitverzögerung für keine Aktion:" +
+                      "<ul>" +
+                          "<li><b>Kurz:</b> Kurze Zeit : 30 Sekunden</li>" +
+                          "<li><b>Mittel:</b> Mittlere Zeit : 1 Minute 30 Sekunden</li>" +
+                            "<li><b>Lang:</b> Lange Zeit: 2 Minuten 30 Sekunden</li>" +
+                      "</ul>"]
             },
 
             typeOfHints:{
@@ -262,7 +285,7 @@ const strings = {
             title: ["Split Board into Thirds", "TO DO"],
             splitStrategy: {
                 title: ["Split Board into Partion By", "TO DO"],
-                enumTitles: [["Color","Left-to-Right"], ["TO DO", "TO DO"]],                
+                enumTitles: [["Color","Left-to-Right"], ["TO DO", "TO DO"]],
             }
         },
         errors: {
