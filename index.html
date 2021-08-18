@@ -313,7 +313,7 @@
             scanButton.addEventListener("click", (event) => openScanQrCode());
             parent.appendChild(scanButton);
             let shareButton = SettingsForm.createButton("Share");
-            shareButton.addEventListener("click", (event) => openIncludePiecesScreen());
+            shareButton.addEventListener("click", (event) => handleShareSettings());
             parent.appendChild(shareButton);
         }
 
@@ -367,6 +367,113 @@
                 handleShareSettings();
             });
             parent.appendChild(yesButton);
+        }
+
+        function handleShareSettings() {
+            this.hideManipulationButtons();
+            this.closeBoardSelector();
+            this.disablePointerEventsOnPieces();
+            var modal = document.getElementById('modalTop');
+            modal.style.display = "block";
+            modal.style.background = "transparent";
+
+            document.querySelector(".modalFormContent").style.display = "block";
+            document.querySelector(".innerGrid").style.display = "none";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent("#innerGridForm");
+
+            let div1 = document.createElement("div");
+            let h5 = document.createElement("h2");
+            var t1 = document.createTextNode("Share");
+            h5.appendChild(t1);
+            div1.appendChild(h5);
+            modalBodyID.appendChild(div1);
+
+            let settings = SettingsSingleton.getInstance().getSettings();
+
+            //show back button
+            let btn = document.getElementById("backButton");
+            btn.style.display = "block";
+            btn.onclick = function () {
+                openIncludePiecesScreen();
+                btn.style.display = "none";
+            };
+
+            let teacherURLLabel = document.createElement("label");
+            let pupilURLLabel = document.createElement("label");
+
+            let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+            let seed = SettingsParser.parseSettingsToSeed(schema, settings);
+            console.log("baseConfigs.url", baseConfigs.url);
+            let teacherUrl = baseConfigs.url + "?" + baseConfigs.seedUrlParamName + "=" + seed;
+            let pupilUrl = baseConfigs.url + "?" + baseConfigs.seedUrlParamName + "=2" + seed.substr(1, seed.length);
+            teacherURLLabel.innerHTML = teacherUrl;
+            pupilURLLabel.innerHTML = pupilUrl;
+
+            let teacherQrCodeElement = document.createElement("div");
+            let pupilQrCodeElement = document.createElement("div");
+            pupilQrCodeElement.style.margin = "auto";
+
+            generateQrCode(pupilQrCodeElement, pupilUrl);
+            modalBodyID.appendChild(pupilQrCodeElement);
+
+            /*let table = document.createElement("table");
+            table.style.margin = "auto";
+
+            let tr23 = document.createElement("tr");
+            table.appendChild(tr23);
+            let td111 = document.createElement("td");
+            td111.appendChild(document.createTextNode("Share With Other Teachers"));
+            tr23.appendChild(td111);
+            let td212 = document.createElement("td");
+            td212.appendChild(document.createTextNode("Use In Class"));
+            tr23.appendChild(td212);
+
+            let qrTr = generateQrTrElement(teacherUrl, pupilUrl);
+            table.appendChild(qrTr);
+
+            let tr2 = document.createElement("tr");
+            table.appendChild(tr2);
+            let td11 = document.createElement("td");
+            td11.appendChild(document.createTextNode("Use this to share with other teachers (Restricted Settings)"));
+            tr2.appendChild(td11);
+            let td21 = document.createElement("td");
+            td21.appendChild(document.createTextNode("Use this in class"));
+            tr2.appendChild(td21);
+
+            modalBodyID.appendChild(table);*/
+
+            modalBodyID.appendChild(document.createElement("br"));
+            modalBodyID.appendChild(document.createTextNode("Use this QR-code to bring your current settings on your pupil's devices."));
+
+            modalBodyID.appendChild(document.createElement("br"));
+            modalBodyID.appendChild(document.createTextNode("1. Print QR-code 2. The pupils scan it with the X-button in the TUCA-App."));
+
+            modalBodyID.appendChild(document.createElement("br"));
+            let printButton = SettingsForm.createButton("Print");
+            printButton.setAttribute("id", "printQRCode");
+            printButton.addEventListener("click", function () {
+                window.print();
+            });
+            modalBodyID.appendChild(printButton);
+            let downloadImageButton = document.createElement("a");
+            downloadImageButton.innerHTML = "Download image";
+            downloadImageButton.addEventListener("click", function () {
+                handleDownloadImage(downloadImageButton, pupilQrCodeElement.firstElementChild);
+            });
+            downloadImageButton.download = "Canvas.png";
+            modalBodyID.appendChild(downloadImageButton);
+            modalBodyID.appendChild(document.createElement("br"));
+            modalBodyID.appendChild(document.createElement("br"));
+
+            let collapsibleButton = SettingsForm.createCollapsibleButton("Show advanced share options", "Hide advanced share options");
+            let divToHide = document.createElement("div");
+            divToHide.appendChild(document.createTextNode("Test"));
+
+            modalBodyID.appendChild(collapsibleButton);
+            modalBodyID.appendChild(divToHide);
         }
 
         function openScanQrCode() {
@@ -883,113 +990,6 @@
             }
             div5.appendChild(table);
             modal.appendChild(div5);
-        }
-
-        function handleShareSettings() {
-            this.hideManipulationButtons();
-            this.closeBoardSelector();
-            this.disablePointerEventsOnPieces();
-            var modal = document.getElementById('modalTop');
-            modal.style.display = "block";
-            modal.style.background = "transparent";
-
-            document.querySelector(".modalFormContent").style.display = "block";
-            document.querySelector(".innerGrid").style.display = "none";
-            template.clearContent("#modalButtonsID");
-            template.clearContent("#modalTitleID");
-            template.clearContent("#modalBodyID");
-            template.clearContent("#innerGridForm");
-
-            let div1 = document.createElement("div");
-            let h5 = document.createElement("h2");
-            var t1 = document.createTextNode("Share");
-            h5.appendChild(t1);
-            div1.appendChild(h5);
-            modalBodyID.appendChild(div1);
-
-            let settings = SettingsSingleton.getInstance().getSettings();
-
-            //show back button
-            let btn = document.getElementById("backButton");
-            btn.style.display = "block";
-            btn.onclick = function () {
-                openIncludePiecesScreen();
-                btn.style.display = "none";
-            };
-
-            let teacherURLLabel = document.createElement("label");
-            let pupilURLLabel = document.createElement("label");
-
-            let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
-            let seed = SettingsParser.parseSettingsToSeed(schema, settings);
-            console.log("baseConfigs.url", baseConfigs.url);
-            let teacherUrl = baseConfigs.url + "?" + baseConfigs.seedUrlParamName + "=" + seed;
-            let pupilUrl = baseConfigs.url + "?" + baseConfigs.seedUrlParamName + "=2" + seed.substr(1, seed.length);
-            teacherURLLabel.innerHTML = teacherUrl;
-            pupilURLLabel.innerHTML = pupilUrl;
-
-            let teacherQrCodeElement = document.createElement("div");
-            let pupilQrCodeElement = document.createElement("div");
-            pupilQrCodeElement.style.margin = "auto";
-
-            generateQrCode(pupilQrCodeElement, pupilUrl);
-            modalBodyID.appendChild(pupilQrCodeElement);
-
-            /*let table = document.createElement("table");
-            table.style.margin = "auto";
-
-            let tr23 = document.createElement("tr");
-            table.appendChild(tr23);
-            let td111 = document.createElement("td");
-            td111.appendChild(document.createTextNode("Share With Other Teachers"));
-            tr23.appendChild(td111);
-            let td212 = document.createElement("td");
-            td212.appendChild(document.createTextNode("Use In Class"));
-            tr23.appendChild(td212);
-
-            let qrTr = generateQrTrElement(teacherUrl, pupilUrl);
-            table.appendChild(qrTr);
-
-            let tr2 = document.createElement("tr");
-            table.appendChild(tr2);
-            let td11 = document.createElement("td");
-            td11.appendChild(document.createTextNode("Use this to share with other teachers (Restricted Settings)"));
-            tr2.appendChild(td11);
-            let td21 = document.createElement("td");
-            td21.appendChild(document.createTextNode("Use this in class"));
-            tr2.appendChild(td21);
-
-            modalBodyID.appendChild(table);*/
-
-            modalBodyID.appendChild(document.createElement("br"));
-            modalBodyID.appendChild(document.createTextNode("Use this QR-code to bring your current settings on your pupil's devices."));
-
-            modalBodyID.appendChild(document.createElement("br"));
-            modalBodyID.appendChild(document.createTextNode("1. Print QR-code 2. The pupils scan it with the X-button in the TUCA-App."));
-
-            modalBodyID.appendChild(document.createElement("br"));
-            let printButton = SettingsForm.createButton("Print");
-            printButton.setAttribute("id", "printQRCode");
-            printButton.addEventListener("click", function () {
-                window.print();
-            });
-            modalBodyID.appendChild(printButton);
-            let downloadImageButton = document.createElement("a");
-            downloadImageButton.innerHTML = "Download image";
-            downloadImageButton.addEventListener("click", function () {
-                handleDownloadImage(downloadImageButton, pupilQrCodeElement.firstElementChild);
-            });
-            downloadImageButton.download = "Canvas.png";
-            modalBodyID.appendChild(downloadImageButton);
-            modalBodyID.appendChild(document.createElement("br"));
-            modalBodyID.appendChild(document.createElement("br"));
-
-            let collapsibleButton = SettingsForm.createCollapsibleButton("Show advanced share options", "Hide advanced share options");
-            let divToHide = document.createElement("div");
-            divToHide.appendChild(document.createTextNode("Test"));
-
-            modalBodyID.appendChild(collapsibleButton);
-            modalBodyID.appendChild(divToHide);
         }
 
         function handleDownloadImage(downloadImageButton, canvasElement) {
