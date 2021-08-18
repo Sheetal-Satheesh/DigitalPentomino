@@ -355,12 +355,11 @@
             let seed = SettingsParser.parseSettingsToSeed(schema, settings);
             console.log("baseConfigs.url", baseConfigs.url);
 
-            let teacherQrCodeElement = document.createElement("div");
-            let pupilQrCodeElement = document.createElement("div");
-            pupilQrCodeElement.style.margin = "auto";
+            let qrCodeElement = document.createElement("div");
+            qrCodeElement.style.margin = "auto";
 
-            updateShareOptions(pupilQrCodeElement, seed);
-            parent.appendChild(pupilQrCodeElement);
+            updateShareOptions(qrCodeElement, seed);
+            parent.appendChild(qrCodeElement);
 
             parent.appendChild(document.createElement("br"));
             parent.appendChild(document.createTextNode("Use this QR-code to bring your current settings on your pupil's devices."));
@@ -372,7 +371,7 @@
             let printButton = createPrintButton();
             parent.appendChild(printButton);
 
-            let downloadImageButton = createDownloadImageLink(pupilQrCodeElement.firstElementChild);
+            let downloadImageButton = createDownloadImageLink(qrCodeElement);
             parent.appendChild(downloadImageButton);
 
             parent.appendChild(document.createElement("br"));
@@ -384,7 +383,7 @@
 
             parent.appendChild(collapsibleButton);
             parent.appendChild(divToHide);
-            addAdvancedShareOptions(divToHide, pupilQrCodeElement);
+            addAdvancedShareOptions(divToHide, qrCodeElement);
         }
 
         function addAdvancedShareOptions(advOptionsRoot, qrCodeElement) {
@@ -448,10 +447,11 @@
             generateQrCode(qrCodeElement, url);
         }
 
-        function createDownloadImageLink(canvas) {
+        function createDownloadImageLink(qrCodeElement) {
             let downloadImageButton = document.createElement("a");
             downloadImageButton.innerHTML = "Download image";
             downloadImageButton.addEventListener("click", function () {
+                let canvas = qrCodeElement.firstElementChild;
                 handleDownloadImage(downloadImageButton, canvas);
             });
             downloadImageButton.download = "Canvas.png";
