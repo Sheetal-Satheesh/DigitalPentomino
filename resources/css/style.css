@@ -245,7 +245,7 @@ height: 4vw;
 .gamearea {
   justify-content: normal;
   display: block;
-  float: left;
+  position: fixed;
   user-select: none;
   text-align: center;
   /*outline: 1px solid #eee;*/

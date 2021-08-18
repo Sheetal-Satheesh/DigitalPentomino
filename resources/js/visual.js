@@ -184,15 +184,18 @@ class Visual {
                         }
                     }
 
+                    let fieldTop = (row * width) + 10 + 'vw';
+                    let fieldLeft = (col * width) + 'vw';
+
                     if (blockedCell && gameCellPattern == 'blockedCell')
-                        out += '<div class="gamearea ' + ((isBoard) ? 'boardarea blockedcell' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';
+                        out += '<div class="gamearea ' + ((isBoard) ? 'boardarea blockedcell' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="left:' + fieldLeft + ';top:' + fieldTop + ';width:' + width + 'vw;height:' + width + 'vw;"></div>';
                     else if (blockedCell && gameCellPattern == 'gamearea')
-                        out += '<div class="gamearea" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';
+                        out += '<div class="gamearea" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="left:' + fieldLeft + ';top:' + fieldTop + ';width:' + width + 'vw;height:' + width + 'vw;"></div>';
                     else
-                        out += '<div class="gamearea ' + ((isBoard) ? 'boardarea' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';
+                        out += '<div class="gamearea ' + ((isBoard) ? 'boardarea' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="left:' + fieldLeft + ';top:' + fieldTop + ';width:' + width + 'vw;height:' + width + 'vw;"></div>';
                 }
                 else
-                    out += '<div class="gamearea ' + ((isBoard) ? 'boardarea' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';   //'+col+','+row+'
+                    out += '<div class="gamearea ' + ((isBoard) ? 'boardarea' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="left:' + fieldLeft + ';top:' + fieldTop + ';width:' + width + 'vw;height:' + width + 'vw;"></div>';   //'+col+','+row+'
             }
         }
 
@@ -234,10 +237,14 @@ class Visual {
 
             //this "paints" the bitmap of the pice into the bounding box
             for (var i in bitMap) {
+                console.log("i:" + i)
                 var row = bitMap[i];
                 for (var j in row) {
+                    console.log("j:" + j)
                     var set = bitMap[i][j];
-                    out += '<div style="display:block;float:left;width:' + width + 'vw;height:' + width + 'vw;' + ((set) ? 'background:' + piece.color : '') + '" class="' + ((set) ? 'bmPoint' : 'bmAround') + '"></div>';
+                    let bmLeft = (j*width) + 'vw';
+                    let bmTop = (i*width) + 'vw';
+                    out += '<div style="display:block;position:fixed;top:' +  bmTop + ';left:' + bmLeft + ';width:' + width + 'vw;height:' + width + 'vw;' + ((set) ? 'background:' + piece.color : '') + '" class="' + ((set) ? 'bmPoint' : 'bmAround') + '"></div>';
                 }
             }
             out += '</div>';
