@@ -85,6 +85,18 @@ class SettingsSchema {
                         "enumText": titles.hinting.hintingLevels.enumTitles[lang],
                         "default": "Easy",
                         "pupilModeVisibleOnDefault": false
+                    },
+                    enableAutoHinting:{
+                      "type": "boolean",
+                      "title": titles.autohinting.enableAutoHinting.title[lang],
+                      "default": false,
+                      "pupilModeVisibleOnDefault": true
+                    },
+                    initiateActionsIfUserNotActive:{
+                      "type": "boolean",
+                      "title": titles.autohinting.initiateActionsIfUserNotActive.title[lang],
+                      "default": true,
+                      "pupilModeVisibleOnDefault": true
                     }
                 }
             },
@@ -124,6 +136,58 @@ class SettingsSchema {
                         "enumText": titles.showSolvedBoardScreen.SolvedScreens.enumTitles[lang],
                         "default": "Play again?"
                     }
+                }
+            },
+            autohinting: {
+                "type": "object",
+                "title": titles.autohinting.title[lang],
+                "pupilModeVisibleOnDefault": false,
+                "advanced": true,
+                "properties": {
+                  autoHintVariants:{
+                    "type": "string",
+                    "title": titles.autohinting.autoHintVariants.title[lang],
+                    "enum": ["Time period", "Wrong moves"],
+                    "enumText": titles.autohinting.autoHintVariants.enumTitles[lang],
+                    "description": titles.autohinting.autoHintVariants.description[lang],
+                    "default": "Wrong moves"
+                  },
+
+                  enableTimePeriodBasedAutoHintInAnyCase:{
+                    "type": "boolean",
+                    "title": titles.autohinting.enableTimePeriodBasedAutoHintInAnyCase.title[lang],
+                    "description": titles.autohinting.enableTimePeriodBasedAutoHintInAnyCase.description[lang],
+                    "default": false
+                  },
+
+                  numberOfWrongMoves: {
+                      "step": 1,
+                      "type": "integer",
+                      "title": titles.autohinting.numberOfWrongMoves.title[lang],
+                      "description": titles.autohinting.numberOfWrongMoves.description[lang],
+                      "default": 5,
+                      "minimum": 5,
+                      "exclusiveMinimum": false,
+                      "maximum": 20
+                  },
+
+                  timeForNoAction: {
+                    "type": "string",
+                    "title": titles.autohinting.timeForNoAction.title[lang],
+                    "enum": ["Short", "Medium", "Long"],
+                    "enumText": titles.autohinting.timeForNoAction.enumTitles[lang],
+                    "description": titles.autohinting.timeForNoAction.description[lang],
+                    "default": "Short"
+                  },
+
+                  typeOfHints:{
+                    "type": "string",
+                    "title": titles.autohinting.typeOfHints.title[lang],
+                    "enum": ["Visual", "Textual", "Both"],
+                    "enumText": titles.autohinting.typeOfHints.enumTitles[lang],
+                    "description": titles.autohinting.typeOfHints.description[lang],
+                    "default": "Visual"
+                  }
                 }
             },
             hinting: {
