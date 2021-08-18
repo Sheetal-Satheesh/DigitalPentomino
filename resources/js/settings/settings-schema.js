@@ -115,7 +115,7 @@ class SettingsSchema {
                         "type": "boolean",
                         "title": titles.boardCustomization.includePiecePos.title[lang],
                         "description": titles.boardCustomization.includePiecePos.description[lang],
-                        "default": false
+                        "default": true
                     }
                 }
             },
