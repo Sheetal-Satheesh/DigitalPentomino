@@ -380,6 +380,7 @@
 
             let collapsibleButton = SettingsForm.createCollapsibleButton("Show advanced share options", "Hide advanced share options");
             let divToHide = document.createElement("div");
+            divToHide.style.display = "none";
 
             parent.appendChild(collapsibleButton);
             parent.appendChild(divToHide);
@@ -409,8 +410,33 @@
 
                 updateShareOptions(qrCodeElement, seed);
             };
-
             advOptionsRoot.appendChild(includePiecesCheckbox);
+
+            let teacherModeLabel = SettingsForm.createLabel("Share with pupils (Settings disabled)");
+            advOptionsRoot.appendChild(teacherModeLabel);
+
+            let teacherModeCheckbox = SettingsForm.createSelectElement(
+                "teacherModeCheckbox",
+                ["shareWithClass", "shareWithTeachers"],
+                ["Share with class (Settings disabled)", "Share with teachers (Settings enabled)"]);
+
+            teacherModeCheckbox.onchange = () => {
+                /*let checkboxValue = includePiecesCheckbox.checked;
+                let settings = SettingsSingleton.getInstance().getSettings();
+                settings.boardCustomization.includePiecePos = checkboxValue;
+
+                let game = new FrontController().controller.game();
+                let customSettingsEntry = CustomSettingsEntrySingleton.getInstance()
+                    .get("boardCustomization", "initialPiecePos");
+                let piecePosSeedEntry = customSettingsEntry.parseFromGameToSeed(game);
+                settings.boardCustomization.initialPiecePos = piecePosSeedEntry;
+
+                let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), settings);
+                insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
+
+                updateShareOptions(qrCodeElement, seed);*/
+            };
+            advOptionsRoot.appendChild(teacherModeCheckbox);
 
             advOptionsRoot.appendChild(document.createElement("br"));
         }
