@@ -222,7 +222,24 @@ class SettingsSchema {
                         "_enumText": titles.prefilling.distanceValue.enumTitles
                     }
                 }
+            },
+            splitPartition: {
+                "type": "object",
+                "advanced": true,
+                "title": titles.splitPartition.title[lang],
+                "visible": false,
+                "pupilModeVisibleOnDefault": false,
+                "properties": {
+                    splitStrategy: {
+                        "type": "string",
+                        "title": titles.splitPartition.splitStrategy.title[lang],                       
+                        "enum": ["color","left-to-right"],
+                        "enumText": titles.splitPartition.splitStrategy.enumTitles[lang],
+                        "default": "color"
+                    }
+                }
             }
+
         };
     }
 }

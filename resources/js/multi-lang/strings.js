@@ -11,6 +11,9 @@ const strings = {
         WellDone: ["Well done! Please wait for your Teacher to continue", "Gut gemacht! Bitte warten Sie auf Ihren Lehrer, um fortzufahren"],
         Excellent: ["Excellent ! Now continue with the next task on your assignment", "Ausgezeichnet! Fahren Sie jetzt mit der nächsten Aufgabe Ihres Auftrags fort"]
     },
+    speechbubbleTexts: {
+        Solved: ["Ya hoo !! You solved it !", "Juhu!! Du hast es gelöst!"]
+    },
     numberOfPossibleSolutions: ["Number of solutions", "Anzahl Lösungen"],
     License: ["LICENSES", "LIZENZEN"],
     settings: {
@@ -183,6 +186,13 @@ const strings = {
                 title: ["Choose a theme", "Wähle ein Design"],
                 enumTitles: [["Default", "DayTuca", "NightTuca", "HighContrast"], ["Standard", "TucaHell", "TucaDunkel", "Kontrast"]],
                 description: ["General theme of the application.", "Grundlegendes Design der Applikation"]
+            }
+        },
+        splitPartition: {
+            title: ["Split Board into Thirds", "TO DO"],
+            splitStrategy: {
+                title: ["Split Board into Partion By", "TO DO"],
+                enumTitles: [["Color","Left-to-Right"], ["TO DO", "TO DO"]],                
             }
         },
         errors: {

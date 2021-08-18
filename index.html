@@ -54,6 +54,7 @@
     <script src="resources/js/hint-ai.js"></script>
     <script src="resources/js/help/hinting/command-sequence-list.js"></script>
     <script src="resources/js/load_screen.js"></script>
+    <script src="resources/js/split-board.js"></script>
 </head>
 <!-- Preloader section -->
 <div class="preloader d-flex">
@@ -88,7 +89,6 @@
                 <div class="boardmodalContainer" id="boardmodalContainerID">
                     <div class="boardouterGrid">
                         <div class="boardinnerGrid" id="boardinnerGrid" style="display: block;">
-
                         </div>
                         <form class="boardmodalFormContent" style="display: none;">
                             <form></form>
@@ -113,6 +113,7 @@
                         <div class="innerGrid" id="innerGrid"></div>
                         <form id="innerGridForm"></form>
                     </div>
+                    <form class="modalFullframeContainer" id="modalFullframeContainerID"></form>
                     <form class="modalFormContent">
                         <div class="modalFormContainer" id="modalFormContainerID">
                             <h3 id="modalTitleID"></h3>
@@ -157,6 +158,8 @@
                 </button>
                 <button type="button" id='reset' class="cActionBtn" onclick="resetGame()">
                     <img src="resources/images/icons/tidy_up_v2.png"></button>
+                <button type="button" id='splitBoard' class="cActionBtn" onclick="splitTheBoard()">
+                    <img id="splitBoardimg" src="resources/images/icons/dp_512.png"></button>                
             </div>
 
             <div id="labelNumberSolutionsContainer">
@@ -195,13 +198,13 @@
                     <span class="icon-flip2" id="OpflipV"></span>
                 </div>
             </div>
-        </div>
-        <!---Button Manipulation Ends-->
+        </div> <!---Button Manipulation Ends-->        
     </div>
 
     <script type="text/javascript">
         let pd;
         let template;
+        let isPlaying = false;
 
         const SnapshotType = {
             "FilterOnly": 0,
@@ -294,6 +297,7 @@
 
             document.querySelector(".modalFormContent").style.display = "none";
             document.querySelector(".innerGrid").style.display = "block";
+            document.querySelector(".modalFullframeContainer").style.display = "none";
             template.clearContent("#modalButtonsID");
             template.clearContent("#modalTitleID");
             template.clearContent("#modalBodyID");
@@ -416,6 +420,7 @@
 
                 document.querySelector(".modalFormContent").style.display = "block";
                 document.querySelector(".innerGrid").style.display = "none";
+                document.querySelector(".modalFullframeContainer").style.display = "none";
                 template.clearContent("#modalButtonsID");
                 template.clearContent("#modalTitleID");
                 template.clearContent("#modalBodyID");
@@ -449,6 +454,7 @@
                 dltBtn.addEventListener("click", () => {
                     pd.reset();
                 });
+                $("#bubbleContainer").css("display", "block");
             }
         }
 
@@ -469,6 +475,24 @@
                 // TODO - handle, e.g. shake hint button
                 console.log("Game is already solved. Cannot display hint");
             }
+        }
+        function splitTheBoard() {
+            splitButton = document.getElementById("splitBoardimg")            
+            if(!isPlaying) {
+                splitButton.classList.add("splitbuttonimg");  
+                if (!pd.gameController.game()._board.isSolved()) {
+                    pd.visual.splitTheBoard();                                            
+                } else {
+                    console.log("Game is already solved");
+                    pd.visual.unblockPartition();
+                }
+                isPlaying = true;
+            } else {
+                splitButton.classList.remove("splitbuttonimg");
+                pd.visual.undoSplit();
+                isPlaying = false;
+            }
+            
         }
 
         function rotateClkWise() {
@@ -616,13 +640,18 @@
             modal.style.background = "#eceaea";
 
             document.querySelector(".modalFormContent").style.display = "none";
-            document.querySelector(".innerGrid").style.display = "block";
+            document.querySelector(".modalFullframeContainer").style.display = "block";
+            document.querySelector(".innerGrid").style.display = "none";
             template.clearContent("#modalButtonsID");
             template.clearContent("#modalTitleID");
             template.clearContent("#modalBodyID");
             template.clearContent(".innerGrid")
             template.clearContent("#innerGridForm");
             template.clearContent("#filterGrid");
+            template.clearContent(".modalFullframeContainer");
+
+            //hide back button for main settings menu
+            document.getElementById("backButton").style.display = "none";
 
             //add form to attach settings to
             //$('#innerGridForm').jsonForm({
@@ -632,15 +661,16 @@
             //});
 
             SettingsForm.generateForm(
-                $('#innerGridForm')[0],
+                $('.modalFullframeContainer')[0],
                 this.handleJsonFormSubmit,
                 this.handleShareSettings,
                 this.handleClickedOnLicenses
             );
 
             let settings = SettingsSingleton.getInstance().getSettings();
-            SettingsForm.updateForm($('#innerGridForm')[0], settings);
+            SettingsForm.updateForm($('.modalFullframeContainer')[0], settings);
             // this.postProcessSettingsForm(SettingsSingleton.getInstance().getSettings());
+
         }
 
         // called when license button is clicked in settings
@@ -654,10 +684,12 @@
             modal.style.background = "transparent";
             document.querySelector(".modalFormContent").style.display = "block";
             document.querySelector(".innerGrid").style.display = "none";
+            document.querySelector(".modalFullframeContainer").style.display = "none";
             template.clearContent("#modalButtonsID");
             template.clearContent("#modalTitleID");
             template.clearContent("#modalBodyID");
             template.clearContent("#innerGridForm");
+            template.clearContent(".modalFullframeContainer");
             modal.style.background = "#dcf0ed";
             document.getElementById("modalFormContainerID").style.backgroundColor = "#dcf0ed";
             document.getElementById("modalFormContainerID").style.border = "none";
@@ -669,10 +701,14 @@
             btn.style.display = "block";
             $(".close").click(function () {
                 document.getElementById("modalTop").style.display = "none";
+                $("#licencesTable").attr("style", "display:none");
+                $("#licenseHeading").attr("style", "display:none");
+                $("#tableLicenseDiv").attr("style", "display:none");
+                $("#tableLicenseDiv").remove();
                 if ($("#licencesTable")) {
-                    document.getElementById("licencesTable").style.display = "none";
-                    document.getElementById("licenseHeading").style.display = "none";
-                    document.getElementById("tableLicenseDiv").style.display = "none";
+                    $("#licencesTable").attr("style", "display:none");
+                    $("#licenseHeading").attr("style", "display:none");
+                    $("#tableLicenseDiv").attr("style", "display:none");
                     for (let i = 0; i < y.length; i++) { y[i].style.pointerEvents = "auto"; }
                 }
             });
@@ -689,7 +725,7 @@
                 if (div5) {
                     div5.style.display = "none";
                 }
-                SettingsForm.updateForm($('#innerGridForm')[0], settings);
+                //SettingsForm.updateForm($('#innerGridForm')[0], settings);
                 btn.style.display = "none";
             };
             let lang = SettingsSingleton.getInstance().getSettings().general.language;
@@ -710,7 +746,6 @@
             }
             modal.appendChild(document.createElement(strings.License[lang]));
             var table = document.createElement('TABLE');
-            console.log(table);
             table.id = "licencesTable"
             table.border = '1px solid black';
             table.style.textAlign = "center";
@@ -809,6 +844,7 @@
 
             document.querySelector(".modalFormContent").style.display = "block";
             document.querySelector(".innerGrid").style.display = "none";
+            document.querySelector(".modalFullframeContainer").style.display = "none";
             template.clearContent("#modalButtonsID");
             template.clearContent("#modalTitleID");
             template.clearContent("#modalBodyID");
@@ -1167,6 +1203,7 @@
 
             document.querySelector(".modalFormContent").style.display = "none";
             document.querySelector(".outerGrid").style.display = "block";
+            document.querySelector(".modalFullframeContainer").style.display = "none";
             let imageGrid = document.getElementById('innerGrid');
             let imgFilterGrid = document.getElementById('filterGrid');
             template.clearContent(".innerGrid");
@@ -1288,6 +1325,7 @@
 
             document.querySelector(".modalFormContent").style.display = "none";
             document.querySelector(".outerGrid").style.display = "block";
+            document.querySelector(".modalFullframeContainer").style.display = "none";
 
             let imageGrid = document.getElementById('innerGrid');
             let imgFilterGrid = document.getElementById('filterGrid');
