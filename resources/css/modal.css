@@ -76,6 +76,7 @@ button:hover {
   bottom: 11vw;
   width: 100%;
   overflow-y: scroll; 
+  margin-left: 2vw;
 }
 
   /* The Modal Close Button (x) */
