@@ -242,10 +242,8 @@ class Visual {
 
             //this "paints" the bitmap of the pice into the bounding box
             for (var i in bitMap) {
-                console.log("i:" + i)
                 var row = bitMap[i];
                 for (var j in row) {
-                    console.log("j:" + j)
                     var set = bitMap[i][j];
                     let bmLeft = (j*width) + 'vw';
                     let bmTop = (i*width) + 'vw';
