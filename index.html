@@ -366,7 +366,7 @@
             let printButton = createPrintButton(qrCodeElement);
             parent.appendChild(printButton);
 
-            let downloadImageButton = createDownloadImageLink(qrCodeElement);
+            let downloadImageButton = createDownloadImageLink();
             parent.appendChild(downloadImageButton);
             parent.appendChild(document.createElement("br"));
 
@@ -380,17 +380,17 @@
             urlElement.target="_blank";
             // Security measure: https://developer.mozilla.org/en-US/docs/Web/HTML/Link_types/noopener
             urlElement.rel="noopener noreferrer";
-            addAdvancedShareOptions(divToHide, qrCodeElement, urlElement);
+            addAdvancedShareOptions(divToHide, qrCodeElement, urlElement, downloadImageButton);
 
             let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
             let seed = SettingsParser.parseSettingsToSeed(schema, settings);
             let exportSeed = seed.substr(1, seed.length - 1);
             exportSeed = 2 + exportSeed;
             console.log("baseConfigs.url", baseConfigs.url);
-            updateShareOptions(qrCodeElement, urlElement, exportSeed);
+            updateShareOptions(qrCodeElement, urlElement, downloadImageButton, exportSeed);
         }
 
-        function addAdvancedShareOptions(advOptionsRoot, qrCodeElement, urlElement) {
+        function addAdvancedShareOptions(advOptionsRoot, qrCodeElement, urlElement, downloadImageButton) {
             advOptionsRoot.appendChild(urlElement);
             advOptionsRoot.appendChild(document.createElement("br"));
 
@@ -411,7 +411,7 @@
                 let exportSeed = seed.substr(1, seed.length - 1);
                 exportSeed = (teacherModeCheckbox.value === "shareWithTeachers" ? 1 : 2) + exportSeed;
 
-                updateShareOptions(qrCodeElement, urlElement, exportSeed);
+                updateShareOptions(qrCodeElement, urlElement, downloadImageButton, exportSeed);
             };
 
             let includePiecesCheckbox = SettingsForm.createInputElement("checkbox", "includePiecesCheckBox");
@@ -431,7 +431,7 @@
                 let exportSeed = seed.substr(1, seed.length - 1);
                 exportSeed = (teacherModeCheckbox.value === "shareWithTeachers" ? 1 : 2) + exportSeed;
 
-                updateShareOptions(qrCodeElement, urlElement, exportSeed);
+                updateShareOptions(qrCodeElement, urlElement, downloadImageButton, exportSeed);
             };
 
             advOptionsRoot.appendChild(includePiecesCheckbox);
@@ -440,7 +440,7 @@
             advOptionsRoot.appendChild(document.createElement("br"));
         }
 
-        function updateShareOptions(qrCodeElement, urlElement, seed) {
+        function updateShareOptions(qrCodeElement, urlElement, downloadImageButton, seed) {
             let url = baseConfigs.url + "?" + baseConfigs.seedUrlParamName + "=" + seed;
             //let pupilUrl = baseConfigs.url + "?" + baseConfigs.seedUrlParamName + "=2" + seed.substr(1, seed.length);
 
@@ -448,17 +448,36 @@
             urlElement.href = url;
 
             generateQrCode(qrCodeElement, url);
+
+            downloadImageButton.onclick = () => {
+                let dt = qrCodeElement.firstElementChild.toDataURL('image/png');
+                download(dt);
+            };
         }
 
-        function createDownloadImageLink(qrCodeElement) {
-            let downloadImageButton = document.createElement("a");
-            downloadImageButton.innerHTML = "Download image";
-            downloadImageButton.addEventListener("click", function () {
-                let canvas = qrCodeElement.firstElementChild;
-                handleDownloadImage(downloadImageButton, canvas);
-            });
-            downloadImageButton.download = "Canvas.png";
+        function createDownloadImageLink() {
+            let downloadImageButton = document.createElement("input");
+            downloadImageButton.type = "button";
+            downloadImageButton.value = "Download image";
             return downloadImageButton;
+        }
+
+        function download(file) {
+
+            //creating an invisible element
+            let element = document.createElement('a');
+            element.setAttribute('href', file);
+            element.setAttribute("download", "qr_code.png");
+
+            // Above code is equivalent to
+            // <a href="path of file" download="file name">
+
+            document.body.appendChild(element);
+
+            //onClick property
+            element.click();
+
+            document.body.removeChild(element);
         }
 
         function createPrintButton(qrCodeElement) {
