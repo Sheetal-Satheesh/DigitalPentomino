@@ -337,6 +337,7 @@
   border: 1px solid black;
   border-radius: 1vw;
   font-size: 1.7vw;
+  zoom: 1 !important;
 }
 
 #licenseButton {
