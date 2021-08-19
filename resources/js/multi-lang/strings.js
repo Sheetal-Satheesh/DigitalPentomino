@@ -69,7 +69,9 @@ const strings = {
              solvedScreenBoy: ["Solved screen boy image", "Gelöster Bildschirm Junge Bild"],
              solvedScreenGift: ["Solved Screen Gift image", "Gelöst Bildschirm Geschenkbild"],
              backgroundMusic: ["Background Music", "Hintergrundmusik"],
-             functionsMusic: ["Functions Music","Funktionen Musik"]
+             functionsMusic: ["Functions Music","Funktionen Musik"],
+             html2canvas:["html2canvas","html2canvas"],
+             loadash:["loadash","loadash"]
         },
         autohinting:{
             title: ["Auto hinting", "Automatisches Hinting"],
