@@ -309,12 +309,13 @@
             parent.appendChild(heading);
 
             // Add scan / share buttons
-            let scanButton = SettingsForm.createButton("Scan");
-            scanButton.addEventListener("click", (event) => openScanQrCode());
-            parent.appendChild(scanButton);
-            let shareButton = SettingsForm.createButton("Share");
-            shareButton.addEventListener("click", (event) => handleShareSettings());
-            parent.appendChild(shareButton);
+            let scanImgElement = SettingsForm.createImg("shareImg", "resources/images/icons/scan_qr_code.png");
+            scanImgElement.onclick = () => openScanQrCode();
+            let shareImgElement = SettingsForm.createImg("shareImg", "resources/images/icons/share_qr_code.png");
+            shareImgElement.onclick = () => handleShareSettings();
+
+            parent.appendChild(scanImgElement);
+            parent.appendChild(shareImgElement);
         }
 
         function handleShareSettings() {
