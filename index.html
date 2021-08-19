@@ -54,6 +54,7 @@
     <script src="resources/js/hint-ai.js"></script>
     <script src="resources/js/help/hinting/command-sequence-list.js"></script>
     <script src="resources/js/load_screen.js"></script>
+    <script src="resources/js/split-board.js"></script>
 </head>
 <!-- Preloader section -->
 <div class="preloader d-flex">
@@ -157,6 +158,8 @@
                 </button>
                 <button type="button" id='reset' class="cActionBtn" onclick="resetGame()">
                     <img src="resources/images/icons/tidy_up_v2.png"></button>
+                <button type="button" id='splitBoard' class="cActionBtn" onclick="splitTheBoard()">
+                    <img id="splitBoardimg" src="resources/images/icons/dp_512.png"></button>                
             </div>
 
             <div id="labelNumberSolutionsContainer">
@@ -195,13 +198,13 @@
                     <span class="icon-flip2" id="OpflipV"></span>
                 </div>
             </div>
-        </div>
-        <!---Button Manipulation Ends-->
+        </div> <!---Button Manipulation Ends-->
     </div>
 
     <script type="text/javascript">
         let pd;
         let template;
+        let isPlaying = false;
 
         const SnapshotType = {
             "FilterOnly": 0,
@@ -222,7 +225,136 @@
                 settings,
                 null);
             processChangesToSettings(initialChanges, settings);
+            inactivityTime();
         }
+
+        function inactivityTime() {
+            let time;
+            let text;
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+            let speechBubbleText = document.getElementById('speechBubbleText');
+            // initializing the resetTime function to the events in the DOM
+            window.onload = resetTime;
+            window.onclick = resetTime;
+            window.onkeypress = resetTime;
+            window.ontouchstart = resetTime;
+            window.onmousemove = resetTime;
+            window.onmousedown = resetTime;
+            window.ontouchstart = resetTime;
+            window.addEventListener('scroll', resetTime, true);
+            //alert user if not active
+            function alertUser() {
+                let lang = SettingsSingleton.getInstance().getSettings().general.language;
+                // do tasks
+                //this loop initiates actions if user inactive, this can be configurable from the settings
+                //Series of actions are : bubble speech message, and onmouse move the application says welcome back
+                //then simultaneously bird animation starts and then ends
+                if(SettingsSingleton.getInstance().getSettings().general.initiateActionsIfUserNotActive){
+                    //speech bubble message : "hello There"
+                    setTimeout(function(){
+                        speechBubbleText.textContent=strings.speechbubbleTexts.helloThere[lang];
+                    }, 1000);
+                    //detect user if active again => onmouse move it says welcome back and the bird animaltion starts
+                    document.onmousemove = function(){
+                        //if(speech bubble message : "hello There ? ") => display "welcome back"
+                        if(speechBubbleText.textContent === strings.speechbubbleTexts.helloThere[lang]){
+                            setTimeout(function(){speechBubbleText.textContent = strings.speechbubbleTexts.welcomeBack[lang]; }, 500);
+                        }
+                        //start bird animation
+                        setTimeout(function(){
+                            document.getElementById('birdContainer').classList.add("anim");
+                        }, 1000);
+                    };
+                    //at the end remove the bird animation
+                    setTimeout(function(){
+                        document.getElementById('birdContainer').classList.remove("anim");
+                    }, 10000);
+                }
+                //if autohinting enabled continue with autoHint() function
+                if(SettingsSingleton.getInstance().getSettings().general.enableAutoHinting){
+                    //wakeup user with bird sound
+                    if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
+                        let audio = new Audio('resources/audio/pingPong.mp3');
+                        audio.play();
+                    }
+                    autoHint();
+                }
+                //else if autohinting disabled => display "Continue with the game"
+                else{
+                    setTimeout(function(){
+                        speechBubbleText.textContent = strings.speechbubbleTexts.pleaseContinue[lang];
+                    }, 5000);
+                }
+            }
+            //end of alert user
+            //reset timer for every event in the DOM
+            // Initialise the setTimeout and then
+            //clear timeout to check user activity on the application
+            function resetTime() {
+                clearTimeout(time);
+                time = setTimeout(alertUser, 1000 * userInactiveWaitTime()); // 10 seconds
+            }
+        };
+
+        //end of inactivityTime() function
+
+
+
+    //Function gives time delay to wait for user inactivityTime
+    function userInactiveWaitTime(){
+        let userInactiveWaitTime = SettingsSingleton.getInstance().getSettings().autohinting.timeForNoAction;
+        let time = 0;
+        switch(userInactiveWaitTime) {
+            case "Short":
+                // code block
+                time = 10;
+                break;
+            case "Medium":
+                // code block
+                time = 90;
+                break;
+            case "Long":
+                // code block
+                time = 150;
+                break;
+            default:
+                // code block
+                console.error("time unknown!");
+        }
+        return time;
+    }
+
+//runs if autohint is enabled (this function specific for time period based)
+//Time period based hinting is only enabled in case the user is far away from the final solution
+        function autoHint(){
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+            let speechBubbleText = document.getElementById('speechBubbleText');
+            let hint = pd.gameController.getHint();
+            //let x = window.matchMedia("(max-width: 860px)");
+            //check if user is towards the solution or not
+            //in case if the user is towards the final solution  , the message "Please continue with the game" appears
+            //this option can be configurable from the settings
+            if(!(SettingsSingleton.getInstance().getSettings().autohinting.enableTimePeriodBasedAutoHintInAnyCase)){
+                if((pd.visual.numberofPlacedPentominos() > (pd.visual.pieces.length/2))){
+                    setTimeout(function(){
+                        speechBubbleText.textContent = strings.speechbubbleTexts.pleaseContinue[lang];
+                    }, 5000);
+                    pd.visual.numberofPlacedPentominos();
+                    return;
+                }
+            }
+            //check if time period based autohint is set or not
+            //in case if the time period is not selected  , the message "Please continue with the game" appears
+            if(!(SettingsSingleton.getInstance().getSettings().autohinting.autoHintVariants === "Time period")){
+                setTimeout(function(){
+                    speechBubbleText.textContent = strings.speechbubbleTexts.pleaseContinue[lang];
+                }, 2500);
+                return;
+            }
+            pd.visual.configureAutoHints();
+        }
+
+
 
         function buttonManipulation() {
             let btn = document.querySelector('.mainWrapper');
@@ -294,6 +426,7 @@
 
             document.querySelector(".modalFormContent").style.display = "none";
             document.querySelector(".innerGrid").style.display = "block";
+            document.querySelector(".modalFullframeContainer").style.display = "none";
             template.clearContent("#modalButtonsID");
             template.clearContent("#modalTitleID");
             template.clearContent("#modalBodyID");
@@ -450,6 +583,7 @@
                 dltBtn.addEventListener("click", () => {
                     pd.reset();
                 });
+                $("#bubbleContainer").css("display", "block");
             }
         }
 
@@ -470,6 +604,24 @@
                 // TODO - handle, e.g. shake hint button
                 console.log("Game is already solved. Cannot display hint");
             }
+        }
+        function splitTheBoard() {
+            splitButton = document.getElementById("splitBoardimg")            
+            if(!isPlaying) {
+                splitButton.classList.add("splitbuttonimg");  
+                if (!pd.gameController.game()._board.isSolved()) {
+                    pd.visual.splitTheBoard();                                            
+                } else {
+                    console.log("Game is already solved");
+                    pd.visual.unblockPartition();
+                }
+                isPlaying = true;
+            } else {
+                splitButton.classList.remove("splitbuttonimg");
+                pd.visual.undoSplit();
+                isPlaying = false;
+            }
+            
         }
 
         function rotateClkWise() {
@@ -1416,7 +1568,6 @@
         function hideBubbleContainer() {
             document.getElementById('bubbleContainer').style.display = "none";
         }
-
 
     </script>
     <script src="./registerSW.js"></script>

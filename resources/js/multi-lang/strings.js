@@ -12,7 +12,24 @@ const strings = {
         Excellent: ["Excellent ! Now continue with the next task on your assignment", "Ausgezeichnet! Fahren Sie jetzt mit der nächsten Aufgabe Ihres Auftrags fort"]
     },
     speechbubbleTexts: {
-        Solved: ["Ya hoo !! You solved it !", "Juhu!! Du hast es gelöst!"]
+        Solved: ["Ya hoo !! You solved it !", "Juhu!! Du hast es gelöst!"],
+        pleaseContinue: ["Please continue with the game", "Bitte fahren Sie mit dem Spiel fort"],
+        pleaseStop: ["Wait for the hint", "Auf den Hinweis warten"],
+        helloThere: ["Hello are you there ?", "Hallo, sind Sie noch dran?"],
+        welcomeBack:["Welcome back", "Willkommen zurück"],
+        iHaveAHint:["I have a hint", "Ich habe einen Tipp"],
+        clickHintbtn:["Click on the hint button", "Klicken Sie auf die Schaltfläche Hinweis"],
+        removePentomino:["Remove", "Entfernen"],
+        move:["Move", "Verschieben"],
+        MoveToPosition:["to position","zu positionieren"],
+        atPosition:["at position","an Ort und Stelle"],
+        place:["Place", "Ort"],
+        rotate:["Rotate", "Drehen Sie"],
+        clockwise:["clockwise","im Uhrzeigersinn"],
+        antiClockwise:["anti-clockwise", "linksdrehend"],
+        mirror:["Mirror","Spiegel"],
+        vertical:["vertical","vertikal"],
+        horizontal:["horizontal","horizontal"]
     },
     numberOfPossibleSolutions: ["Number of solutions", "Anzahl Lösungen"],
     License: ["LICENSES", "LIZENZEN"],
@@ -53,6 +70,80 @@ const strings = {
              solvedScreenGift: ["Solved Screen Gift image", "Gelöst Bildschirm Geschenkbild"],
              backgroundMusic: ["Background Music", "Hintergrundmusik"],
              functionsMusic: ["Functions Music","Funktionen Musik"]
+        },
+        autohinting:{
+            title: ["Auto hinting", "Automatisches Hinting"],
+            enableAutoHinting:{
+                title: ["Enable auto hinting", "Auto-Hinweis aktivieren"],
+                description: [["Enables auto-hinting", "Aktiviert Auto-Hinting"]]
+            },
+            initiateActionsIfUserNotActive:{
+                title: ["Initiate actions if user not active", "Aktionen einleiten, wenn der Benutzer nicht aktiv ist"],
+                description: [["Initiates actions only if user is not active on the application", "Löst nur Aktionen aus, wenn der Benutzer nicht in der Anwendung aktiv ist"]]
+            },
+
+            autoHintVariants:{
+                title: ["Variants of auto-hinting", "Varianten von Auto-Hinting"],
+                enumTitles: [["Time period", "Wrong actions"], ["Zeitspanne", "Falsche Maßnahmen"]],
+                description: [
+                "Provides automatic hints :"  +
+                    "<ul>" +
+                        "<li><b>Time period:</b> Auto-hinting based on the in-active player time, in this case if the player is near to the solution hints are not provided. In case the user is far from the solution, hints are provided.</li>" +
+                        "<li><b>Wrong moves:</b> Auto-hinting based on the number of wrong moves, here the user can only make the number of wrong moves configured here in the settings, for every number of wrong moves, hint is provided.</li>" +
+                    "</ul>",
+                    "Liefert automatische Hinweise :" +
+                        "<ul>" +
+                        "<li><b>Zeitspanne:</b> Auto-Hinting basierend auf der Zeit, in der der Spieler inaktiv ist. In diesem Fall werden keine Hinweise gegeben, wenn der Spieler sich in der Nähe der Lösung befindet. Befindet sich der Benutzer weit von der Lösung entfernt, werden Hinweise gegeben.</li>" +
+                        "<li><b>Falsche Züge:</b> Auto-Hinweis basierend auf der Anzahl der falschen Züge, hier kann der Benutzer nur die Anzahl der falschen Züge machen, die hier in den Einstellungen konfiguriert sind, für jede Anzahl von falschen Zügen wird ein Hinweis gegeben.</li>" +
+                        "</ul>"]
+            },
+            enableTimePeriodBasedAutoHintInAnyCase:{
+              title: [["Enable time period based autohinting in any case"],["Aktivieren Sie in jedem Fall die zeitraumbasierte automatische Anzeige"]],
+              description: ["Enabling activates time period based hinting in any case. But disabling this option makes the time period based auto hinting inactive in case the user is towards the solution.",
+              "Wenn Sie diese Option aktivieren, wird der zeitraumbasierte Hinweis in jedem Fall aktiviert. Durch die Deaktivierung dieser Option wird der zeitraumbasierte automatische Hinweis jedoch inaktiv, wenn der Benutzer auf die Lösung zusteuert."]
+            },
+
+            numberOfWrongMoves: {
+                title: ["Number of wrong actions", "Anzahl der falschen Aktionen"],
+                  description: ["After how any number of wrong moves should the hint occur automatically",
+                  "Nach einer beliebigen Anzahl von falschen Zügen sollte der Hinweis automatisch erfolgen"]
+            },
+
+            timeForNoAction: {
+                title: ["Time to wait for no action", "Zeit zum Warten, nicht zum Handeln"],
+                  enumTitles: [["Short", "Medium", "Long"], ["Kurz", "Mittel", "Lang"]],
+                  description: [
+                  "Provides Time delay for no action :"  +
+                      "<ul>" +
+                          "<li><b>Short:</b> Short time : 30 seconds</li>" +
+                          "<li><b>Medium:</b> Medium time : 1 minute 30 seconds</li>" +
+                            "<li><b>Long:</b> Long time : 2 minute 30 seconds</li>" +
+                      "</ul>",
+                      "Bietet Zeitverzögerung für keine Aktion:" +
+                      "<ul>" +
+                          "<li><b>Kurz:</b> Kurze Zeit : 30 Sekunden</li>" +
+                          "<li><b>Mittel:</b> Mittlere Zeit : 1 Minute 30 Sekunden</li>" +
+                            "<li><b>Lang:</b> Lange Zeit: 2 Minuten 30 Sekunden</li>" +
+                      "</ul>"]
+            },
+
+            typeOfHints:{
+                title: ["Type of hints for auto-hinting", "Art der Hinweise für das Auto-Hinting"],
+                enumTitles: [["Visual", "Textual", "Both"], ["Visuell", "Textuell", "Beides"]],
+                description: [
+                "Provides automatic hints :"  +
+                    "<ul>" +
+                        "<li><b>Visual:</b> Gives only visual hints.</li>" +
+                        "<li><b>Textual:</b> Gives only textual hints.</li>" +
+                        "<li><b>Both:</b> Gives both visual and textual hints</li>" +
+                    "</ul>",
+                    "Liefert automatische Hinweise :" +
+                        "<ul>" +
+                        "<li><b>Visuell:</b> Gibt nur visuelle Hinweise.</li>" +
+                        "<li><b>Textuell:</b> Gibt nur textuelle Hinweise.</li>" +
+                        "<li><b>Beide:</b> Gibt sowohl visuelle als auch textliche Hinweise</li>" +
+                        "</ul>"]
+            }
         },
         hinting: {
             title: ["Hints (Experimental)", "Hinweise (Experimentell)"],
@@ -190,6 +281,13 @@ const strings = {
                 title: ["Choose a theme", "Wähle ein Design"],
                 enumTitles: [["Default", "DayTuca", "NightTuca", "HighContrast"], ["Standard", "TucaHell", "TucaDunkel", "Kontrast"]],
                 description: ["General theme of the application.", "Grundlegendes Design der Applikation"]
+            }
+        },
+        splitPartition: {
+            title: ["Split Board into Thirds", "TO DO"],
+            splitStrategy: {
+                title: ["Split Board into Partion By", "TO DO"],
+                enumTitles: [["Color","Left-to-Right"], ["TO DO", "TO DO"]],                
             }
         },
         errors: {

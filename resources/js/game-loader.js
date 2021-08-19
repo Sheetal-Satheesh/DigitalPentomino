@@ -13,6 +13,7 @@ class GameLoader {
         this._game = null;
         this._commandManager = null;
         this._hintAI = null;
+        this._splitBoard = null;
         /**
          *  
          * [{
@@ -45,6 +46,10 @@ class GameLoader {
 
     hintAI() {
         return this._hintAI;
+    }
+
+    splitBoard() {
+        return this._splitBoard;
     }
 
     getGame() {
@@ -175,6 +180,8 @@ class GameLoader {
         if (prevGameName == null || prevGameName != this._game.getName()) {
             this._hintAI = new HintAI(this._game, true);
         }
+
+        this._splitBoard = new SplitBoard(this._game);                
         this.saveGame();
     }
 
@@ -210,7 +217,7 @@ class GameLoader {
         let gameClone = _.cloneDeep(this._game);
         let cmdManagerClone = _.cloneDeep(this._commandManager);
         let hintAIClone = _.cloneDeep(this._hintAI);
-
+        
         if (!this._gameList.hasOwnProperty(gameId)) {
             this._gameList[gameId] = {
                 "game": gameClone,
