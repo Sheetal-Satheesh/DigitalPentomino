@@ -353,12 +353,14 @@
 
             let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
             let seed = SettingsParser.parseSettingsToSeed(schema, settings);
+            let exportSeed = seed.substr(1, seed.length - 1);
+            exportSeed = 2 + exportSeed;
             console.log("baseConfigs.url", baseConfigs.url);
 
             let qrCodeElement = document.createElement("div");
             qrCodeElement.style.margin = "auto";
 
-            updateShareOptions(qrCodeElement, seed);
+            updateShareOptions(qrCodeElement, exportSeed);
             parent.appendChild(qrCodeElement);
 
             parent.appendChild(document.createElement("br"));
@@ -392,6 +394,21 @@
                 strings.settings.boardCustomization.includePiecePos.title[lang]);
             advOptionsRoot.appendChild(includePiecesLabel);
 
+            let teacherModeCheckbox = SettingsForm.createSelectElement(
+                "teacherModeCheckbox",
+                ["shareWithClass", "shareWithTeachers"],
+                ["Share with class (Settings disabled)", "Share with teachers (Settings enabled)"]);
+
+            teacherModeCheckbox.onchange = () => {
+                let settings = SettingsSingleton.getInstance().getSettings();
+                let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), settings);
+                insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
+                let exportSeed = seed.substr(1, seed.length - 1);
+                exportSeed = (teacherModeCheckbox.value === "shareWithTeachers" ? 1 : 2) + exportSeed;
+
+                updateShareOptions(qrCodeElement, exportSeed);
+            };
+
             let includePiecesCheckbox = SettingsForm.createInputElement("checkbox", "includePiecesCheckBox");
             includePiecesCheckbox.onchange = () => {
                 let checkboxValue = includePiecesCheckbox.checked;
@@ -406,35 +423,13 @@
 
                 let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), settings);
                 insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
+                let exportSeed = seed.substr(1, seed.length - 1);
+                exportSeed = (teacherModeCheckbox.value === "shareWithTeachers" ? 1 : 2) + exportSeed;
 
-                updateShareOptions(qrCodeElement, seed);
+                updateShareOptions(qrCodeElement, exportSeed);
             };
+
             advOptionsRoot.appendChild(includePiecesCheckbox);
-
-            let teacherModeLabel = SettingsForm.createLabel("Share with pupils (Settings disabled)");
-            advOptionsRoot.appendChild(teacherModeLabel);
-
-            let teacherModeCheckbox = SettingsForm.createSelectElement(
-                "teacherModeCheckbox",
-                ["shareWithClass", "shareWithTeachers"],
-                ["Share with class (Settings disabled)", "Share with teachers (Settings enabled)"]);
-
-            teacherModeCheckbox.onchange = () => {
-                /*let checkboxValue = includePiecesCheckbox.checked;
-                let settings = SettingsSingleton.getInstance().getSettings();
-                settings.boardCustomization.includePiecePos = checkboxValue;
-
-                let game = new FrontController().controller.game();
-                let customSettingsEntry = CustomSettingsEntrySingleton.getInstance()
-                    .get("boardCustomization", "initialPiecePos");
-                let piecePosSeedEntry = customSettingsEntry.parseFromGameToSeed(game);
-                settings.boardCustomization.initialPiecePos = piecePosSeedEntry;
-
-                let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), settings);
-                insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
-
-                updateShareOptions(qrCodeElement, seed);*/
-            };
             advOptionsRoot.appendChild(teacherModeCheckbox);
 
             advOptionsRoot.appendChild(document.createElement("br"));
