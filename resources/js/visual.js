@@ -1057,8 +1057,11 @@ class Visual {
            //Speech bubble asks show the hint or ignore
            setTimeout(function(){
                    speechBubbleText.innerHTML = '<button id="showBothHint" name="showBothHint" onclick="pd.visual.bothAutoHint()"></button>' + '<button id="hideBothHint" name="hideBothHint" onclick="pd.visual.ignore()"></button>';
+                   if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+                       document.getElementById("labelNumberSolutions").innerHTML = '<button id="showBothHint" name="showBothHint" onclick="pd.visual.bothAutoHint()"></button>' + '<button id="hideBothHint" name="hideBothHint" onclick="pd.visual.ignore()"></button>';
+                   }
                    document.querySelector("#showBothHint").innerHTML = strings.speechbubbleTexts.showHint[lang];
-                    document.querySelector("#hideBothHint").innerHTML = strings.speechbubbleTexts.ignore[lang];
+                   document.querySelector("#hideBothHint").innerHTML = strings.speechbubbleTexts.ignore[lang];
               }, 5000);
       }
   }
