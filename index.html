@@ -351,16 +351,8 @@
                 btn.style.display = "none";
             };
 
-            let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
-            let seed = SettingsParser.parseSettingsToSeed(schema, settings);
-            let exportSeed = seed.substr(1, seed.length - 1);
-            exportSeed = 2 + exportSeed;
-            console.log("baseConfigs.url", baseConfigs.url);
-
             let qrCodeElement = document.createElement("div");
             qrCodeElement.style.margin = "auto";
-
-            updateShareOptions(qrCodeElement, exportSeed);
             parent.appendChild(qrCodeElement);
 
             parent.appendChild(document.createElement("br"));
@@ -375,8 +367,6 @@
 
             let downloadImageButton = createDownloadImageLink(qrCodeElement);
             parent.appendChild(downloadImageButton);
-
-            parent.appendChild(document.createElement("br"));
             parent.appendChild(document.createElement("br"));
 
             let collapsibleButton = SettingsForm.createCollapsibleButton("Show advanced share options", "Hide advanced share options");
@@ -385,10 +375,24 @@
 
             parent.appendChild(collapsibleButton);
             parent.appendChild(divToHide);
-            addAdvancedShareOptions(divToHide, qrCodeElement);
+            let urlElement = document.createElement("a");
+            urlElement.target="_blank";
+            // Security measure: https://developer.mozilla.org/en-US/docs/Web/HTML/Link_types/noopener
+            urlElement.rel="noopener noreferrer";
+            addAdvancedShareOptions(divToHide, qrCodeElement, urlElement);
+
+            let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+            let seed = SettingsParser.parseSettingsToSeed(schema, settings);
+            let exportSeed = seed.substr(1, seed.length - 1);
+            exportSeed = 2 + exportSeed;
+            console.log("baseConfigs.url", baseConfigs.url);
+            updateShareOptions(qrCodeElement, urlElement, exportSeed);
         }
 
-        function addAdvancedShareOptions(advOptionsRoot, qrCodeElement) {
+        function addAdvancedShareOptions(advOptionsRoot, qrCodeElement, urlElement) {
+            advOptionsRoot.appendChild(urlElement);
+            advOptionsRoot.appendChild(document.createElement("br"));
+
             let lang = SettingsSingleton.getInstance().getSettings().general.language;
             let includePiecesLabel = SettingsForm.createLabel(
                 strings.settings.boardCustomization.includePiecePos.title[lang]);
@@ -406,7 +410,7 @@
                 let exportSeed = seed.substr(1, seed.length - 1);
                 exportSeed = (teacherModeCheckbox.value === "shareWithTeachers" ? 1 : 2) + exportSeed;
 
-                updateShareOptions(qrCodeElement, exportSeed);
+                updateShareOptions(qrCodeElement, urlElement, exportSeed);
             };
 
             let includePiecesCheckbox = SettingsForm.createInputElement("checkbox", "includePiecesCheckBox");
@@ -426,7 +430,7 @@
                 let exportSeed = seed.substr(1, seed.length - 1);
                 exportSeed = (teacherModeCheckbox.value === "shareWithTeachers" ? 1 : 2) + exportSeed;
 
-                updateShareOptions(qrCodeElement, exportSeed);
+                updateShareOptions(qrCodeElement, urlElement, exportSeed);
             };
 
             advOptionsRoot.appendChild(includePiecesCheckbox);
@@ -435,9 +439,12 @@
             advOptionsRoot.appendChild(document.createElement("br"));
         }
 
-        function updateShareOptions(qrCodeElement, seed) {
+        function updateShareOptions(qrCodeElement, urlElement, seed) {
             let url = baseConfigs.url + "?" + baseConfigs.seedUrlParamName + "=" + seed;
             //let pupilUrl = baseConfigs.url + "?" + baseConfigs.seedUrlParamName + "=2" + seed.substr(1, seed.length);
+
+            urlElement.innerText = url;
+            urlElement.href = url;
 
             generateQrCode(qrCodeElement, url);
         }
