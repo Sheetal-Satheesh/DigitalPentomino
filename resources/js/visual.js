@@ -882,10 +882,14 @@ class Visual {
             let audio = new Audio('resources/audio/hinting.mp3');
             audio.play();
         }
-        if(!(SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Visual" )){
-            pd.visual.hintText(hint);
+        if((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Visual" )){
+            this.indicateHint(hint, commandNumber);
        }
-       if(!(SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Textual" )){
+       if((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Textual" )){
+          pd.visual.hintText(hint);
+       }
+       if((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Both" )){
+          pd.visual.hintText(hint);
           this.indicateHint(hint, commandNumber);
        }
         setTimeout(function () {
