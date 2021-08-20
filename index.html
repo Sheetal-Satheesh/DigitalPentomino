@@ -670,7 +670,9 @@
                 this.disableSnapshotButton();
                 this.hideBubbleContainer();
             }
-            $("#bubbleContainer").css("display", "block");
+           if ((SettingsSingleton.getInstance().getSettings().general.enableBird)){
+              $("#bubbleContainer").css("display", "block");
+           }
         }
 
         // From https://stackoverflow.com/questions/10970078/modifying-a-query-string-without-reloading-the-page (2nd answer)
