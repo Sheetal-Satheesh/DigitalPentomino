@@ -29,6 +29,7 @@ let piecesSelectedForPartition = [];
 let styleBlocks;
 let splitCounter = -1;
 let randomCell;
+let count = 0;
 class Visual {
 
     constructor(pd, type = "reload") {
@@ -131,6 +132,10 @@ class Visual {
             }
         }
     }
+    numberofPlacedPentominos(){
+     let NumberOfPentominoes = this.gameController.game()._board._pentominoes.length;
+     return NumberOfPentominoes;
+   }
 
     removeFromTray(pentomino) {
         if (pentomino.inTray == 0) {
@@ -184,15 +189,18 @@ class Visual {
                         }
                     }
 
+                    let fieldTop = (row * width) + 10 + 'vw';
+                    let fieldLeft = (col * width) + 'vw';
+
                     if (blockedCell && gameCellPattern == 'blockedCell')
-                        out += '<div class="gamearea ' + ((isBoard) ? 'boardarea blockedcell' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';
+                        out += '<div class="gamearea ' + ((isBoard) ? 'boardarea blockedcell' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="left:' + fieldLeft + ';top:' + fieldTop + ';width:' + width + 'vw;height:' + width + 'vw;"></div>';
                     else if (blockedCell && gameCellPattern == 'gamearea')
-                        out += '<div class="gamearea" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';
+                        out += '<div class="gamearea" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="left:' + fieldLeft + ';top:' + fieldTop + ';width:' + width + 'vw;height:' + width + 'vw;"></div>';
                     else
-                        out += '<div class="gamearea ' + ((isBoard) ? 'boardarea' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';
+                        out += '<div class="gamearea ' + ((isBoard) ? 'boardarea' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="left:' + fieldLeft + ';top:' + fieldTop + ';width:' + width + 'vw;height:' + width + 'vw;"></div>';
                 }
                 else
-                    out += '<div class="gamearea ' + ((isBoard) ? 'boardarea' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="width:' + width + 'vw;height:' + width + 'vw;"></div>';   //'+col+','+row+'
+                    out += '<div class="gamearea ' + ((isBoard) ? 'boardarea' : '') + '" id="field_' + row + ',' + col + '" title="' + row + ',' + col + '" style="left:' + fieldLeft + ';top:' + fieldTop + ';width:' + width + 'vw;height:' + width + 'vw;"></div>';   //'+col+','+row+'
             }
         }
 
@@ -237,7 +245,9 @@ class Visual {
                 var row = bitMap[i];
                 for (var j in row) {
                     var set = bitMap[i][j];
-                    out += '<div style="display:block;float:left;width:' + width + 'vw;height:' + width + 'vw;' + ((set) ? 'background:' + piece.color : '') + '" class="' + ((set) ? 'bmPoint' : 'bmAround') + '"></div>';
+                    let bmLeft = (j*width) + 'vw';
+                    let bmTop = (i*width) + 'vw';
+                    out += '<div style="display:block;position:fixed;top:' +  bmTop + ';left:' + bmLeft + ';width:' + width + 'vw;height:' + width + 'vw;' + ((set) ? 'background:' + piece.color : '') + '" class="' + ((set) ? 'bmPoint' : 'bmAround') + '"></div>';
                 }
             }
             out += '</div>';
@@ -881,6 +891,14 @@ class Visual {
         //Fill speech bubble text
 
         speechBubbleText.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
+        if(SettingsSingleton.getInstance().getSettings().general.enableAutoHinting){
+            if((this.gameController.getHint().getPossibleSolutions().length) === 0){
+                count+=1;
+                if(count > SettingsSingleton.getInstance().getSettings().autohinting.numberOfWrongMoves ){
+                    this.autoHintWrongMoves();
+                }
+            }
+        }
     }
 
     callHintAI() {
@@ -907,6 +925,155 @@ class Visual {
             hintButton.disabled = false;
         }, 1000);
     }
+
+    hintText(hint){
+     hint = pd.gameController.getHint();
+     let lang = SettingsSingleton.getInstance().getSettings().general.language;
+     let commandNumber = 0;
+     let hintCommand = hint.getCommands()[commandNumber];
+     let timeoutFrame = 1000;
+     let r;
+     let x = window.matchMedia("(max-width: 860px)");
+     //possible command names (place, remove, moveToPosition, rotateClkWise, rotateAntiClkWise, mirrorH, mirrorV)
+     let hintSkill = hint._skill;
+     let hintName = hintCommand._name;
+     r = document.getElementById("speechBubbleText");
+         switch (hintName) {
+           case "Remove":
+               this.text = strings.speechbubbleTexts.removePentomino[lang]  + " pentomino " + hintCommand._pentomino.name;
+               document.getElementById("speechBubbleText").textContent = this.text;
+               if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+                   document.getElementById("labelNumberSolutions").innerText = this.text;
+               }
+               break;
+           case "MoveToPosition":
+               this.text = strings.speechbubbleTexts.move[lang] + " pentomino " + hintCommand._pentomino.name + strings.speechbubbleTexts.MoveToPosition[lang] + " " + "[" + hintCommand._row + "," + hintCommand._col + "]";
+               document.getElementById("speechBubbleText").textContent = this.text;
+               if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+                   document.getElementById("labelNumberSolutions").innerText = this.text;
+               }
+               break;
+           case "Place":
+               this.text = strings.speechbubbleTexts.place[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.atPosition[lang]  + " " +  "[" + hintCommand._nextPosition[0] + "," + hintCommand._nextPosition[1] + "]";
+               document.getElementById("speechBubbleText").textContent = this.text;
+               if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+                   document.getElementById("labelNumberSolutions").innerText = this.text;
+               }
+               break;
+           case "RotateClkWise":
+               this.text = strings.speechbubbleTexts.rotate[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.clockwise[lang];
+               document.getElementById("speechBubbleText").textContent = this.text;
+               if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+                   document.getElementById("labelNumberSolutions").innerText = this.text;
+               }
+               break;
+           case "RotateAntiClkWise":
+               this.text = strings.speechbubbleTexts.rotate[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.antiClockwise[lang];
+               document.getElementById("speechBubbleText").textContent = this.text;
+               if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+                   document.getElementById("labelNumberSolutions").innerText = this.text;
+               }
+               break;
+           case "MirrorH":
+               this.text = strings.speechbubbleTexts.mirror[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.horizontal[lang];
+               document.getElementById("speechBubbleText").textContent = this.text;
+               if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+                   document.getElementById("labelNumberSolutions").innerText = this.text;
+               }
+               break;
+           case "MirrorV":
+               this.text = strings.speechbubbleTexts.mirror[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.vertical[lang];
+               document.getElementById("speechBubbleText").textContent = this.text;
+               if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+                   document.getElementById("labelNumberSolutions").innerText = this.text;
+               }
+               break;
+           default:
+               this.text = "Error - unknown command with name '" + hintName + "'";
+               throw new Error("Error: unknown command with name " + hintName);
+       }
+   }
+
+
+   autoHintWrongMoves(){
+        let lang = SettingsSingleton.getInstance().getSettings().general.language;
+        if(!(SettingsSingleton.getInstance().getSettings().autohinting.autoHintVariants === "Wrong moves")){
+            return;
+        }
+
+          document.getElementById('birdContainer').classList.add("anim");
+
+        document.getElementById("speechBubbleText").textContent = strings.speechbubbleTexts.iHaveAHint[lang] ;
+        //Speech bubble asks show the hint or ignore
+       pd.visual.configureAutoHints();
+        setTimeout(function(){
+          document.getElementById('birdContainer').classList.remove("anim");
+          count = 0;
+        }, 20000);
+  }
+
+   showTextualHint(){
+      let hint = pd.gameController.getHint();
+      this.hintText(hint);
+    }
+
+   ignore(){
+      let lang = SettingsSingleton.getInstance().getSettings().general.language;
+      document.getElementById('speechBubbleText').textContent = strings.speechbubbleTexts.pleaseContinue[lang];
+  }
+
+   bothAutoHint(){
+      let hint = pd.gameController.getHint();
+      this.callHintAI();
+      this.hintText(hint);
+  }
+
+  visualAutoHint() {
+      this.callHintAI();
+  }
+
+
+  configureAutoHints(){
+    let lang = SettingsSingleton.getInstance().getSettings().general.language;
+    let speechBubbleText = document.getElementById('speechBubbleText');
+    let hint = pd.gameController.getHint();
+    //checks if visual hints are enabled.
+    //If enabled => the user can click on the button on the speech bubble to get the hint
+    if((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Visual" )){
+      //Speech bubble says : I have a hint
+      setTimeout(function(){
+             speechBubbleText.textContent= strings.speechbubbleTexts.iHaveAHint[lang] ;
+         }, 3000);
+         //Speech bubble asks show the hint or ignore
+         setTimeout(function(){
+                 speechBubbleText.innerHTML = '<button id="showVisualHint" name="showVisualHint" onclick="pd.visual.visualAutoHint()" >showHint</button>' + '<button id="hideVisualHint" name="hideVisualHint" onclick="pd.visual.ignore()">Ignore</button>';
+            }, 5000);
+     }
+     //checks if Textual hints are enabled.
+     //If enabled => the user automatically gets a textul hint
+     else if((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Textual" )){
+       //Speech bubble says : I have a hint
+       setTimeout(function(){
+              speechBubbleText.textContent= strings.speechbubbleTexts.iHaveAHint[lang] ;
+          }, 3000);
+            //Speech bubble automatically shows textual hint
+            //Speech bubble asks show the hint or ignore
+            setTimeout(function(){
+              pd.visual.hintText(hint);
+            }, 5000);
+      }
+      else if((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Both" )){
+        //Speech bubble says : I have a hint
+        setTimeout(function(){
+               speechBubbleText.textContent= strings.speechbubbleTexts.iHaveAHint[lang] ;
+           }, 3000);
+           //Speech bubble asks show the hint or ignore
+           setTimeout(function(){
+                   speechBubbleText.innerHTML = '<button id="showBothHint" name="showBothHint" onclick="pd.visual.bothAutoHint()">showHint</button>' + '<button id="hideBothHint" name="hideBothHint" onclick="pd.visual.ignore()">Ignore</button>';
+              }, 5000);
+      }
+  }
+
 
     resize(arr, newSize) {
         let partionLength = 0;
@@ -959,11 +1126,9 @@ class Visual {
     }    
 
     undoSplit() {        
-        Array.prototype.forEach.call(document.getElementsByClassName("gamearea boardarea"), function (element) {
-            if(!element.classList.contains("blockedcell")) {
-                element.style.backgroundColor = "";
-                element.style.opacity ="";
-            }            
+        Array.prototype.forEach.call(document.getElementsByClassName("gamearea boardarea"), function (element) {            
+            element.style.backgroundColor = "";
+            element.style.opacity ="";
         });
         this.pieces.forEach(piece => {
             Array.prototype.forEach.call(document.getElementById('piece_' + piece.name).getElementsByClassName("bmPoint"), function (element) {
@@ -999,7 +1164,7 @@ class Visual {
         }        
     }
     
-    displaySplit_V2() { 
+     displaySplit_V2() { 
         splitCounter++;
         if(splitPartition.length > splitCounter) {
             let partitionedArray = splitPartition[splitCounter]
@@ -1033,11 +1198,9 @@ class Visual {
     }
 
     unblockPartition() {
-        Array.prototype.forEach.call(document.getElementsByClassName("gamearea boardarea"), function (element) {
-            if(!element.classList.contains("blockedcell")) {
-                element.style.background = backGroundColor;
-                element.style.opacity ="";
-            }            
+        Array.prototype.forEach.call(document.getElementsByClassName("gamearea boardarea"), function (element) {            
+            element.style.background = backGroundColor;
+            element.style.opacity ="";
         });
         this.pieces.forEach(piece => {
             Array.prototype.forEach.call(document.getElementById('piece_' + piece.name).getElementsByClassName("bmPoint"), function (element) {
@@ -1381,9 +1544,9 @@ class Visual {
         modalFormContainerID.style.display = "block";
         let modalBodyID = document.querySelector("#modalBodyID");
         modalBodyID.style.display = "block";
-        document.querySelector(".modalFullframeContainer").style.display = "none";
         document.querySelector(".innerGrid").style.display = "none";
         template.clearContent("#modalButtonsID");
+        document.querySelector(".modalFullframeContainer").style.display = "none";
         template.clearContent("#modalTitleID");
         template.clearContent("#modalBodyID");
         template.clearContent("#innerGridForm");
