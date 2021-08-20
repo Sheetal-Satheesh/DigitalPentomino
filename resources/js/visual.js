@@ -1113,13 +1113,8 @@ class Visual {
         this.displaySplit_V2();
     }
 
-<<<<<<< HEAD
     undoSplit() {
         Array.prototype.forEach.call(document.getElementsByClassName("gamearea boardarea"), function (element) {
-=======
-    undoSplit() {        
-        Array.prototype.forEach.call(document.getElementsByClassName("gamearea boardarea"), function (element) {            
->>>>>>> 3820c00ac6969abf8d05ef09f40b7111f7234a00
             if(!element.classList.contains("blockedcell")) {
                 element.style.backgroundColor = "";
                 element.style.opacity ="";
@@ -1193,11 +1188,7 @@ class Visual {
     }
 
     unblockPartition() {
-<<<<<<< HEAD
         Array.prototype.forEach.call(document.getElementsByClassName("gamearea boardarea"), function (element) {
-=======
-        Array.prototype.forEach.call(document.getElementsByClassName("gamearea boardarea"), function (element) {            
->>>>>>> 3820c00ac6969abf8d05ef09f40b7111f7234a00
             if(!element.classList.contains("blockedcell")) {
                 element.style.background = backGroundColor;
                 element.style.opacity ="";
