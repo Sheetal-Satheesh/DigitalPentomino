@@ -778,7 +778,6 @@ class Visual {
                 this.checkIfGameWon();
             }
         }
-        console.log("rotated clockwise");
     }
 
     rotateAntiClkWise(cmdProperty = cmdAttrDefault) {
@@ -796,13 +795,12 @@ class Visual {
                 this.checkIfGameWon();
             }
         }
-        console.log("rotated anticlockwise");
     }
 
     flipH(cmdProperty = cmdAttrDefault) {
         let piece = this.selected;
         if (!piece) return
-        //debugger
+
         let pieceDiv = document.getElementById("piece_" + piece.name);
         let flipped = pieceDiv.getAttribute("flipped") * 1;
         let currentRot = pieceDiv.style.getPropertyValue("--rotationX").split(/(-?\d+)/)[1] * 1; //converts string value to int
@@ -814,7 +812,6 @@ class Visual {
         if (cmdProperty.cmdType != CommandTypes.Shadow) {
             this.checkIfGameWon();
         }
-        console.log("flipped horizontal");
     }
 
     flipV(cmdProperty = cmdAttrDefault) {
@@ -833,7 +830,6 @@ class Visual {
         if (cmdProperty.cmdType != CommandTypes.Shadow) {
             this.checkIfGameWon();
         }
-        console.log("flipped vertical");
     }
 
     showNumberOfPossibleSolutions() {
@@ -846,13 +842,12 @@ class Visual {
           return;
       }
         labelPossibleSolutions.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
-
         //Fill speech bubble text
-
         speechBubbleText.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
         if(SettingsSingleton.getInstance().getSettings().general.enableAutoHinting){
             if((this.gameController.getHint().getPossibleSolutions().length) === 0){
                 count+=1;
+                //check if number of wrongg moves is greater than the value configured in settings
                 if(count > SettingsSingleton.getInstance().getSettings().autohinting.numberOfWrongMoves ){
                     this.autoHintWrongMoves();
                 }
@@ -1066,6 +1061,7 @@ class Visual {
       }
   }
 
+  //end of configure autohints function
 
     resize(arr, newSize) {
         let partionLength = 0;
