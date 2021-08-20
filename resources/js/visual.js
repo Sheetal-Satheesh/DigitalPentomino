@@ -1115,8 +1115,10 @@ class Visual {
 
     undoSplit() {
         Array.prototype.forEach.call(document.getElementsByClassName("gamearea boardarea"), function (element) {
-            element.style.backgroundColor = "";
-            element.style.opacity ="";
+            if(!element.classList.contains("blockedcell")) {
+                element.style.backgroundColor = "";
+                element.style.opacity ="";
+            }
         });
         this.pieces.forEach(piece => {
             Array.prototype.forEach.call(document.getElementById('piece_' + piece.name).getElementsByClassName("bmPoint"), function (element) {
@@ -1187,8 +1189,10 @@ class Visual {
 
     unblockPartition() {
         Array.prototype.forEach.call(document.getElementsByClassName("gamearea boardarea"), function (element) {
-            element.style.background = backGroundColor;
-            element.style.opacity ="";
+            if(!element.classList.contains("blockedcell")) {
+                element.style.background = backGroundColor;
+                element.style.opacity ="";
+            }
         });
         this.pieces.forEach(piece => {
             Array.prototype.forEach.call(document.getElementById('piece_' + piece.name).getElementsByClassName("bmPoint"), function (element) {
