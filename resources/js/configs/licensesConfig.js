@@ -32,5 +32,17 @@ licensesConfig = {
         "Author": "ZapSplat",
         "link": "https://www.zapsplat.com/sound-effect-category/wood/",
         "license": "https://www.zapsplat.com/license-type/standard-license/"
+    },
+    "qrScanner": {
+        "name": ["QR Scanner", "QR Scanner"],
+        "Author": "Nimiq",
+        "link": "https://github.com/nimiq/qr-scanner",
+        "license": "MIT License"
+    },
+    "qrGenerator": {
+        "name": ["QR Generator", "QR Generator"],
+        "Author": "Jerome Etienne",
+        "link": "https://github.com/jeromeetienne/jquery-qrcode",
+        "license": "MIT License"
     }
 }
