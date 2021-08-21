@@ -15,11 +15,11 @@ h1 {
 
 .filterGrid {
    position: fixed;
-   top: 13vw;
-   bottom: 10vw;
+   top: 8vw;
+   bottom: 15vw;
    left: 3vw;
-   width: 12vw;
-   max-width: 12vw;
+   width: 13vw;
+   max-width: 13vw;
    height: 24vw;
    overflow-x: hidden;
 }
@@ -27,9 +27,11 @@ h1 {
 .filterGrid .fimageDiv {
    position: relative;
    width: 11vw;
-   margin-right: .1vw;
+   /* margin-right: .1vw; */
+   margin: 1.5vw 1.2vw 1.5vw 1.2vw;
    /* border: .2vw solid rgb(2, 71, 62);
    border-style: solid; */
+
 }
 
 .innerGrid {
@@ -129,28 +131,29 @@ h1 {
 
 .fTextDiv {
    position: relative;
-   border: 1px solid green;
+   /* border: 1px solid green; */
    font: bold;
    font-family: "Times New Roman", Times, serif;
    font-size: 20px;
    font-style: oblique;
    font-weight: bold;
-   margin: 1.5vw .5vw 1.5vw .5vw;
-   padding-right: 1vw;
+   margin: 1.5vw 1vw 1.5vw 1vw;
+   /* padding-right: 1vw; */
    max-width: 10.5vw;
    height: 6vw;
    text-align: center;
    align-items: center;
    justify-content: center;
-   background-color: #2f8f82;
+   background-color: #eceaea;
 }
 
 .fTextDiv:active {
-   background-color: #d34944;
+   background-color: #969393;
 }
 
 .fTextDiv .fTextbutton {
    padding-top: 2vw;
+   padding-left: 1vw;
    height: 2vw;
 }
 
@@ -158,5 +161,5 @@ h1 {
    width: fit-content;
    position: "center";
    content: "Replay";
-   background-color: #2f8f82;;
+   background-color: #afaaaa;;
 }

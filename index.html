@@ -1222,7 +1222,9 @@
         }
         function deleteGameImage(imgKey, gameId) {
             pd.visual.deleteGameImage(imgKey);
+            showGameImages();
             renderGallery(gameId);
+
         }
 
         function generateRandomColor() {
@@ -1245,7 +1247,7 @@
             }
             if (stateType == "start") {
                 fTextDivStart.style.border = 0;
-                fTextDivEnd.style.border = "3px dotted white";
+                fTextDivEnd.style.border = "3px dotted gray";
                 fTextDivStart.setAttribute('type', "image");
                 finishBlink(fTextDivStart);
                 blink(fTextDivEnd);
@@ -1281,6 +1283,7 @@
             template.clearContent("#innerGridForm");
 
             let images = pd.visual.getImagesByGameId(gameId);
+
             if (images == undefined) {
                 return;
             }
@@ -1330,7 +1333,7 @@
             this.disableSnapshotButton();
             this.disablePointerEventsOnPieces();
             this.hideManipulationButtons();
-            modal.style.background = " rgb(220, 240, 237)";
+            modal.style.backgroundColor = "#eceaea";
             modal.style.display = "block";
 
             document.querySelector(".modalFormContent").style.display = "none";
@@ -1342,10 +1345,30 @@
             template.clearContent("#innerGridForm");
             template.clearContent("#filterGrid");
 
+            pd.visual.delGameAutoImages();
             pd.visual.saveGameImage(SnapshotType.Auto);
             let currGmKey = pd.visual.getCurrentGameKey();
             let gameIds = pd.visual.getAllGameIds();
+            if (gameIds.length == 1 && pd.getGameState('start') == undefined) {
+                return;
 
+            }
+
+            let currGameId = pd.visual.getCurrentGameId();
+            let images = pd.visual.getImagesByGameId(currGameId);
+            let imageType = undefined;
+            images.forEach((item) => {
+                let imgKey = Object.keys(item)[0];
+                let image = item[imgKey];
+                let currImgType = parseInt(image.getAttribute('type'));
+                if (currImgType == SnapshotType.Original) {
+                    imageType = currImgType;
+                }
+            });
+
+            if (imageType == undefined) {
+                return;
+            }
             gameIds.reverse().forEach((gameId) => {
                 let img = pd.visual.getLastGameimage(gameId);
                 if (img == undefined) {
@@ -1354,9 +1377,8 @@
 
                 if (gameId == currGmKey) {
                     img.style.filter = "brightness(120%) saturate(120%)";
-                    img.style.border = ".2vw solid rgb(2, 71, 62)";
-                    img.style.background = "yellow";
-                    let images = pd.visual.getImagesByGameId(currGmKey)
+                    img.style.border = ".3px dotted gray";
+                    img.style.background = "black";
                     renderGallery(gameId);
                 }
                 else {
@@ -1400,8 +1422,8 @@
         }
 
         function changeReplayFilterUI(startElem, endElem, contentType) {
-            startElem.style.border = "3px dotted white";
-            startElem.style.color = "white";
+            startElem.style.border = "3px dotted gray";
+            startElem.style.color = "#eceaea";
 
             let fDivEnd = document.querySelector(".ftextDivEnd");
             endElem.style.border = "0";
@@ -1430,11 +1452,10 @@
         }
 
         function showReplayUI() {
-            /*
-            TODO: Text should support multi language
-            */
-            let textStartState = "Start State",
-                textEndState = "End State";
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
+            let textStartState = strings.replay.startStateText[lang],
+                textEndState = strings.replay.endStateText[lang];
 
             if ($('.modalFormContainer').is(':visible')) {
                 this.closeModal();
@@ -1447,12 +1468,12 @@
             }
 
             this.disableSnapshotButton();
-            this.disablePointerEventsOnPieces();
+            //this.disablePointerEventsOnPieces();//TODO: Fix this
             this.hideManipulationButtons();
-            this.saveGameImage(SnapshotType.Auto);
+            pd.visual.saveGameImage(SnapshotType.Auto);
 
             var modal = document.getElementById('modalTop');
-            modal.style.background = " rgb(220, 240, 237)";
+            modal.style.backgroundColor = "#eceaea";
             modal.style.display = "block";
 
             document.querySelector(".modalFormContent").style.display = "none";
@@ -1473,7 +1494,7 @@
 
             if (startGameState == undefined) {
                 document.querySelector(".modalFormContent").style.display = "block";
-                document.querySelector(".outerGrid").style.display = "none";
+                document.querySelector(".innerGrid").style.display = "none";
                 let textNode = {
                     name: "modalText",
                     text: "Game Not Started Yet ",
@@ -1483,7 +1504,7 @@
                 return;
             }
 
-            imgFilterGrid.style.backgroundColor = "rgb(20, 70, 63)";
+            imgFilterGrid.style.backgroundColor = "#c7c3c3";
             let fTextDivStart = document.createElement("div");
             fTextDivStart.setAttribute("class", "fTextDiv ftextDivStart");
             fTextDivStart.setAttribute("type", "text");
