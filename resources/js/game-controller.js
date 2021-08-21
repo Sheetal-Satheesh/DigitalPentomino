@@ -127,11 +127,7 @@ class GameController {
             throw new Error("Selected Game State Not Found :(");
         }
 
-        return this.cmdManager().CmdSequences(startKey, endKey);
-    }
-
-    getCmdKeySequences() {
-        return this.cmdManager().CmdKeySequences();
+        return this._gameLoader.cmdSequences(startKey, endKey);
     }
 
     getGameIdByKey(key) {
@@ -148,6 +144,10 @@ class GameController {
 
     getCurrentGameId(){
         return this._gameLoader.getGame().getId();
+    }
+
+    delGameAutoImages(gameId){
+        return this._gameLoader.delGameAutoImages(gameId);
     }
 
     exceptionHandler(pentomino) {

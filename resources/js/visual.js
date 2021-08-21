@@ -242,10 +242,8 @@ class Visual {
 
             //this "paints" the bitmap of the pice into the bounding box
             for (var i in bitMap) {
-                console.log("i:" + i)
                 var row = bitMap[i];
                 for (var j in row) {
-                    console.log("j:" + j)
                     var set = bitMap[i][j];
                     let bmLeft = (j*width) + 'vw';
                     let bmTop = (i*width) + 'vw';
@@ -764,6 +762,31 @@ class Visual {
         return emptyTrayList;
     }
 
+    updateDOMWithPentomino(piece) {
+        let oldPieceDiv = document.getElementById("piece_" + piece.name);
+        let pieceBitMap = piece.getMatrixRepresentation();
+        let width = UIProperty.WindowWidth / this.pd.gameWidth;
+        let newDiv = document.createElement("div");
+        let out = '<div class="piece" id="piece_' + piece.name + '" style="width:' + (5 * width) + 'vw;height:' + (5 * width) + 'vw;display:block;z-index:0;">';
+
+        for (let i = 0; i < 5; ++i) {
+            for (let j = 0; j < 5; ++j) {
+                let set = pieceBitMap[i][j];
+                out += '<div style="display:block;float:left;width:' + width + 'vw;height:' + width + 'vw;' + ((set) ? 'background:' + piece.color : '') + '" class="' + ((set) ? 'bmPoint' : 'bmAround') + '"></div>';
+            }
+        }
+
+        newDiv.innerHTML = out;
+        let correctDiv = newDiv.firstElementChild;
+        correctDiv.style.setProperty("left", oldPieceDiv.style.left);
+        correctDiv.style.setProperty("top", oldPieceDiv.style.top);
+        correctDiv.style.setProperty("transformOrigin", oldPieceDiv.style.transformOrigin);
+        correctDiv.style.setProperty("--magnification", oldPieceDiv.style.getPropertyValue("--magnification"));
+        correctDiv.style.setProperty("--rotationX", "0deg");
+        correctDiv.style.setProperty("--rotationY", "0deg");
+        correctDiv.style.setProperty("--rotationZ", "0deg");
+        oldPieceDiv.replaceWith(correctDiv);
+    }
 
     rotateClkWise(cmdProperty = cmdAttrDefault) {
         let piece = this.selected;
@@ -780,6 +803,10 @@ class Visual {
                 this.checkIfGameWon();
             }
         }
+        
+        setTimeout(function (that, piece) {
+            that.updateDOMWithPentomino(piece);
+        }, 200, this, piece);
     }
 
     rotateAntiClkWise(cmdProperty = cmdAttrDefault) {
@@ -797,6 +824,10 @@ class Visual {
                 this.checkIfGameWon();
             }
         }
+        
+        setTimeout(function (that, piece) {
+            that.updateDOMWithPentomino(piece);
+        }, 200, this, piece);
     }
 
     flipH(cmdProperty = cmdAttrDefault) {
@@ -818,6 +849,10 @@ class Visual {
         if (cmdProperty.cmdType != CommandTypes.Shadow) {
             this.checkIfGameWon();
         }
+        
+        setTimeout(function (that, piece) {
+            that.updateDOMWithPentomino(piece);
+        }, 200, this, piece);
     }
 
     flipV(cmdProperty = cmdAttrDefault) {
@@ -836,7 +871,10 @@ class Visual {
         if (cmdProperty.cmdType != CommandTypes.Shadow) {
             this.checkIfGameWon();
         }
-
+        
+        setTimeout(function (that, piece) {
+            that.updateDOMWithPentomino(piece);
+        }, 200, this, piece);
     }
 
     showNumberOfPossibleSolutions() {
@@ -1096,10 +1134,12 @@ class Visual {
         this.displaySplit_V2();
     }
 
-    undoSplit() {
-        Array.prototype.forEach.call(document.getElementsByClassName("gamearea boardarea"), function (element) {
-            element.style.backgroundColor = "";
-            element.style.opacity ="";
+    undoSplit() {        
+        Array.prototype.forEach.call(document.getElementsByClassName("gamearea boardarea"), function (element) {            
+            if(!element.classList.contains("blockedcell")) {
+                element.style.backgroundColor = "";
+                element.style.opacity ="";
+            }
         });
         this.pieces.forEach(piece => {
             Array.prototype.forEach.call(document.getElementById('piece_' + piece.name).getElementsByClassName("bmPoint"), function (element) {
@@ -1169,9 +1209,11 @@ class Visual {
     }
 
     unblockPartition() {
-        Array.prototype.forEach.call(document.getElementsByClassName("gamearea boardarea"), function (element) {
-            element.style.background = backGroundColor;
-            element.style.opacity ="";
+        Array.prototype.forEach.call(document.getElementsByClassName("gamearea boardarea"), function (element) {            
+            if(!element.classList.contains("blockedcell")) {
+                element.style.background = backGroundColor;
+                element.style.opacity ="";
+            }
         });
         this.pieces.forEach(piece => {
             Array.prototype.forEach.call(document.getElementById('piece_' + piece.name).getElementsByClassName("bmPoint"), function (element) {
@@ -1978,7 +2020,7 @@ class Visual {
         return UtilitiesClass.getRandomElementFromArray(solution.filter(piece => !(pickedPieces[piece[0].name] == 1)));
     }
 
-    execShadowCmd(command, seqType) {
+    execShadowCmd(command, seqType = CommandSeq.Forward) {
         let cmdProperty = updateCommandAttr(CommandTypes.Shadow, seqType);
         switch (command.name) {
             case "Remove":
@@ -2040,17 +2082,14 @@ class Visual {
         }
     }
 
-    getGameStates() {
-        let cmdKeySequences = this.gameController.getCmdKeySequences();
-        return cmdKeySequences;
-    }
-
     undo() {
-        let command = this.gameController.undo();
-        if (command == undefined) {
+        let commandSeq = this.gameController.undo();
+        if (commandSeq == undefined) {
             return;
         }
-        this.execShadowCmd(command);
+        commandSeq.forEach((item) => {
+            this.execShadowCmd(item);
+        }, this);
         if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.showNumberOfPossibleSolutions();
         }
@@ -2058,11 +2097,15 @@ class Visual {
     }
 
     redo() {
-        let command = this.gameController.redo();
-        if (command == undefined) {
+        let commandSeq = this.gameController.redo();
+        if (commandSeq == undefined) {
             return;
         }
-        this.execShadowCmd(command);
+        commandSeq.forEach((item) => {
+            this.execShadowCmd(item);
+        }, this);
+
+
         if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.showNumberOfPossibleSolutions();
         }
@@ -2094,6 +2137,13 @@ class Visual {
         let gameElem = document.getElementById('playarea');
         let currCmdKey = this.gameController.getCurrentCmdKey();
 
+        let gameId = pd.visual.getCurrentGameKey();
+        let img = pd.visual.getLastGameimage(gameId);
+        if (img != undefined &&
+            img.value == currCmdKey &&
+            type == SnapshotType.Auto) {
+            return;
+        }
 
         html2canvas(gameElem).then(function (screeshot) {
             screeshot.setAttribute("class", "screenshot");
@@ -2117,7 +2167,12 @@ class Visual {
 
     }
 
+    delGameAutoImages() {
+        this.gameController.delGameAutoImages();
+    }
+
     showGameImages() {
+        delGameAutoImages();
         let gameImages = this.gameController.getGameImages();
         return gameImages;
     }
@@ -2139,14 +2194,14 @@ class Visual {
         if (currentCmdKey == undefined) {
             currentCmdKey = this.gameController.getStartCmdKey();
         }
-        let [cmdSequences, seqType] = this.gameController.getCmdSequences(currentCmdKey, targetStateKey);
+        let cmdSequences = this.gameController.getCmdSequences(currentCmdKey, targetStateKey);
         for (let indx = 0; indx < cmdSequences.length; indx++) {
-            this.execShadowCmd(cmdSequences[indx], seqType);
+            this.execShadowCmd(cmdSequences[indx], CommandTypes.Shadow);
         }
     }
 
     replay(startKey, targetKey) {
-
+        this.disableManipulations();
         if (startKey.length == 0) {
             startKey = this.gameController.getStartCmdKey();
             if (startKey == undefined) {
@@ -2162,18 +2217,16 @@ class Visual {
                 return;
             }
         }
-
-        let [cmdSequences, seqType] = this.gameController.getCmdSequences(startKey, targetKey);
         this.loadGameState(startKey);
-
+        let cmdSequences = this.gameController.getCmdSequences(startKey, targetKey);
 
         let timeInterval = 100;
-        for (let indx = 0; indx < cmdSequences.length && (!this.replayRunning); indx++) {
+        for (let indx = 0; indx < cmdSequences.length; indx++) {
             let command = cmdSequences[indx];
             var that = this;
 
             setTimeout(function (that, command) {
-                that.execShadowCmd(command, seqType);
+                that.execShadowCmd(command, CommandTypes.Shadow);
                 if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
                     that.showNumberOfPossibleSolutions();
                 }
@@ -2181,12 +2234,13 @@ class Visual {
         }
         this.setReplayStatus(false);
 
-        const pause = function () {
+        const pause = function (that) {
             let replayId = document.getElementById("replay");
             let replayImg = replayId.children[0];
             replayImg.setAttribute('src', 'resources/images/icons/replay.svg');
+            that.enablePointerEventsOnPieces();
         };
-        setTimeout(pause, timeInterval);
+        setTimeout(pause, timeInterval, this);
 
     }
 
