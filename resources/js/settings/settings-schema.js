@@ -160,6 +160,14 @@ class SettingsSchema {
                     "default": false
                   },
 
+                  showOrHideButtonsForTextualHints:{
+                    "type": "boolean",
+                    "title": titles.autohinting.showOrHideButtonsForTextualHints.title[lang],
+                    "description": titles.autohinting.showOrHideButtonsForTextualHints.description[lang],
+                    "default": false
+                  },
+
+
                   numberOfWrongMoves: {
                       "step": 1,
                       "type": "integer",

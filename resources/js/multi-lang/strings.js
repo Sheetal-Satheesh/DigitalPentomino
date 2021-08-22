@@ -29,7 +29,9 @@ const strings = {
         antiClockwise:["anti-clockwise", "linksdrehend"],
         mirror:["Mirror","Spiegel"],
         vertical:["vertical","vertikal"],
-        horizontal:["horizontal","horizontal"]
+        horizontal:["horizontal","horizontal"],
+        showHint:["Show hint","Hinweis anzeigen"],
+        ignore:["Ignore","Ignorieren Sie"]
     },
     numberOfPossibleSolutions: ["Number of solutions", "Anzahl Lösungen"],
     License: ["LICENSES", "LIZENZEN"],
@@ -82,6 +84,11 @@ const strings = {
             initiateActionsIfUserNotActive:{
                 title: ["Initiate actions if user not active", "Aktionen einleiten, wenn der Benutzer nicht aktiv ist"],
                 description: [["Initiates actions only if user is not active on the application", "Löst nur Aktionen aus, wenn der Benutzer nicht in der Anwendung aktiv ist"]]
+            },
+            showOrHideButtonsForTextualHints:{
+                title: ["Show Buttons for textual hints", "Schaltflächen für Texthinweise anzeigen"],
+                description: ["Shows buttons in case the user wants autohinting textual hints as optional else textual hints will occur automatically.",
+                "Zeigt Schaltflächen an wenn der Benutzer automatische Texthinweise als Option wünscht andernfalls werden Texthinweise automatisch angezeigt."]
             },
 
             autoHintVariants:{
@@ -289,7 +296,7 @@ const strings = {
             title: ["Split Board into Thirds", "TO DO"],
             splitStrategy: {
                 title: ["Split Board into Partion By", "TO DO"],
-                enumTitles: [["Color","Left-to-Right"], ["TO DO", "TO DO"]],                
+                enumTitles: [["Color","Left-to-Right"], ["TO DO", "TO DO"]],
             }
         },
         errors: {
