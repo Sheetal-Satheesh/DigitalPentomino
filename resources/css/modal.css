@@ -77,6 +77,8 @@ button:hover {
   width: 100%;
   overflow-y: scroll; 
   margin-left: 2vw;
+  /* scaling container always from top left */
+  transform-origin: top left;
 }
 
   /* The Modal Close Button (x) */

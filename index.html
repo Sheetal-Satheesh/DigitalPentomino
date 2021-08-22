@@ -804,10 +804,15 @@
             // Ipad has a ratio of of approx. 1.4 - hence scale settings smaller for wider stuff than 1,5
             if ((window.innerWidth / window.innerHeight) > 1.4) {
                 document.getElementById('modalFullframeContainerID').style.zoom = (1.4 / (window.innerWidth / window.innerHeight));
+                document.getElementById('modalFullframeContainerID').style.MozTransform = 'scale(' + (1.4 / (window.innerWidth / window.innerHeight)) + ',' + (1.4 / (window.innerWidth / window.innerHeight)) + ')';
+                //document.getElementById('modalFullframeContainerID').style.webkitTransform = 'scale(' + (1.4 / (window.innerWidth / window.innerHeight)) + ')';
                 //adapt the floatingButtons to still align with the bottom bar
                 $('.formButton').css('bottom',(11 * (1 / (1.4 / (window.innerWidth / window.innerHeight))) + 'vw'));
             } else {
                 document.getElementById('modalFullframeContainerID').style.zoom = 1;
+                document.getElementById('modalFullframeContainerID').style.MozTransform = 'scale(1,1)';
+                //document.getElementById('modalFullframeContainerID').style.webkitTransform = 'scale(1)';
+
             }
 
         }
