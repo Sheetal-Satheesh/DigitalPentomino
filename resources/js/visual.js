@@ -824,7 +824,7 @@ class Visual {
                 this.checkIfGameWon();
             }
         }
-        
+
         setTimeout(function (that, piece) {
             that.updateDOMWithPentomino(piece);
         }, 200, this, piece);
@@ -845,7 +845,7 @@ class Visual {
         if (cmdProperty.cmdType != CommandTypes.Shadow) {
             this.checkIfGameWon();
         }
-        
+
         setTimeout(function (that, piece) {
             that.updateDOMWithPentomino(piece);
         }, 200, this, piece);
@@ -867,7 +867,7 @@ class Visual {
         if (cmdProperty.cmdType != CommandTypes.Shadow) {
             this.checkIfGameWon();
         }
-        
+
         setTimeout(function (that, piece) {
             that.updateDOMWithPentomino(piece);
         }, 200, this, piece);
@@ -917,7 +917,16 @@ class Visual {
             let audio = new Audio('resources/audio/hinting.mp3');
             audio.play();
         }
-        this.indicateHint(hint, commandNumber);
+        if((SettingsSingleton.getInstance().getSettings().hinting.typeOfHints === "Visual" )){
+            this.indicateHint(hint, commandNumber);
+       }
+       if((SettingsSingleton.getInstance().getSettings().hinting.typeOfHints === "Textual" )){
+            pd.visual.hintText(hint);
+       }
+       if((SettingsSingleton.getInstance().getSettings().hinting.typeOfHints === "Both" )){
+            pd.visual.hintText(hint);
+            this.indicateHint(hint, commandNumber);
+       }
         setTimeout(function () {
             hintButton.disabled = false;
         }, 1000);
