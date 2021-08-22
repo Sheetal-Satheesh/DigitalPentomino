@@ -165,6 +165,23 @@ const strings = {
                 description: ["Shows the number of solutions that contain the current pentominoes on the board.",
                     "Zeigt die Anzahl der Lösungen an, die mit den Pentominoes wie sie zu diesem Zeitpunkt auf dem Spielbrett liegen, möglich sind."]
             },
+            typeOfHints:{
+                title: ["Type of hints", "Art der Hinweise"],
+                enumTitles: [["Visual", "Textual", "Both"], ["Visuell", "Textuell", "Beides"]],
+                description: [
+                "Provides hints :"  +
+                    "<ul>" +
+                        "<li><b>Visual:</b> Gives only visual hints.</li>" +
+                        "<li><b>Textual:</b> Gives only textual hints.</li>" +
+                        "<li><b>Both:</b> Gives both visual and textual hints</li>" +
+                    "</ul>",
+                    "Liefert Hinweise :" +
+                        "<ul>" +
+                        "<li><b>Visuell:</b> Gibt nur visuelle Hinweise.</li>" +
+                        "<li><b>Textuell:</b> Gibt nur textuelle Hinweise.</li>" +
+                        "<li><b>Beide:</b> Gibt sowohl visuelle als auch textliche Hinweise</li>" +
+                        "</ul>"]
+            },
             hintingStrategy: {
                 title: ["Hint Type", "Art der Hinweise"],
                 enumTitles: [["Concrete", "Partial", "Area"], ["Konkret", "Partiell", "Bereich"]],
@@ -289,7 +306,7 @@ const strings = {
             title: ["Split Board into Thirds", "TO DO"],
             splitStrategy: {
                 title: ["Split Board into Partion By", "TO DO"],
-                enumTitles: [["Color","Left-to-Right"], ["TO DO", "TO DO"]],                
+                enumTitles: [["Color","Left-to-Right"], ["TO DO", "TO DO"]],
             }
         },
         errors: {

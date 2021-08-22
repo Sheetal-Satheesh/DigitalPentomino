@@ -208,6 +208,14 @@ class SettingsSchema {
                         "description": titles.hinting.enableHinting.description[lang],
                         "default": true
                     },
+                    typeOfHints:{
+                      "type": "string",
+                      "title": titles.hinting.typeOfHints.title[lang],
+                      "enum": ["Visual", "Textual", "Both"],
+                      "enumText": titles.hinting.typeOfHints.enumTitles[lang],
+                      "description": titles.hinting.typeOfHints.description[lang],
+                      "default": "Visual"
+                    },
                     hintingStrategy: {
                         "type": "string",
                         "title": titles.hinting.hintingStrategy.title[lang],
@@ -296,7 +304,7 @@ class SettingsSchema {
                 "properties": {
                     splitStrategy: {
                         "type": "string",
-                        "title": titles.splitPartition.splitStrategy.title[lang],                       
+                        "title": titles.splitPartition.splitStrategy.title[lang],
                         "enum": ["color","left-to-right"],
                         "enumText": titles.splitPartition.splitStrategy.enumTitles[lang],
                         "default": "color"
