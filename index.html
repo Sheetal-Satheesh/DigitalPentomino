@@ -59,6 +59,7 @@
     <script src="resources/js/hint-ai.js"></script>
     <script src="resources/js/help/hinting/command-sequence-list.js"></script>
     <script src="resources/js/load_screen.js"></script>
+    <script src="resources/js/split-board.js"></script>
 </head>
 <!-- Preloader section -->
 <div class="preloader d-flex">
@@ -93,7 +94,6 @@
                 <div class="boardmodalContainer" id="boardmodalContainerID">
                     <div class="boardouterGrid">
                         <div class="boardinnerGrid" id="boardinnerGrid" style="display: block;">
-
                         </div>
                         <form class="boardmodalFormContent" style="display: none;">
                             <form></form>
@@ -118,6 +118,7 @@
                         <div class="innerGrid" id="innerGrid"></div>
                         <form id="innerGridForm"></form>
                     </div>
+                    <form class="modalFullframeContainer" id="modalFullframeContainerID"></form>
                     <form class="modalFormContent">
                         <div class="modalFormContainer" id="modalFormContainerID">
                             <h3 id="modalTitleID"></h3>
@@ -162,6 +163,8 @@
                 </button>
                 <button type="button" id='reset' class="cActionBtn" onclick="resetGame()">
                     <img src="resources/images/icons/tidy_up_v2.png"></button>
+                <button type="button" id='splitBoard' class="cActionBtn" onclick="splitTheBoard()">
+                    <img id="splitBoardimg" src="resources/images/icons/dp_512.png"></button>
             </div>
 
             <div id="labelNumberSolutionsContainer">
@@ -200,13 +203,13 @@
                     <span class="icon-flip2" id="OpflipV"></span>
                 </div>
             </div>
-        </div>
-        <!---Button Manipulation Ends-->
+        </div> <!---Button Manipulation Ends-->
     </div>
 
     <script type="text/javascript">
         let pd;
         let template;
+        let isPlaying = false;
 
         const SnapshotType = {
             "FilterOnly": 0,
@@ -227,7 +230,136 @@
                 settings,
                 null);
             processChangesToSettings(initialChanges, settings);
+            inactivityTime();
         }
+
+        function inactivityTime() {
+            let time;
+            let text;
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+            let speechBubbleText = document.getElementById('speechBubbleText');
+            // initializing the resetTime function to the events in the DOM
+            window.onload = resetTime;
+            window.onclick = resetTime;
+            window.onkeypress = resetTime;
+            window.ontouchstart = resetTime;
+            window.onmousemove = resetTime;
+            window.onmousedown = resetTime;
+            window.ontouchstart = resetTime;
+            window.addEventListener('scroll', resetTime, true);
+            //alert user if not active
+            function alertUser() {
+                let lang = SettingsSingleton.getInstance().getSettings().general.language;
+                // do tasks
+                //this loop initiates actions if user inactive, this can be configurable from the settings
+                //Series of actions are : bubble speech message, and onmouse move the application says welcome back
+                //then simultaneously bird animation starts and then ends
+                if(SettingsSingleton.getInstance().getSettings().general.initiateActionsIfUserNotActive){
+                    //speech bubble message : "hello There"
+                    setTimeout(function(){
+                        speechBubbleText.textContent=strings.speechbubbleTexts.helloThere[lang];
+                    }, 1000);
+                    //detect user if active again => onmouse move it says welcome back and the bird animaltion starts
+                    document.onmousemove = function(){
+                        //if(speech bubble message : "hello There ? ") => display "welcome back"
+                        if(speechBubbleText.textContent === strings.speechbubbleTexts.helloThere[lang]){
+                            setTimeout(function(){speechBubbleText.textContent = strings.speechbubbleTexts.welcomeBack[lang]; }, 500);
+                        }
+                        //start bird animation
+                        setTimeout(function(){
+                            document.getElementById('birdContainer').classList.add("anim");
+                        }, 1000);
+                    };
+                    //at the end remove the bird animation
+                    setTimeout(function(){
+                        document.getElementById('birdContainer').classList.remove("anim");
+                    }, 10000);
+                }
+                //if autohinting enabled continue with autoHint() function
+                if(SettingsSingleton.getInstance().getSettings().general.enableAutoHinting){
+                    //wakeup user with bird sound
+                    if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
+                        let audio = new Audio('resources/audio/pingPong.mp3');
+                        audio.play();
+                    }
+                    autoHint();
+                }
+                //else if autohinting disabled => display "Continue with the game"
+                else{
+                    setTimeout(function(){
+                        speechBubbleText.textContent = strings.speechbubbleTexts.pleaseContinue[lang];
+                    }, 5000);
+                }
+            }
+            //end of alert user
+            //reset timer for every event in the DOM
+            // Initialise the setTimeout and then
+            //clear timeout to check user activity on the application
+            function resetTime() {
+                clearTimeout(time);
+                time = setTimeout(alertUser, 1000 * userInactiveWaitTime()); // 10 seconds
+            }
+        };
+
+        //end of inactivityTime() function
+
+
+
+    //Function gives time delay to wait for user inactivityTime
+    function userInactiveWaitTime(){
+        let userInactiveWaitTime = SettingsSingleton.getInstance().getSettings().autohinting.timeForNoAction;
+        let time = 0;
+        switch(userInactiveWaitTime) {
+            case "Short":
+                // code block
+                time = 10;
+                break;
+            case "Medium":
+                // code block
+                time = 90;
+                break;
+            case "Long":
+                // code block
+                time = 150;
+                break;
+            default:
+                // code block
+                console.error("time unknown!");
+        }
+        return time;
+    }
+
+//runs if autohint is enabled (this function specific for time period based)
+//Time period based hinting is only enabled in case the user is far away from the final solution
+        function autoHint(){
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+            let speechBubbleText = document.getElementById('speechBubbleText');
+            let hint = pd.gameController.getHint();
+            //let x = window.matchMedia("(max-width: 860px)");
+            //check if user is towards the solution or not
+            //in case if the user is towards the final solution  , the message "Please continue with the game" appears
+            //this option can be configurable from the settings
+            if(!(SettingsSingleton.getInstance().getSettings().autohinting.enableTimePeriodBasedAutoHintInAnyCase)){
+                if((pd.visual.numberofPlacedPentominos() > (pd.visual.pieces.length/2))){
+                    setTimeout(function(){
+                        speechBubbleText.textContent = strings.speechbubbleTexts.pleaseContinue[lang];
+                    }, 5000);
+                    pd.visual.numberofPlacedPentominos();
+                    return;
+                }
+            }
+            //check if time period based autohint is set or not
+            //in case if the time period is not selected  , the message "Please continue with the game" appears
+            if(!(SettingsSingleton.getInstance().getSettings().autohinting.autoHintVariants === "Time period")){
+                setTimeout(function(){
+                    speechBubbleText.textContent = strings.speechbubbleTexts.pleaseContinue[lang];
+                }, 2500);
+                return;
+            }
+            pd.visual.configureAutoHints();
+        }
+
+
 
         function buttonManipulation() {
             let btn = document.querySelector('.mainWrapper');
@@ -299,6 +431,7 @@
 
             document.querySelector(".modalFormContent").style.display = "none";
             document.querySelector(".innerGrid").style.display = "block";
+            document.querySelector(".modalFullframeContainer").style.display = "none";
             template.clearContent("#modalButtonsID");
             template.clearContent("#modalTitleID");
             template.clearContent("#modalBodyID");
@@ -421,6 +554,7 @@
 
                 document.querySelector(".modalFormContent").style.display = "block";
                 document.querySelector(".innerGrid").style.display = "none";
+                document.querySelector(".modalFullframeContainer").style.display = "none";
                 template.clearContent("#modalButtonsID");
                 template.clearContent("#modalTitleID");
                 template.clearContent("#modalBodyID");
@@ -454,6 +588,7 @@
                 dltBtn.addEventListener("click", () => {
                     pd.reset();
                 });
+                $("#bubbleContainer").css("display", "block");
             }
         }
 
@@ -474,6 +609,24 @@
                 // TODO - handle, e.g. shake hint button
                 console.log("Game is already solved. Cannot display hint");
             }
+        }
+        function splitTheBoard() {
+            splitButton = document.getElementById("splitBoardimg")
+            if(!isPlaying) {
+                splitButton.classList.add("splitbuttonimg");
+                if (!pd.gameController.game()._board.isSolved()) {
+                    pd.visual.splitTheBoard();
+                } else {
+                    console.log("Game is already solved");
+                    pd.visual.unblockPartition();
+                }
+                isPlaying = true;
+            } else {
+                splitButton.classList.remove("splitbuttonimg");
+                pd.visual.undoSplit();
+                isPlaying = false;
+            }
+
         }
 
         function rotateClkWise() {
@@ -522,6 +675,9 @@
                 this.disableSnapshotButton();
                 this.hideBubbleContainer();
             }
+           if ((SettingsSingleton.getInstance().getSettings().general.enableBird)){
+              $("#bubbleContainer").css("display", "block");
+           }
         }
 
         // From https://stackoverflow.com/questions/10970078/modifying-a-query-string-without-reloading-the-page (2nd answer)
@@ -621,13 +777,18 @@
             modal.style.background = "#eceaea";
 
             document.querySelector(".modalFormContent").style.display = "none";
-            document.querySelector(".innerGrid").style.display = "block";
+            document.querySelector(".modalFullframeContainer").style.display = "block";
+            document.querySelector(".innerGrid").style.display = "none";
             template.clearContent("#modalButtonsID");
             template.clearContent("#modalTitleID");
             template.clearContent("#modalBodyID");
             template.clearContent(".innerGrid")
             template.clearContent("#innerGridForm");
             template.clearContent("#filterGrid");
+            template.clearContent(".modalFullframeContainer");
+
+            //hide back button for main settings menu
+            document.getElementById("backButton").style.display = "none";
 
             //add form to attach settings to
             //$('#innerGridForm').jsonForm({
@@ -637,15 +798,16 @@
             //});
 
             SettingsForm.generateForm(
-                $('#innerGridForm')[0],
+                $('.modalFullframeContainer')[0],
                 this.handleJsonFormSubmit,
                 this.handleShareSettings,
                 this.handleClickedOnLicenses
             );
 
             let settings = SettingsSingleton.getInstance().getSettings();
-            SettingsForm.updateForm($('#innerGridForm')[0], settings);
+            SettingsForm.updateForm($('.modalFullframeContainer')[0], settings);
             // this.postProcessSettingsForm(SettingsSingleton.getInstance().getSettings());
+
         }
 
         // called when license button is clicked in settings
@@ -659,10 +821,12 @@
             modal.style.background = "transparent";
             document.querySelector(".modalFormContent").style.display = "block";
             document.querySelector(".innerGrid").style.display = "none";
+            document.querySelector(".modalFullframeContainer").style.display = "none";
             template.clearContent("#modalButtonsID");
             template.clearContent("#modalTitleID");
             template.clearContent("#modalBodyID");
             template.clearContent("#innerGridForm");
+            template.clearContent(".modalFullframeContainer");
             modal.style.background = "#dcf0ed";
             document.getElementById("modalFormContainerID").style.backgroundColor = "#dcf0ed";
             document.getElementById("modalFormContainerID").style.border = "none";
@@ -674,10 +838,14 @@
             btn.style.display = "block";
             $(".close").click(function () {
                 document.getElementById("modalTop").style.display = "none";
+                $("#licencesTable").attr("style", "display:none");
+                $("#licenseHeading").attr("style", "display:none");
+                $("#tableLicenseDiv").attr("style", "display:none");
+                $("#tableLicenseDiv").remove();
                 if ($("#licencesTable")) {
-                    document.getElementById("licencesTable").style.display = "none";
-                    document.getElementById("licenseHeading").style.display = "none";
-                    document.getElementById("tableLicenseDiv").style.display = "none";
+                    $("#licencesTable").attr("style", "display:none");
+                    $("#licenseHeading").attr("style", "display:none");
+                    $("#tableLicenseDiv").attr("style", "display:none");
                     for (let i = 0; i < y.length; i++) { y[i].style.pointerEvents = "auto"; }
                 }
             });
@@ -694,7 +862,7 @@
                 if (div5) {
                     div5.style.display = "none";
                 }
-                SettingsForm.updateForm($('#innerGridForm')[0], settings);
+                //SettingsForm.updateForm($('#innerGridForm')[0], settings);
                 btn.style.display = "none";
             };
             let lang = SettingsSingleton.getInstance().getSettings().general.language;
@@ -715,7 +883,6 @@
             }
             modal.appendChild(document.createElement(strings.License[lang]));
             var table = document.createElement('TABLE');
-            console.log(table);
             table.id = "licencesTable"
             table.border = '1px solid black';
             table.style.textAlign = "center";
@@ -814,6 +981,7 @@
 
             document.querySelector(".modalFormContent").style.display = "block";
             document.querySelector(".innerGrid").style.display = "none";
+            document.querySelector(".modalFullframeContainer").style.display = "none";
             template.clearContent("#modalButtonsID");
             template.clearContent("#modalTitleID");
             template.clearContent("#modalBodyID");
@@ -1059,7 +1227,9 @@
         }
         function deleteGameImage(imgKey, gameId) {
             pd.visual.deleteGameImage(imgKey);
+            showGameImages();
             renderGallery(gameId);
+
         }
 
         function generateRandomColor() {
@@ -1082,7 +1252,7 @@
             }
             if (stateType == "start") {
                 fTextDivStart.style.border = 0;
-                fTextDivEnd.style.border = "3px dotted white";
+                fTextDivEnd.style.border = "3px dotted gray";
                 fTextDivStart.setAttribute('type', "image");
                 finishBlink(fTextDivStart);
                 blink(fTextDivEnd);
@@ -1118,6 +1288,7 @@
             template.clearContent("#innerGridForm");
 
             let images = pd.visual.getImagesByGameId(gameId);
+
             if (images == undefined) {
                 return;
             }
@@ -1167,21 +1338,42 @@
             this.disableSnapshotButton();
             this.disablePointerEventsOnPieces();
             this.hideManipulationButtons();
-            modal.style.background = " rgb(220, 240, 237)";
+            modal.style.backgroundColor = "#eceaea";
             modal.style.display = "block";
 
             document.querySelector(".modalFormContent").style.display = "none";
             document.querySelector(".outerGrid").style.display = "block";
+            document.querySelector(".modalFullframeContainer").style.display = "none";
             let imageGrid = document.getElementById('innerGrid');
             let imgFilterGrid = document.getElementById('filterGrid');
             template.clearContent(".innerGrid");
             template.clearContent("#innerGridForm");
             template.clearContent("#filterGrid");
 
+            pd.visual.delGameAutoImages();
             pd.visual.saveGameImage(SnapshotType.Auto);
             let currGmKey = pd.visual.getCurrentGameKey();
             let gameIds = pd.visual.getAllGameIds();
+            if (gameIds.length == 1 && pd.getGameState('start') == undefined) {
+                return;
 
+            }
+
+            let currGameId = pd.visual.getCurrentGameId();
+            let images = pd.visual.getImagesByGameId(currGameId);
+            let imageType = undefined;
+            images.forEach((item) => {
+                let imgKey = Object.keys(item)[0];
+                let image = item[imgKey];
+                let currImgType = parseInt(image.getAttribute('type'));
+                if (currImgType == SnapshotType.Original) {
+                    imageType = currImgType;
+                }
+            });
+
+            if (imageType == undefined) {
+                return;
+            }
             gameIds.reverse().forEach((gameId) => {
                 let img = pd.visual.getLastGameimage(gameId);
                 if (img == undefined) {
@@ -1190,9 +1382,8 @@
 
                 if (gameId == currGmKey) {
                     img.style.filter = "brightness(120%) saturate(120%)";
-                    img.style.border = ".2vw solid rgb(2, 71, 62)";
-                    img.style.background = "yellow";
-                    let images = pd.visual.getImagesByGameId(currGmKey)
+                    img.style.border = ".3px dotted gray";
+                    img.style.background = "black";
                     renderGallery(gameId);
                 }
                 else {
@@ -1236,8 +1427,8 @@
         }
 
         function changeReplayFilterUI(startElem, endElem, contentType) {
-            startElem.style.border = "3px dotted white";
-            startElem.style.color = "white";
+            startElem.style.border = "3px dotted gray";
+            startElem.style.color = "#eceaea";
 
             let fDivEnd = document.querySelector(".ftextDivEnd");
             endElem.style.border = "0";
@@ -1266,11 +1457,10 @@
         }
 
         function showReplayUI() {
-            /*
-            TODO: Text should support multi language
-            */
-            let textStartState = "Start State",
-                textEndState = "End State";
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
+            let textStartState = strings.replay.startStateText[lang],
+                textEndState = strings.replay.endStateText[lang];
 
             if ($('.modalFormContainer').is(':visible')) {
                 this.closeModal();
@@ -1283,16 +1473,17 @@
             }
 
             this.disableSnapshotButton();
-            this.disablePointerEventsOnPieces();
+            //this.disablePointerEventsOnPieces();//TODO: Fix this
             this.hideManipulationButtons();
-            this.saveGameImage(SnapshotType.Auto);
+            pd.visual.saveGameImage(SnapshotType.Auto);
 
             var modal = document.getElementById('modalTop');
-            modal.style.background = " rgb(220, 240, 237)";
+            modal.style.backgroundColor = "#eceaea";
             modal.style.display = "block";
 
             document.querySelector(".modalFormContent").style.display = "none";
             document.querySelector(".outerGrid").style.display = "block";
+            document.querySelector(".modalFullframeContainer").style.display = "none";
 
             let imageGrid = document.getElementById('innerGrid');
             let imgFilterGrid = document.getElementById('filterGrid');
@@ -1308,7 +1499,7 @@
 
             if (startGameState == undefined) {
                 document.querySelector(".modalFormContent").style.display = "block";
-                document.querySelector(".outerGrid").style.display = "none";
+                document.querySelector(".innerGrid").style.display = "none";
                 let textNode = {
                     name: "modalText",
                     text: "Game Not Started Yet ",
@@ -1318,7 +1509,7 @@
                 return;
             }
 
-            imgFilterGrid.style.backgroundColor = "rgb(20, 70, 63)";
+            imgFilterGrid.style.backgroundColor = "#c7c3c3";
             let fTextDivStart = document.createElement("div");
             fTextDivStart.setAttribute("class", "fTextDiv ftextDivStart");
             fTextDivStart.setAttribute("type", "text");
@@ -1385,7 +1576,6 @@
         function hideBubbleContainer() {
             document.getElementById('bubbleContainer').style.display = "none";
         }
-
 
     </script>
     <script src="./registerSW.js"></script>

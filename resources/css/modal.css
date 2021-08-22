@@ -68,6 +68,17 @@ button:hover {
 
 }  
 
+.modalFullframeContainer {
+  position: relative;
+  top: 0vw;
+  left: 0vw;
+  right: 0vw;
+  bottom: 11vw;
+  width: 100%;
+  overflow-y: scroll; 
+  margin-left: 2vw;
+}
+
   /* The Modal Close Button (x) */
 
   .modal .close {
