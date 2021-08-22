@@ -296,17 +296,17 @@ class Visual {
             htmlElement.style.setProperty("--rotationZ", "0deg");
 
             if(piecesSelectedForPartition.length != 0 && splitCounter <= 1 ) {
-                let containsDisplayedPieceName = piecesSelectedForPartition.indexOf(piece.name);
+                let containsDisplayedPieceName = piecesSelectedForPartition.indexOf(piece.name);                
                 if(containsDisplayedPieceName === -1 ) {
                     htmlElement.style.display = 'none';
-
+                                                            
                 }
                 else if (containsDisplayedPieceName >=0) {
                     htmlElement.style.display = 'block';
-                }
+                }               
             }
-
-
+            
+            
         }
         else {
             var bCellsFnd = this.isPentominoInBlockCells(piece);
@@ -364,13 +364,13 @@ class Visual {
         htmlElement.style.display = 'block';
 
         if(piecesSelectedForPartition.length != 0 && splitCounter <= 1 ) {
-            let containsDisplayedPieceName = piecesSelectedForPartition.indexOf(piece.name);
+            let containsDisplayedPieceName = piecesSelectedForPartition.indexOf(piece.name);            
             if(containsDisplayedPieceName === -1 ) {
-                htmlElement.style.display = 'none';
+                htmlElement.style.display = 'none';                                                            
             }
             else if (containsDisplayedPieceName >=0) {
                 htmlElement.style.display = 'block';
-            }
+            }            
         }
     }
 
@@ -471,19 +471,19 @@ class Visual {
         document.getElementById('pieceManipulation').style.display = 'none';
     }
 
-    blockPartition() {
+    blockPartition() {        
         let partitionedArray = splitPartition[splitCounter]
-        let piecesDisplayed = [];
-        for (let i = 0; i < partitionedArray.length; i++) {
-            piecesDisplayed.push(partitionedArray[i][0].name);
-        }
+        let piecesDisplayed = [];        
+        for (let i = 0; i < partitionedArray.length; i++) {           
+            piecesDisplayed.push(partitionedArray[i][0].name);                     
+        } 
         this.pieces.forEach(piece => {
             let containsDisplayedPieceName = piecesDisplayed.indexOf(piece.name)
-                if(containsDisplayedPieceName >= 0 ) {
-                    document.getElementById('piece_'+ piece.name).classList.add("disabledbutton");
-                }
-        });
-
+                if(containsDisplayedPieceName >= 0 ) {                    
+                    document.getElementById('piece_'+ piece.name).classList.add("disabledbutton");                
+                }                                                      
+        }); 
+        
 
     }
     // 	save(piece) {
@@ -715,7 +715,7 @@ class Visual {
                         that.select(data[1], event.clientX, event.clientY);
                         flagCheckPartitionSolved = that.checkPartitionSolved();
                         if(flagCheckPartitionSolved) {
-                            that.blockPartition();
+                            that.blockPartition();                            
                             that.displaySplit_V2();
                         }
 
@@ -762,6 +762,31 @@ class Visual {
         return emptyTrayList;
     }
 
+    updateDOMWithPentomino(piece) {
+        let oldPieceDiv = document.getElementById("piece_" + piece.name);
+        let pieceBitMap = piece.getMatrixRepresentation();
+        let width = UIProperty.WindowWidth / this.pd.gameWidth;
+        let newDiv = document.createElement("div");
+        let out = '<div class="piece" id="piece_' + piece.name + '" style="width:' + (5 * width) + 'vw;height:' + (5 * width) + 'vw;display:block;z-index:0;">';
+
+        for (let i = 0; i < 5; ++i) {
+            for (let j = 0; j < 5; ++j) {
+                let set = pieceBitMap[i][j];
+                out += '<div style="display:block;float:left;width:' + width + 'vw;height:' + width + 'vw;' + ((set) ? 'background:' + piece.color : '') + '" class="' + ((set) ? 'bmPoint' : 'bmAround') + '"></div>';
+            }
+        }
+
+        newDiv.innerHTML = out;
+        let correctDiv = newDiv.firstElementChild;
+        correctDiv.style.setProperty("left", oldPieceDiv.style.left);
+        correctDiv.style.setProperty("top", oldPieceDiv.style.top);
+        correctDiv.style.setProperty("transformOrigin", oldPieceDiv.style.transformOrigin);
+        correctDiv.style.setProperty("--magnification", oldPieceDiv.style.getPropertyValue("--magnification"));
+        correctDiv.style.setProperty("--rotationX", "0deg");
+        correctDiv.style.setProperty("--rotationY", "0deg");
+        correctDiv.style.setProperty("--rotationZ", "0deg");
+        oldPieceDiv.replaceWith(correctDiv);
+    }
 
     rotateClkWise(cmdProperty = cmdAttrDefault) {
         let piece = this.selected;
@@ -778,6 +803,10 @@ class Visual {
                 this.checkIfGameWon();
             }
         }
+        
+        setTimeout(function (that, piece) {
+            that.updateDOMWithPentomino(piece);
+        }, 200, this, piece);
     }
 
     rotateAntiClkWise(cmdProperty = cmdAttrDefault) {
@@ -795,6 +824,10 @@ class Visual {
                 this.checkIfGameWon();
             }
         }
+
+        setTimeout(function (that, piece) {
+            that.updateDOMWithPentomino(piece);
+        }, 200, this, piece);
     }
 
     flipH(cmdProperty = cmdAttrDefault) {
@@ -816,6 +849,10 @@ class Visual {
         if (cmdProperty.cmdType != CommandTypes.Shadow) {
             this.checkIfGameWon();
         }
+
+        setTimeout(function (that, piece) {
+            that.updateDOMWithPentomino(piece);
+        }, 200, this, piece);
     }
 
     flipV(cmdProperty = cmdAttrDefault) {
@@ -835,6 +872,9 @@ class Visual {
             this.checkIfGameWon();
         }
 
+        setTimeout(function (that, piece) {
+            that.updateDOMWithPentomino(piece);
+        }, 200, this, piece);
     }
 
     showNumberOfPossibleSolutions() {
@@ -896,71 +936,71 @@ class Visual {
     }
 
     hintText(hint){
-       hint = pd.gameController.getHint();
-       let lang = SettingsSingleton.getInstance().getSettings().general.language;
-       let commandNumber = 0;
-       let hintCommand = hint.getCommands()[commandNumber];
-       let timeoutFrame = 1000;
-       let r;
-       let x = window.matchMedia("(max-width: 860px)");
-       //possible command names (place, remove, moveToPosition, rotateClkWise, rotateAntiClkWise, mirrorH, mirrorV)
-       let hintSkill = hint._skill;
-       let hintName = hintCommand._name;
-       r = document.getElementById("speechBubbleText");
-           switch (hintName) {
-             case "Remove":
-                 this.text = strings.speechbubbleTexts.removePentomino[lang]  + " pentomino " + hintCommand._pentomino.name;
-                 document.getElementById("speechBubbleText").textContent = this.text;
-                 if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-                     document.getElementById("labelNumberSolutions").innerText = this.text;
-                 }
-                 break;
-             case "MoveToPosition":
-                 this.text = strings.speechbubbleTexts.move[lang] + " pentomino " + hintCommand._pentomino.name + strings.speechbubbleTexts.MoveToPosition[lang] + " " + "[" + hintCommand._row + "," + hintCommand._col + "]";
-                 document.getElementById("speechBubbleText").textContent = this.text;
-                 if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-                     document.getElementById("labelNumberSolutions").innerText = this.text;
-                 }
-                 break;
-             case "Place":
-                 this.text = strings.speechbubbleTexts.place[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.atPosition[lang]  + " " +  "[" + hintCommand._nextPosition[0] + "," + hintCommand._nextPosition[1] + "]";
-                 document.getElementById("speechBubbleText").textContent = this.text;
-                 if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-                     document.getElementById("labelNumberSolutions").innerText = this.text;
-                 }
-                 break;
-             case "RotateClkWise":
-                 this.text = strings.speechbubbleTexts.rotate[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.clockwise[lang];
-                 document.getElementById("speechBubbleText").textContent = this.text;
-                 if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-                     document.getElementById("labelNumberSolutions").innerText = this.text;
-                 }
-                 break;
-             case "RotateAntiClkWise":
-                 this.text = strings.speechbubbleTexts.rotate[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.antiClockwise[lang];
-                 document.getElementById("speechBubbleText").textContent = this.text;
-                 if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-                     document.getElementById("labelNumberSolutions").innerText = this.text;
-                 }
-                 break;
-             case "MirrorH":
-                 this.text = strings.speechbubbleTexts.mirror[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.horizontal[lang];
-                 document.getElementById("speechBubbleText").textContent = this.text;
-                 if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-                     document.getElementById("labelNumberSolutions").innerText = this.text;
-                 }
-                 break;
-             case "MirrorV":
-                 this.text = strings.speechbubbleTexts.mirror[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.vertical[lang];
-                 document.getElementById("speechBubbleText").textContent = this.text;
-                 if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-                     document.getElementById("labelNumberSolutions").innerText = this.text;
-                 }
-                 break;
-             default:
-                 this.text = "Error - unknown command with name '" + hintName + "'";
-                 throw new Error("Error: unknown command with name " + hintName);
-         }
+     hint = pd.gameController.getHint();
+     let lang = SettingsSingleton.getInstance().getSettings().general.language;
+     let commandNumber = 0;
+     let hintCommand = hint.getCommands()[commandNumber];
+     let timeoutFrame = 1000;
+     let r;
+     let x = window.matchMedia("(max-width: 860px)");
+     //possible command names (place, remove, moveToPosition, rotateClkWise, rotateAntiClkWise, mirrorH, mirrorV)
+     let hintSkill = hint._skill;
+     let hintName = hintCommand._name;
+     r = document.getElementById("speechBubbleText");
+         switch (hintName) {
+           case "Remove":
+               this.text = strings.speechbubbleTexts.removePentomino[lang]  + " pentomino " + hintCommand._pentomino.name;
+               document.getElementById("speechBubbleText").textContent = this.text;
+               if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+                   document.getElementById("labelNumberSolutions").innerText = this.text;
+               }
+               break;
+           case "MoveToPosition":
+               this.text = strings.speechbubbleTexts.move[lang] + " pentomino " + hintCommand._pentomino.name + strings.speechbubbleTexts.MoveToPosition[lang] + " " + "[" + hintCommand._row + "," + hintCommand._col + "]";
+               document.getElementById("speechBubbleText").textContent = this.text;
+               if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+                   document.getElementById("labelNumberSolutions").innerText = this.text;
+               }
+               break;
+           case "Place":
+               this.text = strings.speechbubbleTexts.place[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.atPosition[lang]  + " " +  "[" + hintCommand._nextPosition[0] + "," + hintCommand._nextPosition[1] + "]";
+               document.getElementById("speechBubbleText").textContent = this.text;
+               if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+                   document.getElementById("labelNumberSolutions").innerText = this.text;
+               }
+               break;
+           case "RotateClkWise":
+               this.text = strings.speechbubbleTexts.rotate[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.clockwise[lang];
+               document.getElementById("speechBubbleText").textContent = this.text;
+               if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+                   document.getElementById("labelNumberSolutions").innerText = this.text;
+               }
+               break;
+           case "RotateAntiClkWise":
+               this.text = strings.speechbubbleTexts.rotate[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.antiClockwise[lang];
+               document.getElementById("speechBubbleText").textContent = this.text;
+               if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+                   document.getElementById("labelNumberSolutions").innerText = this.text;
+               }
+               break;
+           case "MirrorH":
+               this.text = strings.speechbubbleTexts.mirror[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.horizontal[lang];
+               document.getElementById("speechBubbleText").textContent = this.text;
+               if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+                   document.getElementById("labelNumberSolutions").innerText = this.text;
+               }
+               break;
+           case "MirrorV":
+               this.text = strings.speechbubbleTexts.mirror[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.vertical[lang];
+               document.getElementById("speechBubbleText").textContent = this.text;
+               if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+                   document.getElementById("labelNumberSolutions").innerText = this.text;
+               }
+               break;
+           default:
+               this.text = "Error - unknown command with name '" + hintName + "'";
+               throw new Error("Error: unknown command with name " + hintName);
+       }
    }
 
 
@@ -1058,55 +1098,57 @@ class Visual {
             splitPartition.push(arr[counter]);
             counter++;
             partionLength++;
-        }
+        }                    
     }
 
-    splitTheBoard() {
-        let splitCategory = SettingsSingleton.getInstance().getSettings().splitPartition.splitStrategy;
+    splitTheBoard() {               
+        let splitCategory = SettingsSingleton.getInstance().getSettings().splitPartition.splitStrategy;        
         switch (splitCategory) {
             case "color":
                 this.undoSplit();
                 this.callSplitBoardViaColor();
                 break;
-            case "left-to-right":
+            case "left-to-right":                
                 this.readyForSplitting();
                 this.callSplitBoard_V2();
                 break;
-        }
+        }              
     }
 
     readyForSplitting() {
-        this.reset();
+        this.reset();        
         this.undoSplit();
     }
 
     callSplitBoardViaColor() {
-        let partitionedArray = pd.gameController.loadSplit();
-        this.displaySplit(partitionedArray, alternateColor);
+        let partitionedArray = pd.gameController.loadSplit();                
+        this.displaySplit(partitionedArray, alternateColor);        
     }
 
-    callSplitBoard_V2() {
-        let partitionedArray = pd.gameController.loadSplit_V2();
+    callSplitBoard_V2() {       
+        let partitionedArray = pd.gameController.loadSplit_V2();        
         this.resize(partitionedArray, partitionedArray.length)
         let styleElement = document.querySelector('.boardarea');
-        let styleValue = window.getComputedStyle(styleElement);
-        styleBlocks = styleValue.backgroundColor;
-        this.displaySplit_V2();
-    }
+        let styleValue = window.getComputedStyle(styleElement);  
+        styleBlocks = styleValue.backgroundColor;              
+        this.displaySplit_V2();                     
+    }    
 
-    undoSplit() {
-        Array.prototype.forEach.call(document.getElementsByClassName("gamearea boardarea"), function (element) {
-            element.style.backgroundColor = "";
-            element.style.opacity ="";
+    undoSplit() {        
+        Array.prototype.forEach.call(document.getElementsByClassName("gamearea boardarea"), function (element) {            
+            if(!element.classList.contains("blockedcell")) {
+                element.style.backgroundColor = "";
+                element.style.opacity ="";
+            }
         });
         this.pieces.forEach(piece => {
             Array.prototype.forEach.call(document.getElementById('piece_' + piece.name).getElementsByClassName("bmPoint"), function (element) {
-                element.style.background = piece.color ;
+                element.style.background = piece.color ;                 
             });
         });
-        this.pieces.forEach(piece => {
-            document.getElementById('piece_'+ piece.name).style.display = 'block';
-        });
+        this.pieces.forEach(piece => {            
+            document.getElementById('piece_'+ piece.name).style.display = 'block';                                                                                           
+        }); 
         piecesSelectedForPartition = [];
         splitPartition = [];
         splitCounter = -1;
@@ -1130,56 +1172,58 @@ class Visual {
                     element.style.background = alternateColor[i];
                 });
             }
-        }
+        }        
     }
-
-     displaySplit_V2() {
+    
+     displaySplit_V2() { 
         splitCounter++;
         if(splitPartition.length > splitCounter) {
             let partitionedArray = splitPartition[splitCounter]
             let piecesDisplayed = [];
             for (let i = 0; i < partitionedArray.length; i++) {
-                for (let j = 0; j < partitionedArray[i][1].length; j++) {
-                        let fieldValue = partitionedArray[i][1];
+                for (let j = 0; j < partitionedArray[i][1].length; j++) {                
+                        let fieldValue = partitionedArray[i][1];                    
                         let fieldID = document.getElementById("field_" + fieldValue[j][0] + "," + fieldValue[j][1]);
                         fieldID.style.background = "#77C9D4";
-                        fieldID.style.opacity = .5;
-                }
-                piecesDisplayed.push(partitionedArray[i][0].name);
-            }
+                        fieldID.style.opacity = .5;                                                          
+                } 
+                piecesDisplayed.push(partitionedArray[i][0].name);                     
+            } 
             for (let elm =0; elm < piecesDisplayed.length; elm++){
                 piecesSelectedForPartition.push(piecesDisplayed[elm]) ;
             }
-
+            
             this.pieces.forEach(piece => {
                 let containsDisplayedPieceName = piecesDisplayed.indexOf(piece.name)
                     if(containsDisplayedPieceName === -1 ) {
                         if(!document.getElementById('piece_'+ piece.name).classList.contains('disabledbutton')){
                             document.getElementById('piece_'+ piece.name).style.display = 'none';
-                        }
+                        }                                       
                     }
                     else if (containsDisplayedPieceName >=0) {
                         document.getElementById('piece_'+ piece.name).style.display = 'block';
-                    }
-            });
+                    }                                                                      
+            });           
         }
-
+              
     }
 
     unblockPartition() {
-        Array.prototype.forEach.call(document.getElementsByClassName("gamearea boardarea"), function (element) {
-            element.style.background = backGroundColor;
-            element.style.opacity ="";
+        Array.prototype.forEach.call(document.getElementsByClassName("gamearea boardarea"), function (element) {            
+            if(!element.classList.contains("blockedcell")) {
+                element.style.background = backGroundColor;
+                element.style.opacity ="";
+            }
         });
         this.pieces.forEach(piece => {
             Array.prototype.forEach.call(document.getElementById('piece_' + piece.name).getElementsByClassName("bmPoint"), function (element) {
-                element.style.display = 'block';
+                element.style.display = 'block';                
             });
-
-            if(document.getElementById('piece_'+ piece.name).classList.contains('disabledbutton')){
+                        
+            if(document.getElementById('piece_'+ piece.name).classList.contains('disabledbutton')){                
                 document.getElementById('piece_'+ piece.name).classList.remove("disabledbutton");
-            }
-
+            }                                                                                            
+            
         });
 
 
@@ -1188,48 +1232,48 @@ class Visual {
     checkPartitionSolved() {
         let piecesDisplayed = [];
         let partitionCheck = false;
-
+        
         if (!splitPartition) {
-            return false;
+            return false;   
         }
 
         if(splitPartition.length === 0) {
             return false;
         }
-
+        
         let partitionedArray = splitPartition[splitCounter]
-
+        
         if(!partitionedArray) {
             return false;
         }
-        for (let i = 0; i < partitionedArray.length; i++) {
-            piecesDisplayed.push(partitionedArray[i][0].name);
-        }
-
+        for (let i = 0; i < partitionedArray.length; i++) {            
+            piecesDisplayed.push(partitionedArray[i][0].name);                     
+        } 
+        
         let temp = [];
-        for (let i = 0; i < piecesDisplayed.length; i++) {
-            temp.push(false);
-        }
+        for (let i = 0; i < piecesDisplayed.length; i++) {            
+            temp.push(false);                     
+        } 
 
         this.pieces.forEach(piece => {
             if(this.gameController.isPlacedOnBoard(piece)) {
                 let containsDisplayedPieceName = piecesDisplayed.indexOf(piece.name)
                 if(containsDisplayedPieceName >= 0) {
-                    let result = this.pd.gameController.partitionHasUnoccupiedPosition(piece);
+                    let result = this.pd.gameController.partitionHasUnoccupiedPosition(piece);                                                                    
                     temp[containsDisplayedPieceName] = result;
                     let checker = temp.every(v => v === true);
                     if (checker) {
                         partitionCheck = true;
                         if(this.checkIfGameWon()){
                             this.unblockPartition();
-                        }
-                        return partitionCheck;
+                        }                        
+                        return partitionCheck; 
                     }
                 }
             }
-
-        });
-        return partitionCheck;
+                            
+        });     
+        return partitionCheck;            
     }
 
 
@@ -1978,7 +2022,7 @@ class Visual {
         return UtilitiesClass.getRandomElementFromArray(solution.filter(piece => !(pickedPieces[piece[0].name] == 1)));
     }
 
-    execShadowCmd(command, seqType) {
+    execShadowCmd(command, seqType = CommandSeq.Forward) {
         let cmdProperty = updateCommandAttr(CommandTypes.Shadow, seqType);
         switch (command.name) {
             case "Remove":
@@ -2040,17 +2084,14 @@ class Visual {
         }
     }
 
-    getGameStates() {
-        let cmdKeySequences = this.gameController.getCmdKeySequences();
-        return cmdKeySequences;
-    }
-
     undo() {
-        let command = this.gameController.undo();
-        if (command == undefined) {
+        let commandSeq = this.gameController.undo();
+        if (commandSeq == undefined) {
             return;
         }
-        this.execShadowCmd(command);
+        commandSeq.forEach((item) => {
+            this.execShadowCmd(item);
+        }, this);
         if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.showNumberOfPossibleSolutions();
         }
@@ -2058,11 +2099,15 @@ class Visual {
     }
 
     redo() {
-        let command = this.gameController.redo();
-        if (command == undefined) {
+        let commandSeq = this.gameController.redo();
+        if (commandSeq == undefined) {
             return;
         }
-        this.execShadowCmd(command);
+        commandSeq.forEach((item) => {
+            this.execShadowCmd(item);
+        }, this);
+
+
         if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.showNumberOfPossibleSolutions();
         }
@@ -2094,6 +2139,13 @@ class Visual {
         let gameElem = document.getElementById('playarea');
         let currCmdKey = this.gameController.getCurrentCmdKey();
 
+        let gameId = pd.visual.getCurrentGameKey();
+        let img = pd.visual.getLastGameimage(gameId);
+        if (img != undefined &&
+            img.value == currCmdKey &&
+            type == SnapshotType.Auto) {
+            return;
+        }
 
         html2canvas(gameElem).then(function (screeshot) {
             screeshot.setAttribute("class", "screenshot");
@@ -2117,7 +2169,12 @@ class Visual {
 
     }
 
+    delGameAutoImages() {
+        this.gameController.delGameAutoImages();
+    }
+
     showGameImages() {
+        delGameAutoImages();
         let gameImages = this.gameController.getGameImages();
         return gameImages;
     }
@@ -2139,14 +2196,14 @@ class Visual {
         if (currentCmdKey == undefined) {
             currentCmdKey = this.gameController.getStartCmdKey();
         }
-        let [cmdSequences, seqType] = this.gameController.getCmdSequences(currentCmdKey, targetStateKey);
+        let cmdSequences = this.gameController.getCmdSequences(currentCmdKey, targetStateKey);
         for (let indx = 0; indx < cmdSequences.length; indx++) {
-            this.execShadowCmd(cmdSequences[indx], seqType);
+            this.execShadowCmd(cmdSequences[indx], CommandTypes.Shadow);
         }
     }
 
     replay(startKey, targetKey) {
-
+        this.disableManipulations();
         if (startKey.length == 0) {
             startKey = this.gameController.getStartCmdKey();
             if (startKey == undefined) {
@@ -2162,18 +2219,16 @@ class Visual {
                 return;
             }
         }
-
-        let [cmdSequences, seqType] = this.gameController.getCmdSequences(startKey, targetKey);
         this.loadGameState(startKey);
-
+        let cmdSequences = this.gameController.getCmdSequences(startKey, targetKey);
 
         let timeInterval = 100;
-        for (let indx = 0; indx < cmdSequences.length && (!this.replayRunning); indx++) {
+        for (let indx = 0; indx < cmdSequences.length; indx++) {
             let command = cmdSequences[indx];
             var that = this;
 
             setTimeout(function (that, command) {
-                that.execShadowCmd(command, seqType);
+                that.execShadowCmd(command, CommandTypes.Shadow);
                 if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
                     that.showNumberOfPossibleSolutions();
                 }
@@ -2181,12 +2236,13 @@ class Visual {
         }
         this.setReplayStatus(false);
 
-        const pause = function () {
+        const pause = function (that) {
             let replayId = document.getElementById("replay");
             let replayImg = replayId.children[0];
             replayImg.setAttribute('src', 'resources/images/icons/replay.svg');
+            that.enablePointerEventsOnPieces();
         };
-        setTimeout(pause, timeInterval);
+        setTimeout(pause, timeInterval, this);
 
     }
 

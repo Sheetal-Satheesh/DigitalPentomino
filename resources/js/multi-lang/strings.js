@@ -306,7 +306,7 @@ const strings = {
             title: ["Split Board into Thirds", "TO DO"],
             splitStrategy: {
                 title: ["Split Board into Partion By", "TO DO"],
-                enumTitles: [["Color","Left-to-Right"], ["TO DO", "TO DO"]],
+                enumTitles: [["Color","Left-to-Right"], ["TO DO", "TO DO"]],                
             }
         },
         errors: {
