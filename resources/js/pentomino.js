@@ -233,20 +233,20 @@ class Pentomino {
             return [numRotations, numMirrors];
         }
 
-        if (numRotations > 3 || numMirrors > 1) {
+        if (numRotations >= 3 || numMirrors > 1) {
             return null;
         }
 
         let currentPentoCopy = Object.assign(new Pentomino(goalPento.name), currentPento);
         currentPentoCopy.rotateClkWise();
-        let result = this.getNumOfRotationsMirrors(currentPentoCopy, goalPento, numRotations + 1, numMirrors);
+        let result = this.getNumOfRotationsMirrors(currentPentoCopy, goalPento, Number(numRotations) + 1, numMirrors);
         if (!(result === null)) {
             return result;
         }
 
         let currentPentoCopy2 = Object.assign(new Pentomino(goalPento.name), currentPento);
         currentPentoCopy2.mirrorH();
-        let result2 = this.getNumOfRotationsMirrors(currentPentoCopy2, goalPento, numRotations, numMirrors + 1);
+        let result2 = this.getNumOfRotationsMirrors(currentPentoCopy2, goalPento, numRotations, Number(numMirrors) + 1);
         if (!(result2 === null)) {
             return result2;
         }

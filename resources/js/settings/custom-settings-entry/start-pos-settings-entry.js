@@ -123,8 +123,8 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
                 this.placePiece(p.name, pos[0] + boardSRows, pos[1] + boardSCols);
 
                 let numRotationsMirrors = Pentomino.getNumOfRotationsMirrors(new Pentomino(p.name), p, 0, 0);
-                for (let i = numRotationsMirrors[0]; i > 0; i--) this.rotatePieceClkwise(p);
-                for (let i = numRotationsMirrors[1]; i > 0; i--) this.mirrorPieceH(p);
+                for (let i = numRotationsMirrors[0]; i > 0; i--) this.rotatePieceClkwise(p.name);
+                for (let i = numRotationsMirrors[1]; i > 0; i--) this.mirrorPieceH(p.name);
             });
 
             pd.visual.renderPieces();
