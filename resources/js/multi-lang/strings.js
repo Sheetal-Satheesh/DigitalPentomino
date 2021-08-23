@@ -75,6 +75,13 @@ const strings = {
              html2canvas:["html2canvas","html2canvas"],
              loadash:["loadash","loadash"]
         },
+        speech:{
+            title: ["Speech", "Rede"],
+            enableSpeech:{
+                title: ["Enable speech", "Sprache freigeben"],
+                description: [["Enabling this option makes the application speak", "Wenn Sie diese Option aktivieren, spricht die Anwendung"]]
+            }
+        },
         autohinting:{
             title: ["Auto hinting", "Automatisches Hinting"],
             enableAutoHinting:{

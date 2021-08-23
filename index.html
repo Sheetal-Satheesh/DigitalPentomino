@@ -253,8 +253,13 @@
                     //speech bubble message : "hello There"
                     setTimeout(function(){
                         speechBubbleText.textContent = strings.speechbubbleTexts.helloThere[lang];
+                        //check if TUCA bird is enabled
                         if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
                             document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.helloThere[lang];
+                            //enable speech bot
+                            if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
+                               pd.visual.speakBot(strings.speechbubbleTexts.helloThere[lang]);
+                            }
                         }
                     }, 1000);
                     //detect user if active again => onmouse move it says welcome back and the bird animaltion starts
@@ -277,7 +282,7 @@
                     }, 10000);
                 }
                 //if autohinting enabled continue with autoHint() function
-                if(SettingsSingleton.getInstance().getSettings().general.enableAutoHinting){
+                if(SettingsSingleton.getInstance().getSettings().autohinting.enableAutoHinting){
                     //wakeup user with bird sound
                     if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
                         let audio = new Audio('resources/audio/pingPong.mp3');
