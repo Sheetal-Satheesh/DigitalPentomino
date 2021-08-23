@@ -390,8 +390,19 @@
         }
 
         function addAdvancedShareOptions(advOptionsRoot, qrCodeElement, urlElement, downloadImageButton) {
-            advOptionsRoot.appendChild(urlElement);
             advOptionsRoot.appendChild(document.createElement("br"));
+
+            let p = document.createElement("p");
+            let descrLabel = document.createElement("label");
+            descrLabel.innerText = "URL:" + " ";
+            p.appendChild(descrLabel);
+            p.appendChild(urlElement);
+            let copyUrlButton = SettingsForm.createButton("Copy");
+            copyUrlButton.addEventListener("click", (event) => {
+                navigator.clipboard.writeText(urlElement.innerText);
+            });
+            p.appendChild(copyUrlButton);
+            advOptionsRoot.appendChild(p);
 
             let lang = SettingsSingleton.getInstance().getSettings().general.language;
             let includePiecesLabel = SettingsForm.createLabel(
