@@ -104,7 +104,7 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
 
     parseFromSeed(schemaEntry, remainingSeed, settingsEntry, key, seed) {
         let n = parseInt(remainingSeed.substr(StartPosSettingsEntry.getBoardNameDecimals(), BOARD_PENTOMINO_NUM_DECIMALS));
-        let seedEntryLength = StartPosSettingsEntry.getBoardNameDecimals() + BOARD_PENTOMINO_NUM_DECIMALS + n * 5;
+        let seedEntryLength = StartPosSettingsEntry.getBoardNameDecimals() + BOARD_PENTOMINO_NUM_DECIMALS + n * 6;
         settingsEntry[key] = remainingSeed.substr(0, seedEntryLength);
         return seedEntryLength - 1;
     }
@@ -121,6 +121,10 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
             game.getPentominoesOnBoard().forEach(p => {
                 let pos = game.getPosition(p);
                 this.placePiece(p.name, pos[0] + boardSRows, pos[1] + boardSCols);
+
+                let numRotationsMirrors = Pentomino.getNumOfRotationsMirrors(new Pentomino(p.name), p, 0, 0);
+                for (let i = numRotationsMirrors[0]; i > 0; i--) this.rotatePieceClkwise(p);
+                for (let i = numRotationsMirrors[1]; i > 0; i--) this.mirrorPieceH(p);
             });
 
             pd.visual.renderPieces();
@@ -131,6 +135,16 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
         let piece = pd.visual.pieces.filter(p => p.name === pieceName)[0];
         piece.updateTrayValue(0);
         pd.gameController.placePentomino(piece, row, col);
+    }
+
+    rotatePieceClkwise(pieceName) {
+        let piece = pd.visual.pieces.filter(p => p.name === pieceName)[0];
+        pd.gameController.rotatePentominoClkWise(piece);
+    }
+
+    mirrorPieceH(pieceName) {
+        let piece = pd.visual.pieces.filter(p => p.name === pieceName)[0];
+        pd.gameController.mirrorPentominoH(piece);
     }
 
     // === === === PARSE HELPER === === ===
@@ -144,10 +158,16 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
 
         for (let i = 0; i < n; i++) {
             let offset = boardNameDecimals + BOARD_PENTOMINO_NUM_DECIMALS;
-            let name = seed.substr(i * 5 + offset, 1);
-            let row = parseInt(seed.substr(i * 5 + offset + 1, BOARD_POSITION_DECIMALS));
-            let col = parseInt(seed.substr(i * 5 + offset + 3, BOARD_POSITION_DECIMALS));
-            game.placePentomino(new Pentomino(name), row,col);
+            let name = seed.substr(i * 6 + offset, 1);
+            let row = parseInt(seed.substr(i * 6 + offset + 1, BOARD_POSITION_DECIMALS));
+            let col = parseInt(seed.substr(i * 6 + offset + 3, BOARD_POSITION_DECIMALS));
+            let numRotMirCompressed = parseInt(seed.substr(i * 6 + offset + 5, 1));
+            let numRotMir = [StartPosSettingsEntry.getNumClkwiseRotations(numRotMirCompressed),
+                StartPosSettingsEntry.getNumMirrorH(numRotMirCompressed)];
+            let pento = new Pentomino(name);
+            game.placePentomino(pento, row,col);
+            for (let j = numRotMir[0]; j > 0; j--) game.rotatePentominoClkWise(pento);
+            for (let j = numRotMir[1]; j > 0; j--) game.mirrorPentominoH(pento);
         }
 
         return game;
@@ -201,7 +221,7 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
         return x % 4;
     }
 
-    static getNumMirror(x) {
+    static getNumMirrorH(x) {
         return x < 4 ? 0 : 1;
     }
 }
