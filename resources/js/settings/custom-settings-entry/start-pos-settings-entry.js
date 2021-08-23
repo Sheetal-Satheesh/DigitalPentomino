@@ -170,6 +170,8 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
             seed += p.name;
             seed += StartPosSettingsEntry.pad(pos[0] - boardSRows, BOARD_POSITION_DECIMALS);
             seed += StartPosSettingsEntry.pad(pos[1] - boardSCols, BOARD_POSITION_DECIMALS);
+            let numRotationsMirrors = Pentomino.getNumOfRotationsMirrors(new Pentomino(p.name), p, 0, 0);
+            seed += numRotationsMirrors[0] + 4 * numRotationsMirrors[1];
         });
 
         return seed;
@@ -193,5 +195,13 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
 
     static getBoardNameDecimals() {
         return Math.max(BOARD_NAME_DECIMALS_MIN, SettingsParser.getNumOfDigits(baseConfigs.boards.length));
+    }
+
+    static getNumClkwiseRotations(x) {
+        return x % 4;
+    }
+
+    static getNumMirror(x) {
+        return x < 4 ? 0 : 1;
     }
 }

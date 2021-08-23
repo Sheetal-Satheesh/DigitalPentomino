@@ -227,6 +227,32 @@ class Pentomino {
             }
         }
     }
+
+    static getNumOfRotationsMirrors(currentPento, goalPento, numRotations, numMirrors) {
+        if (currentPento.sRepr === goalPento.sRepr) {
+            return [numRotations, numMirrors];
+        }
+
+        if (numRotations > 3 || numMirrors > 1) {
+            return null;
+        }
+
+        let currentPentoCopy = Object.assign(new Pentomino(goalPento.name), currentPento);
+        currentPentoCopy.rotateClkWise();
+        let result = this.getNumOfRotationsMirrors(currentPentoCopy, goalPento, numRotations + 1, numMirrors);
+        if (!(result === null)) {
+            return result;
+        }
+
+        let currentPentoCopy2 = Object.assign(new Pentomino(goalPento.name), currentPento);
+        currentPentoCopy2.mirrorH();
+        let result2 = this.getNumOfRotationsMirrors(currentPentoCopy2, goalPento, numRotations, numMirrors + 1);
+        if (!(result2 === null)) {
+            return result2;
+        }
+
+        return null;
+    }
 }
 
 if (typeof module != 'undefined') {
