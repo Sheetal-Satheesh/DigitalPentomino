@@ -301,10 +301,12 @@
             template.clearContent(".innerGrid")
             template.clearContent("#innerGridForm");
 
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
             let parent = $('#innerGridForm')[0];
 
             let heading = document.createElement("h4");
-            heading.innerHTML = "Scan or share?";
+            heading.innerHTML = strings.qrCode.scanOrShare[lang];
             parent.appendChild(heading);
 
             // Add scan / share buttons
@@ -332,9 +334,11 @@
             template.clearContent("#modalBodyID");
             template.clearContent("#innerGridForm");
 
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
             let parent = document.getElementById("modalBodyID");
 
-            let t1 = document.createTextNode("Share");
+            let t1 = document.createTextNode(strings.qrCode.share.shareQrCode[lang]);
             let h5 = document.createElement("h2");
             let div1 = document.createElement("div");
             h5.appendChild(t1);
@@ -356,20 +360,32 @@
             parent.appendChild(qrCodeElement);
 
             parent.appendChild(document.createElement("br"));
-            parent.appendChild(document.createTextNode("Use this QR-code to bring your current settings on your pupil's devices."));
+            parent.appendChild(document.createTextNode(strings.qrCode.share.useThisQrCode[lang]));
 
             parent.appendChild(document.createElement("br"));
-            parent.appendChild(document.createTextNode("1. Print QR-code 2. The pupils scan it with the X-button in the TUCA-App."));
+            parent.appendChild(document.createTextNode(strings.qrCode.share.firstPrintQrCode[lang] + ": "));
 
-            parent.appendChild(document.createElement("br"));
             let printButton = createPrintButton(qrCodeElement);
             parent.appendChild(printButton);
-
+            parent.appendChild(document.createTextNode(" " + strings.general.or[lang] + " "));
             let downloadImageButton = createDownloadImageLink();
             parent.appendChild(downloadImageButton);
+
             parent.appendChild(document.createElement("br"));
 
-            let collapsibleButton = SettingsForm.createCollapsibleButton("Show advanced share options", "Hide advanced share options");
+            let qrButtonImg = document.createElement("img");
+            qrButtonImg.src = "resources/images/icons/qr-code.png";
+            qrButtonImg.style.width = "2vw";
+            qrButtonImg.style.height = "2vw";
+
+            parent.appendChild(document.createTextNode(strings.qrCode.share.sndScanByPupilsFirstPart[lang] + " "));
+            parent.appendChild(qrButtonImg);
+            parent.appendChild(document.createTextNode(strings.qrCode.share.sndScanByPupilsSndPart[lang]));
+            parent.appendChild(document.createElement("br"));
+
+            let collapsibleButton = SettingsForm.createCollapsibleButton(
+                strings.settings.advanced.show[lang],
+                strings.settings.advanced.hide[lang]);
             let divToHide = document.createElement("div");
             divToHide.style.display = "none";
 
@@ -413,7 +429,7 @@
             let teacherModeCheckbox = SettingsForm.createSelectElement(
                 "teacherModeCheckbox",
                 ["shareWithClass", "shareWithTeachers"],
-                [strings.qrCode.share.teachersMode[lang], strings.qrCode.share.pupilMode[lang]]);
+                [strings.qrCode.share.pupilMode[lang], strings.qrCode.share.teachersMode[lang]]);
 
             teacherModeCheckbox.onchange = () => {
                 let settings = SettingsSingleton.getInstance().getSettings();
@@ -469,7 +485,8 @@
         function createDownloadImageLink() {
             let downloadImageButton = document.createElement("input");
             downloadImageButton.type = "button";
-            downloadImageButton.value = "Download image";
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+            downloadImageButton.value = strings.qrCode.share.downloadImage[lang];
             return downloadImageButton;
         }
 
@@ -492,7 +509,8 @@
         }
 
         function createPrintButton(qrCodeElement) {
-            let printButton = SettingsForm.createButton("Print");
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+            let printButton = SettingsForm.createButton(strings.qrCode.share.print[lang]);
             printButton.setAttribute("id", "printQRCode");
             printButton.addEventListener("click", function () {
                 let canvas = qrCodeElement.firstElementChild;
@@ -526,10 +544,12 @@
             template.clearContent(".innerGrid")
             template.clearContent("#innerGridForm");
 
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
             let parent = $('#innerGridForm')[0];
 
             let heading = document.createElement("h4");
-            heading.innerHTML = "Scan QR-code";
+            heading.innerHTML = strings.qrCode.scan.scanQrCode[lang];
             parent.appendChild(heading);
 
             let videoElement = parent.appendChild(document.createElement("video"));

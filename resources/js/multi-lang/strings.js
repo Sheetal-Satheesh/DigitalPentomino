@@ -2,7 +2,8 @@ const strings = {
     general: {
         no: ["No", "Nein"],
         yes: ["Yes", "Ja"],
-        cancel: ["cancel", "Abbrechen"]
+        cancel: ["cancel", "Abbrechen"],
+        or: ["or", "oder"]
     },
     reset: ["Do You Want To Reset?", "Willst du deinen Spielstand wirklich löschen?"],
     showSolved: {
@@ -206,14 +207,23 @@ const strings = {
         }
     },
     qrCode: {
+        scanOrShare: ["Scan or Share?", "Scannen oder Teilen?"],
         share: {
+            shareQrCode: ["Share QR-code", "Teile QR-code"],
             copyUrl: ["Copy", "Kopieren"],
             urlToTest: ["Link", "Link"],
             teachersMode: ["Share with teachers (Settings available)", "Teile mit anderen Lehrern (Einstellungen verfügbar)"],
-            pupilMode: ["Share with class (Settings restricted)", "Teile mit Schülern (Einstellungen eingeschränkt)"]
+            pupilMode: ["Share with class (Settings restricted)", "Teile mit Schülern (Einstellungen eingeschränkt)"],
+            print: ["Print", "Drucken"],
+            downloadImage: ["Download as image", "Als Bild herunterladen"],
+            useThisQrCode: ["Use this QR-code to bring your current settings on your pupil's devices.",
+                "Bringen Sie mit diesem QR-Code ihre momentanen Einstellungen zu den Geräten Ihrer Schüler"],
+            firstPrintQrCode: ["1. Print QR-code", "1. Drucken Sie den QR-code"],
+            sndScanByPupilsFirstPart: ["2. Let the pupils scan it with the", "2. Lassen Sie ihn von Ihren Schülern scannen mit dem"],
+            sndScanByPupilsSndPart: ["-Button in the TUCA-App.", "-button in der TUCA-App."],
         },
         scan: {
-
+            scanQrCode: ["Scan QR-code", "Scanne QR-code"]
         }
     }
 };
