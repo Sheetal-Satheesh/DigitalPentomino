@@ -1,6 +1,8 @@
 const BOARD_NAME_DECIMALS_MIN = 3;
 const BOARD_PENTOMINO_NUM_DECIMALS = 2;
 const BOARD_POSITION_DECIMALS = 2;
+const BOARD_NAME_DECIMALS = 1;
+const BOARD_PENTOMINO_ROTATION_MIRROR = 1;
 
 class StartPosSettingsEntry extends CustomSettingsEntry {
     constructor(heading, subheading) {
@@ -156,12 +158,15 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
 
         let n = parseInt(seed.substr(boardNameDecimals, BOARD_PENTOMINO_NUM_DECIMALS));
 
+        let offset = boardNameDecimals + BOARD_PENTOMINO_NUM_DECIMALS;
+        let pieceEntryLength = BOARD_POSITION_DECIMALS * 2
+            + BOARD_PENTOMINO_ROTATION_MIRROR
+            + BOARD_NAME_DECIMALS;
         for (let i = 0; i < n; i++) {
-            let offset = boardNameDecimals + BOARD_PENTOMINO_NUM_DECIMALS;
-            let name = seed.substr(i * 6 + offset, 1);
-            let row = parseInt(seed.substr(i * 6 + offset + 1, BOARD_POSITION_DECIMALS));
-            let col = parseInt(seed.substr(i * 6 + offset + 3, BOARD_POSITION_DECIMALS));
-            let numRotMirCompressed = parseInt(seed.substr(i * 6 + offset + 5, 1));
+            let name = seed.substr(i * pieceEntryLength + offset, BOARD_NAME_DECIMALS);
+            let row = parseInt(seed.substr(i * pieceEntryLength + offset + 1, BOARD_POSITION_DECIMALS));
+            let col = parseInt(seed.substr(i * pieceEntryLength + offset + 3, BOARD_POSITION_DECIMALS));
+            let numRotMirCompressed = parseInt(seed.substr(i * pieceEntryLength + offset + 5, BOARD_PENTOMINO_ROTATION_MIRROR));
             let numRotMir = [StartPosSettingsEntry.getNumClkwiseRotations(numRotMirCompressed),
                 StartPosSettingsEntry.getNumMirrorH(numRotMirCompressed)];
             let pento = new Pentomino(name);
