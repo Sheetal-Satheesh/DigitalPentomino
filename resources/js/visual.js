@@ -2368,16 +2368,23 @@ class Visual {
   speakBot(textTospeak){
       const synth = window.speechSynthesis;
       const utter = new SpeechSynthesisUtterance(textTospeak);
+      let voices = synth.getVoices();
+      let speechBubbleText = document.getElementById("speechBubbleText");
+      //check if browser supports speech synthesis
+        if ('speechSynthesis' in window) {
+          speechBubbleText.innerHTML = 'Your browser <strong>supports</strong> speech synthesis.';
+        } else {
+          speechBubbleText.innerHTML = 'Sorry your browser <strong>does not support</strong> speech synthesis.<br>Try this in <a href="https://www.google.co.uk/intl/en/chrome/browser/canary.html">Chrome Canary</a>.';
+          speechBubbleText.classList.add('not-supported');
+        }
       //utter.lang = 'en-US';
       //utter.lang = 'en-IN';
       utter.voiceURI = "Google UK English Female";
       utter.name =  "Google UK English Female"
       utter.localService= false;
-      utter.default= false
+      utter.default= false;
       //utter.lang = 'de-DE';
       utter.lang = 'de-GB';
-      var voices = synth.getVoices();
-      console.log(voices);
       synth.speak(utter);
   }
 
