@@ -57,6 +57,7 @@ class SettingsParser {
                     return null;
                 }
 
+                console.log(remainingSeed.substr(0, lastElement + 2) + "_" + remainingSeed.substr(lastElement + 2, remainingSeed.length) + ": " + heading + "." + key);
                 remainingSeed = remainingSeed.substr(lastElement + 1, remainingSeed.length);
 
                 switch (remainingSeed[0]) {
@@ -221,6 +222,7 @@ class SettingsParser {
                 }
 
                 seed += visibility.isVisible(heading, key) === true ? 1 : 0;
+                console.log(seed + ": " + heading + "." + key);
             }
         }
 
@@ -265,7 +267,7 @@ class SettingsParser {
         if (maximum === undefined) {
             throw new Error("Settings schema entry " + schemaEntry + " is of type integer but doesn't have a maximum entry");
         }
-        return settingsValue - minimum;
+        return StartPosSettingsEntry.pad(settingsValue - minimum, SettingsParser.getNumOfDigits(maximum - minimum));
     }
 
     static parseBooleanToSeed(schemaEntry, settingsValue) {
