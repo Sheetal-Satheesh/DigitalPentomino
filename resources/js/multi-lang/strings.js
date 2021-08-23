@@ -204,5 +204,9 @@ const strings = {
             higherThanMax: ["This shouldn't be greater than", "Dieser Eintrag darf nicht größer sein als"],
             numberBadInput: ["Please enter a number", "Bitte geben Sie eine Zahl ein"]
         }
+    },
+    share: {
+        copyUrl: ["Copy", "Kopieren"],
+        urlToTest: ["Link", "Link"]
     }
 };
