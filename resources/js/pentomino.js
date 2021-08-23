@@ -228,30 +228,29 @@ class Pentomino {
         }
     }
 
-    static getNumOfRotationsMirrors(currentPento, goalPento, numRotations, numMirrors) {
+    static getNumOfRotationsMirrors(currentPento, goalPento, numRotations) {
         if (currentPento.sRepr === goalPento.sRepr) {
-            return [numRotations, numMirrors];
+            return [numRotations, 0];
         }
 
-        if (numRotations >= 3 || numMirrors > 1) {
+        if (numRotations > 3) {
             return null;
         }
 
         let currentPentoCopy = Object.assign(new Pentomino(goalPento.name), currentPento);
         currentPentoCopy.rotateClkWise();
-        let result = this.getNumOfRotationsMirrors(currentPentoCopy, goalPento, Number(numRotations) + 1, numMirrors);
+        let result = this.getNumOfRotationsMirrors(currentPentoCopy, goalPento, new Number(numRotations) + 1);
         if (!(result === null)) {
             return result;
         }
 
         let currentPentoCopy2 = Object.assign(new Pentomino(goalPento.name), currentPento);
         currentPentoCopy2.mirrorH();
-        let result2 = this.getNumOfRotationsMirrors(currentPentoCopy2, goalPento, numRotations, Number(numMirrors) + 1);
-        if (!(result2 === null)) {
-            return result2;
+        if (currentPentoCopy2.sRepr === goalPento.sRepr) {
+            return [numRotations, 1];
+        } else {
+            return null;
         }
-
-        return null;
     }
 }
 

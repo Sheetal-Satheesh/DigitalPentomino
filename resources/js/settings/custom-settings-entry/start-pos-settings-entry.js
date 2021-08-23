@@ -190,7 +190,7 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
             seed += p.name;
             seed += StartPosSettingsEntry.pad(pos[0] - boardSRows, BOARD_POSITION_DECIMALS);
             seed += StartPosSettingsEntry.pad(pos[1] - boardSCols, BOARD_POSITION_DECIMALS);
-            let numRotationsMirrors = Pentomino.getNumOfRotationsMirrors(new Pentomino(p.name), p, 0, 0);
+            let numRotationsMirrors = Pentomino.getNumOfRotationsMirrors(new Pentomino(p.name), p, 0);
             seed += numRotationsMirrors[0] + 4 * numRotationsMirrors[1];
         });
 
