@@ -218,9 +218,9 @@ const strings = {
             downloadImage: ["Download as image", "Als Bild herunterladen"],
             useThisQrCode: ["Use this QR-code to bring your current settings on your pupil's devices.",
                 "Bringen Sie mit diesem QR-Code ihre momentanen Einstellungen zu den Geräten Ihrer Schüler"],
-            firstPrintQrCode: ["1. Print QR-code", "1. Drucken Sie den QR-code"],
-            sndScanByPupilsFirstPart: ["2. Let the pupils scan it with the", "2. Lassen Sie ihn von Ihren Schülern scannen mit dem"],
-            sndScanByPupilsSndPart: ["-Button in the TUCA-App.", "-button in der TUCA-App."],
+            firstPrintQrCode: ["1. Print the QR-code", "1. Drucken Sie den QR-code"],
+            sndScanByPupilsFirstPart: ["2. Let your pupils scan it with the", "2. Lassen Sie ihn von Ihren Schülern mit dem"],
+            sndScanByPupilsSndPart: ["-button in the TUCA-App.", "-Button in der TUCA-App scannen."]
         },
         scan: {
             scanQrCode: ["Scan QR-code", "Scanne QR-code"]
