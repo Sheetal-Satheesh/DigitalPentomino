@@ -841,7 +841,7 @@
             template.clearContent("#innerGridForm");
             template.clearContent(".modalFullframeContainer");
             modal.style.background = "#dcf0ed";
-            document.getElementById("modalFormContainerID").style.backgroundColor = "#dcf0ed";
+            document.getElementById("modalFormContainerID").style.backgroundColor = "lightgrey";
             document.getElementById("modalFormContainerID").style.border = "none";
             let y = document.getElementsByClassName("cActionBtn");
             for (let i = 0; i < y.length; i++) { y[i].style.pointerEvents = "none"; }
@@ -1470,7 +1470,7 @@
             this.saveGameImage(SnapshotType.Auto);
 
             var modal = document.getElementById('modalTop');
-            modal.style.background = " rgb(220, 240, 237)";
+            modal.style.background = " lightgrey";
             modal.style.display = "block";
 
             document.querySelector(".modalFormContent").style.display = "none";
