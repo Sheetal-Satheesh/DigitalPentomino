@@ -13,14 +13,12 @@ class CommandTree {
         this._rootCmdNode = undefined;
         this._currentCmdNode = undefined;
         this._lastComandNode = undefined;
-        this._operationStatus &= ~(UNDO & REDO);
     }
 
     Clean() {
         this._rootCmdNode = undefined;
         this._currentCmdNode = undefined;
         this._lastComandNode = undefined;
-        this._operationStatus &= ~(UNDO & REDO);
     }
 
     _insert(current, parent, command) {
@@ -29,9 +27,6 @@ class CommandTree {
             if (parent == undefined) {
                 return current;
             } else {
-                if ((this._operationStatus & UNDO) != UNDO) {
-                    return current;
-                }
                 parent.AddChild(current);
                 this._currentCmdNode = current;
                 return parent;
@@ -59,13 +54,27 @@ class CommandTree {
     }
 
     Insert(command) {
+
+        if (this._currentCmdNode == undefined &&
+            this._rootCmdNode != undefined) {
+            this._currentCmdNode = this._rootCmdNode;
+        }
+
+        if (this._currentCmdNode != undefined &&
+            this._currentCmdNode != this._lastComandNode) {
+            let newCommand = new CommandNode(command);
+            this._currentCmdNode.AddChild(newCommand);
+            this._currentCmdNode = newCommand;
+            this._lastComandNode = this.TreeRightMost(this._rootCmdNode);
+            return this._currentCmdNode;
+
+        }
+
         this._rootCmdNode = this._insert(this._rootCmdNode, this._rootCmdNode, command);
         if (this._currentCmdNode == undefined) {
             this._currentCmdNode = this._rootCmdNode;
         }
         this._lastComandNode = this._currentCmdNode;
-        this._operationStatus &= ~REDO;
-        this._operationStatus |= UNDO;
 
         return this._currentCmdNode;
     }
@@ -95,7 +104,20 @@ class CommandTree {
         return retNode;
     }
 
-    NodeCount(currentNode=this._rootCmdNode) {
+    TreeRightMost(currNode) {
+        if (currNode == undefined) {
+            return undefined;
+        }
+
+        let retNode = this.TreeRightMost(currNode.ChildTopNode());
+        if (retNode == undefined) {
+            return currNode;
+        }
+
+        return retNode;
+    }
+
+    NodeCount(currentNode = this._rootCmdNode) {
         if (currentNode == undefined) {
             return 0;
         }
@@ -106,6 +128,406 @@ class CommandTree {
         }
 
         return 1;
+    }
+
+    GetNodePath(currNode, key) {
+        if (currNode == undefined) {
+            return undefined;
+        }
+
+        if (currNode.Key() == key) {
+            return [currNode];
+        }
+
+        let childs = currNode.Children();
+        let retNodes = [];
+        for (let iter = 0; iter < childs.length; ++iter) {
+            let node = this.GetNodePath(childs[iter], key);
+
+            if (node.length != 0) {
+                retNodes.push(currNode);
+            }
+            retNodes = [...retNodes, ...node];
+        }
+
+        return retNodes;
+    }
+
+
+    GetSequeneType(currNode, startKey, endKey) {
+        if (currNode == undefined) {
+            return undefined;
+        }
+
+        if (startKey == endKey) {
+            return SearchStrategy.Top2Bottom;
+        }
+
+        if (currNode.Key() == startKey) {
+            return SearchStrategy.Top2Bottom;
+        }
+
+        if (currNode.Key() == endKey) {
+            return SearchStrategy.BottomUp;
+        }
+        let seqType = 0;
+        for (let indx = 0; indx < currNode.Children().length; ++indx) {
+            let childs = currNode.Children();
+            seqType = this.GetSequeneType(
+                childs[indx],
+                startKey,
+                endKey
+            );
+            if (seqType != 0) {
+                return seqType;
+            }
+        }
+        return seqType;
+    }
+
+    /**
+     * Find the top parents branch next node, to remember
+     * Redo operations
+     * 
+     * @param {*} currNode 
+     * @returns 
+     */
+    NextBranchNode(currNode) {
+        if (currNode == undefined) {
+            return undefined;
+        }
+        if (currNode.Key() == currNode.Parent().Key()) {
+            return undefined;
+        }
+
+        let siblings = currNode.Siblings();
+        if (siblings.length > 1) {
+            for (let iter = 0; iter < siblings.length; ++iter) {
+                if (currNode.Key() == siblings[iter].Key() &&
+                    this.NodePosition(currNode) != NodeOrder.Last) {
+                    return siblings[iter + 1];
+                }
+            }
+        }
+
+        return this.NextBranchNode(currNode.Parent());
+    }
+
+    /**
+     * Find the top parents branch previous node, to remember
+     * undo operations
+     * 
+     * Can be achieved this by in place check
+     * 
+     * @param {*} currNode 
+     * @returns 
+     */
+
+    PrevBranchNode(currNode) {
+        if (currNode == undefined) {
+            return undefined;
+        }
+        if (currNode.Key() == currNode.Parent().Key()) {
+            return undefined;
+        }
+
+        let siblings = currNode.Siblings();
+        if (siblings.length > 1) {
+            for (let iter = 0; iter < siblings.length; ++iter) {
+                if (currNode.Key() == siblings[iter].Key() &&
+                    (this.NodePosition(currNode) != NodeOrder.First)) {
+                    return siblings[iter - 1];
+                }
+            }
+        }
+
+        return this.PrevBranchNode(currNode.Parent());
+    }
+
+    /**
+     * very recent branch leaf node
+     * @param {} head 
+     * @returns 
+     */
+
+    LeafNode(head) {
+        if (head == undefined) {
+            return undefined;
+        }
+
+        let siblings = head.Children();
+        if (siblings.length == 0) {
+            return head;
+        }
+        else if (siblings.length >= 1) {
+            return this.LeafNode(head.ChildTopNode());
+        }
+
+    }
+
+    /**
+     *  Current branch top node
+     * 
+     * @param {*} leaf 
+     * @returns 
+     */
+    TopNode(leaf) {
+        if (leaf == undefined) {
+            return undefined;
+        }
+        if (leaf.Key() == leaf.Parent().Key()) {
+            return undefined;
+        }
+
+
+        let siblings = leaf.Parent().Children();
+        if (siblings.length > 1) {
+            return leaf;
+        }
+        else if (siblings.length <= 1) {
+            return this.TopNode(leaf.Parent());
+        }
+    }
+
+    /**
+     * Find the node order among the siblings
+     * 
+     */
+    NodePosition(current) {
+        if (current == undefined) {
+            return NodeOrder.Unknown;
+        }
+
+        let siblings = current.Parent().Children();
+        for (let iter = 0; iter < siblings.length; ++iter) {
+            if (current.Key() == siblings[iter].Key()) {
+                if (iter == 0) {
+                    return NodeOrder.First;
+                }
+                else if (iter == (siblings.length - 1)) {
+                    return NodeOrder.Last;
+                }
+                else {
+                    return NodeOrder.Middle;
+                }
+            }
+        }
+    }
+
+    PositionCurrent(cmdKey) {
+        if (cmdKey == undefined) {
+            this._currentCmdNode = undefined;
+            return;
+        }
+        this._currentCmdNode = this.SearchCmdNode(this._rootCmdNode, cmdKey);
+    }
+
+    isEmpty() {
+        return this.isAtRoot() && this.isAtLeaf();
+    }
+
+    isAtRoot() {
+        return this._currentCmdNode === this._rootCmdNode;
+    }
+
+    isAtLeaf() {
+        return this._currentCmdNode.getChildren().length === 0;
+    }
+
+    Root() {
+        return this._rootCmdNode;
+    }
+
+    Current() {
+        return this._currentCmdNode;
+    }
+
+    Leaf() {
+        return this._lastComandNode;
+    }
+
+    /**** Code not used*/
+    CmdSequences(startKey, endKey) {
+        let startPath = this.GetNodePath(this._rootCmdNode, startKey);
+        let endPath = this.GetNodePath(this._rootCmdNode, endKey);
+        let sIndx = 0,
+            eIndx = 0,
+            parentIndx = -1;
+        let parent = undefined;
+        while (sIndx != startPath.length ||
+            eIndx != endPath.length) {
+            if (sIndx == eIndx &&
+                startPath[sIndx] == endPath[eIndx]) {
+                sIndx++;
+                eIndx++;
+            }
+            else {
+                parentIndx = eIndx;
+
+                if ((startPath[sIndx - 1].ChildTopNode() == endPath[sIndx]) ||
+                    (endPath[eIndx - 1].ChildTopNode() == startPath[eIndx])
+                ) {
+                    parentIndx = (parentIndx != 0) ? parentIndx - 1 : 0;
+                }
+                break;
+            }
+        }
+
+        let startBranch = [];
+        for (let indx = startPath.length - 1; indx > parentIndx; indx--) {
+            startBranch.push(startPath[indx].Command());
+        }
+
+        let endBranch = [];
+        for (let indx = parentIndx; indx < endPath.length; indx++) {
+            endBranch.push(endPath[indx].Command());
+        }
+
+
+        let sequnceType = this.GetSequeneType(this._rootCmdNode, startKey, endKey);
+        if (sequnceType == SearchStrategy.BottomUp) {
+            endBranch = endBranch.reverse();
+        }
+
+        let retCmds = [];
+        retCmds = [...startBranch, ...endBranch];
+        return {
+            seqType: sequnceType,
+            commands: retCmds
+        };
+    }
+
+    CollectCmdSequences(
+        currNode,
+        startKey,
+        endKey,
+        searchType) {
+
+
+        if (currNode == undefined) {
+            return undefined;
+        }
+
+        if (startKey == endKey) {
+            return {
+                seqType: SearchStrategy.Top2Bottom,
+                commands: [this.SearchCmdNode(currNode, startKey).Command()]
+            };
+        }
+
+        if (currNode.Key() == startKey) {
+            searchType |= SearchStrategy.Top2Bottom;
+            if ((SearchStrategy.BottomUp & searchType) != 0) {
+                return {
+                    seqType: SearchStrategy.BottomUp,
+                    commands: [currNode.Command()]
+                };
+            }
+        }
+
+        if (currNode.Key() == endKey) {
+            searchType |= SearchStrategy.BottomUp;
+            if ((SearchStrategy.Top2Bottom & searchType) != 0) {
+                return {
+                    seqType: SearchStrategy.Top2Bottom,
+                    commands: [currNode.Command()]
+                };
+            }
+        }
+
+        let retObj = {
+            seqType: 0,
+            commands: []
+        };
+
+        let searchValue = searchType;
+        for (let indx = 0; indx < currNode.Children().length; ++indx) {
+            let childs = currNode.Children();
+            let cmdObj = this.CollectCmdSequences(
+                childs[indx],
+                startKey,
+                endKey,
+                searchValue
+            );
+
+
+            if (searchType) {
+                if (!retObj.commands.find(cmd => cmd._pentomino === currNode.Command()._pentomino)) {
+                    retObj.commands.push(currNode.Command());
+                }
+            } else {
+                searchValue = cmdObj.seqType;
+            }
+
+            retObj.seqType = cmdObj.seqType;
+            retObj.commands = [...retObj.commands, ...cmdObj.commands];
+
+
+        }
+
+        if (searchType &&
+            retObj.seqType == 0) {
+            retObj.seqType = searchType;
+            retObj.commands.push(currNode.Command());
+        }
+
+
+        return retObj;
+    }
+
+    MoveUp() {
+
+        if (this._currentCmdNode == undefined) {
+            if (this._rootCmdNode == undefined) {
+                console.error("Command Tree is Emty: Game is not Started");
+                return;
+            }
+        }
+
+        if (this._currentCmdNode.Key() === this._currentCmdNode.Parent().Key()) {
+            return;
+        }
+
+        let current = this._currentCmdNode;
+        let sibling = current.Parent().Children();
+        if (sibling.length > 1) {
+            this._currentCmdNode = this.PrevBranchNode(this._currentCmdNode);
+        }
+        else {
+            this._currentCmdNode = this._currentCmdNode.Parent();
+        }
+    }
+
+    /**
+    * TODO:// extensive support 
+    * @returns 
+    */
+
+    MoveDown() {
+        let current = undefined;
+        if (this._currentCmdNode == undefined) {
+            if (this._rootCmdNode == undefined) {
+                console.error("Command Tree is Emty: Game is not Started");
+                return;
+            }
+            else {
+                this._currentCmdNode = this._rootCmdNode;
+            }
+        }
+
+        if (this._currentCmdNode.Children().length == 0) {
+            let branchNode = this.NextBranchNode(this._currentCmdNode);
+            if (branchNode != undefined) {
+                this._currentCmdNode = branchNode;
+            } else {
+                console.log("Redo not possible");
+            }
+            return;
+        }
+        else {
+            this._currentCmdNode = this._currentCmdNode.Children()[0];
+            return;
+        }
     }
 
     CollectCmdKeySequences(
@@ -159,262 +581,7 @@ class CommandTree {
 
         return cmdKeySeq;
     }
-
-    CollectCmdSequences(
-        currNode,
-        startKey,
-        endKey,
-        searchType) {
-
-
-        if (currNode == undefined) {
-            return undefined;
-        }
-
-        if (currNode.Key() == startKey) {
-            searchType |= SearchStrategy.Top2Bottom;
-            if ((SearchStrategy.BottomUp & searchType) != 0) {
-                return {
-                    seqType: SearchStrategy.BottomUp,
-                    commands: [currNode.Command()]
-                };
-            }
-        }
-
-        if (currNode.Key() == endKey) {
-            searchType |= SearchStrategy.BottomUp;
-            if ((SearchStrategy.Top2Bottom & searchType) != 0) {
-                return {
-                    seqType: SearchStrategy.Top2Bottom,
-                    commands: [currNode.Command()]
-                };
-            }
-        }
-
-        let retObj = {
-            seqType: 0,
-            commands: []
-        };
-
-        let searchValue = searchType;
-        for (let indx = 0; indx < currNode.Children().length; ++indx) {
-            let childs = currNode.Children();
-            let cmdObj = this.CollectCmdSequences(
-                childs[indx],
-                startKey,
-                endKey,
-                searchValue
-            );
-
-            if (searchType) {
-                if (!retObj.commands.find(cmd => cmd._pentomino === currNode.Command()._pentomino)) {
-                    retObj.commands.push(currNode.Command());
-                }
-            } else {
-                searchValue = cmdObj.seqType;
-            }
-
-            retObj.seqType = cmdObj.seqType;
-            retObj.commands = [...retObj.commands, ...cmdObj.commands];
-
-
-        }
-
-        if (searchType &&
-            retObj.seqType == 0) {
-            retObj.seqType = searchType;
-            retObj.commands.push(currNode.Command());
-        }
-
-
-        return retObj;
-    }
-
-    MoveUp() {
-        let current = undefined;
-
-        if (this._currentCmdNode == undefined) {
-            if (this._rootCmdNode == undefined) {
-                this._operationStatus &= ~(UNDO & REDO);
-                console.error("Command Tree is Emty: Game is not Started");
-                return undefined;
-            }
-        }
-
-        if ((this._operationStatus & UNDO) != UNDO) {
-            console.error("Undo not Possible");
-            return undefined;
-
-        }
-
-        if (this._currentCmdNode.Key() === this._currentCmdNode.Parent().Key()) {
-            current = this._currentCmdNode;
-            this._operationStatus &= ~UNDO;
-            this._currentCmdNode = undefined;
-            return current.Command();
-        }
-        else {
-            current = this._currentCmdNode;
-            this._currentCmdNode = this._currentCmdNode.Parent();
-            this._operationStatus |= (UNDO | REDO);
-            return current.Command();
-        }
-    }
-
-    NextBranchNode(current, target) {
-        let retCurrent, firstNode;
-        if (current == undefined) {
-            console.error("Node undefined");
-            return [undefined, firstNode];
-        }
-        else if (target == current) {
-            if (target.Children().length == 0) {
-                return [target, firstNode = true];
-            }
-            return [target.Children()[0], firstNode];
-        }
-        else if (current.Children().length == 0) {
-            return [current, firstNode];
-        }
-
-        for (let prevIndex = 0, index = 0;
-            index < current.Children().length; ++index) {
-
-            let child = current.Children();
-            if (index != prevIndex) {
-                if (firstNode == true) {
-                    return [child[index], firstNode];
-                }
-                if (child[index] == target) {
-                    return [target.Children()[0], firstNode];
-                }
-            }
-            [retCurrent, firstNode] = this.NextBranchNode(child[index], target, firstNode);
-            prevIndex = index;
-            if (retCurrent.Parent() == target) {
-                return [retCurrent, firstNode];
-            }
-        }
-
-        return [current, firstNode];
-    }
-
-    /**
-     * TODO:// extensive support 
-     * @returns 
-     */
-
-    MoveDown() {
-        let current = undefined;
-        if (this._currentCmdNode == undefined) {
-            if (this._rootCmdNode == undefined) {
-                this._operationStatus &= ~(UNDO & REDO);
-                console.error("Command Tree is Emty: Game is not Started");
-                return undefined;
-            }
-            else {
-                this._currentCmdNode = this._rootCmdNode;
-                this._operationStatus |= UNDO;
-                return this._currentCmdNode.Command();
-            }
-        }
-
-        if ((this._operationStatus & REDO) != REDO) {
-            console.error("Redo not Possible");
-            return undefined;
-        }
-
-        if (this._currentCmdNode.Children().length == 0) {
-            current = this._currentCmdNode;
-            this._operationStatus &= ~REDO;
-            return undefined;
-        }
-        else {
-            current = this._currentCmdNode;
-            this._currentCmdNode = current.ChildTopNode();
-            this._operationStatus |= (UNDO | REDO);
-            return this._currentCmdNode.Command();
-        }
-    }
-
-    CommandSequences(startKey, endKey) {
-        let startNode = this.SearchCmdNode(this._rootCmdNode, startKey);
-        if (startNode == undefined) {
-            console.error("Search Failed: Node with key" +
-                startKey + "Not Found");
-            return undefined;
-        }
-
-        let endNode = this.SearchCmdNode(this._rootCmdNode, endKey);
-        if (endNode == undefined) {
-            console.error("Search Failed: Node with key" +
-                endKey + "Not Found");
-            return undefined;
-        }
-
-        let cmdSequences = this.CollectCmdSequences(
-            this._rootCmdNode,
-            startNode,
-            endNode);
-
-        return cmdSequences;
-    }
-
-    isEmpty() {
-        return this.isAtRoot() && this.isAtLeaf();
-    }
-
-    isAtRoot() {
-        return this._currentCmd === this._rootCmdNode;
-    }
-
-    isAtLeaf() {
-        return this._currentCmd.getChildren().length === 0;
-    }
-
-    Root() {
-        return this._rootCmdNode;
-    }
-
-    RootCmdKey() {
-        if (this._rootCmdNode != undefined) {
-            return this._rootCmdNode.Key();
-        }
-        return undefined;
-    }
-
-    Current() {
-        return this._currentCmdNode;
-    }
-
-    PositionCurrent(cmdKey) {
-        this._currentCmdNode = this.SearchCmdNode(this._rootCmdNode, cmdKey);
-    }
-
-    CurrentCmdKey() {
-        if (this._currentCmdNode != undefined) {
-            return this._currentCmdNode.Key();
-        }
-        return undefined;
-    }
-
-    Leaf() {
-        return this._lastComandNode;
-    }
-
-    LeafCmdKey() {
-        if (this._lastComandNode != undefined) {
-            return this._lastComandNode.Key();
-        }
-        return undefined;
-    }
-
-    Flush() {
-        this._rootCmdNode = undefined;
-        this._currentCmdNode = undefined;
-    }
 }
-
 if (typeof module != 'undefined') {
     module.exports = CommandHistoryTree;
 }
