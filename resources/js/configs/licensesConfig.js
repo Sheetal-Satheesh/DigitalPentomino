@@ -33,7 +33,6 @@ licensesConfig = {
         "link": "https://www.zapsplat.com/sound-effect-category/wood/",
         "license": "https://www.zapsplat.com/license-type/standard-license/"
     },
-<<<<<<< HEAD
     "qrScanner": {
         "name": ["QR Scanner", "QR Scanner"],
         "Author": "Nimiq",
@@ -45,7 +44,7 @@ licensesConfig = {
         "Author": "Jerome Etienne",
         "link": "https://github.com/jeromeetienne/jquery-qrcode",
         "license": "MIT License"
-=======
+    },
     "html2canvas":{
         "name": strings.settings.license.html2canvas,
         "Author": "Niklas von Hertzen",
@@ -57,6 +56,5 @@ licensesConfig = {
         "Author": "Jeremy Ashkenas",
         "link": "https://lodash.com/",
         "license":"https://raw.githubusercontent.com/lodash/lodash/4.17.15-npm/LICENSE"
->>>>>>> development
     }
 }
