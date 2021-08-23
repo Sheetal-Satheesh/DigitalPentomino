@@ -205,8 +205,15 @@ const strings = {
             numberBadInput: ["Please enter a number", "Bitte geben Sie eine Zahl ein"]
         }
     },
-    share: {
-        copyUrl: ["Copy", "Kopieren"],
-        urlToTest: ["Link", "Link"]
+    qrCode: {
+        share: {
+            copyUrl: ["Copy", "Kopieren"],
+            urlToTest: ["Link", "Link"],
+            teachersMode: ["Share with teachers (Settings available)", "Teile mit anderen Lehrern (Einstellungen verfügbar)"],
+            pupilMode: ["Share with class (Settings restricted)", "Teile mit Schülern (Einstellungen eingeschränkt)"]
+        },
+        scan: {
+
+        }
     }
 };

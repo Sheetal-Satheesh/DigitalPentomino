@@ -396,10 +396,10 @@
 
             let p = document.createElement("p");
             let descrLabel = document.createElement("label");
-            descrLabel.innerText = strings.share.urlToTest[lang] + ": ";
+            descrLabel.innerText = strings.qrCode.share.urlToTest[lang] + ": ";
             p.appendChild(descrLabel);
             p.appendChild(urlElement);
-            let copyUrlButton = SettingsForm.createButton(strings.share.copyUrl[lang]);
+            let copyUrlButton = SettingsForm.createButton(strings.qrCode.share.copyUrl[lang]);
             copyUrlButton.addEventListener("click", (event) => {
                 navigator.clipboard.writeText(urlElement.innerText);
             });
@@ -413,7 +413,7 @@
             let teacherModeCheckbox = SettingsForm.createSelectElement(
                 "teacherModeCheckbox",
                 ["shareWithClass", "shareWithTeachers"],
-                ["Share with class (Settings disabled)", "Share with teachers (Settings enabled)"]);
+                [strings.qrCode.share.teachersMode[lang], strings.qrCode.share.pupilMode[lang]]);
 
             teacherModeCheckbox.onchange = () => {
                 let settings = SettingsSingleton.getInstance().getSettings();
