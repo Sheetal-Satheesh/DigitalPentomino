@@ -167,8 +167,40 @@
   z-index:500;
 }
 
+.anim{
+  /* position: relative;
+  top:98.5vw;
+  left : 82.5vw;
+  height: 18vw;
+  width: 18vw;
+  justify-content: center;
+  display: table-cell;
+  right: 0;
+  bottom: 4vw;
+  z-index:500; */
+  animation-name: example;
+  animation-duration: 4s;
+  animation-delay: 1s;
+}
+
+@keyframes example {
+  0%   {transform: rotate(30deg); -webkit-transform: rotate(30deg);}
+  20%  {transform: rotate(-10deg); -webkit-transform: rotate(-10deg);}
+  22%  {transform: rotate(0deg); -webkit-transform: rotate(0deg);}
+  25%  {transform: rotate(30deg); -webkit-transform: rotate(30deg);}
+  40%  {transform: rotate(-10deg); -webkit-transform: rotate(-10deg);}
+  44%  {transform: rotate(0deg); -webkit-transform: rotate(0deg);}
+  50%  {transform: rotate(30deg); -webkit-transform: rotate(30deg);}
+  56%  {transform: rotate(-10deg); -webkit-transform: rotate(-10deg);}
+  58%  {transform: rotate(0deg); -webkit-transform: rotate(0deg);}
+  65%  {transform: rotate(30deg); -webkit-transform: rotate(30deg);}
+  85%  {transform: rotate(-10deg); -webkit-transform: rotate(-10deg);}
+  90%  {transform: rotate(10deg); -webkit-transform: rotate(10deg);}
+  100%  {transform: rotate(0deg); -webkit-transform: rotate(0deg);}
+}
+
 #bubbleContainer:active{
-  pointer-events:none; /* only allow hover events on the container */
+  pointer-events:all; /* only allow hover events on the container */
 }
 
 #bubbleContainer:hover{
@@ -245,11 +277,22 @@ height: 4vw;
 .gamearea {
   justify-content: normal;
   display: block;
-  float: left;
+  position: fixed;
   user-select: none;
   text-align: center;
   /*outline: 1px solid #eee;*/
   --webkit-transform: translate3d(0,0,0);
+}
+
+.disabledbutton {
+  pointer-events: none;
+  opacity: 0.6;
+  display:none;
+}
+
+.splitbuttonimg {
+  pointer-events: none;
+  opacity: 0.6;  
 }
 
 .boardarea {
@@ -521,6 +564,59 @@ table
   margin: 0;
   padding: 20px;
 }
+
+/* Toggle Split Board */
+.toggleSplitBoard {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.toggleSplitBoard input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
 
 /* Style for Button Manipulation */
 .main-wrapper {
