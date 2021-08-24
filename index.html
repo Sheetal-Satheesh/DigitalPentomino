@@ -1461,19 +1461,21 @@
                 imageGrid.appendChild(imageDiv);
 
                 if (callerType == "Snapshot") {
+                    let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
                     let buttonDiv = document.createElement("div");
                     buttonDiv.setAttribute("class", "imageBtnDiv");
 
                     let loadBtn = document.createElement("button");
                     loadBtn.setAttribute("class", "imageButton imageLoadBtn");
-                    loadBtn.textContent = "Load";
+                    loadBtn.textContent = strings.replay.loadSnapshot[lang];
                     loadBtn.addEventListener('click', function () {
                         loadGameImage(image.value);
                     }, false);
 
                     let deleteBtn = document.createElement("button");
                     deleteBtn.setAttribute("class", "imageButton imageDeleteBtn");
-                    deleteBtn.textContent = "Delete";
+                    deleteBtn.textContent = strings.replay.deleteSnapshot[lang];
                     deleteBtn.addEventListener('click', function () {
                         deleteGameImage(imgKey, gameId);
                     }, false);
@@ -1692,7 +1694,7 @@
 
             let replyBtn = document.createElement("button");
             replyBtn.setAttribute("class", "imageButton imageLoadBtn replayBtn");
-            replyBtn.textContent = "Replay";
+            replyBtn.textContent = strings.replay.doReply[lang];
 
 
             fButtonDiv.appendChild(replyBtn);

@@ -37,8 +37,11 @@ const strings = {
     numberOfPossibleSolutions: ["Number of solutions", "Anzahl Lösungen"],
     License: ["LICENSES", "LIZENZEN"],
     replay:{
-        startStateText: ["Start State", "Wiederholung"],
-        endStateText: ["End State","Endzustand"]
+        doReply: ["Replay", "Playback"],
+        startStateText: ["Start State", "Startzustand"],
+        endStateText: ["End State","Endzustand"],
+        deleteSnapshot: ["Delete", "Löschen"],
+        loadSnapshot: ["Load", "Laden"]
     },
     settings: {
         header: ["Game settings", "Spieleinstellungen"],
