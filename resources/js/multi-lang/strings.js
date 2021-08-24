@@ -35,10 +35,14 @@ const strings = {
         ignore:["Ignore","Ignorieren Sie"]
     },
     numberOfPossibleSolutions: ["Number of solutions", "Anzahl Lösungen"],
-    License: ["LICENSES", "LIZENZEN"],
+    License: ["Licenses", "Lizenzen"],
     replay:{
-        startStateText: ["Start State", "Wiederholung"],
-        endStateText: ["End State","Endzustand"]
+        doReply: ["Replay", "Playback"],
+        startStateText: ["Start State", "Startzustand"],
+        endStateText: ["End State","Endzustand"],
+        deleteSnapshot: ["Delete", "Löschen"],
+        loadSnapshot: ["Load", "Laden"],
+        gameNotStartedYet: ["Game has not started yet", "Es wurde noch keine Aktion durchgeführt"]
     },
     settings: {
         header: ["Game settings", "Spieleinstellungen"],
