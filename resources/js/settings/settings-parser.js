@@ -42,6 +42,10 @@ class SettingsParser {
                     case "boolean":
                         lastElement = SettingsParser.parseBooleanFromSeed(schemaEntry, remainingSeed, settingsEntry, key, seed);
                         break;
+                    case "custom":
+                        let customSettingsEntry = CustomSettingsEntrySingleton.getInstance().get(heading, key);
+                        lastElement = customSettingsEntry.parseFromSeed(schemaEntry, remainingSeed, settingsEntry, key, seed);
+                        break;
                     case "array":
                     case "object":
                         throw new Error("Unsupported type: " + schemaEntry.type);
@@ -53,6 +57,7 @@ class SettingsParser {
                     return null;
                 }
 
+                // console.log(remainingSeed.substr(0, lastElement + 2) + "_" + remainingSeed.substr(lastElement + 2, remainingSeed.length) + ": " + heading + "." + key);
                 remainingSeed = remainingSeed.substr(lastElement + 1, remainingSeed.length);
 
                 switch (remainingSeed[0]) {
@@ -63,7 +68,7 @@ class SettingsParser {
                         visibility.setVisible(heading, key, true);
                         break;
                     default:
-                        console.warn("Unknown visibility qualifier: " + remainingSeed[0]);
+                        console.error(heading + "." + key + ": Unknown visibility qualifier: " + remainingSeed[0]);
                         return null;
                 }
 
@@ -206,6 +211,10 @@ class SettingsParser {
                     case "boolean":
                         seed += SettingsParser.parseBooleanToSeed(schemaEntry, settingsValue);
                         break;
+                    case "custom":
+                        let customSettingsEntry = CustomSettingsEntrySingleton.getInstance().get(heading, key);
+                        seed += customSettingsEntry.parseSettingsToSeed(schemaEntry, settingsValue);
+                        break;
                     case "array": case "object":
                         throw new Error("Unsupported type: " + schemaEntry.type);
                     default:
@@ -213,6 +222,7 @@ class SettingsParser {
                 }
 
                 seed += visibility.isVisible(heading, key) === true ? 1 : 0;
+                // console.log(seed + ": " + heading + "." + key);
             }
         }
 
@@ -257,7 +267,7 @@ class SettingsParser {
         if (maximum === undefined) {
             throw new Error("Settings schema entry " + schemaEntry + " is of type integer but doesn't have a maximum entry");
         }
-        return settingsValue - minimum;
+        return StartPosSettingsEntry.pad(settingsValue - minimum, SettingsParser.getNumOfDigits(maximum - minimum));
     }
 
     static parseBooleanToSeed(schemaEntry, settingsValue) {
