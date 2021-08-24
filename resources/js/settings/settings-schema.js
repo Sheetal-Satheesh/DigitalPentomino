@@ -141,7 +141,16 @@ class SettingsSchema {
                   enableSpeech:{
                     "type": "boolean",
                     "title": titles.speech.enableSpeech.title[lang],
+                    "description": titles.speech.enableSpeech.description[lang],
                     "default": true
+                  },
+                  maleOrFemaleVoice:{
+                    "type": "string",
+                    "title": titles.speech.maleOrFemaleVoice.title[lang],
+                    "enum": ["Female", "Male"],
+                    "enumText": titles.speech.maleOrFemaleVoice.enumTitles[lang],
+                    "description": titles.speech.maleOrFemaleVoice.description[lang],
+                    "default": "Female"
                   }
                 }
             },

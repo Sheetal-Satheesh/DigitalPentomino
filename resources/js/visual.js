@@ -2368,7 +2368,6 @@ class Visual {
   speakBot(textTospeak){
       const synth = window.speechSynthesis;
       const utter = new SpeechSynthesisUtterance(textTospeak);
-      let voices = synth.getVoices();
       let speechBubbleText = document.getElementById("speechBubbleText");
       //check if browser supports speech synthesis
         if ('speechSynthesis' in window) {
@@ -2379,13 +2378,40 @@ class Visual {
         }
       //utter.lang = 'en-US';
       //utter.lang = 'en-IN';
-      utter.voiceURI = "Google UK English Female";
-      utter.name =  "Google UK English Female"
-      utter.localService= false;
-      utter.default= false;
       //utter.lang = 'de-DE';
-      utter.lang = 'de-GB';
-      synth.speak(utter);
+      if(SettingsSingleton.getInstance().getSettings().general.language === 1){
+          utter.lang = 'de-DE';
+          utter.voiceURI = 'Google Deutsch';
+          utter.name = 'Google Deutsch';
+          utter.localService= false;
+          utter.default= false;
+          synth.speak(utter);
+      }else{
+          utter.lang = 'en-GB';
+          utter.Local = 'true';
+          utter.voiceURI = "Google UK English Female";
+          utter.name =  "Google UK English Female"
+          console.log((SettingsSingleton.getInstance().getSettings().speech.maleOrFemaleVoice),"language");
+          synth.speak(utter);
+      }
   }
+
+  synthVoice(text) {
+          const awaitVoices = new Promise(resolve=>
+            window.speechSynthesis.onvoiceschanged = resolve)
+          .then(()=> {
+            const synth = window.speechSynthesis;
+
+            var voices = synth.getVoices();
+            console.log(voices)
+
+            const utterance = new SpeechSynthesisUtterance();
+            utterance.voice = voices[5];
+            utterance.text = text;
+            console.log("utterance.voice",utterance.voice);
+            console.log("utterance.text",utterance.text);
+            synth.speak(utterance);
+          });
+    }
 
 }
