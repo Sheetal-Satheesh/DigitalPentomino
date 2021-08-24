@@ -2366,48 +2366,45 @@ class Visual {
   //hintText() function
   //userinactivity() function
   speakBot(textTospeak){
-       let speechBubbleText = document.getElementById("speechBubbleText");
-        //check if browser supports speech synthesis
+      const synth = window.speechSynthesis;
+      const utter = new SpeechSynthesisUtterance(textTospeak);
+      let voices = synth.getVoices();
+      let speechBubbleText = document.getElementById("speechBubbleText");
+      //check if browser supports speech synthesis
         if ('speechSynthesis' in window) {
           speechBubbleText.innerHTML = 'Your browser <strong>supports</strong> speech synthesis.';
         } else {
           speechBubbleText.innerHTML = 'Sorry your browser <strong>does not support</strong> speech synthesis.<br>Try this in <a href="https://www.google.co.uk/intl/en/chrome/browser/canary.html">Chrome Canary</a>.';
           speechBubbleText.classList.add('not-supported');
         }
-        this.synthVoice(textTospeak);
+      //utter.lang = 'en-US';
+      //utter.lang = 'en-IN';
+      //utter.lang = 'de-DE';
+      if(SettingsSingleton.getInstance().getSettings().general.language === 1){
+          if(SettingsSingleton.getInstance().getSettings().speech.maleOrFemaleVoice === "Female"){
+            utter.lang = 'de-DE';
+            utter.voiceURI = 'Google Deutsch';
+            utter.name = 'Google Deutsch';
+            utter.localService= false;
+            utter.default= false;
+            synth.speak(utter);
+          }else if(SettingsSingleton.getInstance().getSettings().speech.maleOrFemaleVoice === "Male"){
+              utter.voice = voices[1];
+              synth.speak(utter);
+          }
+      }else{
+          utter.lang = 'en-GB';
+          utter.Local = 'true';
+
+          if(SettingsSingleton.getInstance().getSettings().speech.maleOrFemaleVoice === "Female"){
+            utter.voiceURI = "Google UK English Female";
+            utter.name =  "Google UK English Female";
+            synth.speak(utter);
+          }else if(SettingsSingleton.getInstance().getSettings().speech.maleOrFemaleVoice === "Male"){
+              utter.voice = voices[8];
+              synth.speak(utter);
+          }
+      }
   }
-
-  synthVoice(text) {
-          const awaitVoices = new Promise(resolve=>
-            window.speechSynthesis.onvoiceschanged = resolve)
-          .then(()=> {
-            const synth = window.speechSynthesis;
-
-            var voices = synth.getVoices();
-            console.log(voices)
-            const utterance = new SpeechSynthesisUtterance();
-            if(SettingsSingleton.getInstance().getSettings().general.language === 1){
-                if(SettingsSingleton.getInstance().getSettings().speech.maleOrFemaleVoice === "Female"){
-                      utterance.voice = voices[5];
-                      utterance.text = text;
-                }else if(SettingsSingleton.getInstance().getSettings().speech.maleOrFemaleVoice === "Male"){
-                    utterance.voice = voices[8];
-                    utterance.text = text;
-                }
-            }else{
-                if(SettingsSingleton.getInstance().getSettings().speech.maleOrFemaleVoice === "Female"){
-                      utterance.voice = voices[7];
-                      utterance.text = text;
-                }else if(SettingsSingleton.getInstance().getSettings().speech.maleOrFemaleVoice === "Male"){
-                    utterance.voice = voices[8];
-                    utterance.text = text;
-                }
-
-            }
-            console.log("utterance.voice",utterance.voice);
-            console.log("utterance.text",utterance.text);
-            synth.speak(utterance);
-          });
-    }
 
 }
