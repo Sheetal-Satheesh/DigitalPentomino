@@ -1577,8 +1577,10 @@ class Visual {
         if (!enabledSolvedScreen) {
             return;
         }
-
-        this.disablePointerEventsOnPieces();
+        
+        let piecesIdArray = this.pieces.map(piece => "piece_" + piece.name);
+        this.disablePointerEventsOnPieces(piecesIdArray);
+        
         let modal = document.getElementById('modalTop');
         modal.style.display = "block";
         modal.style.background = "transparent";
@@ -2291,8 +2293,7 @@ class Visual {
         return (this.replayRunning == true) ? true : false;
     }
 
-    disablePointerEventsOnPieces() {
-        let piecesIdArray = ['piece_X', 'piece_Y', 'piece_F', 'piece_I', 'piece_L', 'piece_N', 'piece_P', 'piece_T', 'piece_U', 'piece_V', 'piece_W', 'piece_Z'];
+    disablePointerEventsOnPieces(piecesIdArray) {
         piecesIdArray.forEach(function (piece) {
             document.getElementById(piece).style.pointerEvents = "none";
         });

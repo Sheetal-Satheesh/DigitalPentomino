@@ -273,6 +273,10 @@ const strings = {
         },
         prefilling: {
             title: ["Prefilling", "Automatisches Füllen"],
+            fixPieces: {
+                title: ["Fix pieces", "Teile fixieren"],
+                description: ["Pieces cannot be moved after being automatically placed", "Teile können nicht verschoben werden, nachdem sie automatisch platziert wurden"],
+            },
             enablePrefilling: {
                 title: ["Enable Prefilling?", "Automatisches Füllen einschalten"],
                 description: ["Prefilling fills the board randomly with pentominoes.",
@@ -311,6 +315,10 @@ const strings = {
         },
         splitPartition: {
             title: ["Split Board into Thirds", "TO DO"],
+            fixPieces: {
+                title: ["Fix pieces", "Teile fixieren"],
+                description: ["Pieces cannot be moved after a partition is filled(only for left-to-right strategy)", "Teile können nicht verschoben werden, nachdem eine Partition gefüllt ist(nur für Links-nach-rechts-Strategie)"],
+            },
             splitStrategy: {
                 title: ["Split Board into Partion By", "TO DO"],
                 enumTitles: [["Color","Left-to-Right"], ["TO DO", "TO DO"]],
