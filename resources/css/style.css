@@ -20,41 +20,8 @@
   height: 100%;
 }
 
-#tray {
-  z-index: 0;
-  position: fixed;
-  top: 0vw;
-  left: 0vw;
-  width: 100%;
-  height: 10vw;
-  background-color: #e2e0e0;
-  display: flex;
-  overflow-x: auto;
-}
 
-#playarea {
-  position: fixed;
-  left: 0vw;
-  top: 10vw;
-  bottom: 10vw;
-  background: transparent;
-  width: 100%;
-  /*height: 39.35vw;*/
-}
 
-#field {
-  position: fixed;
-  left: 0vw;
-  top: 10vw;
-  bottom: 10vw;
-  background: transparent;
-  /* background-image: url('file:///C:/Users/saura/Desktop/DP - Git/digitalpentomino_v5/resources/images/UI_images/tucaThemeDayBackground.png'); */
-  /* background-image: url('file:///C:/Users/saura/Desktop/DP - Git/digitalpentomino_v5/resources/images/UI_images/tuca_space_background.jpg'); */
-  /* background-size: cover; */
-  width: 100%;
-  /*height: 39.35vw;*/
-  bottom: 10vw;
-}
 
 #piecearea {
   user-select: none;
@@ -62,22 +29,7 @@
   height: 10vw;
 }
 
-#functions_navbar {
-  align-items: flex-end;;
-  justify-content: center;
-  /* z-index: 10; */
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 10vw;
-  background-color: #e2e0e0;
-  display: flex;
-  overflow-x: auto;
-  padding: 2%;
-  padding-left: 5%;
-  padding-right: 5%;
-}
+
 
 .cActionBtn img {
   float: center;
@@ -301,7 +253,8 @@ height: 4vw;
 
 .boardarea {
   outline: 1px solid #2f4f4f47;
-  background: #eceaea;
+  /* background: #eceaea; */
+  background-color: rgba(255, 255, 255, 0.925);
   top: 0;
   bottom: 0;
   left: 0;
@@ -376,7 +329,7 @@ border: 0;
   box-shadow: 1px 1px 5px 5px rgba(14, 99, 141, 0.5);
 }
 
-.cGame {
+/* .cGame {
 position: fixed;
 top: 0;
 background: darkgray;
@@ -385,7 +338,7 @@ bottom: 0;
 left: 0;
 overflow:none;
 /* --webkit-transform: translate3d(0,0,0); */
-}
+} */
 
 img#logo{
 position: fixed;

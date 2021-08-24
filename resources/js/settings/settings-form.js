@@ -29,7 +29,7 @@ class SettingsForm {
             let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
             let settings = SettingsSingleton.getInstance().getSettings();
             let settingsClone = SettingsForm.collectDataFromForm(formElement, schema, settings);
-            console.log(settingsClone);
+            // console.log(settingsClone);
             event.preventDefault();
             onSubmit(false, settingsClone);
             if ($('#birdContainer').is(':visible')){
@@ -180,6 +180,8 @@ class SettingsForm {
         SettingsForm.addPrefillChangeListener();
         // further modifications of behavior
     }
+
+   
 
     static addPrefillChangeListener() {
         let prefillStratSelectElem = document.getElementById("prefilling.prefillingStrategy");

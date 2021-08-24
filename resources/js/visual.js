@@ -20,7 +20,16 @@ function updateCommandAttr(cmdType, cmdSeq) {
 }
 
 const cmdAttrDefault = updateCommandAttr(CommandTypes.Original, CommandSeq.Forward);
-const alternateColor = ["#77C9D4", "#57B390", "#015249"];
+ //var currentAppliedTheme = SettingsSingleton.getInstance().getSettings().theming.theme;
+ //console.log("currentAppliedTheme--->", currentAppliedTheme);
+// switch(currentAppliedTheme){
+//     case "default":
+//         break;
+    
+//     case "dayTheme":
+//         break;
+// }
+var alternateColor = ["#77C9D4", "#57B390", "#015249"];
 const backGroundColor = '#eceaea';
 
 let lastHintedPentName = null;
@@ -425,7 +434,7 @@ class Visual {
             let colorR = this.hexToRgb(this.selected.color).r;
             let colorG = this.hexToRgb(this.selected.color).g;
             let colorB = this.hexToRgb(this.selected.color).b;
-            pieceMan[i].style.background = "rgba(" + [colorR, colorG, colorB, 0.5].join(',') + ")";
+            pieceMan[i].style.background = "rgba(" + [colorR, colorG, colorB].join(',') + ")";
         }
 
         if ((x + 280 > gameWidth)) {

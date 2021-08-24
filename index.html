@@ -9,10 +9,7 @@
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="resources/images/icons/dp_192.png">
     <link rel="stylesheet" href="resources/css/style.css">
-    <link rel="stylesheet" id="switcher-id" href="">
-     <!-- <link rel="stylesheet" href="resources/css/dayTheme.css"> -->
-    <link rel="stylesheet" href="resources/css/iceTheme.css">
-     <!-- <link rel="stylesheet" href="resources/css/blackandwhitetheme.css"> --> -->
+    <link rel="stylesheet" id="switcher-id" href=" ">
     <link rel="stylesheet" href="resources/css/board_selection.css">
     <link rel="stylesheet" href="resources/css/modal.css">
     <link rel="stylesheet" href="resources/css/load_screen.css">
@@ -20,6 +17,7 @@
     <link rel="stylesheet" href="resources/css/settings_form.css">
     <link rel="stylesheet" style="text/css" href="resources/jsonform/bootstrap.css" />
     <script src="resources/js/multi-lang/strings.js"></script>
+    <script src="resources/js/themeSwitcher.js"></script>
     <script src="resources/js/settings/settings-schema.js"></script>
     <script src="resources/js/settings/settings.js"></script>
     <script src="resources/js/settings/settings-parser.js"></script>
@@ -45,7 +43,6 @@
     <script src="resources/js/game-solution.js"></script>
     <script src="resources/js/pd.js"></script>
     <script src="resources/js/handleMobile.js"></script>
-    <script src="resources/js/themeSwitcher.js"></script>
     <script type="text/javascript" src="resources/jsonform/jquery.min.js"></script>
     <script type="text/javascript" src="resources/jsonform/underscore.js"></script>
     <script type="text/javascript" src="resources/jsonform/jsonform.js"></script>
@@ -221,6 +218,7 @@
         Object.freeze(SnapshotType);
 
         function initialize() {
+            console.log('In initialize');
             pd = new PD();
             template = new Template();
             loadBoardList();
@@ -755,7 +753,24 @@
                         document.getElementById("bubbleContainer").style.display = "none";
                         document.getElementById("labelNumberSolutionsContainer").style.display = "block";
                     }
-                }
+                } 
+                else if (heading === "theming" && key === "theme") {
+                    var newThemeValue = settings[heading][key];
+                    console.log('--------->',newThemeValue);
+                    if(newThemeValue == 'default'){
+                            document.getElementById('switcher-id').href = 'resources/css/themes/defaultTheme.css';
+                        }
+                        else if(newThemeValue == 'dayTheme'){
+                            document.getElementById('switcher-id').href = 'resources/css/themes/dayTheme.css';
+                        }
+                        else if (newThemeValue == 'nightTheme') {
+                            document.getElementById('switcher-id').href = 'resources/css/themes/iceTheme.css';
+                        }
+                        else if(newThemeValue == 'blackAndWhiteTheme') {
+                            document.getElementById('switcher-id').href = 'resources/css/themes/blackandwhitetheme.css';
+                        }
+                        // localStorage.setItem('style', newThemeValue);
+                    }               
             });
         }
 
