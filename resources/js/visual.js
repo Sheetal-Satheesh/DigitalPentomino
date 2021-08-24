@@ -1577,8 +1577,10 @@ class Visual {
         if (!enabledSolvedScreen) {
             return;
         }
+        
         let piecesIdArray = this.pieces.map(piece => "piece_" + piece.name);
         this.disablePointerEventsOnPieces(piecesIdArray);
+        
         let modal = document.getElementById('modalTop');
         modal.style.display = "block";
         modal.style.background = "transparent";

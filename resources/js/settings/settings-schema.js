@@ -279,6 +279,12 @@ class SettingsSchema {
                 "visible": false,
                 "pupilModeVisibleOnDefault": false,
                 "properties": {
+                    fixPieces : {
+                        "type": "boolean",
+                        "title": titles.prefilling.fixPieces.title[lang],
+                        "description": titles.prefilling.fixPieces.description[lang],
+                        "default": false
+                    },
                     enablePrefilling: {
                         "type": "boolean",
                         "title": titles.prefilling.enablePrefilling.title[lang],
@@ -310,6 +316,12 @@ class SettingsSchema {
                 "visible": false,
                 "pupilModeVisibleOnDefault": false,
                 "properties": {
+                    fixPieces : {
+                        "type": "boolean",
+                        "title": titles.splitPartition.fixPieces.title[lang],
+                        "description": titles.splitPartition.fixPieces.description[lang],
+                        "default": false
+                    },
                     splitStrategy: {
                         "type": "string",
                         "title": titles.splitPartition.splitStrategy.title[lang],
