@@ -573,7 +573,7 @@
             let seed = SettingsParser.parseSettingsToSeed(schema, settings);
             let exportSeed = seed.substr(1, seed.length - 1);
             exportSeed = 2 + exportSeed;
-            console.log("baseConfigs.url", baseConfigs.url);
+            console.info("baseConfigs.url", baseConfigs.url);
             updateShareOptions(qrCodeElement, urlElement, downloadImageButton, exportSeed);
         }
 

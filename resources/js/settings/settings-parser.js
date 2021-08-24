@@ -57,7 +57,7 @@ class SettingsParser {
                     return null;
                 }
 
-                console.log(remainingSeed.substr(0, lastElement + 2) + "_" + remainingSeed.substr(lastElement + 2, remainingSeed.length) + ": " + heading + "." + key);
+                // console.log(remainingSeed.substr(0, lastElement + 2) + "_" + remainingSeed.substr(lastElement + 2, remainingSeed.length) + ": " + heading + "." + key);
                 remainingSeed = remainingSeed.substr(lastElement + 1, remainingSeed.length);
 
                 switch (remainingSeed[0]) {
@@ -222,7 +222,7 @@ class SettingsParser {
                 }
 
                 seed += visibility.isVisible(heading, key) === true ? 1 : 0;
-                console.log(seed + ": " + heading + "." + key);
+                // console.log(seed + ": " + heading + "." + key);
             }
         }
 
