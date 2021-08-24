@@ -43,6 +43,10 @@ class SettingsSchema {
         let lang = this._language;
         let titles = strings.settings;
 
+        let defaultBoardIndex = StartPosSettingsEntry.parseBoardNameToIndex("board_6x10");
+        let boardCustomizationDefault = StartPosSettingsEntry.pad(defaultBoardIndex, StartPosSettingsEntry.getBoardNameDecimals()) +
+            StartPosSettingsEntry.pad(0, BOARD_PENTOMINO_NUM_DECIMALS);
+
         return this._schema = {
             general: {
                 "type": "object",
@@ -116,6 +120,26 @@ class SettingsSchema {
                     },
                 }
             },
+            boardCustomization: {
+                "type": "object",
+                "title": titles.boardCustomization.title[lang],
+                "advanced": false,
+                "pupilModeVisibleOnDefault": false,
+                "properties": {
+                    initialPiecePos: {
+                        "type": "custom",
+                        "title": titles.boardCustomization.initialPiecePos.title[lang],
+                        "description": titles.boardCustomization.initialPiecePos.description[lang],
+                        "default": boardCustomizationDefault
+                    },
+                    includePiecePos: {
+                        "type": "boolean",
+                        "title": titles.boardCustomization.includePiecePos.title[lang],
+                        "description": titles.boardCustomization.includePiecePos.description[lang],
+                        "default": true
+                    }
+                }
+            },
             showSolvedBoardScreen: {
                 "type": "object",
                 "title": titles.showSolvedBoardScreen.title[lang],
@@ -159,6 +183,14 @@ class SettingsSchema {
                     "description": titles.autohinting.enableTimePeriodBasedAutoHintInAnyCase.description[lang],
                     "default": false
                   },
+
+                  showOrHideButtonsForTextualHints:{
+                    "type": "boolean",
+                    "title": titles.autohinting.showOrHideButtonsForTextualHints.title[lang],
+                    "description": titles.autohinting.showOrHideButtonsForTextualHints.description[lang],
+                    "default": false
+                  },
+
 
                   numberOfWrongMoves: {
                       "step": 1,
@@ -207,6 +239,14 @@ class SettingsSchema {
                         "title": titles.hinting.enableHinting.title[lang],
                         "description": titles.hinting.enableHinting.description[lang],
                         "default": true
+                    },
+                    typeOfHints:{
+                      "type": "string",
+                      "title": titles.hinting.typeOfHints.title[lang],
+                      "enum": ["Visual", "Textual", "Both"],
+                      "enumText": titles.hinting.typeOfHints.enumTitles[lang],
+                      "description": titles.hinting.typeOfHints.description[lang],
+                      "default": "Visual"
                     },
                     hintingStrategy: {
                         "type": "string",
@@ -263,6 +303,12 @@ class SettingsSchema {
                 "visible": false,
                 "pupilModeVisibleOnDefault": false,
                 "properties": {
+                    fixPieces : {
+                        "type": "boolean",
+                        "title": titles.prefilling.fixPieces.title[lang],
+                        "description": titles.prefilling.fixPieces.description[lang],
+                        "default": false
+                    },
                     enablePrefilling: {
                         "type": "boolean",
                         "title": titles.prefilling.enablePrefilling.title[lang],
@@ -294,9 +340,15 @@ class SettingsSchema {
                 "visible": false,
                 "pupilModeVisibleOnDefault": false,
                 "properties": {
+                    fixPieces : {
+                        "type": "boolean",
+                        "title": titles.splitPartition.fixPieces.title[lang],
+                        "description": titles.splitPartition.fixPieces.description[lang],
+                        "default": false
+                    },
                     splitStrategy: {
                         "type": "string",
-                        "title": titles.splitPartition.splitStrategy.title[lang],                       
+                        "title": titles.splitPartition.splitStrategy.title[lang],
                         "enum": ["color","left-to-right"],
                         "enumText": titles.splitPartition.splitStrategy.enumTitles[lang],
                         "default": "color"

@@ -22,6 +22,9 @@
     <script src="resources/js/settings/translator.js"></script>
     <script src="resources/js/settings/settings-form.js"></script>
     <script src="resources/js/settings/settings-visibility.js"></script>
+    <script src="resources/js/settings/custom-settings-entry/custom-settings-entry.js"></script>
+    <script src="resources/js/settings/custom-settings-entry/start-pos-settings-entry.js"></script>
+    <script src="resources/js/settings/custom-settings-entry/custom-settings-entry-master.js"></script>
     <script src="resources/index.js"></script>
     <script src="resources/js/ui-template.js"></script>
     <script src="resources/js/board.js"></script>
@@ -43,7 +46,6 @@
     <script src="resources/js/handleMobile.js"></script>
     <script type="text/javascript" src="resources/jsonform/jquery.min.js"></script>
     <script type="text/javascript" src="resources/jsonform/underscore.js"></script>
-    <script type="text/javascript" src="resources/jsonform/jsonform.js"></script>
     <script type="text/javascript" src="resources/jsonform/jsv.js"></script>
     <script type="text/javascript" src="resources/jsonform/html2canvas.js"></script>
     <script type="text/javascript" src="resources/jsonform/loadash.js"></script>
@@ -252,13 +254,19 @@
                 if(SettingsSingleton.getInstance().getSettings().general.initiateActionsIfUserNotActive){
                     //speech bubble message : "hello There"
                     setTimeout(function(){
-                        speechBubbleText.textContent=strings.speechbubbleTexts.helloThere[lang];
+                        speechBubbleText.textContent = strings.speechbubbleTexts.helloThere[lang];
+                        if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+                            document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.helloThere[lang];
+                        }
                     }, 1000);
                     //detect user if active again => onmouse move it says welcome back and the bird animaltion starts
                     document.onmousemove = function(){
                         //if(speech bubble message : "hello There ? ") => display "welcome back"
                         if(speechBubbleText.textContent === strings.speechbubbleTexts.helloThere[lang]){
                             setTimeout(function(){speechBubbleText.textContent = strings.speechbubbleTexts.welcomeBack[lang]; }, 500);
+                            if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+                                document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.welcomeBack[lang];
+                            }
                         }
                         //start bird animation
                         setTimeout(function(){
@@ -283,6 +291,9 @@
                 else{
                     setTimeout(function(){
                         speechBubbleText.textContent = strings.speechbubbleTexts.pleaseContinue[lang];
+                        if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+                            document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.pleaseContinue[lang];
+                        }
                     }, 5000);
                 }
             }
@@ -294,7 +305,7 @@
                 clearTimeout(time);
                 time = setTimeout(alertUser, 1000 * userInactiveWaitTime()); // 10 seconds
             }
-        };
+        }
 
         //end of inactivityTime() function
 
@@ -338,6 +349,9 @@
                 if((pd.visual.numberofPlacedPentominos() > (pd.visual.pieces.length/2))){
                     setTimeout(function(){
                         speechBubbleText.textContent = strings.speechbubbleTexts.pleaseContinue[lang];
+                        if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+                            document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.pleaseContinue[lang];
+                        }
                     }, 5000);
                     pd.visual.numberofPlacedPentominos();
                     return;
@@ -348,6 +362,9 @@
             if(!(SettingsSingleton.getInstance().getSettings().autohinting.autoHintVariants === "Time period")){
                 setTimeout(function(){
                     speechBubbleText.textContent = strings.speechbubbleTexts.pleaseContinue[lang];
+                    if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+                        document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.pleaseContinue[lang];
+                    }
                 }, 2500);
                 return;
             }
@@ -409,7 +426,16 @@
             let modal = document.getElementById('modalTop');
             if ($(modal).is(':visible')) {
                 this.closeModal();
+            } else if (SettingsSingleton.getInstance().getSettings().teachersMode) {
+                // teacher has the choice between share and scan
+                openImportOrExportDialog();
+                this.disablePointerEventsOnPieces();
+                this.hideManipulationButtons();
+                if ($('#birdContainer').is(':visible')) {
+                    this.hideBubbleContainer();
+                }
             } else {
+                // pupils can only scan
                 openScanQrCode();
                 this.disablePointerEventsOnPieces();
                 this.hideManipulationButtons();
@@ -417,6 +443,264 @@
                     this.hideBubbleContainer();
                 }
             }
+        }
+
+        function openImportOrExportDialog() {
+            let modal = document.getElementById('modalTop');
+            modal.style.display = "block";
+            modal.style.background = "#eceaea";
+
+            document.querySelector(".modalFormContent").style.display = "none";
+            document.querySelector(".modalFullframeContainer").style.display = "block";
+            document.querySelector(".innerGrid").style.display = "none";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent(".innerGrid")
+            template.clearContent("#innerGridForm");
+            template.clearContent("#filterGrid");
+            template.clearContent(".modalFullframeContainer");
+
+            //hide back button for main settings menu
+            document.getElementById("backButton").style.display = "none";
+
+            this.disablePointerEventsOnPieces();
+            this.hideManipulationButtons();
+            this.hideBubbleContainer();
+
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
+            let parent = modal;
+
+            let heading = document.createElement("h4");
+            heading.innerHTML = strings.qrCode.scanOrShare[lang];
+            parent.appendChild(heading);
+
+            // Add scan / share buttons
+            let scanImgElement = SettingsForm.createImg("scanImg", "resources/images/icons/scan_qr_code.png");
+            scanImgElement.onclick = () => openScanQrCode();
+            let shareImgElement = SettingsForm.createImg("shareImg", "resources/images/icons/share_qr_code.png");
+            shareImgElement.onclick = () => handleShareSettings();
+
+            parent.appendChild(scanImgElement);
+            parent.appendChild(shareImgElement);
+        }
+
+        function handleShareSettings() {
+            let modal = document.getElementById('modalTop');
+
+            this.hideBubbleContainer();
+            this.disableSnapshotButton();
+            this.hideManipulationButtons();
+            this.closeBoardSelector();
+            this.disablePointerEventsOnPieces();
+            modal.style.display = "block";
+            modal.style.background = "transparent";
+
+            document.querySelector(".modalFormContent").style.display = "block";
+            document.querySelector(".innerGrid").style.display = "none";
+            document.querySelector(".modalFullframeContainer").style.display = "none";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent("#innerGridForm");
+            template.clearContent("#filterGrid");
+
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
+            let parent = document.getElementById("modalBodyID");
+
+            let t1 = document.createTextNode(strings.qrCode.share.shareQrCode[lang]);
+            let h5 = document.createElement("h2");
+            let div1 = document.createElement("div");
+            h5.appendChild(t1);
+            div1.appendChild(h5);
+            parent.appendChild(div1);
+
+            let settings = SettingsSingleton.getInstance().getSettings();
+
+            //show back button
+            let btn = document.getElementById("backButton");
+            btn.style.display = "block";
+            btn.onclick = function () {
+                openImportOrExportDialog();
+                btn.style.display = "none";
+            };
+
+            let qrCodeElement = document.createElement("div");
+            qrCodeElement.style.margin = "auto";
+            parent.appendChild(qrCodeElement);
+
+            parent.appendChild(document.createElement("br"));
+            parent.appendChild(document.createTextNode(strings.qrCode.share.useThisQrCode[lang]));
+
+            parent.appendChild(document.createElement("br"));
+            parent.appendChild(document.createTextNode(strings.qrCode.share.firstPrintQrCode[lang] + ": "));
+
+            let printButton = createPrintButton(qrCodeElement);
+            parent.appendChild(printButton);
+            parent.appendChild(document.createTextNode(" " + strings.general.or[lang] + " "));
+            let downloadImageButton = createDownloadImageLink();
+            parent.appendChild(downloadImageButton);
+
+            parent.appendChild(document.createElement("br"));
+
+            let qrButtonImg = document.createElement("img");
+            qrButtonImg.src = "resources/images/icons/qr-code.png";
+            qrButtonImg.style.width = "2vw";
+            qrButtonImg.style.height = "2vw";
+
+            parent.appendChild(document.createTextNode(strings.qrCode.share.sndScanByPupilsFirstPart[lang] + " "));
+            parent.appendChild(qrButtonImg);
+            parent.appendChild(document.createTextNode(strings.qrCode.share.sndScanByPupilsSndPart[lang]));
+            parent.appendChild(document.createElement("br"));
+
+            let collapsibleButton = SettingsForm.createCollapsibleButton(
+                strings.settings.advanced.show[lang],
+                strings.settings.advanced.hide[lang]);
+            let divToHide = document.createElement("div");
+            divToHide.style.display = "none";
+
+            parent.appendChild(collapsibleButton);
+            parent.appendChild(divToHide);
+            let urlElement = document.createElement("a");
+            urlElement.target="_blank";
+            // Security measure: https://developer.mozilla.org/en-US/docs/Web/HTML/Link_types/noopener
+            urlElement.rel="noopener noreferrer";
+            addAdvancedShareOptions(divToHide, qrCodeElement, urlElement, downloadImageButton);
+
+            let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+            let seed = SettingsParser.parseSettingsToSeed(schema, settings);
+            let exportSeed = seed.substr(1, seed.length - 1);
+            exportSeed = 2 + exportSeed;
+            console.info("baseConfigs.url", baseConfigs.url);
+            updateShareOptions(qrCodeElement, urlElement, downloadImageButton, exportSeed);
+        }
+
+        function addAdvancedShareOptions(advOptionsRoot, qrCodeElement, urlElement, downloadImageButton) {
+            advOptionsRoot.appendChild(document.createElement("br"));
+
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
+            let p = document.createElement("p");
+            let descrLabel = document.createElement("label");
+            descrLabel.innerText = strings.qrCode.share.urlToTest[lang] + ": ";
+            p.appendChild(descrLabel);
+            p.appendChild(urlElement);
+            let copyUrlButton = SettingsForm.createButton(strings.qrCode.share.copyUrl[lang]);
+            copyUrlButton.addEventListener("click", (event) => {
+                navigator.clipboard.writeText(urlElement.innerText);
+            });
+            p.appendChild(copyUrlButton);
+            advOptionsRoot.appendChild(p);
+
+            let includePiecesLabel = SettingsForm.createLabel(
+                strings.settings.boardCustomization.includePiecePos.title[lang]);
+            advOptionsRoot.appendChild(includePiecesLabel);
+
+            let teacherModeCheckbox = SettingsForm.createSelectElement(
+                "teacherModeCheckbox",
+                ["shareWithClass", "shareWithTeachers"],
+                [strings.qrCode.share.pupilMode[lang], strings.qrCode.share.teachersMode[lang]]);
+
+            teacherModeCheckbox.onchange = () => {
+                let settings = SettingsSingleton.getInstance().getSettings();
+                let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), settings);
+                insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
+                let exportSeed = seed.substr(1, seed.length - 1);
+                exportSeed = (teacherModeCheckbox.value === "shareWithTeachers" ? 1 : 2) + exportSeed;
+
+                updateShareOptions(qrCodeElement, urlElement, downloadImageButton, exportSeed);
+            };
+
+            let includePiecesCheckbox = SettingsForm.createInputElement("checkbox", "includePiecesCheckBox");
+            includePiecesCheckbox.onchange = () => {
+                let checkboxValue = includePiecesCheckbox.checked;
+                let settings = SettingsSingleton.getInstance().getSettings();
+                settings.boardCustomization.includePiecePos = checkboxValue;
+
+                let game = new FrontController().controller.game();
+                let customSettingsEntry = CustomSettingsEntrySingleton.getInstance()
+                    .get("boardCustomization", "initialPiecePos");
+                let piecePosSeedEntry = customSettingsEntry.parseFromGameToSeed(game);
+                settings.boardCustomization.initialPiecePos = piecePosSeedEntry;
+
+                let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), settings);
+                insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
+                let exportSeed = seed.substr(1, seed.length - 1);
+                exportSeed = (teacherModeCheckbox.value === "shareWithTeachers" ? 1 : 2) + exportSeed;
+
+                updateShareOptions(qrCodeElement, urlElement, downloadImageButton, exportSeed);
+            };
+
+            advOptionsRoot.appendChild(includePiecesCheckbox);
+            advOptionsRoot.appendChild(teacherModeCheckbox);
+
+            advOptionsRoot.appendChild(document.createElement("br"));
+        }
+
+        function updateShareOptions(qrCodeElement, urlElement, downloadImageButton, seed) {
+            let url = baseConfigs.url + "?" + baseConfigs.seedUrlParamName + "=" + seed;
+            //let pupilUrl = baseConfigs.url + "?" + baseConfigs.seedUrlParamName + "=2" + seed.substr(1, seed.length);
+
+            urlElement.innerText = url;
+            urlElement.href = url;
+
+            generateQrCode(qrCodeElement, url);
+
+            downloadImageButton.onclick = () => {
+                let dt = qrCodeElement.firstElementChild.toDataURL('image/png');
+                download(dt);
+            };
+        }
+
+        function createDownloadImageLink() {
+            let downloadImageButton = document.createElement("input");
+            downloadImageButton.type = "button";
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+            downloadImageButton.value = strings.qrCode.share.downloadImage[lang];
+            return downloadImageButton;
+        }
+
+        function download(file) {
+
+            //creating an invisible element
+            let element = document.createElement('a');
+            element.setAttribute('href', file);
+            element.setAttribute("download", "qr_code.png");
+
+            // Above code is equivalent to
+            // <a href="path of file" download="file name">
+
+            document.body.appendChild(element);
+
+            //onClick property
+            element.click();
+
+            document.body.removeChild(element);
+        }
+
+        function createPrintButton(qrCodeElement) {
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+            let printButton = SettingsForm.createButton(strings.qrCode.share.print[lang]);
+            printButton.setAttribute("id", "printQRCode");
+            printButton.addEventListener("click", function () {
+                let canvas = qrCodeElement.firstElementChild;
+                let imgDataUrl = canvas.toDataURL('image/png');
+                printInNewWindow(imgDataUrl);
+            });
+            return printButton;
+        }
+
+        // from https://stackoverflow.com/questions/18542081/how-to-open-an-image-and-have-it-print
+        function printInNewWindow(imgDataUrl) {
+            let win = window.open('');
+            let img = win.document.createElement("img");
+            img.src = imgDataUrl;
+            win.document.body.appendChild(img);
+            img.onload = function(){
+                win.print();
+            };
         }
 
         function openScanQrCode() {
@@ -433,10 +717,12 @@
             template.clearContent(".innerGrid")
             template.clearContent("#innerGridForm");
 
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
             let parent = $('#innerGridForm')[0];
 
             let heading = document.createElement("h4");
-            heading.innerHTML = "Scan QR-code";
+            heading.innerHTML = strings.qrCode.scan.scanQrCode[lang];
             parent.appendChild(heading);
 
             let videoElement = parent.appendChild(document.createElement("video"));
@@ -468,6 +754,32 @@
 
             //onQrCodeScanned("https://pentomino-digital.de/V5/index.html?t=2010101110111011101110121");
             //this.closeModal();
+        }
+
+        function handleDownloadImage(downloadImageButton, canvasElement) {
+            dlCanvas(downloadImageButton, canvasElement);
+        }
+
+        function dlCanvas(downloadImageButton, canvasElem) {
+            let dt = canvasElem.toDataURL('image/png');
+            downloadImageButton.href = dt;
+        }
+
+        function generateQrCode(element, inputText) {
+            let selector = $(element);
+            selector.empty();
+            // Set Size to Match User Input
+            // FIXME: fix width and height
+            selector.css({
+                'width': 255,
+                'height': 255
+            });
+            // Generate and Output QR Code
+            selector.qrcode({
+                width: 255,
+                height: 255,
+                text: inputText
+            });
         }
 
         // from https://stackoverflow.com/questions/59702127/draw-rectangle-over-html-5-tag-video first answer
@@ -751,6 +1063,13 @@
                         document.getElementById("labelNumberSolutionsContainer").style.display = "block";
                     }
                 }
+
+                let allCustomSettings = CustomSettingsEntrySingleton.getInstance().getAll();
+                allCustomSettings.forEach(customSettings => {
+                    if (customSettings.getName() === SettingsForm.generateSettingsEntryName(heading, key)) {
+                        customSettings.processChangesToSettings(settings[heading][key], pd);
+                    }
+                });
             });
         }
 
@@ -795,7 +1114,6 @@
             SettingsForm.generateForm(
                 $('.modalFullframeContainer')[0],
                 this.handleJsonFormSubmit,
-                this.handleShareSettings,
                 this.handleClickedOnLicenses
             );
 
@@ -985,161 +1303,6 @@
             }
             div5.appendChild(table);
             modal.appendChild(div5);
-        }
-
-        function handleShareSettings(settings) {
-            this.hideManipulationButtons();
-            this.closeBoardSelector();
-            this.disablePointerEventsOnPieces();
-            var modal = document.getElementById('modalTop');
-            modal.style.display = "block";
-            modal.style.background = "transparent";
-
-            document.querySelector(".modalFormContent").style.display = "block";
-            document.querySelector(".innerGrid").style.display = "none";
-            document.querySelector(".modalFullframeContainer").style.display = "none";
-            template.clearContent("#modalButtonsID");
-            template.clearContent("#modalTitleID");
-            template.clearContent("#modalBodyID");
-            template.clearContent("#innerGridForm");
-            template.clearContent("#filterGrid");
-
-            let div1 = document.createElement("div");
-            let h5 = document.createElement("h2");
-            var t1 = document.createTextNode("Share");
-            h5.appendChild(t1);
-            div1.appendChild(h5);
-            modalBodyID.appendChild(div1);
-
-            //show back button
-            let btn = document.getElementById("backButton");
-            btn.style.display = "block";
-            btn.onclick = function () {
-                openSettings();
-                SettingsForm.updateForm($('#innerGridForm')[0], settings);
-                btn.style.display = "none";
-            };
-
-            let teacherURLLabel = document.createElement("label");
-            let pupilURLLabel = document.createElement("label");
-
-            let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
-            let seed = SettingsParser.parseSettingsToSeed(schema, settings);
-            console.log("baseConfigs.url", baseConfigs.url);
-            let teacherUrl = baseConfigs.url + "?" + baseConfigs.seedUrlParamName + "=" + seed;
-            let pupilUrl = baseConfigs.url + "?" + baseConfigs.seedUrlParamName + "=2" + seed.substr(1, seed.length);
-            teacherURLLabel.innerHTML = teacherUrl;
-            pupilURLLabel.innerHTML = pupilUrl;
-
-            let teacherQrCodeElement = document.createElement("div");
-            let pupilQrCodeElement = document.createElement("div");
-            pupilQrCodeElement.style.margin = "auto";
-
-            generateQrCode(pupilQrCodeElement, pupilUrl);
-            modalBodyID.appendChild(pupilQrCodeElement);
-
-            /*let table = document.createElement("table");
-            table.style.margin = "auto";
-
-            let tr23 = document.createElement("tr");
-            table.appendChild(tr23);
-            let td111 = document.createElement("td");
-            td111.appendChild(document.createTextNode("Share With Other Teachers"));
-            tr23.appendChild(td111);
-            let td212 = document.createElement("td");
-            td212.appendChild(document.createTextNode("Use In Class"));
-            tr23.appendChild(td212);
-
-            let qrTr = generateQrTrElement(teacherUrl, pupilUrl);
-            table.appendChild(qrTr);
-
-            let tr2 = document.createElement("tr");
-            table.appendChild(tr2);
-            let td11 = document.createElement("td");
-            td11.appendChild(document.createTextNode("Use this to share with other teachers (Restricted Settings)"));
-            tr2.appendChild(td11);
-            let td21 = document.createElement("td");
-            td21.appendChild(document.createTextNode("Use this in class"));
-            tr2.appendChild(td21);
-
-            modalBodyID.appendChild(table);*/
-
-            modalBodyID.appendChild(document.createElement("br"));
-            modalBodyID.appendChild(document.createTextNode("Use this QR-code to bring your current settings on your pupil's devices."));
-
-            modalBodyID.appendChild(document.createElement("br"));
-            modalBodyID.appendChild(document.createTextNode("1. Print QR-code 2. The pupils scan it with the X-button in the TUCA-App."));
-
-            modalBodyID.appendChild(document.createElement("br"));
-            let printButton = SettingsForm.createButton("Print");
-            printButton.setAttribute("id", "printQRCode");
-            printButton.addEventListener("click", function () {
-                window.print();
-            });
-            modalBodyID.appendChild(printButton);
-            let downloadImageButton = document.createElement("a");
-            downloadImageButton.innerHTML = "Download image";
-            downloadImageButton.addEventListener("click", function () {
-                handleDownloadImage(downloadImageButton, pupilQrCodeElement.firstElementChild);
-            });
-            downloadImageButton.download = "Canvas.png";
-            modalBodyID.appendChild(downloadImageButton);
-            modalBodyID.appendChild(document.createElement("br"));
-            modalBodyID.appendChild(document.createElement("br"));
-
-            let collapsibleButton = SettingsForm.createCollapsibleButton("Show advanced share options", "Hide advanced share options");
-            let divToHide = document.createElement("div");
-            divToHide.appendChild(document.createTextNode("Test"));
-
-            modalBodyID.appendChild(collapsibleButton);
-            modalBodyID.appendChild(divToHide);
-        }
-
-        function handleDownloadImage(downloadImageButton, canvasElement) {
-            dlCanvas(downloadImageButton, canvasElement);
-        }
-
-        function dlCanvas(downloadImageButton, canvasElem) {
-            let dt = canvasElem.toDataURL('image/png');
-            downloadImageButton.href = dt;
-        }
-
-
-        /*function generateQrTrElement(teacherUrl, pupilUrl) {
-            // Generate QR
-            let teacherQrCodeElement = document.createElement("div");
-            let pupilQrCodeElement = document.createElement("div");
-
-            generateQrCode(teacherQrCodeElement, teacherUrl);
-            generateQrCode(pupilQrCodeElement, pupilUrl);
-
-            let tr = document.createElement("tr");
-            let td1 = document.createElement("td");
-            tr.appendChild(td1);
-            let td2 = document.createElement("td");
-            tr.appendChild(td2);
-
-            td1.appendChild(teacherQrCodeElement);
-            td2.appendChild(pupilQrCodeElement);
-
-            return tr;
-        }*/
-
-        function generateQrCode(element, inputText) {
-            let selector = $(element);
-            selector.empty();
-            // Set Size to Match User Input
-            // FIXME: fix width and height
-            selector.css({
-                'width': 255,
-                'height': 255
-            });
-            // Generate and Output QR Code
-            selector.qrcode({
-                width: 255,
-                height: 255,
-                text: inputText
-            });
         }
 
         let piecesIdArray = ['piece_X', 'piece_Y', 'piece_F', 'piece_I', 'piece_L', 'piece_N', 'piece_P', 'piece_T', 'piece_U', 'piece_V', 'piece_W', 'piece_Z'];

@@ -2,7 +2,8 @@ const strings = {
     general: {
         no: ["No", "Nein"],
         yes: ["Yes", "Ja"],
-        cancel: ["cancel", "Abbrechen"]
+        cancel: ["cancel", "Abbrechen"],
+        or: ["or", "oder"]
     },
     reset: ["Do You Want To Reset?", "Willst du deinen Spielstand wirklich löschen?"],
     showSolved: {
@@ -29,7 +30,9 @@ const strings = {
         antiClockwise:["anti-clockwise", "linksdrehend"],
         mirror:["Mirror","Spiegel"],
         vertical:["vertical","vertikal"],
-        horizontal:["horizontal","horizontal"]
+        horizontal:["horizontal","horizontal"],
+        showHint:["Show hint","Hinweis anzeigen"],
+        ignore:["Ignore","Ignorieren Sie"]
     },
     numberOfPossibleSolutions: ["Number of solutions", "Anzahl Lösungen"],
     License: ["LICENSES", "LIZENZEN"],
@@ -82,6 +85,11 @@ const strings = {
             initiateActionsIfUserNotActive:{
                 title: ["Initiate actions if user not active", "Aktionen einleiten, wenn der Benutzer nicht aktiv ist"],
                 description: [["Initiates actions only if user is not active on the application", "Löst nur Aktionen aus, wenn der Benutzer nicht in der Anwendung aktiv ist"]]
+            },
+            showOrHideButtonsForTextualHints:{
+                title: ["Show Buttons for textual hints", "Schaltflächen für Texthinweise anzeigen"],
+                description: ["Shows buttons in case the user wants autohinting textual hints as optional else textual hints will occur automatically.",
+                "Zeigt Schaltflächen an wenn der Benutzer automatische Texthinweise als Option wünscht andernfalls werden Texthinweise automatisch angezeigt."]
             },
 
             autoHintVariants:{
@@ -164,6 +172,23 @@ const strings = {
                 title: ["Show number of possible solutions", "Zeige Anzahl der möglichen Lösungen an"],
                 description: ["Shows the number of solutions that contain the current pentominoes on the board.",
                     "Zeigt die Anzahl der Lösungen an, die mit den Pentominoes wie sie zu diesem Zeitpunkt auf dem Spielbrett liegen, möglich sind."]
+            },
+            typeOfHints:{
+                title: ["Type of hints", "Art der Hinweise"],
+                enumTitles: [["Visual", "Textual", "Both"], ["Visuell", "Textuell", "Beides"]],
+                description: [
+                "Provides hints :"  +
+                    "<ul>" +
+                        "<li><b>Visual:</b> Gives only visual hints.</li>" +
+                        "<li><b>Textual:</b> Gives only textual hints.</li>" +
+                        "<li><b>Both:</b> Gives both visual and textual hints</li>" +
+                    "</ul>",
+                    "Liefert Hinweise :" +
+                        "<ul>" +
+                        "<li><b>Visuell:</b> Gibt nur visuelle Hinweise.</li>" +
+                        "<li><b>Textuell:</b> Gibt nur textuelle Hinweise.</li>" +
+                        "<li><b>Beide:</b> Gibt sowohl visuelle als auch textliche Hinweise</li>" +
+                        "</ul>"]
             },
             hintingStrategy: {
                 title: ["Hint Type", "Art der Hinweise"],
@@ -249,6 +274,10 @@ const strings = {
         },
         prefilling: {
             title: ["Prefilling", "Automatisches Füllen"],
+            fixPieces: {
+                title: ["Fix pieces", "Teile fixieren"],
+                description: ["Pieces cannot be moved after being automatically placed", "Teile können nicht verschoben werden, nachdem sie automatisch platziert wurden"],
+            },
             enablePrefilling: {
                 title: ["Enable Prefilling?", "Automatisches Füllen einschalten"],
                 description: ["Prefilling fills the board randomly with pentominoes.",
@@ -287,15 +316,53 @@ const strings = {
         },
         splitPartition: {
             title: ["Split Board into Thirds", "TO DO"],
+            fixPieces: {
+                title: ["Fix pieces", "Teile fixieren"],
+                description: ["Pieces cannot be moved after a partition is filled(only for left-to-right strategy)", "Teile können nicht verschoben werden, nachdem eine Partition gefüllt ist(nur für Links-nach-rechts-Strategie)"],
+            },
             splitStrategy: {
                 title: ["Split Board into Partion By", "TO DO"],
-                enumTitles: [["Color","Left-to-Right"], ["TO DO", "TO DO"]],                
+                enumTitles: [["Color","Left-to-Right"], ["TO DO", "TO DO"]],
+            }
+        },
+        boardCustomization: {
+            title: ["Board Customization", "Spielbrett Anpassung"],
+            initialPiecePos: {
+                title: ["Predefine start game", "Wähle das Start-Spielbrett"],
+                description: ["When starting the app, the saved board will be selected and pieces loaded at their saved position.", "Wenn die App gestartet wird, wird das gespeicherte Spielbrett geladen und die Spielsteine starten an ihrer gespeicherten Position."]
+            },
+            includePiecePos: {
+                title: ["Include pentomino pieces on board?", "Speichere Spielsteine auf dem Brett?"],
+                description: ["TODO", "TODO"]
+            },
+            shareThisBoard: {
+                title: ["Share this board?", "Teile dieses Brett?"]
             }
         },
         errors: {
             lowerThanMin: ["This shouldn't be smaller than", "Dieser Eintrag darf nicht kleiner sein als"],
             higherThanMax: ["This shouldn't be greater than", "Dieser Eintrag darf nicht größer sein als"],
             numberBadInput: ["Please enter a number", "Bitte geben Sie eine Zahl ein"]
+        }
+    },
+    qrCode: {
+        scanOrShare: ["Scan or Share?", "Scannen oder Teilen?"],
+        share: {
+            shareQrCode: ["Share QR-code", "Teile QR-code"],
+            copyUrl: ["Copy", "Kopieren"],
+            urlToTest: ["Link", "Link"],
+            teachersMode: ["Share with teachers (Settings available)", "Teile mit anderen Lehrern (Einstellungen verfügbar)"],
+            pupilMode: ["Share with class (Settings restricted)", "Teile mit Schülern (Einstellungen eingeschränkt)"],
+            print: ["Print", "Drucken"],
+            downloadImage: ["Download as image", "Als Bild herunterladen"],
+            useThisQrCode: ["Use this QR-code to bring your current settings on your pupil's devices.",
+                "Bringen Sie mit diesem QR-Code ihre momentanen Einstellungen zu den Geräten Ihrer Schüler"],
+            firstPrintQrCode: ["1. Print the QR-code", "1. Drucken Sie den QR-code"],
+            sndScanByPupilsFirstPart: ["2. Let your pupils scan it with the", "2. Lassen Sie ihn von Ihren Schülern mit dem"],
+            sndScanByPupilsSndPart: ["-button in the TUCA-App.", "-Button in der TUCA-App scannen."]
+        },
+        scan: {
+            scanQrCode: ["Scan QR-code", "Scanne QR-code"]
         }
     }
 };
