@@ -43,6 +43,10 @@ class SettingsSchema {
         let lang = this._language;
         let titles = strings.settings;
 
+        let defaultBoardIndex = StartPosSettingsEntry.parseBoardNameToIndex("board_6x10");
+        let boardCustomizationDefault = StartPosSettingsEntry.pad(defaultBoardIndex, StartPosSettingsEntry.getBoardNameDecimals()) +
+            StartPosSettingsEntry.pad(0, BOARD_PENTOMINO_NUM_DECIMALS);
+
         return this._schema = {
             general: {
                 "type": "object",
@@ -108,6 +112,26 @@ class SettingsSchema {
                         "enumText": titles.theming.theme.enumTitles[lang],
                         "default": "theme1"
                     },
+                }
+            },
+            boardCustomization: {
+                "type": "object",
+                "title": titles.boardCustomization.title[lang],
+                "advanced": false,
+                "pupilModeVisibleOnDefault": false,
+                "properties": {
+                    initialPiecePos: {
+                        "type": "custom",
+                        "title": titles.boardCustomization.initialPiecePos.title[lang],
+                        "description": titles.boardCustomization.initialPiecePos.description[lang],
+                        "default": boardCustomizationDefault
+                    },
+                    includePiecePos: {
+                        "type": "boolean",
+                        "title": titles.boardCustomization.includePiecePos.title[lang],
+                        "description": titles.boardCustomization.includePiecePos.description[lang],
+                        "default": true
+                    }
                 }
             },
             showSolvedBoardScreen: {
@@ -300,6 +324,12 @@ class SettingsSchema {
                 "visible": false,
                 "pupilModeVisibleOnDefault": false,
                 "properties": {
+                    fixPieces : {
+                        "type": "boolean",
+                        "title": titles.prefilling.fixPieces.title[lang],
+                        "description": titles.prefilling.fixPieces.description[lang],
+                        "default": false
+                    },
                     enablePrefilling: {
                         "type": "boolean",
                         "title": titles.prefilling.enablePrefilling.title[lang],
@@ -331,6 +361,12 @@ class SettingsSchema {
                 "visible": false,
                 "pupilModeVisibleOnDefault": false,
                 "properties": {
+                    fixPieces : {
+                        "type": "boolean",
+                        "title": titles.splitPartition.fixPieces.title[lang],
+                        "description": titles.splitPartition.fixPieces.description[lang],
+                        "default": false
+                    },
                     splitStrategy: {
                         "type": "string",
                         "title": titles.splitPartition.splitStrategy.title[lang],

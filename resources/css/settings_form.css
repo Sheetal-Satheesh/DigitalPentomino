@@ -240,6 +240,7 @@
   padding: 3vw;
   background-color: lightblue;
   font-size: 3vw;
+  border-radius: 2vw;
 }
 
 .modalContainer h4 {
@@ -371,4 +372,8 @@ button.collapsible {
 
 #videoCanvas {
   width: 95%;
+}
+
+#showAdvanceSettingsBtn {
+  border-radius: 1vw;
 }

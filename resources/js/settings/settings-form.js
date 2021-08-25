@@ -1,24 +1,14 @@
 class SettingsForm {
 
   // === === === GENERATE FORM === === ===
-    static generateForm(formElement, onSubmit, onExport, onLicense) {
+    static generateForm(formElement, onSubmit, onLicense) {
         let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
         let settings = SettingsSingleton.getInstance().getSettings();
 
         SettingsForm.createForm(formElement, schema, settings);
 
         formElement.appendChild(document.createElement("br"));
-        formElement.appendChild(document.createElement("br"));        if (settings.teachersMode) {
-            let useInClassButton = SettingsForm.createButton("Share");
-            useInClassButton.className = "formButton";
-            useInClassButton.id = "btnSettingsShare";
-            useInClassButton.addEventListener("click", function() {
-                let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
-                let settings = SettingsSingleton.getInstance().getSettings();
-                onExport(SettingsForm.collectDataFromForm(formElement, schema, settings));
-            });
-            formElement.appendChild(useInClassButton);
-        }
+        formElement.appendChild(document.createElement("br"));
         let licenseButton = SettingsForm.createLicenseButton();
         licenseButton.id = "licenseButton";
         licenseButton.className = "formButton"
@@ -148,6 +138,13 @@ class SettingsForm {
                             max: settingsEntry.maximum
                         });
                         div.appendChild(numberInputElement);
+                        break;
+                    case "custom":
+                        let customInputElementLabel = SettingsForm.createLabel(settingsEntry.title);
+                        div.appendChild(customInputElementLabel);
+                        let customSettingsEntry = CustomSettingsEntrySingleton.getInstance().get(heading, key);
+                        let customSettingsElement = customSettingsEntry.create(settingsEntry);
+                        div.appendChild(customSettingsElement);
                         break;
                     default:
                         throw new Error("Unknown type: " + settingsEntryType);
@@ -346,6 +343,20 @@ class SettingsForm {
         return labelElement;
     }
 
+    static createImg(id, src, options) {
+        let imgElement = document.createElement("img");
+        imgElement.id = id;
+        imgElement.src = src;
+
+        if (!(options === undefined)) {
+            for (let [key, value] of Object.entries(options)) {
+                imgElement.setAttribute(key, value);
+            }
+        }
+
+        return imgElement;
+    }
+
     static createSelectElement(name, enumElements, enumTexts) {
         let selectElement = document.createElement("select");
         selectElement.name = name;
@@ -418,7 +429,9 @@ class SettingsForm {
         });
     }
 
-
+    static generateSettingsEntryName(heading, subheading) {
+        return heading + "_" + subheading;
+    }
 
     // --- --- --- Data Collection --- --- ---
     static collectDataFromForm(formElement, schema, settings) {
@@ -455,6 +468,10 @@ class SettingsForm {
                     case "number":
                         let numberInputElement = $(formElement).find("input[name='" + name + "']")[0];
                         result[heading][key] = parseFloat(numberInputElement.value);
+                        break;
+                    case "custom":
+                        let customSettingsEntry = CustomSettingsEntrySingleton.getInstance().get(heading, key);
+                        result[heading][key] = customSettingsEntry.collect(formElement);
                         break;
                     default:
                         throw new Error("Unknown type: " + settingsEntryType);
@@ -497,6 +514,10 @@ class SettingsForm {
                         } else {
                             SettingsForm.updateImgSelectElement(heading, subheading, schemaEntry, settings[heading][subheading], formElement);
                         }
+                        break;
+                    case "custom":
+                        let customSettingsEntry = CustomSettingsEntrySingleton.getInstance().get(heading, subheading);
+                        customSettingsEntry.update(heading, subheading, schemaEntry, settings[heading][subheading], formElement);
                         break;
                     default:
                         throw new Error("Schema Error: Unknown type: " + schemaEntry.type);
