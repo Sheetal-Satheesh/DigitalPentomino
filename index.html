@@ -218,7 +218,6 @@
         Object.freeze(SnapshotType);
 
         function initialize() {
-            console.log('In initialize');
             pd = new PD();
             template = new Template();
             loadBoardList();
@@ -756,7 +755,7 @@
                 } 
                 else if (heading === "theming" && key === "theme") {
                     var newThemeValue = settings[heading][key];
-                    console.log('--------->',newThemeValue);
+                    this.applyColorToPieces(newThemeValue);
                     if(newThemeValue == 'default'){
                             document.getElementById('switcher-id').href = 'resources/css/themes/defaultTheme.css';
                         }
@@ -769,9 +768,29 @@
                         else if(newThemeValue == 'blackAndWhiteTheme') {
                             document.getElementById('switcher-id').href = 'resources/css/themes/blackandwhitetheme.css';
                         }
-                        // localStorage.setItem('style', newThemeValue);
+                         localStorage.setItem('style', newThemeValue);
                     }               
             });
+        }
+
+        function applyColorToPieces(selectedTheme){
+          if(selectedTheme == "blackAndWhiteTheme"){
+            piecesIdArray.forEach(function (piece){
+                Array.prototype.forEach.call(document.getElementById(piece).getElementsByClassName("bmPoint"), function (element) {
+                    element.style.background = "#000000"
+                });
+            });
+          }
+          else{
+                var colorsArrayDefault = ['#cc2828', '#cccc28', '#7acc28', '#28cc28', '#cc28cc', '#28cc7a', '#28cccc', '#287acc', '#2828cc', '#cc287a', '#cc7a28', '#7a28cc'];
+                var counter = 0;
+                piecesIdArray.forEach(function (piece, counter){
+                    Array.prototype.forEach.call(document.getElementById(piece).getElementsByClassName("bmPoint"), function (element) {
+                        element.style.background = colorsArrayDefault[counter];
+                    });
+                    counter ++;
+                });
+            }     
         }
 
         function selectSettings() {
