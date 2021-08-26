@@ -132,7 +132,7 @@ class SettingsForm {
                         let numberInputElementLabel = SettingsForm.createLabel(settingsEntry.title);
                         div.appendChild(numberInputElementLabel);
                         let numberInputElement = SettingsForm.createInputElement("number", elementName, {
-                            step: 0.1,
+                            step: 0.01,
                             value: settingsEntry.defaultValue,
                             min: settingsEntry.minimum,
                             max: settingsEntry.maximum
