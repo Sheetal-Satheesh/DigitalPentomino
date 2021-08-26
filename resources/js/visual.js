@@ -2384,6 +2384,7 @@ class Visual {
       if(SettingsSingleton.getInstance().getSettings().general.language === 1){
           if(SettingsSingleton.getInstance().getSettings().speech.maleOrFemaleVoice === "Female"){
             utter.lang = 'de-DE';
+            utter.volume = SettingsSingleton.getInstance().getSettings().speech.volume;
             utter.voiceURI = 'Google Deutsch';
             utter.name = 'Google Deutsch';
             utter.localService= false;
@@ -2391,6 +2392,7 @@ class Visual {
             synth.speak(utter);
           }else if(SettingsSingleton.getInstance().getSettings().speech.maleOrFemaleVoice === "Male"){
               utter.voice = voices[1];
+              utter.volume = SettingsSingleton.getInstance().getSettings().speech.volume;
               synth.speak(utter);
           }
       }else{
@@ -2405,6 +2407,7 @@ class Visual {
             synth.speak(utter);
           }else if(SettingsSingleton.getInstance().getSettings().speech.maleOrFemaleVoice === "Male"){
               utter.voice = voices[8];
+              utter.volume = SettingsSingleton.getInstance().getSettings().speech.volume;
               synth.speak(utter);
           }
       }
