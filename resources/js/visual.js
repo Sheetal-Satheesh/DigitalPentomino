@@ -1598,10 +1598,10 @@ class Visual {
         if (!enabledSolvedScreen) {
             return;
         }
-        
+
         let piecesIdArray = this.pieces.map(piece => "piece_" + piece.name);
         this.disablePointerEventsOnPieces(piecesIdArray);
-        
+
         let modal = document.getElementById('modalTop');
         modal.style.display = "block";
         modal.style.background = "transparent";
@@ -2400,6 +2400,8 @@ class Visual {
           if(SettingsSingleton.getInstance().getSettings().speech.maleOrFemaleVoice === "Female"){
             utter.voiceURI = "Google UK English Female";
             utter.name =  "Google UK English Female";
+            utter.volume = 20;
+            console.log("utter.volume",utter.volume, "utter.rate", utter.rate, "utter.pitch", utter.pitch);
             synth.speak(utter);
           }else if(SettingsSingleton.getInstance().getSettings().speech.maleOrFemaleVoice === "Male"){
               utter.voice = voices[8];

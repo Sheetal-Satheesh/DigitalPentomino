@@ -101,7 +101,12 @@ const strings = {
                       "<li><b>Weiblich:</b> Weibliche Chatbot-Stimme. </li>" +
                       "<li><b>Männlich:</b> Männlich Chatbot-Stimme.</li>" +
                       "</ul>"]
-            }
+            },
+            volume:{
+                title: ["Volume", "Lautstärke"],
+                description: ["Set volume",
+                "Lautstärke einstellen"]
+            },
         },
         autohinting:{
             title: ["Auto hinting", "Automatisches Hinting"],

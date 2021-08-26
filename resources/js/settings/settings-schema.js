@@ -175,7 +175,14 @@ class SettingsSchema {
                     "enumText": titles.speech.maleOrFemaleVoice.enumTitles[lang],
                     "description": titles.speech.maleOrFemaleVoice.description[lang],
                     "default": "Female"
-                  }
+                  },
+                  volume:{
+                    "type": "range",
+                    "title": titles.speech.volume.title[lang],
+                    "default": 1,
+                     "minimum": 0,
+                     "maximum": 1
+                  },
                 }
             },
             autohinting: {
