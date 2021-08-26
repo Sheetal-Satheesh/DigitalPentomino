@@ -214,6 +214,9 @@ class SettingsParser {
                     case "boolean":
                         seed += SettingsParser.parseBooleanToSeed(schemaEntry, settingsValue);
                         break;
+                    case "range":
+                        seed += SettingsParser.parseBooleanToSeed(schemaEntry, settingsValue);
+                        break;
                     case "custom":
                         let customSettingsEntry = CustomSettingsEntrySingleton.getInstance().get(heading, key);
                         seed += customSettingsEntry.parseSettingsToSeed(schemaEntry, settingsValue);

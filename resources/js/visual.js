@@ -2400,7 +2400,7 @@ class Visual {
           if(SettingsSingleton.getInstance().getSettings().speech.maleOrFemaleVoice === "Female"){
             utter.voiceURI = "Google UK English Female";
             utter.name =  "Google UK English Female";
-            utter.volume = 20;
+            utter.volume = SettingsSingleton.getInstance().getSettings().speech.volume;
             console.log("utter.volume",utter.volume, "utter.rate", utter.rate, "utter.pitch", utter.pitch);
             synth.speak(utter);
           }else if(SettingsSingleton.getInstance().getSettings().speech.maleOrFemaleVoice === "Male"){
