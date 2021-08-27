@@ -156,6 +156,10 @@ class Visual {
         this.pd.visual.disableManipulations();
         this.renderPieces();
         this.undoSplit();
+        splitButton = document.getElementById("splitBoardimg");
+        if(splitButton.classList.contains("splitbuttonimg")){
+            splitButton.classList.remove("splitbuttonimg");
+        }
     }
 
     renderBoard() {
@@ -1149,6 +1153,9 @@ class Visual {
     readyForSplitting() {
         this.reset();        
         this.undoSplit();
+        if(!splitButton.classList.contains("splitbuttonimg")) {
+            splitButton.classList.add("splitbuttonimg");
+        }
     }
 
     callSplitBoardViaColor() {

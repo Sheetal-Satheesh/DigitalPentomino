@@ -206,7 +206,6 @@
     <script type="text/javascript">
         let pd;
         let template;
-        let isPlaying = false;
 
         const SnapshotType = {
             "FilterOnly": 0,
@@ -919,19 +918,17 @@
         }
         function splitTheBoard() {
             splitButton = document.getElementById("splitBoardimg")
-            if(!isPlaying) {
+            if(!splitButton.classList.contains("splitbuttonimg")) {
                 splitButton.classList.add("splitbuttonimg");
                 if (!pd.gameController.game()._board.isSolved()) {
                     pd.visual.splitTheBoard();
                 } else {
                     console.log("Game is already solved");
                     pd.visual.unblockPartition();
-                }
-                isPlaying = true;
+                }               
             } else {
                 splitButton.classList.remove("splitbuttonimg");
-                pd.visual.undoSplit();
-                isPlaying = false;
+                pd.visual.undoSplit();                
             }
 
         }
