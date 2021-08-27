@@ -2405,12 +2405,93 @@ class Visual {
             utter.volume = SettingsSingleton.getInstance().getSettings().speech.volume;
             console.log("utter.volume",utter.volume, "utter.rate", utter.rate, "utter.pitch", utter.pitch);
             synth.speak(utter);
+            this.speechSynthesis();
           }else if(SettingsSingleton.getInstance().getSettings().speech.maleOrFemaleVoice === "Male"){
               utter.voice = voices[8];
               utter.volume = SettingsSingleton.getInstance().getSettings().speech.volume;
               synth.speak(utter);
           }
       }
+  }
+
+  createForm(){
+    var x = document.createElement("FORM");
+    x.setAttribute("id", "speechForm");
+    document.body.appendChild(x);
+
+    var y = document.createElement("select");
+    y.setAttribute("id", "speechSelect");
+
+    document.getElementById("speechForm").appendChild(y);
+    console.log(x);
+  }
+
+  speechSynthesis(){
+    var x = document.createElement("FORM");
+    x.setAttribute("id", "speechForm");
+    document.body.appendChild(x);
+
+    var y = document.createElement("select");
+    y.setAttribute("id", "speechSelect");
+
+    document.getElementById("speechForm").appendChild(y);
+    let utterance = new SpeechSynthesisUtterance("Hello world!");
+speechSynthesis.speak(utterance);
+    var synth = window.speechSynthesis;
+
+var inputForm = document.querySelector('#speechForm');
+var inputTxt = document.querySelector('.txt');
+var voiceSelect = document.querySelector('#speechSelect');
+document.getElementById("licenseHeading").appendChild(inputForm);
+console.log(inputForm);
+
+var pitch = document.querySelector('#pitch');
+var pitchValue = document.querySelector('.pitch-value');
+var rate = document.querySelector('#rate');
+var rateValue = document.querySelector('.rate-value');
+
+var voices = [];
+
+function populateVoiceList() {
+  voices = synth.getVoices();
+
+  for(var i = 0; i < voices.length ; i++) {
+    var option = document.createElement('option');
+    option.textContent = voices[i].name + ' (' + voices[i].lang + ')';
+
+    if(voices[i].default) {
+      option.textContent += ' -- DEFAULT';
+    }
+
+    option.setAttribute('data-lang', voices[i].lang);
+    option.setAttribute('data-name', voices[i].name);
+    voiceSelect.appendChild(option);
+  }
+}
+
+populateVoiceList();
+if (speechSynthesis.onvoiceschanged !== undefined) {
+  speechSynthesis.onvoiceschanged = populateVoiceList;
+}
+
+inputForm.onsubmit = function(event) {
+  event.preventDefault();
+
+  var utterThis = new SpeechSynthesisUtterance(inputTxt.value);
+  var selectedOption = voiceSelect.selectedOptions[0].getAttribute('data-name');
+  for(var i = 0; i < voices.length ; i++) {
+    if(voices[i].name === selectedOption) {
+      utterThis.voice = voices[i];
+      console.log("voices",voices[i]);
+    }
+  }
+  utterThis.pitch = pitch.value;
+  utterThis.rate = rate.value;
+  synth.speak(utterThis);
+
+  inputTxt.blur();
+}
+
   }
 
 }
