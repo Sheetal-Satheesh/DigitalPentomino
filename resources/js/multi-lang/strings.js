@@ -3,9 +3,10 @@ const strings = {
         no: ["No", "Nein"],
         yes: ["Yes", "Ja"],
         cancel: ["cancel", "Abbrechen"],
-        or: ["or", "oder"]
+        or: ["or", "oder"],
+        submit: ["Apply", "Übernehmen"]
     },
-    reset: ["Do You Want To Reset?", "Willst du deinen Spielstand wirklich löschen?"],
+    reset: ["Do You Want to clear the board?", "Willst du das Brett wirklich leeren?"],
     showSolved: {
         congrats: ["Congratulations!", "Glückwunsch!"],
         play: ["Play Again?", "Nochmal spielen?"],
@@ -14,20 +15,20 @@ const strings = {
     },
     speechbubbleTexts: {
         Solved: ["Ya hoo !! You solved it !", "Juhu!! Du hast es gelöst!"],
-        pleaseContinue: ["Please continue with the game", "Bitte fahren Sie mit dem Spiel fort"],
+        pleaseContinue: ["Please continue with the game", "Bitte fahre mit dem Spiel fort"],
         pleaseStop: ["Wait for the hint", "Auf den Hinweis warten"],
-        helloThere: ["Hello are you there ?", "Hallo, sind Sie noch dran?"],
-        welcomeBack:["Welcome back", "Willkommen zurück"],
+        helloThere: ["Hello are you there ?", "Hallo, bist du noch da?"],
+        welcomeBack:["Welcome back!", "Willkommen zurück!"],
         iHaveAHint:["I have a hint", "Ich habe einen Tipp"],
         clickHintbtn:["Click on the hint button", "Klicken Sie auf die Schaltfläche Hinweis"],
-        removePentomino:["Remove", "Entfernen"],
+        removePentomino:["Remove", "Entferne"],
         move:["Move", "Verschieben"],
         MoveToPosition:["to position","zu positionieren"],
         atPosition:["at position","an Ort und Stelle"],
         place:["Place", "Ort"],
         rotate:["Rotate", "Drehen Sie"],
-        clockwise:["clockwise","im Uhrzeigersinn"],
-        antiClockwise:["anti-clockwise", "linksdrehend"],
+        clockwise:["clockwise","nach rechts"],
+        antiClockwise:["anti-clockwise", "nach links"],
         mirror:["Mirror","Spiegel"],
         vertical:["vertical","vertikal"],
         horizontal:["horizontal","horizontal"],
@@ -37,7 +38,7 @@ const strings = {
     numberOfPossibleSolutions: ["Number of solutions", "Anzahl Lösungen"],
     License: ["Licenses", "Lizenzen"],
     replay:{
-        doReply: ["Replay", "Playback"],
+        doReply: ["Replay", "Wiedergabe"],
         startStateText: ["Start State", "Startzustand"],
         endStateText: ["End State","Endzustand"],
         deleteSnapshot: ["Delete", "Löschen"],
@@ -61,13 +62,13 @@ const strings = {
                 enumTitles: [["English", "German"], ["Englisch", "Deutsch"]]
             },
             enableAudio: {
-                title: ["Enable Audio", "Audio einschalten"]
+                title: ["Sound effects", "Soundeffekte"]
             },
             enableBgMusic: {
-                title: ["Enable Background Music", "Hintergrundmusik einschalten"]
+                title: ["Background Music", "Hintergrundmusik"]
             },
             enableBird: {
-                title: ["Show tucan as helper", "Tucan als Helfer anzeigen"]
+                title: ["Tuca as helper", "Tuca als Helfer"]
             }
         },
         license: {
@@ -81,24 +82,24 @@ const strings = {
              loadash:["loadash","loadash"]
         },
         autohinting:{
-            title: ["Auto hinting", "Automatisches Hinting"],
+            title: ["Auto hinting", "Automatische Hilfestellung"],
             enableAutoHinting:{
-                title: ["Enable auto hinting", "Auto-Hinweis aktivieren"],
-                description: [["Enables auto-hinting", "Aktiviert Auto-Hinting"]]
+                title: ["Automated hinting", "Automatisierte Hilfestellung"],
+                description: [["Enables auto-hinting", "Aktiviert automatisierte Hilfestellung"]]
             },
             initiateActionsIfUserNotActive:{
-                title: ["Initiate actions if user not active", "Aktionen einleiten, wenn der Benutzer nicht aktiv ist"],
+                title: ["Initiate actions if user not active", "Hinweis, wenn der Benutzer nicht aktiv ist"],
                 description: [["Initiates actions only if user is not active on the application", "Löst nur Aktionen aus, wenn der Benutzer nicht in der Anwendung aktiv ist"]]
             },
             showOrHideButtonsForTextualHints:{
-                title: ["Show Buttons for textual hints", "Schaltflächen für Texthinweise anzeigen"],
+                title: ["Hints can be denied", "Hinweise können abgelehnt werden"],
                 description: ["Shows buttons in case the user wants autohinting textual hints as optional else textual hints will occur automatically.",
                 "Zeigt Schaltflächen an wenn der Benutzer automatische Texthinweise als Option wünscht andernfalls werden Texthinweise automatisch angezeigt."]
             },
 
             autoHintVariants:{
-                title: ["Variants of auto-hinting", "Varianten von Auto-Hinting"],
-                enumTitles: [["Time period", "Wrong actions"], ["Zeitspanne", "Falsche Maßnahmen"]],
+                title: ["Give auto-hint based on", "Automatisierte Hilfestellung geben nach"],
+                enumTitles: [["Time", "Unsolvable situation"], ["Sekunden Inaktivität", "Zügen in unlösbarer Spielsituation"]],
                 description: [
                 "Provides automatic hints :"  +
                     "<ul>" +
@@ -112,7 +113,7 @@ const strings = {
                         "</ul>"]
             },
             enableTimePeriodBasedAutoHintInAnyCase:{
-              title: [["Enable time period based autohinting in any case"],["Aktivieren Sie in jedem Fall die zeitraumbasierte automatische Anzeige"]],
+              title: [["Enable time period based autohinting in any case"],["Hilfestellung deaktivieren wenn nur noch X Steine platziert werden müssen"]],
               description: ["Enabling activates time period based hinting in any case. But disabling this option makes the time period based auto hinting inactive in case the user is towards the solution.",
               "Wenn Sie diese Option aktivieren, wird der zeitraumbasierte Hinweis in jedem Fall aktiviert. Durch die Deaktivierung dieser Option wird der zeitraumbasierte automatische Hinweis jedoch inaktiv, wenn der Benutzer auf die Lösung zusteuert."]
             },
@@ -160,15 +161,14 @@ const strings = {
             }
         },
         hinting: {
-            title: ["Hints (Experimental)", "Hinweise (Experimentell)"],
+            title: ["Hinting (Experimental)", "Hilfestellung (Experimentell)"],
             enableHinting: {
-                title: ["Enable hints", "Hinweise einschalten"],
-                description: ["Hints suggest pentomino-actions to the user, which bring the board closer to a solution.",
-                    "Hinweise schlagen dem Spieler Züge vor, die ihn/sie näher zur Lösung bringen."]
+                title: ["Hint button", "Hilfestellungs-Button"],
+                description: ["",""]
             },
             hintingLevels: {
-                title: ["Levels", "Levels"],
-                enumTitles: [["Easy", "Medium", "Difficult","Custom"], ["Leicht", "Mittel", "Schwierig", "Benutzerdefiniert"]],
+                title: ["Assistance", "Hilfestellung"],
+                enumTitles: [["High", "Medium", "Low","Custom"], ["Viel", "Mittel", "Wenig", "Individuell"]],
                 description: ["TODO",
                     "TODO"]
             },
@@ -206,52 +206,46 @@ const strings = {
                         "</ul>",
                     "Spezifiziert, von welcher Art die Hinweise sind:" +
                         "<ul>" +
-                            "<li><b>Konkrete Hinweise:</b> Der Hinweis empfiehlt direkt eine Aktion für ein bestimmtes Pentomino.</li>" +
-                            "<li><b>Partielle Hinweise:</b> Die Aktion wird nur angedeutet, indem Zellen des Pentominoes an dessen Zielposition angezeigt werden.</li>" +
-                            "<li><b>Bereich-Hinweise:</b> Die Aktion wird nur angedeutet, indem ein Bereich angezeigt wird, der die Zielposition des Pentominoes enthält.</li>" +
+                            "<li><b>Konkrete Hinweise:</b> Der Hinweis empfiehlt eine Zielposition für ein Pentomino.</li>" +
+                            "<li><b>Partielle Hinweise:</b> Das Zielfeld wird nur angedeutet, indem Teile der Zielposition des Pentominos angezeigt werden.</li>" +
+                            "<li><b>Bereich-Hinweise:</b> Es wird ein Bereich vorgeschlagen, in dem ein Pentomino zu platzieren ist.</li>" +
                         "</ul>"]
             },
             partialHintingStrategy: {
-                title: ["Partial Hinting Strategy", "Partielle Hinweise Strategie"],
-                enumTitles: [["Random", "Most Occupied Cells"], ["Zufällig", "Maximal belegte Felder"]],
-                description: ["TODO",
-                    "TODO"]
+                title: ["Partial Hinting Strategy", "Strategie für partielle Hinweise"],
+                enumTitles: [["Random", "Most Occupied Cells"], ["Zufällig", "Feld mit den wenigsten freien Nachbarn"]],
+                description: ["",
+                    ""]
             },
             maxPartialHintingCells: {
-                title: ["Max Partial Hinting Cells", "Maximale Anzahl Zellen bei partiellen Hinweisen"],
+                title: ["Max Partial Hinting Cells", "Maximale Anzahl Zielpositionen bei partiellen Hinweisen"],
                 description: ["If Partial hinting is enabled, the number of cells is randomly determined between 1 and the specified value.",
-                    "Die Anzahl der Zellen, die bei partiellen Hinweisen angezeigt werden, ist zufällig zwischen 1 und er eingestellten Zahl."]
+                    "Die Anzahl der Zielpositionen, die bei partiellen Hinweisen angezeigt werden, ist zufällig zwischen 1 und er eingestellten Zahl."]
             },
             skillTeaching: {
-                title: ["Enable Skill-Teaching?", "Fähigkeits-lehrende Hinweise einschalten?"],
+                title: ["Enable Skill-Teaching?", "Erklärung für Hilfestellungen"],
                 description: ["If skill-teaching is enabled, some hints are providing additional information to teach certain skills.",
                     "Wenn Fähigkeits-lehrende Hinweise eingeschaltet sind, werden manche bei manchen Hinweisen versucht, zusätzliche Fähigkeiten zu vermitteln."]
             },
             exactHints: {
-                title: ["Enable exact Hints?", "Exakte Hinweise aktivieren?"],
+                title: ["Seperate Hints into individual actions", "Hilfestellungen in Einzelaktionen zerlegen"],
                 description: ["If enabled, Rotate, Flip and Move-actions that should be performed on one pentomino are three separate hints. Otherwise these actions are combined into one hint.",
                     "Aktiviert: Drehen, Spiegeln und Bewege-Aktionen, die auf ein Pentomino angewandt werden müssen sind drei separate Hinweise. Deaktiviert: Aktionen werden in einem Hinweis zusammengefasst."]
             },
             hintingVariants: {
-                title: ["Hinting variants", "Hinweismöglichkeiten"],
+                title: ["Hinting variants", "Varianten der Hilfestellungen"],
                 enumTitles: [
                     ["Show pentominoes", "Show destination", "Show both"],
                     ["Pentomino anzeigen", "Ziel anzeigen", "Beides anzeigen"]
                 ],
-                description: ["Hinting variants have different options:" +
-                    "Show pentominoes: Hinting will only indicate pentomino to pickup" +
-                    "Show destination: Hinting will indicate only destination to place pentomino" +
-                    "Show both : Hinting will show both = pentomino to pickup and the detination to place",
-                    "Hinting-Varianten haben verschiedene Optionen: " +
-                    "Pentomino anzeigen: Hinting zeigt nur Pentomino zum Aufnehmen an " +
-                    "Ziel anzeigen: Hinting zeigt nur das Ziel an, um Pentomino zu platzieren " +
-                    "Beides anzeigen: Hinting zeigt beides an = Pentomino zum Aufnehmen und das Ziel zum Ablegen"
+                description: ["",
+                    ""
                 ]
 
             }
         },
         showSolvedBoardScreen:{
-                title: ["Show Solved Board Screen", "Bildschirm Gelöste Karte anzeigen"],
+                title: ["Show Solved Board Screen", "Gelösten Bildschirm anzeigen"],
                 enableSolvedScreen:{
                     title: ["Enable solved screen?", "Gelösten Bildschirm freigeben"],
                     description: ["Solved Board Screen indicates what should happen after the whole board is fully solved.",
@@ -277,30 +271,20 @@ const strings = {
                 }
         },
         prefilling: {
-            title: ["Prefilling", "Automatisches Füllen"],
+            title: ["Prefilled boards", "Vorbelegte Bretter"],
             fixPieces: {
-                title: ["Fix pieces", "Teile fixieren"],
+                title: ["Fix pentominos", "Pentominos fixieren"],
                 description: ["Pieces cannot be moved after being automatically placed", "Teile können nicht verschoben werden, nachdem sie automatisch platziert wurden"],
             },
             enablePrefilling: {
-                title: ["Enable Prefilling?", "Automatisches Füllen einschalten"],
+                title: ["Prefilling button", "Automatisches Füllen Button"],
                 description: ["Prefilling fills the board randomly with pentominoes.",
                     "Automatisches Füllen platziert zufällig Pentominoes auf das Spielfeld."]
             },
             prefillingStrategy: {
-                title: ["Prefill-Constraint", "Automatisches Füllen-Einschränkung"],
-                enumTitles: [["Distance", "Pieces"], ["Distanz", "Nachbar"]],
-                description: [
-                    "The selected constraint is applied when the pentominoes are placed on the board:" +
-                    "<ul>" +
-                    "<li><b>Distance-Constraint:</b> Pieces are not closer than the value specified in <i>Distance value</i>.</li>" +
-                    "<li><b>Pieces-Constraint:</b> Pieces are not touching more pieces than specified in <i>Distance value</i>.</li>" +
-                    "</ul>",
-                    "Die Einschränkung muss eingehalten werden, wenn die Pentominoes auf dem Spielfeld platziert werden:" +
-                    "<ul>" +
-                    "<li><b>Distanz-Einschränkung:</b> Distanz zweier Pentominoes ist maximal der Wert spezifiziert in <i>Distanz-Wert</i>.</li>" +
-                    "<li><b>Nachbar-Einschränkung:</b> Ein Pentomino hat maximal so viele benachbarte Pentominoes wie spezifiziert in <i>Distanz-Wert</i>.</li>" +
-                    "</ul>"]
+                title: ["Strategy for prefilling", "Strategie für automatisches Füllen"],
+                enumTitles: [["Distance", "Pieces"], ["Distanz: mindestens X Felder zwischen Pentominos", "Nachbar: X Pentominos aneinander"]],
+                description: ["",""]
             },
             distanceValue: {
                 title: ["Distance value", "Distanz-Wert"],
@@ -311,18 +295,18 @@ const strings = {
             }
         },
         theming: {
-            title: ["Application theme", "Applikationsdesign"],
+            title: ["Application theme", "Aussehen"],
             theme: {
-                title: ["Choose a theme", "Wähle ein Design"],
+                title: ["Theme", "Design"],
                 enumTitles: [["Default", "DayTuca", "NightTuca", "HighContrast"], ["Standard", "TucaHell", "TucaDunkel", "Kontrast"]],
                 description: ["General theme of the application.", "Grundlegendes Design der Applikation"]
             }
         },
         splitPartition: {
-            title: ["Split Board into Thirds", "TO DO"],
+            title: ["Split Board into Thirds", "Brettdrittelung"],
             fixPieces: {
-                title: ["Fix pieces", "Teile fixieren"],
-                description: ["Pieces cannot be moved after a partition is filled(only for left-to-right strategy)", "Teile können nicht verschoben werden, nachdem eine Partition gefüllt ist(nur für Links-nach-rechts-Strategie)"],
+                title: ["Fix pieces after solving a Third of the board", "Pentominos nach Lösung eines Drittels fixieren"],
+                description: ["Pieces cannot be moved after a partition is filled (only for left-to-right strategy)", "Teile können nicht verschoben werden, nachdem eine Partition gefüllt ist(nur für Links-nach-rechts-Strategie)"],
             },
             splitStrategy: {
                 title: ["Split Board into Partion By", "TO DO"],
@@ -336,8 +320,8 @@ const strings = {
                 description: ["When starting the app, the saved board will be selected and pieces loaded at their saved position.", "Wenn die App gestartet wird, wird das gespeicherte Spielbrett geladen und die Spielsteine starten an ihrer gespeicherten Position."]
             },
             includePiecePos: {
-                title: ["Include pentomino pieces on board?", "Speichere Spielsteine auf dem Brett?"],
-                description: ["TODO", "TODO"]
+                title: ["Include pentomino pieces", "Pentomino-Spielsteine mit einbeziehen"],
+                description: ["", ""]
             },
             shareThisBoard: {
                 title: ["Share this board?", "Teile dieses Brett?"]
@@ -359,14 +343,17 @@ const strings = {
             pupilMode: ["Share with class (Settings restricted)", "Teile mit Schülern (Einstellungen eingeschränkt)"],
             print: ["Print", "Drucken"],
             downloadImage: ["Download as image", "Als Bild herunterladen"],
-            useThisQrCode: ["Use this QR-code to bring your current settings on your pupil's devices.",
-                "Bringen Sie mit diesem QR-Code ihre momentanen Einstellungen zu den Geräten Ihrer Schüler"],
+            useThisQrCode: ["You can use this QR-code to bring your current settings onto your pupil's devices.",
+                "Durch diesen QR-Code könenn Sie die momentanen Einstellungen zu den Geräten Ihrer Schüler bringen."],
             firstPrintQrCode: ["1. Print the QR-code", "1. Drucken Sie den QR-code"],
             sndScanByPupilsFirstPart: ["2. Let your pupils scan it with the", "2. Lassen Sie ihn von Ihren Schülern mit dem"],
             sndScanByPupilsSndPart: ["-button in the TUCA-App.", "-Button in der TUCA-App scannen."]
         },
         scan: {
-            scanQrCode: ["Scan QR-code", "Scanne QR-code"]
+            scanQrCode: ["QR-code", "QR-code"]
         }
     }
 };
+
+
+/* Pupil mode: Nur noch grundlegende Einstellungen können verändert werden. Teacher mode: Alle Einstellungen können verändert werden. */
