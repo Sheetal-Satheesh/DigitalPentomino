@@ -1114,6 +1114,10 @@
                 this.handleClickedOnLicenses
             );
 
+            //rename submit button
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+            document.getElementById('btnSettingsSubmit').innerText = strings.general.submit[lang];;
+
             let settings = SettingsSingleton.getInstance().getSettings();
             SettingsForm.updateForm($('.modalFullframeContainer')[0], settings);
             // this.postProcessSettingsForm(SettingsSingleton.getInstance().getSettings());

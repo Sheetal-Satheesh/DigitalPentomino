@@ -3,7 +3,8 @@ const strings = {
         no: ["No", "Nein"],
         yes: ["Yes", "Ja"],
         cancel: ["cancel", "Abbrechen"],
-        or: ["or", "oder"]
+        or: ["or", "oder"],
+        submit: ["Apply", "Übernehmen"]
     },
     reset: ["Do You Want to clear the board?", "Willst du das Brett wirklich leeren?"],
     showSolved: {
