@@ -167,22 +167,7 @@ class SettingsSchema {
                     "title": titles.speech.enableSpeech.title[lang],
                     "description": titles.speech.enableSpeech.description[lang],
                     "default": true
-                  },
-                  maleOrFemaleVoice:{
-                    "type": "string",
-                    "title": titles.speech.maleOrFemaleVoice.title[lang],
-                    "enum": ["Female", "Male"],
-                    "enumText": titles.speech.maleOrFemaleVoice.enumTitles[lang],
-                    "description": titles.speech.maleOrFemaleVoice.description[lang],
-                    "default": "Female"
-                  },
-                  volume:{
-                    "type": "range",
-                    "title": titles.speech.volume.title[lang],
-                    "default": 1,
-                     "minimum": 0,
-                     "maximum": 1
-                  },
+                  }
                 }
             },
             autohinting: {

@@ -139,19 +139,6 @@ class SettingsForm {
                         });
                         div.appendChild(numberInputElement);
                         break;
-                    case "range":
-                        let rangeInputElementLabel = SettingsForm.createLabel(settingsEntry.title);
-                        div.appendChild(rangeInputElementLabel);
-                        let rangeInputElement = SettingsForm.createInputElement("number", elementName, {
-                            step: 0.1,
-                            value: settingsEntry.defaultValue,
-                            min: settingsEntry.minimum,
-                            max: settingsEntry.maximum,
-                            type: settingsEntry.type
-                        });
-                        div.appendChild(rangeInputElement);
-
-                        break;
                     case "custom":
                         let customInputElementLabel = SettingsForm.createLabel(settingsEntry.title);
                         div.appendChild(customInputElementLabel);
@@ -482,10 +469,6 @@ class SettingsForm {
                         let numberInputElement = $(formElement).find("input[name='" + name + "']")[0];
                         result[heading][key] = parseFloat(numberInputElement.value);
                         break;
-                    case "range":
-                        let rangeInputElement = $(formElement).find("input[name='" + name + "']")[0];
-                        result[heading][key] = parseFloat(rangeInputElement.value);
-                        break;
                     case "custom":
                         let customSettingsEntry = CustomSettingsEntrySingleton.getInstance().get(heading, key);
                         result[heading][key] = customSettingsEntry.collect(formElement);
@@ -531,9 +514,6 @@ class SettingsForm {
                         } else {
                             SettingsForm.updateImgSelectElement(heading, subheading, schemaEntry, settings[heading][subheading], formElement);
                         }
-                        break;
-                    case "range":
-                        SettingsForm.editInputSchemaEntry(heading, subheading, settings[heading][subheading], formElement);
                         break;
                     case "custom":
                         let customSettingsEntry = CustomSettingsEntrySingleton.getInstance().get(heading, subheading);

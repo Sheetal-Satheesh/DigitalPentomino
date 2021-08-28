@@ -880,12 +880,15 @@ class Visual {
       let labelPossibleSolutions = document.getElementById("labelNumberSolutions");
       if (this.gameController.game()._board.isSolved()) {
             speechBubbleText.innerText = strings.speechbubbleTexts.Solved[lang];
+            if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
+               this.speakBot(this.text);
+            }
           return;
       }
-        labelPossibleSolutions.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
-
+      if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+          labelPossibleSolutions.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
+      }
         //Fill speech bubble text
-
         speechBubbleText.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
         if(SettingsSingleton.getInstance().getSettings().autohinting.enableAutoHinting){
             if((this.gameController.getHint().getPossibleSolutions().length) === 0){
@@ -1046,9 +1049,9 @@ class Visual {
 
    ignore(){
       let lang = SettingsSingleton.getInstance().getSettings().general.language;
-      document.getElementById('speechBubbleText').textContent = strings.speechbubbleTexts.pleaseContinue[lang];
+      document.getElementById('speechBubbleText').textContent = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
       if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-          document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.pleaseContinue[lang];
+          document.getElementById("labelNumberSolutions").innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
       }
   }
 
@@ -1074,8 +1077,14 @@ class Visual {
       //Speech bubble says : I have a hint
       setTimeout(function(){
              speechBubbleText.textContent= strings.speechbubbleTexts.iHaveAHint[lang] ;
+             if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
+                this.speakBot(strings.speechbubbleTexts.iHaveAHint[lang]);
+             }
              if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
                  document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.iHaveAHint[lang];
+                 if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
+                    this.speakBot(strings.speechbubbleTexts.iHaveAHint[lang]);
+                 }
              }
          }, 3000);
          //Speech bubble asks show the hint or ignore
@@ -1094,8 +1103,14 @@ class Visual {
        //Speech bubble says : I have a hint
        setTimeout(function(){
               speechBubbleText.textContent= strings.speechbubbleTexts.iHaveAHint[lang] ;
+              if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
+                 this.speakBot(strings.speechbubbleTexts.iHaveAHint[lang]);
+              }
               if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
                   document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.iHaveAHint[lang];
+                  if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
+                     this.speakBot(strings.speechbubbleTexts.iHaveAHint[lang]);
+                  }
               }
           }, 3000);
             //Speech bubble automatically shows textual hint
@@ -1118,8 +1133,14 @@ class Visual {
         //Speech bubble says : I have a hint
         setTimeout(function(){
                speechBubbleText.textContent= strings.speechbubbleTexts.iHaveAHint[lang] ;
+               if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
+                  this.speakBot(strings.speechbubbleTexts.iHaveAHint[lang]);
+               }
                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
                    document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.iHaveAHint[lang];
+                   if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
+                      this.speakBot(strings.speechbubbleTexts.iHaveAHint[lang]);
+                   }
                }
            }, 3000);
            //Speech bubble asks show the hint or ignore
@@ -2327,171 +2348,35 @@ class Visual {
         });
     }
 
-    // SPEECH Creation
-    speech(){
-      const voice = document.querySelector("#speechBubbleText");
-      const button = document.querySelector("#speech");
-      const speechRecognition = window.speechRecognition || window.webkitSpeechRecognition;
-      const recorder = new speechRecognition();
-      const synth = window.speechSynthesis;
 
-
-      recorder.onstart = () =>{
-          console.log("voice activated");
-      };
-      recorder.onresult = (event) =>{
-          const resultIndex = event.resultIndex;
-          const transcript = event.results[resultIndex][0].transcript;
-          voice.textContent = transcript;
-          //this.botVoice(transcript);
-          if(transcript === "hello"){
-              const utter = new SpeechSynthesisUtterance("Hi, how are you?");
-              utter.lang = 'en-GB';
-              synth.speak(utter);
-          }
-      };
-      button.addEventListener('click', ()=>{
-          recorder.start();
-      });
-    };
-//end of speech function
-    botVoice(message){
-        const speech = new SpeechSynthesisUtterance();
-        speech.text = "this is a test message";
-        speech.volume = 1;
-        speech.rate = 1;
-        speech.pitch = 1;
-        window.speechSynthesis.speak(speech);
-    }
   //bot speaks in :
   //hintText() function
   //userinactivity() function
+  //when the board is solved
+  //when wrong actions are done
   speakBot(textTospeak){
       const synth = window.speechSynthesis;
       const utter = new SpeechSynthesisUtterance(textTospeak);
       let voices = synth.getVoices();
       let speechBubbleText = document.getElementById("speechBubbleText");
-      //check if browser supports speech synthesis
-        if ('speechSynthesis' in window) {
-          speechBubbleText.innerHTML = 'Your browser <strong>supports</strong> speech synthesis.';
-        } else {
-          speechBubbleText.innerHTML = 'Sorry your browser <strong>does not support</strong> speech synthesis.<br>Try this in <a href="https://www.google.co.uk/intl/en/chrome/browser/canary.html">Chrome Canary</a>.';
-          speechBubbleText.classList.add('not-supported');
-        }
       //utter.lang = 'en-US';
       //utter.lang = 'en-IN';
       //utter.lang = 'de-DE';
       if(SettingsSingleton.getInstance().getSettings().general.language === 1){
-          if(SettingsSingleton.getInstance().getSettings().speech.maleOrFemaleVoice === "Female"){
             utter.lang = 'de-DE';
-            utter.volume = SettingsSingleton.getInstance().getSettings().speech.volume;
             utter.voiceURI = 'Google Deutsch';
             utter.name = 'Google Deutsch';
             utter.localService= false;
             utter.default= false;
             synth.speak(utter);
-          }else if(SettingsSingleton.getInstance().getSettings().speech.maleOrFemaleVoice === "Male"){
-              utter.voice = voices[1];
-              utter.volume = SettingsSingleton.getInstance().getSettings().speech.volume;
-              synth.speak(utter);
-          }
       }else{
-          utter.lang = 'en-GB';
-          utter.Local = 'true';
-
-          if(SettingsSingleton.getInstance().getSettings().speech.maleOrFemaleVoice === "Female"){
+            utter.lang = 'en-GB';
+            utter.Local = 'true';
             utter.voiceURI = "Google UK English Female";
             utter.name =  "Google UK English Female";
-            utter.volume = SettingsSingleton.getInstance().getSettings().speech.volume;
-            console.log("utter.volume",utter.volume, "utter.rate", utter.rate, "utter.pitch", utter.pitch);
             synth.speak(utter);
-            this.speechSynthesis();
-          }else if(SettingsSingleton.getInstance().getSettings().speech.maleOrFemaleVoice === "Male"){
-              utter.voice = voices[8];
-              utter.volume = SettingsSingleton.getInstance().getSettings().speech.volume;
-              synth.speak(utter);
-          }
       }
   }
 
-  createForm(){
-    var x = document.createElement("FORM");
-    x.setAttribute("id", "speechForm");
-    document.body.appendChild(x);
-
-    var y = document.createElement("select");
-    y.setAttribute("id", "speechSelect");
-
-    document.getElementById("speechForm").appendChild(y);
-    console.log(x);
-  }
-
-  speechSynthesis(){
-    var x = document.createElement("FORM");
-    x.setAttribute("id", "speechForm");
-    document.body.appendChild(x);
-
-    var y = document.createElement("select");
-    y.setAttribute("id", "speechSelect");
-
-    document.getElementById("speechForm").appendChild(y);
-    let utterance = new SpeechSynthesisUtterance("Hello world!");
-speechSynthesis.speak(utterance);
-    var synth = window.speechSynthesis;
-
-var inputForm = document.querySelector('#speechForm');
-var inputTxt = document.querySelector('.txt');
-var voiceSelect = document.querySelector('#speechSelect');
-document.getElementById("licenseHeading").appendChild(inputForm);
-console.log(inputForm);
-
-var pitch = document.querySelector('#pitch');
-var pitchValue = document.querySelector('.pitch-value');
-var rate = document.querySelector('#rate');
-var rateValue = document.querySelector('.rate-value');
-
-var voices = [];
-
-function populateVoiceList() {
-  voices = synth.getVoices();
-
-  for(var i = 0; i < voices.length ; i++) {
-    var option = document.createElement('option');
-    option.textContent = voices[i].name + ' (' + voices[i].lang + ')';
-
-    if(voices[i].default) {
-      option.textContent += ' -- DEFAULT';
-    }
-
-    option.setAttribute('data-lang', voices[i].lang);
-    option.setAttribute('data-name', voices[i].name);
-    voiceSelect.appendChild(option);
-  }
-}
-
-populateVoiceList();
-if (speechSynthesis.onvoiceschanged !== undefined) {
-  speechSynthesis.onvoiceschanged = populateVoiceList;
-}
-
-inputForm.onsubmit = function(event) {
-  event.preventDefault();
-
-  var utterThis = new SpeechSynthesisUtterance(inputTxt.value);
-  var selectedOption = voiceSelect.selectedOptions[0].getAttribute('data-name');
-  for(var i = 0; i < voices.length ; i++) {
-    if(voices[i].name === selectedOption) {
-      utterThis.voice = voices[i];
-      console.log("voices",voices[i]);
-    }
-  }
-  utterThis.pitch = pitch.value;
-  utterThis.rate = rate.value;
-  synth.speak(utterThis);
-
-  inputTxt.blur();
-}
-
-  }
 
 }

@@ -255,20 +255,25 @@
                     //speech bubble message : "hello There"
                     setTimeout(function(){
                         speechBubbleText.textContent = strings.speechbubbleTexts.helloThere[lang];
+                            if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
+                               pd.visual.speakBot(strings.speechbubbleTexts.helloThere[lang]);
+                            }
+
                         //check if TUCA bird is enabled
                         if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
                             document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.helloThere[lang];
-                            //enable speech bot
                             if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
                                pd.visual.speakBot(strings.speechbubbleTexts.helloThere[lang]);
                             }
                         }
-                    }, 1000);
+                    }, 500);
                     //detect user if active again => onmouse move it says welcome back and the bird animaltion starts
                     document.onmousemove = function(){
                         //if(speech bubble message : "hello There ? ") => display "welcome back"
                         if(speechBubbleText.textContent === strings.speechbubbleTexts.helloThere[lang]){
-                            setTimeout(function(){speechBubbleText.textContent = strings.speechbubbleTexts.welcomeBack[lang]; }, 500);
+                            setTimeout(function(){
+                              speechBubbleText.textContent = strings.speechbubbleTexts.welcomeBack[lang];
+                            }, 2000);
                             if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
                                 document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.welcomeBack[lang];
                             }
@@ -276,8 +281,11 @@
                         //start bird animation
                         setTimeout(function(){
                             document.getElementById('birdContainer').classList.add("anim");
-                        }, 1000);
+                        }, 2000);
                     };
+
+
+
                     //at the end remove the bird animation
                     setTimeout(function(){
                         document.getElementById('birdContainer').classList.remove("anim");
@@ -285,19 +293,14 @@
                 }
                 //if autohinting enabled continue with autoHint() function
                 if(SettingsSingleton.getInstance().getSettings().autohinting.enableAutoHinting){
-                    //wakeup user with bird sound
-                    if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
-                        let audio = new Audio('resources/audio/pingPong.mp3');
-                        audio.play();
-                    }
                     autoHint();
                 }
-                //else if autohinting disabled => display "Continue with the game"
+                //else if autohinting disabled 
                 else{
                     setTimeout(function(){
-                        speechBubbleText.textContent = strings.speechbubbleTexts.pleaseContinue[lang];
+                        speechBubbleText.textContent = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getHint().getPossibleSolutions().length;
                         if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-                            document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.pleaseContinue[lang];
+                            document.getElementById("labelNumberSolutions").innerText = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getHint().getPossibleSolutions().length;
                         }
                     }, 5000);
                 }
@@ -353,12 +356,12 @@
             if(!(SettingsSingleton.getInstance().getSettings().autohinting.enableTimePeriodBasedAutoHintInAnyCase)){
                 if((pd.visual.numberofPlacedPentominos() > (pd.visual.pieces.length/2))){
                     setTimeout(function(){
-                        speechBubbleText.textContent = strings.speechbubbleTexts.pleaseContinue[lang];
+                        speechBubbleText.textContent = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getHint().getPossibleSolutions().length;
                         if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-                            document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.pleaseContinue[lang];
+                            document.getElementById("labelNumberSolutions").innerText = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getHint().getPossibleSolutions().length;
                         }
                     }, 5000);
-                    pd.visual.numberofPlacedPentominos();
+                    //pd.visual.numberofPlacedPentominos();
                     return;
                 }
             }
@@ -366,9 +369,9 @@
             //in case if the time period is not selected  , the message "Please continue with the game" appears
             if(!(SettingsSingleton.getInstance().getSettings().autohinting.autoHintVariants === "Time period")){
                 setTimeout(function(){
-                    speechBubbleText.textContent = strings.speechbubbleTexts.pleaseContinue[lang];
+                    speechBubbleText.textContent = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getHint().getPossibleSolutions().length;
                     if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-                        document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.pleaseContinue[lang];
+                        document.getElementById("labelNumberSolutions").innerText = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getHint().getPossibleSolutions().length;
                     }
                 }, 2500);
                 return;
