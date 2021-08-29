@@ -42,9 +42,6 @@ class SettingsParser {
                     case "boolean":
                         lastElement = SettingsParser.parseBooleanFromSeed(schemaEntry, remainingSeed, settingsEntry, key, seed);
                         break;
-                    case "range":
-                        lastElement = SettingsParser.parseBooleanFromSeed(schemaEntry, remainingSeed, settingsEntry, key, seed);
-                        break;
                     case "custom":
                         let customSettingsEntry = CustomSettingsEntrySingleton.getInstance().get(heading, key);
                         lastElement = customSettingsEntry.parseFromSeed(schemaEntry, remainingSeed, settingsEntry, key, seed);
