@@ -22,13 +22,14 @@ button:hover {
 }
 
 #modalTop {
-    top: 10vw;
+    top: 0vw;
     left: 0vw;
     right: 0vw;
     bottom: 10vw;
     /*border: 1px solid rgb(18, 122, 114);*/
     overflow: hidden;
     overflow-y:scroll;
+    background-color: lightgrey;
 }
 
   /* The Modal (background) */
@@ -50,12 +51,13 @@ button:hover {
   /* Modal Content/Box */
 .modalFormContent {
     position:relative;
-    top:5vw;
-    left: 28vw;
+    top: 15vw;
+    left: 31vw;
     width: 35vw;
     padding-bottom: 2vw;;
     background-color: #eceaea;
     border: .2vw solid rgb(2, 71, 62) ;
+    border-radius: 2vw;
 
 }
 
@@ -65,8 +67,20 @@ button:hover {
     text-align: center;
     top:2vw;
     overflow:hidden;
-
 }  
+
+.modalFullframeContainer {
+  position: relative;
+  top: 0vw;
+  left: 0vw;
+  right: 0vw;
+  bottom: 11vw;
+  width: 100%;
+  overflow-y: scroll; 
+  margin-left: 2vw;
+  /* scaling container always from top left */
+  transform-origin: top left;
+}
 
   /* The Modal Close Button (x) */
 
@@ -74,7 +88,7 @@ button:hover {
     z-index: 100;
     position: fixed;
     right: 1vw;
-    top: 11vw;
+    top: 1vw;
     width: 5vw;
     height: 5vw;
     background-color:white;
@@ -130,7 +144,7 @@ button:hover {
   z-index: 100;
   position: fixed;
   left: 1vw;
-  top: 11vw;
+  top: 1vw;
   width: 5vw;
   height: 5vw;
   background-color:white;

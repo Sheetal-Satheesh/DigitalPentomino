@@ -22,6 +22,9 @@
     <script src="resources/js/settings/translator.js"></script>
     <script src="resources/js/settings/settings-form.js"></script>
     <script src="resources/js/settings/settings-visibility.js"></script>
+    <script src="resources/js/settings/custom-settings-entry/custom-settings-entry.js"></script>
+    <script src="resources/js/settings/custom-settings-entry/start-pos-settings-entry.js"></script>
+    <script src="resources/js/settings/custom-settings-entry/custom-settings-entry-master.js"></script>
     <script src="resources/index.js"></script>
     <script src="resources/js/ui-template.js"></script>
     <script src="resources/js/board.js"></script>
@@ -43,7 +46,6 @@
     <script src="resources/js/handleMobile.js"></script>
     <script type="text/javascript" src="resources/jsonform/jquery.min.js"></script>
     <script type="text/javascript" src="resources/jsonform/underscore.js"></script>
-    <script type="text/javascript" src="resources/jsonform/jsonform.js"></script>
     <script type="text/javascript" src="resources/jsonform/jsv.js"></script>
     <script type="text/javascript" src="resources/jsonform/html2canvas.js"></script>
     <script type="text/javascript" src="resources/jsonform/loadash.js"></script>
@@ -54,6 +56,7 @@
     <script src="resources/js/hint-ai.js"></script>
     <script src="resources/js/help/hinting/command-sequence-list.js"></script>
     <script src="resources/js/load_screen.js"></script>
+    <script src="resources/js/split-board.js"></script>
 </head>
 <!-- Preloader section -->
 <div class="preloader d-flex">
@@ -88,7 +91,6 @@
                 <div class="boardmodalContainer" id="boardmodalContainerID">
                     <div class="boardouterGrid">
                         <div class="boardinnerGrid" id="boardinnerGrid" style="display: block;">
-
                         </div>
                         <form class="boardmodalFormContent" style="display: none;">
                             <form></form>
@@ -109,9 +111,11 @@
                         src="resources/images/icons/back.png"></button>
                 <div class="modalContainer" id="modalContainerID">
                     <div class="outerGrid">
+                        <div class="filterGrid" id="filterGrid"></div>
                         <div class="innerGrid" id="innerGrid"></div>
                         <form id="innerGridForm"></form>
                     </div>
+                    <form class="modalFullframeContainer" id="modalFullframeContainerID"></form>
                     <form class="modalFormContent">
                         <div class="modalFormContainer" id="modalFormContainerID">
                             <h3 id="modalTitleID"></h3>
@@ -151,11 +155,13 @@
                 <button type="button" id='gallery' class="cActionBtn" onclick="showGameImages()">
                     <img src="resources/images/icons/gallery_v2.png">
                 </button>
-                <button type="button" id='replay' class="cActionBtn" onclick="execReplay()">
+                <button type="button" id='replay' class="cActionBtn" onclick="showReplayUI()">
                     <img src="resources/images/icons/replay.svg">
                 </button>
                 <button type="button" id='reset' class="cActionBtn" onclick="resetGame()">
                     <img src="resources/images/icons/tidy_up_v2.png"></button>
+                <button type="button" id='splitBoard' class="cActionBtn" onclick="splitTheBoard()">
+                    <img id="splitBoardimg" src="resources/images/icons/dp_512.png"></button>
             </div>
 
             <div id="labelNumberSolutionsContainer">
@@ -194,13 +200,21 @@
                     <span class="icon-flip2" id="OpflipV"></span>
                 </div>
             </div>
-        </div>
-        <!---Button Manipulation Ends-->
+        </div> <!---Button Manipulation Ends-->
     </div>
 
     <script type="text/javascript">
         let pd;
         let template;
+
+        const SnapshotType = {
+            "FilterOnly": 0,
+            "Original": 1,
+            "Auto": 1 << 1,
+            "Original_Auto": (1 | (1 << 1)),
+            "Undefined": (1 & (1 << 1))
+        }
+        Object.freeze(SnapshotType);
 
         function initialize() {
             pd = new PD();
@@ -212,7 +226,151 @@
                 settings,
                 null);
             processChangesToSettings(initialChanges, settings);
+            inactivityTime();
         }
+
+        function inactivityTime() {
+            let time;
+            let text;
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+            let speechBubbleText = document.getElementById('speechBubbleText');
+            // initializing the resetTime function to the events in the DOM
+            window.onload = resetTime;
+            window.onclick = resetTime;
+            window.onkeypress = resetTime;
+            window.ontouchstart = resetTime;
+            window.onmousemove = resetTime;
+            window.onmousedown = resetTime;
+            window.ontouchstart = resetTime;
+            window.addEventListener('scroll', resetTime, true);
+            //alert user if not active
+            function alertUser() {
+                let lang = SettingsSingleton.getInstance().getSettings().general.language;
+                // do tasks
+                //this loop initiates actions if user inactive, this can be configurable from the settings
+                //Series of actions are : bubble speech message, and onmouse move the application says welcome back
+                //then simultaneously bird animation starts and then ends
+                if(SettingsSingleton.getInstance().getSettings().general.initiateActionsIfUserNotActive){
+                    //speech bubble message : "hello There"
+                    setTimeout(function(){
+                        speechBubbleText.textContent = strings.speechbubbleTexts.helloThere[lang];
+                        if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+                            document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.helloThere[lang];
+                        }
+                    }, 1000);
+                    //detect user if active again => onmouse move it says welcome back and the bird animaltion starts
+                    document.onmousemove = function(){
+                        //if(speech bubble message : "hello There ? ") => display "welcome back"
+                        if(speechBubbleText.textContent === strings.speechbubbleTexts.helloThere[lang]){
+                            setTimeout(function(){speechBubbleText.textContent = strings.speechbubbleTexts.welcomeBack[lang]; }, 500);
+                            if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+                                document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.welcomeBack[lang];
+                            }
+                        }
+                        //start bird animation
+                        setTimeout(function(){
+                            document.getElementById('birdContainer').classList.add("anim");
+                        }, 1000);
+                    };
+                    //at the end remove the bird animation
+                    setTimeout(function(){
+                        document.getElementById('birdContainer').classList.remove("anim");
+                    }, 10000);
+                }
+                //if autohinting enabled continue with autoHint() function
+                if(SettingsSingleton.getInstance().getSettings().general.enableAutoHinting){
+                    //wakeup user with bird sound
+                    if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
+                        let audio = new Audio('resources/audio/pingPong.mp3');
+                        audio.play();
+                    }
+                    autoHint();
+                }
+                //else if autohinting disabled => display "Continue with the game"
+                else{
+                    setTimeout(function(){
+                        speechBubbleText.textContent = strings.speechbubbleTexts.pleaseContinue[lang];
+                        if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+                            document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.pleaseContinue[lang];
+                        }
+                    }, 5000);
+                }
+            }
+            //end of alert user
+            //reset timer for every event in the DOM
+            // Initialise the setTimeout and then
+            //clear timeout to check user activity on the application
+            function resetTime() {
+                clearTimeout(time);
+                time = setTimeout(alertUser, 1000 * userInactiveWaitTime()); // 10 seconds
+            }
+        }
+
+        //end of inactivityTime() function
+
+
+
+    //Function gives time delay to wait for user inactivityTime
+    function userInactiveWaitTime(){
+        let userInactiveWaitTime = SettingsSingleton.getInstance().getSettings().autohinting.timeForNoAction;
+        let time = 0;
+        switch(userInactiveWaitTime) {
+            case "Short":
+                // code block
+                time = 10;
+                break;
+            case "Medium":
+                // code block
+                time = 90;
+                break;
+            case "Long":
+                // code block
+                time = 150;
+                break;
+            default:
+                // code block
+                console.error("time unknown!");
+        }
+        return time;
+    }
+
+//runs if autohint is enabled (this function specific for time period based)
+//Time period based hinting is only enabled in case the user is far away from the final solution
+        function autoHint(){
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+            let speechBubbleText = document.getElementById('speechBubbleText');
+            let hint = pd.gameController.getHint();
+            //let x = window.matchMedia("(max-width: 860px)");
+            //check if user is towards the solution or not
+            //in case if the user is towards the final solution  , the message "Please continue with the game" appears
+            //this option can be configurable from the settings
+            if(!(SettingsSingleton.getInstance().getSettings().autohinting.enableTimePeriodBasedAutoHintInAnyCase)){
+                if((pd.visual.numberofPlacedPentominos() > (pd.visual.pieces.length/2))){
+                    setTimeout(function(){
+                        speechBubbleText.textContent = strings.speechbubbleTexts.pleaseContinue[lang];
+                        if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+                            document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.pleaseContinue[lang];
+                        }
+                    }, 5000);
+                    pd.visual.numberofPlacedPentominos();
+                    return;
+                }
+            }
+            //check if time period based autohint is set or not
+            //in case if the time period is not selected  , the message "Please continue with the game" appears
+            if(!(SettingsSingleton.getInstance().getSettings().autohinting.autoHintVariants === "Time period")){
+                setTimeout(function(){
+                    speechBubbleText.textContent = strings.speechbubbleTexts.pleaseContinue[lang];
+                    if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+                        document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.pleaseContinue[lang];
+                    }
+                }, 2500);
+                return;
+            }
+            pd.visual.configureAutoHints();
+        }
+
+
 
         function buttonManipulation() {
             let btn = document.querySelector('.mainWrapper');
@@ -267,7 +425,16 @@
             let modal = document.getElementById('modalTop');
             if ($(modal).is(':visible')) {
                 this.closeModal();
+            } else if (SettingsSingleton.getInstance().getSettings().teachersMode) {
+                // teacher has the choice between share and scan
+                openImportOrExportDialog();
+                this.disablePointerEventsOnPieces();
+                this.hideManipulationButtons();
+                if ($('#birdContainer').is(':visible')) {
+                    this.hideBubbleContainer();
+                }
             } else {
+                // pupils can only scan
                 openScanQrCode();
                 this.disablePointerEventsOnPieces();
                 this.hideManipulationButtons();
@@ -277,6 +444,264 @@
             }
         }
 
+        function openImportOrExportDialog() {
+            let modal = document.getElementById('modalTop');
+            modal.style.display = "block";
+            modal.style.background = "#eceaea";
+
+            document.querySelector(".modalFormContent").style.display = "none";
+            document.querySelector(".modalFullframeContainer").style.display = "block";
+            document.querySelector(".innerGrid").style.display = "none";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent(".innerGrid")
+            template.clearContent("#innerGridForm");
+            template.clearContent("#filterGrid");
+            template.clearContent(".modalFullframeContainer");
+
+            //hide back button for main settings menu
+            document.getElementById("backButton").style.display = "none";
+
+            this.disablePointerEventsOnPieces();
+            this.hideManipulationButtons();
+            this.hideBubbleContainer();
+
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
+            let parent = modal;
+
+            let heading = document.createElement("h4");
+            heading.innerHTML = strings.qrCode.scanOrShare[lang];
+            parent.appendChild(heading);
+
+            // Add scan / share buttons
+            let scanImgElement = SettingsForm.createImg("scanImg", "resources/images/icons/scan_qr_code.png");
+            scanImgElement.onclick = () => openScanQrCode();
+            let shareImgElement = SettingsForm.createImg("shareImg", "resources/images/icons/share_qr_code.png");
+            shareImgElement.onclick = () => handleShareSettings();
+
+            parent.appendChild(scanImgElement);
+            parent.appendChild(shareImgElement);
+        }
+
+        function handleShareSettings() {
+            let modal = document.getElementById('modalTop');
+
+            this.hideBubbleContainer();
+            this.disableSnapshotButton();
+            this.hideManipulationButtons();
+            this.closeBoardSelector();
+            this.disablePointerEventsOnPieces();
+            modal.style.display = "block";
+            modal.style.background = "transparent";
+
+            document.querySelector(".modalFormContent").style.display = "block";
+            document.querySelector(".innerGrid").style.display = "none";
+            document.querySelector(".modalFullframeContainer").style.display = "none";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent("#innerGridForm");
+            template.clearContent("#filterGrid");
+
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
+            let parent = document.getElementById("modalBodyID");
+
+            let t1 = document.createTextNode(strings.qrCode.share.shareQrCode[lang]);
+            let h5 = document.createElement("h2");
+            let div1 = document.createElement("div");
+            h5.appendChild(t1);
+            div1.appendChild(h5);
+            parent.appendChild(div1);
+
+            let settings = SettingsSingleton.getInstance().getSettings();
+
+            //show back button
+            let btn = document.getElementById("backButton");
+            btn.style.display = "block";
+            btn.onclick = function () {
+                openImportOrExportDialog();
+                btn.style.display = "none";
+            };
+
+            let qrCodeElement = document.createElement("div");
+            qrCodeElement.style.margin = "auto";
+            parent.appendChild(qrCodeElement);
+
+            parent.appendChild(document.createElement("br"));
+            parent.appendChild(document.createTextNode(strings.qrCode.share.useThisQrCode[lang]));
+
+            parent.appendChild(document.createElement("br"));
+            parent.appendChild(document.createTextNode(strings.qrCode.share.firstPrintQrCode[lang] + ": "));
+
+            let printButton = createPrintButton(qrCodeElement);
+            parent.appendChild(printButton);
+            parent.appendChild(document.createTextNode(" " + strings.general.or[lang] + " "));
+            let downloadImageButton = createDownloadImageLink();
+            parent.appendChild(downloadImageButton);
+
+            parent.appendChild(document.createElement("br"));
+
+            let qrButtonImg = document.createElement("img");
+            qrButtonImg.src = "resources/images/icons/qr-code.png";
+            qrButtonImg.style.width = "2vw";
+            qrButtonImg.style.height = "2vw";
+
+            parent.appendChild(document.createTextNode(strings.qrCode.share.sndScanByPupilsFirstPart[lang] + " "));
+            parent.appendChild(qrButtonImg);
+            parent.appendChild(document.createTextNode(strings.qrCode.share.sndScanByPupilsSndPart[lang]));
+            parent.appendChild(document.createElement("br"));
+
+            let collapsibleButton = SettingsForm.createCollapsibleButton(
+                strings.settings.advanced.show[lang],
+                strings.settings.advanced.hide[lang]);
+            let divToHide = document.createElement("div");
+            divToHide.style.display = "none";
+
+            parent.appendChild(collapsibleButton);
+            parent.appendChild(divToHide);
+            let urlElement = document.createElement("a");
+            urlElement.target="_blank";
+            // Security measure: https://developer.mozilla.org/en-US/docs/Web/HTML/Link_types/noopener
+            urlElement.rel="noopener noreferrer";
+            addAdvancedShareOptions(divToHide, qrCodeElement, urlElement, downloadImageButton);
+
+            let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
+            let seed = SettingsParser.parseSettingsToSeed(schema, settings);
+            let exportSeed = seed.substr(1, seed.length - 1);
+            exportSeed = 2 + exportSeed;
+            console.info("baseConfigs.url", baseConfigs.url);
+            updateShareOptions(qrCodeElement, urlElement, downloadImageButton, exportSeed);
+        }
+
+        function addAdvancedShareOptions(advOptionsRoot, qrCodeElement, urlElement, downloadImageButton) {
+            advOptionsRoot.appendChild(document.createElement("br"));
+
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
+            let p = document.createElement("p");
+            let descrLabel = document.createElement("label");
+            descrLabel.innerText = strings.qrCode.share.urlToTest[lang] + ": ";
+            p.appendChild(descrLabel);
+            p.appendChild(urlElement);
+            let copyUrlButton = SettingsForm.createButton(strings.qrCode.share.copyUrl[lang]);
+            copyUrlButton.addEventListener("click", (event) => {
+                navigator.clipboard.writeText(urlElement.innerText);
+            });
+            p.appendChild(copyUrlButton);
+            advOptionsRoot.appendChild(p);
+
+            let includePiecesLabel = SettingsForm.createLabel(
+                strings.settings.boardCustomization.includePiecePos.title[lang]);
+            advOptionsRoot.appendChild(includePiecesLabel);
+
+            let teacherModeCheckbox = SettingsForm.createSelectElement(
+                "teacherModeCheckbox",
+                ["shareWithClass", "shareWithTeachers"],
+                [strings.qrCode.share.pupilMode[lang], strings.qrCode.share.teachersMode[lang]]);
+
+            teacherModeCheckbox.onchange = () => {
+                let settings = SettingsSingleton.getInstance().getSettings();
+                let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), settings);
+                insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
+                let exportSeed = seed.substr(1, seed.length - 1);
+                exportSeed = (teacherModeCheckbox.value === "shareWithTeachers" ? 1 : 2) + exportSeed;
+
+                updateShareOptions(qrCodeElement, urlElement, downloadImageButton, exportSeed);
+            };
+
+            let includePiecesCheckbox = SettingsForm.createInputElement("checkbox", "includePiecesCheckBox");
+            includePiecesCheckbox.onchange = () => {
+                let checkboxValue = includePiecesCheckbox.checked;
+                let settings = SettingsSingleton.getInstance().getSettings();
+                settings.boardCustomization.includePiecePos = checkboxValue;
+
+                let game = new FrontController().controller.game();
+                let customSettingsEntry = CustomSettingsEntrySingleton.getInstance()
+                    .get("boardCustomization", "initialPiecePos");
+                let piecePosSeedEntry = customSettingsEntry.parseFromGameToSeed(game);
+                settings.boardCustomization.initialPiecePos = piecePosSeedEntry;
+
+                let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), settings);
+                insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
+                let exportSeed = seed.substr(1, seed.length - 1);
+                exportSeed = (teacherModeCheckbox.value === "shareWithTeachers" ? 1 : 2) + exportSeed;
+
+                updateShareOptions(qrCodeElement, urlElement, downloadImageButton, exportSeed);
+            };
+
+            advOptionsRoot.appendChild(includePiecesCheckbox);
+            advOptionsRoot.appendChild(teacherModeCheckbox);
+
+            advOptionsRoot.appendChild(document.createElement("br"));
+        }
+
+        function updateShareOptions(qrCodeElement, urlElement, downloadImageButton, seed) {
+            let url = baseConfigs.url + "?" + baseConfigs.seedUrlParamName + "=" + seed;
+            //let pupilUrl = baseConfigs.url + "?" + baseConfigs.seedUrlParamName + "=2" + seed.substr(1, seed.length);
+
+            urlElement.innerText = url;
+            urlElement.href = url;
+
+            generateQrCode(qrCodeElement, url);
+
+            downloadImageButton.onclick = () => {
+                let dt = qrCodeElement.firstElementChild.toDataURL('image/png');
+                download(dt);
+            };
+        }
+
+        function createDownloadImageLink() {
+            let downloadImageButton = document.createElement("input");
+            downloadImageButton.type = "button";
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+            downloadImageButton.value = strings.qrCode.share.downloadImage[lang];
+            return downloadImageButton;
+        }
+
+        function download(file) {
+
+            //creating an invisible element
+            let element = document.createElement('a');
+            element.setAttribute('href', file);
+            element.setAttribute("download", "qr_code.png");
+
+            // Above code is equivalent to
+            // <a href="path of file" download="file name">
+
+            document.body.appendChild(element);
+
+            //onClick property
+            element.click();
+
+            document.body.removeChild(element);
+        }
+
+        function createPrintButton(qrCodeElement) {
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+            let printButton = SettingsForm.createButton(strings.qrCode.share.print[lang]);
+            printButton.setAttribute("id", "printQRCode");
+            printButton.addEventListener("click", function () {
+                let canvas = qrCodeElement.firstElementChild;
+                let imgDataUrl = canvas.toDataURL('image/png');
+                printInNewWindow(imgDataUrl);
+            });
+            return printButton;
+        }
+
+        // from https://stackoverflow.com/questions/18542081/how-to-open-an-image-and-have-it-print
+        function printInNewWindow(imgDataUrl) {
+            let win = window.open('');
+            let img = win.document.createElement("img");
+            img.src = imgDataUrl;
+            win.document.body.appendChild(img);
+            img.onload = function(){
+                win.print();
+            };
+        }
+
         function openScanQrCode() {
             let modal = document.getElementById('modalTop');
             modal.style.display = "block";
@@ -284,16 +709,19 @@
 
             document.querySelector(".modalFormContent").style.display = "none";
             document.querySelector(".innerGrid").style.display = "block";
+            document.querySelector(".modalFullframeContainer").style.display = "none";
             template.clearContent("#modalButtonsID");
             template.clearContent("#modalTitleID");
             template.clearContent("#modalBodyID");
             template.clearContent(".innerGrid")
             template.clearContent("#innerGridForm");
 
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
             let parent = $('#innerGridForm')[0];
 
             let heading = document.createElement("h4");
-            heading.innerHTML = "Scan QR-code";
+            heading.innerHTML = strings.qrCode.scan.scanQrCode[lang];
             parent.appendChild(heading);
 
             let videoElement = parent.appendChild(document.createElement("video"));
@@ -325,6 +753,32 @@
 
             //onQrCodeScanned("https://pentomino-digital.de/V5/index.html?t=2010101110111011101110121");
             //this.closeModal();
+        }
+
+        function handleDownloadImage(downloadImageButton, canvasElement) {
+            dlCanvas(downloadImageButton, canvasElement);
+        }
+
+        function dlCanvas(downloadImageButton, canvasElem) {
+            let dt = canvasElem.toDataURL('image/png');
+            downloadImageButton.href = dt;
+        }
+
+        function generateQrCode(element, inputText) {
+            let selector = $(element);
+            selector.empty();
+            // Set Size to Match User Input
+            // FIXME: fix width and height
+            selector.css({
+                'width': 255,
+                'height': 255
+            });
+            // Generate and Output QR Code
+            selector.qrcode({
+                width: 255,
+                height: 255,
+                text: inputText
+            });
         }
 
         // from https://stackoverflow.com/questions/59702127/draw-rectangle-over-html-5-tag-video first answer
@@ -406,10 +860,12 @@
 
                 document.querySelector(".modalFormContent").style.display = "block";
                 document.querySelector(".innerGrid").style.display = "none";
+                document.querySelector(".modalFullframeContainer").style.display = "none";
                 template.clearContent("#modalButtonsID");
                 template.clearContent("#modalTitleID");
                 template.clearContent("#modalBodyID");
                 template.clearContent("#innerGridForm");
+                template.clearContent("#filterGrid");
 
                 let lang = SettingsSingleton.getInstance().getSettings().general.language;
 
@@ -438,6 +894,7 @@
                 dltBtn.addEventListener("click", () => {
                     pd.reset();
                 });
+                $("#bubbleContainer").css("display", "block");
             }
         }
 
@@ -445,9 +902,9 @@
             document.getElementById('boardmodalTop').style.display = 'none';
             this.closeModalContainer();
             this.enableSnapshotButton();
-            if ($('#birdContainer').is(':visible')){
+            if ($('#birdContainer').is(':visible')) {
                 this.showBubbleContainer();
-            }           
+            }
         }
 
         function callHintAI() {
@@ -458,6 +915,22 @@
                 // TODO - handle, e.g. shake hint button
                 console.log("Game is already solved. Cannot display hint");
             }
+        }
+        function splitTheBoard() {
+            splitButton = document.getElementById("splitBoardimg")
+            if(!splitButton.classList.contains("splitbuttonimg")) {
+                splitButton.classList.add("splitbuttonimg");
+                if (!pd.gameController.game()._board.isSolved()) {
+                    pd.visual.splitTheBoard();
+                } else {
+                    console.log("Game is already solved");
+                    pd.visual.unblockPartition();
+                }               
+            } else {
+                splitButton.classList.remove("splitbuttonimg");
+                pd.visual.undoSplit();                
+            }
+
         }
 
         function rotateClkWise() {
@@ -506,6 +979,9 @@
                 this.disableSnapshotButton();
                 this.hideBubbleContainer();
             }
+           if ((SettingsSingleton.getInstance().getSettings().general.enableBird)){
+              $("#bubbleContainer").css("display", "block");
+           }
         }
 
         // From https://stackoverflow.com/questions/10970078/modifying-a-query-string-without-reloading-the-page (2nd answer)
@@ -584,6 +1060,13 @@
                         document.getElementById("labelNumberSolutionsContainer").style.display = "block";
                     }
                 }
+
+                let allCustomSettings = CustomSettingsEntrySingleton.getInstance().getAll();
+                allCustomSettings.forEach(customSettings => {
+                    if (customSettings.getName() === SettingsForm.generateSettingsEntryName(heading, key)) {
+                        customSettings.processChangesToSettings(settings[heading][key], pd);
+                    }
+                });
             });
         }
 
@@ -605,12 +1088,18 @@
             modal.style.background = "#eceaea";
 
             document.querySelector(".modalFormContent").style.display = "none";
-            document.querySelector(".innerGrid").style.display = "block";
+            document.querySelector(".modalFullframeContainer").style.display = "block";
+            document.querySelector(".innerGrid").style.display = "none";
             template.clearContent("#modalButtonsID");
             template.clearContent("#modalTitleID");
             template.clearContent("#modalBodyID");
             template.clearContent(".innerGrid")
             template.clearContent("#innerGridForm");
+            template.clearContent("#filterGrid");
+            template.clearContent(".modalFullframeContainer");
+
+            //hide back button for main settings menu
+            document.getElementById("backButton").style.display = "none";
 
             //add form to attach settings to
             //$('#innerGridForm').jsonForm({
@@ -620,15 +1109,40 @@
             //});
 
             SettingsForm.generateForm(
-                $('#innerGridForm')[0],
+                $('.modalFullframeContainer')[0],
                 this.handleJsonFormSubmit,
-                this.handleShareSettings,
                 this.handleClickedOnLicenses
             );
 
+            //rename submit button
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+            document.getElementById('btnSettingsSubmit').innerText = strings.general.submit[lang];;
+
             let settings = SettingsSingleton.getInstance().getSettings();
-            SettingsForm.updateForm($('#innerGridForm')[0], settings);
+            SettingsForm.updateForm($('.modalFullframeContainer')[0], settings);
             // this.postProcessSettingsForm(SettingsSingleton.getInstance().getSettings());
+
+            // scale settings smaller for very wide monitors (currently only working for chrome)
+            // Ipad has a ratio of of approx. 1.4 - hence scale settings smaller for wider stuff than 1,5
+            let isChrome = !!window.chrome;
+            if (((window.innerWidth / window.innerHeight) > 1.4)) {
+                
+                //excludes other browsers from adaption
+                if (isChrome) {
+                    document.getElementById('modalFullframeContainerID').style.zoom = (1.4 / (window.innerWidth / window.innerHeight));
+                    //adapt the floatingButtons to still align with the bottom bar
+                    $('.formButton').css('bottom',(11 * (1 / (1.4 / (window.innerWidth / window.innerHeight))) + 'vw'));
+                }
+
+                
+            } else {
+
+                if (isChrome) {
+                    document.getElementById('modalFullframeContainerID').style.zoom = 1;
+                    $('.formButton').css('bottom','11vw');
+                }
+            }
+
         }
 
         // called when license button is clicked in settings
@@ -642,26 +1156,32 @@
             modal.style.background = "transparent";
             document.querySelector(".modalFormContent").style.display = "block";
             document.querySelector(".innerGrid").style.display = "none";
+            document.querySelector(".modalFullframeContainer").style.display = "none";
             template.clearContent("#modalButtonsID");
             template.clearContent("#modalTitleID");
             template.clearContent("#modalBodyID");
             template.clearContent("#innerGridForm");
+            template.clearContent(".modalFullframeContainer");
             modal.style.background = "#dcf0ed";
-            document.getElementById("modalFormContainerID").style.backgroundColor = "#dcf0ed";
+            document.getElementById("modalFormContainerID").style.backgroundColor = "lightgrey";
             document.getElementById("modalFormContainerID").style.border = "none";
             let y = document.getElementsByClassName("cActionBtn");
-            for(let i = 0; i< y.length; i++){ y[i].style.pointerEvents = "none"; }
-            $(".modalFormContent").css( "display", "none" );
+            for (let i = 0; i < y.length; i++) { y[i].style.pointerEvents = "none"; }
+            $(".modalFormContent").css("display", "none");
             //show back button
             let btn = document.getElementById("backButton");
             btn.style.display = "block";
             $(".close").click(function () {
-              document.getElementById("modalTop").style.display = "none";
+                document.getElementById("modalTop").style.display = "none";
+                $("#licencesTable").attr("style", "display:none");
+                $("#licenseHeading").attr("style", "display:none");
+                $("#tableLicenseDiv").attr("style", "display:none");
+                $("#tableLicenseDiv").remove();
                 if ($("#licencesTable")) {
-                    document.getElementById("licencesTable").style.display = "none";
-                    document.getElementById("licenseHeading").style.display = "none";
-                    document.getElementById("tableLicenseDiv").style.display = "none";
-                    for(let i = 0; i< y.length; i++){ y[i].style.pointerEvents = "auto"; }
+                    $("#licencesTable").attr("style", "display:none");
+                    $("#licenseHeading").attr("style", "display:none");
+                    $("#tableLicenseDiv").attr("style", "display:none");
+                    for (let i = 0; i < y.length; i++) { y[i].style.pointerEvents = "auto"; }
                 }
             });
             btn.onclick = function () {
@@ -671,13 +1191,13 @@
                     document.getElementById("licencesTable").style.display = "none";
                     document.getElementById("licenseHeading").style.display = "none";
                     document.getElementById("tableLicenseDiv").style.display = "none";
-                    for(let i = 0; i< y.length; i++){ y[i].style.pointerEvents = "auto"; }
+                    for (let i = 0; i < y.length; i++) { y[i].style.pointerEvents = "auto"; }
                 }
                 document.getElementById("licenseHeading").style.display = "none";
-                if(div5){
-                  div5.style.display = "none";
+                if (div5) {
+                    div5.style.display = "none";
                 }
-                SettingsForm.updateForm($('#innerGridForm')[0], settings);
+                //SettingsForm.updateForm($('#innerGridForm')[0], settings);
                 btn.style.display = "none";
             };
             let lang = SettingsSingleton.getInstance().getSettings().general.language;
@@ -698,7 +1218,6 @@
             }
             modal.appendChild(document.createElement(strings.License[lang]));
             var table = document.createElement('TABLE');
-            console.log(table);
             table.id = "licencesTable"
             table.border = '1px solid black';
             table.style.textAlign = "center";
@@ -739,12 +1258,12 @@
                         let entry = subSettings[key][lang];
                         let imageElement;
                         const subString = "image";
-                        if(entry.includes(subString)){
-                          imageElement = document.createElement("img");
-                          imageElement.setAttribute("style", "width: 10vw; height: 10vw; border: 2px solid black; text-align: center; border:transparent");
-                          let img_src = "resources/images/icons/" + heading +".ico";
-                          imageElement.setAttribute("src", img_src);
-                          td.appendChild(imageElement);
+                        if (entry.includes(subString)) {
+                            imageElement = document.createElement("img");
+                            imageElement.setAttribute("style", "width: 10vw; height: 10vw; border: 2px solid black; text-align: center; border:transparent");
+                            let img_src = "resources/images/icons/" + heading + ".ico";
+                            imageElement.setAttribute("src", img_src);
+                            td.appendChild(imageElement);
                         }
                         td.style.width = '20vw';
                         td.style.padding = "1vw";
@@ -785,159 +1304,6 @@
             }
             div5.appendChild(table);
             modal.appendChild(div5);
-        }
-
-        function handleShareSettings(settings) {
-            this.hideManipulationButtons();
-            this.closeBoardSelector();
-            this.disablePointerEventsOnPieces();
-            var modal = document.getElementById('modalTop');
-            modal.style.display = "block";
-            modal.style.background = "transparent";
-
-            document.querySelector(".modalFormContent").style.display = "block";
-            document.querySelector(".innerGrid").style.display = "none";
-            template.clearContent("#modalButtonsID");
-            template.clearContent("#modalTitleID");
-            template.clearContent("#modalBodyID");
-            template.clearContent("#innerGridForm");
-
-            let div1 = document.createElement("div");
-            let h5 = document.createElement("h2");
-            var t1 = document.createTextNode("Share");
-            h5.appendChild(t1);
-            div1.appendChild(h5);
-            modalBodyID.appendChild(div1);
-
-            //show back button
-            let btn = document.getElementById("backButton");
-            btn.style.display = "block";
-            btn.onclick = function () {
-                openSettings();
-                SettingsForm.updateForm($('#innerGridForm')[0], settings);
-                btn.style.display = "none";
-            };
-
-            let teacherURLLabel = document.createElement("label");
-            let pupilURLLabel = document.createElement("label");
-
-            let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
-            let seed = SettingsParser.parseSettingsToSeed(schema, settings);
-            console.log("baseConfigs.url", baseConfigs.url);
-            let teacherUrl = baseConfigs.url + "?" + baseConfigs.seedUrlParamName + "=" + seed;
-            let pupilUrl = baseConfigs.url + "?" + baseConfigs.seedUrlParamName + "=2" + seed.substr(1, seed.length);
-            teacherURLLabel.innerHTML = teacherUrl;
-            pupilURLLabel.innerHTML = pupilUrl;
-
-            let teacherQrCodeElement = document.createElement("div");
-            let pupilQrCodeElement = document.createElement("div");
-            pupilQrCodeElement.style.margin = "auto";
-
-            generateQrCode(pupilQrCodeElement, pupilUrl);
-            modalBodyID.appendChild(pupilQrCodeElement);
-
-            /*let table = document.createElement("table");
-            table.style.margin = "auto";
-
-            let tr23 = document.createElement("tr");
-            table.appendChild(tr23);
-            let td111 = document.createElement("td");
-            td111.appendChild(document.createTextNode("Share With Other Teachers"));
-            tr23.appendChild(td111);
-            let td212 = document.createElement("td");
-            td212.appendChild(document.createTextNode("Use In Class"));
-            tr23.appendChild(td212);
-
-            let qrTr = generateQrTrElement(teacherUrl, pupilUrl);
-            table.appendChild(qrTr);
-
-            let tr2 = document.createElement("tr");
-            table.appendChild(tr2);
-            let td11 = document.createElement("td");
-            td11.appendChild(document.createTextNode("Use this to share with other teachers (Restricted Settings)"));
-            tr2.appendChild(td11);
-            let td21 = document.createElement("td");
-            td21.appendChild(document.createTextNode("Use this in class"));
-            tr2.appendChild(td21);
-
-            modalBodyID.appendChild(table);*/
-
-            modalBodyID.appendChild(document.createElement("br"));
-            modalBodyID.appendChild(document.createTextNode("Use this QR-code to bring your current settings on your pupil's devices."));
-
-            modalBodyID.appendChild(document.createElement("br"));
-            modalBodyID.appendChild(document.createTextNode("1. Print QR-code 2. The pupils scan it with the X-button in the TUCA-App."));
-
-            modalBodyID.appendChild(document.createElement("br"));
-            let printButton = SettingsForm.createButton("Print");
-            printButton.setAttribute("id", "printQRCode");
-            printButton.addEventListener("click", function () {
-                window.print();
-            });
-            modalBodyID.appendChild(printButton);
-            let downloadImageButton = document.createElement("a");
-            downloadImageButton.innerHTML = "Download image";
-            downloadImageButton.addEventListener("click", function () {
-                handleDownloadImage(downloadImageButton, pupilQrCodeElement.firstElementChild);
-            });
-            downloadImageButton.download = "Canvas.png";
-            modalBodyID.appendChild(downloadImageButton);
-            modalBodyID.appendChild(document.createElement("br"));
-            modalBodyID.appendChild(document.createElement("br"));
-
-            let collapsibleButton = SettingsForm.createCollapsibleButton("Show advanced share options", "Hide advanced share options");
-            let divToHide = document.createElement("div");
-            divToHide.appendChild(document.createTextNode("Test"));
-
-            modalBodyID.appendChild(collapsibleButton);
-            modalBodyID.appendChild(divToHide);
-        }
-
-        function handleDownloadImage(downloadImageButton, canvasElement) {
-            dlCanvas(downloadImageButton, canvasElement);
-        }
-
-        function dlCanvas(downloadImageButton, canvasElem) {
-            let dt = canvasElem.toDataURL('image/png');
-            downloadImageButton.href = dt;
-        }
-
-
-        /*function generateQrTrElement(teacherUrl, pupilUrl) {
-            // Generate QR
-            let teacherQrCodeElement = document.createElement("div");
-            let pupilQrCodeElement = document.createElement("div");
-
-            generateQrCode(teacherQrCodeElement, teacherUrl);
-            generateQrCode(pupilQrCodeElement, pupilUrl);
-
-            let tr = document.createElement("tr");
-            let td1 = document.createElement("td");
-            tr.appendChild(td1);
-            let td2 = document.createElement("td");
-            tr.appendChild(td2);
-
-            td1.appendChild(teacherQrCodeElement);
-            td2.appendChild(pupilQrCodeElement);
-
-            return tr;
-        }*/
-
-        function generateQrCode(element, inputText) {
-            let selector = $(element);
-            selector.empty();
-            // Set Size to Match User Input
-            // FIXME: fix width and height
-            selector.css({
-                'width': 255,
-                'height': 255
-            });
-            // Generate and Output QR Code
-            selector.qrcode({
-                width: 255,
-                height: 255,
-                text: inputText
-            });
         }
 
         let piecesIdArray = ['piece_X', 'piece_Y', 'piece_F', 'piece_I', 'piece_L', 'piece_N', 'piece_P', 'piece_T', 'piece_U', 'piece_V', 'piece_W', 'piece_Z'];
@@ -1021,17 +1387,7 @@
 
         function saveGameImage() {
             addFlash("playarea");
-            let gameImage = undefined;
-            let gameElem = document.getElementById('playarea');
-
-            html2canvas(gameElem).then(function (screeshot) {
-                screeshot.setAttribute("class", "screenshot");
-                screeshot.style.width = '25vw';
-                screeshot.style.height = '15vw';
-                screeshot.style.border = "2px solid black";
-                gameImage = screeshot;
-                pd.visual.saveGameImage(gameImage);
-            });
+            pd.visual.saveGameImage(SnapshotType.Original);
         }
 
         function loadGameImage(key) {
@@ -1049,9 +1405,11 @@
         function enableSnapshotButton() {
             $('#screenshot').prop('disabled', false);
         }
-        function deleteGameImage(key) {
-            pd.visual.deleteGameImage(key);
+        function deleteGameImage(imgKey, gameId) {
+            pd.visual.deleteGameImage(imgKey);
             showGameImages();
+            renderGallery(gameId);
+
         }
 
         function generateRandomColor() {
@@ -1064,155 +1422,323 @@
 
         }
 
-        function showGameImages() {
-            var modal = document.getElementById('modalTop');
-            this.disablePointerEventsOnPieces();
-            this.hideManipulationButtons();
-            this.hideBubbleContainer();
-            modal.style.background = " #eceaea";
-            modal.style.display = "block";
+        function addReplyFilterImage(img, stateType) {
+            let targetDiv;
+            let fTextDivStart = document.querySelector(".ftextDivStart");
+            let fTextDivEnd = document.querySelector(".ftextDivEnd");
 
-            document.querySelector(".modalFormContent").style.display = "none";
-            document.querySelector(".innerGrid").style.display = "block";
+            if (fTextDivStart.getAttribute('type') == "image") {
+                stateType = "end";
+            }
+            if (stateType == "start") {
+                fTextDivStart.style.border = 0;
+                fTextDivEnd.style.border = "3px dotted gray";
+                fTextDivStart.setAttribute('type', "image");
+                finishBlink(fTextDivStart);
+                blink(fTextDivEnd);
+                targetDiv = fTextDivStart;
+            } else {
+                fTextDivEnd.style.border = 0;
+                targetDiv = fTextDivEnd;
+                finishBlink(fTextDivEnd);
+            }
 
-            let imageList = pd.visual.showGameImages();
-            let imageGrid = document.getElementById('innerGrid');
-            template.clearContent(".innerGrid");
-            template.clearContent("#innerGridForm");
-            let gameId = undefined;
-            let borderColor = generateRandomColor();
+            targetDiv.innerHTML = "";
+            let childs = targetDiv.childNodes;
+            childs.forEach((item) => {
+                targetDiv.removeChild(item);
+            });
 
-            imageList.forEach((item) => {
-                let imgKey = Object.keys(item)[0];
-                let image = item[imgKey];
-                let imageDiv = document.createElement("div");
-                imageDiv.setAttribute("class", "imageDiv");
-
-                if (gameId != pd.visual.getGameIdByKey(imgKey)) {
-                    gameId = pd.visual.getGameIdByKey(imgKey);
-                    borderColor = generateRandomColor();
-                }
-                imageDiv.style.borderWidth = "3px";
-                imageDiv.style.borderColor = borderColor;
-
-                let buttonDiv = document.createElement("div");
-                buttonDiv.setAttribute("class", "imageBtnDiv");
-
-                let loadBtn = document.createElement("button");
-                loadBtn.setAttribute("class", "imageButton imageLoadBtn");
-                loadBtn.textContent = "Load";
-                loadBtn.addEventListener('click', function () {
-                    loadGameImage(imgKey);
-                }, false);
-
-
-                let deleteBtn = document.createElement("button");
-                deleteBtn.setAttribute("class", "imageButton imageDeleteBtn");
-                deleteBtn.textContent = "Delete";
-                deleteBtn.addEventListener('click', function () {
-                    deleteGameImage(imgKey);
-                }, false);
-
-
-                buttonDiv.appendChild(loadBtn);
-                buttonDiv.appendChild(deleteBtn);
-
-                imageDiv.appendChild(image);
-                imageDiv.appendChild(buttonDiv);
-                imageGrid.appendChild(imageDiv);
-
+            html2canvas(img).then(function (cloneImg) {
+                cloneImg.setAttribute("class", "screenshot");
+                cloneImg.style.width = '10vw';
+                cloneImg.style.height = '5.5vw';
+                cloneImg.value = img.value;
+                targetDiv.appendChild(cloneImg);
+                console.log(cloneImg.value);
             });
 
         }
 
-        function execReplay() {
-            var modal = document.getElementById('modalTop');
-            if ($('.modalFormContainer').is(':visible')) {
-                this.closeModal();
+        function renderGallery(gameId, callerType = "Snapshot") {
+
+            document.querySelector(".innerGrid").style.display = "block";
+            let imageGrid = document.getElementById('innerGrid');
+            template.clearContent(".innerGrid");
+            template.clearContent("#innerGridForm");
+
+            let images = pd.visual.getImagesByGameId(gameId);
+
+            if (images == undefined) {
+                return;
             }
-            else {
-                this.disableSnapshotButton();
-                this.hideManipulationButtons();
-                this.disablePointerEventsOnPieces();
-                modal.style.display = "block";
-                modal.style.background = "transparent";
-                document.querySelector(".modalFormContent").style.display = "block";
-                document.querySelector(".innerGrid").style.display = "none";
-                template.clearContent("#modalButtonsID");
-                template.clearContent("#modalTitleID");
-                template.clearContent("#modalBodyID");
-                template.clearContent("#innerGridForm");
 
-                let startGameState = pd.getGameState("start");
-                let currGameState = pd.getGameState("current");
+            images.forEach((item) => {
+                let imgKey = Object.keys(item)[0];
+                let image = item[imgKey];
+                image.value = imgKey;
+                let imageDiv = document.createElement("div");
+                imageDiv.setAttribute("class", "imageDiv");
+                imageDiv.appendChild(image);
+                imageGrid.appendChild(imageDiv);
 
-                if (startGameState == undefined) {
-                    let textNode = {
-                        name: "modalText",
-                        text: "Game Not Started Yet ",
-                    }
+                if (callerType == "Snapshot") {
+                    let lang = SettingsSingleton.getInstance().getSettings().general.language;
 
-                    template.attachText("#modalTitleID", textNode);
+                    let buttonDiv = document.createElement("div");
+                    buttonDiv.setAttribute("class", "imageBtnDiv");
+
+                    let loadBtn = document.createElement("button");
+                    loadBtn.setAttribute("class", "imageButton imageLoadBtn");
+                    loadBtn.textContent = strings.replay.loadSnapshot[lang];
+                    loadBtn.addEventListener('click', function () {
+                        loadGameImage(image.value);
+                    }, false);
+
+                    let deleteBtn = document.createElement("button");
+                    deleteBtn.setAttribute("class", "imageButton imageDeleteBtn");
+                    deleteBtn.textContent = strings.replay.deleteSnapshot[lang];
+                    deleteBtn.addEventListener('click', function () {
+                        deleteGameImage(imgKey, gameId);
+                    }, false);
+
+                    buttonDiv.appendChild(loadBtn);
+                    buttonDiv.appendChild(deleteBtn);
+                    imageDiv.appendChild(buttonDiv);
+                }
+                else if (callerType.includes("Replay")) {
+                    let stateType = callerType.split(':');
+                    imageDiv.addEventListener('click', function () {
+                        addReplyFilterImage(imageDiv.childNodes[0], stateType[1]);
+                    }, false);
+                }
+            });
+        }
+
+        function showGameImages() {
+            var modal = document.getElementById('modalTop');
+            this.disableSnapshotButton();
+            this.disablePointerEventsOnPieces();
+            this.hideManipulationButtons();
+            modal.style.background = " lightgrey";
+            modal.style.display = "block";
+
+            document.querySelector(".modalFormContent").style.display = "none";
+            document.querySelector(".outerGrid").style.display = "block";
+            document.querySelector(".modalFullframeContainer").style.display = "none";
+            let imageGrid = document.getElementById('innerGrid');
+            let imgFilterGrid = document.getElementById('filterGrid');
+            template.clearContent(".innerGrid");
+            template.clearContent("#innerGridForm");
+            template.clearContent("#filterGrid");
+
+            pd.visual.delGameAutoImages();
+            pd.visual.saveGameImage(SnapshotType.Auto);
+            let currGmKey = pd.visual.getCurrentGameKey();
+            let gameIds = pd.visual.getAllGameIds();
+            if (gameIds.length == 1 && pd.getGameState('start') == undefined) {
+                return;
+
+            }
+
+            let currGameId = pd.visual.getCurrentGameId();
+            let images = pd.visual.getImagesByGameId(currGameId);
+            let imageType = undefined;
+            images.forEach((item) => {
+                let imgKey = Object.keys(item)[0];
+                let image = item[imgKey];
+                let currImgType = parseInt(image.getAttribute('type'));
+                if (currImgType == SnapshotType.Original) {
+                    imageType = currImgType;
+                }
+            });
+
+            if (imageType == undefined) {
+                return;
+            }
+            gameIds.reverse().forEach((gameId) => {
+                let img = pd.visual.getLastGameimage(gameId);
+                if (img == undefined) {
                     return;
                 }
 
-                let allGameState = pd.getAllGameStates();
-
-                let selectStartElem = document.createElement("select");
-                selectStartElem.setAttribute("class", "StateSelect");
-                selectStartElem.setAttribute("id", "startStateOptions");
-                selectStartElem.setAttribute("style", "margin: 0 .5vw;");
-
-                let selectTargetElem = document.createElement("select");
-                selectTargetElem.setAttribute("class", "StateSelect");
-                selectTargetElem.setAttribute("id", "targetStateOptions");
-                selectTargetElem.setAttribute("style", "margin: 0 .5vw;");
-
-                for (let index = 0; index < allGameState.length; ++index) {
-                    let optStart = document.createElement('option');
-                    let optTarget = document.createElement('option');
-                    optStart.value = allGameState[index];
-                    optTarget.value = allGameState[index];
-                    optStart.innerHTML = allGameState[index];
-                    optTarget.innerHTML = allGameState[index];
-
-                    if (allGameState[index] == startGameState) {
-                        optStart.selected = "selected";
-                        optStart.setAttribute("class", "selected");
-                    }
-                    else if (allGameState[index] == currGameState) {
-                        optTarget.selected = "selected";
-                        optTarget.setAttribute("class", "selected");
-
-                    }
-
-                    selectStartElem.appendChild(optStart);
-                    selectTargetElem.appendChild(optTarget);
+                if (gameId == currGmKey) {
+                    img.style.filter = "brightness(120%) saturate(120%)";
+                    img.style.border = ".3px dotted gray";
+                    img.style.background = "black";
+                    renderGallery(gameId);
+                }
+                else {
+                    img.style.border = "0";
                 }
 
-                document.getElementById("modalBodyID").appendChild(selectStartElem);
-                document.getElementById("modalBodyID").appendChild(selectTargetElem);
+                /* All css property should be aligned with generic IPad design perspective*/
+                img.setAttribute("class", "filterImage");
+                img.style.width = "10vw";
+                img.style.height = "5.5vw";
 
-                var submit = document.createElement("input");
-                submit.setAttribute("type", "button");
-                submit.setAttribute("value", "Submit");
-                submit.setAttribute("class", "submitReplay");
-                submit.setAttribute("style", "margin: 0 .5vw;background-color:rgb(149, 172, 170);");
-                submit.onclick = function () {
-                    let replayId = document.getElementById("replay");
-                    let replayImg = replayId.children[0];
-                    replayImg.setAttribute('src', 'resources/images/icons/pause.png');
-                    let sValue = document.getElementById("startStateOptions").value;
-                    let eValue = document.getElementById("targetStateOptions").value;
-                    console.log(sValue);
-                    console.log(eValue);
-                    pd.replay(sValue, eValue);
-                    modal.style.display = "none";
+                let fImgDiv = document.createElement("div");
+                fImgDiv.setAttribute("class", "fimageDiv");
 
-                }
-                document.getElementById("modalBodyID").appendChild(submit);
-                this.enableSnapshotButton();
+                img.addEventListener('click', function () {
+                    renderGallery(gameId);
+                }, false);
+
+                fImgDiv.appendChild(img);
+                imgFilterGrid.appendChild(fImgDiv);
+            });
+        }
+
+        function execReplay(startGameState, currGameState) {
+
+            if (startGameState == undefined ||
+                currGameState == undefined) {
+                console.warn("Start Or End game state not selected");
+                return;
             }
+            var modal = document.getElementById('modalTop');
+            modal.style.display = "none";
+
+            let replayId = document.getElementById("replay");
+            let replayImg = replayId.children[0];
+            replayImg.setAttribute('src', 'resources/images/icons/pause.png');
+
+            pd.replay(startGameState, currGameState);
+            pd.visual.setReplayStatus(true);
+            this.enableSnapshotButton();
+        }
+
+        function changeReplayFilterUI(startElem, endElem, contentType) {
+            startElem.style.border = "3px dotted gray";
+            startElem.style.color = "#eceaea";
+
+            let fDivEnd = document.querySelector(".ftextDivEnd");
+            endElem.style.border = "0";
+            endElem.style.color = "black";
+
+            let gameId = pd.visual.getCurrentGameId();
+            renderGallery(gameId, contentType);
+        }
+
+        function blink(element) {
+
+            element.animate([
+                { color: "yellow" }, { color: "red" }],
+                {
+                    duration: 1000,
+                    iterations: Infinity
+                });
+        }
+
+        function finishBlink(element) {
+            element.getAnimations().forEach(
+                function (animation) {
+                    return animation.pause();
+                }
+            );
+        }
+
+        function showReplayUI() {
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
+            let textStartState = strings.replay.startStateText[lang],
+                textEndState = strings.replay.endStateText[lang];
+
+            if ($('.modalFormContainer').is(':visible')) {
+                this.closeModal();
+                document.getElementById('filterGrid').style.backgroundColor = "none";
+            }
+
+            if (pd.visual.isRelayRunning()) {
+                pd.visual.setReplayStatus(false);
+                return;
+            }
+
+            this.disableSnapshotButton();
+            //this.disablePointerEventsOnPieces();//TODO: Fix this
+            this.hideManipulationButtons();
+            pd.visual.saveGameImage(SnapshotType.Auto);
+
+            var modal = document.getElementById('modalTop');
+            modal.style.background = " lightgrey";
+            modal.style.display = "block";
+
+            document.querySelector(".modalFormContent").style.display = "none";
+            document.querySelector(".outerGrid").style.display = "block";
+            document.querySelector(".modalFullframeContainer").style.display = "none";
+
+            let imageGrid = document.getElementById('innerGrid');
+            let imgFilterGrid = document.getElementById('filterGrid');
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent(".innerGrid");
+            template.clearContent("#innerGridForm");
+            template.clearContent("#filterGrid");
+
+            let startGameState = pd.getGameState("start");
+            let currGameState = pd.getGameState("current");
+
+            if (startGameState == undefined) {
+                document.querySelector(".modalFormContent").style.display = "block";
+                document.querySelector(".innerGrid").style.display = "none";
+                let textNode = {
+                    name: "modalText",
+                    text: strings.replay.gameNotStartedYet[lang],
+                }
+
+                template.attachText("#modalTitleID", textNode);
+                return;
+            }
+
+            imgFilterGrid.style.backgroundColor = "#c7c3c3";
+            let fTextDivStart = document.createElement("div");
+            fTextDivStart.setAttribute("class", "fTextDiv ftextDivStart");
+            fTextDivStart.setAttribute("type", "text");
+            fTextDivStart.innerHTML += textStartState;
+            imgFilterGrid.appendChild(fTextDivStart);
+
+
+
+            let fTextDivEnd = document.createElement("div");
+            fTextDivEnd.setAttribute("class", "fTextDiv ftextDivEnd");
+            fTextDivEnd.setAttribute("type", "text");
+            fTextDivEnd.innerHTML += textEndState;
+            imgFilterGrid.appendChild(fTextDivEnd);
+
+
+            fButtonDiv = document.createElement("div");
+            fButtonDiv.setAttribute("class", "fTextDiv fTextbutton");
+            fButtonDiv.style.backgroundColor = "inherit";
+            fButtonDiv.style.border = "0";
+
+            imgFilterGrid.appendChild(fButtonDiv);
+
+            let replyBtn = document.createElement("button");
+            replyBtn.setAttribute("class", "imageButton imageLoadBtn replayBtn");
+            replyBtn.textContent = strings.replay.doReply[lang];
+
+
+            fButtonDiv.appendChild(replyBtn);
+
+            blink(fTextDivStart);
+            changeReplayFilterUI(fTextDivStart, fTextDivEnd, "Replay:start");
+            fTextDivStart.addEventListener('click', function () {
+                fTextDivStart.setAttribute("type", "text");
+                changeReplayFilterUI(fTextDivStart, fTextDivEnd, "Replay:start");
+            }, false);
+
+            fTextDivEnd.addEventListener('click', function () {
+                fTextDivEnd.setAttribute("type", "text");
+                changeReplayFilterUI(fTextDivEnd, fTextDivStart, "Replay:end");
+            }, false);
+
+            replyBtn.addEventListener('click', function () {
+                let startCmdKey = document.querySelector(".ftextDivStart").childNodes[0].value;
+                let endCmdKey = document.querySelector(".ftextDivEnd").childNodes[0].value;
+
+                execReplay(startCmdKey, endCmdKey);
+            }, false);
         }
 
         function loadBoard(selectedBoard) {
@@ -1225,14 +1751,13 @@
             document.getElementById("board_selection_form").style.display = "none";
         }
 
-        function showBubbleContainer(){
+        function showBubbleContainer() {
             document.getElementById('bubbleContainer').style.display = "block";
         }
 
-        function hideBubbleContainer(){
+        function hideBubbleContainer() {
             document.getElementById('bubbleContainer').style.display = "none";
         }
-
 
     </script>
     <script src="./registerSW.js"></script>

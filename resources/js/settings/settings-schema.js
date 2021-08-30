@@ -43,6 +43,10 @@ class SettingsSchema {
         let lang = this._language;
         let titles = strings.settings;
 
+        let defaultBoardIndex = StartPosSettingsEntry.parseBoardNameToIndex("board_6x10");
+        let boardCustomizationDefault = StartPosSettingsEntry.pad(defaultBoardIndex, StartPosSettingsEntry.getBoardNameDecimals()) +
+            StartPosSettingsEntry.pad(0, BOARD_PENTOMINO_NUM_DECIMALS);
+
         return this._schema = {
             general: {
                 "type": "object",
@@ -75,7 +79,28 @@ class SettingsSchema {
                         "type": "boolean",
                         "title": titles.general.enableBird.title[lang],
                         "default": true,
-                        "pupilModeVisibleOnDefualt": true
+                        "pupilModeVisibleOnDefault": true
+                    },
+                    hintingLevels: {
+                        "type": "string",
+                        "title": titles.hinting.hintingLevels.title[lang],
+                        "description": titles.hinting.hintingLevels.description[lang],
+                        "enum": ["Easy", "Medium", "Difficult", "Custom"],
+                        "enumText": titles.hinting.hintingLevels.enumTitles[lang],
+                        "default": "Easy",
+                        "pupilModeVisibleOnDefault": false
+                    },
+                    enableAutoHinting:{
+                      "type": "boolean",
+                      "title": titles.autohinting.enableAutoHinting.title[lang],
+                      "default": false,
+                      "pupilModeVisibleOnDefault": true
+                    },
+                    initiateActionsIfUserNotActive:{
+                      "type": "boolean",
+                      "title": titles.autohinting.initiateActionsIfUserNotActive.title[lang],
+                      "default": true,
+                      "pupilModeVisibleOnDefault": true
                     }
                 }
             },
@@ -93,6 +118,26 @@ class SettingsSchema {
                         "enumText": titles.theming.theme.enumTitles[lang],
                         "default": "theme1"
                     },
+                }
+            },
+            boardCustomization: {
+                "type": "object",
+                "title": titles.boardCustomization.title[lang],
+                "advanced": false,
+                "pupilModeVisibleOnDefault": false,
+                "properties": {
+                    initialPiecePos: {
+                        "type": "custom",
+                        "title": titles.boardCustomization.initialPiecePos.title[lang],
+                        "description": titles.boardCustomization.initialPiecePos.description[lang],
+                        "default": boardCustomizationDefault
+                    },
+                    includePiecePos: {
+                        "type": "boolean",
+                        "title": titles.boardCustomization.includePiecePos.title[lang],
+                        "description": titles.boardCustomization.includePiecePos.description[lang],
+                        "default": true
+                    }
                 }
             },
             showSolvedBoardScreen: {
@@ -117,21 +162,72 @@ class SettingsSchema {
                     }
                 }
             },
+            autohinting: {
+                "type": "object",
+                "title": titles.autohinting.title[lang],
+                "pupilModeVisibleOnDefault": false,
+                "advanced": true,
+                "properties": {
+                  autoHintVariants:{
+                    "type": "string",
+                    "title": titles.autohinting.autoHintVariants.title[lang],
+                    "enum": ["Time period", "Wrong moves"],
+                    "enumText": titles.autohinting.autoHintVariants.enumTitles[lang],
+                    "description": titles.autohinting.autoHintVariants.description[lang],
+                    "default": "Wrong moves"
+                  },
+
+                  enableTimePeriodBasedAutoHintInAnyCase:{
+                    "type": "boolean",
+                    "title": titles.autohinting.enableTimePeriodBasedAutoHintInAnyCase.title[lang],
+                    "description": titles.autohinting.enableTimePeriodBasedAutoHintInAnyCase.description[lang],
+                    "default": false
+                  },
+
+                  showOrHideButtonsForTextualHints:{
+                    "type": "boolean",
+                    "title": titles.autohinting.showOrHideButtonsForTextualHints.title[lang],
+                    "description": titles.autohinting.showOrHideButtonsForTextualHints.description[lang],
+                    "default": false
+                  },
+
+
+                  numberOfWrongMoves: {
+                      "step": 1,
+                      "type": "integer",
+                      "title": titles.autohinting.numberOfWrongMoves.title[lang],
+                      "description": titles.autohinting.numberOfWrongMoves.description[lang],
+                      "default": 5,
+                      "minimum": 5,
+                      "exclusiveMinimum": false,
+                      "maximum": 20
+                  },
+
+                  timeForNoAction: {
+                    "type": "string",
+                    "title": titles.autohinting.timeForNoAction.title[lang],
+                    "enum": ["Short", "Medium", "Long"],
+                    "enumText": titles.autohinting.timeForNoAction.enumTitles[lang],
+                    "description": titles.autohinting.timeForNoAction.description[lang],
+                    "default": "Short"
+                  },
+
+                  typeOfHints:{
+                    "type": "string",
+                    "title": titles.autohinting.typeOfHints.title[lang],
+                    "enum": ["Visual", "Textual", "Both"],
+                    "enumText": titles.autohinting.typeOfHints.enumTitles[lang],
+                    "description": titles.autohinting.typeOfHints.description[lang],
+                    "default": "Visual"
+                  }
+                }
+            },
             hinting: {
                 "type": "object",
                 "title": titles.hinting.title[lang],
                 "pupilModeVisibleOnDefault": false,
                 "advanced": true,
                 "properties": {
-                    hintingLevels: {
-                        "type": "string",
-                        "title": titles.hinting.hintingLevels.title[lang],
-                        "description": titles.hinting.hintingLevels.description[lang],
-                        "enum": ["Easy", "Medium", "Difficult", "Custom"],
-                        "enumText": titles.hinting.hintingLevels.enumTitles[lang],
-                        "default": "Easy"
-                    },
-
                     showNumberOfPossibleSolutions: {
                         "type": "boolean",
                         "title": titles.hinting.showNumberOfPossibleSolutions.title[lang],
@@ -143,6 +239,14 @@ class SettingsSchema {
                         "title": titles.hinting.enableHinting.title[lang],
                         "description": titles.hinting.enableHinting.description[lang],
                         "default": true
+                    },
+                    typeOfHints:{
+                      "type": "string",
+                      "title": titles.hinting.typeOfHints.title[lang],
+                      "enum": ["Visual", "Textual", "Both"],
+                      "enumText": titles.hinting.typeOfHints.enumTitles[lang],
+                      "description": titles.hinting.typeOfHints.description[lang],
+                      "default": "Visual"
                     },
                     hintingStrategy: {
                         "type": "string",
@@ -199,6 +303,12 @@ class SettingsSchema {
                 "visible": false,
                 "pupilModeVisibleOnDefault": false,
                 "properties": {
+                    fixPieces : {
+                        "type": "boolean",
+                        "title": titles.prefilling.fixPieces.title[lang],
+                        "description": titles.prefilling.fixPieces.description[lang],
+                        "default": false
+                    },
                     enablePrefilling: {
                         "type": "boolean",
                         "title": titles.prefilling.enablePrefilling.title[lang],
@@ -222,7 +332,30 @@ class SettingsSchema {
                         "_enumText": titles.prefilling.distanceValue.enumTitles
                     }
                 }
+            },
+            splitPartition: {
+                "type": "object",
+                "advanced": true,
+                "title": titles.splitPartition.title[lang],
+                "visible": false,
+                "pupilModeVisibleOnDefault": false,
+                "properties": {
+                    fixPieces : {
+                        "type": "boolean",
+                        "title": titles.splitPartition.fixPieces.title[lang],
+                        "description": titles.splitPartition.fixPieces.description[lang],
+                        "default": false
+                    },
+                    splitStrategy: {
+                        "type": "string",
+                        "title": titles.splitPartition.splitStrategy.title[lang],
+                        "enum": ["color","left-to-right"],
+                        "enumText": titles.splitPartition.splitStrategy.enumTitles[lang],
+                        "default": "color"
+                    }
+                }
             }
+
         };
     }
 }

@@ -4,6 +4,7 @@ if (typeof require != 'undefined') {
     CommandPath = require('./command-history/command-path.js');
     CommandManager = require('./command-history/command-manager.js');
     HintAI = require('./hint-ai.js');
+    SplitBoard = require('./split-board.js');
 }
 
 /**
@@ -77,8 +78,16 @@ class GameController {
         return this._gameLoader.getGameImages();
     }
 
+    getLastGameimage(gameId) {
+        return this._gameLoader.getLastGameimage(gameId);
+    }
+
     loadGame(key) {
         this._gameLoader.loadGame(key);
+    }
+
+    getCurrentGameKey() {
+        return this._gameLoader.getCurrentGameKey();
     }
 
     cmdManager() {
@@ -87,6 +96,10 @@ class GameController {
 
     hintAI() {
         return this._gameLoader.hintAI();
+    }
+
+    splitBoard() {
+        return this._gameLoader.splitBoard();
     }
 
     getStartCmdKey() {
@@ -101,6 +114,10 @@ class GameController {
         return this.cmdManager().CurrentCmdKey();
     }
 
+    getOperationCount(){
+        return this.cmdManager().NodeCount();
+    }
+
     getCmdSequences(startKey, endKey) {
         if (this.cmdManager().IsKeyFound(startKey) == false) {
             throw new Error("Selected Game State Not Found :(");
@@ -110,15 +127,27 @@ class GameController {
             throw new Error("Selected Game State Not Found :(");
         }
 
-        return this.cmdManager().CmdSequences(startKey, endKey);
-    }
-
-    getCmdKeySequences() {
-        return this.cmdManager().CmdKeySequences();
+        return this._gameLoader.cmdSequences(startKey, endKey);
     }
 
     getGameIdByKey(key) {
         return this._gameLoader.getGameIdByKey(key);
+    }
+
+    getAllGameIds() {
+        return this._gameLoader.getAllGameIds();
+    }
+
+    getImagesByGameId(gameId) {
+        return this._gameLoader.getImagesByGameId(gameId);
+    }
+
+    getCurrentGameId(){
+        return this._gameLoader.getGame().getId();
+    }
+
+    delGameAutoImages(gameId){
+        return this._gameLoader.delGameAutoImages(gameId);
     }
 
     exceptionHandler(pentomino) {
@@ -246,6 +275,39 @@ class GameController {
         }
 
         return this.hintAI().getHint(this.game());
+    }
+        
+    //--- --- --- Split Board --- --- --
+    loadSplit() {
+        if (this.game() === null) {
+            throw new Error("Game is not set");
+        }
+
+        if (this.splitBoard() === null) {
+            console.error(" not initialized");
+        }
+
+        return this.splitBoard().loadSplit();
+    }
+
+    //--- --- --- Split Board V2 --- --- ---
+    loadSplit_V2() {
+        if (this.game() === null) {
+            throw new Error("Game is not set");
+        }
+
+        if (this.splitBoard() === null) {
+            console.error(" not initialized");
+        }
+
+        return this.splitBoard().loadSplit_V2();
+    }
+
+    partitionHasUnoccupiedPosition(pentomino) {
+        if (this.game() === null) {
+            throw new Error("Game is not set");
+        }
+        return this.splitBoard().partitionHasUnoccupiedPosition(pentomino);
     }
 
     getSolutions() {

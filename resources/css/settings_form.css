@@ -193,13 +193,6 @@
   opacity: 1;
 }
 
-.outerGrid{
-  left:0vw;
-  right:0vw;
-  padding-left:2vw;
-  padding-right:2vw;
-}
-
 
 /* --------------------------------------- */
 
@@ -247,6 +240,7 @@
   padding: 3vw;
   background-color: lightblue;
   font-size: 3vw;
+  border-radius: 2vw;
 }
 
 .modalContainer h4 {
@@ -376,5 +370,10 @@ button.collapsible {
   width: 11vw;
 }
 
+#videoCanvas {
+  width: 95%;
+}
 
-
+#showAdvanceSettingsBtn {
+  border-radius: 1vw;
+}

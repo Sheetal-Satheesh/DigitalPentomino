@@ -21,11 +21,12 @@ class Settings {
         let querySeed = urlParams.get(baseConfigs.seedUrlParamName);
         let schema = SettingsSchemaSingleton.getInstance().createSchema();
         if (querySeed === null) {
+            console.info("Url param seed not found. Use default settings object");
             this._settings = SettingsParser.createDefaultSettingsObject(schema);
         } else {
             this._settings = SettingsParser.parseSettingsFromSeed(schema, querySeed);
             if (this._settings === null) {
-                // TODO: Handle invalid seed
+                console.error("Invalid seed. Use default settings object");
                 this._settings = SettingsParser.createDefaultSettingsObject(schema);
             }
         }
