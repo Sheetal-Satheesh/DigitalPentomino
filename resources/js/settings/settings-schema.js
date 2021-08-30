@@ -125,14 +125,17 @@ class SettingsSchema {
                 "title": titles.boardCustomization.title[lang],
                 "advanced": false,
                 "pupilModeVisibleOnDefault": false,
+                "visible": false,
                 "properties": {
                     initialPiecePos: {
+                        "visible": false,
                         "type": "custom",
                         "title": titles.boardCustomization.initialPiecePos.title[lang],
                         "description": titles.boardCustomization.initialPiecePos.description[lang],
                         "default": boardCustomizationDefault
                     },
                     includePiecePos: {
+                        "visible": false,
                         "type": "boolean",
                         "title": titles.boardCustomization.includePiecePos.title[lang],
                         "description": titles.boardCustomization.includePiecePos.description[lang],
@@ -300,7 +303,6 @@ class SettingsSchema {
                 "type": "object",
                 "advanced": true,
                 "title": titles.prefilling.title[lang],
-                "visible": false,
                 "pupilModeVisibleOnDefault": false,
                 "properties": {
                     fixPieces : {

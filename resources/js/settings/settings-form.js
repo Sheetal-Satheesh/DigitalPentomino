@@ -51,7 +51,8 @@ class SettingsForm {
         for (let heading in schema) {
             let subSettings = schema[heading].properties;
 
-            let headingIsVisible = settings.teachersMode || settings.visibility.isVisible(heading);
+            let headingIsVisible = (settings.teachersMode || settings.visibility.isVisible(heading))
+                && !(schema[heading].visible === false);
 
             if (headingIsVisible && creatingNormalSettings && schema[heading].advanced) {
                 creatingNormalSettings = false;
@@ -83,7 +84,8 @@ class SettingsForm {
                     settingsEntry.enumText = settingsEntry._enumText[strat];
                 }
 
-                let elementIsVisible = settings.teachersMode || settings.visibility.isVisible(heading, key);
+                let elementIsVisible = (settings.teachersMode || settings.visibility.isVisible(heading, key))
+                    && !(schema[heading].visible === false);
 
                 let div = document.createElement("div");
                 div.style.display = elementIsVisible ? "block" : "none";
