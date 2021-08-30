@@ -881,7 +881,7 @@ class Visual {
       if (this.gameController.game()._board.isSolved()) {
             speechBubbleText.innerText = strings.speechbubbleTexts.Solved[lang];
             if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
-               this.speakBot(strings.speechbubbleTexts.Solved[lang];);
+               this.speakBot(strings.speechbubbleTexts.Solved[lang]);
             }
           return;
       }
