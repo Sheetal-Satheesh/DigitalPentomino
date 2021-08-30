@@ -50,7 +50,9 @@ self.addEventListener("install", function(event) {
           './resources/js/visual.js',
           //image files
           './resources/images/icons/flag_of_germany_200px.png',
-          './resources/images/icons/flag_of_germany_grey_200px.png'
+          './resources/images/icons/flag_of_germany_grey_200px.png',
+          './resources/images/icons/flag_of_the_united_kingdom_200px.png',
+          './resources/images/icons/flag_of_the_united_kingdom_grey_200px.png'
         ]);
       })
       .then(function() {
