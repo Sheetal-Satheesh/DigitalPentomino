@@ -1021,13 +1021,15 @@
                     document.getElementById("speechBubbleText").textContent = strings.numberOfPossibleSolutions[lang] + ': ?';
                 } else if (heading === "hinting" && key === "enableHinting") {
                     let hintingEnabled = settings[heading][key];
-                    document.getElementById("hintButton").style.visibility = hintingEnabled ? "visible" : "hidden";
+                    console.log(document.getElementById("hintButton").style.display);
+                    document.getElementById("hintButton").style.display = hintingEnabled ? "" : "none";
                 } else if (heading === "hinting" && key === "showNumberOfPossibleSolutions") {
                     let showNumberOfPossibleSolutions = settings[heading][key];
-                    document.getElementById("bubbleContainer").style.visibility = showNumberOfPossibleSolutions ? "visible" : "hidden";
+                    document.getElementById("bubbleContainer").style.display = showNumberOfPossibleSolutions ? "" : "none";
+
                 } else if (heading === "prefilling" && key === "enablePrefilling") {
                     let visible = settings[heading][key];
-                    document.getElementById("prefillBoard").style.visibility = visible ? "visible" : "hidden";
+                    document.getElementById("prefillBoard").style.display = visible ? "" : "none";
                 } else if (heading === "general" && key === "enableBgMusic") {
                     let playBgMusic = settings[heading][key];
                     let bgMusicAudio = document.getElementById("bgMusic");
