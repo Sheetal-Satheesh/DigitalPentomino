@@ -85,7 +85,7 @@ class SettingsForm {
                 }
 
                 let elementIsVisible = (settings.teachersMode || settings.visibility.isVisible(heading, key))
-                    && !(schema[heading].visible === false);
+                    && !(schema[heading].properties[key].visible === false);
 
                 let div = document.createElement("div");
                 div.style.display = elementIsVisible ? "block" : "none";
@@ -274,18 +274,26 @@ class SettingsForm {
 
         for (let heading in schema) {
             let subSettings = schema[heading].properties;
+            let headingIsVisible = !(schema[heading].visible === false);
 
-            useInClassElement.appendChild(SettingsForm.createHeader("h4", schema[heading].title));
+            if (headingIsVisible) {
+                useInClassElement.appendChild(SettingsForm.createHeader("h4", schema[heading].title));
+            }
 
             for (let key in subSettings) {
                 let elementName = heading + "." + key;
 
                 let settingsEntry = subSettings[key];
+                let elementIsVisible = !(subSettings[key].visible === false);
 
                 let checkBoxElement = SettingsForm.createInputElement("checkbox", "teachers." + elementName);
+                checkBoxElement.style.display = elementIsVisible ? "" : "none";
                 useInClassElement.appendChild(checkBoxElement);
-                useInClassElement.appendChild(SettingsForm.createLabel(settingsEntry.title, { for: checkBoxElement.id }));
-                useInClassElement.appendChild(document.createElement("br"));
+
+                if (elementIsVisible) {
+                    useInClassElement.appendChild(SettingsForm.createLabel(settingsEntry.title, { for: checkBoxElement.id }));
+                    useInClassElement.appendChild(document.createElement("br"));
+                }
             }
         }
 
