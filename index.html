@@ -539,28 +539,21 @@
             parent.appendChild(qrCodeElement);
 
             parent.appendChild(document.createElement("br"));
-            parent.appendChild(document.createTextNode(strings.qrCode.share.useThisQrCode[lang]));
+            parent.appendChild(document.createTextNode(strings.qrCode.share.useThisQrCodeFirstPart[lang]));
+            let qrButtonImg = document.createElement("img");
 
+            qrButtonImg.src = "resources/images/icons/qr-code.png";
+            qrButtonImg.style.width = "2vw";
+            qrButtonImg.style.height = "2vw";
+            parent.appendChild(qrButtonImg);
+            parent.appendChild(document.createTextNode(strings.qrCode.share.useThisQrCodeSecondPart[lang] + " "));
             parent.appendChild(document.createElement("br"));
-            parent.appendChild(document.createTextNode(strings.qrCode.share.firstPrintQrCode[lang] + ": "));
 
             let printButton = createPrintButton(qrCodeElement);
             parent.appendChild(printButton);
             parent.appendChild(document.createTextNode(" " + strings.general.or[lang] + " "));
             let downloadImageButton = createDownloadImageLink();
             parent.appendChild(downloadImageButton);
-
-            parent.appendChild(document.createElement("br"));
-
-            let qrButtonImg = document.createElement("img");
-            qrButtonImg.src = "resources/images/icons/qr-code.png";
-            qrButtonImg.style.width = "2vw";
-            qrButtonImg.style.height = "2vw";
-
-            parent.appendChild(document.createTextNode(strings.qrCode.share.sndScanByPupilsFirstPart[lang] + " "));
-            parent.appendChild(qrButtonImg);
-            parent.appendChild(document.createTextNode(strings.qrCode.share.sndScanByPupilsSndPart[lang]));
-            parent.appendChild(document.createElement("br"));
 
             let collapsibleButton = SettingsForm.createCollapsibleButton(
                 strings.settings.advanced.show[lang],

@@ -371,11 +371,9 @@ const strings = {
             pupilMode: ["Share with class (Settings restricted)", "Teile mit Schülern (Einstellungen eingeschränkt)"],
             print: ["Print", "Drucken"],
             downloadImage: ["Download as image", "Als Bild herunterladen"],
-            useThisQrCode: ["You can use this QR-code to bring your current settings onto your pupil's devices.",
-                "Durch diesen QR-Code könenn Sie die momentanen Einstellungen zu den Geräten Ihrer Schüler bringen."],
-            firstPrintQrCode: ["1. Print the QR-code", "1. Drucken Sie den QR-code"],
-            sndScanByPupilsFirstPart: ["2. Let your pupils scan it with the", "2. Lassen Sie ihn von Ihren Schülern mit dem"],
-            sndScanByPupilsSndPart: ["-button in the TUCA-App.", "-Button in der TUCA-App scannen."]
+            useThisQrCodeFirstPart: ["You can use this QR-code to transfer your current settings on your pupil's devices. For that, print it and let it being scanned by your pupils with the",
+                "Sie können mit diesem QR-Code Ihre momentanen Einstellungen zu den Geräten Ihrer Schüler transferieren. Drucken Sie ihn dafür aus und lassen Sie ihn von Ihren Schülern mit dem "],
+            useThisQrCodeSecondPart: ["-Button in the TUCA-App.", "-Button in der TUCA-App scannen."]
         },
         scan: {
             scanQrCode: ["QR-code", "QR-code"]
