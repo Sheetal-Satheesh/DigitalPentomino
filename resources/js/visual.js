@@ -1895,6 +1895,15 @@ class Visual {
             that.disablePrefillButton(false);
         }, 100, this);
 
+        if (SettingsSingleton.getInstance().getSettings().prefilling.fixPieces) {
+            let piecesIdArray = this.pieces.filter(piece => !piece.inTray).
+                map(piece => "piece_" + piece.name);
+            //The pointer events to be disabled after the pieces are drawn on screen
+            setTimeout(function(that) {
+                that.disablePointerEventsOnPieces(piecesIdArray);
+            }, 100, this);
+        }
+
         if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.showNumberOfPossibleSolutions();
         }
@@ -1910,6 +1919,7 @@ class Visual {
 
     readyForPrefilling() {
         this.reset();
+        this.enablePointerEventsOnPieces();
         // Prevent clicking of button while previous prefilling is going on
         this.disablePrefillButton(true);
     }

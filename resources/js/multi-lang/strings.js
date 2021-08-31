@@ -304,10 +304,10 @@ const strings = {
         },
         splitPartition: {
             title: ["Split Board into Thirds", "Brettdrittelung"],
-            fixPieces: {
-                title: ["Fix pieces after solving a Third of the board", "Pentominos nach Lösung eines Drittels fixieren"],
-                description: ["Pieces cannot be moved after a partition is filled (only for left-to-right strategy)", "Teile können nicht verschoben werden, nachdem eine Partition gefüllt ist(nur für Links-nach-rechts-Strategie)"],
-            },
+            // fixPieces: {
+            //     title: ["Fix pieces after solving a Third of the board", "Pentominos nach Lösung eines Drittels fixieren"],
+            //     description: ["Pieces cannot be moved after a partition is filled (only for left-to-right strategy)", "Teile können nicht verschoben werden, nachdem eine Partition gefüllt ist(nur für Links-nach-rechts-Strategie)"],
+            // },
             splitStrategy: {
                 title: ["Split Board into Partion By", "TO DO"],
                 enumTitles: [["Color","Left-to-Right"], ["TO DO", "TO DO"]],
