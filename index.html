@@ -206,7 +206,6 @@
     <script type="text/javascript">
         let pd;
         let template;
-        let isPlaying = false;
 
         const SnapshotType = {
             "FilterOnly": 0,
@@ -912,19 +911,17 @@
         }
         function splitTheBoard() {
             splitButton = document.getElementById("splitBoardimg")
-            if(!isPlaying) {
+            if(!splitButton.classList.contains("splitbuttonimg")) {
                 splitButton.classList.add("splitbuttonimg");
                 if (!pd.gameController.game()._board.isSolved()) {
                     pd.visual.splitTheBoard();
                 } else {
                     console.log("Game is already solved");
                     pd.visual.unblockPartition();
-                }
-                isPlaying = true;
+                }               
             } else {
                 splitButton.classList.remove("splitbuttonimg");
-                pd.visual.undoSplit();
-                isPlaying = false;
+                pd.visual.undoSplit();                
             }
 
         }
@@ -1110,9 +1107,34 @@
                 this.handleClickedOnLicenses
             );
 
+            //rename submit button
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+            document.getElementById('btnSettingsSubmit').innerText = strings.general.submit[lang];;
+
             let settings = SettingsSingleton.getInstance().getSettings();
             SettingsForm.updateForm($('.modalFullframeContainer')[0], settings);
             // this.postProcessSettingsForm(SettingsSingleton.getInstance().getSettings());
+
+            // scale settings smaller for very wide monitors (currently only working for chrome)
+            // Ipad has a ratio of of approx. 1.4 - hence scale settings smaller for wider stuff than 1,5
+            let isChrome = !!window.chrome;
+            if (((window.innerWidth / window.innerHeight) > 1.4)) {
+                
+                //excludes other browsers from adaption
+                if (isChrome) {
+                    document.getElementById('modalFullframeContainerID').style.zoom = (1.4 / (window.innerWidth / window.innerHeight));
+                    //adapt the floatingButtons to still align with the bottom bar
+                    $('.formButton').css('bottom',(11 * (1 / (1.4 / (window.innerWidth / window.innerHeight))) + 'vw'));
+                }
+
+                
+            } else {
+
+                if (isChrome) {
+                    document.getElementById('modalFullframeContainerID').style.zoom = 1;
+                    $('.formButton').css('bottom','11vw');
+                }
+            }
 
         }
 
@@ -1134,7 +1156,7 @@
             template.clearContent("#innerGridForm");
             template.clearContent(".modalFullframeContainer");
             modal.style.background = "#dcf0ed";
-            document.getElementById("modalFormContainerID").style.backgroundColor = "#dcf0ed";
+            document.getElementById("modalFormContainerID").style.backgroundColor = "lightgrey";
             document.getElementById("modalFormContainerID").style.border = "none";
             let y = document.getElementsByClassName("cActionBtn");
             for (let i = 0; i < y.length; i++) { y[i].style.pointerEvents = "none"; }
@@ -1491,7 +1513,7 @@
             this.disableSnapshotButton();
             this.disablePointerEventsOnPieces();
             this.hideManipulationButtons();
-            modal.style.backgroundColor = "#eceaea";
+            modal.style.background = " lightgrey";
             modal.style.display = "block";
 
             document.querySelector(".modalFormContent").style.display = "none";
@@ -1631,7 +1653,7 @@
             pd.visual.saveGameImage(SnapshotType.Auto);
 
             var modal = document.getElementById('modalTop');
-            modal.style.backgroundColor = "#eceaea";
+            modal.style.background = " lightgrey";
             modal.style.display = "block";
 
             document.querySelector(".modalFormContent").style.display = "none";
