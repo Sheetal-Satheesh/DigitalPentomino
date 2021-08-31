@@ -90,12 +90,6 @@ class SettingsSchema {
                         "default": "Easy",
                         "pupilModeVisibleOnDefault": false
                     },
-                    enableAutoHinting:{
-                      "type": "boolean",
-                      "title": titles.autohinting.enableAutoHinting.title[lang],
-                      "default": false,
-                      "pupilModeVisibleOnDefault": true
-                    },
                     initiateActionsIfUserNotActive:{
                       "type": "boolean",
                       "title": titles.autohinting.initiateActionsIfUserNotActive.title[lang],
@@ -162,12 +156,31 @@ class SettingsSchema {
                     }
                 }
             },
+            speech: {
+                "type": "object",
+                "title": titles.speech.title[lang],
+                "pupilModeVisibleOnDefault": false,
+                "advanced": true,
+                "properties": {
+                  enableSpeech:{
+                    "type": "boolean",
+                    "title": titles.speech.enableSpeech.title[lang],
+                    "description": titles.speech.enableSpeech.description[lang],
+                    "default": true
+                  }
+                }
+            },
             autohinting: {
                 "type": "object",
                 "title": titles.autohinting.title[lang],
                 "pupilModeVisibleOnDefault": false,
                 "advanced": true,
                 "properties": {
+                  enableAutoHinting:{
+                    "type": "boolean",
+                    "title": titles.autohinting.enableAutoHinting.title[lang],
+                    "default": false
+                  },
                   autoHintVariants:{
                     "type": "string",
                     "title": titles.autohinting.autoHintVariants.title[lang],

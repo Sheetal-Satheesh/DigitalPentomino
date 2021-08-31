@@ -81,6 +81,34 @@ const strings = {
              html2canvas:["html2canvas","html2canvas"],
              loadash:["loadash","loadash"]
         },
+        speech:{
+            title: ["Speech", "Rede"],
+            enableSpeech:{
+                title: ["Enable speech", "Sprache freigeben"],
+                description: ["Enabling this option makes the application speak,Standard German slang is used for german language translation and english slang for english language translation.",
+                "Wenn Sie diese Option aktivieren, spricht die Anwendung.Die deutsche Standardsprache wird für die deutsche Übersetzung verwendet, die englische für die englische Übersetzung."]
+            },
+            maleOrFemaleVoice:{
+              title: ["Select male or female bot voice.", "Männliche oder weibliche Bot-Stimme auswählen."],
+              enumTitles: [["Female", "Male"], ["Weiblich", "Männlich"]],
+              description: [
+              "Selects female or male voices :"  +
+                  "<ul>" +
+                      "<li><b>Female:</b> Female chat bot voice.</li>" +
+                      "<li><b>Male:</b> Male chat bot voice</li>" +
+                  "</ul>",
+                  "Liefert automatische Hinweise :" +
+                      "<ul>" +
+                      "<li><b>Weiblich:</b> Weibliche Chatbot-Stimme. </li>" +
+                      "<li><b>Männlich:</b> Männlich Chatbot-Stimme.</li>" +
+                      "</ul>"]
+            },
+            volume:{
+                title: ["Volume", "Lautstärke"],
+                description: ["Set volume",
+                "Lautstärke einstellen"]
+            },
+        },
         autohinting:{
             title: ["Auto hinting", "Automatische Hilfestellung"],
             enableAutoHinting:{

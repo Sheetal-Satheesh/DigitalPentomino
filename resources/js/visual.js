@@ -807,7 +807,7 @@ class Visual {
                 this.checkIfGameWon();
             }
         }
-        
+
         setTimeout(function (that, piece) {
             that.updateDOMWithPentomino(piece);
         }, 200, this, piece);
@@ -884,14 +884,17 @@ class Visual {
       let labelPossibleSolutions = document.getElementById("labelNumberSolutions");
       if (this.gameController.game()._board.isSolved()) {
             speechBubbleText.innerText = strings.speechbubbleTexts.Solved[lang];
+            if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
+               this.speakBot(strings.speechbubbleTexts.Solved[lang]);
+            }
           return;
       }
-        labelPossibleSolutions.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
-
+      if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+          labelPossibleSolutions.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
+      }
         //Fill speech bubble text
-
         speechBubbleText.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
-        if(SettingsSingleton.getInstance().getSettings().general.enableAutoHinting){
+        if(SettingsSingleton.getInstance().getSettings().autohinting.enableAutoHinting){
             if((this.gameController.getHint().getPossibleSolutions().length) === 0){
                 count+=1;
                 //check if number of wrongg moves is greater than the value configured in settings
@@ -951,6 +954,9 @@ class Visual {
          switch (hintName) {
            case "Remove":
                this.text = strings.speechbubbleTexts.removePentomino[lang]  + " pentomino " + hintCommand._pentomino.name;
+               if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
+                  this.speakBot(this.text);
+               }
                document.getElementById("speechBubbleText").textContent = this.text;
                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
                    document.getElementById("labelNumberSolutions").innerText = this.text;
@@ -958,6 +964,9 @@ class Visual {
                break;
            case "MoveToPosition":
                this.text = strings.speechbubbleTexts.move[lang] + " pentomino " + hintCommand._pentomino.name + strings.speechbubbleTexts.MoveToPosition[lang] + " " + "[" + hintCommand._row + "," + hintCommand._col + "]";
+               if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
+                  this.speakBot(this.text);
+               }
                document.getElementById("speechBubbleText").textContent = this.text;
                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
                    document.getElementById("labelNumberSolutions").innerText = this.text;
@@ -965,6 +974,9 @@ class Visual {
                break;
            case "Place":
                this.text = strings.speechbubbleTexts.place[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.atPosition[lang]  + " " +  "[" + hintCommand._nextPosition[0] + "," + hintCommand._nextPosition[1] + "]";
+               if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
+                  this.speakBot(this.text);
+               }
                document.getElementById("speechBubbleText").textContent = this.text;
                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
                    document.getElementById("labelNumberSolutions").innerText = this.text;
@@ -972,6 +984,9 @@ class Visual {
                break;
            case "RotateClkWise":
                this.text = strings.speechbubbleTexts.rotate[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.clockwise[lang];
+               if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
+                  this.speakBot(this.text);
+               }
                document.getElementById("speechBubbleText").textContent = this.text;
                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
                    document.getElementById("labelNumberSolutions").innerText = this.text;
@@ -979,6 +994,9 @@ class Visual {
                break;
            case "RotateAntiClkWise":
                this.text = strings.speechbubbleTexts.rotate[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.antiClockwise[lang];
+               if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
+                  this.speakBot(this.text);
+               }
                document.getElementById("speechBubbleText").textContent = this.text;
                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
                    document.getElementById("labelNumberSolutions").innerText = this.text;
@@ -986,6 +1004,9 @@ class Visual {
                break;
            case "MirrorH":
                this.text = strings.speechbubbleTexts.mirror[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.horizontal[lang];
+               if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
+                  this.speakBot(this.text);
+               }
                document.getElementById("speechBubbleText").textContent = this.text;
                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
                    document.getElementById("labelNumberSolutions").innerText = this.text;
@@ -993,6 +1014,9 @@ class Visual {
                break;
            case "MirrorV":
                this.text = strings.speechbubbleTexts.mirror[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.vertical[lang];
+               if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
+                  this.speakBot(this.text);
+               }
                document.getElementById("speechBubbleText").textContent = this.text;
                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
                    document.getElementById("labelNumberSolutions").innerText = this.text;
@@ -1029,9 +1053,9 @@ class Visual {
 
    ignore(){
       let lang = SettingsSingleton.getInstance().getSettings().general.language;
-      document.getElementById('speechBubbleText').textContent = strings.speechbubbleTexts.pleaseContinue[lang];
+      document.getElementById('speechBubbleText').textContent = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
       if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-          document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.pleaseContinue[lang];
+          document.getElementById("labelNumberSolutions").innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
       }
   }
 
@@ -1057,8 +1081,14 @@ class Visual {
       //Speech bubble says : I have a hint
       setTimeout(function(){
              speechBubbleText.textContent= strings.speechbubbleTexts.iHaveAHint[lang] ;
+             if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
+                this.speakBot(strings.speechbubbleTexts.iHaveAHint[lang]);
+             }
              if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
                  document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.iHaveAHint[lang];
+                 if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
+                    this.speakBot(strings.speechbubbleTexts.iHaveAHint[lang]);
+                 }
              }
          }, 3000);
          //Speech bubble asks show the hint or ignore
@@ -1077,8 +1107,14 @@ class Visual {
        //Speech bubble says : I have a hint
        setTimeout(function(){
               speechBubbleText.textContent= strings.speechbubbleTexts.iHaveAHint[lang] ;
+              if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
+                 this.speakBot(strings.speechbubbleTexts.iHaveAHint[lang]);
+              }
               if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
                   document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.iHaveAHint[lang];
+                  if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
+                     this.speakBot(strings.speechbubbleTexts.iHaveAHint[lang]);
+                  }
               }
           }, 3000);
             //Speech bubble automatically shows textual hint
@@ -1101,8 +1137,14 @@ class Visual {
         //Speech bubble says : I have a hint
         setTimeout(function(){
                speechBubbleText.textContent= strings.speechbubbleTexts.iHaveAHint[lang] ;
+               if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
+                  this.speakBot(strings.speechbubbleTexts.iHaveAHint[lang]);
+               }
                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
                    document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.iHaveAHint[lang];
+                   if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
+                      this.speakBot(strings.speechbubbleTexts.iHaveAHint[lang]);
+                   }
                }
            }, 3000);
            //Speech bubble asks show the hint or ignore
@@ -1157,8 +1199,7 @@ class Visual {
             splitButton.classList.add("splitbuttonimg");
         }
     }
-
-    callSplitBoardViaColor() {
+callSplitBoardViaColor() {
         let partitionedArray = pd.gameController.loadSplit();                
         this.displaySplit(partitionedArray, alternateColor);        
     }
@@ -1584,10 +1625,10 @@ class Visual {
         if (!enabledSolvedScreen) {
             return;
         }
-        
+
         let piecesIdArray = this.pieces.map(piece => "piece_" + piece.name);
         this.disablePointerEventsOnPieces(piecesIdArray);
-        
+
         let modal = document.getElementById('modalTop');
         modal.style.display = "block";
         modal.style.background = "transparent";
@@ -2312,5 +2353,36 @@ class Visual {
             document.getElementById(piece).style.pointerEvents = "auto";
         });
     }
+
+
+  //bot speaks in :
+  //hintText() function
+  //userinactivity() function
+  //when the board is solved
+  //when wrong actions are done
+  speakBot(textTospeak){
+      const synth = window.speechSynthesis;
+      const utter = new SpeechSynthesisUtterance(textTospeak);
+      let voices = synth.getVoices();
+      let speechBubbleText = document.getElementById("speechBubbleText");
+      //utter.lang = 'en-US';
+      //utter.lang = 'en-IN';
+      //utter.lang = 'de-DE';
+      if(SettingsSingleton.getInstance().getSettings().general.language === 1){
+            utter.lang = 'de-DE';
+            utter.voiceURI = 'Google Deutsch';
+            utter.name = 'Google Deutsch';
+            utter.localService= false;
+            utter.default= false;
+            synth.speak(utter);
+      }else{
+            utter.lang = 'en-GB';
+            utter.Local = 'true';
+            utter.voiceURI = "Google UK English Female";
+            utter.name =  "Google UK English Female";
+            synth.speak(utter);
+      }
+  }
+
 
 }
