@@ -907,30 +907,6 @@ class Visual {
     }
 
 
- disablePiece(pointer) {
-   let currentPiece = this.selected;
-   let p = document.getElementById('piece_' + currentPiece.name);
-   pointer = setTimeout(function(){ p.style.pointerEvents = "none"; }, 1000);
-}
-
- enablePiece(pointer) {
-  clearTimeout(pointer);
-}
-
-
-disablePieceForSomeTime(){
-      let pointer;
-      let currentPiece = this.selected;
-      let p = document.getElementById('piece_' + currentPiece.name);
-      function myFunction() {
-        pointer = setTimeout(function(){ console.log(disabled); p.style.pointerEvents = "none"; }, 3000);
-      }
-
-      function myStopFunction() {
-        clearTimeout(pointer);
-      }
-};
-
 
     callHintAI() {
         let hint = pd.gameController.getHint();
@@ -1062,9 +1038,7 @@ disablePieceForSomeTime(){
         if(!(SettingsSingleton.getInstance().getSettings().autohinting.autoHintVariants === "Wrong moves")){
             return;
         }
-
-        this.disablePieceForSomeTime();
-        //start bird animation
+          //start bird animation
           document.getElementById('birdContainer').classList.add("anim");
         //Speech bubble asks show the hint or ignore
         //this function call configures auto hints
