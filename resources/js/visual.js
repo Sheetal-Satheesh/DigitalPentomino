@@ -1034,6 +1034,10 @@ class Visual {
         if(!(SettingsSingleton.getInstance().getSettings().autohinting.autoHintVariants === "Wrong moves")){
             return;
         }
+        //speak: i have a hint
+        if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
+           this.speakBot(strings.speechbubbleTexts.iHaveAHint[lang]);
+        }
         //start bird animation
           document.getElementById('birdContainer').classList.add("anim");
         //Speech bubble asks show the hint or ignore
@@ -1081,14 +1085,8 @@ class Visual {
       //Speech bubble says : I have a hint
       setTimeout(function(){
              speechBubbleText.textContent= strings.speechbubbleTexts.iHaveAHint[lang] ;
-             if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
-                this.speakBot(strings.speechbubbleTexts.iHaveAHint[lang]);
-             }
              if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
                  document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.iHaveAHint[lang];
-                 if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
-                    this.speakBot(strings.speechbubbleTexts.iHaveAHint[lang]);
-                 }
              }
          }, 3000);
          //Speech bubble asks show the hint or ignore
@@ -1107,14 +1105,8 @@ class Visual {
        //Speech bubble says : I have a hint
        setTimeout(function(){
               speechBubbleText.textContent= strings.speechbubbleTexts.iHaveAHint[lang] ;
-              if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
-                 this.speakBot(strings.speechbubbleTexts.iHaveAHint[lang]);
-              }
               if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
                   document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.iHaveAHint[lang];
-                  if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
-                     this.speakBot(strings.speechbubbleTexts.iHaveAHint[lang]);
-                  }
               }
           }, 3000);
             //Speech bubble automatically shows textual hint
@@ -1137,14 +1129,8 @@ class Visual {
         //Speech bubble says : I have a hint
         setTimeout(function(){
                speechBubbleText.textContent= strings.speechbubbleTexts.iHaveAHint[lang] ;
-               if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
-                  pd.visual.speakBot(strings.speechbubbleTexts.iHaveAHint[lang]);
-               }
                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
                    document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.iHaveAHint[lang];
-                   if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
-                      this.speakBot(strings.speechbubbleTexts.iHaveAHint[lang]);
-                   }
                }
            }, 3000);
            //Speech bubble asks show the hint or ignore
