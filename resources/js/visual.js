@@ -880,6 +880,7 @@ class Visual {
     showNumberOfPossibleSolutions() {
       let speechBubbleText = document.getElementById("speechBubbleText");
       let lang = SettingsSingleton.getInstance().getSettings().general.language;
+      let pointer;
         //Fill solutions label text
       let labelPossibleSolutions = document.getElementById("labelNumberSolutions");
       if (this.gameController.game()._board.isSolved()) {
@@ -904,6 +905,32 @@ class Visual {
             }
         }
     }
+
+
+ disablePiece(pointer) {
+   let currentPiece = this.selected;
+   let p = document.getElementById('piece_' + currentPiece.name);
+   pointer = setTimeout(function(){ p.style.pointerEvents = "none"; }, 1000);
+}
+
+ enablePiece(pointer) {
+  clearTimeout(pointer);
+}
+
+
+disablePieceForSomeTime(){
+      let pointer;
+      let currentPiece = this.selected;
+      let p = document.getElementById('piece_' + currentPiece.name);
+      function myFunction() {
+        pointer = setTimeout(function(){ console.log(disabled); p.style.pointerEvents = "none"; }, 3000);
+      }
+
+      function myStopFunction() {
+        clearTimeout(pointer);
+      }
+};
+
 
     callHintAI() {
         let hint = pd.gameController.getHint();
@@ -1031,13 +1058,12 @@ class Visual {
 
    autoHintWrongMoves(){
         let lang = SettingsSingleton.getInstance().getSettings().general.language;
+        let pointer;
         if(!(SettingsSingleton.getInstance().getSettings().autohinting.autoHintVariants === "Wrong moves")){
             return;
         }
-        //speak: i have a hint
-        if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
-           this.speakBot(strings.speechbubbleTexts.iHaveAHint[lang]);
-        }
+
+        this.disablePieceForSomeTime();
         //start bird animation
           document.getElementById('birdContainer').classList.add("anim");
         //Speech bubble asks show the hint or ignore
