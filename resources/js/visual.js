@@ -39,6 +39,7 @@ let styleBlocks;
 let splitCounter = -1;
 let randomCell;
 let count = 0;
+let highContrastPieceColor = "#000000";
 class Visual {
 
     constructor(pd, type = "reload") {
@@ -1143,7 +1144,12 @@ class Visual {
         });
         this.pieces.forEach(piece => {
             Array.prototype.forEach.call(document.getElementById('piece_' + piece.name).getElementsByClassName("bmPoint"), function (element) {
-                element.style.background = piece.color ;                 
+                //change here the split
+                if(localStorage.getItem('style') == "blackAndWhiteTheme"){
+                    element.style.background = highContrastPieceColor;                 
+                }
+                else
+                element.style.background = piece.color ;  
             });
         });
         this.pieces.forEach(piece => {            

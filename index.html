@@ -775,8 +775,8 @@
 
         function applyColorToPieces(selectedTheme){
           if(selectedTheme == "blackAndWhiteTheme"){
-            piecesIdArray.forEach(function (piece){
-                Array.prototype.forEach.call(document.getElementById(piece).getElementsByClassName("bmPoint"), function (element) {
+            piecesIdArray.forEach(function (item){
+                Array.prototype.forEach.call(document.getElementById(item).getElementsByClassName("bmPoint"), function (element) {
                     element.style.background = "#000000"
                 });
             });
