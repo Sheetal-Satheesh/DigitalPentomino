@@ -767,6 +767,8 @@ class Visual {
     }
 
     updateDOMWithPentomino(piece) {
+        let isColorSplitActive = document.querySelector(".splitbuttonimg") !== null &&
+            SettingsSingleton.getInstance().getSettings().splitPartition.splitStrategy == "color";
         let oldPieceDiv = document.getElementById("piece_" + piece.name);
         let pieceBitMap = piece.getMatrixRepresentation();
         let width = UIProperty.WindowWidth / this.pd.gameWidth;
@@ -776,7 +778,7 @@ class Visual {
         for (let i = 0; i < 5; ++i) {
             for (let j = 0; j < 5; ++j) {
                 let set = pieceBitMap[i][j];
-                out += '<div style="display:block;float:left;width:' + width + 'vw;height:' + width + 'vw;' + ((set) ? 'background:' + piece.color : '') + '" class="' + ((set) ? 'bmPoint' : 'bmAround') + '"></div>';
+                out += '<div style="display:block;float:left;width:' + width + 'vw;height:' + width + 'vw;' + ((set) ? 'background:' + ((isColorSplitActive) ? piece.alternateColor : piece.color) : '') + '" class="' + ((set) ? 'bmPoint' : 'bmAround') + '"></div>';
             }
         }
 
@@ -1231,7 +1233,8 @@ callSplitBoardViaColor() {
                         fieldID.style.opacity = .5;
                     }
                 }
-                var piece = partitionedArray[i][j][0]
+                var piece = partitionedArray[i][j][0];
+                this.pieces.filter(p => p.name == piece.name)[0].alternateColor = alternateColor[i];
                 piece.alternateColor = alternateColor[i];
                 Array.prototype.forEach.call(document.getElementById('piece_' + piece.name).getElementsByClassName("bmPoint"), function (element) {
                     element.style.background = alternateColor[i];
