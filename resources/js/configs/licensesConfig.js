@@ -27,6 +27,12 @@ licensesConfig = {
         "link": "https://incompetech.filmmusic.io/song/3490-chee-zee-beach",
         "license": "https://filmmusic.io/standard-license"
     },
+    "qrScannerIcon": {
+        "name": strings.settings.license.qrScannerIcon,
+        "Author": "Freepik (https://www.freepik.com)",
+        "link": "https://www.flaticon.com/",
+        "license": "Flaticaon Free License"
+    },
     "functionsMusic": {
         "name": strings.settings.license.functionsMusic,
         "Author": "ZapSplat",
