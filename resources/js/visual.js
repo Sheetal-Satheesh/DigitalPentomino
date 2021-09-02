@@ -1220,7 +1220,7 @@ callSplitBoardViaColor() {
         });
         this.pieces.forEach(piece => {
             Array.prototype.forEach.call(document.getElementById('piece_' + piece.name).getElementsByClassName("bmPoint"), function (element) {
-                //change here the split
+                //Piece colors can be changed for High contrast theme
                 if(localStorage.getItem('style') == "blackAndWhiteTheme"){
                     element.style.background = highContrastPieceColor;                 
                 }
@@ -1245,7 +1245,7 @@ callSplitBoardViaColor() {
                     for (var k = 0; k < fieldValue.length; k++) {
                         let fieldID = document.getElementById("field_" + fieldValue[k][0] + "," + fieldValue[k][1]);
                         fieldID.style.background = alternateColor[i];
-                        fieldID.style.opacity = .5;
+                        fieldID.style.opacity = .7;
                     }
                 }
                 var piece = partitionedArray[i][j][0];

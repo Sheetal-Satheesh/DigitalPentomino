@@ -1081,13 +1081,9 @@
                         else if (newThemeValue == 'nightTheme') {
                             document.getElementById('switcher-id').href = 'resources/css/themes/iceTheme.css';
                         }
-                        else if(newThemeValue == 'blackAndWhiteTheme') {
-                            document.getElementById('switcher-id').href = 'resources/css/themes/blackandwhitetheme.css';
-                        }
                          localStorage.setItem('style', newThemeValue);
-                    }               
-                }
-
+                }               
+                
                 let allCustomSettings = CustomSettingsEntrySingleton.getInstance().getAll();
                 allCustomSettings.forEach(customSettings => {
                     if (customSettings.getName() === SettingsForm.generateSettingsEntryName(heading, key)) {

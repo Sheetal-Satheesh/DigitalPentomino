@@ -108,7 +108,7 @@ class SettingsSchema {
                         "type": "string",
                         "title": titles.theming.theme.title[lang],
                         "description": titles.theming.theme.description[lang],
-                        "enum": ["default", "dayTheme", "nightTheme", "blackAndWhiteTheme"],
+                        "enum": ["default", "dayTheme", "nightTheme"],
                         "enumText": titles.theming.theme.enumTitles[lang],
                         "default": "default"
                     },
