@@ -294,7 +294,7 @@
                 if(SettingsSingleton.getInstance().getSettings().autohinting.enableAutoHinting){
                     autoHint();
                 }
-                //else if autohinting disabled 
+                //else if autohinting disabled
                 else{
                     setTimeout(function(){
                         speechBubbleText.textContent = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getHint().getPossibleSolutions().length;
@@ -325,7 +325,7 @@
         switch(userInactiveWaitTime) {
             case "Short":
                 // code block
-                time = 10;
+                time = 30;
                 break;
             case "Medium":
                 // code block
@@ -374,6 +374,10 @@
                     }
                 }, 2500);
                 return;
+            }
+            //speak: i have a hint
+            if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
+               this.speakBot(strings.speechbubbleTexts.iHaveAHint[lang]);
             }
             pd.visual.configureAutoHints();
         }
@@ -926,10 +930,10 @@
                 } else {
                     console.log("Game is already solved");
                     pd.visual.unblockPartition();
-                }               
+                }
             } else {
                 splitButton.classList.remove("splitbuttonimg");
-                pd.visual.undoSplit();                
+                pd.visual.undoSplit();
             }
 
         }
