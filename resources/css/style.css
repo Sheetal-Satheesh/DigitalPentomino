@@ -55,6 +55,7 @@
   -moz-border-radius: 50%;
   -webkit-border-radius: 50%;
   outline: 0;
+  background-color: white;
 }
 
 .cActionBtn:active {
