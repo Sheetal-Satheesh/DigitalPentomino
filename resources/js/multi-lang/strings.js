@@ -87,27 +87,7 @@ const strings = {
                 title: ["Enable speech", "Sprache freigeben"],
                 description: ["Enabling this option makes the application speak,Standard German slang is used for german language translation and english slang for english language translation.",
                 "Wenn Sie diese Option aktivieren, spricht die Anwendung.Die deutsche Standardsprache wird für die deutsche Übersetzung verwendet, die englische für die englische Übersetzung."]
-            },
-            maleOrFemaleVoice:{
-              title: ["Select male or female bot voice.", "Männliche oder weibliche Bot-Stimme auswählen."],
-              enumTitles: [["Female", "Male"], ["Weiblich", "Männlich"]],
-              description: [
-              "Selects female or male voices :"  +
-                  "<ul>" +
-                      "<li><b>Female:</b> Female chat bot voice.</li>" +
-                      "<li><b>Male:</b> Male chat bot voice</li>" +
-                  "</ul>",
-                  "Liefert automatische Hinweise :" +
-                      "<ul>" +
-                      "<li><b>Weiblich:</b> Weibliche Chatbot-Stimme. </li>" +
-                      "<li><b>Männlich:</b> Männlich Chatbot-Stimme.</li>" +
-                      "</ul>"]
-            },
-            volume:{
-                title: ["Volume", "Lautstärke"],
-                description: ["Set volume",
-                "Lautstärke einstellen"]
-            },
+            }
         },
         autohinting:{
             title: ["Auto hinting", "Automatische Hilfestellung"],
@@ -197,8 +177,21 @@ const strings = {
             hintingLevels: {
                 title: ["Assistance", "Hilfestellung"],
                 enumTitles: [["High", "Medium", "Low","Custom"], ["Viel", "Mittel", "Wenig", "Individuell"]],
-                description: ["TODO",
-                    "TODO"]
+                description: [
+                "Levels of assistance :"  +
+                    "<ul>" +
+                        "<li><b>High:</b> Makes the game solvable more easily with high help functionality for high assistance.Player will get easier hints, exact hints, board prefilling is possible and both the pentomino and the destination will be indicated.</li>" +
+                        "<li><b>Medium:</b> Medium level of help functionality for assistance.Medium hinting strategy enabled.</li>" +
+                        "<li><b>Low:</b> Low level of assistance.Difficult hints will be configured.Prefilling of the board is disabled</li>" +
+                        "<li><b>Custom:</b> Nothing gets changed, but you can change as per your convenience</li>" +
+                    "</ul>",
+                    "Stufen der Unterstützung :" +
+                    "<ul>" +
+                      "<li><b>Viel:</b> Macht das Spiel leichter lösbar mit hoher Hilfefunktionalität für hohe Unterstützung.Der Spieler erhält leichtere Hinweise, genaue Hinweise, das Spielbrett kann vorausgefüllt werden und sowohl das Pentomino als auch das Ziel werden angezeigt.</li>" +
+                      "<li><b>Mittel:</b> Mittleres Niveau der Hilfefunktionalität für Unterstützung.Mittlere Hinweisstrategie aktiviert.</li>" +
+                      "<li><b>Wenig:</b> Niedriges Niveau der Hilfestellung. Schwere Hinweise werden konfiguriert. Das Vorfüllen der Tafel ist deaktiviert</li>" +
+                      "<li><b>Individuell:</b>Es wird nichts geändert, aber Sie können nach Belieben Änderungen vornehmen.</li>" +
+                  "</ul>"]
             },
             showNumberOfPossibleSolutions: {
                 title: ["Show number of possible solutions", "Zeige Anzahl der möglichen Lösungen an"],
