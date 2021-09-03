@@ -439,7 +439,7 @@ class Visual {
             let colorR = this.hexToRgb(this.selected.color).r;
             let colorG = this.hexToRgb(this.selected.color).g;
             let colorB = this.hexToRgb(this.selected.color).b;
-            pieceMan[i].style.background = "rgba(" + [colorR, colorG, colorB].join(',') + ")";
+            pieceMan[i].style.background = "rgba(" + [colorR, colorG, colorB, 0.7].join(',') + ")";
         }
 
         if ((x + 280 > gameWidth)) {
