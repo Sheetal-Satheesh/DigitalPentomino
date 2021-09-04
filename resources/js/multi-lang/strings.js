@@ -2,9 +2,11 @@ const strings = {
     general: {
         no: ["No", "Nein"],
         yes: ["Yes", "Ja"],
+        ok: ["ok", "ok"],
         cancel: ["cancel", "Abbrechen"],
         or: ["or", "oder"],
-        submit: ["Apply", "Übernehmen"]
+        submit: ["Apply", "Übernehmen"],
+        qrCodeScanned: ["Successfully scanned", "Erfolgreich gescannt"]
     },
     reset: ["Do You Want to clear the board?", "Willst du das Brett wirklich leeren?"],
     showSolved: {
