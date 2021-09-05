@@ -1637,7 +1637,6 @@ callSplitBoardViaColor() {
         let div1 = document.createElement("div");
         let img = document.createElement("img");
 
-        //let textNode3 = SettingsSingleton.getInstance().getSettings().showSolvedBoardScreen.SolvedScreens;
         let textNode2;
         let cancelBtn;
         let playAgnBtnAttributes;
