@@ -851,50 +851,49 @@
         }
 
         function reactionScreenOnScanned(){
-            var modal = document.getElementById('modalTop');
+            let modal = document.getElementById('modalTop');
             if ($(modal).is(':visible')) {
                 this.closeModal();
             }
-            else {
-                this.hideBubbleContainer();
-                this.disableSnapshotButton();
-                this.hideManipulationButtons();
-                this.closeBoardSelector();
-                this.disablePointerEventsOnPieces();
-                modal.style.display = "block";
-                modal.style.background = "transparent";
+            
+            this.hideBubbleContainer();
+            this.disableSnapshotButton();
+            this.hideManipulationButtons();
+            this.closeBoardSelector();
+            this.disablePointerEventsOnPieces();
+            modal.style.display = "block";
+            modal.style.background = "transparent";
 
-                document.querySelector(".modalFormContent").style.display = "block";
-                document.querySelector(".innerGrid").style.display = "none";
-                document.querySelector(".modalFullframeContainer").style.display = "none";
-                template.clearContent("#modalButtonsID");
-                template.clearContent("#modalTitleID");
-                template.clearContent("#modalBodyID");
-                template.clearContent("#innerGridForm");
-                template.clearContent("#filterGrid");
+            document.querySelector(".modalFormContent").style.display = "block";
+            document.querySelector(".innerGrid").style.display = "none";
+            document.querySelector(".modalFullframeContainer").style.display = "none";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent("#innerGridForm");
+            template.clearContent("#filterGrid");
 
-                let lang = SettingsSingleton.getInstance().getSettings().general.language;
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
 
-                let textNode = {
-                    class: "modalText",
-                    text: strings.general.qrCodeScanned[lang]
-                };
-                template.attachText("#modalTitleID", textNode);
+            let textNode = {
+                class: "modalText",
+                text: strings.general.qrCodeScanned[lang]
+            };
+            template.attachText("#modalTitleID", textNode);
 
-                let okBtn = {
-                    class: "deleteBtn",
-                    onclick: "closeModalContainer()",
-                    textContent: strings.general.ok[lang]
-                };
+            let okBtn = {
+                class: "deleteBtn",
+                onclick: "closeModalContainer()",
+                textContent: strings.general.ok[lang]
+            };
 
-                template.attachBtn("#modalButtonsID", okBtn);
+            template.attachBtn("#modalButtonsID", okBtn);
 
-                let okButton = document.querySelector(".okBtn");
-                okButton.addEventListener("click", () => {
-                    this.closeModal();
-                });
-                $("#bubbleContainer").css("display", "block");
-            }
+            let okButton = document.querySelector(".okBtn");
+            okButton.addEventListener("click", () => {
+                this.closeModal();
+            });
+            $("#bubbleContainer").css("display", "block");
         }
 
         function resetGame() {
