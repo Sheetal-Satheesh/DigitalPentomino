@@ -1610,10 +1610,10 @@ callSplitBoardViaColor() {
     }
 
     showGameSolved() {
-        let enabledSolvedScreen = SettingsSingleton.getInstance().getSettings().showSolvedBoardScreen.enableSolvedScreen;
-        if (!enabledSolvedScreen) {
-            return;
-        }
+        //let enabledSolvedScreen = SettingsSingleton.getInstance().getSettings().showSolvedBoardScreen.enableSolvedScreen;
+        // if (!enabledSolvedScreen) {
+        //     return;
+        // }
 
         let piecesIdArray = this.pieces.map(piece => "piece_" + piece.name);
         this.disablePointerEventsOnPieces(piecesIdArray);
@@ -1643,76 +1643,115 @@ callSplitBoardViaColor() {
         let div1 = document.createElement("div");
         let img = document.createElement("img");
 
-        let textNode3 = SettingsSingleton.getInstance().getSettings().showSolvedBoardScreen.SolvedScreens;
+        //let textNode3 = SettingsSingleton.getInstance().getSettings().showSolvedBoardScreen.SolvedScreens;
         let textNode2;
         let cancelBtn;
         let playAgnBtnAttributes;
         template.attachText("#modalBodyID", textNode1);
+        textNode2 = {
+            class: "modalText",
+            text: strings.showSolved.play[lang]
+        };
+        img.src = "resources/images/icons/solvedScreenBoy.ico";
+        img.style.cursor = "none";
+        div1.appendChild(img);
+        modalBodyID.appendChild(div1);
+        template.attachText("#modalBodyID", textNode2);
+        cancelBtn = {
+            class: "cancelBtn",
+            onclick: "document.getElementById('modalTop').style.display='none'",
+            textContent: strings.general.no[lang]
+        };
+        playAgnBtnAttributes = {
+            class: "deleteBtn",
+            onclick: "document.getElementById('modalTop').style.display='none'",
+            textContent: strings.general.yes[lang]
+        };
+        let div2 = document.createElement("div");
+        let text = document.createElement("h5");
+        text.innerHTML = "\n";
+        div2.appendChild(text);
+        //attach div
+        modalBodyID.appendChild(div2);
 
-        switch (textNode3) {
-            case "Play again?":
-                textNode2 = {
-                    class: "modalText",
-                    text: strings.showSolved.play[lang]
-                };
-                img.src = "resources/images/icons/solvedScreenBoy.ico";
-                img.style.cursor = "none";
-                div1.appendChild(img);
-                modalBodyID.appendChild(div1);
-                template.attachText("#modalBodyID", textNode2);
-                cancelBtn = {
-                    class: "cancelBtn",
-                    onclick: "document.getElementById('modalTop').style.display='none'",
-                    textContent: strings.general.no[lang]
-                };
-                playAgnBtnAttributes = {
-                    class: "deleteBtn",
-                    onclick: "document.getElementById('modalTop').style.display='none'",
-                    textContent: strings.general.yes[lang]
-                };
-                let div2 = document.createElement("div");
-                let text = document.createElement("h5");
-                text.innerHTML = "\n";
-                div2.appendChild(text);
-                //attach div
-                modalBodyID.appendChild(div2);
+        template.attachBtn("#modalBodyID", playAgnBtnAttributes);
+        template.attachBtn("#modalBodyID", cancelBtn);
+        let playAgainBtn = document.querySelector(".deleteBtn");
+        playAgainBtn.addEventListener("click", () => {
+            pd.reset();
+            this.enablePointerEventsOnPieces();
+        });
 
-                template.attachBtn("#modalBodyID", playAgnBtnAttributes);
-                template.attachBtn("#modalBodyID", cancelBtn);
-                let playAgainBtn = document.querySelector(".deleteBtn");
-                playAgainBtn.addEventListener("click", () => {
-                    pd.reset();
-                    this.enablePointerEventsOnPieces();
-                });
+        let dontPlayAgainBtn = document.querySelector(".cancelBtn");
+        dontPlayAgainBtn.addEventListener("click", () => {
+            this.enablePointerEventsOnPieces();
+        });
 
-                let dontPlayAgainBtn = document.querySelector(".cancelBtn");
-                dontPlayAgainBtn.addEventListener("click", () => {
-                    this.enablePointerEventsOnPieces();
-                });
 
-                break;
-            case "Well done! Please wait for your Teacher to continue":
-                textNode2 = {
-                    class: "modalText",
-                    text: strings.showSolved.WellDone[lang]
-                };
-                img.src = "resources/images/icons/solvedScreenMagician.ico";
-                div1.appendChild(img);
-                modalBodyID.appendChild(div1);
-                template.attachText("#modalBodyID", textNode2);
-                break;
-
-            case "Excellent ! Now continue with the next task on your assignment":
-                textNode2 = {
-                    class: "modalText",
-                    text: strings.showSolved.Excellent[lang]
-                };
-                img.src = "resources/images/icons/solvedScreenGift.ico";
-                div1.appendChild(img);
-                modalBodyID.appendChild(div1);
-                template.attachText("#modalBodyID", textNode2);
-                break;
-        }
+        // switch (textNode3) {
+        //     case "Play again?":
+        //         textNode2 = {
+        //             class: "modalText",
+        //             text: strings.showSolved.play[lang]
+        //         };
+        //         img.src = "resources/images/icons/solvedScreenBoy.ico";
+        //         img.style.cursor = "none";
+        //         div1.appendChild(img);
+        //         modalBodyID.appendChild(div1);
+        //         template.attachText("#modalBodyID", textNode2);
+        //         cancelBtn = {
+        //             class: "cancelBtn",
+        //             onclick: "document.getElementById('modalTop').style.display='none'",
+        //             textContent: strings.general.no[lang]
+        //         };
+        //         playAgnBtnAttributes = {
+        //             class: "deleteBtn",
+        //             onclick: "document.getElementById('modalTop').style.display='none'",
+        //             textContent: strings.general.yes[lang]
+        //         };
+        //         let div2 = document.createElement("div");
+        //         let text = document.createElement("h5");
+        //         text.innerHTML = "\n";
+        //         div2.appendChild(text);
+        //         //attach div
+        //         modalBodyID.appendChild(div2);
+        //
+        //         template.attachBtn("#modalBodyID", playAgnBtnAttributes);
+        //         template.attachBtn("#modalBodyID", cancelBtn);
+        //         let playAgainBtn = document.querySelector(".deleteBtn");
+        //         playAgainBtn.addEventListener("click", () => {
+        //             pd.reset();
+        //             this.enablePointerEventsOnPieces();
+        //         });
+        //
+        //         let dontPlayAgainBtn = document.querySelector(".cancelBtn");
+        //         dontPlayAgainBtn.addEventListener("click", () => {
+        //             this.enablePointerEventsOnPieces();
+        //         });
+        //
+        //         break;
+        //     case "Well done! Please wait for your Teacher to continue":
+        //         textNode2 = {
+        //             class: "modalText",
+        //             text: strings.showSolved.WellDone[lang]
+        //         };
+        //         img.src = "resources/images/icons/solvedScreenMagician.ico";
+        //         div1.appendChild(img);
+        //         modalBodyID.appendChild(div1);
+        //         template.attachText("#modalBodyID", textNode2);
+        //         break;
+        //
+        //     case "Excellent ! Now continue with the next task on your assignment":
+        //         textNode2 = {
+        //             class: "modalText",
+        //             text: strings.showSolved.Excellent[lang]
+        //         };
+        //         img.src = "resources/images/icons/solvedScreenGift.ico";
+        //         div1.appendChild(img);
+        //         modalBodyID.appendChild(div1);
+        //         template.attachText("#modalBodyID", textNode2);
+        //         break;
+        // }
     }
 
     dist(a, b) {

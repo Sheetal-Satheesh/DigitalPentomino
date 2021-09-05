@@ -12,8 +12,8 @@ const strings = {
     showSolved: {
         congrats: ["Congratulations!", "Glückwunsch!"],
         play: ["Play Again?", "Nochmal spielen?"],
-        WellDone: ["Well done! Please wait for your Teacher to continue", "Gut gemacht! Bitte warten Sie auf Ihren Lehrer, um fortzufahren"],
-        Excellent: ["Excellent ! Now continue with the next task on your assignment", "Ausgezeichnet! Fahren Sie jetzt mit der nächsten Aufgabe Ihres Auftrags fort"]
+        // WellDone: ["Well done! Please wait for your Teacher to continue", "Gut gemacht! Bitte warten Sie auf Ihren Lehrer, um fortzufahren"],
+        // Excellent: ["Excellent ! Now continue with the next task on your assignment", "Ausgezeichnet! Fahren Sie jetzt mit der nächsten Aufgabe Ihres Auftrags fort"]
     },
     speechbubbleTexts: {
         Solved: ["Ya hoo !! You solved it !", "Juhu!! Du hast es gelöst!"],
@@ -267,32 +267,7 @@ const strings = {
 
             }
         },
-        showSolvedBoardScreen:{
-                title: ["Show Solved Board Screen", "Gelösten Bildschirm anzeigen"],
-                enableSolvedScreen:{
-                    title: ["Enable solved screen?", "Gelösten Bildschirm freigeben"],
-                    description: ["Solved Board Screen indicates what should happen after the whole board is fully solved.",
-                    "Der Bildschirm Gelöstes Board zeigt an, was passieren soll, nachdem das gesamte Board vollständig gelöst ist."]
-                },
-                SolvedScreens: {
-                    title: ["Different solved screens", "Unterschiedlich gelöste Bildschirme"],
-                    enumTitles: [["Play again?", "Well done! Please wait for your Teacher to continue", "Excellent ! Now continue with the next task on your assignment"],
-                                ["Noch einmal spielen?", "Gut gemacht! Bitte warten Sie auf Ihren Lehrer, um fortzufahren", "Ausgezeichnet! Fahren Sie jetzt mit der nächsten Aufgabe Ihres Auftrags fort"]],
-                    description: [
-                    "The selected board is applied when the game is fully solved"+
-                    "<ul>" +
-                    "<li><b>Play again?:</b>Asking the students to play the game again with options<i>yes or no </i>.</li>" +
-                    "<li><b>Well done! Please wait for your Teacher to continue:</b>Asking the students to wait for the teacher to continue</li>" +
-                    "<li><b>Excellent ! Now continue with the next task on your assignment:</b>Asking the students to continue their next assignment</li>"+
-                    "</ul>",
-                    "Das gewählte Brett wird angewendet, wenn das Spiel vollständig gelöst ist "+
-                    "<ul>" +
-                    "<li><b>Noch einmal spielen?:</b>Aufforderung an die Schüler, das Spiel noch einmal zu spielen, mit den Optionen<i>ja oder nein</i>.</li>" +
-                    "<li><b>Gut gemacht! Bitte warten Sie auf den Lehrer, um fortzufahren:</b>Aufforderung an die Schüler, auf den Lehrer zu warten, um fortzufahren</li>" +
-                    "<li><b>Exzellent! Fahren Sie jetzt mit der nächsten Aufgabe Ihres Auftrags fort:</b>Aufforderung an die Schüler, mit der nächsten Aufgabe fortzufahren</li>"+
-                    "</ul>"]
-                }
-        },
+      
         prefilling: {
             title: ["Prefilled boards", "Vorbelegte Bretter"],
             fixPieces: {
