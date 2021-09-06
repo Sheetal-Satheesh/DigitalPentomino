@@ -483,8 +483,9 @@
 
             let parent = modal;
 
-            let heading = document.createElement("h4");
+            let heading = document.createElement("h3");
             heading.innerHTML = strings.qrCode.scanOrShare[lang];
+            heading.style.textAlign = "center";
             parent.appendChild(heading);
 
             // Add scan / share buttons
@@ -608,39 +609,54 @@
                 [strings.qrCode.share.pupilMode[lang], strings.qrCode.share.teachersMode[lang]]);
 
             teacherModeCheckbox.onchange = () => {
-                let settings = SettingsSingleton.getInstance().getSettings();
-                let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), settings);
-                insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
-                let exportSeed = seed.substr(1, seed.length - 1);
-                exportSeed = (teacherModeCheckbox.value === "shareWithTeachers" ? 1 : 2) + exportSeed;
-
-                updateShareOptions(qrCodeElement, urlElement, downloadImageButton, exportSeed);
+                handleClickedOnTeacherModeCheckbox(teacherModeCheckbox, qrCodeElement, urlElement, downloadImageButton);
             };
+            handleClickedOnTeacherModeCheckbox(teacherModeCheckbox, qrCodeElement, urlElement, downloadImageButton);
 
             let includePiecesCheckbox = SettingsForm.createInputElement("checkbox", "includePiecesCheckBox");
             includePiecesCheckbox.onchange = () => {
-                let checkboxValue = includePiecesCheckbox.checked;
-                let settings = SettingsSingleton.getInstance().getSettings();
-                settings.boardCustomization.includePiecePos = checkboxValue;
-
-                let game = new FrontController().controller.game();
-                let customSettingsEntry = CustomSettingsEntrySingleton.getInstance()
-                    .get("boardCustomization", "initialPiecePos");
-                let piecePosSeedEntry = customSettingsEntry.parseFromGameToSeed(game);
-                settings.boardCustomization.initialPiecePos = piecePosSeedEntry;
-
-                let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), settings);
-                insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
-                let exportSeed = seed.substr(1, seed.length - 1);
-                exportSeed = (teacherModeCheckbox.value === "shareWithTeachers" ? 1 : 2) + exportSeed;
-
-                updateShareOptions(qrCodeElement, urlElement, downloadImageButton, exportSeed);
+                handleClickedOnIncludePiecesCheckbox(includePiecesCheckbox, teacherModeCheckbox,
+                    qrCodeElement, urlElement, downloadImageButton);
             };
+            includePiecesCheckbox.checked = SettingsSingleton.getInstance().getSettings().boardCustomization.includePiecePos;
+            handleClickedOnIncludePiecesCheckbox(includePiecesCheckbox, teacherModeCheckbox,
+                qrCodeElement, urlElement, downloadImageButton);
 
             advOptionsRoot.appendChild(includePiecesCheckbox);
             advOptionsRoot.appendChild(teacherModeCheckbox);
 
             advOptionsRoot.appendChild(document.createElement("br"));
+        }
+
+        function handleClickedOnTeacherModeCheckbox(teacherModeCheckbox,
+                                                    qrCodeElement, urlElement, downloadImageButton) {
+            let settings = SettingsSingleton.getInstance().getSettings();
+            let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), settings);
+            insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
+            let exportSeed = seed.substr(1, seed.length - 1);
+            exportSeed = (teacherModeCheckbox.value === "shareWithTeachers" ? 1 : 2) + exportSeed;
+
+            updateShareOptions(qrCodeElement, urlElement, downloadImageButton, exportSeed);
+        }
+
+        function handleClickedOnIncludePiecesCheckbox(includePiecesCheckbox, teacherModeCheckbox,
+              qrCodeElement, urlElement, downloadImageButton) {
+            let checkboxValue = includePiecesCheckbox.checked;
+            let settings = SettingsSingleton.getInstance().getSettings();
+            settings.boardCustomization.includePiecePos = checkboxValue;
+
+            let game = new FrontController().controller.game();
+            let customSettingsEntry = CustomSettingsEntrySingleton.getInstance()
+                .get("boardCustomization", "initialPiecePos");
+            let piecePosSeedEntry = customSettingsEntry.parseFromGameToSeed(game);
+            settings.boardCustomization.initialPiecePos = piecePosSeedEntry;
+
+            let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), settings);
+            insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
+            let exportSeed = seed.substr(1, seed.length - 1);
+            exportSeed = (teacherModeCheckbox.value === "shareWithTeachers" ? 1 : 2) + exportSeed;
+
+            updateShareOptions(qrCodeElement, urlElement, downloadImageButton, exportSeed);
         }
 
         function updateShareOptions(qrCodeElement, urlElement, downloadImageButton, seed) {

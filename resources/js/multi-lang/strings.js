@@ -79,7 +79,8 @@ const strings = {
              backgroundMusic: ["Background Music", "Hintergrundmusik"],
              functionsMusic: ["Functions Music","Funktionen Musik"],
              html2canvas:["html2canvas","html2canvas"],
-             loadash:["loadash","loadash"]
+             loadash:["loadash","loadash"],
+            qrScannerIcon: ["QR Scanner Icon", "QR Scanner Icon"]
         },
         speech:{
             title: ["Speech", "Rede"],
