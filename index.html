@@ -489,12 +489,65 @@
 
             // Add scan / share buttons
             let scanImgElement = SettingsForm.createImg("scanImg", "resources/images/icons/scan_qr_code.png");
-            scanImgElement.onclick = () => openScanQrCode();
+            scanImgElement.onclick = () => {
+                  if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+                      showCameraUnavailable();
+                  }
+                  else{
+                      openScanQrCode();
+                  }
+              }
             let shareImgElement = SettingsForm.createImg("shareImg", "resources/images/icons/share_qr_code.png");
             shareImgElement.onclick = () => handleShareSettings();
 
             parent.appendChild(scanImgElement);
             parent.appendChild(shareImgElement);
+        }
+
+        function showCameraUnavailable(){
+            let modal = document.getElementById('modalTop');
+            if ($(modal).is(':visible')) {
+                this.closeModal();
+            }
+
+            this.hideBubbleContainer();
+            this.disableSnapshotButton();
+            this.hideManipulationButtons();
+            this.closeBoardSelector();
+            this.disablePointerEventsOnPieces();
+            modal.style.display = "block";
+            modal.style.background = "transparent";
+
+            document.querySelector(".modalFormContent").style.display = "block";
+            document.querySelector(".innerGrid").style.display = "none";
+            document.querySelector(".modalFullframeContainer").style.display = "none";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent("#innerGridForm");
+            template.clearContent("#filterGrid");
+
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
+            let textNode = {
+                class: "modalText",
+                text: strings.general.showCameraUnavailable[lang]
+            };
+            template.attachText("#modalTitleID", textNode);
+
+            let okBtn = {
+                class: "deleteBtn",
+                onclick: "closeModalContainer()",
+                textContent: strings.general.ok[lang]
+            };
+
+            template.attachBtn("#modalButtonsID", okBtn);
+
+            let okButton = document.querySelector(".okBtn");
+            okButton.addEventListener("click", () => {
+                this.closeModal();
+            });
+            $("#bubbleContainer").css("display", "block");
         }
 
         function handleShareSettings() {

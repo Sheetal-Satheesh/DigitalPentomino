@@ -6,7 +6,8 @@ const strings = {
         cancel: ["cancel", "Abbrechen"],
         or: ["or", "oder"],
         submit: ["Apply", "Übernehmen"],
-        qrCodeScanned: ["Successfully scanned", "Erfolgreich gescannt"]
+        qrCodeScanned: ["Successfully scanned", "Erfolgreich gescannt"],
+        showCameraUnavailable: ["Camera is not available on your device !", "Die Kamera ist auf Ihrem Gerät nicht verfügbar!"]
     },
     reset: ["Do You Want to clear the board?", "Willst du das Brett wirklich leeren?"],
     showSolved: {
