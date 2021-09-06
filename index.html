@@ -483,8 +483,9 @@
 
             let parent = modal;
 
-            let heading = document.createElement("h4");
+            let heading = document.createElement("h3");
             heading.innerHTML = strings.qrCode.scanOrShare[lang];
+            heading.style.textAlign = "center";
             parent.appendChild(heading);
 
             // Add scan / share buttons
