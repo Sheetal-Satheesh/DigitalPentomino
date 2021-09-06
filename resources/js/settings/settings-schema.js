@@ -147,7 +147,7 @@ class SettingsSchema {
                     "type": "boolean",
                     "title": titles.speech.enableSpeech.title[lang],
                     "description": titles.speech.enableSpeech.description[lang],
-                    "default": true
+                    "default": false
                   }
                 }
             },
