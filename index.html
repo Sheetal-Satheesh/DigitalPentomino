@@ -1590,29 +1590,37 @@
             pd.visual.saveGameImage(SnapshotType.Auto);
             let currGmKey = pd.visual.getCurrentGameKey();
             let gameIds = pd.visual.getAllGameIds();
-            if (gameIds.length == 1 && pd.getGameState('start') == undefined) {
+            if (pd.getGameState('start') == undefined) {
                 return;
 
             }
-
             let currGameId = pd.visual.getCurrentGameId();
             let images = pd.visual.getImagesByGameId(currGameId);
             let imageType = undefined;
-            images.forEach((item) => {
-                let imgKey = Object.keys(item)[0];
-                let image = item[imgKey];
-                let currImgType = parseInt(image.getAttribute('type'));
-                if (currImgType == SnapshotType.Original) {
-                    imageType = currImgType;
-                }
-            });
-
-            if (imageType == undefined) {
-                return;
+            let currImgType = undefined;
+            if (images != undefined) {
+                images.forEach((item) => {
+                    let imgKey = Object.keys(item)[0];
+                    let image = item[imgKey];
+                    currImgType = parseInt(image.getAttribute('type'));
+                    if (currImgType == SnapshotType.Original) {
+                        imageType = currImgType;
+                    }
+                });
             }
+            if (imageType == undefined) {
+                gameIds.forEach(element => {
+                    if (element == currGameId){
+                        gameIds.splice(gameIds.indexOf(currGameId), 1);
+                        return;
+                    }
+                });
+            }
+
             gameIds.reverse().forEach((gameId) => {
                 let img = pd.visual.getLastGameimage(gameId);
-                if (img == undefined) {
+                let images = pd.visual.getImagesByGameId(gameId);
+                if (img == undefined || images.length == 0) {
                     return;
                 }
 
