@@ -160,29 +160,35 @@ class SettingsSchema {
                   enableAutoHinting:{
                     "type": "boolean",
                     "title": titles.autohinting.enableAutoHinting.title[lang],
+                    "description": titles.autohinting.enableAutoHinting.description[lang],
                     "default": false
                   },
-                  autoHintVariants:{
-                    "type": "string",
-                    "title": titles.autohinting.autoHintVariants.title[lang],
-                    "enum": ["Time period", "Wrong moves"],
-                    "enumText": titles.autohinting.autoHintVariants.enumTitles[lang],
-                    "description": titles.autohinting.autoHintVariants.description[lang],
-                    "default": "Wrong moves"
+                  timebased:{
+                    "type": "boolean",
+                    "title": titles.autohinting.autoHintVariants.timebased.title[lang],
+                    "description": titles.autohinting.autoHintVariants.timebased.description[lang],
+                    "default": true
+                  },
+
+                  wrongMoves:{
+                    "type": "boolean",
+                    "title": titles.autohinting.autoHintVariants.wrongMoves.title[lang],
+                    "description": titles.autohinting.autoHintVariants.wrongMoves.description[lang],
+                    "default": false
                   },
 
                   enableTimePeriodBasedAutoHintInAnyCase:{
                     "type": "boolean",
                     "title": titles.autohinting.enableTimePeriodBasedAutoHintInAnyCase.title[lang],
                     "description": titles.autohinting.enableTimePeriodBasedAutoHintInAnyCase.description[lang],
-                    "default": false
+                    "default": true
                   },
 
                   showOrHideButtonsForTextualHints:{
                     "type": "boolean",
                     "title": titles.autohinting.showOrHideButtonsForTextualHints.title[lang],
                     "description": titles.autohinting.showOrHideButtonsForTextualHints.description[lang],
-                    "default": false
+                    "default": true
                   },
 
 

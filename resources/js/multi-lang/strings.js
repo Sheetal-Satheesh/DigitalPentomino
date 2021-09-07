@@ -94,7 +94,7 @@ const strings = {
             title: ["Auto hinting", "Automatische Hilfestellung"],
             enableAutoHinting:{
                 title: ["Automated hinting", "Automatisierte Hilfestellung"],
-                description: [["Enables auto-hinting", "Aktiviert automatisierte Hilfestellung"]]
+                description: ["Enables auto-hinting", "Aktiviert automatisierte Hilfestellung"]
             },
             initiateActionsIfUserNotActive:{
                 title: ["Initiate actions if user not active", "Hinweis, wenn der Benutzer nicht aktiv ist"],
@@ -102,24 +102,23 @@ const strings = {
             },
             showOrHideButtonsForTextualHints:{
                 title: ["Hints can be denied", "Hinweise können abgelehnt werden"],
-                description: ["Shows buttons in case the user wants autohinting textual hints as optional else textual hints will occur automatically.",
-                "Zeigt Schaltflächen an wenn der Benutzer automatische Texthinweise als Option wünscht andernfalls werden Texthinweise automatisch angezeigt."]
+                description: ["Shows buttons in case the user wants autohinting for textual hints as optional else textual hints will occur automatically.",
+                "Zeigt Schaltflächen an wenn der Benutzer automatische für Texthinweise als Option wünscht andernfalls werden Texthinweise automatisch angezeigt."]
             },
 
             autoHintVariants:{
-                title: ["Give auto-hint based on", "Automatisierte Hilfestellung geben nach"],
-                enumTitles: [["Time", "Unsolvable situation"], ["Sekunden Inaktivität", "Zügen in unlösbarer Spielsituation"]],
-                description: [
-                "Provides automatic hints :"  +
-                    "<ul>" +
-                        "<li><b>Time period:</b> Auto-hinting based on the in-active player time, in this case if the player is near to the solution hints are not provided. In case the user is far from the solution, hints are provided.</li>" +
-                        "<li><b>Wrong moves:</b> Auto-hinting based on the number of wrong moves, here the user can only make the number of wrong moves configured here in the settings, for every number of wrong moves, hint is provided.</li>" +
-                    "</ul>",
-                    "Liefert automatische Hinweise :" +
-                        "<ul>" +
-                        "<li><b>Zeitspanne:</b> Auto-Hinting basierend auf der Zeit, in der der Spieler inaktiv ist. In diesem Fall werden keine Hinweise gegeben, wenn der Spieler sich in der Nähe der Lösung befindet. Befindet sich der Benutzer weit von der Lösung entfernt, werden Hinweise gegeben.</li>" +
-                        "<li><b>Falsche Züge:</b> Auto-Hinweis basierend auf der Anzahl der falschen Züge, hier kann der Benutzer nur die Anzahl der falschen Züge machen, die hier in den Einstellungen konfiguriert sind, für jede Anzahl von falschen Zügen wird ein Hinweis gegeben.</li>" +
-                        "</ul>"]
+                timebased: {
+                  title: ["Gives auto-hint based on time with time set below", "Automatisierte Hilfestellung geben nach"],
+                  description: [
+                      "Auto-hinting based on the in-active player time, in this case if the player is near to the solution hints are not provided. In case the user is far from the solution, hints are provided.",
+                      "Auto-Hinting basierend auf der Zeit, in der der Spieler inaktiv ist. In diesem Fall werden keine Hinweise gegeben, wenn der Spieler sich in der Nähe der Lösung befindet. Befindet sich der Benutzer weit von der Lösung entfernt, werden Hinweise gegeben."]
+                },
+                wrongMoves: {
+                  title: ["Gives auto-hint based on number of wrong actions set below.", "Gibt einen automatischen Hinweis basierend auf der Anzahl falscher Aktionen, die unten eingestellt sind."],
+                  description: [
+                      "Auto-hinting based on the number of wrong moves, here the user can only make the number of wrong moves configured below here in the settings, for every number of wrong moves, hint is provided.",
+                      "Auto-Hinweis basierend auf der Anzahl falscher Züge, hier kann der Benutzer nur die Anzahl falscher Züge machen, die hier unten in den Einstellungen konfiguriert ist, für jede Anzahl falscher Züge wird ein Hinweis gegeben.Gibt einen automatischen Hinweis basierend auf der Anzahl falscher Aktionen, die unten eingestellt sind"]
+                }
             },
             enableTimePeriodBasedAutoHintInAnyCase:{
               title: [["Enable time period based autohinting in any case"],["Hilfestellung deaktivieren wenn nur noch X Steine platziert werden müssen"]],
