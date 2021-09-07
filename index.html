@@ -485,8 +485,9 @@
 
             let parent = modal;
 
-            let heading = document.createElement("h4");
+            let heading = document.createElement("h3");
             heading.innerHTML = strings.qrCode.scanOrShare[lang];
+            heading.style.textAlign = "center";
             parent.appendChild(heading);
 
             // Add scan / share buttons
@@ -610,39 +611,54 @@
                 [strings.qrCode.share.pupilMode[lang], strings.qrCode.share.teachersMode[lang]]);
 
             teacherModeCheckbox.onchange = () => {
-                let settings = SettingsSingleton.getInstance().getSettings();
-                let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), settings);
-                insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
-                let exportSeed = seed.substr(1, seed.length - 1);
-                exportSeed = (teacherModeCheckbox.value === "shareWithTeachers" ? 1 : 2) + exportSeed;
-
-                updateShareOptions(qrCodeElement, urlElement, downloadImageButton, exportSeed);
+                handleClickedOnTeacherModeCheckbox(teacherModeCheckbox, qrCodeElement, urlElement, downloadImageButton);
             };
+            handleClickedOnTeacherModeCheckbox(teacherModeCheckbox, qrCodeElement, urlElement, downloadImageButton);
 
             let includePiecesCheckbox = SettingsForm.createInputElement("checkbox", "includePiecesCheckBox");
             includePiecesCheckbox.onchange = () => {
-                let checkboxValue = includePiecesCheckbox.checked;
-                let settings = SettingsSingleton.getInstance().getSettings();
-                settings.boardCustomization.includePiecePos = checkboxValue;
-
-                let game = new FrontController().controller.game();
-                let customSettingsEntry = CustomSettingsEntrySingleton.getInstance()
-                    .get("boardCustomization", "initialPiecePos");
-                let piecePosSeedEntry = customSettingsEntry.parseFromGameToSeed(game);
-                settings.boardCustomization.initialPiecePos = piecePosSeedEntry;
-
-                let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), settings);
-                insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
-                let exportSeed = seed.substr(1, seed.length - 1);
-                exportSeed = (teacherModeCheckbox.value === "shareWithTeachers" ? 1 : 2) + exportSeed;
-
-                updateShareOptions(qrCodeElement, urlElement, downloadImageButton, exportSeed);
+                handleClickedOnIncludePiecesCheckbox(includePiecesCheckbox, teacherModeCheckbox,
+                    qrCodeElement, urlElement, downloadImageButton);
             };
+            includePiecesCheckbox.checked = SettingsSingleton.getInstance().getSettings().boardCustomization.includePiecePos;
+            handleClickedOnIncludePiecesCheckbox(includePiecesCheckbox, teacherModeCheckbox,
+                qrCodeElement, urlElement, downloadImageButton);
 
             advOptionsRoot.appendChild(includePiecesCheckbox);
             advOptionsRoot.appendChild(teacherModeCheckbox);
 
             advOptionsRoot.appendChild(document.createElement("br"));
+        }
+
+        function handleClickedOnTeacherModeCheckbox(teacherModeCheckbox,
+                                                    qrCodeElement, urlElement, downloadImageButton) {
+            let settings = SettingsSingleton.getInstance().getSettings();
+            let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), settings);
+            insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
+            let exportSeed = seed.substr(1, seed.length - 1);
+            exportSeed = (teacherModeCheckbox.value === "shareWithTeachers" ? 1 : 2) + exportSeed;
+
+            updateShareOptions(qrCodeElement, urlElement, downloadImageButton, exportSeed);
+        }
+
+        function handleClickedOnIncludePiecesCheckbox(includePiecesCheckbox, teacherModeCheckbox,
+              qrCodeElement, urlElement, downloadImageButton) {
+            let checkboxValue = includePiecesCheckbox.checked;
+            let settings = SettingsSingleton.getInstance().getSettings();
+            settings.boardCustomization.includePiecePos = checkboxValue;
+
+            let game = new FrontController().controller.game();
+            let customSettingsEntry = CustomSettingsEntrySingleton.getInstance()
+                .get("boardCustomization", "initialPiecePos");
+            let piecePosSeedEntry = customSettingsEntry.parseFromGameToSeed(game);
+            settings.boardCustomization.initialPiecePos = piecePosSeedEntry;
+
+            let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), settings);
+            insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
+            let exportSeed = seed.substr(1, seed.length - 1);
+            exportSeed = (teacherModeCheckbox.value === "shareWithTeachers" ? 1 : 2) + exportSeed;
+
+            updateShareOptions(qrCodeElement, urlElement, downloadImageButton, exportSeed);
         }
 
         function updateShareOptions(qrCodeElement, urlElement, downloadImageButton, seed) {
@@ -745,6 +761,7 @@
                 let success = onQrCodeScanned(result);
                 if (success) {
                     qrScanner.stop();
+                    this.reactionScreenOnScanned();
                     this.closeModal();
                 }
             });
@@ -849,6 +866,52 @@
             applyNewSettingsObjToApp(newSettings);
             insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
             return true;
+        }
+
+        function reactionScreenOnScanned(){
+            let modal = document.getElementById('modalTop');
+            if ($(modal).is(':visible')) {
+                this.closeModal();
+            }
+            
+            this.hideBubbleContainer();
+            this.disableSnapshotButton();
+            this.hideManipulationButtons();
+            this.closeBoardSelector();
+            this.disablePointerEventsOnPieces();
+            modal.style.display = "block";
+            modal.style.background = "transparent";
+
+            document.querySelector(".modalFormContent").style.display = "block";
+            document.querySelector(".innerGrid").style.display = "none";
+            document.querySelector(".modalFullframeContainer").style.display = "none";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent("#innerGridForm");
+            template.clearContent("#filterGrid");
+
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
+            let textNode = {
+                class: "modalText",
+                text: strings.general.qrCodeScanned[lang]
+            };
+            template.attachText("#modalTitleID", textNode);
+
+            let okBtn = {
+                class: "deleteBtn",
+                onclick: "closeModalContainer()",
+                textContent: strings.general.ok[lang]
+            };
+
+            template.attachBtn("#modalButtonsID", okBtn);
+
+            let okButton = document.querySelector(".okBtn");
+            okButton.addEventListener("click", () => {
+                this.closeModal();
+            });
+            $("#bubbleContainer").css("display", "block");
         }
 
         function resetGame() {
@@ -1579,29 +1642,37 @@
             pd.visual.saveGameImage(SnapshotType.Auto);
             let currGmKey = pd.visual.getCurrentGameKey();
             let gameIds = pd.visual.getAllGameIds();
-            if (gameIds.length == 1 && pd.getGameState('start') == undefined) {
+            if (pd.getGameState('start') == undefined) {
                 return;
 
             }
-
             let currGameId = pd.visual.getCurrentGameId();
             let images = pd.visual.getImagesByGameId(currGameId);
             let imageType = undefined;
-            images.forEach((item) => {
-                let imgKey = Object.keys(item)[0];
-                let image = item[imgKey];
-                let currImgType = parseInt(image.getAttribute('type'));
-                if (currImgType == SnapshotType.Original) {
-                    imageType = currImgType;
-                }
-            });
-
-            if (imageType == undefined) {
-                return;
+            let currImgType = undefined;
+            if (images != undefined) {
+                images.forEach((item) => {
+                    let imgKey = Object.keys(item)[0];
+                    let image = item[imgKey];
+                    currImgType = parseInt(image.getAttribute('type'));
+                    if (currImgType == SnapshotType.Original) {
+                        imageType = currImgType;
+                    }
+                });
             }
+            if (imageType == undefined) {
+                gameIds.forEach(element => {
+                    if (element == currGameId){
+                        gameIds.splice(gameIds.indexOf(currGameId), 1);
+                        return;
+                    }
+                });
+            }
+
             gameIds.reverse().forEach((gameId) => {
                 let img = pd.visual.getLastGameimage(gameId);
-                if (img == undefined) {
+                let images = pd.visual.getImagesByGameId(gameId);
+                if (img == undefined || images.length == 0) {
                     return;
                 }
 

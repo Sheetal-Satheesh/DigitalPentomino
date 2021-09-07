@@ -137,28 +137,6 @@ class SettingsSchema {
                     }
                 }
             },
-            showSolvedBoardScreen: {
-                "type": "object",
-                "title": titles.showSolvedBoardScreen.title[lang],
-                "pupilModeVisibleOnDefault": false,
-                "advanced": false,
-                "properties": {
-                    enableSolvedScreen: {
-                        "type": "boolean",
-                        "title": titles.showSolvedBoardScreen.enableSolvedScreen.title[lang],
-                        "description": titles.showSolvedBoardScreen.enableSolvedScreen.description[lang],
-                        "default": true
-                    },
-                    SolvedScreens: {
-                        "type": "string",
-                        "title": titles.showSolvedBoardScreen.SolvedScreens.title[lang],
-                        "description": titles.showSolvedBoardScreen.SolvedScreens.description[lang],
-                        "enum": ["Play again?", "Well done! Please wait for your Teacher to continue", "Excellent ! Now continue with the next task on your assignment"],
-                        "enumText": titles.showSolvedBoardScreen.SolvedScreens.enumTitles[lang],
-                        "default": "Play again?"
-                    }
-                }
-            },
             speech: {
                 "type": "object",
                 "title": titles.speech.title[lang],
