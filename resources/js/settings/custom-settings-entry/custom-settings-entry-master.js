@@ -29,6 +29,10 @@ class CustomSettingsEntryMaster {
         this.addEntry(new StartPosSettingsEntry("boardCustomization", "initialPiecePos"));
     }
 
+    /**
+     * Adds new handler. Not to be called from outside. New entries are registered in the constructor by this function.
+     * @param newEntry
+     */
     addEntry(newEntry) {
         if (this.customSettingsEntries[newEntry.getName()] === undefined) {
             this.customSettingsEntries[newEntry.getName()] = newEntry;
@@ -37,6 +41,12 @@ class CustomSettingsEntryMaster {
         }
     }
 
+    /**
+     * Returns custom settings entry with the specified name.
+     * @param heading
+     * @param subheading
+     * @returns {CustomSettingsEntry}
+     */
     get(heading, subheading) {
         let name = SettingsForm.generateSettingsEntryName(heading, subheading);
         if (this.customSettingsEntries[name] === undefined) {
@@ -46,6 +56,10 @@ class CustomSettingsEntryMaster {
         return this.customSettingsEntries[name];
     }
 
+    /**
+     * returns an array of all registered custom settings entries.
+     * @returns {[CustomSettingsEntry]}
+     */
     getAll() {
         return Object.values(this.customSettingsEntries);
     }
