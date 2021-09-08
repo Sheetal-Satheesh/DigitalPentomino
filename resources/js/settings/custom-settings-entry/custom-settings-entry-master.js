@@ -15,6 +15,12 @@ const CustomSettingsEntrySingleton = (function () {
     };
 })();
 
+/**
+ * A singleton which manages all custom setting entries. An entries can be added by registering a handlers in the
+ * constructor. A handler is implemented by inheriting from the superclass {@link CustomSettingsEntry}.
+ *
+ * The singleton get be used anywhere to {@link #get} an entry by its respective name.
+ */
 class CustomSettingsEntryMaster {
     constructor() {
         this.customSettingsEntries = {};
