@@ -1,7 +1,7 @@
 /**
  * Singleton, which can be used to access a class of type {@link CustomSettingsEntryMaster}, which manages all
  * registered custom settings entries.
- * @type {{getInstance: (function(): CustomSettingsEntryMaster)}}
+ * @returns {CustomSettingsEntryMaster}
  */
 const CustomSettingsEntrySingleton = (function () {
     let instance;
