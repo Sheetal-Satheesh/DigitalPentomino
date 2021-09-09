@@ -447,12 +447,7 @@
                 }
             } else {
                 // pupils can only scan
-                if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
-                    showCameraUnavailable();
-                }
-                else{
-                    openScanQrCode();
-                }
+                openScanQrCode();
                 this.disablePointerEventsOnPieces();
                 this.hideManipulationButtons();
                 if ($('#birdContainer').is(':visible')) {
@@ -791,6 +786,7 @@
         function handleCameraNotFoundError() {
             // TODO - handle
             console.log("handle camera not found");
+            showCameraUnavailable();
         }
 
         function openScanQrFunctionality() {
@@ -833,6 +829,7 @@
             }).catch(error => {
                 // TODO - camera permission not granted
                 console.info("camera permission not granted");
+                showCameraUnavailable();
             });
 
             //onQrCodeScanned("https://pentomino-digital.de/V5/index.html?t=2010101110111011101110121");
