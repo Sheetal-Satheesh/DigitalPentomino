@@ -478,20 +478,27 @@
             this.disablePointerEventsOnPieces();
             this.hideManipulationButtons();
             this.hideBubbleContainer();
-
+            $(".close").click(function () {
+                $("#shareOrScan").remove();
+                $("#scanImgElement").remove();
+                $("#shareImgElement").remove();
+            });
             let lang = SettingsSingleton.getInstance().getSettings().general.language;
 
             let parent = modal;
 
-            let heading = document.createElement("h3");
+            let heading = document.createElement("h1");
+            heading.id="shareOrScan";
             heading.innerHTML = strings.qrCode.scanOrShare[lang];
             heading.style.textAlign = "center";
             parent.appendChild(heading);
 
             // Add scan / share buttons
             let scanImgElement = SettingsForm.createImg("scanImg", "resources/images/icons/scan_qr_code.png");
+            scanImgElement.id = "scanImgElement";
             scanImgElement.onclick = () => openScanQrCode();
             let shareImgElement = SettingsForm.createImg("shareImg", "resources/images/icons/share_qr_code.png");
+            shareImgElement.id = "shareImgElement";
             shareImgElement.onclick = () => handleShareSettings();
 
             parent.appendChild(scanImgElement);
