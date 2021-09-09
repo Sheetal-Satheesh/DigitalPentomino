@@ -779,6 +779,23 @@
             template.clearContent(".innerGrid")
             template.clearContent("#innerGridForm");
 
+            QrScanner.hasCamera().then((hasCamera) => {
+                if (hasCamera) {
+                    openScanQrFunctionality();
+                } else {
+                    handleCameraNotFoundError();
+                }
+            });
+        }
+
+        function handleCameraNotFoundError() {
+            // TODO - handle
+            console.log("handle camera not found");
+        }
+
+        function openScanQrFunctionality() {
+            console.info("browser has camera");
+
             let lang = SettingsSingleton.getInstance().getSettings().general.language;
 
             let parent = $('#innerGridForm')[0];
@@ -806,14 +823,17 @@
                 }
             });
 
-            qrScanner.start();
-
-            // Draw video on canvas with rectangle
-            videoElement.onplay = function () {
-                setTimeout(function () {
-                    drawVideoToCanvas(videoElement, canvasElem);
-                }, 300);
-            };
+            qrScanner.start().then(() => {
+                // Draw video on canvas with rectangle
+                videoElement.onplay = function () {
+                    setTimeout(function () {
+                        drawVideoToCanvas(videoElement, canvasElem);
+                    }, 300);
+                };
+            }).catch(error => {
+                // TODO - camera permission not granted
+                console.info("camera permission not granted");
+            });
 
             //onQrCodeScanned("https://pentomino-digital.de/V5/index.html?t=2010101110111011101110121");
             //this.closeModal();
