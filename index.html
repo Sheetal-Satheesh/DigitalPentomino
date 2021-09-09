@@ -489,14 +489,7 @@
 
             // Add scan / share buttons
             let scanImgElement = SettingsForm.createImg("scanImg", "resources/images/icons/scan_qr_code.png");
-            scanImgElement.onclick = () => {
-                  if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
-                      showCameraUnavailable();
-                  }
-                  else{
-                      openScanQrCode();
-                  }
-              }
+            scanImgElement.onclick = () => openScanQrCode();
             let shareImgElement = SettingsForm.createImg("shareImg", "resources/images/icons/share_qr_code.png");
             shareImgElement.onclick = () => handleShareSettings();
 
