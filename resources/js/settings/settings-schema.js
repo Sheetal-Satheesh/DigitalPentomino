@@ -93,6 +93,7 @@ class SettingsSchema {
                     initiateActionsIfUserNotActive:{
                       "type": "boolean",
                       "title": titles.autohinting.initiateActionsIfUserNotActive.title[lang],
+                      "description":  titles.autohinting.initiateActionsIfUserNotActive.description[lang],
                       "default": true,
                       "pupilModeVisibleOnDefault": true
                     }
