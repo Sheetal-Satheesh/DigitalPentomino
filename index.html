@@ -873,7 +873,7 @@
             if ($(modal).is(':visible')) {
                 this.closeModal();
             }
-            
+
             this.hideBubbleContainer();
             this.disableSnapshotButton();
             this.hideManipulationButtons();
@@ -1098,7 +1098,6 @@
                     document.getElementById("speechBubbleText").textContent = strings.numberOfPossibleSolutions[lang] + ': ?';
                 } else if (heading === "hinting" && key === "enableHinting") {
                     let hintingEnabled = settings[heading][key];
-                    console.log(document.getElementById("hintButton").style.display);
                     document.getElementById("hintButton").style.display = hintingEnabled ? "" : "none";
                 } else if (heading === "hinting" && key === "showNumberOfPossibleSolutions") {
                     let showNumberOfPossibleSolutions = settings[heading][key];

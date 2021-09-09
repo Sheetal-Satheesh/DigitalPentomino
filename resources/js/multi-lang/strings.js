@@ -173,7 +173,7 @@ const strings = {
             title: ["Hinting (Experimental)", "Hilfestellung (Experimentell)"],
             enableHinting: {
                 title: ["Hint button", "Hilfestellungs-Button"],
-                description: ["",""]
+                description: ["This option enables hint button, if disabled hint button will be invisible.","Diese Option aktiviert die Hinweis-Schaltfläche, wenn sie deaktiviert ist, ist die Hinweis-Schaltfläche unsichtbar."]
             },
             hintingLevels: {
                 title: ["Assistance", "Hilfestellung"],
@@ -201,19 +201,17 @@ const strings = {
             },
             typeOfHints:{
                 title: ["Type of hints", "Art der Hinweise"],
-                enumTitles: [["Visual", "Textual", "Both"], ["Visuell", "Textuell", "Beides"]],
+                enumTitles: [["Visual","Visual and textual"], ["Visuell","Visuell und textlich"]],
                 description: [
                 "Provides hints :"  +
                     "<ul>" +
                         "<li><b>Visual:</b> Gives only visual hints.</li>" +
-                        "<li><b>Textual:</b> Gives only textual hints.</li>" +
-                        "<li><b>Both:</b> Gives both visual and textual hints</li>" +
+                        "<li><b>Visual and textual:</b> Gives both visual and textual hints</li>" +
                     "</ul>",
                     "Liefert Hinweise :" +
                         "<ul>" +
                         "<li><b>Visuell:</b> Gibt nur visuelle Hinweise.</li>" +
-                        "<li><b>Textuell:</b> Gibt nur textuelle Hinweise.</li>" +
-                        "<li><b>Beide:</b> Gibt sowohl visuelle als auch textliche Hinweise</li>" +
+                        "<li><b>Visuell und textlich:</b> Gibt sowohl visuelle als auch textliche Hinweise</li>" +
                         "</ul>"]
             },
             hintingStrategy: {

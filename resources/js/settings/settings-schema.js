@@ -147,7 +147,7 @@ class SettingsSchema {
                     "type": "boolean",
                     "title": titles.speech.enableSpeech.title[lang],
                     "description": titles.speech.enableSpeech.description[lang],
-                    "default": true
+                    "default": false
                   }
                 }
             },
@@ -222,6 +222,14 @@ class SettingsSchema {
                 "pupilModeVisibleOnDefault": false,
                 "advanced": true,
                 "properties": {
+                  typeOfHints:{
+                    "type": "string",
+                    "title": titles.hinting.typeOfHints.title[lang],
+                    "enum": ["Visual","Visual and textual"],
+                    "enumText": titles.hinting.typeOfHints.enumTitles[lang],
+                    "description": titles.hinting.typeOfHints.description[lang],
+                    "default": "Visual"
+                  },
                     showNumberOfPossibleSolutions: {
                         "type": "boolean",
                         "title": titles.hinting.showNumberOfPossibleSolutions.title[lang],
@@ -234,13 +242,13 @@ class SettingsSchema {
                         "description": titles.hinting.enableHinting.description[lang],
                         "default": true
                     },
-                    typeOfHints:{
-                      "type": "string",
-                      "title": titles.hinting.typeOfHints.title[lang],
-                      "enum": ["Visual", "Textual", "Both"],
-                      "enumText": titles.hinting.typeOfHints.enumTitles[lang],
-                      "description": titles.hinting.typeOfHints.description[lang],
-                      "default": "Visual"
+                    hintingVariants: {
+                        "type": "string",
+                        "title": titles.hinting.hintingVariants.title[lang],
+                        "description": titles.hinting.hintingVariants.description[lang],
+                        "enum": ["Show pentominoes", "Show destination", "Show both"],
+                        "enumText": titles.hinting.hintingVariants.enumTitles[lang],
+                        "default": "Show both"
                     },
                     hintingStrategy: {
                         "type": "string",
@@ -279,14 +287,6 @@ class SettingsSchema {
                         "title": titles.hinting.exactHints.title[lang],
                         "description": titles.hinting.exactHints.description[lang],
                         "default": false
-                    },
-                    hintingVariants: {
-                        "type": "string",
-                        "title": titles.hinting.hintingVariants.title[lang],
-                        "description": titles.hinting.hintingVariants.description[lang],
-                        "enum": ["Show pentominoes", "Show destination", "Show both"],
-                        "enumText": titles.hinting.hintingVariants.enumTitles[lang],
-                        "default": "Show both"
                     }
                 }
             },

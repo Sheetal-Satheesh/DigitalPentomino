@@ -942,10 +942,10 @@ class Visual {
         if((SettingsSingleton.getInstance().getSettings().hinting.typeOfHints === "Visual" )){
             this.indicateHint(hint, commandNumber);
        }
-       if((SettingsSingleton.getInstance().getSettings().hinting.typeOfHints === "Textual" )){
-            pd.visual.hintText(hint);
-       }
-       if((SettingsSingleton.getInstance().getSettings().hinting.typeOfHints === "Both" )){
+       // if((SettingsSingleton.getInstance().getSettings().hinting.typeOfHints === "Textual" )){
+       //      pd.visual.hintText(hint);
+       // }
+       if((SettingsSingleton.getInstance().getSettings().hinting.typeOfHints === "Visual and textual" )){
             pd.visual.hintText(hint);
             this.indicateHint(hint, commandNumber);
        }
