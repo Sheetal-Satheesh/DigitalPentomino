@@ -257,9 +257,19 @@ const strings = {
                     ["Show pentominoes", "Show destination", "Show both"],
                     ["Pentomino anzeigen", "Ziel anzeigen", "Beides anzeigen"]
                 ],
-                description: ["",
-                    ""
-                ]
+                description: [
+                    "Variants of hinting:" +
+                        "<ul>" +
+                            "<li><b>Show pentominoes:</b> Indicates only pentominos.</li>" +
+                            "<li><b>Show destination:</b> Indicates only detsination.</li>" +
+                            "<li><b>Show both:</b> Indicates pentominos and destination.</li>" +
+                        "</ul>",
+                    "Varianten der Andeutung:" +
+                        "<ul>" +
+                            "<li><b>Pentomino anzeigen:</b> Zeigt nur Pentominos an.</li>" +
+                            "<li><b>Zielort anzeigen:</b> Zeigt nur das Ziel an.</li>" +
+                            "<li><b>Beides anzeigen:</b> Zeigt Pentominos und Zielort an.</li>" +
+                        "</ul>"]
 
             }
         },
