@@ -300,17 +300,17 @@ class Visual {
             htmlElement.style.setProperty("--rotationZ", "0deg");
 
             if(piecesSelectedForPartition.length != 0 && splitCounter <= 1 ) {
-                let containsDisplayedPieceName = piecesSelectedForPartition.indexOf(piece.name);                
+                let containsDisplayedPieceName = piecesSelectedForPartition.indexOf(piece.name);
                 if(containsDisplayedPieceName === -1 ) {
                     htmlElement.style.display = 'none';
-                                                            
+
                 }
                 else if (containsDisplayedPieceName >=0) {
                     htmlElement.style.display = 'block';
-                }               
+                }
             }
-            
-            
+
+
         }
         else {
             var bCellsFnd = this.isPentominoInBlockCells(piece);
@@ -368,13 +368,13 @@ class Visual {
         htmlElement.style.display = 'block';
 
         if(piecesSelectedForPartition.length != 0 && splitCounter <= 1 ) {
-            let containsDisplayedPieceName = piecesSelectedForPartition.indexOf(piece.name);            
+            let containsDisplayedPieceName = piecesSelectedForPartition.indexOf(piece.name);
             if(containsDisplayedPieceName === -1 ) {
-                htmlElement.style.display = 'none';                                                            
+                htmlElement.style.display = 'none';
             }
             else if (containsDisplayedPieceName >=0) {
                 htmlElement.style.display = 'block';
-            }            
+            }
         }
     }
 
@@ -475,19 +475,19 @@ class Visual {
         document.getElementById('pieceManipulation').style.display = 'none';
     }
 
-    blockPartition() {        
+    blockPartition() {
         let partitionedArray = splitPartition[splitCounter]
-        let piecesDisplayed = [];        
-        for (let i = 0; i < partitionedArray.length; i++) {           
-            piecesDisplayed.push(partitionedArray[i][0].name);                     
-        } 
+        let piecesDisplayed = [];
+        for (let i = 0; i < partitionedArray.length; i++) {
+            piecesDisplayed.push(partitionedArray[i][0].name);
+        }
         this.pieces.forEach(piece => {
             let containsDisplayedPieceName = piecesDisplayed.indexOf(piece.name)
-                if(containsDisplayedPieceName >= 0 ) {                    
-                    document.getElementById('piece_'+ piece.name).classList.add("disabledbutton");                
-                }                                                      
-        }); 
-        
+                if(containsDisplayedPieceName >= 0 ) {
+                    document.getElementById('piece_'+ piece.name).classList.add("disabledbutton");
+                }
+        });
+
 
     }
     // 	save(piece) {
@@ -719,7 +719,7 @@ class Visual {
                         that.select(data[1], event.clientX, event.clientY);
                         flagCheckPartitionSolved = that.checkPartitionSolved();
                         if(flagCheckPartitionSolved) {
-                            that.blockPartition();                            
+                            that.blockPartition();
                             that.displaySplit_V2();
                         }
 
@@ -767,6 +767,8 @@ class Visual {
     }
 
     updateDOMWithPentomino(piece) {
+        let isColorSplitActive = document.querySelector(".splitbuttonimg") !== null &&
+            SettingsSingleton.getInstance().getSettings().splitPartition.splitStrategy == "color";
         let oldPieceDiv = document.getElementById("piece_" + piece.name);
         let pieceBitMap = piece.getMatrixRepresentation();
         let width = UIProperty.WindowWidth / this.pd.gameWidth;
@@ -776,7 +778,7 @@ class Visual {
         for (let i = 0; i < 5; ++i) {
             for (let j = 0; j < 5; ++j) {
                 let set = pieceBitMap[i][j];
-                out += '<div style="display:block;float:left;width:' + width + 'vw;height:' + width + 'vw;' + ((set) ? 'background:' + piece.color : '') + '" class="' + ((set) ? 'bmPoint' : 'bmAround') + '"></div>';
+                out += '<div style="display:block;float:left;width:' + width + 'vw;height:' + width + 'vw;' + ((set) ? 'background:' + ((isColorSplitActive) ? piece.alternateColor : piece.color) : '') + '" class="' + ((set) ? 'bmPoint' : 'bmAround') + '"></div>';
             }
         }
 
@@ -807,7 +809,7 @@ class Visual {
                 this.checkIfGameWon();
             }
         }
-        
+
         setTimeout(function (that, piece) {
             that.updateDOMWithPentomino(piece);
         }, 200, this, piece);
@@ -880,18 +882,22 @@ class Visual {
     showNumberOfPossibleSolutions() {
       let speechBubbleText = document.getElementById("speechBubbleText");
       let lang = SettingsSingleton.getInstance().getSettings().general.language;
+      let pointer;
         //Fill solutions label text
       let labelPossibleSolutions = document.getElementById("labelNumberSolutions");
       if (this.gameController.game()._board.isSolved()) {
             speechBubbleText.innerText = strings.speechbubbleTexts.Solved[lang];
+            if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
+               this.speakBot(strings.speechbubbleTexts.Solved[lang]);
+            }
           return;
       }
-        labelPossibleSolutions.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
-
+      if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+          labelPossibleSolutions.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
+      }
         //Fill speech bubble text
-
         speechBubbleText.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
-        if(SettingsSingleton.getInstance().getSettings().general.enableAutoHinting){
+        if(SettingsSingleton.getInstance().getSettings().autohinting.enableAutoHinting){
             if((this.gameController.getHint().getPossibleSolutions().length) === 0){
                 count+=1;
                 //check if number of wrongg moves is greater than the value configured in settings
@@ -901,6 +907,8 @@ class Visual {
             }
         }
     }
+
+
 
     callHintAI() {
         let hint = pd.gameController.getHint();
@@ -924,10 +932,10 @@ class Visual {
         if((SettingsSingleton.getInstance().getSettings().hinting.typeOfHints === "Visual" )){
             this.indicateHint(hint, commandNumber);
        }
-       if((SettingsSingleton.getInstance().getSettings().hinting.typeOfHints === "Textual" )){
-            pd.visual.hintText(hint);
-       }
-       if((SettingsSingleton.getInstance().getSettings().hinting.typeOfHints === "Both" )){
+       // if((SettingsSingleton.getInstance().getSettings().hinting.typeOfHints === "Textual" )){
+       //      pd.visual.hintText(hint);
+       // }
+       if((SettingsSingleton.getInstance().getSettings().hinting.typeOfHints === "Visual and textual" )){
             pd.visual.hintText(hint);
             this.indicateHint(hint, commandNumber);
        }
@@ -951,6 +959,9 @@ class Visual {
          switch (hintName) {
            case "Remove":
                this.text = strings.speechbubbleTexts.removePentomino[lang]  + " pentomino " + hintCommand._pentomino.name;
+               if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
+                  this.speakBot(this.text);
+               }
                document.getElementById("speechBubbleText").textContent = this.text;
                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
                    document.getElementById("labelNumberSolutions").innerText = this.text;
@@ -958,6 +969,9 @@ class Visual {
                break;
            case "MoveToPosition":
                this.text = strings.speechbubbleTexts.move[lang] + " pentomino " + hintCommand._pentomino.name + strings.speechbubbleTexts.MoveToPosition[lang] + " " + "[" + hintCommand._row + "," + hintCommand._col + "]";
+               if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
+                  this.speakBot(this.text);
+               }
                document.getElementById("speechBubbleText").textContent = this.text;
                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
                    document.getElementById("labelNumberSolutions").innerText = this.text;
@@ -965,6 +979,9 @@ class Visual {
                break;
            case "Place":
                this.text = strings.speechbubbleTexts.place[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.atPosition[lang]  + " " +  "[" + hintCommand._nextPosition[0] + "," + hintCommand._nextPosition[1] + "]";
+               if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
+                  this.speakBot(this.text);
+               }
                document.getElementById("speechBubbleText").textContent = this.text;
                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
                    document.getElementById("labelNumberSolutions").innerText = this.text;
@@ -972,6 +989,9 @@ class Visual {
                break;
            case "RotateClkWise":
                this.text = strings.speechbubbleTexts.rotate[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.clockwise[lang];
+               if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
+                  this.speakBot(this.text);
+               }
                document.getElementById("speechBubbleText").textContent = this.text;
                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
                    document.getElementById("labelNumberSolutions").innerText = this.text;
@@ -979,6 +999,9 @@ class Visual {
                break;
            case "RotateAntiClkWise":
                this.text = strings.speechbubbleTexts.rotate[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.antiClockwise[lang];
+               if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
+                  this.speakBot(this.text);
+               }
                document.getElementById("speechBubbleText").textContent = this.text;
                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
                    document.getElementById("labelNumberSolutions").innerText = this.text;
@@ -986,6 +1009,9 @@ class Visual {
                break;
            case "MirrorH":
                this.text = strings.speechbubbleTexts.mirror[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.horizontal[lang];
+               if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
+                  this.speakBot(this.text);
+               }
                document.getElementById("speechBubbleText").textContent = this.text;
                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
                    document.getElementById("labelNumberSolutions").innerText = this.text;
@@ -993,6 +1019,9 @@ class Visual {
                break;
            case "MirrorV":
                this.text = strings.speechbubbleTexts.mirror[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.vertical[lang];
+               if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
+                  this.speakBot(this.text);
+               }
                document.getElementById("speechBubbleText").textContent = this.text;
                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
                    document.getElementById("labelNumberSolutions").innerText = this.text;
@@ -1007,10 +1036,11 @@ class Visual {
 
    autoHintWrongMoves(){
         let lang = SettingsSingleton.getInstance().getSettings().general.language;
+        let pointer;
         if(!(SettingsSingleton.getInstance().getSettings().autohinting.autoHintVariants === "Wrong moves")){
             return;
         }
-        //start bird animation
+          //start bird animation
           document.getElementById('birdContainer').classList.add("anim");
         //Speech bubble asks show the hint or ignore
         //this function call configures auto hints
@@ -1029,9 +1059,9 @@ class Visual {
 
    ignore(){
       let lang = SettingsSingleton.getInstance().getSettings().general.language;
-      document.getElementById('speechBubbleText').textContent = strings.speechbubbleTexts.pleaseContinue[lang];
+      document.getElementById('speechBubbleText').textContent = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
       if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-          document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.pleaseContinue[lang];
+          document.getElementById("labelNumberSolutions").innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
       }
   }
 
@@ -1133,47 +1163,46 @@ class Visual {
             splitPartition.push(arr[counter]);
             counter++;
             partionLength++;
-        }                    
+        }
     }
 
-    splitTheBoard() {               
-        let splitCategory = SettingsSingleton.getInstance().getSettings().splitPartition.splitStrategy;        
+    splitTheBoard() {
+        let splitCategory = SettingsSingleton.getInstance().getSettings().splitPartition.splitStrategy;
         switch (splitCategory) {
             case "color":
                 this.undoSplit();
                 this.callSplitBoardViaColor();
                 break;
-            case "left-to-right":                
+            case "left-to-right":
                 this.readyForSplitting();
                 this.callSplitBoard_V2();
                 break;
-        }              
+        }
     }
 
     readyForSplitting() {
-        this.reset();        
+        this.reset();
         this.undoSplit();
         if(!splitButton.classList.contains("splitbuttonimg")) {
             splitButton.classList.add("splitbuttonimg");
         }
     }
-
-    callSplitBoardViaColor() {
-        let partitionedArray = pd.gameController.loadSplit();                
-        this.displaySplit(partitionedArray, alternateColor);        
+callSplitBoardViaColor() {
+        let partitionedArray = pd.gameController.loadSplit();
+        this.displaySplit(partitionedArray, alternateColor);
     }
 
-    callSplitBoard_V2() {       
-        let partitionedArray = pd.gameController.loadSplit_V2();        
+    callSplitBoard_V2() {
+        let partitionedArray = pd.gameController.loadSplit_V2();
         this.resize(partitionedArray, partitionedArray.length)
         let styleElement = document.querySelector('.boardarea');
-        let styleValue = window.getComputedStyle(styleElement);  
-        styleBlocks = styleValue.backgroundColor;              
-        this.displaySplit_V2();                     
-    }    
+        let styleValue = window.getComputedStyle(styleElement);
+        styleBlocks = styleValue.backgroundColor;
+        this.displaySplit_V2();
+    }
 
-    undoSplit() {        
-        Array.prototype.forEach.call(document.getElementsByClassName("gamearea boardarea"), function (element) {            
+    undoSplit() {
+        Array.prototype.forEach.call(document.getElementsByClassName("gamearea boardarea"), function (element) {
             if(!element.classList.contains("blockedcell")) {
                 element.style.backgroundColor = "";
                 element.style.opacity ="";
@@ -1181,12 +1210,12 @@ class Visual {
         });
         this.pieces.forEach(piece => {
             Array.prototype.forEach.call(document.getElementById('piece_' + piece.name).getElementsByClassName("bmPoint"), function (element) {
-                element.style.background = piece.color ;                 
+                element.style.background = piece.color ;
             });
         });
-        this.pieces.forEach(piece => {            
-            document.getElementById('piece_'+ piece.name).style.display = 'block';                                                                                           
-        }); 
+        this.pieces.forEach(piece => {
+            document.getElementById('piece_'+ piece.name).style.display = 'block';
+        });
         piecesSelectedForPartition = [];
         splitPartition = [];
         splitCounter = -1;
@@ -1204,50 +1233,51 @@ class Visual {
                         fieldID.style.opacity = .5;
                     }
                 }
-                var piece = partitionedArray[i][j][0]
+                var piece = partitionedArray[i][j][0];
+                this.pieces.filter(p => p.name == piece.name)[0].alternateColor = alternateColor[i];
                 piece.alternateColor = alternateColor[i];
                 Array.prototype.forEach.call(document.getElementById('piece_' + piece.name).getElementsByClassName("bmPoint"), function (element) {
                     element.style.background = alternateColor[i];
                 });
             }
-        }        
+        }
     }
-    
-     displaySplit_V2() { 
+
+     displaySplit_V2() {
         splitCounter++;
         if(splitPartition.length > splitCounter) {
             let partitionedArray = splitPartition[splitCounter]
             let piecesDisplayed = [];
             for (let i = 0; i < partitionedArray.length; i++) {
-                for (let j = 0; j < partitionedArray[i][1].length; j++) {                
-                        let fieldValue = partitionedArray[i][1];                    
+                for (let j = 0; j < partitionedArray[i][1].length; j++) {
+                        let fieldValue = partitionedArray[i][1];
                         let fieldID = document.getElementById("field_" + fieldValue[j][0] + "," + fieldValue[j][1]);
                         fieldID.style.background = "#77C9D4";
-                        fieldID.style.opacity = .5;                                                          
-                } 
-                piecesDisplayed.push(partitionedArray[i][0].name);                     
-            } 
+                        fieldID.style.opacity = .5;
+                }
+                piecesDisplayed.push(partitionedArray[i][0].name);
+            }
             for (let elm =0; elm < piecesDisplayed.length; elm++){
                 piecesSelectedForPartition.push(piecesDisplayed[elm]) ;
             }
-            
+
             this.pieces.forEach(piece => {
                 let containsDisplayedPieceName = piecesDisplayed.indexOf(piece.name)
                     if(containsDisplayedPieceName === -1 ) {
                         if(!document.getElementById('piece_'+ piece.name).classList.contains('disabledbutton')){
                             document.getElementById('piece_'+ piece.name).style.display = 'none';
-                        }                                       
+                        }
                     }
                     else if (containsDisplayedPieceName >=0) {
                         document.getElementById('piece_'+ piece.name).style.display = 'block';
-                    }                                                                      
-            });           
+                    }
+            });
         }
-              
+
     }
 
     unblockPartition() {
-        Array.prototype.forEach.call(document.getElementsByClassName("gamearea boardarea"), function (element) {            
+        Array.prototype.forEach.call(document.getElementsByClassName("gamearea boardarea"), function (element) {
             if(!element.classList.contains("blockedcell")) {
                 element.style.background = backGroundColor;
                 element.style.opacity ="";
@@ -1255,13 +1285,13 @@ class Visual {
         });
         this.pieces.forEach(piece => {
             Array.prototype.forEach.call(document.getElementById('piece_' + piece.name).getElementsByClassName("bmPoint"), function (element) {
-                element.style.display = 'block';                
+                element.style.display = 'block';
             });
-                        
-            if(document.getElementById('piece_'+ piece.name).classList.contains('disabledbutton')){                
+
+            if(document.getElementById('piece_'+ piece.name).classList.contains('disabledbutton')){
                 document.getElementById('piece_'+ piece.name).classList.remove("disabledbutton");
-            }                                                                                            
-            
+            }
+
         });
 
 
@@ -1270,48 +1300,48 @@ class Visual {
     checkPartitionSolved() {
         let piecesDisplayed = [];
         let partitionCheck = false;
-        
+
         if (!splitPartition) {
-            return false;   
+            return false;
         }
 
         if(splitPartition.length === 0) {
             return false;
         }
-        
+
         let partitionedArray = splitPartition[splitCounter]
-        
+
         if(!partitionedArray) {
             return false;
         }
-        for (let i = 0; i < partitionedArray.length; i++) {            
-            piecesDisplayed.push(partitionedArray[i][0].name);                     
-        } 
-        
+        for (let i = 0; i < partitionedArray.length; i++) {
+            piecesDisplayed.push(partitionedArray[i][0].name);
+        }
+
         let temp = [];
-        for (let i = 0; i < piecesDisplayed.length; i++) {            
-            temp.push(false);                     
-        } 
+        for (let i = 0; i < piecesDisplayed.length; i++) {
+            temp.push(false);
+        }
 
         this.pieces.forEach(piece => {
             if(this.gameController.isPlacedOnBoard(piece)) {
                 let containsDisplayedPieceName = piecesDisplayed.indexOf(piece.name)
                 if(containsDisplayedPieceName >= 0) {
-                    let result = this.pd.gameController.partitionHasUnoccupiedPosition(piece);                                                                    
+                    let result = this.pd.gameController.partitionHasUnoccupiedPosition(piece);
                     temp[containsDisplayedPieceName] = result;
                     let checker = temp.every(v => v === true);
                     if (checker) {
                         partitionCheck = true;
                         if(this.checkIfGameWon()){
                             this.unblockPartition();
-                        }                        
-                        return partitionCheck; 
+                        }
+                        return partitionCheck;
                     }
                 }
             }
-                            
-        });     
-        return partitionCheck;            
+
+        });
+        return partitionCheck;
     }
 
 
@@ -1580,14 +1610,8 @@ class Visual {
     }
 
     showGameSolved() {
-        let enabledSolvedScreen = SettingsSingleton.getInstance().getSettings().showSolvedBoardScreen.enableSolvedScreen;
-        if (!enabledSolvedScreen) {
-            return;
-        }
-        
         let piecesIdArray = this.pieces.map(piece => "piece_" + piece.name);
         this.disablePointerEventsOnPieces(piecesIdArray);
-        
         let modal = document.getElementById('modalTop');
         modal.style.display = "block";
         modal.style.background = "transparent";
@@ -1613,75 +1637,53 @@ class Visual {
         let div1 = document.createElement("div");
         let img = document.createElement("img");
 
-        let textNode3 = SettingsSingleton.getInstance().getSettings().showSolvedBoardScreen.SolvedScreens;
         let textNode2;
         let cancelBtn;
         let playAgnBtnAttributes;
         template.attachText("#modalBodyID", textNode1);
+        textNode2 = {
+            class: "modalText",
+            text: strings.showSolved.play[lang]
+        };
+        img.src = "resources/images/icons/solvedScreenBoy.ico";
+        img.style.cursor = "none";
+        div1.appendChild(img);
+        modalBodyID.appendChild(div1);
+        template.attachText("#modalBodyID", textNode2);
+        cancelBtn = {
+            class: "cancelBtn",
+            onclick: "document.getElementById('modalTop').style.display='none'",
+            textContent: strings.general.no[lang]
+        };
+        playAgnBtnAttributes = {
+            class: "deleteBtn",
+            onclick: "document.getElementById('modalTop').style.display='none'",
+            textContent: strings.general.yes[lang]
+        };
+        let div2 = document.createElement("div");
+        let text = document.createElement("h5");
+        text.innerHTML = "\n";
+        div2.appendChild(text);
+        //attach div
+        modalBodyID.appendChild(div2);
 
-        switch (textNode3) {
-            case "Play again?":
-                textNode2 = {
-                    class: "modalText",
-                    text: strings.showSolved.play[lang]
-                };
-                img.src = "resources/images/icons/solvedScreenBoy.ico";
-                img.style.cursor = "none";
-                div1.appendChild(img);
-                modalBodyID.appendChild(div1);
-                template.attachText("#modalBodyID", textNode2);
-                cancelBtn = {
-                    class: "cancelBtn",
-                    onclick: "document.getElementById('modalTop').style.display='none'",
-                    textContent: strings.general.no[lang]
-                };
-                playAgnBtnAttributes = {
-                    class: "deleteBtn",
-                    onclick: "document.getElementById('modalTop').style.display='none'",
-                    textContent: strings.general.yes[lang]
-                };
-                let div2 = document.createElement("div");
-                let text = document.createElement("h5");
-                text.innerHTML = "\n";
-                div2.appendChild(text);
-                //attach div
-                modalBodyID.appendChild(div2);
+        template.attachBtn("#modalBodyID", playAgnBtnAttributes);
+        template.attachBtn("#modalBodyID", cancelBtn);
+        let playAgainBtn = document.querySelector(".deleteBtn");
+        playAgainBtn.addEventListener("click", () => {
+            pd.reset();
+            this.enablePointerEventsOnPieces();
+        });
 
-                template.attachBtn("#modalBodyID", playAgnBtnAttributes);
-                template.attachBtn("#modalBodyID", cancelBtn);
-                let playAgainBtn = document.querySelector(".deleteBtn");
-                playAgainBtn.addEventListener("click", () => {
-                    pd.reset();
-                    this.enablePointerEventsOnPieces();
-                });
-
-                let dontPlayAgainBtn = document.querySelector(".cancelBtn");
-                dontPlayAgainBtn.addEventListener("click", () => {
-                    this.enablePointerEventsOnPieces();
-                });
-
-                break;
-            case "Well done! Please wait for your Teacher to continue":
-                textNode2 = {
-                    class: "modalText",
-                    text: strings.showSolved.WellDone[lang]
-                };
-                img.src = "resources/images/icons/solvedScreenMagician.ico";
-                div1.appendChild(img);
-                modalBodyID.appendChild(div1);
-                template.attachText("#modalBodyID", textNode2);
-                break;
-
-            case "Excellent ! Now continue with the next task on your assignment":
-                textNode2 = {
-                    class: "modalText",
-                    text: strings.showSolved.Excellent[lang]
-                };
-                img.src = "resources/images/icons/solvedScreenGift.ico";
-                div1.appendChild(img);
-                modalBodyID.appendChild(div1);
-                template.attachText("#modalBodyID", textNode2);
-                break;
+        let dontPlayAgainBtn = document.querySelector(".cancelBtn");
+        dontPlayAgainBtn.addEventListener("click", () => {
+            this.enablePointerEventsOnPieces();
+        });
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
         }
     }
 
@@ -2322,5 +2324,36 @@ class Visual {
             document.getElementById(piece).style.pointerEvents = "auto";
         });
     }
+
+
+  //bot speaks in :
+  //hintText() function
+  //userinactivity() function
+  //when the board is solved
+  //when wrong actions are done
+  speakBot(textTospeak){
+      const synth = window.speechSynthesis;
+      const utter = new SpeechSynthesisUtterance(textTospeak);
+      let voices = synth.getVoices();
+      let speechBubbleText = document.getElementById("speechBubbleText");
+      //utter.lang = 'en-US';
+      //utter.lang = 'en-IN';
+      //utter.lang = 'de-DE';
+      if(SettingsSingleton.getInstance().getSettings().general.language === 1){
+            utter.lang = 'de-DE';
+            utter.voiceURI = 'Google Deutsch';
+            utter.name = 'Google Deutsch';
+            utter.localService= false;
+            utter.default= false;
+            synth.speak(utter);
+      }else{
+            utter.lang = 'en-GB';
+            utter.Local = 'true';
+            utter.voiceURI = "Google UK English Female";
+            utter.name =  "Google UK English Female";
+            synth.speak(utter);
+      }
+  }
+
 
 }

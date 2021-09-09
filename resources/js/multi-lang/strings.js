@@ -2,16 +2,16 @@ const strings = {
     general: {
         no: ["No", "Nein"],
         yes: ["Yes", "Ja"],
+        ok: ["ok", "ok"],
         cancel: ["cancel", "Abbrechen"],
         or: ["or", "oder"],
-        submit: ["Apply", "Übernehmen"]
+        submit: ["Apply", "Übernehmen"],
+        qrCodeScanned: ["Successfully scanned", "Erfolgreich gescannt"]
     },
     reset: ["Do You Want to clear the board?", "Willst du das Brett wirklich leeren?"],
     showSolved: {
         congrats: ["Congratulations!", "Glückwunsch!"],
         play: ["Play Again?", "Nochmal spielen?"],
-        WellDone: ["Well done! Please wait for your Teacher to continue", "Gut gemacht! Bitte warten Sie auf Ihren Lehrer, um fortzufahren"],
-        Excellent: ["Excellent ! Now continue with the next task on your assignment", "Ausgezeichnet! Fahren Sie jetzt mit der nächsten Aufgabe Ihres Auftrags fort"]
     },
     speechbubbleTexts: {
         Solved: ["Ya hoo !! You solved it !", "Juhu!! Du hast es gelöst!"],
@@ -79,7 +79,16 @@ const strings = {
              backgroundMusic: ["Background Music", "Hintergrundmusik"],
              functionsMusic: ["Functions Music","Funktionen Musik"],
              html2canvas:["html2canvas","html2canvas"],
-             loadash:["loadash","loadash"]
+             loadash:["loadash","loadash"],
+            qrScannerIcon: ["QR Scanner Icon", "QR Scanner Icon"]
+        },
+        speech:{
+            title: ["Speech", "Rede"],
+            enableSpeech:{
+                title: ["Enable speech", "Sprache freigeben"],
+                description: ["Enabling this option makes the application speak,Standard German slang is used for german language translation and english slang for english language translation.",
+                "Wenn Sie diese Option aktivieren, spricht die Anwendung.Die deutsche Standardsprache wird für die deutsche Übersetzung verwendet, die englische für die englische Übersetzung."]
+            }
         },
         autohinting:{
             title: ["Auto hinting", "Automatische Hilfestellung"],
@@ -164,13 +173,26 @@ const strings = {
             title: ["Hinting (Experimental)", "Hilfestellung (Experimentell)"],
             enableHinting: {
                 title: ["Hint button", "Hilfestellungs-Button"],
-                description: ["",""]
+                description: ["This option enables hint button, if disabled hint button will be invisible.","Diese Option aktiviert die Hinweis-Schaltfläche, wenn sie deaktiviert ist, ist die Hinweis-Schaltfläche unsichtbar."]
             },
             hintingLevels: {
                 title: ["Assistance", "Hilfestellung"],
                 enumTitles: [["High", "Medium", "Low","Custom"], ["Viel", "Mittel", "Wenig", "Individuell"]],
-                description: ["TODO",
-                    "TODO"]
+                description: [
+                "Levels of assistance :"  +
+                    "<ul>" +
+                        "<li><b>High:</b> Makes the game solvable more easily with high help functionality for high assistance.Player will get easier hints, exact hints, board prefilling is possible and both the pentomino and the destination will be indicated.</li>" +
+                        "<li><b>Medium:</b> Medium level of help functionality for assistance.Medium hinting strategy enabled.</li>" +
+                        "<li><b>Low:</b> Low level of assistance.Difficult hints will be configured.Prefilling of the board is disabled</li>" +
+                        "<li><b>Custom:</b> Nothing gets changed, but you can change as per your convenience</li>" +
+                    "</ul>",
+                    "Stufen der Unterstützung :" +
+                    "<ul>" +
+                      "<li><b>Viel:</b> Macht das Spiel leichter lösbar mit hoher Hilfefunktionalität für hohe Unterstützung.Der Spieler erhält leichtere Hinweise, genaue Hinweise, das Spielbrett kann vorausgefüllt werden und sowohl das Pentomino als auch das Ziel werden angezeigt.</li>" +
+                      "<li><b>Mittel:</b> Mittleres Niveau der Hilfefunktionalität für Unterstützung.Mittlere Hinweisstrategie aktiviert.</li>" +
+                      "<li><b>Wenig:</b> Niedriges Niveau der Hilfestellung. Schwere Hinweise werden konfiguriert. Das Vorfüllen der Tafel ist deaktiviert</li>" +
+                      "<li><b>Individuell:</b>Es wird nichts geändert, aber Sie können nach Belieben Änderungen vornehmen.</li>" +
+                  "</ul>"]
             },
             showNumberOfPossibleSolutions: {
                 title: ["Show number of possible solutions", "Zeige Anzahl der möglichen Lösungen an"],
@@ -179,19 +201,17 @@ const strings = {
             },
             typeOfHints:{
                 title: ["Type of hints", "Art der Hinweise"],
-                enumTitles: [["Visual", "Textual", "Both"], ["Visuell", "Textuell", "Beides"]],
+                enumTitles: [["Visual","Visual and textual"], ["Visuell","Visuell und textlich"]],
                 description: [
                 "Provides hints :"  +
                     "<ul>" +
                         "<li><b>Visual:</b> Gives only visual hints.</li>" +
-                        "<li><b>Textual:</b> Gives only textual hints.</li>" +
-                        "<li><b>Both:</b> Gives both visual and textual hints</li>" +
+                        "<li><b>Visual and textual:</b> Gives both visual and textual hints</li>" +
                     "</ul>",
                     "Liefert Hinweise :" +
                         "<ul>" +
                         "<li><b>Visuell:</b> Gibt nur visuelle Hinweise.</li>" +
-                        "<li><b>Textuell:</b> Gibt nur textuelle Hinweise.</li>" +
-                        "<li><b>Beide:</b> Gibt sowohl visuelle als auch textliche Hinweise</li>" +
+                        "<li><b>Visuell und textlich:</b> Gibt sowohl visuelle als auch textliche Hinweise</li>" +
                         "</ul>"]
             },
             hintingStrategy: {
@@ -244,32 +264,7 @@ const strings = {
 
             }
         },
-        showSolvedBoardScreen:{
-                title: ["Show Solved Board Screen", "Gelösten Bildschirm anzeigen"],
-                enableSolvedScreen:{
-                    title: ["Enable solved screen?", "Gelösten Bildschirm freigeben"],
-                    description: ["Solved Board Screen indicates what should happen after the whole board is fully solved.",
-                    "Der Bildschirm Gelöstes Board zeigt an, was passieren soll, nachdem das gesamte Board vollständig gelöst ist."]
-                },
-                SolvedScreens: {
-                    title: ["Different solved screens", "Unterschiedlich gelöste Bildschirme"],
-                    enumTitles: [["Play again?", "Well done! Please wait for your Teacher to continue", "Excellent ! Now continue with the next task on your assignment"],
-                                ["Noch einmal spielen?", "Gut gemacht! Bitte warten Sie auf Ihren Lehrer, um fortzufahren", "Ausgezeichnet! Fahren Sie jetzt mit der nächsten Aufgabe Ihres Auftrags fort"]],
-                    description: [
-                    "The selected board is applied when the game is fully solved"+
-                    "<ul>" +
-                    "<li><b>Play again?:</b>Asking the students to play the game again with options<i>yes or no </i>.</li>" +
-                    "<li><b>Well done! Please wait for your Teacher to continue:</b>Asking the students to wait for the teacher to continue</li>" +
-                    "<li><b>Excellent ! Now continue with the next task on your assignment:</b>Asking the students to continue their next assignment</li>"+
-                    "</ul>",
-                    "Das gewählte Brett wird angewendet, wenn das Spiel vollständig gelöst ist "+
-                    "<ul>" +
-                    "<li><b>Noch einmal spielen?:</b>Aufforderung an die Schüler, das Spiel noch einmal zu spielen, mit den Optionen<i>ja oder nein</i>.</li>" +
-                    "<li><b>Gut gemacht! Bitte warten Sie auf den Lehrer, um fortzufahren:</b>Aufforderung an die Schüler, auf den Lehrer zu warten, um fortzufahren</li>" +
-                    "<li><b>Exzellent! Fahren Sie jetzt mit der nächsten Aufgabe Ihres Auftrags fort:</b>Aufforderung an die Schüler, mit der nächsten Aufgabe fortzufahren</li>"+
-                    "</ul>"]
-                }
-        },
+
         prefilling: {
             title: ["Prefilled boards", "Vorbelegte Bretter"],
             fixPieces: {
@@ -343,11 +338,9 @@ const strings = {
             pupilMode: ["Share with class (Settings restricted)", "Teile mit Schülern (Einstellungen eingeschränkt)"],
             print: ["Print", "Drucken"],
             downloadImage: ["Download as image", "Als Bild herunterladen"],
-            useThisQrCode: ["You can use this QR-code to bring your current settings onto your pupil's devices.",
-                "Durch diesen QR-Code könenn Sie die momentanen Einstellungen zu den Geräten Ihrer Schüler bringen."],
-            firstPrintQrCode: ["1. Print the QR-code", "1. Drucken Sie den QR-code"],
-            sndScanByPupilsFirstPart: ["2. Let your pupils scan it with the", "2. Lassen Sie ihn von Ihren Schülern mit dem"],
-            sndScanByPupilsSndPart: ["-button in the TUCA-App.", "-Button in der TUCA-App scannen."]
+            useThisQrCodeFirstPart: ["You can use this QR-code to transfer your current settings on your pupil's devices. For that, print it and let it being scanned by your pupils with the",
+                "Sie können mit diesem QR-Code Ihre momentanen Einstellungen zu den Geräten Ihrer Schüler transferieren. Drucken Sie ihn dafür aus und lassen Sie ihn von Ihren Schülern mit dem "],
+            useThisQrCodeSecondPart: ["-Button in the TUCA-App.", "-Button in der TUCA-App scannen."]
         },
         scan: {
             scanQrCode: ["QR-code", "QR-code"]

@@ -64,7 +64,7 @@
         <img src="resources/images/icons/tuca.png" type="image/svg+xml" />
     </div>
     <div class="sk-cube-grid">
-        <img src="https://i.gifer.com/YCZH.gif" />
+        <img src="resources/images/icons/loader.gif" />
     </div>
 </div>
 
@@ -254,15 +254,25 @@
                     //speech bubble message : "hello There"
                     setTimeout(function(){
                         speechBubbleText.textContent = strings.speechbubbleTexts.helloThere[lang];
+                            if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
+                               pd.visual.speakBot(strings.speechbubbleTexts.helloThere[lang]);
+                            }
+
+                        //check if TUCA bird is enabled
                         if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
                             document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.helloThere[lang];
+                            if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
+                               pd.visual.speakBot(strings.speechbubbleTexts.helloThere[lang]);
+                            }
                         }
-                    }, 1000);
+                    }, 500);
                     //detect user if active again => onmouse move it says welcome back and the bird animaltion starts
                     document.onmousemove = function(){
                         //if(speech bubble message : "hello There ? ") => display "welcome back"
                         if(speechBubbleText.textContent === strings.speechbubbleTexts.helloThere[lang]){
-                            setTimeout(function(){speechBubbleText.textContent = strings.speechbubbleTexts.welcomeBack[lang]; }, 500);
+                            setTimeout(function(){
+                              speechBubbleText.textContent = strings.speechbubbleTexts.welcomeBack[lang];
+                            }, 2000);
                             if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
                                 document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.welcomeBack[lang];
                             }
@@ -270,28 +280,26 @@
                         //start bird animation
                         setTimeout(function(){
                             document.getElementById('birdContainer').classList.add("anim");
-                        }, 1000);
+                        }, 2000);
                     };
+
+
+
                     //at the end remove the bird animation
                     setTimeout(function(){
                         document.getElementById('birdContainer').classList.remove("anim");
                     }, 10000);
                 }
                 //if autohinting enabled continue with autoHint() function
-                if(SettingsSingleton.getInstance().getSettings().general.enableAutoHinting){
-                    //wakeup user with bird sound
-                    if (SettingsSingleton.getInstance().getSettings().general.enableAudio){
-                        let audio = new Audio('resources/audio/pingPong.mp3');
-                        audio.play();
-                    }
+                if(SettingsSingleton.getInstance().getSettings().autohinting.enableAutoHinting){
                     autoHint();
                 }
-                //else if autohinting disabled => display "Continue with the game"
+                //else if autohinting disabled
                 else{
                     setTimeout(function(){
-                        speechBubbleText.textContent = strings.speechbubbleTexts.pleaseContinue[lang];
+                        speechBubbleText.textContent = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getHint().getPossibleSolutions().length;
                         if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-                            document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.pleaseContinue[lang];
+                            document.getElementById("labelNumberSolutions").innerText = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getHint().getPossibleSolutions().length;
                         }
                     }, 5000);
                 }
@@ -317,7 +325,7 @@
         switch(userInactiveWaitTime) {
             case "Short":
                 // code block
-                time = 10;
+                time = 30;
                 break;
             case "Medium":
                 // code block
@@ -347,12 +355,12 @@
             if(!(SettingsSingleton.getInstance().getSettings().autohinting.enableTimePeriodBasedAutoHintInAnyCase)){
                 if((pd.visual.numberofPlacedPentominos() > (pd.visual.pieces.length/2))){
                     setTimeout(function(){
-                        speechBubbleText.textContent = strings.speechbubbleTexts.pleaseContinue[lang];
+                        speechBubbleText.textContent = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getHint().getPossibleSolutions().length;
                         if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-                            document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.pleaseContinue[lang];
+                            document.getElementById("labelNumberSolutions").innerText = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getHint().getPossibleSolutions().length;
                         }
                     }, 5000);
-                    pd.visual.numberofPlacedPentominos();
+                    //pd.visual.numberofPlacedPentominos();
                     return;
                 }
             }
@@ -360,12 +368,16 @@
             //in case if the time period is not selected  , the message "Please continue with the game" appears
             if(!(SettingsSingleton.getInstance().getSettings().autohinting.autoHintVariants === "Time period")){
                 setTimeout(function(){
-                    speechBubbleText.textContent = strings.speechbubbleTexts.pleaseContinue[lang];
+                    speechBubbleText.textContent = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getHint().getPossibleSolutions().length;
                     if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-                        document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.pleaseContinue[lang];
+                        document.getElementById("labelNumberSolutions").innerText = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getHint().getPossibleSolutions().length;
                     }
                 }, 2500);
                 return;
+            }
+            //speak: i have a hint
+            if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
+               this.speakBot(strings.speechbubbleTexts.iHaveAHint[lang]);
             }
             pd.visual.configureAutoHints();
         }
@@ -471,8 +483,9 @@
 
             let parent = modal;
 
-            let heading = document.createElement("h4");
+            let heading = document.createElement("h3");
             heading.innerHTML = strings.qrCode.scanOrShare[lang];
+            heading.style.textAlign = "center";
             parent.appendChild(heading);
 
             // Add scan / share buttons
@@ -531,28 +544,21 @@
             parent.appendChild(qrCodeElement);
 
             parent.appendChild(document.createElement("br"));
-            parent.appendChild(document.createTextNode(strings.qrCode.share.useThisQrCode[lang]));
+            parent.appendChild(document.createTextNode(strings.qrCode.share.useThisQrCodeFirstPart[lang]));
+            let qrButtonImg = document.createElement("img");
 
+            qrButtonImg.src = "resources/images/icons/qr-code.png";
+            qrButtonImg.style.width = "2vw";
+            qrButtonImg.style.height = "2vw";
+            parent.appendChild(qrButtonImg);
+            parent.appendChild(document.createTextNode(strings.qrCode.share.useThisQrCodeSecondPart[lang] + " "));
             parent.appendChild(document.createElement("br"));
-            parent.appendChild(document.createTextNode(strings.qrCode.share.firstPrintQrCode[lang] + ": "));
 
             let printButton = createPrintButton(qrCodeElement);
             parent.appendChild(printButton);
             parent.appendChild(document.createTextNode(" " + strings.general.or[lang] + " "));
             let downloadImageButton = createDownloadImageLink();
             parent.appendChild(downloadImageButton);
-
-            parent.appendChild(document.createElement("br"));
-
-            let qrButtonImg = document.createElement("img");
-            qrButtonImg.src = "resources/images/icons/qr-code.png";
-            qrButtonImg.style.width = "2vw";
-            qrButtonImg.style.height = "2vw";
-
-            parent.appendChild(document.createTextNode(strings.qrCode.share.sndScanByPupilsFirstPart[lang] + " "));
-            parent.appendChild(qrButtonImg);
-            parent.appendChild(document.createTextNode(strings.qrCode.share.sndScanByPupilsSndPart[lang]));
-            parent.appendChild(document.createElement("br"));
 
             let collapsibleButton = SettingsForm.createCollapsibleButton(
                 strings.settings.advanced.show[lang],
@@ -603,39 +609,54 @@
                 [strings.qrCode.share.pupilMode[lang], strings.qrCode.share.teachersMode[lang]]);
 
             teacherModeCheckbox.onchange = () => {
-                let settings = SettingsSingleton.getInstance().getSettings();
-                let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), settings);
-                insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
-                let exportSeed = seed.substr(1, seed.length - 1);
-                exportSeed = (teacherModeCheckbox.value === "shareWithTeachers" ? 1 : 2) + exportSeed;
-
-                updateShareOptions(qrCodeElement, urlElement, downloadImageButton, exportSeed);
+                handleClickedOnTeacherModeCheckbox(teacherModeCheckbox, qrCodeElement, urlElement, downloadImageButton);
             };
+            handleClickedOnTeacherModeCheckbox(teacherModeCheckbox, qrCodeElement, urlElement, downloadImageButton);
 
             let includePiecesCheckbox = SettingsForm.createInputElement("checkbox", "includePiecesCheckBox");
             includePiecesCheckbox.onchange = () => {
-                let checkboxValue = includePiecesCheckbox.checked;
-                let settings = SettingsSingleton.getInstance().getSettings();
-                settings.boardCustomization.includePiecePos = checkboxValue;
-
-                let game = new FrontController().controller.game();
-                let customSettingsEntry = CustomSettingsEntrySingleton.getInstance()
-                    .get("boardCustomization", "initialPiecePos");
-                let piecePosSeedEntry = customSettingsEntry.parseFromGameToSeed(game);
-                settings.boardCustomization.initialPiecePos = piecePosSeedEntry;
-
-                let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), settings);
-                insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
-                let exportSeed = seed.substr(1, seed.length - 1);
-                exportSeed = (teacherModeCheckbox.value === "shareWithTeachers" ? 1 : 2) + exportSeed;
-
-                updateShareOptions(qrCodeElement, urlElement, downloadImageButton, exportSeed);
+                handleClickedOnIncludePiecesCheckbox(includePiecesCheckbox, teacherModeCheckbox,
+                    qrCodeElement, urlElement, downloadImageButton);
             };
+            includePiecesCheckbox.checked = SettingsSingleton.getInstance().getSettings().boardCustomization.includePiecePos;
+            handleClickedOnIncludePiecesCheckbox(includePiecesCheckbox, teacherModeCheckbox,
+                qrCodeElement, urlElement, downloadImageButton);
 
             advOptionsRoot.appendChild(includePiecesCheckbox);
             advOptionsRoot.appendChild(teacherModeCheckbox);
 
             advOptionsRoot.appendChild(document.createElement("br"));
+        }
+
+        function handleClickedOnTeacherModeCheckbox(teacherModeCheckbox,
+                                                    qrCodeElement, urlElement, downloadImageButton) {
+            let settings = SettingsSingleton.getInstance().getSettings();
+            let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), settings);
+            insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
+            let exportSeed = seed.substr(1, seed.length - 1);
+            exportSeed = (teacherModeCheckbox.value === "shareWithTeachers" ? 1 : 2) + exportSeed;
+
+            updateShareOptions(qrCodeElement, urlElement, downloadImageButton, exportSeed);
+        }
+
+        function handleClickedOnIncludePiecesCheckbox(includePiecesCheckbox, teacherModeCheckbox,
+              qrCodeElement, urlElement, downloadImageButton) {
+            let checkboxValue = includePiecesCheckbox.checked;
+            let settings = SettingsSingleton.getInstance().getSettings();
+            settings.boardCustomization.includePiecePos = checkboxValue;
+
+            let game = new FrontController().controller.game();
+            let customSettingsEntry = CustomSettingsEntrySingleton.getInstance()
+                .get("boardCustomization", "initialPiecePos");
+            let piecePosSeedEntry = customSettingsEntry.parseFromGameToSeed(game);
+            settings.boardCustomization.initialPiecePos = piecePosSeedEntry;
+
+            let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), settings);
+            insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
+            let exportSeed = seed.substr(1, seed.length - 1);
+            exportSeed = (teacherModeCheckbox.value === "shareWithTeachers" ? 1 : 2) + exportSeed;
+
+            updateShareOptions(qrCodeElement, urlElement, downloadImageButton, exportSeed);
         }
 
         function updateShareOptions(qrCodeElement, urlElement, downloadImageButton, seed) {
@@ -738,6 +759,7 @@
                 let success = onQrCodeScanned(result);
                 if (success) {
                     qrScanner.stop();
+                    this.reactionScreenOnScanned();
                     this.closeModal();
                 }
             });
@@ -844,6 +866,52 @@
             return true;
         }
 
+        function reactionScreenOnScanned(){
+            let modal = document.getElementById('modalTop');
+            if ($(modal).is(':visible')) {
+                this.closeModal();
+            }
+
+            this.hideBubbleContainer();
+            this.disableSnapshotButton();
+            this.hideManipulationButtons();
+            this.closeBoardSelector();
+            this.disablePointerEventsOnPieces();
+            modal.style.display = "block";
+            modal.style.background = "transparent";
+
+            document.querySelector(".modalFormContent").style.display = "block";
+            document.querySelector(".innerGrid").style.display = "none";
+            document.querySelector(".modalFullframeContainer").style.display = "none";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent("#innerGridForm");
+            template.clearContent("#filterGrid");
+
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
+            let textNode = {
+                class: "modalText",
+                text: strings.general.qrCodeScanned[lang]
+            };
+            template.attachText("#modalTitleID", textNode);
+
+            let okBtn = {
+                class: "deleteBtn",
+                onclick: "closeModalContainer()",
+                textContent: strings.general.ok[lang]
+            };
+
+            template.attachBtn("#modalButtonsID", okBtn);
+
+            let okButton = document.querySelector(".okBtn");
+            okButton.addEventListener("click", () => {
+                this.closeModal();
+            });
+            $("#bubbleContainer").css("display", "block");
+        }
+
         function resetGame() {
             var modal = document.getElementById('modalTop');
             if ($(modal).is(':visible')) {
@@ -925,10 +993,10 @@
                 } else {
                     console.log("Game is already solved");
                     pd.visual.unblockPartition();
-                }               
+                }
             } else {
                 splitButton.classList.remove("splitbuttonimg");
-                pd.visual.undoSplit();                
+                pd.visual.undoSplit();
             }
 
         }
@@ -1028,7 +1096,6 @@
                     document.getElementById("speechBubbleText").textContent = strings.numberOfPossibleSolutions[lang] + ': ?';
                 } else if (heading === "hinting" && key === "enableHinting") {
                     let hintingEnabled = settings[heading][key];
-                    console.log(document.getElementById("hintButton").style.display);
                     document.getElementById("hintButton").style.display = hintingEnabled ? "" : "none";
                 } else if (heading === "hinting" && key === "showNumberOfPossibleSolutions") {
                     let showNumberOfPossibleSolutions = settings[heading][key];
@@ -1128,7 +1195,7 @@
             // Ipad has a ratio of of approx. 1.4 - hence scale settings smaller for wider stuff than 1,5
             let isChrome = !!window.chrome;
             if (((window.innerWidth / window.innerHeight) > 1.4)) {
-                
+
                 //excludes other browsers from adaption
                 if (isChrome) {
                     document.getElementById('modalFullframeContainerID').style.zoom = (1.4 / (window.innerWidth / window.innerHeight));
@@ -1136,7 +1203,7 @@
                     $('.formButton').css('bottom',(11 * (1 / (1.4 / (window.innerWidth / window.innerHeight))) + 'vw'));
                 }
 
-                
+
             } else {
 
                 if (isChrome) {
@@ -1538,29 +1605,37 @@
             pd.visual.saveGameImage(SnapshotType.Auto);
             let currGmKey = pd.visual.getCurrentGameKey();
             let gameIds = pd.visual.getAllGameIds();
-            if (gameIds.length == 1 && pd.getGameState('start') == undefined) {
+            if (pd.getGameState('start') == undefined) {
                 return;
 
             }
-
             let currGameId = pd.visual.getCurrentGameId();
             let images = pd.visual.getImagesByGameId(currGameId);
             let imageType = undefined;
-            images.forEach((item) => {
-                let imgKey = Object.keys(item)[0];
-                let image = item[imgKey];
-                let currImgType = parseInt(image.getAttribute('type'));
-                if (currImgType == SnapshotType.Original) {
-                    imageType = currImgType;
-                }
-            });
-
-            if (imageType == undefined) {
-                return;
+            let currImgType = undefined;
+            if (images != undefined) {
+                images.forEach((item) => {
+                    let imgKey = Object.keys(item)[0];
+                    let image = item[imgKey];
+                    currImgType = parseInt(image.getAttribute('type'));
+                    if (currImgType == SnapshotType.Original) {
+                        imageType = currImgType;
+                    }
+                });
             }
+            if (imageType == undefined) {
+                gameIds.forEach(element => {
+                    if (element == currGameId){
+                        gameIds.splice(gameIds.indexOf(currGameId), 1);
+                        return;
+                    }
+                });
+            }
+
             gameIds.reverse().forEach((gameId) => {
                 let img = pd.visual.getLastGameimage(gameId);
-                if (img == undefined) {
+                let images = pd.visual.getImagesByGameId(gameId);
+                if (img == undefined || images.length == 0) {
                     return;
                 }
 

@@ -90,12 +90,6 @@ class SettingsSchema {
                         "default": "Easy",
                         "pupilModeVisibleOnDefault": false
                     },
-                    enableAutoHinting:{
-                      "type": "boolean",
-                      "title": titles.autohinting.enableAutoHinting.title[lang],
-                      "default": false,
-                      "pupilModeVisibleOnDefault": true
-                    },
                     initiateActionsIfUserNotActive:{
                       "type": "boolean",
                       "title": titles.autohinting.initiateActionsIfUserNotActive.title[lang],
@@ -125,14 +119,17 @@ class SettingsSchema {
                 "title": titles.boardCustomization.title[lang],
                 "advanced": false,
                 "pupilModeVisibleOnDefault": false,
+                "visible": false,
                 "properties": {
                     initialPiecePos: {
+                        "visible": false,
                         "type": "custom",
                         "title": titles.boardCustomization.initialPiecePos.title[lang],
                         "description": titles.boardCustomization.initialPiecePos.description[lang],
                         "default": boardCustomizationDefault
                     },
                     includePiecePos: {
+                        "visible": false,
                         "type": "boolean",
                         "title": titles.boardCustomization.includePiecePos.title[lang],
                         "description": titles.boardCustomization.includePiecePos.description[lang],
@@ -140,26 +137,18 @@ class SettingsSchema {
                     }
                 }
             },
-            showSolvedBoardScreen: {
+            speech: {
                 "type": "object",
-                "title": titles.showSolvedBoardScreen.title[lang],
+                "title": titles.speech.title[lang],
                 "pupilModeVisibleOnDefault": false,
-                "advanced": false,
+                "advanced": true,
                 "properties": {
-                    enableSolvedScreen: {
-                        "type": "boolean",
-                        "title": titles.showSolvedBoardScreen.enableSolvedScreen.title[lang],
-                        "description": titles.showSolvedBoardScreen.enableSolvedScreen.description[lang],
-                        "default": true
-                    },
-                    SolvedScreens: {
-                        "type": "string",
-                        "title": titles.showSolvedBoardScreen.SolvedScreens.title[lang],
-                        "description": titles.showSolvedBoardScreen.SolvedScreens.description[lang],
-                        "enum": ["Play again?", "Well done! Please wait for your Teacher to continue", "Excellent ! Now continue with the next task on your assignment"],
-                        "enumText": titles.showSolvedBoardScreen.SolvedScreens.enumTitles[lang],
-                        "default": "Play again?"
-                    }
+                  enableSpeech:{
+                    "type": "boolean",
+                    "title": titles.speech.enableSpeech.title[lang],
+                    "description": titles.speech.enableSpeech.description[lang],
+                    "default": false
+                  }
                 }
             },
             autohinting: {
@@ -168,6 +157,11 @@ class SettingsSchema {
                 "pupilModeVisibleOnDefault": false,
                 "advanced": true,
                 "properties": {
+                  enableAutoHinting:{
+                    "type": "boolean",
+                    "title": titles.autohinting.enableAutoHinting.title[lang],
+                    "default": false
+                  },
                   autoHintVariants:{
                     "type": "string",
                     "title": titles.autohinting.autoHintVariants.title[lang],
@@ -228,6 +222,14 @@ class SettingsSchema {
                 "pupilModeVisibleOnDefault": false,
                 "advanced": true,
                 "properties": {
+                  typeOfHints:{
+                    "type": "string",
+                    "title": titles.hinting.typeOfHints.title[lang],
+                    "enum": ["Visual","Visual and textual"],
+                    "enumText": titles.hinting.typeOfHints.enumTitles[lang],
+                    "description": titles.hinting.typeOfHints.description[lang],
+                    "default": "Visual"
+                  },
                     showNumberOfPossibleSolutions: {
                         "type": "boolean",
                         "title": titles.hinting.showNumberOfPossibleSolutions.title[lang],
@@ -240,13 +242,13 @@ class SettingsSchema {
                         "description": titles.hinting.enableHinting.description[lang],
                         "default": true
                     },
-                    typeOfHints:{
-                      "type": "string",
-                      "title": titles.hinting.typeOfHints.title[lang],
-                      "enum": ["Visual", "Textual", "Both"],
-                      "enumText": titles.hinting.typeOfHints.enumTitles[lang],
-                      "description": titles.hinting.typeOfHints.description[lang],
-                      "default": "Visual"
+                    hintingVariants: {
+                        "type": "string",
+                        "title": titles.hinting.hintingVariants.title[lang],
+                        "description": titles.hinting.hintingVariants.description[lang],
+                        "enum": ["Show pentominoes", "Show destination", "Show both"],
+                        "enumText": titles.hinting.hintingVariants.enumTitles[lang],
+                        "default": "Show both"
                     },
                     hintingStrategy: {
                         "type": "string",
@@ -285,14 +287,6 @@ class SettingsSchema {
                         "title": titles.hinting.exactHints.title[lang],
                         "description": titles.hinting.exactHints.description[lang],
                         "default": false
-                    },
-                    hintingVariants: {
-                        "type": "string",
-                        "title": titles.hinting.hintingVariants.title[lang],
-                        "description": titles.hinting.hintingVariants.description[lang],
-                        "enum": ["Show pentominoes", "Show destination", "Show both"],
-                        "enumText": titles.hinting.hintingVariants.enumTitles[lang],
-                        "default": "Show both"
                     }
                 }
             },
@@ -300,7 +294,6 @@ class SettingsSchema {
                 "type": "object",
                 "advanced": true,
                 "title": titles.prefilling.title[lang],
-                "visible": false,
                 "pupilModeVisibleOnDefault": false,
                 "properties": {
                     fixPieces : {

@@ -4,30 +4,19 @@
 
 
 .preloader {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 99999;
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: center;
-    align-items: center;
-    background-color: #fff;
-    display: flex;
-
-    position: fixed;
+ position: fixed;
  left: 0;
  top: 0;
  width: 100%;
  height: 100%;
  margin: 0;
  padding: 0;
- z-index = 99999;
+ z-index: 99999;
  text-align: center;
  display: flex;
+ background-color: #fff;
  align-items: center;
+ flex-flow: row nowrap;
  justify-content: center;
 }
 
@@ -38,7 +27,8 @@
     background-size: 60%;
     width: 100%;
     height: 100%;
-    margin-bottom: 50px;
+    margin-bottom: 9vh;
+    margin-right: 5vh;
 }
 
 .tuca img {

@@ -51,7 +51,8 @@ class SettingsForm {
         for (let heading in schema) {
             let subSettings = schema[heading].properties;
 
-            let headingIsVisible = settings.teachersMode || settings.visibility.isVisible(heading);
+            let headingIsVisible = (settings.teachersMode || settings.visibility.isVisible(heading))
+                && !(schema[heading].visible === false);
 
             if (headingIsVisible && creatingNormalSettings && schema[heading].advanced) {
                 creatingNormalSettings = false;
@@ -83,7 +84,8 @@ class SettingsForm {
                     settingsEntry.enumText = settingsEntry._enumText[strat];
                 }
 
-                let elementIsVisible = settings.teachersMode || settings.visibility.isVisible(heading, key);
+                let elementIsVisible = (settings.teachersMode || settings.visibility.isVisible(heading, key))
+                    && !(schema[heading].properties[key].visible === false);
 
                 let div = document.createElement("div");
                 div.style.display = elementIsVisible ? "block" : "none";
@@ -186,7 +188,7 @@ class SettingsForm {
             let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
             let enumTexts = strings.settings.prefilling.distanceValue.enumTitles[evt.target.value];
             let enumElements = schema.prefilling.properties.distanceValue.enum;
-            
+
             //Remove the existing elements in the lsit
             for(let i = distValSelectElem.options.length -1; i >= 0; --i) {
                 distValSelectElem.remove(i);
@@ -207,38 +209,38 @@ class SettingsForm {
             let selectedOption = select.options[select.selectedIndex];
             let value = selectedOption.getAttribute('value');
             switch (value) {
-                case "Easy":
-                    //activate full hint
-                              $('select[name="hinting.hintingStrategy"]').find('option[value="full"]').attr("selected", true);
-                   //check exact hints
-                    $("input[name='hinting.exactHints']").prop('checked', true);
-                              //uncheck partial hinting
-                              $("input[name='teachers.hinting.partialHintingStragety']").prop('checked', false);
-                    //enable prefilling
-                    $("input[name='prefilling.enablePrefilling']").prop('checked', true);
-                              //check hintingVariants
-                              $("input[name='teachers.hinting.hintingVariants']").prop('checked', true);
-                              //enable both hinting hintingVariants
-                              $("input[name='hinting.hintingVariants']").find('option[value="Show both"]').attr("selected", true);
-                              break;
-                          case "Medium":
-                              //activate area hint
-                              $('select[name="hinting.hintingStrategy"]').find('option[value="area"]').attr("selected", true);
-                              //uncheck exact hints
-                              $("input[name='hinting.exactHints']").prop('checked', false);
-                              break;
-                          case "Difficult":
-                              //activate partial hint
-                              $('select[name="hinting.hintingStrategy"]').find('option[value="partial"]').attr("selected", true);
-                              //disable prefilling
-                              $("input[name='prefilling.enablePrefilling']").prop('checked', false);
-                              //uncheck exact hints
-                              $("input[name='hinting.exactHints']").prop('checked', false);
-                              //check partial hinting strategy
-                              $("input[name='teachers.hinting.partialHintingStragety']").prop('checked', true);
-                    break;
-                case "Custom":
-                    break;
+                  case "Easy":
+                      //activate full hint
+                      $('select[name="hinting.hintingStrategy"]').find('option[value="full"]').attr("selected", true);
+                      //check exact hints
+                      $("input[name='hinting.exactHints']").prop('checked', true);
+                      //uncheck partial hinting
+                      $("input[name='teachers.hinting.partialHintingStragety']").prop('checked', false);
+                      //enable prefilling
+                      $("input[name='prefilling.enablePrefilling']").prop('checked', true);
+                      //check hintingVariants
+                      $("input[name='teachers.hinting.hintingVariants']").prop('checked', true);
+                      //enable both hinting hintingVariants
+                      $("input[name='hinting.hintingVariants']").find('option[value="Show both"]').attr("selected", true);
+                      break;
+                  case "Medium":
+                      //activate area hint
+                      $('select[name="hinting.hintingStrategy"]').find('option[value="area"]').attr("selected", true);
+                      //uncheck exact hints
+                      $("input[name='hinting.exactHints']").prop('checked', false);
+                      break;
+                  case "Difficult":
+                      //activate partial hint
+                      $('select[name="hinting.hintingStrategy"]').find('option[value="partial"]').attr("selected", true);
+                      //disable prefilling
+                      $("input[name='prefilling.enablePrefilling']").prop('checked', false);
+                      //uncheck exact hints
+                      $("input[name='hinting.exactHints']").prop('checked', false);
+                      //check partial hinting strategy
+                      $("input[name='teachers.hinting.partialHintingStragety']").prop('checked', true);
+                      break;
+                  case "Custom": return;
+                       break;
                 default:
                     console.log("Level unknown");
             }
@@ -272,18 +274,26 @@ class SettingsForm {
 
         for (let heading in schema) {
             let subSettings = schema[heading].properties;
+            let headingIsVisible = !(schema[heading].visible === false);
 
-            useInClassElement.appendChild(SettingsForm.createHeader("h4", schema[heading].title));
+            if (headingIsVisible) {
+                useInClassElement.appendChild(SettingsForm.createHeader("h4", schema[heading].title));
+            }
 
             for (let key in subSettings) {
                 let elementName = heading + "." + key;
 
                 let settingsEntry = subSettings[key];
+                let elementIsVisible = !(subSettings[key].visible === false);
 
                 let checkBoxElement = SettingsForm.createInputElement("checkbox", "teachers." + elementName);
+                checkBoxElement.style.display = elementIsVisible ? "" : "none";
                 useInClassElement.appendChild(checkBoxElement);
-                useInClassElement.appendChild(SettingsForm.createLabel(settingsEntry.title, { for: checkBoxElement.id }));
-                useInClassElement.appendChild(document.createElement("br"));
+
+                if (elementIsVisible) {
+                    useInClassElement.appendChild(SettingsForm.createLabel(settingsEntry.title, { for: checkBoxElement.id }));
+                    useInClassElement.appendChild(document.createElement("br"));
+                }
             }
         }
 
