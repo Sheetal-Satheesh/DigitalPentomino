@@ -440,7 +440,7 @@
             } else if (SettingsSingleton.getInstance().getSettings().teachersMode) {
                 // teacher has the choice between share and scan
                 openImportOrExportDialog();
-                this.disablePointerEventsOnPieces();
+                UtilitiesClass.disablePointerEventsOnModalOpen();
                 this.hideManipulationButtons();
                 if ($('#birdContainer').is(':visible')) {
                     this.hideBubbleContainer();
@@ -448,7 +448,7 @@
             } else {
                 // pupils can only scan
                 openScanQrCode();
-                this.disablePointerEventsOnPieces();
+                UtilitiesClass.disablePointerEventsOnModalOpen();
                 this.hideManipulationButtons();
                 if ($('#birdContainer').is(':visible')) {
                     this.hideBubbleContainer();
@@ -475,7 +475,7 @@
             //hide back button for main settings menu
             document.getElementById("backButton").style.display = "none";
 
-            this.disablePointerEventsOnPieces();
+            UtilitiesClass.disablePointerEventsOnModalOpen();
             this.hideManipulationButtons();
             this.hideBubbleContainer();
 
@@ -505,7 +505,7 @@
             this.disableSnapshotButton();
             this.hideManipulationButtons();
             this.closeBoardSelector();
-            this.disablePointerEventsOnPieces();
+            UtilitiesClass.disablePointerEventsOnModalOpen();
             modal.style.display = "block";
             modal.style.background = "transparent";
 
@@ -922,7 +922,7 @@
                 this.disableSnapshotButton();
                 this.hideManipulationButtons();
                 this.closeBoardSelector();
-                this.disablePointerEventsOnPieces();
+                UtilitiesClass.disablePointerEventsOnModalOpen();
                 modal.style.display = "block";
                 modal.style.background = "transparent";
 
@@ -1043,7 +1043,7 @@
                 boardSelectorPopup.style.display = "block";
                 this.hideManipulationButtons();
                 this.closeSettings();
-                this.disablePointerEventsOnPieces();
+                UtilitiesClass.disablePointerEventsOnModalOpen();
                 this.disableSnapshotButton();
                 this.hideBubbleContainer();
             }
@@ -1145,7 +1145,7 @@
                 this.closeModal();
             } else {
                 openSettings();
-                this.disablePointerEventsOnPieces();
+                UtilitiesClass.disablePointerEventsOnModalOpen();
                 this.hideManipulationButtons();
                 this.hideBubbleContainer();
             }
@@ -1218,7 +1218,7 @@
         function handleClickedOnLicenses(settings) {
             this.hideManipulationButtons();
             this.closeBoardSelector();
-            this.disablePointerEventsOnPieces();
+            UtilitiesClass.disablePointerEventsOnModalOpen();
             var modal = document.getElementById('modalTop');
             let modalFormContent = document.getElementsByClassName('modalFormContent');
             modal.style.display = "block";
@@ -1375,23 +1375,10 @@
             modal.appendChild(div5);
         }
 
-        let piecesIdArray = ['piece_X', 'piece_Y', 'piece_F', 'piece_I', 'piece_L', 'piece_N', 'piece_P', 'piece_T', 'piece_U', 'piece_V', 'piece_W', 'piece_Z'];
-        function disablePointerEventsOnPieces() {
-            piecesIdArray.forEach(function (piece) {
-                document.getElementById(piece).style.pointerEvents = "none";
-            });
-        }
-
-        function enablePointerEventsOnPiece() {
-            piecesIdArray.forEach(function (piece) {
-                document.getElementById(piece).style.pointerEvents = "auto";
-            });
-        }
-
         function closeModalContainer() {
             document.getElementById('modalTop').style.display = "none";
             document.getElementById('backButton').style.display = "none";
-            this.enablePointerEventsOnPiece();
+            UtilitiesClass.enablePointerEventsOnModalClose();
         }
 
         function closeSettings() {
@@ -1402,7 +1389,7 @@
 
         function closeBoardSelector() {
             document.getElementById('boardmodalTop').style.display = "none";
-            this.enablePointerEventsOnPiece();
+            UtilitiesClass.enablePointerEventsOnModalClose();
         }
 
         function selectSeeding() {
@@ -1587,7 +1574,7 @@
         function showGameImages() {
             var modal = document.getElementById('modalTop');
             this.disableSnapshotButton();
-            this.disablePointerEventsOnPieces();
+            UtilitiesClass.disablePointerEventsOnModalOpen();
             this.hideManipulationButtons();
             modal.style.background = " lightgrey";
             modal.style.display = "block";
@@ -1733,6 +1720,7 @@
 
             this.disableSnapshotButton();
             //this.disablePointerEventsOnPieces();//TODO: Fix this
+            UtilitiesClass.disablePointerEventsOnModalOpen();
             this.hideManipulationButtons();
             pd.visual.saveGameImage(SnapshotType.Auto);
 

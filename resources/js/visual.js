@@ -2292,7 +2292,7 @@ callSplitBoardViaColor() {
             let replayId = document.getElementById("replay");
             let replayImg = replayId.children[0];
             replayImg.setAttribute('src', 'resources/images/icons/replay.svg');
-            that.enablePointerEventsOnPieces();
+            // that.enablePointerEventsOnPieces();
         };
         setTimeout(pause, timeInterval, this);
 
