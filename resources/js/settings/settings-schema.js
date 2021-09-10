@@ -167,17 +167,16 @@ class SettingsSchema {
                   timebased:{
                     "type": "boolean",
                     "title": titles.autohinting.autoHintVariants.timebased.title[lang],
-                    "description": titles.autohinting.autoHintVariants.timebased.description[lang],
                     "default": true
                   },
-
-                  wrongMoves:{
-                    "type": "boolean",
-                    "title": titles.autohinting.autoHintVariants.wrongMoves.title[lang],
-                    "description": titles.autohinting.autoHintVariants.wrongMoves.description[lang],
-                    "default": false
+                  timeForNoAction: {
+                    "type": "string",
+                    "title": titles.autohinting.timeForNoAction.title[lang],
+                    "enum": ["Short", "Medium", "Long"],
+                    "enumText": titles.autohinting.timeForNoAction.enumTitles[lang],
+                    "description": titles.autohinting.timeForNoAction.description[lang],
+                    "default": "Short"
                   },
-
                   enableTimePeriodBasedAutoHintInAnyCase:{
                     "type": "boolean",
                     "title": titles.autohinting.enableTimePeriodBasedAutoHintInAnyCase.title[lang],
@@ -185,14 +184,11 @@ class SettingsSchema {
                     "default": true
                   },
 
-                  showOrHideButtonsForTextualHints:{
+                  wrongMoves:{
                     "type": "boolean",
-                    "title": titles.autohinting.showOrHideButtonsForTextualHints.title[lang],
-                    "description": titles.autohinting.showOrHideButtonsForTextualHints.description[lang],
-                    "default": true
+                    "title": titles.autohinting.autoHintVariants.wrongMoves.title[lang],
+                    "default": false
                   },
-
-
                   numberOfWrongMoves: {
                       "step": 1,
                       "type": "integer",
@@ -203,16 +199,6 @@ class SettingsSchema {
                       "exclusiveMinimum": false,
                       "maximum": 20
                   },
-
-                  timeForNoAction: {
-                    "type": "string",
-                    "title": titles.autohinting.timeForNoAction.title[lang],
-                    "enum": ["Short", "Medium", "Long"],
-                    "enumText": titles.autohinting.timeForNoAction.enumTitles[lang],
-                    "description": titles.autohinting.timeForNoAction.description[lang],
-                    "default": "Short"
-                  },
-
                   typeOfHints:{
                     "type": "string",
                     "title": titles.autohinting.typeOfHints.title[lang],
@@ -220,6 +206,12 @@ class SettingsSchema {
                     "enumText": titles.autohinting.typeOfHints.enumTitles[lang],
                     "description": titles.autohinting.typeOfHints.description[lang],
                     "default": "Visual"
+                  },
+                  showOrHideButtonsForTextualHints:{
+                    "type": "boolean",
+                    "title": titles.autohinting.showOrHideButtonsForTextualHints.title[lang],
+                    "description": titles.autohinting.showOrHideButtonsForTextualHints.description[lang],
+                    "default": true
                   }
                 }
             },
