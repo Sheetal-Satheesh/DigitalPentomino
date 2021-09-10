@@ -21,7 +21,6 @@
     <script src="resources/js/settings/settings-schema.js"></script>
     <script src="resources/js/settings/settings.js"></script>
     <script src="resources/js/settings/settings-parser.js"></script>
-    <script src="resources/js/settings/translator.js"></script>
     <script src="resources/js/settings/settings-form.js"></script>
     <script src="resources/js/settings/settings-visibility.js"></script>
     <script src="resources/js/settings/custom-settings-entry/custom-settings-entry.js"></script>
@@ -438,6 +437,9 @@
         function clickedOnScanQrCode() {
             let modal = document.getElementById('modalTop');
             if ($(modal).is(':visible')) {
+                $("#shareOrScan").remove();
+                $("#scanImgElement").remove();
+                $("#shareImgElement").remove();
                 this.closeModal();
             } else if (SettingsSingleton.getInstance().getSettings().teachersMode) {
                 // teacher has the choice between share and scan
@@ -481,19 +483,27 @@
             this.hideManipulationButtons();
             this.hideBubbleContainer();
 
+            $(".close").click(function () {
+                $("#shareOrScan").remove();
+                $("#scanImgElement").remove();
+                $("#shareImgElement").remove();
+            });
             let lang = SettingsSingleton.getInstance().getSettings().general.language;
 
             let parent = modal;
 
-            let heading = document.createElement("h3");
+            let heading = document.createElement("h1");
+            heading.id="shareOrScan";
             heading.innerHTML = strings.qrCode.scanOrShare[lang];
             heading.style.textAlign = "center";
             parent.appendChild(heading);
 
             // Add scan / share buttons
             let scanImgElement = SettingsForm.createImg("scanImg", "resources/images/icons/scan_qr_code.png");
+            scanImgElement.id = "scanImgElement";
             scanImgElement.onclick = () => openScanQrCode();
             let shareImgElement = SettingsForm.createImg("shareImg", "resources/images/icons/share_qr_code.png");
+            shareImgElement.id = "shareImgElement";
             shareImgElement.onclick = () => handleShareSettings();
 
             parent.appendChild(scanImgElement);
@@ -1251,7 +1261,7 @@
         }
 
         // called when license button is clicked in settings
-        function handleClickedOnLicenses(settings) {
+        function handleClickedOnLicenses() {
             this.hideManipulationButtons();
             this.closeBoardSelector();
             this.disablePointerEventsOnPieces();

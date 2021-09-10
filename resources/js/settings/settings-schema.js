@@ -1,12 +1,7 @@
-/** RULES
- *  - entries of type string only with enum specified
- *  - number entries only with minimum and maximum specified
- *  - Only depth of one supported
- *  - Numbers must contain an entry 'decimals', which specifies the number of decimals
- *  - Default attribute is mandatory
- *  - Texts of enums can be defined with the enumText attribute
+/**
+ * Singleton to access global {@link SettingsSchema}-object.
+ * @type {{getInstance: (function(): SettingsSchema)}}
  */
-
 const SettingsSchemaSingleton = (function () {
     let instance;
 
@@ -24,12 +19,30 @@ const SettingsSchemaSingleton = (function () {
     };
 })();
 
+/**
+ * Class which can be used to create a settings-schema-object, which is the schema for the app-settings.
+ * The class contains a getter to get the current settings-schema-object.
+ * A new settings-schema-object is created when the language changes.
+ * The default value is set in {@link baseConfigs}.
+ *
+ * Rules for declaring a settings schema entry:
+ *  - entries of type string only with enum specified
+ *  - number entries only with minimum and maximum specified
+ *  - Only depth of one supported
+ *  - Numbers must contain an entry 'decimals', which specifies the number of decimals
+ *  - Default attribute is mandatory
+ *  - Texts of enums can be defined with the enumText attribute
+ */
 class SettingsSchema {
     constructor() {
         this._language = baseConfigs.defaultLanguage;
         this._schema = this.createSchema();
     }
 
+    /**
+     * Returns the current settings schema or a new schema object if the language changed in the meantime.
+     * @returns {{general: {advanced: boolean, pupilModeVisibleOnDefault: boolean, type: string, title: string, properties: {initiateActionsIfUserNotActive: {default: boolean, pupilModeVisibleOnDefault: boolean, type: string, title: string}, hintingLevels: {default: string, description: string, pupilModeVisibleOnDefault: boolean, type: string, title: string, enumText: string[], enum: string[]}, language: {imgPaths: string[], default: string, type: string, title: string, enumText: string[], enum: string[]}, enableAudio: {default: boolean, pupilModeVisibleOnDefault: boolean, type: string, title: string}, enableBird: {default: boolean, pupilModeVisibleOnDefault: boolean, type: string, title: string}, enableBgMusic: {default: boolean, pupilModeVisibleOnDefault: boolean, type: string, title: string}}}, hinting: {advanced: boolean, pupilModeVisibleOnDefault: boolean, type: string, title: string, properties: {maxPartialHintingCells: {default: number, description: string, maximum: number, step: number, type: string, title: string, exclusiveMinimum: boolean, minimum: number}, showNumberOfPossibleSolutions: {default: boolean, description: string, type: string, title: string}, hintingVariants: {default: string, description: string, type: string, title: string, enumText: string[], enum: string[]}, partialHintingStragety: {default: string, description: string, type: string, title: string, enumText: string[], enum: string[]}, skillTeaching: {default: boolean, description: string, type: string, title: string}, typeOfHints: {default: string, description: string, type: string, title: string, enumText: string[], enum: string[]}, enableHinting: {default: boolean, description: string, type: string, title: string}, hintingStrategy: {default: string, description: string, type: string, title: string, enumText: string[], enum: string[]}, exactHints: {default: boolean, description: string, type: string, title: string}}}, prefilling: {advanced: boolean, pupilModeVisibleOnDefault: boolean, type: string, title: string, properties: {prefillingStrategy: {default: string, description: string, type: string, title: string, enumText: string[], enum: string[]}, distanceValue: {default: string, _enumText: {pieces: [[string], [string], [string], [string]], distance: [[string], [string], [string], [string]]}, type: string, title: string, enumText: [], enum: string[]}, fixPieces: {default: boolean, description: string, type: string, title: string}, enablePrefilling: {default: boolean, description: string, type: string, title: string}}}, speech: {advanced: boolean, pupilModeVisibleOnDefault: boolean, type: string, title: string, properties: {enableSpeech: {default: boolean, description: string, type: string, title: string}}}, splitPartition: {visible: boolean, advanced: boolean, pupilModeVisibleOnDefault: boolean, type: string, title: string, properties: {splitStrategy: {default: string, type: string, title: string, enumText: string[], enum: string[]}, fixPieces: {default: boolean, description: string, type: string, title: string}}}, autohinting: {advanced: boolean, pupilModeVisibleOnDefault: boolean, type: string, title: string, properties: {timeForNoAction: {default: string, description: string, type: string, title: string, enumText: string[], enum: string[]}, showOrHideButtonsForTextualHints: {default: boolean, description: string, type: string, title: string}, enableTimePeriodBasedAutoHintInAnyCase: {default: boolean, description: string, type: string, title: [string]|[string]}, typeOfHints: {default: string, description: string, type: string, title: string, enumText: string[], enum: string[]}, enableAutoHinting: {default: boolean, type: string, title: string}, autoHintVariants: {default: string, description: string, type: string, title: string, enumText: string[], enum: string[]}, numberOfWrongMoves: {default: number, description: string, maximum: number, step: number, type: string, title: string, exclusiveMinimum: boolean, minimum: number}}}, theming: {advanced: boolean, pupilModeVisibleOnDefault: boolean, type: string, title: string, properties: {theme: {default: string, description: string, type: string, title: string, enumText: string[], enum: string[]}}}, boardCustomization: {visible: boolean, advanced: boolean, pupilModeVisibleOnDefault: boolean, type: string, title: string, properties: {initialPiecePos: {default: *, visible: boolean, description: string, type: string, title: string}, includePiecePos: {default: boolean, visible: boolean, description: string, type: string, title: string}}}}}
+     */
     getSettingsSchema() {
         if(this._language == SettingsSingleton.getInstance().getSettings().general.language)
             return this._schema;
@@ -39,6 +52,10 @@ class SettingsSchema {
         }
     }
 
+    /**
+     * Creates a new settings-schema. **IMPORTANT** Not to be called from outside for efficiency reasons.
+     * @returns {{general: {advanced: boolean, pupilModeVisibleOnDefault: boolean, type: string, title: string, properties: {initiateActionsIfUserNotActive: {default: boolean, pupilModeVisibleOnDefault: boolean, type: string, title: string}, hintingLevels: {default: string, description: string, pupilModeVisibleOnDefault: boolean, type: string, title: string, enumText: string[], enum: string[]}, language: {imgPaths: string[], default: string, type: string, title: string, enumText: string[], enum: string[]}, enableAudio: {default: boolean, pupilModeVisibleOnDefault: boolean, type: string, title: string}, enableBird: {default: boolean, pupilModeVisibleOnDefault: boolean, type: string, title: string}, enableBgMusic: {default: boolean, pupilModeVisibleOnDefault: boolean, type: string, title: string}}}, hinting: {advanced: boolean, pupilModeVisibleOnDefault: boolean, type: string, title: string, properties: {maxPartialHintingCells: {default: number, description: string, maximum: number, step: number, type: string, title: string, exclusiveMinimum: boolean, minimum: number}, showNumberOfPossibleSolutions: {default: boolean, description: string, type: string, title: string}, hintingVariants: {default: string, description: string, type: string, title: string, enumText: string[], enum: string[]}, partialHintingStragety: {default: string, description: string, type: string, title: string, enumText: string[], enum: string[]}, skillTeaching: {default: boolean, description: string, type: string, title: string}, typeOfHints: {default: string, description: string, type: string, title: string, enumText: string[], enum: string[]}, enableHinting: {default: boolean, description: string, type: string, title: string}, hintingStrategy: {default: string, description: string, type: string, title: string, enumText: string[], enum: string[]}, exactHints: {default: boolean, description: string, type: string, title: string}}}, prefilling: {advanced: boolean, pupilModeVisibleOnDefault: boolean, type: string, title: string, properties: {prefillingStrategy: {default: string, description: string, type: string, title: string, enumText: string[], enum: string[]}, distanceValue: {default: string, _enumText: {pieces: [[string], [string], [string], [string]], distance: [[string], [string], [string], [string]]}, type: string, title: string, enumText: *[], enum: string[]}, fixPieces: {default: boolean, description: string, type: string, title: string}, enablePrefilling: {default: boolean, description: string, type: string, title: string}}}, speech: {advanced: boolean, pupilModeVisibleOnDefault: boolean, type: string, title: string, properties: {enableSpeech: {default: boolean, description: string, type: string, title: string}}}, splitPartition: {visible: boolean, advanced: boolean, pupilModeVisibleOnDefault: boolean, type: string, title: string, properties: {splitStrategy: {default: string, type: string, title: string, enumText: string[], enum: string[]}, fixPieces: {default: boolean, description: string, type: string, title: string}}}, autohinting: {advanced: boolean, pupilModeVisibleOnDefault: boolean, type: string, title: string, properties: {timeForNoAction: {default: string, description: string, type: string, title: string, enumText: string[], enum: string[]}, showOrHideButtonsForTextualHints: {default: boolean, description: string, type: string, title: string}, enableTimePeriodBasedAutoHintInAnyCase: {default: boolean, description: string, type: string, title: ([string]|[string])}, typeOfHints: {default: string, description: string, type: string, title: string, enumText: string[], enum: string[]}, enableAutoHinting: {default: boolean, type: string, title: string}, autoHintVariants: {default: string, description: string, type: string, title: string, enumText: string[], enum: string[]}, numberOfWrongMoves: {default: number, description: string, maximum: number, step: number, type: string, title: string, exclusiveMinimum: boolean, minimum: number}}}, theming: {advanced: boolean, pupilModeVisibleOnDefault: boolean, type: string, title: string, properties: {theme: {default: string, description: string, type: string, title: string, enumText: string[], enum: string[]}}}, boardCustomization: {visible: boolean, advanced: boolean, pupilModeVisibleOnDefault: boolean, type: string, title: string, properties: {initialPiecePos: {default: *, visible: boolean, description: string, type: string, title: string}, includePiecePos: {default: boolean, visible: boolean, description: string, type: string, title: string}}}}}
+     */
     createSchema() {
         let lang = this._language;
         let titles = strings.settings;
