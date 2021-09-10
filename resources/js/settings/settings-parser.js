@@ -1,3 +1,15 @@
+/**
+ * This utility class is used to parse the seed from the url/Qr-code to a Settings-object and back.
+ * The seed contains all information in the settings-object in one string.
+ * The settings-object contains all values of the game-settings in a plain two-level javascript-object.
+ *
+ * All parsing is based on the settings-schema defined in {@link SettingsSchema}.
+ *
+ * Central methods:
+ * - {@link SettingsParser#parseSettingsFromSeed} parses settings-object to seed string
+ * - {@link SettingsParser#parseSettingsToSeed} parses seed to settings-object
+ * - ({@link SettingsParser#createDefaultSettingsObject} generates empty settings object)
+ */
 class SettingsParser {
 
     // --- --- --- Seed To Settings --- --- ---
@@ -275,6 +287,11 @@ class SettingsParser {
     }
 
     // --- --- --- Create Empty Settings Object --- --- ---
+    /**
+     * Creates a new {@link Settings} object based on the default values in {@link SettingsSchema}.
+     * @param schema
+     * @returns {{}}
+     */
     static createDefaultSettingsObject(schema) {
         let settings = {};
         settings.visibility = new SettingsVisibility();
