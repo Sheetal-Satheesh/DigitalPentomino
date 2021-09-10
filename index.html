@@ -436,6 +436,9 @@
         function clickedOnScanQrCode() {
             let modal = document.getElementById('modalTop');
             if ($(modal).is(':visible')) {
+                $("#shareOrScan").remove();
+                $("#scanImgElement").remove();
+                $("#shareImgElement").remove();
                 this.closeModal();
             } else if (SettingsSingleton.getInstance().getSettings().teachersMode) {
                 // teacher has the choice between share and scan
@@ -478,6 +481,7 @@
             this.disablePointerEventsOnPieces();
             this.hideManipulationButtons();
             this.hideBubbleContainer();
+
             $(".close").click(function () {
                 $("#shareOrScan").remove();
                 $("#scanImgElement").remove();
