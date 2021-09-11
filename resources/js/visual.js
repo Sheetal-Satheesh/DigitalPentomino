@@ -1187,13 +1187,14 @@ class Visual {
             splitButton.classList.add("splitbuttonimg");
         }
     }
-callSplitBoardViaColor() {
-        let partitionedArray = pd.gameController.loadSplit();
+
+    callSplitBoardViaColor() {
+        let partitionedArray = pd.gameController.splitByColor();
         this.displaySplit(partitionedArray, alternateColor);
     }
 
     callSplitBoard_V2() {
-        let partitionedArray = pd.gameController.loadSplit_V2();
+        let partitionedArray = pd.gameController.splitFromLeftToRight();
         this.resize(partitionedArray, partitionedArray.length)
         let styleElement = document.querySelector('.boardarea');
         let styleValue = window.getComputedStyle(styleElement);

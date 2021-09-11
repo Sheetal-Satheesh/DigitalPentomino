@@ -16,7 +16,7 @@ class SplitBoard {
         this.count = 0;
     }
 
-    loadSplit() {
+    splitByColor() {
         let game = this._game;
         let possibleSolutions = this._getPossibleSolutions(game, this._solutions);        
         let closestSolution;
@@ -36,7 +36,7 @@ class SplitBoard {
         return partionedArray;
     }
 
-    loadSplit_V2() {
+    splitFromLeftToRight() {
         let game = this._game;
         let possibleSolutions = this._getPossibleSolutions(game, this._solutions);
         let closestSolution;  

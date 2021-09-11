@@ -278,7 +278,7 @@ class GameController {
     }
         
     //--- --- --- Split Board --- --- --
-    loadSplit() {
+    splitByColor() {
         if (this.game() === null) {
             throw new Error("Game is not set");
         }
@@ -287,11 +287,11 @@ class GameController {
             console.error(" not initialized");
         }
 
-        return this.splitBoard().loadSplit();
+        return this.splitBoard().splitByColor();
     }
 
     //--- --- --- Split Board V2 --- --- ---
-    loadSplit_V2() {
+    splitFromLeftToRight() {
         if (this.game() === null) {
             throw new Error("Game is not set");
         }
@@ -300,7 +300,7 @@ class GameController {
             console.error(" not initialized");
         }
 
-        return this.splitBoard().loadSplit_V2();
+        return this.splitBoard().splitFromLeftToRight();
     }
 
     partitionHasUnoccupiedPosition(pentomino) {
