@@ -367,7 +367,7 @@
             }
             //check if time period based autohint is set or not
             //in case if the time period is not selected  , the message "Please continue with the game" appears
-            if(!(SettingsSingleton.getInstance().getSettings().autohinting.autoHintVariants === "Time period")){
+            if(!(SettingsSingleton.getInstance().getSettings().autohinting.timebased)){
                 setTimeout(function(){
                     speechBubbleText.textContent = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getHint().getPossibleSolutions().length;
                     if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){

@@ -86,7 +86,7 @@ const strings = {
             title: ["Speech", "Rede"],
             enableSpeech:{
                 title: ["Enable speech", "Sprache freigeben"],
-                description: ["Enabling this option makes the application speak,Standard German slang is used for german language translation and english slang for english language translation.",
+                description: ["Enabling this option makes the application speak,Standard German slang is used for german language translation and"+ "<br />" +" english slang for english language translation.",
                 "Wenn Sie diese Option aktivieren, spricht die Anwendung.Die deutsche Standardsprache wird für die deutsche Übersetzung verwendet, die englische für die englische Übersetzung."]
             }
         },
@@ -94,37 +94,36 @@ const strings = {
             title: ["Auto hinting", "Automatische Hilfestellung"],
             enableAutoHinting:{
                 title: ["Automated hinting", "Automatisierte Hilfestellung"],
-                description: [["Enables auto-hinting", "Aktiviert automatisierte Hilfestellung"]]
+                description: ["Enables auto-hinting", "Aktiviert automatisierte Hilfestellung"]
             },
             initiateActionsIfUserNotActive:{
                 title: ["Initiate actions if user not active", "Hinweis, wenn der Benutzer nicht aktiv ist"],
-                description: [["Initiates actions only if user is not active on the application", "Löst nur Aktionen aus, wenn der Benutzer nicht in der Anwendung aktiv ist"]]
+                description: ["Initiates actions only if user is not active on the application", "Löst nur Aktionen aus, wenn der Benutzer nicht in der Anwendung aktiv ist"]
             },
             showOrHideButtonsForTextualHints:{
                 title: ["Hints can be denied", "Hinweise können abgelehnt werden"],
-                description: ["Shows buttons in case the user wants autohinting textual hints as optional else textual hints will occur automatically.",
-                "Zeigt Schaltflächen an wenn der Benutzer automatische Texthinweise als Option wünscht andernfalls werden Texthinweise automatisch angezeigt."]
+                description: ["Shows buttons in case the user wants autohinting for textual hints as optional else textual hints will occur automatically.",
+                "Zeigt Schaltflächen an wenn der Benutzer automatische für Texthinweise als Option wünscht andernfalls werden Texthinweise automatisch angezeigt."]
             },
 
             autoHintVariants:{
-                title: ["Give auto-hint based on", "Automatisierte Hilfestellung geben nach"],
-                enumTitles: [["Time", "Unsolvable situation"], ["Sekunden Inaktivität", "Zügen in unlösbarer Spielsituation"]],
-                description: [
-                "Provides automatic hints :"  +
-                    "<ul>" +
-                        "<li><b>Time period:</b> Auto-hinting based on the in-active player time, in this case if the player is near to the solution hints are not provided. In case the user is far from the solution, hints are provided.</li>" +
-                        "<li><b>Wrong moves:</b> Auto-hinting based on the number of wrong moves, here the user can only make the number of wrong moves configured here in the settings, for every number of wrong moves, hint is provided.</li>" +
-                    "</ul>",
-                    "Liefert automatische Hinweise :" +
-                        "<ul>" +
-                        "<li><b>Zeitspanne:</b> Auto-Hinting basierend auf der Zeit, in der der Spieler inaktiv ist. In diesem Fall werden keine Hinweise gegeben, wenn der Spieler sich in der Nähe der Lösung befindet. Befindet sich der Benutzer weit von der Lösung entfernt, werden Hinweise gegeben.</li>" +
-                        "<li><b>Falsche Züge:</b> Auto-Hinweis basierend auf der Anzahl der falschen Züge, hier kann der Benutzer nur die Anzahl der falschen Züge machen, die hier in den Einstellungen konfiguriert sind, für jede Anzahl von falschen Zügen wird ein Hinweis gegeben.</li>" +
-                        "</ul>"]
+                timebased: {
+                  title: ["Gives auto-hint based on time with time set below", "Automatisierte Hilfestellung geben nach"],
+                  description: [
+                      "Auto-hinting based on the in-active player time, in this case if the player is near to the solution hints are not provided. "+ "<br />" +" In case the user is far from the solution, hints are provided.",
+                      "Auto-Hinting basierend auf der Zeit, in der der Spieler inaktiv ist. In diesem Fall werden keine Hinweise gegeben, wenn der "+ "<br />" +" Spieler sich in der Nähe der Lösung befindet. Befindet sich der Benutzer weit von der Lösung entfernt, werden Hinweise gegeben."]
+                },
+                wrongMoves: {
+                  title: ["Gives auto-hint based on number of wrong actions set below.", "Gibt einen automatischen Hinweis basierend auf der Anzahl "+ "<br />" +" falscher Aktionen, die unten eingestellt sind."],
+                  description: [
+                      "Auto-hinting based on the number of wrong moves, here the user can only make the number of wrong moves configured below here in the "+ "<br />" +" settings, for every number of wrong moves, hint is provided.",
+                      "Auto-Hinweis basierend auf der Anzahl falscher Züge, hier kann der Benutzer nur die Anzahl falscher Züge machen, die hier unten in den "+ "<br />" +" Einstellungen konfiguriert ist, für jede Anzahl falscher Züge wird ein Hinweis gegeben.Gibt einen automatischen Hinweis basierend auf der Anzahl falscher Aktionen, die unten eingestellt sind"]
+                }
             },
             enableTimePeriodBasedAutoHintInAnyCase:{
               title: [["Enable time period based autohinting in any case"],["Hilfestellung deaktivieren wenn nur noch X Steine platziert werden müssen"]],
-              description: ["Enabling activates time period based hinting in any case. But disabling this option makes the time period based auto hinting inactive in case the user is towards the solution.",
-              "Wenn Sie diese Option aktivieren, wird der zeitraumbasierte Hinweis in jedem Fall aktiviert. Durch die Deaktivierung dieser Option wird der zeitraumbasierte automatische Hinweis jedoch inaktiv, wenn der Benutzer auf die Lösung zusteuert."]
+              description: ["Enabling activates time period based hinting in any case. But disabling this option makes the time period based auto hinting inactive  "+ "<br />" +"in case the user is towards the solution.",
+              "Wenn Sie diese Option aktivieren, wird der zeitraumbasierte Hinweis in jedem Fall aktiviert. Durch die Deaktivierung dieser Option wird der "+ "<br />" +"zeitraumbasierte automatische Hinweis jedoch inaktiv, wenn der Benutzer auf die Lösung zusteuert."]
             },
 
             numberOfWrongMoves: {
@@ -173,7 +172,7 @@ const strings = {
             title: ["Hinting (Experimental)", "Hilfestellung (Experimentell)"],
             enableHinting: {
                 title: ["Hint button", "Hilfestellungs-Button"],
-                description: ["This option enables hint button, if disabled hint button will be invisible.","Diese Option aktiviert die Hinweis-Schaltfläche, wenn sie deaktiviert ist, ist die Hinweis-Schaltfläche unsichtbar."]
+                description: ["This option enables hint button, if disabled hint button will be invisible.","Diese Option aktiviert die Hinweis-Schaltfläche, "+ "<br />" +" wenn sie deaktiviert ist, ist die Hinweis-Schaltfläche unsichtbar."]
             },
             hintingLevels: {
                 title: ["Assistance", "Hilfestellung"],
@@ -181,16 +180,16 @@ const strings = {
                 description: [
                 "Levels of assistance :"  +
                     "<ul>" +
-                        "<li><b>High:</b> Makes the game solvable more easily with high help functionality for high assistance.Player will get easier hints, exact hints, board prefilling is possible and both the pentomino and the destination will be indicated.</li>" +
+                        "<li><b>High:</b> Makes the game solvable more easily with high help functionality for high assistance.Player will get easier hints, exact "+ "<br />" +" hints, board prefilling is possible and both the pentomino and the destination will be indicated.</li>" +
                         "<li><b>Medium:</b> Medium level of help functionality for assistance.Medium hinting strategy enabled.</li>" +
-                        "<li><b>Low:</b> Low level of assistance.Difficult hints will be configured.Prefilling of the board is disabled</li>" +
-                        "<li><b>Custom:</b> Nothing gets changed, but you can change as per your convenience</li>" +
+                        "<li><b>Low:</b> Low level of assistance.Difficult hints will be configured.Prefilling of the board is disabled.</li>" +
+                        "<li><b>Custom:</b> Nothing gets changed, but you can change as per your convenience.</li>" +
                     "</ul>",
                     "Stufen der Unterstützung :" +
                     "<ul>" +
-                      "<li><b>Viel:</b> Macht das Spiel leichter lösbar mit hoher Hilfefunktionalität für hohe Unterstützung.Der Spieler erhält leichtere Hinweise, genaue Hinweise, das Spielbrett kann vorausgefüllt werden und sowohl das Pentomino als auch das Ziel werden angezeigt.</li>" +
+                      "<li><b>Viel:</b> Macht das Spiel leichter lösbar mit hoher Hilfefunktionalität für hohe Unterstützung.Der Spieler erhält leichtere Hinweise, genaue "+ "<br />" +" Hinweise, das Spielbrett kann vorausgefüllt werden und sowohl das Pentomino als auch das Ziel werden angezeigt.</li>" +
                       "<li><b>Mittel:</b> Mittleres Niveau der Hilfefunktionalität für Unterstützung.Mittlere Hinweisstrategie aktiviert.</li>" +
-                      "<li><b>Wenig:</b> Niedriges Niveau der Hilfestellung. Schwere Hinweise werden konfiguriert. Das Vorfüllen der Tafel ist deaktiviert</li>" +
+                      "<li><b>Wenig:</b> Niedriges Niveau der Hilfestellung. Schwere Hinweise werden konfiguriert. Das Vorfüllen der Tafel ist deaktiviert.</li>" +
                       "<li><b>Individuell:</b>Es wird nichts geändert, aber Sie können nach Belieben Änderungen vornehmen.</li>" +
                   "</ul>"]
             },
@@ -258,9 +257,19 @@ const strings = {
                     ["Show pentominoes", "Show destination", "Show both"],
                     ["Pentomino anzeigen", "Ziel anzeigen", "Beides anzeigen"]
                 ],
-                description: ["",
-                    ""
-                ]
+                description: [
+                    "Variants of hinting:" +
+                        "<ul>" +
+                            "<li><b>Show pentominoes:</b> Indicates only pentominos.</li>" +
+                            "<li><b>Show destination:</b> Indicates only detsination.</li>" +
+                            "<li><b>Show both:</b> Indicates pentominos and destination.</li>" +
+                        "</ul>",
+                    "Varianten der Andeutung:" +
+                        "<ul>" +
+                            "<li><b>Pentomino anzeigen:</b> Zeigt nur Pentominos an.</li>" +
+                            "<li><b>Zielort anzeigen:</b> Zeigt nur das Ziel an.</li>" +
+                            "<li><b>Beides anzeigen:</b> Zeigt Pentominos und Zielort an.</li>" +
+                        "</ul>"]
 
             }
         },
