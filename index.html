@@ -462,6 +462,7 @@
             let modal = document.getElementById('modalTop');
             var x = window.matchMedia("(max-width: 1092px)");
             var y = window.matchMedia("(max-width: 1200px)");
+            var z = window.matchMedia("(max-width: 490px)");
             modal.style.display = "block";
             modal.style.background = "#eceaea";
 
@@ -508,22 +509,25 @@
             // Add scan / share buttons
             let scanImgElement = SettingsForm.createImg("scanImg", "resources/images/icons/scan_qr_code.png");
             scanImgElement.id = "scanImgElement";
-            scanImgElement.style.marginLeft="130px";
-            if(y.matches){//if media query matches  : 1200 px
+            scanImgElement.style.marginLeft="8vw";
+            if(y.matches){//if media query matches ==>  width : 1200 px
                   scanImgElement.style.marginLeft="auto";
-            }
-            if(x.matches){ //if media query matches : 1092 px
-                //scanDiv.style.width = "40%";
-                scanDiv.style.textAlign = "center";
             }
             scanImgElement.onclick = () => openScanQrCode();
             let shareImgElement = SettingsForm.createImg("shareImg", "resources/images/icons/share_qr_code.png");
             shareImgElement.id = "shareImgElement";
-            if(x.matches){ //if media query matches : 1092px
+            if(x.matches){ //if media query matches  ==>  width : 1092px
                 //shareDiv.style.width = "40%";
                 shareDiv.style.textAlign = "center";
                 shareDiv.display="none";
                 div.style.display="block";
+                scanDiv.style.textAlign = "center";
+            }
+            if(z.matches){  // media query ==>  width :  490px
+                //scanDiv.style.width = "20%";
+                //shareDiv.style.width = "20%";
+                $("#scanImgElement").css("width", "20%");
+                $("#shareImgElement").css("width", "20%");
             }
             shareImgElement.onclick = () => handleShareSettings();
 
