@@ -15,6 +15,16 @@ const SettingsSingleton = (function () {
     };
 })();
 
+/**
+ * A singleton to access the Settings-object. The Settings-object is a simple two-level key-value pair, which
+ * contains all values of the current settings. The structure of the Settings-object is defined in {@link SettingsSchema}.
+ * The type of the values in the settings-object correspond to the type defined in the {@link SettingsSchema}.
+ * The value of a heading and a subheading can be accessed with
+ *
+ * SettingsSingleton.getInstance().getSettings().heading.subheading
+ *
+ * A heading and its subheading form a pair which is unique in the settings object.
+ */
 class Settings {
     constructor() {
         let urlParams = new URLSearchParams(window.location.search);
@@ -32,6 +42,14 @@ class Settings {
         }
     }
 
+    /**
+     * The settings values of the current global settings object are overwritten with the values by the new settings
+     * object.
+     *
+     * **IMPORTANT**: Deep copy, the settings-object given as parameter will not be the new global settings object and
+     * thus changes are not reflected.
+     * @param settings
+     */
     setSettings(settings) {
         let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
         for (let heading in schema) {
@@ -44,6 +62,10 @@ class Settings {
         this._settings.visibility = jQuery.extend(true, new SettingsVisibility(), settings.visibility);
     }
 
+    /**
+     * Get the current global settings.
+     * @returns {Object|null|{}|*}
+     */
     getSettings() {
         return this._settings;
     }

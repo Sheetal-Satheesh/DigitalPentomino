@@ -1037,7 +1037,7 @@ class Visual {
    autoHintWrongMoves(){
         let lang = SettingsSingleton.getInstance().getSettings().general.language;
         let pointer;
-        if(!(SettingsSingleton.getInstance().getSettings().autohinting.autoHintVariants === "Wrong moves")){
+        if(!(SettingsSingleton.getInstance().getSettings().autohinting.wrongMoves)){
             return;
         }
           //start bird animation

@@ -1,6 +1,24 @@
+/**
+ * This class is used to create and interact with the settings-html element and it's sub-elements.
+ *
+ * Central methods:
+ * - {@link SettingsForm#generateForm} to generate a new SettingsForm.
+ * - {@link SettingsForm#updateForm} to populate SettingsForm with values.
+ */
 class SettingsForm {
 
-  // === === === GENERATE FORM === === ===
+    // === === === GENERATE FORM === === ===
+    /**
+     * Creates a new Settings Form element. The settings form is generated based on the current settings schema.
+     * The function expects a formElement parameter, which is the root element under which the form will be
+     * generated.
+     *
+     * Furthermore, two callback methods need to be implement: onSubmit and onLicense.
+     *
+     * @param formElement root element, under which settings-form is generated
+     * @param onSubmit The form contains a button to submit the settings. This function is called when this button is pressed.
+     * @param onLicense The form contains a button to open the licenses menu. This function is  called when this button is pressed.
+     */
     static generateForm(formElement, onSubmit, onLicense) {
         let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
         let settings = SettingsSingleton.getInstance().getSettings();
@@ -26,11 +44,7 @@ class SettingsForm {
                 document.getElementById('bubbleContainer').style.display = "block";
             }
         });
-        licenseButton.addEventListener("click", event => {
-            let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
-            let settings = SettingsSingleton.getInstance().getSettings();
-            onLicense(SettingsForm.collectDataFromForm(formElement, schema, settings));
-        });
+        licenseButton.addEventListener("click", () => onLicense());
 
         //add placeholder div at bottom of settings
         let placeholder = document.createElement("div");
@@ -503,6 +517,15 @@ class SettingsForm {
     }
 
     // === === === UPDATE FORM === === ===
+    /**
+     * The settings form can be populated with new values. The values are expected to be a settings-object, which can
+     * be accessed with the {@link Settings}.
+     *
+     * Based on the type of the value defined in {@link SettingsSchema}, the different elements are changed.
+     *
+     * @param formElement
+     * @param settings
+     */
     static updateForm(formElement, settings) {
         let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
 

@@ -4,11 +4,37 @@ const BOARD_POSITION_DECIMALS = 2;
 const BOARD_NAME_DECIMALS = 1;
 const BOARD_PENTOMINO_ROTATION_MIRROR = 1;
 
+/**
+ * This entry is used to save the pentominoes on the board to be placed when the board is loaded.
+ * For example the teacher wants pentomino P to be placed at position [4, 3] then this is saved in the seed.
+ * When the board is loaded, pentomino P is placed at this position.
+ *
+ * The settings entry is not shown by default but can be made visible for debugging purposes by settings the
+ * visible flag in {@link SettingsSchemaSingleton} to true.
+ *
+ * Some functions are nevertheless used when creating and collecting the seed.
+ * The settings schema entry should therefore not be removed.
+ * The functions are actively used in the share-functionality.
+ */
 class StartPosSettingsEntry extends CustomSettingsEntry {
+    /**
+     * Constructor. Name is specified in {@link CustomSettingsEntryMaster}, where the handler is registered.
+     * @param heading
+     * @param subheading
+     */
     constructor(heading, subheading) {
         super(heading, subheading);
     }
 
+    /**
+     * Creates div, in which current board image is displayed and pieces are
+     * visualized by a simple string, e.g. L[5, 3], P[3, 7], ...
+     *
+     * This element is later turned invisible and should only be made visible for debugging pursoses.
+     *
+     * @param settingsEntry
+     * @returns {HTMLDivElement}
+     */
     create(settingsEntry) {
         let div = document.createElement("div");
         div.id = this._name;
@@ -64,12 +90,27 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
         this.display(div, selectedValue);
     }
 
+    /**
+     * Collects information from settings entry, which is stored in a string in a label with the id
+     * **startPiecePosLabel**.
+     * @param formElement
+     * @returns {*}
+     */
     collect(formElement) {
         let div = $(formElement).find("#" + this._name)[0];
         let resultLabel = $(div).find("#startPiecePosLabel")[0];
         return resultLabel.textContent;
     }
 
+    /**
+     * updates div element from settingsValue. This board image is updated as well as the string.
+     * Also the label, which stores the current seedValue for the settingsEntry.
+     * @param heading
+     * @param subheading
+     * @param schemaEntry
+     * @param selectedValue
+     * @param formElement
+     */
     update(heading, subheading, schemaEntry, selectedValue, formElement) {
         let div = $(formElement).find("#" + this._name)[0];
         let resultLabel = $(div).find("#startPiecePosLabel")[0];
@@ -100,10 +141,27 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
         boardLabel.innerHTML = text;
     }
 
+    /**
+     * Returns the seedValue, which in this case is already stored in the settingsValue.
+     * @param schemaEntry
+     * @param settingsValue
+     * @returns {String}
+     */
     parseSettingsToSeed(schemaEntry, settingsValue) {
         return settingsValue;
     }
 
+    /**
+     * The seedValue is parsed into a settingsValue. For this the length of the settingsentry in contrast to the
+     * whole seed must be determined. This depends on various static variables of the game, e.g. number of available
+     * boards, etc.
+     * @param schemaEntry
+     * @param remainingSeed
+     * @param settingsEntry
+     * @param key
+     * @param seed
+     * @returns {number}
+     */
     parseFromSeed(schemaEntry, remainingSeed, settingsEntry, key, seed) {
         let n = parseInt(remainingSeed.substr(StartPosSettingsEntry.getBoardNameDecimals(), BOARD_PENTOMINO_NUM_DECIMALS));
         let seedEntryLength = StartPosSettingsEntry.getBoardNameDecimals() + BOARD_PENTOMINO_NUM_DECIMALS + n * 6;
@@ -111,6 +169,12 @@ class StartPosSettingsEntry extends CustomSettingsEntry {
         return seedEntryLength - 1;
     }
 
+    /**
+     * When this settingsEntry changes its value, the board must be reloaded and pieces must be placed on the board,
+     * which where specified in the settingsValue.
+     * @param settingsValue
+     * @param pd
+     */
     processChangesToSettings(settingsValue, pd) {
         let game = this.parseFromSeedToGame(settingsValue);
 
