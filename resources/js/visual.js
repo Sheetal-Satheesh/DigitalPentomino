@@ -908,11 +908,12 @@ class Visual {
         }
     }
 
-
+    getSplitStatus() {
+        return document.querySelector(".splitbuttonimg") !== null;
+    }
 
     callHintAI() {
-        let isSplitActive = document.querySelector(".splitbuttonimg") !== null;
-        let hint = pd.gameController.getHint(isSplitActive);
+        let hint = pd.gameController.getHint(this.getSplitStatus(), piecesSelectedForPartition);
         //disable hint button until hint is finished
         let hintButton = document.getElementById('hintButton');
         hintButton.disabled = true;
@@ -946,7 +947,7 @@ class Visual {
     }
 
     hintText(hint){
-     hint = pd.gameController.getHint();
+     hint = pd.gameController.getHint(this.getSplitStatus(), piecesSelectedForPartition);
      let lang = SettingsSingleton.getInstance().getSettings().general.language;
      let commandNumber = 0;
      let hintCommand = hint.getCommands()[commandNumber];
@@ -1054,7 +1055,7 @@ class Visual {
   }
 
    showTextualHint(){
-      let hint = pd.gameController.getHint();
+      let hint = pd.gameController.getHint(this.getSplitStatus(), piecesSelectedForPartition);
       this.hintText(hint);
     }
 
@@ -1067,7 +1068,7 @@ class Visual {
   }
 
    bothAutoHint(){
-      let hint = pd.gameController.getHint();
+      let hint = pd.gameController.getHint(this.getSplitStatus(), piecesSelectedForPartition);
       this.callHintAI();
       this.hintText(hint);
   }
@@ -1080,7 +1081,7 @@ class Visual {
   configureAutoHints(){
     let lang = SettingsSingleton.getInstance().getSettings().general.language;
     let speechBubbleText = document.getElementById('speechBubbleText');
-    let hint = pd.gameController.getHint();
+    let hint = pd.gameController.getHint(this.getSplitStatus(), piecesSelectedForPartition);
     //checks if visual hints are enabled.
     //If enabled => the user can click on the button on the speech bubble to get the hint
     //checks if visual hints are enabled

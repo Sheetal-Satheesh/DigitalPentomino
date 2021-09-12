@@ -25,12 +25,12 @@ class HintAI {
         return this.helpClass.getPossibleSolutions(game);
     }
 
-    getHint(game, isSplitActive) {
+    getHint(game, isSplitActive, piecesSelectedForPartition) {
         // let game = this._game;
         let closestSolution = this.helpClass.getGameSolution(game, isSplitActive);
 
         if (closestSolution !== undefined) {
-            let commandSequenceList = this._getCommandSequenceListToSolution(game, closestSolution);
+            let commandSequenceList = this._getCommandSequenceListToSolution(game, closestSolution, piecesSelectedForPartition);
             let commands = this._getNextHint(game, closestSolution, commandSequenceList);
             return new Hint(commands);
         }
@@ -45,7 +45,7 @@ class HintAI {
                 let bestUnreachableCellSpace = this._calculateBestUnreachableCellSpace(game, unoccupiedCellSpaces);
 
                 if (bestUnreachableCellSpace === null) {
-                    let commandSequenceList = this._getCommandSequenceListToSolution(game, nextClosestSolution);
+                    let commandSequenceList = this._getCommandSequenceListToSolution(game, nextClosestSolution, piecesSelectedForPartition);
                     let misplacedPentominos = this._removeWronglyPlacedPentominos(game, nextClosestSolution);
                     if (misplacedPentominos) {
                         return new Hint([misplacedPentominos]);
@@ -283,10 +283,12 @@ class HintAI {
     }
 
     // --- --- --- Calculate All Command Sequences To Solution --- --- ---
-    _getCommandSequenceListToSolution(game, solution) {
+    _getCommandSequenceListToSolution(game, solution, piecesSelectedForPartition) {
         let commandSequenceList = new CommandSequenceList();
 
         let nonPerfectPentominoes = game.getAllPentominoes().filter(p => !this.helpClass.isPerfectPentomino(game, solution, p.name));
+        if(piecesSelectedForPartition.length > 0)
+            nonPerfectPentominoes = nonPerfectPentominoes.filter(pentomino => piecesSelectedForPartition.indexOf(pentomino.name) >= 0);
         nonPerfectPentominoes.forEach(p => {
             commandSequenceList.addCommandSequence(p.name, this._getCommandsToPerfectPentominoState(game, solution, p));
         });

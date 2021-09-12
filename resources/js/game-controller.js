@@ -265,7 +265,7 @@ class GameController {
         this.game().addToTray(pentomino);
     }
     // --- --- --- Hints --- --- ---
-    getHint(isSplitActive) {
+    getHint(isSplitActive, piecesSelectedForPartition) {
         if (this.game() === null) {
             throw new Error("Game is not set");
         }
@@ -274,7 +274,7 @@ class GameController {
             console.error("HintAI not initialized");
         }
 
-        return this.hintAI().getHint(this.game(), isSplitActive);
+        return this.hintAI().getHint(this.game(), isSplitActive, piecesSelectedForPartition);
     }
 
     getPossibleSolutions() {
