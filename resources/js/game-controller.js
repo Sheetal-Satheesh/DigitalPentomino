@@ -265,7 +265,7 @@ class GameController {
         this.game().addToTray(pentomino);
     }
     // --- --- --- Hints --- --- ---
-    getHint() {
+    getHint(isSplitActive) {
         if (this.game() === null) {
             throw new Error("Game is not set");
         }
@@ -274,7 +274,19 @@ class GameController {
             console.error("HintAI not initialized");
         }
 
-        return this.hintAI().getHint(this.game());
+        return this.hintAI().getHint(this.game(), isSplitActive);
+    }
+
+    getPossibleSolutions() {
+        if (this.game() === null) {
+            throw new Error("Game is not set");
+        }
+
+        if (this.hintAI() === null) {
+            console.error("HintAI not initialized");
+        }
+
+        return this.hintAI().getCurrentSolutionCount(this.game());
     }
         
     //--- --- --- Split Board --- --- --
@@ -287,7 +299,7 @@ class GameController {
             console.error(" not initialized");
         }
 
-        return this.splitBoard().splitByColor();
+        return this.splitBoard().splitByColor(this.game());
     }
 
     //--- --- --- Split Board V2 --- --- ---
@@ -300,14 +312,14 @@ class GameController {
             console.error(" not initialized");
         }
 
-        return this.splitBoard().splitFromLeftToRight();
+        return this.splitBoard().splitFromLeftToRight(this.game());
     }
 
     partitionHasUnoccupiedPosition(pentomino) {
         if (this.game() === null) {
             throw new Error("Game is not set");
         }
-        return this.splitBoard().partitionHasUnoccupiedPosition(pentomino);
+        return this.splitBoard().partitionHasUnoccupiedPosition(pentomino, this.game());
     }
 
     getSolutions() {

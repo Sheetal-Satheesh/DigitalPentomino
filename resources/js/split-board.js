@@ -9,25 +9,17 @@ if (typeof require != 'undefined') {
 class SplitBoard {
 
     constructor(game) {
-        this._game = game;
-        this._solutions = Solutions.getGamesFromSolutionsConfig(game.getName());
-        this._finalSolution;
         this._partionedArray;
         this.count = 0;
+        this.solutionForSplit;
+        this.helpClass = new Help(game);
     }
 
-    splitByColor() {
-        let game = this._game;
-        let possibleSolutions = this._getPossibleSolutions(game, this._solutions);        
-        let closestSolution;
-
-        if (possibleSolutions.length > 0) {
-            closestSolution = possibleSolutions[0];
-            this._finalSolution = closestSolution;
-        }
-        else {
-            closestSolution = this._getClosesSolution(game, this._solutions);
-            this._finalSolution = closestSolution;
+    splitByColor(game) {
+        let closestSolution = this.helpClass.getGameSolution(game, null, 2);        
+        
+        if (closestSolution == undefined) {
+            closestSolution = this.helpClass.getClosestSolution(game);
         }
 
         let orderPieces = this._operationForSplitting(closestSolution);        
@@ -36,14 +28,9 @@ class SplitBoard {
         return partionedArray;
     }
 
-    splitFromLeftToRight() {
-        let game = this._game;
-        let possibleSolutions = this._getPossibleSolutions(game, this._solutions);
-        let closestSolution;  
-        // closestSolution = possibleSolutions[0]      
-        closestSolution = possibleSolutions[Math.floor(Math.random() * possibleSolutions.length)];
-        this._finalSolution = closestSolution;  
-
+    splitFromLeftToRight(game) {
+        let closestSolution = this.helpClass.getGameSolution(game, null, 1);
+        this.solutionForSplit = closestSolution;
         let orderPieces = this._operationForSplitting(closestSolution); 
         let relativePosOfPieceWithAnchorPos = this._getRelativePositionOfPieceWithAnchorPosition(closestSolution, orderPieces);
         let partitionedArray = this._splitArrayIntoChunks(relativePosOfPieceWithAnchorPos);
@@ -57,48 +44,9 @@ class SplitBoard {
         return orderPieces; 
     }
 
-    /**
-     * Assumes that pentomino is placed on the board
-     * @param game
-     * @param solution
-     * @param gamePentomino
-     */
-     _isPerfectPentomino(game, solution, pentominoName) {
-        let gamePentomino = game.getPentominoByName(pentominoName);
-        let solutionPentomino = solution.getPentominoByName(pentominoName);
-
-        if (gamePentomino === null && solutionPentomino === null) {
-            // FIXME - should return the pentomino if its in the tray and not return null
-            //throw new Error("Pentomino '" + pentominoName + "' does neither exist in the game nor in the solution");
-            return true;
-        }
-
-        if (gamePentomino === null) {
-            return !solution.isPlacedOnBoard(solutionPentomino);
-        }
-
-        if (solutionPentomino === null) {
-            return !game.isPlacedOnBoard(gamePentomino);
-        }
-
-        if (!game.isPlacedOnBoard(gamePentomino))
-            return !solution.isPlacedOnBoard(solutionPentomino);
-        else if (solution.isPlacedOnBoard(solutionPentomino)) {
-            let gamePentominoPosition = game.getPosition(gamePentomino);
-            let solutionPentominoPosition = solution.getPosition(solutionPentomino);
-            
-            return gamePentominoPosition[0] === solutionPentominoPosition[0]
-                && gamePentominoPosition[1] === solutionPentominoPosition[1]
-                && gamePentomino.sRepr.localeCompare(solutionPentomino.sRepr) === 0;
-        } else {
-            return false;
-        }
-    }
-
      /** ---------------  Split Via Partition Checks- If Partition is Filled -------------*/
-    partitionHasUnoccupiedPosition(pentomino) {               
-        let game = this._game;
-        let solution = this._finalSolution; 
+    partitionHasUnoccupiedPosition(pentomino, game) {               
+        let solution = this.solutionForSplit; 
         let pentominoName = pentomino.name;
         
         let gamePentomino = game.getPentominoByName(pentominoName);
@@ -215,49 +163,6 @@ class SplitBoard {
         return finalPosAndPiece;
     }
 
-    // --- --- --- Closest Solution --- --- ---
-    /**
-     *  Priority:
-     *  - Perfect pentominoes on the board (Correct position, correct angle, correct mirroring)
-     *  - Pentominoes that need one operation to be perfect
-     *  - Pentominoes that need two operations to be perfect
-     *  - etc.
-     * @param game
-     * @param solutions
-     * @returns {*}
-     */
-    _getClosesSolution(game, solutions) {
-        let closestSolution = null;
-        let numOfPerfectPentominoesOnBoardOfClosestSolution = -1;
-
-        solutions.forEach(solution => {
-            let numOfPerfectPentominoesOnBoard = 0;
-            let counter = 0;
-            let numOfPentominoes = game.getAllPentominoes().length;
-
-            game.getAllPentominoes().filter(p => game.isPlacedOnBoard(p)).every(gamePentomino => {
-                let remainingPentominoes = numOfPentominoes - counter;
-                let maxPossibleNumOfPerfectPentominoes = remainingPentominoes + numOfPerfectPentominoesOnBoard;
-                if (maxPossibleNumOfPerfectPentominoes <= numOfPerfectPentominoesOnBoardOfClosestSolution) {
-                    return false;
-                }
-
-                if (this._isPerfectPentomino(game, solution, gamePentomino.name)) {
-                    numOfPerfectPentominoesOnBoard++;
-                }
-                counter++;
-                return true;
-            });
-
-            if (numOfPerfectPentominoesOnBoard > numOfPerfectPentominoesOnBoardOfClosestSolution) {
-                closestSolution = solution;
-                numOfPerfectPentominoesOnBoardOfClosestSolution = numOfPerfectPentominoesOnBoard;
-            }
-        });
-
-        return closestSolution;
-    }
-
     // --- --- --- Split Array Into Chunks --- --- ---    
     _splitArrayIntoChunks(closestSolution) {
         const n = 3;
@@ -273,26 +178,6 @@ class SplitBoard {
         }
         return result;
     }
-
-    /** --------------Get Possible solutions------ **/
-    _getPossibleSolutions(game, solutions) {
-        if (game.getAllPentominoes().length === 0) {
-            throw new Error("game is empty");
-        }
-
-        let possibleSolutions = [];
-        solutions.forEach(solution => {
-            let allPentominoesOnBoardArePerfect = game.getAllPentominoes()
-                .filter(pentomino => game.isPlacedOnBoard(pentomino))
-                .every(pentominoOnBoard => {
-                    return this._isPerfectPentomino(game, solution, pentominoOnBoard.name);
-                });
-            if (allPentominoesOnBoardArePerfect) {
-                possibleSolutions.push(solution);
-            }
-        });
-        return possibleSolutions;
-    }    
 }
 
 if (typeof module != 'undefined') {

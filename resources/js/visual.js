@@ -893,12 +893,12 @@ class Visual {
           return;
       }
       if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-          labelPossibleSolutions.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
+          labelPossibleSolutions.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getPossibleSolutions().length;
       }
         //Fill speech bubble text
-        speechBubbleText.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
+        speechBubbleText.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getPossibleSolutions().length;
         if(SettingsSingleton.getInstance().getSettings().autohinting.enableAutoHinting){
-            if((this.gameController.getHint().getPossibleSolutions().length) === 0){
+            if((this.gameController.getPossibleSolutions().length) === 0){
                 count+=1;
                 //check if number of wrongg moves is greater than the value configured in settings
                 if(count > SettingsSingleton.getInstance().getSettings().autohinting.numberOfWrongMoves ){
@@ -911,7 +911,8 @@ class Visual {
 
 
     callHintAI() {
-        let hint = pd.gameController.getHint();
+        let isSplitActive = document.querySelector(".splitbuttonimg") !== null;
+        let hint = pd.gameController.getHint(isSplitActive);
         //disable hint button until hint is finished
         let hintButton = document.getElementById('hintButton');
         hintButton.disabled = true;
@@ -1059,9 +1060,9 @@ class Visual {
 
    ignore(){
       let lang = SettingsSingleton.getInstance().getSettings().general.language;
-      document.getElementById('speechBubbleText').textContent = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
+      document.getElementById('speechBubbleText').textContent = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getPossibleSolutions().length;
       if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-          document.getElementById("labelNumberSolutions").innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
+          document.getElementById("labelNumberSolutions").innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getPossibleSolutions().length;
       }
   }
 
@@ -1171,11 +1172,11 @@ class Visual {
         switch (splitCategory) {
             case "color":
                 this.undoSplit();
-                this.callSplitBoardViaColor();
+                this.splitBoardViaColor();
                 break;
             case "left-to-right":
                 this.readyForSplitting();
-                this.callSplitBoard_V2();
+                this.splitBoardLtoR();
                 break;
         }
     }
@@ -1188,12 +1189,12 @@ class Visual {
         }
     }
 
-    callSplitBoardViaColor() {
+    splitBoardViaColor() {
         let partitionedArray = pd.gameController.splitByColor();
         this.displaySplit(partitionedArray, alternateColor);
     }
 
-    callSplitBoard_V2() {
+    splitBoardLtoR() {
         let partitionedArray = pd.gameController.splitFromLeftToRight();
         this.resize(partitionedArray, partitionedArray.length)
         let styleElement = document.querySelector('.boardarea');

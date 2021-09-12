@@ -1,35 +1,36 @@
 class Help {
-    consttructor(game) {
-        if(Help.instance instanceof Help) {
-            return Help.instance
+    constructor(game) {
+        if(Help.instance instanceof Help && Help.instance.gameName === game.getName()) {
+            return Help.instance;
         }
         
-        this._solutions = Solutions.getGamesFromSolutionsConfig(game.getName());
-        this.isSplitActive = false;       
+        this.solutions = Solutions.getGamesFromSolutionsConfig(game.getName());
+        this.gameName = game.getName();
+        this.isSplitActive = false;
+        this.currentSolnForSplit;       
         Help.instance = this;
-        this.bestSolution;
     }
 
     /** ---------------  Solutions-------------*/
     getSolutions() {
-        if (this._solutions == undefined) {
+        if (this.solutions == undefined) {
             console.error("Solution is not set");
         }
-        return this._solutions;
+        return this.solutions;
     }
 
     // --- --- --- Possible Solutions --- --- ---
-    getPossibleSolutions(game, solutions) {
+    getPossibleSolutions(game) {
         if (game.getAllPentominoes().length === 0) {
             throw new Error("game is empty");
         }
 
         let possibleSolutions = [];
-        solutions.forEach(solution => {
+        this.solutions.forEach(solution => {
             let allPentominoesOnBoardArePerfect = game.getAllPentominoes()
                 .filter(pentomino => game.isPlacedOnBoard(pentomino))
                 .every(pentominoOnBoard => {
-                    return this._isPerfectPentomino(game, solution, pentominoOnBoard.name);
+                    return this.isPerfectPentomino(game, solution, pentominoOnBoard.name);
                 });
             if (allPentominoesOnBoardArePerfect) {
                 possibleSolutions.push(solution);
@@ -39,12 +40,11 @@ class Help {
     }
 
     // --- --- --- C
-    getGameSolution(isSplitActive, eventSource = 0) { 
+    getGameSolution(game, isSplitActive, eventSource = 0) { 
         // eventSource Value 0--> Hint, 1---> SplitFromLtoR, 2---> SplitByColor
-        let possibleSolutions = this.getPossibleSolutions(game, this._solutions);
+        let possibleSolutions = this.getPossibleSolutions(game, this.solutions);
         let bestSolution;
-        this.currentSolnForSplit = bestSolution;
-
+    
         if(eventSource == 1) {
             bestSolution = possibleSolutions[Math.floor(Math.random() * possibleSolutions.length)];
             this.isSplitActive = true;
@@ -54,7 +54,7 @@ class Help {
             if (possibleSolutions.length > 0) {
                 bestSolution = possibleSolutions[0];                
             } else {
-                bestSolution = this.getClosestSolution(game, this._solutions);                
+                bestSolution = undefined;                
             }
             this.isSplitActive = true;
             this.currentSolnForSplit = bestSolution;
@@ -65,7 +65,7 @@ class Help {
                 if (possibleSolutions.length > 0) {
                     bestSolution = possibleSolutions[0];
                 } else {
-                    bestSolution = this.getClosestSolution(game, this._solutions);
+                    bestSolution = undefined;
                 }
             }
         }
@@ -92,7 +92,7 @@ class Help {
                     return false;
                 }
 
-                if (this._isPerfectPentomino(game, solution, gamePentomino.name)) {
+                if (this.isPerfectPentomino(game, solution, gamePentomino.name)) {
                     numOfPerfectPentominoesOnBoard++;
                 }
                 counter++;
@@ -104,6 +104,7 @@ class Help {
                 numOfPerfectPentominoesOnBoardOfClosestSolution = numOfPerfectPentominoesOnBoard;
             }
         });
+        this.currentSolnForSplit = closestSolution;
         return closestSolution;
     }
 
@@ -113,7 +114,7 @@ class Help {
      * @param solution
      * @param gamePentomino
      */
-      _isPerfectPentomino(game, solution, pentominoName) {
+      isPerfectPentomino(game, solution, pentominoName) {
         let gamePentomino = game.getPentominoByName(pentominoName);
         let solutionPentomino = solution.getPentominoByName(pentominoName);
 
