@@ -461,6 +461,10 @@
 
         function openImportOrExportDialog() {
             let modal = document.getElementById('modalTop');
+            var x = window.matchMedia("(max-width: 1092px)");
+            var y = window.matchMedia("(max-width: 1200px)");
+            var z = window.matchMedia("(max-width: 490px)");
+            var p = window.matchMedia("(max-width: 1010px)");
             modal.style.display = "block";
             modal.style.background = "#eceaea";
 
@@ -492,6 +496,15 @@
             let parent = modal;
 
             let heading = document.createElement("h1");
+            let div = document.createElement("div");
+            let scanDiv = document.createElement("div");
+            scanDiv.id="scanDiv";
+            let shareDiv = document.createElement("div");
+            shareDiv.id="shareDiv";
+            div.id="shareOrScandiv";
+            div.style.textAlign="center";
+            div.style.display="flex";
+            shareDiv.display="flex";
             heading.id="shareOrScan";
             heading.innerHTML = strings.qrCode.scanOrShare[lang];
             heading.style.textAlign = "center";
@@ -500,13 +513,36 @@
             // Add scan / share buttons
             let scanImgElement = SettingsForm.createImg("scanImg", "resources/images/icons/scan_qr_code.png");
             scanImgElement.id = "scanImgElement";
+            scanImgElement.style.marginLeft="8vw";
+            if(y.matches){//if media query matches ==>  width : 1200 px
+                  scanImgElement.style.marginLeft="auto";
+            }
+            if(z.matches){  // media query ==>  width :  490px
+                scanImgElement.style.width="50%";
+            }
+            if(p.matches){
+                div.style.display="block";
+            }
             scanImgElement.onclick = () => openScanQrCode();
             let shareImgElement = SettingsForm.createImg("shareImg", "resources/images/icons/share_qr_code.png");
             shareImgElement.id = "shareImgElement";
+            if(z.matches){  // media query ==>  width :  490px
+                shareImgElement.style.width="50%";
+            }
+            if(x.matches){ //if media query matches  ==>  width : 1092px
+                //shareDiv.style.width = "40%";
+                shareDiv.style.textAlign = "center";
+                shareDiv.display="none";
+                //div.style.display="block";
+                scanDiv.style.textAlign = "center";
+            }
             shareImgElement.onclick = () => handleShareSettings();
 
-            parent.appendChild(scanImgElement);
-            parent.appendChild(shareImgElement);
+            scanDiv.appendChild(scanImgElement);
+            shareDiv.appendChild(shareImgElement);
+            div.appendChild(scanDiv);
+            div.appendChild(shareDiv);
+            parent.appendChild(div);
         }
 
         function handleShareSettings() {
@@ -1222,7 +1258,9 @@
                     $('.formButton').css('bottom','11vw');
                 }
             }
-
+            $("#shareOrScan").remove();
+            $("#scanImgElement").remove();
+            $("#shareImgElement").remove();
         }
 
         // called when license button is clicked in settings
@@ -1232,6 +1270,13 @@
             this.disablePointerEventsOnPieces();
             var modal = document.getElementById('modalTop');
             let modalFormContent = document.getElementsByClassName('modalFormContent');
+            let y = document.getElementsByClassName("cActionBtn");
+            //show back button
+            let btn = document.getElementById("backButton");
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+            let licenceHeading = strings.License[lang];
+            let h2 = document.createElement("h2");
+            let div5 = document.createElement("div");
             modal.style.display = "block";
             modal.style.background = "transparent";
             document.querySelector(".modalFormContent").style.display = "block";
@@ -1245,11 +1290,8 @@
             modal.style.background = "#dcf0ed";
             document.getElementById("modalFormContainerID").style.backgroundColor = "lightgrey";
             document.getElementById("modalFormContainerID").style.border = "none";
-            let y = document.getElementsByClassName("cActionBtn");
             for (let i = 0; i < y.length; i++) { y[i].style.pointerEvents = "none"; }
             $(".modalFormContent").css("display", "none");
-            //show back button
-            let btn = document.getElementById("backButton");
             btn.style.display = "block";
             $(".close").click(function () {
                 document.getElementById("modalTop").style.display = "none";
@@ -1280,13 +1322,9 @@
                 //SettingsForm.updateForm($('#innerGridForm')[0], settings);
                 btn.style.display = "none";
             };
-            let lang = SettingsSingleton.getInstance().getSettings().general.language;
-            let licenceHeading = strings.License[lang];
-            let h2 = document.createElement("h2");
             h2.id = "licenseHeading";
             h2.innerHTML = strings.License[lang];
             h2.style.textAlign = "center";
-            let div5 = document.createElement("div");
             div5.id = "tableLicenseDiv";
             div5.style.marginTop = "10vh";
             div5.style.marginRight = "5vh";
