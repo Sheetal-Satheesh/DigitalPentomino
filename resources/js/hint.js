@@ -1,7 +1,6 @@
 class Hint {
-    constructor(commands, possibleSolutions, skill = null) {
+    constructor(commands, skill = null) {
         this._commands = commands;
-        this._possibleSolutions = possibleSolutions;
         this._skill = skill;
     }
 
@@ -11,10 +10,6 @@ class Hint {
 
     getCommands() {
         return this._commands;
-    }
-
-    getPossibleSolutions() {
-        return this._possibleSolutions;
     }
 }
 
