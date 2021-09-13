@@ -893,12 +893,12 @@ class Visual {
           return;
       }
       if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-          labelPossibleSolutions.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
+          labelPossibleSolutions.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getPossibleSolutions().length;
       }
         //Fill speech bubble text
-        speechBubbleText.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
+        speechBubbleText.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getPossibleSolutions().length;
         if(SettingsSingleton.getInstance().getSettings().autohinting.enableAutoHinting){
-            if((this.gameController.getHint().getPossibleSolutions().length) === 0){
+            if((this.gameController.getPossibleSolutions().length) === 0){
                 count+=1;
                 //check if number of wrongg moves is greater than the value configured in settings
                 if(count > SettingsSingleton.getInstance().getSettings().autohinting.numberOfWrongMoves ){
@@ -908,10 +908,12 @@ class Visual {
         }
     }
 
-
+    getSplitStatus() {
+        return document.querySelector(".splitbuttonimg") !== null;
+    }
 
     callHintAI() {
-        let hint = pd.gameController.getHint();
+        let hint = pd.gameController.getHint(this.getSplitStatus(), piecesSelectedForPartition);
         //disable hint button until hint is finished
         let hintButton = document.getElementById('hintButton');
         hintButton.disabled = true;
@@ -945,7 +947,7 @@ class Visual {
     }
 
     hintText(hint){
-     hint = pd.gameController.getHint();
+     hint = pd.gameController.getHint(this.getSplitStatus(), piecesSelectedForPartition);
      let lang = SettingsSingleton.getInstance().getSettings().general.language;
      let commandNumber = 0;
      let hintCommand = hint.getCommands()[commandNumber];
@@ -1053,20 +1055,20 @@ class Visual {
   }
 
    showTextualHint(){
-      let hint = pd.gameController.getHint();
+      let hint = pd.gameController.getHint(this.getSplitStatus(), piecesSelectedForPartition);
       this.hintText(hint);
     }
 
    ignore(){
       let lang = SettingsSingleton.getInstance().getSettings().general.language;
-      document.getElementById('speechBubbleText').textContent = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
+      document.getElementById('speechBubbleText').textContent = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getPossibleSolutions().length;
       if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-          document.getElementById("labelNumberSolutions").innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
+          document.getElementById("labelNumberSolutions").innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getPossibleSolutions().length;
       }
   }
 
    bothAutoHint(){
-      let hint = pd.gameController.getHint();
+      let hint = pd.gameController.getHint(this.getSplitStatus(), piecesSelectedForPartition);
       this.callHintAI();
       this.hintText(hint);
   }
@@ -1079,7 +1081,7 @@ class Visual {
   configureAutoHints(){
     let lang = SettingsSingleton.getInstance().getSettings().general.language;
     let speechBubbleText = document.getElementById('speechBubbleText');
-    let hint = pd.gameController.getHint();
+    let hint = pd.gameController.getHint(this.getSplitStatus(), piecesSelectedForPartition);
     //checks if visual hints are enabled.
     //If enabled => the user can click on the button on the speech bubble to get the hint
     //checks if visual hints are enabled
@@ -1171,11 +1173,11 @@ class Visual {
         switch (splitCategory) {
             case "color":
                 this.undoSplit();
-                this.callSplitBoardViaColor();
+                this.splitBoardViaColor();
                 break;
             case "left-to-right":
                 this.readyForSplitting();
-                this.callSplitBoard_V2();
+                this.splitBoardLtoR();
                 break;
         }
     }
@@ -1187,13 +1189,14 @@ class Visual {
             splitButton.classList.add("splitbuttonimg");
         }
     }
-callSplitBoardViaColor() {
-        let partitionedArray = pd.gameController.loadSplit();
+
+    splitBoardViaColor() {
+        let partitionedArray = pd.gameController.splitByColor();
         this.displaySplit(partitionedArray, alternateColor);
     }
 
-    callSplitBoard_V2() {
-        let partitionedArray = pd.gameController.loadSplit_V2();
+    splitBoardLtoR() {
+        let partitionedArray = pd.gameController.splitFromLeftToRight();
         this.resize(partitionedArray, partitionedArray.length)
         let styleElement = document.querySelector('.boardarea');
         let styleValue = window.getComputedStyle(styleElement);
