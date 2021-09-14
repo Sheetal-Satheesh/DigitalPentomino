@@ -110,6 +110,7 @@ class SettingsSchema {
                     initiateActionsIfUserNotActive:{
                       "type": "boolean",
                       "title": titles.autohinting.initiateActionsIfUserNotActive.title[lang],
+                      "description":  titles.autohinting.initiateActionsIfUserNotActive.description[lang],
                       "default": true,
                       "pupilModeVisibleOnDefault": true
                     }
@@ -177,32 +178,34 @@ class SettingsSchema {
                   enableAutoHinting:{
                     "type": "boolean",
                     "title": titles.autohinting.enableAutoHinting.title[lang],
+                    "description": titles.autohinting.enableAutoHinting.description[lang],
                     "default": false
                   },
-                  autoHintVariants:{
-                    "type": "string",
-                    "title": titles.autohinting.autoHintVariants.title[lang],
-                    "enum": ["Time period", "Wrong moves"],
-                    "enumText": titles.autohinting.autoHintVariants.enumTitles[lang],
-                    "description": titles.autohinting.autoHintVariants.description[lang],
-                    "default": "Wrong moves"
+                  timebased:{
+                    "type": "boolean",
+                    "title": titles.autohinting.autoHintVariants.timebased.title[lang],
+                    "default": true
                   },
-
+                  timeForNoAction: {
+                    "type": "string",
+                    "title": titles.autohinting.timeForNoAction.title[lang],
+                    "enum": ["Short", "Medium", "Long"],
+                    "enumText": titles.autohinting.timeForNoAction.enumTitles[lang],
+                    "description": titles.autohinting.timeForNoAction.description[lang],
+                    "default": "Short"
+                  },
                   enableTimePeriodBasedAutoHintInAnyCase:{
                     "type": "boolean",
                     "title": titles.autohinting.enableTimePeriodBasedAutoHintInAnyCase.title[lang],
                     "description": titles.autohinting.enableTimePeriodBasedAutoHintInAnyCase.description[lang],
-                    "default": false
+                    "default": true
                   },
 
-                  showOrHideButtonsForTextualHints:{
+                  wrongMoves:{
                     "type": "boolean",
-                    "title": titles.autohinting.showOrHideButtonsForTextualHints.title[lang],
-                    "description": titles.autohinting.showOrHideButtonsForTextualHints.description[lang],
+                    "title": titles.autohinting.autoHintVariants.wrongMoves.title[lang],
                     "default": false
                   },
-
-
                   numberOfWrongMoves: {
                       "step": 1,
                       "type": "integer",
@@ -213,16 +216,6 @@ class SettingsSchema {
                       "exclusiveMinimum": false,
                       "maximum": 20
                   },
-
-                  timeForNoAction: {
-                    "type": "string",
-                    "title": titles.autohinting.timeForNoAction.title[lang],
-                    "enum": ["Short", "Medium", "Long"],
-                    "enumText": titles.autohinting.timeForNoAction.enumTitles[lang],
-                    "description": titles.autohinting.timeForNoAction.description[lang],
-                    "default": "Short"
-                  },
-
                   typeOfHints:{
                     "type": "string",
                     "title": titles.autohinting.typeOfHints.title[lang],
@@ -230,6 +223,12 @@ class SettingsSchema {
                     "enumText": titles.autohinting.typeOfHints.enumTitles[lang],
                     "description": titles.autohinting.typeOfHints.description[lang],
                     "default": "Visual"
+                  },
+                  showOrHideButtonsForTextualHints:{
+                    "type": "boolean",
+                    "title": titles.autohinting.showOrHideButtonsForTextualHints.title[lang],
+                    "description": titles.autohinting.showOrHideButtonsForTextualHints.description[lang],
+                    "default": true
                   }
                 }
             },
