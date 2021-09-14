@@ -206,6 +206,7 @@
     <script type="text/javascript">
         let pd;
         let template;
+        let qrScanner = null;
 
         const SnapshotType = {
             "FilterOnly": 0,
@@ -865,10 +866,9 @@
 
             QrScanner.WORKER_PATH = 'resources/jsonform/qr-scanner-worker.min.js';
 
-            const qrScanner = new QrScanner(videoElement, result => {
+            qrScanner = new QrScanner(videoElement, result => {
                 let success = onQrCodeScanned(result);
                 if (success) {
-                    qrScanner.stop();
                     this.reactionScreenOnScanned();
                     this.closeModal();
                 }
@@ -888,6 +888,13 @@
 
             //onQrCodeScanned("https://pentomino-digital.de/V5/index.html?t=2010101110111011101110121");
             //this.closeModal();
+        }
+
+        function destroyQrScanner() {
+            if (!(qrScanner === null)) {
+                qrScanner.destroy();
+                qrScanner = null;
+            }
         }
 
         function handleDownloadImage(downloadImageButton, canvasElement) {
@@ -1080,6 +1087,7 @@
         }
 
         function closeModal() {
+            destroyQrScanner();
             document.getElementById('boardmodalTop').style.display = 'none';
             this.closeModalContainer();
             this.enableSnapshotButton();
