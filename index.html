@@ -19,7 +19,6 @@
     <script src="resources/js/settings/settings-schema.js"></script>
     <script src="resources/js/settings/settings.js"></script>
     <script src="resources/js/settings/settings-parser.js"></script>
-    <script src="resources/js/settings/translator.js"></script>
     <script src="resources/js/settings/settings-form.js"></script>
     <script src="resources/js/settings/settings-visibility.js"></script>
     <script src="resources/js/settings/custom-settings-entry/custom-settings-entry.js"></script>
@@ -57,6 +56,7 @@
     <script src="resources/js/help/hinting/command-sequence-list.js"></script>
     <script src="resources/js/load_screen.js"></script>
     <script src="resources/js/split-board.js"></script>
+    <script src="resources/js/help.js"></script>
 </head>
 <!-- Preloader section -->
 <div class="preloader d-flex">
@@ -206,6 +206,7 @@
     <script type="text/javascript">
         let pd;
         let template;
+        let qrScanner = null;
 
         const SnapshotType = {
             "FilterOnly": 0,
@@ -297,9 +298,9 @@
                 //else if autohinting disabled
                 else{
                     setTimeout(function(){
-                        speechBubbleText.textContent = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getHint().getPossibleSolutions().length;
+                        speechBubbleText.textContent = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getPossibleSolutions().length;
                         if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-                            document.getElementById("labelNumberSolutions").innerText = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getHint().getPossibleSolutions().length;
+                            document.getElementById("labelNumberSolutions").innerText = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getPossibleSolutions().length;
                         }
                     }, 5000);
                 }
@@ -355,9 +356,9 @@
             if(!(SettingsSingleton.getInstance().getSettings().autohinting.enableTimePeriodBasedAutoHintInAnyCase)){
                 if((pd.visual.numberofPlacedPentominos() > (pd.visual.pieces.length/2))){
                     setTimeout(function(){
-                        speechBubbleText.textContent = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getHint().getPossibleSolutions().length;
+                        speechBubbleText.textContent = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getPossibleSolutions().length;
                         if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-                            document.getElementById("labelNumberSolutions").innerText = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getHint().getPossibleSolutions().length;
+                            document.getElementById("labelNumberSolutions").innerText = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getPossibleSolutions().length;
                         }
                     }, 5000);
                     //pd.visual.numberofPlacedPentominos();
@@ -366,11 +367,11 @@
             }
             //check if time period based autohint is set or not
             //in case if the time period is not selected  , the message "Please continue with the game" appears
-            if(!(SettingsSingleton.getInstance().getSettings().autohinting.autoHintVariants === "Time period")){
+            if(!(SettingsSingleton.getInstance().getSettings().autohinting.timebased)){
                 setTimeout(function(){
-                    speechBubbleText.textContent = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getHint().getPossibleSolutions().length;
+                    speechBubbleText.textContent = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getPossibleSolutions().length;
                     if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-                        document.getElementById("labelNumberSolutions").innerText = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getHint().getPossibleSolutions().length;
+                        document.getElementById("labelNumberSolutions").innerText = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getPossibleSolutions().length;
                     }
                 }, 2500);
                 return;
@@ -436,6 +437,9 @@
         function clickedOnScanQrCode() {
             let modal = document.getElementById('modalTop');
             if ($(modal).is(':visible')) {
+                $("#shareOrScan").remove();
+                $("#scanImgElement").remove();
+                $("#shareImgElement").remove();
                 this.closeModal();
             } else if (SettingsSingleton.getInstance().getSettings().teachersMode) {
                 // teacher has the choice between share and scan
@@ -458,6 +462,10 @@
 
         function openImportOrExportDialog() {
             let modal = document.getElementById('modalTop');
+            var x = window.matchMedia("(max-width: 1092px)");
+            var y = window.matchMedia("(max-width: 1200px)");
+            var z = window.matchMedia("(max-width: 490px)");
+            var p = window.matchMedia("(max-width: 1010px)");
             modal.style.display = "block";
             modal.style.background = "#eceaea";
 
@@ -479,23 +487,109 @@
             this.hideManipulationButtons();
             this.hideBubbleContainer();
 
+            $(".close").click(function () {
+                $("#shareOrScan").remove();
+                $("#scanImgElement").remove();
+                $("#shareImgElement").remove();
+            });
             let lang = SettingsSingleton.getInstance().getSettings().general.language;
 
             let parent = modal;
 
-            let heading = document.createElement("h3");
+            let heading = document.createElement("h1");
+            let div = document.createElement("div");
+            let scanDiv = document.createElement("div");
+            scanDiv.id="scanDiv";
+            let shareDiv = document.createElement("div");
+            shareDiv.id="shareDiv";
+            div.id="shareOrScandiv";
+            div.style.textAlign="center";
+            div.style.display="flex";
+            shareDiv.display="flex";
+            heading.id="shareOrScan";
             heading.innerHTML = strings.qrCode.scanOrShare[lang];
             heading.style.textAlign = "center";
             parent.appendChild(heading);
 
             // Add scan / share buttons
             let scanImgElement = SettingsForm.createImg("scanImg", "resources/images/icons/scan_qr_code.png");
+            scanImgElement.id = "scanImgElement";
+            scanImgElement.style.marginLeft="8vw";
+            if(y.matches){//if media query matches ==>  width : 1200 px
+                  scanImgElement.style.marginLeft="auto";
+            }
+            if(z.matches){  // media query ==>  width :  490px
+                scanImgElement.style.width="50%";
+            }
+            if(p.matches){
+                div.style.display="block";
+            }
             scanImgElement.onclick = () => openScanQrCode();
             let shareImgElement = SettingsForm.createImg("shareImg", "resources/images/icons/share_qr_code.png");
+            shareImgElement.id = "shareImgElement";
+            if(z.matches){  // media query ==>  width :  490px
+                shareImgElement.style.width="50%";
+            }
+            if(x.matches){ //if media query matches  ==>  width : 1092px
+                //shareDiv.style.width = "40%";
+                shareDiv.style.textAlign = "center";
+                shareDiv.display="none";
+                //div.style.display="block";
+                scanDiv.style.textAlign = "center";
+            }
             shareImgElement.onclick = () => handleShareSettings();
 
-            parent.appendChild(scanImgElement);
-            parent.appendChild(shareImgElement);
+            scanDiv.appendChild(scanImgElement);
+            shareDiv.appendChild(shareImgElement);
+            div.appendChild(scanDiv);
+            div.appendChild(shareDiv);
+            parent.appendChild(div);
+        }
+
+        function showCameraUnavailable(){
+            let modal = document.getElementById('modalTop');
+            if ($(modal).is(':visible')) {
+                this.closeModal();
+            }
+
+            this.hideBubbleContainer();
+            this.disableSnapshotButton();
+            this.hideManipulationButtons();
+            this.closeBoardSelector();
+            this.disablePointerEventsOnPieces();
+            modal.style.display = "block";
+            modal.style.background = "transparent";
+
+            document.querySelector(".modalFormContent").style.display = "block";
+            document.querySelector(".innerGrid").style.display = "none";
+            document.querySelector(".modalFullframeContainer").style.display = "none";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent("#innerGridForm");
+            template.clearContent("#filterGrid");
+
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
+            let textNode = {
+                class: "modalText",
+                text: strings.general.showCameraUnavailable[lang]
+            };
+            template.attachText("#modalTitleID", textNode);
+
+            let okBtn = {
+                class: "deleteBtn",
+                onclick: "closeModalContainer()",
+                textContent: strings.general.ok[lang]
+            };
+
+            template.attachBtn("#modalButtonsID", okBtn);
+
+            let okButton = document.querySelector(".okBtn");
+            okButton.addEventListener("click", () => {
+                this.closeModal();
+            });
+            $("#bubbleContainer").css("display", "block");
         }
 
         function handleShareSettings() {
@@ -737,6 +831,23 @@
             template.clearContent(".innerGrid")
             template.clearContent("#innerGridForm");
 
+            QrScanner.hasCamera().then((hasCamera) => {
+                if (hasCamera) {
+                    openScanQrFunctionality();
+                } else {
+                    handleCameraNotFoundError();
+                }
+            });
+        }
+
+        function handleCameraNotFoundError() {
+            console.info("handle camera not found");
+            showCameraUnavailable();
+        }
+
+        function openScanQrFunctionality() {
+            console.info("browser has camera");
+
             let lang = SettingsSingleton.getInstance().getSettings().general.language;
 
             let parent = $('#innerGridForm')[0];
@@ -755,26 +866,35 @@
 
             QrScanner.WORKER_PATH = 'resources/jsonform/qr-scanner-worker.min.js';
 
-            const qrScanner = new QrScanner(videoElement, result => {
+            qrScanner = new QrScanner(videoElement, result => {
                 let success = onQrCodeScanned(result);
                 if (success) {
-                    qrScanner.stop();
                     this.reactionScreenOnScanned();
                     this.closeModal();
                 }
             });
 
-            qrScanner.start();
-
-            // Draw video on canvas with rectangle
-            videoElement.onplay = function () {
-                setTimeout(function () {
-                    drawVideoToCanvas(videoElement, canvasElem);
-                }, 300);
-            };
+            qrScanner.start().then(() => {
+                // Draw video on canvas with rectangle
+                videoElement.onplay = function () {
+                    setTimeout(function () {
+                        drawVideoToCanvas(videoElement, canvasElem);
+                    }, 300);
+                };
+            }).catch(error => {
+                console.info("camera permission not granted");
+                showCameraUnavailable();
+            });
 
             //onQrCodeScanned("https://pentomino-digital.de/V5/index.html?t=2010101110111011101110121");
             //this.closeModal();
+        }
+
+        function destroyQrScanner() {
+            if (!(qrScanner === null)) {
+                qrScanner.destroy();
+                qrScanner = null;
+            }
         }
 
         function handleDownloadImage(downloadImageButton, canvasElement) {
@@ -837,7 +957,7 @@
             } catch (_) {
                 // TODO: display error-msg to user in better way
                 alert("Scanned in wrong QR-code.");
-                console.error("Scanned code is not a url: " + qrCode);
+                console.info("Scanned code is not a url: " + qrCode);
                 return false;
             }
 
@@ -847,7 +967,7 @@
                 // TODO: display error-msg to user in better way
                 // No parameter for seed found
                 alert("Scanned in wrong QR-code.");
-                console.error("Scanned url does not contain TUCA seed: " + qrCode);
+                console.info("Scanned url does not contain TUCA seed: " + qrCode);
                 return false;
             }
 
@@ -857,7 +977,7 @@
             if (newSettings === null) {
                 // TODO: display error-msg to user in better way
                 alert("Scanned in wrong QR-code.");
-                console.error("Scanned seed could not be parsed into a settings configuration: " + seed);
+                console.info("Scanned seed could not be parsed into a settings configuration: " + seed);
                 return false;
             }
 
@@ -967,6 +1087,7 @@
         }
 
         function closeModal() {
+            destroyQrScanner();
             document.getElementById('boardmodalTop').style.display = 'none';
             this.closeModalContainer();
             this.enableSnapshotButton();
@@ -1211,16 +1332,25 @@
                     $('.formButton').css('bottom','11vw');
                 }
             }
-
+            $("#shareOrScan").remove();
+            $("#scanImgElement").remove();
+            $("#shareImgElement").remove();
         }
 
         // called when license button is clicked in settings
-        function handleClickedOnLicenses(settings) {
+        function handleClickedOnLicenses() {
             this.hideManipulationButtons();
             this.closeBoardSelector();
             UtilitiesClass.disablePointerEventsOnModalOpen();
             var modal = document.getElementById('modalTop');
             let modalFormContent = document.getElementsByClassName('modalFormContent');
+            let y = document.getElementsByClassName("cActionBtn");
+            //show back button
+            let btn = document.getElementById("backButton");
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+            let licenceHeading = strings.License[lang];
+            let h2 = document.createElement("h2");
+            let div5 = document.createElement("div");
             modal.style.display = "block";
             modal.style.background = "transparent";
             document.querySelector(".modalFormContent").style.display = "block";
@@ -1234,11 +1364,8 @@
             modal.style.background = "#dcf0ed";
             document.getElementById("modalFormContainerID").style.backgroundColor = "lightgrey";
             document.getElementById("modalFormContainerID").style.border = "none";
-            let y = document.getElementsByClassName("cActionBtn");
             for (let i = 0; i < y.length; i++) { y[i].style.pointerEvents = "none"; }
             $(".modalFormContent").css("display", "none");
-            //show back button
-            let btn = document.getElementById("backButton");
             btn.style.display = "block";
             $(".close").click(function () {
                 document.getElementById("modalTop").style.display = "none";
@@ -1269,13 +1396,9 @@
                 //SettingsForm.updateForm($('#innerGridForm')[0], settings);
                 btn.style.display = "none";
             };
-            let lang = SettingsSingleton.getInstance().getSettings().general.language;
-            let licenceHeading = strings.License[lang];
-            let h2 = document.createElement("h2");
             h2.id = "licenseHeading";
             h2.innerHTML = strings.License[lang];
             h2.style.textAlign = "center";
-            let div5 = document.createElement("div");
             div5.id = "tableLicenseDiv";
             div5.style.marginTop = "10vh";
             div5.style.marginRight = "5vh";
