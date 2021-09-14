@@ -545,6 +545,52 @@
             parent.appendChild(div);
         }
 
+        function showCameraUnavailable(){
+            let modal = document.getElementById('modalTop');
+            if ($(modal).is(':visible')) {
+                this.closeModal();
+            }
+
+            this.hideBubbleContainer();
+            this.disableSnapshotButton();
+            this.hideManipulationButtons();
+            this.closeBoardSelector();
+            this.disablePointerEventsOnPieces();
+            modal.style.display = "block";
+            modal.style.background = "transparent";
+
+            document.querySelector(".modalFormContent").style.display = "block";
+            document.querySelector(".innerGrid").style.display = "none";
+            document.querySelector(".modalFullframeContainer").style.display = "none";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent("#innerGridForm");
+            template.clearContent("#filterGrid");
+
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
+            let textNode = {
+                class: "modalText",
+                text: strings.general.showCameraUnavailable[lang]
+            };
+            template.attachText("#modalTitleID", textNode);
+
+            let okBtn = {
+                class: "deleteBtn",
+                onclick: "closeModalContainer()",
+                textContent: strings.general.ok[lang]
+            };
+
+            template.attachBtn("#modalButtonsID", okBtn);
+
+            let okButton = document.querySelector(".okBtn");
+            okButton.addEventListener("click", () => {
+                this.closeModal();
+            });
+            $("#bubbleContainer").css("display", "block");
+        }
+
         function handleShareSettings() {
             let modal = document.getElementById('modalTop');
 
@@ -784,6 +830,23 @@
             template.clearContent(".innerGrid")
             template.clearContent("#innerGridForm");
 
+            QrScanner.hasCamera().then((hasCamera) => {
+                if (hasCamera) {
+                    openScanQrFunctionality();
+                } else {
+                    handleCameraNotFoundError();
+                }
+            });
+        }
+
+        function handleCameraNotFoundError() {
+            console.info("handle camera not found");
+            showCameraUnavailable();
+        }
+
+        function openScanQrFunctionality() {
+            console.info("browser has camera");
+
             let lang = SettingsSingleton.getInstance().getSettings().general.language;
 
             let parent = $('#innerGridForm')[0];
@@ -811,14 +874,17 @@
                 }
             });
 
-            qrScanner.start();
-
-            // Draw video on canvas with rectangle
-            videoElement.onplay = function () {
-                setTimeout(function () {
-                    drawVideoToCanvas(videoElement, canvasElem);
-                }, 300);
-            };
+            qrScanner.start().then(() => {
+                // Draw video on canvas with rectangle
+                videoElement.onplay = function () {
+                    setTimeout(function () {
+                        drawVideoToCanvas(videoElement, canvasElem);
+                    }, 300);
+                };
+            }).catch(error => {
+                console.info("camera permission not granted");
+                showCameraUnavailable();
+            });
 
             //onQrCodeScanned("https://pentomino-digital.de/V5/index.html?t=2010101110111011101110121");
             //this.closeModal();
@@ -884,7 +950,7 @@
             } catch (_) {
                 // TODO: display error-msg to user in better way
                 alert("Scanned in wrong QR-code.");
-                console.error("Scanned code is not a url: " + qrCode);
+                console.info("Scanned code is not a url: " + qrCode);
                 return false;
             }
 
@@ -894,7 +960,7 @@
                 // TODO: display error-msg to user in better way
                 // No parameter for seed found
                 alert("Scanned in wrong QR-code.");
-                console.error("Scanned url does not contain TUCA seed: " + qrCode);
+                console.info("Scanned url does not contain TUCA seed: " + qrCode);
                 return false;
             }
 
@@ -904,7 +970,7 @@
             if (newSettings === null) {
                 // TODO: display error-msg to user in better way
                 alert("Scanned in wrong QR-code.");
-                console.error("Scanned seed could not be parsed into a settings configuration: " + seed);
+                console.info("Scanned seed could not be parsed into a settings configuration: " + seed);
                 return false;
             }
 
