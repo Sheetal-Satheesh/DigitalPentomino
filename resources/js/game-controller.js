@@ -265,7 +265,7 @@ class GameController {
         this.game().addToTray(pentomino);
     }
     // --- --- --- Hints --- --- ---
-    getHint() {
+    getHint(isSplitActive, piecesSelectedForPartition) {
         if (this.game() === null) {
             throw new Error("Game is not set");
         }
@@ -274,11 +274,23 @@ class GameController {
             console.error("HintAI not initialized");
         }
 
-        return this.hintAI().getHint(this.game());
+        return this.hintAI().getHint(this.game(), isSplitActive, piecesSelectedForPartition);
+    }
+
+    getPossibleSolutions() {
+        if (this.game() === null) {
+            throw new Error("Game is not set");
+        }
+
+        if (this.hintAI() === null) {
+            console.error("HintAI not initialized");
+        }
+
+        return this.hintAI().getCurrentSolutionCount(this.game());
     }
         
     //--- --- --- Split Board --- --- --
-    loadSplit() {
+    splitByColor() {
         if (this.game() === null) {
             throw new Error("Game is not set");
         }
@@ -287,11 +299,11 @@ class GameController {
             console.error(" not initialized");
         }
 
-        return this.splitBoard().loadSplit();
+        return this.splitBoard().splitByColor(this.game());
     }
 
     //--- --- --- Split Board V2 --- --- ---
-    loadSplit_V2() {
+    splitFromLeftToRight() {
         if (this.game() === null) {
             throw new Error("Game is not set");
         }
@@ -300,14 +312,14 @@ class GameController {
             console.error(" not initialized");
         }
 
-        return this.splitBoard().loadSplit_V2();
+        return this.splitBoard().splitFromLeftToRight(this.game());
     }
 
     partitionHasUnoccupiedPosition(pentomino) {
         if (this.game() === null) {
             throw new Error("Game is not set");
         }
-        return this.splitBoard().partitionHasUnoccupiedPosition(pentomino);
+        return this.splitBoard().partitionHasUnoccupiedPosition(pentomino, this.game());
     }
 
     getSolutions() {

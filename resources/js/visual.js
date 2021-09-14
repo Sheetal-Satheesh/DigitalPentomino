@@ -893,12 +893,12 @@ class Visual {
           return;
       }
       if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-          labelPossibleSolutions.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
+          labelPossibleSolutions.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getPossibleSolutions().length;
       }
         //Fill speech bubble text
-        speechBubbleText.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
+        speechBubbleText.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getPossibleSolutions().length;
         if(SettingsSingleton.getInstance().getSettings().autohinting.enableAutoHinting){
-            if((this.gameController.getHint().getPossibleSolutions().length) === 0){
+            if((this.gameController.getPossibleSolutions().length) === 0){
                 count+=1;
                 //check if number of wrongg moves is greater than the value configured in settings
                 if(count > SettingsSingleton.getInstance().getSettings().autohinting.numberOfWrongMoves ){
@@ -908,10 +908,12 @@ class Visual {
         }
     }
 
-
+    getSplitStatus() {
+        return document.querySelector(".splitbuttonimg") !== null;
+    }
 
     callHintAI() {
-        let hint = pd.gameController.getHint();
+        let hint = pd.gameController.getHint(this.getSplitStatus(), piecesSelectedForPartition);
         //disable hint button until hint is finished
         let hintButton = document.getElementById('hintButton');
         hintButton.disabled = true;
@@ -945,7 +947,7 @@ class Visual {
     }
 
     hintText(hint){
-     hint = pd.gameController.getHint();
+     hint = pd.gameController.getHint(this.getSplitStatus(), piecesSelectedForPartition);
      let lang = SettingsSingleton.getInstance().getSettings().general.language;
      let commandNumber = 0;
      let hintCommand = hint.getCommands()[commandNumber];
@@ -1037,7 +1039,7 @@ class Visual {
    autoHintWrongMoves(){
         let lang = SettingsSingleton.getInstance().getSettings().general.language;
         let pointer;
-        if(!(SettingsSingleton.getInstance().getSettings().autohinting.autoHintVariants === "Wrong moves")){
+        if(!(SettingsSingleton.getInstance().getSettings().autohinting.wrongMoves)){
             return;
         }
           //start bird animation
@@ -1053,20 +1055,20 @@ class Visual {
   }
 
    showTextualHint(){
-      let hint = pd.gameController.getHint();
+      let hint = pd.gameController.getHint(this.getSplitStatus(), piecesSelectedForPartition);
       this.hintText(hint);
     }
 
    ignore(){
       let lang = SettingsSingleton.getInstance().getSettings().general.language;
-      document.getElementById('speechBubbleText').textContent = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
+      document.getElementById('speechBubbleText').textContent = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getPossibleSolutions().length;
       if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-          document.getElementById("labelNumberSolutions").innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getHint().getPossibleSolutions().length;
+          document.getElementById("labelNumberSolutions").innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getPossibleSolutions().length;
       }
   }
 
    bothAutoHint(){
-      let hint = pd.gameController.getHint();
+      let hint = pd.gameController.getHint(this.getSplitStatus(), piecesSelectedForPartition);
       this.callHintAI();
       this.hintText(hint);
   }
@@ -1079,7 +1081,7 @@ class Visual {
   configureAutoHints(){
     let lang = SettingsSingleton.getInstance().getSettings().general.language;
     let speechBubbleText = document.getElementById('speechBubbleText');
-    let hint = pd.gameController.getHint();
+    let hint = pd.gameController.getHint(this.getSplitStatus(), piecesSelectedForPartition);
     //checks if visual hints are enabled.
     //If enabled => the user can click on the button on the speech bubble to get the hint
     //checks if visual hints are enabled
@@ -1171,11 +1173,11 @@ class Visual {
         switch (splitCategory) {
             case "color":
                 this.undoSplit();
-                this.callSplitBoardViaColor();
+                this.splitBoardViaColor();
                 break;
             case "left-to-right":
                 this.readyForSplitting();
-                this.callSplitBoard_V2();
+                this.splitBoardLtoR();
                 break;
         }
     }
@@ -1187,13 +1189,14 @@ class Visual {
             splitButton.classList.add("splitbuttonimg");
         }
     }
-callSplitBoardViaColor() {
-        let partitionedArray = pd.gameController.loadSplit();
+
+    splitBoardViaColor() {
+        let partitionedArray = pd.gameController.splitByColor();
         this.displaySplit(partitionedArray, alternateColor);
     }
 
-    callSplitBoard_V2() {
-        let partitionedArray = pd.gameController.loadSplit_V2();
+    splitBoardLtoR() {
+        let partitionedArray = pd.gameController.splitFromLeftToRight();
         this.resize(partitionedArray, partitionedArray.length)
         let styleElement = document.querySelector('.boardarea');
         let styleValue = window.getComputedStyle(styleElement);
@@ -1610,14 +1613,8 @@ callSplitBoardViaColor() {
     }
 
     showGameSolved() {
-        let enabledSolvedScreen = SettingsSingleton.getInstance().getSettings().showSolvedBoardScreen.enableSolvedScreen;
-        if (!enabledSolvedScreen) {
-            return;
-        }
-
         let piecesIdArray = this.pieces.map(piece => "piece_" + piece.name);
         this.disablePointerEventsOnPieces(piecesIdArray);
-
         let modal = document.getElementById('modalTop');
         modal.style.display = "block";
         modal.style.background = "transparent";
@@ -1643,75 +1640,53 @@ callSplitBoardViaColor() {
         let div1 = document.createElement("div");
         let img = document.createElement("img");
 
-        let textNode3 = SettingsSingleton.getInstance().getSettings().showSolvedBoardScreen.SolvedScreens;
         let textNode2;
         let cancelBtn;
         let playAgnBtnAttributes;
         template.attachText("#modalBodyID", textNode1);
+        textNode2 = {
+            class: "modalText",
+            text: strings.showSolved.play[lang]
+        };
+        img.src = "resources/images/icons/solvedScreenBoy.ico";
+        img.style.cursor = "none";
+        div1.appendChild(img);
+        modalBodyID.appendChild(div1);
+        template.attachText("#modalBodyID", textNode2);
+        cancelBtn = {
+            class: "cancelBtn",
+            onclick: "document.getElementById('modalTop').style.display='none'",
+            textContent: strings.general.no[lang]
+        };
+        playAgnBtnAttributes = {
+            class: "deleteBtn",
+            onclick: "document.getElementById('modalTop').style.display='none'",
+            textContent: strings.general.yes[lang]
+        };
+        let div2 = document.createElement("div");
+        let text = document.createElement("h5");
+        text.innerHTML = "\n";
+        div2.appendChild(text);
+        //attach div
+        modalBodyID.appendChild(div2);
 
-        switch (textNode3) {
-            case "Play again?":
-                textNode2 = {
-                    class: "modalText",
-                    text: strings.showSolved.play[lang]
-                };
-                img.src = "resources/images/icons/solvedScreenBoy.ico";
-                img.style.cursor = "none";
-                div1.appendChild(img);
-                modalBodyID.appendChild(div1);
-                template.attachText("#modalBodyID", textNode2);
-                cancelBtn = {
-                    class: "cancelBtn",
-                    onclick: "document.getElementById('modalTop').style.display='none'",
-                    textContent: strings.general.no[lang]
-                };
-                playAgnBtnAttributes = {
-                    class: "deleteBtn",
-                    onclick: "document.getElementById('modalTop').style.display='none'",
-                    textContent: strings.general.yes[lang]
-                };
-                let div2 = document.createElement("div");
-                let text = document.createElement("h5");
-                text.innerHTML = "\n";
-                div2.appendChild(text);
-                //attach div
-                modalBodyID.appendChild(div2);
+        template.attachBtn("#modalBodyID", playAgnBtnAttributes);
+        template.attachBtn("#modalBodyID", cancelBtn);
+        let playAgainBtn = document.querySelector(".deleteBtn");
+        playAgainBtn.addEventListener("click", () => {
+            pd.reset();
+            this.enablePointerEventsOnPieces();
+        });
 
-                template.attachBtn("#modalBodyID", playAgnBtnAttributes);
-                template.attachBtn("#modalBodyID", cancelBtn);
-                let playAgainBtn = document.querySelector(".deleteBtn");
-                playAgainBtn.addEventListener("click", () => {
-                    pd.reset();
-                    this.enablePointerEventsOnPieces();
-                });
-
-                let dontPlayAgainBtn = document.querySelector(".cancelBtn");
-                dontPlayAgainBtn.addEventListener("click", () => {
-                    this.enablePointerEventsOnPieces();
-                });
-
-                break;
-            case "Well done! Please wait for your Teacher to continue":
-                textNode2 = {
-                    class: "modalText",
-                    text: strings.showSolved.WellDone[lang]
-                };
-                img.src = "resources/images/icons/solvedScreenMagician.ico";
-                div1.appendChild(img);
-                modalBodyID.appendChild(div1);
-                template.attachText("#modalBodyID", textNode2);
-                break;
-
-            case "Excellent ! Now continue with the next task on your assignment":
-                textNode2 = {
-                    class: "modalText",
-                    text: strings.showSolved.Excellent[lang]
-                };
-                img.src = "resources/images/icons/solvedScreenGift.ico";
-                div1.appendChild(img);
-                modalBodyID.appendChild(div1);
-                template.attachText("#modalBodyID", textNode2);
-                break;
+        let dontPlayAgainBtn = document.querySelector(".cancelBtn");
+        dontPlayAgainBtn.addEventListener("click", () => {
+            this.enablePointerEventsOnPieces();
+        });
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
         }
     }
 
