@@ -840,8 +840,7 @@
         }
 
         function handleCameraNotFoundError() {
-            // TODO - handle
-            console.log("handle camera not found");
+            console.info("handle camera not found");
             showCameraUnavailable();
         }
 
@@ -883,7 +882,6 @@
                     }, 300);
                 };
             }).catch(error => {
-                // TODO - camera permission not granted
                 console.info("camera permission not granted");
                 showCameraUnavailable();
             });
@@ -952,7 +950,7 @@
             } catch (_) {
                 // TODO: display error-msg to user in better way
                 alert("Scanned in wrong QR-code.");
-                console.error("Scanned code is not a url: " + qrCode);
+                console.info("Scanned code is not a url: " + qrCode);
                 return false;
             }
 
@@ -962,7 +960,7 @@
                 // TODO: display error-msg to user in better way
                 // No parameter for seed found
                 alert("Scanned in wrong QR-code.");
-                console.error("Scanned url does not contain TUCA seed: " + qrCode);
+                console.info("Scanned url does not contain TUCA seed: " + qrCode);
                 return false;
             }
 
@@ -972,7 +970,7 @@
             if (newSettings === null) {
                 // TODO: display error-msg to user in better way
                 alert("Scanned in wrong QR-code.");
-                console.error("Scanned seed could not be parsed into a settings configuration: " + seed);
+                console.info("Scanned seed could not be parsed into a settings configuration: " + seed);
                 return false;
             }
 
