@@ -548,6 +548,12 @@
 
         function showCameraUnavailable(){
             let modal = document.getElementById('modalTop');
+            let scan = $("#scanImgElement");
+            let share = $("#shareImgElement");
+            let shareScanHeading = $("#shareOrScan");
+            share.css("display", "none");
+            scan.css("display","none");
+            shareScanHeading.css("display","none");
             if ($(modal).is(':visible')) {
                 this.closeModal();
             }
@@ -578,7 +584,7 @@
             template.attachText("#modalTitleID", textNode);
 
             let okBtn = {
-                class: "deleteBtn",
+                class: "okBtn",
                 onclick: "closeModalContainer()",
                 textContent: strings.general.ok[lang]
             };
@@ -603,6 +609,9 @@
             modal.style.display = "block";
             modal.style.background = "transparent";
 
+            $("#shareOrScan").remove();
+            $("#scanImgElement").remove();
+            $("#shareImgElement").remove();
             document.querySelector(".modalFormContent").style.display = "block";
             document.querySelector(".innerGrid").style.display = "none";
             document.querySelector(".modalFullframeContainer").style.display = "none";
