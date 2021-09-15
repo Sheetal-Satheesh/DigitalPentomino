@@ -1647,7 +1647,6 @@
                 cloneImg.style.height = '5.5vw';
                 cloneImg.value = img.value;
                 targetDiv.appendChild(cloneImg);
-                console.log(cloneImg.value);
             });
 
         }
@@ -1855,8 +1854,8 @@
             }
 
             this.disableSnapshotButton();
-            //this.disablePointerEventsOnPieces();//TODO: Fix this
-            this.hideManipulationButtons();
+            this.disablePointerEventsOnPieces();//TODO: Fix this
+            hideManipulationButtons();
             pd.visual.saveGameImage(SnapshotType.Auto);
 
             var modal = document.getElementById('modalTop');
