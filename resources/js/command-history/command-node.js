@@ -4,6 +4,7 @@ class CommandNode {
         if (!(command instanceof Command)) {
             throw new Error("Invalid Commands: " + Command);
         }
+        /** Random key is generated to identify every command in the tree */
         this._key = Math.random().toString(36).slice(-10); /* key length: 10 */
         this._command = command;
         this._parent = this;
