@@ -132,10 +132,10 @@ class Visual {
             }
         }
     }
-    numberofPlacedPentominos(){
-     let NumberOfPentominoes = this.gameController.game()._board._pentominoes.length;
-     return NumberOfPentominoes;
-   }
+    numberofPlacedPentominos() {
+        let NumberOfPentominoes = this.gameController.game()._board._pentominoes.length;
+        return NumberOfPentominoes;
+    }
 
     removeFromTray(pentomino) {
         if (pentomino.inTray == 0) {
@@ -157,7 +157,7 @@ class Visual {
         this.renderPieces();
         this.undoSplit();
         let splitButton = document.getElementById("splitBoardimg");
-        if(splitButton.classList.contains("splitbuttonimg")){
+        if (splitButton.classList.contains("splitbuttonimg")) {
             splitButton.classList.remove("splitbuttonimg");
         }
     }
@@ -249,9 +249,9 @@ class Visual {
                 var row = bitMap[i];
                 for (var j in row) {
                     var set = bitMap[i][j];
-                    let bmLeft = (j*width) + 'vw';
-                    let bmTop = (i*width) + 'vw';
-                    out += '<div style="display:block;position:fixed;top:' +  bmTop + ';left:' + bmLeft + ';width:' + width + 'vw;height:' + width + 'vw;' + ((set) ? 'background:' + piece.color : '') + '" class="' + ((set) ? 'bmPoint' : 'bmAround') + '"></div>';
+                    let bmLeft = (j * width) + 'vw';
+                    let bmTop = (i * width) + 'vw';
+                    out += '<div style="display:block;position:fixed;top:' + bmTop + ';left:' + bmLeft + ';width:' + width + 'vw;height:' + width + 'vw;' + ((set) ? 'background:' + piece.color : '') + '" class="' + ((set) ? 'bmPoint' : 'bmAround') + '"></div>';
                 }
             }
             out += '</div>';
@@ -299,13 +299,13 @@ class Visual {
             htmlElement.style.setProperty("--rotationY", "0deg");
             htmlElement.style.setProperty("--rotationZ", "0deg");
 
-            if(piecesSelectedForPartition.length != 0 && splitCounter <= 1 ) {
+            if (piecesSelectedForPartition.length != 0 && splitCounter <= 1) {
                 let containsDisplayedPieceName = piecesSelectedForPartition.indexOf(piece.name);
-                if(containsDisplayedPieceName === -1 ) {
+                if (containsDisplayedPieceName === -1) {
                     htmlElement.style.display = 'none';
 
                 }
-                else if (containsDisplayedPieceName >=0) {
+                else if (containsDisplayedPieceName >= 0) {
                     htmlElement.style.display = 'block';
                 }
             }
@@ -367,12 +367,12 @@ class Visual {
         //making the element visible (see remark in renderPieces)
         htmlElement.style.display = 'block';
 
-        if(piecesSelectedForPartition.length != 0 && splitCounter <= 1 ) {
+        if (piecesSelectedForPartition.length != 0 && splitCounter <= 1) {
             let containsDisplayedPieceName = piecesSelectedForPartition.indexOf(piece.name);
-            if(containsDisplayedPieceName === -1 ) {
+            if (containsDisplayedPieceName === -1) {
                 htmlElement.style.display = 'none';
             }
-            else if (containsDisplayedPieceName >=0) {
+            else if (containsDisplayedPieceName >= 0) {
                 htmlElement.style.display = 'block';
             }
         }
@@ -483,9 +483,9 @@ class Visual {
         }
         this.pieces.forEach(piece => {
             let containsDisplayedPieceName = piecesDisplayed.indexOf(piece.name)
-                if(containsDisplayedPieceName >= 0 ) {
-                    document.getElementById('piece_'+ piece.name).classList.add("disabledbutton");
-                }
+            if (containsDisplayedPieceName >= 0) {
+                document.getElementById('piece_' + piece.name).classList.add("disabledbutton");
+            }
         });
 
 
@@ -718,7 +718,7 @@ class Visual {
                          */
                         that.select(data[1], event.clientX, event.clientY);
                         flagCheckPartitionSolved = that.checkPartitionSolved();
-                        if(flagCheckPartitionSolved) {
+                        if (flagCheckPartitionSolved) {
                             that.blockPartition();
                             that.displaySplit_V2();
                         }
@@ -880,28 +880,28 @@ class Visual {
     }
 
     showNumberOfPossibleSolutions() {
-      let speechBubbleText = document.getElementById("speechBubbleText");
-      let lang = SettingsSingleton.getInstance().getSettings().general.language;
-      let pointer;
+        let speechBubbleText = document.getElementById("speechBubbleText");
+        let lang = SettingsSingleton.getInstance().getSettings().general.language;
+        let pointer;
         //Fill solutions label text
-      let labelPossibleSolutions = document.getElementById("labelNumberSolutions");
-      if (this.gameController.game()._board.isSolved()) {
+        let labelPossibleSolutions = document.getElementById("labelNumberSolutions");
+        if (this.gameController.game()._board.isSolved()) {
             speechBubbleText.innerText = strings.speechbubbleTexts.Solved[lang];
-            if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
-               this.speakBot(strings.speechbubbleTexts.Solved[lang]);
+            if (SettingsSingleton.getInstance().getSettings().speech.enableSpeech) {
+                this.speakBot(strings.speechbubbleTexts.Solved[lang]);
             }
-          return;
-      }
-      if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-          labelPossibleSolutions.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getPossibleSolutions().length;
-      }
+            return;
+        }
+        if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
+            labelPossibleSolutions.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getPossibleSolutions().length;
+        }
         //Fill speech bubble text
         speechBubbleText.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getPossibleSolutions().length;
-        if(SettingsSingleton.getInstance().getSettings().autohinting.enableAutoHinting){
-            if((this.gameController.getPossibleSolutions().length) === 0){
-                count+=1;
+        if (SettingsSingleton.getInstance().getSettings().autohinting.enableAutoHinting) {
+            if ((this.gameController.getPossibleSolutions().length) === 0) {
+                count += 1;
                 //check if number of wrongg moves is greater than the value configured in settings
-                if(count > SettingsSingleton.getInstance().getSettings().autohinting.numberOfWrongMoves ){
+                if (count > SettingsSingleton.getInstance().getSettings().autohinting.numberOfWrongMoves) {
                     this.autoHintWrongMoves();
                 }
             }
@@ -931,237 +931,237 @@ class Visual {
             let audio = new Audio('resources/audio/hinting.mp3');
             audio.play();
         }
-        if((SettingsSingleton.getInstance().getSettings().hinting.typeOfHints === "Visual" )){
+        if ((SettingsSingleton.getInstance().getSettings().hinting.typeOfHints === "Visual")) {
             this.indicateHint(hint, commandNumber);
-       }
-       // if((SettingsSingleton.getInstance().getSettings().hinting.typeOfHints === "Textual" )){
-       //      pd.visual.hintText(hint);
-       // }
-       if((SettingsSingleton.getInstance().getSettings().hinting.typeOfHints === "Visual and textual" )){
+        }
+        // if((SettingsSingleton.getInstance().getSettings().hinting.typeOfHints === "Textual" )){
+        //      pd.visual.hintText(hint);
+        // }
+        if ((SettingsSingleton.getInstance().getSettings().hinting.typeOfHints === "Visual and textual")) {
             pd.visual.hintText(hint);
             this.indicateHint(hint, commandNumber);
-       }
+        }
         setTimeout(function () {
             hintButton.disabled = false;
         }, 1000);
     }
 
-    hintText(hint){
-     hint = pd.gameController.getHint(this.getSplitStatus(), piecesSelectedForPartition);
-     let lang = SettingsSingleton.getInstance().getSettings().general.language;
-     let commandNumber = 0;
-     let hintCommand = hint.getCommands()[commandNumber];
-     let timeoutFrame = 1000;
-     let r;
-     let x = window.matchMedia("(max-width: 860px)");
-     //possible command names (place, remove, moveToPosition, rotateClkWise, rotateAntiClkWise, mirrorH, mirrorV)
-     let hintSkill = hint._skill;
-     let hintName = hintCommand._name;
-     r = document.getElementById("speechBubbleText");
-         switch (hintName) {
-           case "Remove":
-               this.text = strings.speechbubbleTexts.removePentomino[lang]  + " pentomino " + hintCommand._pentomino.name;
-               if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
-                  this.speakBot(this.text);
-               }
-               document.getElementById("speechBubbleText").textContent = this.text;
-               if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-                   document.getElementById("labelNumberSolutions").innerText = this.text;
-               }
-               break;
-           case "MoveToPosition":
-               this.text = strings.speechbubbleTexts.move[lang] + " pentomino " + hintCommand._pentomino.name + strings.speechbubbleTexts.MoveToPosition[lang] + " " + "[" + hintCommand._row + "," + hintCommand._col + "]";
-               if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
-                  this.speakBot(this.text);
-               }
-               document.getElementById("speechBubbleText").textContent = this.text;
-               if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-                   document.getElementById("labelNumberSolutions").innerText = this.text;
-               }
-               break;
-           case "Place":
-               this.text = strings.speechbubbleTexts.place[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.atPosition[lang]  + " " +  "[" + hintCommand._nextPosition[0] + "," + hintCommand._nextPosition[1] + "]";
-               if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
-                  this.speakBot(this.text);
-               }
-               document.getElementById("speechBubbleText").textContent = this.text;
-               if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-                   document.getElementById("labelNumberSolutions").innerText = this.text;
-               }
-               break;
-           case "RotateClkWise":
-               this.text = strings.speechbubbleTexts.rotate[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.clockwise[lang];
-               if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
-                  this.speakBot(this.text);
-               }
-               document.getElementById("speechBubbleText").textContent = this.text;
-               if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-                   document.getElementById("labelNumberSolutions").innerText = this.text;
-               }
-               break;
-           case "RotateAntiClkWise":
-               this.text = strings.speechbubbleTexts.rotate[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.antiClockwise[lang];
-               if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
-                  this.speakBot(this.text);
-               }
-               document.getElementById("speechBubbleText").textContent = this.text;
-               if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-                   document.getElementById("labelNumberSolutions").innerText = this.text;
-               }
-               break;
-           case "MirrorH":
-               this.text = strings.speechbubbleTexts.mirror[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.horizontal[lang];
-               if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
-                  this.speakBot(this.text);
-               }
-               document.getElementById("speechBubbleText").textContent = this.text;
-               if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-                   document.getElementById("labelNumberSolutions").innerText = this.text;
-               }
-               break;
-           case "MirrorV":
-               this.text = strings.speechbubbleTexts.mirror[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.vertical[lang];
-               if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
-                  this.speakBot(this.text);
-               }
-               document.getElementById("speechBubbleText").textContent = this.text;
-               if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-                   document.getElementById("labelNumberSolutions").innerText = this.text;
-               }
-               break;
-           default:
-               this.text = "Error - unknown command with name '" + hintName + "'";
-               throw new Error("Error: unknown command with name " + hintName);
-       }
-   }
+    hintText(hint) {
+        hint = pd.gameController.getHint(this.getSplitStatus(), piecesSelectedForPartition);
+        let lang = SettingsSingleton.getInstance().getSettings().general.language;
+        let commandNumber = 0;
+        let hintCommand = hint.getCommands()[commandNumber];
+        let timeoutFrame = 1000;
+        let r;
+        let x = window.matchMedia("(max-width: 860px)");
+        //possible command names (place, remove, moveToPosition, rotateClkWise, rotateAntiClkWise, mirrorH, mirrorV)
+        let hintSkill = hint._skill;
+        let hintName = hintCommand._name;
+        r = document.getElementById("speechBubbleText");
+        switch (hintName) {
+            case "Remove":
+                this.text = strings.speechbubbleTexts.removePentomino[lang] + " pentomino " + hintCommand._pentomino.name;
+                if (SettingsSingleton.getInstance().getSettings().speech.enableSpeech) {
+                    this.speakBot(this.text);
+                }
+                document.getElementById("speechBubbleText").textContent = this.text;
+                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
+                    document.getElementById("labelNumberSolutions").innerText = this.text;
+                }
+                break;
+            case "MoveToPosition":
+                this.text = strings.speechbubbleTexts.move[lang] + " pentomino " + hintCommand._pentomino.name + strings.speechbubbleTexts.MoveToPosition[lang] + " " + "[" + hintCommand._row + "," + hintCommand._col + "]";
+                if (SettingsSingleton.getInstance().getSettings().speech.enableSpeech) {
+                    this.speakBot(this.text);
+                }
+                document.getElementById("speechBubbleText").textContent = this.text;
+                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
+                    document.getElementById("labelNumberSolutions").innerText = this.text;
+                }
+                break;
+            case "Place":
+                this.text = strings.speechbubbleTexts.place[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.atPosition[lang] + " " + "[" + hintCommand._nextPosition[0] + "," + hintCommand._nextPosition[1] + "]";
+                if (SettingsSingleton.getInstance().getSettings().speech.enableSpeech) {
+                    this.speakBot(this.text);
+                }
+                document.getElementById("speechBubbleText").textContent = this.text;
+                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
+                    document.getElementById("labelNumberSolutions").innerText = this.text;
+                }
+                break;
+            case "RotateClkWise":
+                this.text = strings.speechbubbleTexts.rotate[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.clockwise[lang];
+                if (SettingsSingleton.getInstance().getSettings().speech.enableSpeech) {
+                    this.speakBot(this.text);
+                }
+                document.getElementById("speechBubbleText").textContent = this.text;
+                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
+                    document.getElementById("labelNumberSolutions").innerText = this.text;
+                }
+                break;
+            case "RotateAntiClkWise":
+                this.text = strings.speechbubbleTexts.rotate[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.antiClockwise[lang];
+                if (SettingsSingleton.getInstance().getSettings().speech.enableSpeech) {
+                    this.speakBot(this.text);
+                }
+                document.getElementById("speechBubbleText").textContent = this.text;
+                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
+                    document.getElementById("labelNumberSolutions").innerText = this.text;
+                }
+                break;
+            case "MirrorH":
+                this.text = strings.speechbubbleTexts.mirror[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.horizontal[lang];
+                if (SettingsSingleton.getInstance().getSettings().speech.enableSpeech) {
+                    this.speakBot(this.text);
+                }
+                document.getElementById("speechBubbleText").textContent = this.text;
+                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
+                    document.getElementById("labelNumberSolutions").innerText = this.text;
+                }
+                break;
+            case "MirrorV":
+                this.text = strings.speechbubbleTexts.mirror[lang] + " pentomino " + hintCommand._pentomino.name + " " + strings.speechbubbleTexts.vertical[lang];
+                if (SettingsSingleton.getInstance().getSettings().speech.enableSpeech) {
+                    this.speakBot(this.text);
+                }
+                document.getElementById("speechBubbleText").textContent = this.text;
+                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
+                    document.getElementById("labelNumberSolutions").innerText = this.text;
+                }
+                break;
+            default:
+                this.text = "Error - unknown command with name '" + hintName + "'";
+                throw new Error("Error: unknown command with name " + hintName);
+        }
+    }
 
 
-   autoHintWrongMoves(){
+    autoHintWrongMoves() {
         let lang = SettingsSingleton.getInstance().getSettings().general.language;
         let pointer;
-        if(!(SettingsSingleton.getInstance().getSettings().autohinting.wrongMoves)){
+        if (!(SettingsSingleton.getInstance().getSettings().autohinting.wrongMoves)) {
             return;
         }
-          //start bird animation
-          document.getElementById('birdContainer').classList.add("anim");
+        //start bird animation
+        document.getElementById('birdContainer').classList.add("anim");
         //Speech bubble asks show the hint or ignore
         //this function call configures auto hints
         pd.visual.configureAutoHints();
         //stop bird animation
-        setTimeout(function(){
+        setTimeout(function () {
             document.getElementById('birdContainer').classList.remove("anim");
             count = 0;
         }, 20000);
-  }
-
-   showTextualHint(){
-      let hint = pd.gameController.getHint(this.getSplitStatus(), piecesSelectedForPartition);
-      this.hintText(hint);
     }
 
-   ignore(){
-      let lang = SettingsSingleton.getInstance().getSettings().general.language;
-      document.getElementById('speechBubbleText').textContent = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getPossibleSolutions().length;
-      if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-          document.getElementById("labelNumberSolutions").innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getPossibleSolutions().length;
-      }
-  }
+    showTextualHint() {
+        let hint = pd.gameController.getHint(this.getSplitStatus(), piecesSelectedForPartition);
+        this.hintText(hint);
+    }
 
-   bothAutoHint(){
-      let hint = pd.gameController.getHint(this.getSplitStatus(), piecesSelectedForPartition);
-      this.callHintAI();
-      this.hintText(hint);
-  }
+    ignore() {
+        let lang = SettingsSingleton.getInstance().getSettings().general.language;
+        document.getElementById('speechBubbleText').textContent = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getPossibleSolutions().length;
+        if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
+            document.getElementById("labelNumberSolutions").innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getPossibleSolutions().length;
+        }
+    }
 
-  visualAutoHint() {
-      this.callHintAI();
-  }
+    bothAutoHint() {
+        let hint = pd.gameController.getHint(this.getSplitStatus(), piecesSelectedForPartition);
+        this.callHintAI();
+        this.hintText(hint);
+    }
+
+    visualAutoHint() {
+        this.callHintAI();
+    }
 
 
-  configureAutoHints(){
-    let lang = SettingsSingleton.getInstance().getSettings().general.language;
-    let speechBubbleText = document.getElementById('speechBubbleText');
-    let hint = pd.gameController.getHint(this.getSplitStatus(), piecesSelectedForPartition);
-    //checks if visual hints are enabled.
-    //If enabled => the user can click on the button on the speech bubble to get the hint
-    //checks if visual hints are enabled
-    if((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Visual" )){
-      //Speech bubble says : I have a hint
-      setTimeout(function(){
-             speechBubbleText.textContent= strings.speechbubbleTexts.iHaveAHint[lang] ;
-             if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-                 document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.iHaveAHint[lang];
-             }
-         }, 3000);
-         //Speech bubble asks show the hint or ignore
-         setTimeout(function(){
-                 speechBubbleText.innerHTML = '<button id="showVisualHint" name="showVisualHint" onclick="pd.visual.visualAutoHint()" ></button>' + '<button id="hideVisualHint" name="hideVisualHint" onclick="pd.visual.ignore()">Ignore</button>';
-                 if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-                     document.getElementById("labelNumberSolutions").innerHTML = '<button id="showVisualHint" name="showVisualHint" onclick="pd.visual.visualAutoHint()" ></button>' + '<button id="hideVisualHint" name="hideVisualHint" onclick="pd.visual.ignore()">Ignore</button>';
-                 }
-                 document.querySelector("#showVisualHint").innerHTML = strings.speechbubbleTexts.showHint[lang];
-                 document.querySelector("#hideVisualHint").innerHTML = strings.speechbubbleTexts.ignore[lang];
+    configureAutoHints() {
+        let lang = SettingsSingleton.getInstance().getSettings().general.language;
+        let speechBubbleText = document.getElementById('speechBubbleText');
+        let hint = pd.gameController.getHint(this.getSplitStatus(), piecesSelectedForPartition);
+        //checks if visual hints are enabled.
+        //If enabled => the user can click on the button on the speech bubble to get the hint
+        //checks if visual hints are enabled
+        if ((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Visual")) {
+            //Speech bubble says : I have a hint
+            setTimeout(function () {
+                speechBubbleText.textContent = strings.speechbubbleTexts.iHaveAHint[lang];
+                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
+                    document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.iHaveAHint[lang];
+                }
+            }, 3000);
+            //Speech bubble asks show the hint or ignore
+            setTimeout(function () {
+                speechBubbleText.innerHTML = '<button id="showVisualHint" name="showVisualHint" onclick="pd.visual.visualAutoHint()" ></button>' + '<button id="hideVisualHint" name="hideVisualHint" onclick="pd.visual.ignore()">Ignore</button>';
+                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
+                    document.getElementById("labelNumberSolutions").innerHTML = '<button id="showVisualHint" name="showVisualHint" onclick="pd.visual.visualAutoHint()" ></button>' + '<button id="hideVisualHint" name="hideVisualHint" onclick="pd.visual.ignore()">Ignore</button>';
+                }
+                document.querySelector("#showVisualHint").innerHTML = strings.speechbubbleTexts.showHint[lang];
+                document.querySelector("#hideVisualHint").innerHTML = strings.speechbubbleTexts.ignore[lang];
             }, 5000);
-     }
-     //checks if Textual hints are enabled.
-     //If enabled => the user automatically gets a textul hint
-     else if((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Textual" )){
-       //Speech bubble says : I have a hint
-       setTimeout(function(){
-              speechBubbleText.textContent= strings.speechbubbleTexts.iHaveAHint[lang] ;
-              if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-                  document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.iHaveAHint[lang];
-              }
-          }, 3000);
+        }
+        //checks if Textual hints are enabled.
+        //If enabled => the user automatically gets a textul hint
+        else if ((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Textual")) {
+            //Speech bubble says : I have a hint
+            setTimeout(function () {
+                speechBubbleText.textContent = strings.speechbubbleTexts.iHaveAHint[lang];
+                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
+                    document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.iHaveAHint[lang];
+                }
+            }, 3000);
             //Speech bubble automatically shows textual hint
             //Speech bubble asks show the hint or ignore
             //Here the teacher can either show the buttons or just set for automatic textual hints display
-            setTimeout(function(){
-              if(SettingsSingleton.getInstance().getSettings().autohinting.showOrHideButtonsForTextualHints){
-                speechBubbleText.innerHTML = '<button id="showTextualHint" name="showTextualHint" onclick="pd.visual.showTextualHint()"></button>' + '<button id="hideTextualHint" name="hideTextualHint" onclick="pd.visual.ignore()"></button>';
-                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-                    document.getElementById("labelNumberSolutions").innerHTML = '<button id="showTextualHint" name="showTextualHint" onclick="pd.visual.showTextualHint()"></button>' + '<button id="hideTextualHint" name="hideTextualHint" onclick="pd.visual.ignore()"></button>';
+            setTimeout(function () {
+                if (SettingsSingleton.getInstance().getSettings().autohinting.showOrHideButtonsForTextualHints) {
+                    speechBubbleText.innerHTML = '<button id="showTextualHint" name="showTextualHint" onclick="pd.visual.showTextualHint()"></button>' + '<button id="hideTextualHint" name="hideTextualHint" onclick="pd.visual.ignore()"></button>';
+                    if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
+                        document.getElementById("labelNumberSolutions").innerHTML = '<button id="showTextualHint" name="showTextualHint" onclick="pd.visual.showTextualHint()"></button>' + '<button id="hideTextualHint" name="hideTextualHint" onclick="pd.visual.ignore()"></button>';
+                    }
+                    document.querySelector("#showTextualHint").innerHTML = strings.speechbubbleTexts.showHint[lang];
+                    document.querySelector("#hideTextualHint").innerHTML = strings.speechbubbleTexts.ignore[lang];
+                } else {
+                    pd.visual.hintText(hint);
                 }
-                document.querySelector("#showTextualHint").innerHTML = strings.speechbubbleTexts.showHint[lang];
-                document.querySelector("#hideTextualHint").innerHTML = strings.speechbubbleTexts.ignore[lang];
-              }else{
-                  pd.visual.hintText(hint);
-              }
             }, 5000);
-      }
-      else if((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Both" )){
-        //Speech bubble says : I have a hint
-        setTimeout(function(){
-               speechBubbleText.textContent= strings.speechbubbleTexts.iHaveAHint[lang] ;
-               if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-                   document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.iHaveAHint[lang];
-               }
-           }, 3000);
-           //Speech bubble asks show the hint or ignore
-           setTimeout(function(){
-                   speechBubbleText.innerHTML = '<button id="showBothHint" name="showBothHint" onclick="pd.visual.bothAutoHint()"></button>' + '<button id="hideBothHint" name="hideBothHint" onclick="pd.visual.ignore()"></button>';
-                   if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
-                       document.getElementById("labelNumberSolutions").innerHTML = '<button id="showBothHint" name="showBothHint" onclick="pd.visual.bothAutoHint()"></button>' + '<button id="hideBothHint" name="hideBothHint" onclick="pd.visual.ignore()"></button>';
-                   }
-                   document.querySelector("#showBothHint").innerHTML = strings.speechbubbleTexts.showHint[lang];
-                   document.querySelector("#hideBothHint").innerHTML = strings.speechbubbleTexts.ignore[lang];
-              }, 5000);
-      }
-  }
+        }
+        else if ((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Both")) {
+            //Speech bubble says : I have a hint
+            setTimeout(function () {
+                speechBubbleText.textContent = strings.speechbubbleTexts.iHaveAHint[lang];
+                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
+                    document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.iHaveAHint[lang];
+                }
+            }, 3000);
+            //Speech bubble asks show the hint or ignore
+            setTimeout(function () {
+                speechBubbleText.innerHTML = '<button id="showBothHint" name="showBothHint" onclick="pd.visual.bothAutoHint()"></button>' + '<button id="hideBothHint" name="hideBothHint" onclick="pd.visual.ignore()"></button>';
+                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
+                    document.getElementById("labelNumberSolutions").innerHTML = '<button id="showBothHint" name="showBothHint" onclick="pd.visual.bothAutoHint()"></button>' + '<button id="hideBothHint" name="hideBothHint" onclick="pd.visual.ignore()"></button>';
+                }
+                document.querySelector("#showBothHint").innerHTML = strings.speechbubbleTexts.showHint[lang];
+                document.querySelector("#hideBothHint").innerHTML = strings.speechbubbleTexts.ignore[lang];
+            }, 5000);
+        }
+    }
 
-  //end of configure autohints function
+    //end of configure autohints function
 
     resize(arr, newSize) {
         let partionLength = 0;
         let counter = 0;
-        if(splitPartition.length != 0) {
-            while(splitPartition.length === 0){
+        if (splitPartition.length != 0) {
+            while (splitPartition.length === 0) {
                 arr.pop();
             }
         }
         partionLength = splitPartition.length;
         splitCounter = -1;
-        while(partionLength < newSize) {
+        while (partionLength < newSize) {
             splitPartition.push(arr[counter]);
             counter++;
             partionLength++;
@@ -1185,7 +1185,7 @@ class Visual {
     readyForSplitting() {
         this.reset();
         this.undoSplit();
-        if(!splitButton.classList.contains("splitbuttonimg")) {
+        if (!splitButton.classList.contains("splitbuttonimg")) {
             splitButton.classList.add("splitbuttonimg");
         }
     }
@@ -1206,18 +1206,18 @@ class Visual {
 
     undoSplit() {
         Array.prototype.forEach.call(document.getElementsByClassName("gamearea boardarea"), function (element) {
-            if(!element.classList.contains("blockedcell")) {
+            if (!element.classList.contains("blockedcell")) {
                 element.style.backgroundColor = "";
-                element.style.opacity ="";
+                element.style.opacity = "";
             }
         });
         this.pieces.forEach(piece => {
             Array.prototype.forEach.call(document.getElementById('piece_' + piece.name).getElementsByClassName("bmPoint"), function (element) {
-                element.style.background = piece.color ;
+                element.style.background = piece.color;
             });
         });
         this.pieces.forEach(piece => {
-            document.getElementById('piece_'+ piece.name).style.display = 'block';
+            document.getElementById('piece_' + piece.name).style.display = 'block';
         });
         piecesSelectedForPartition = [];
         splitPartition = [];
@@ -1246,34 +1246,34 @@ class Visual {
         }
     }
 
-     displaySplit_V2() {
+    displaySplit_V2() {
         splitCounter++;
-        if(splitPartition.length > splitCounter) {
+        if (splitPartition.length > splitCounter) {
             let partitionedArray = splitPartition[splitCounter]
             let piecesDisplayed = [];
             for (let i = 0; i < partitionedArray.length; i++) {
                 for (let j = 0; j < partitionedArray[i][1].length; j++) {
-                        let fieldValue = partitionedArray[i][1];
-                        let fieldID = document.getElementById("field_" + fieldValue[j][0] + "," + fieldValue[j][1]);
-                        fieldID.style.background = "#77C9D4";
-                        fieldID.style.opacity = .5;
+                    let fieldValue = partitionedArray[i][1];
+                    let fieldID = document.getElementById("field_" + fieldValue[j][0] + "," + fieldValue[j][1]);
+                    fieldID.style.background = "#77C9D4";
+                    fieldID.style.opacity = .5;
                 }
                 piecesDisplayed.push(partitionedArray[i][0].name);
             }
-            for (let elm =0; elm < piecesDisplayed.length; elm++){
-                piecesSelectedForPartition.push(piecesDisplayed[elm]) ;
+            for (let elm = 0; elm < piecesDisplayed.length; elm++) {
+                piecesSelectedForPartition.push(piecesDisplayed[elm]);
             }
 
             this.pieces.forEach(piece => {
                 let containsDisplayedPieceName = piecesDisplayed.indexOf(piece.name)
-                    if(containsDisplayedPieceName === -1 ) {
-                        if(!document.getElementById('piece_'+ piece.name).classList.contains('disabledbutton')){
-                            document.getElementById('piece_'+ piece.name).style.display = 'none';
-                        }
+                if (containsDisplayedPieceName === -1) {
+                    if (!document.getElementById('piece_' + piece.name).classList.contains('disabledbutton')) {
+                        document.getElementById('piece_' + piece.name).style.display = 'none';
                     }
-                    else if (containsDisplayedPieceName >=0) {
-                        document.getElementById('piece_'+ piece.name).style.display = 'block';
-                    }
+                }
+                else if (containsDisplayedPieceName >= 0) {
+                    document.getElementById('piece_' + piece.name).style.display = 'block';
+                }
             });
         }
 
@@ -1281,9 +1281,9 @@ class Visual {
 
     unblockPartition() {
         Array.prototype.forEach.call(document.getElementsByClassName("gamearea boardarea"), function (element) {
-            if(!element.classList.contains("blockedcell")) {
+            if (!element.classList.contains("blockedcell")) {
                 element.style.background = backGroundColor;
-                element.style.opacity ="";
+                element.style.opacity = "";
             }
         });
         this.pieces.forEach(piece => {
@@ -1291,8 +1291,8 @@ class Visual {
                 element.style.display = 'block';
             });
 
-            if(document.getElementById('piece_'+ piece.name).classList.contains('disabledbutton')){
-                document.getElementById('piece_'+ piece.name).classList.remove("disabledbutton");
+            if (document.getElementById('piece_' + piece.name).classList.contains('disabledbutton')) {
+                document.getElementById('piece_' + piece.name).classList.remove("disabledbutton");
             }
 
         });
@@ -1308,13 +1308,13 @@ class Visual {
             return false;
         }
 
-        if(splitPartition.length === 0) {
+        if (splitPartition.length === 0) {
             return false;
         }
 
         let partitionedArray = splitPartition[splitCounter]
 
-        if(!partitionedArray) {
+        if (!partitionedArray) {
             return false;
         }
         for (let i = 0; i < partitionedArray.length; i++) {
@@ -1327,15 +1327,15 @@ class Visual {
         }
 
         this.pieces.forEach(piece => {
-            if(this.gameController.isPlacedOnBoard(piece)) {
+            if (this.gameController.isPlacedOnBoard(piece)) {
                 let containsDisplayedPieceName = piecesDisplayed.indexOf(piece.name)
-                if(containsDisplayedPieceName >= 0) {
+                if (containsDisplayedPieceName >= 0) {
                     let result = this.pd.gameController.partitionHasUnoccupiedPosition(piece);
                     temp[containsDisplayedPieceName] = result;
                     let checker = temp.every(v => v === true);
                     if (checker) {
                         partitionCheck = true;
-                        if(this.checkIfGameWon()){
+                        if (this.checkIfGameWon()) {
                             this.unblockPartition();
                         }
                         return partitionCheck;
@@ -1683,10 +1683,10 @@ class Visual {
             this.enablePointerEventsOnPieces();
         });
         // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function(event) {
-          if (event.target == modal) {
-            modal.style.display = "none";
-          }
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
         }
     }
 
@@ -2282,12 +2282,19 @@ class Visual {
             let command = cmdSequences[indx];
             var that = this;
 
-            setTimeout(function (that, command) {
+            setTimeout(function (that, command, indx) {
                 that.execShadowCmd(command, CommandTypes.Shadow);
                 if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
                     that.showNumberOfPossibleSolutions();
                 }
-            }, timeInterval += 500, that, command);
+                if (indx == (cmdSequences.length - 1)) {
+                    that.enablePointerEventsOnPieces();
+                }
+                else {
+                    that.disablePointerEventsOnPieces();
+                    that.disableManipulations();
+                }
+            }, timeInterval += 500, that, command, indx);
         }
         this.setReplayStatus(false);
 
@@ -2315,48 +2322,49 @@ class Visual {
         return (this.replayRunning == true) ? true : false;
     }
 
-    disablePointerEventsOnPieces(piecesIdArray) {
-        piecesIdArray.forEach(function (piece) {
-            document.getElementById(piece).style.pointerEvents = "none";
+    disablePointerEventsOnPieces() {
+        let pentominoes = this.gameController.getAllPentominoes();
+        pentominoes.forEach(function (piece) {
+            document.getElementById("piece_" + piece.name).style.pointerEvents = "none";
         });
     }
 
     enablePointerEventsOnPieces() {
-        let piecesIdArray = ['piece_X', 'piece_Y', 'piece_F', 'piece_I', 'piece_L', 'piece_N', 'piece_P', 'piece_T', 'piece_U', 'piece_V', 'piece_W', 'piece_Z'];
-        piecesIdArray.forEach(function (piece) {
-            document.getElementById(piece).style.pointerEvents = "auto";
+        let pentominoes = this.gameController.getAllPentominoes();
+        pentominoes.forEach(function (piece) {
+            document.getElementById("piece_" + piece.name).style.pointerEvents = "auto";
         });
     }
 
 
-  //bot speaks in :
-  //hintText() function
-  //userinactivity() function
-  //when the board is solved
-  //when wrong actions are done
-  speakBot(textTospeak){
-      const synth = window.speechSynthesis;
-      const utter = new SpeechSynthesisUtterance(textTospeak);
-      let voices = synth.getVoices();
-      let speechBubbleText = document.getElementById("speechBubbleText");
-      //utter.lang = 'en-US';
-      //utter.lang = 'en-IN';
-      //utter.lang = 'de-DE';
-      if(SettingsSingleton.getInstance().getSettings().general.language === 1){
+    //bot speaks in :
+    //hintText() function
+    //userinactivity() function
+    //when the board is solved
+    //when wrong actions are done
+    speakBot(textTospeak) {
+        const synth = window.speechSynthesis;
+        const utter = new SpeechSynthesisUtterance(textTospeak);
+        let voices = synth.getVoices();
+        let speechBubbleText = document.getElementById("speechBubbleText");
+        //utter.lang = 'en-US';
+        //utter.lang = 'en-IN';
+        //utter.lang = 'de-DE';
+        if (SettingsSingleton.getInstance().getSettings().general.language === 1) {
             utter.lang = 'de-DE';
             utter.voiceURI = 'Google Deutsch';
             utter.name = 'Google Deutsch';
-            utter.localService= false;
-            utter.default= false;
+            utter.localService = false;
+            utter.default = false;
             synth.speak(utter);
-      }else{
+        } else {
             utter.lang = 'en-GB';
             utter.Local = 'true';
             utter.voiceURI = "Google UK English Female";
-            utter.name =  "Google UK English Female";
+            utter.name = "Google UK English Female";
             synth.speak(utter);
-      }
-  }
+        }
+    }
 
 
 }

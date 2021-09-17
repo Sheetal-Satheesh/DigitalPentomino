@@ -153,7 +153,9 @@ class CommandTree {
         return retNodes;
     }
 
-
+/**
+ * For every two key in the tree, it finds the order type.
+ */
     GetSequeneType(currNode, startKey, endKey) {
         if (currNode == undefined) {
             return undefined;
@@ -346,7 +348,6 @@ class CommandTree {
         return this._lastComandNode;
     }
 
-    /**** Code not used*/
     CmdSequences(startKey, endKey) {
         let startPath = this.GetNodePath(this._rootCmdNode, startKey);
         let endPath = this.GetNodePath(this._rootCmdNode, endKey);
@@ -498,10 +499,6 @@ class CommandTree {
         }
     }
 
-    /**
-    * TODO:// extensive support 
-    * @returns 
-    */
 
     MoveDown() {
         let current = undefined;

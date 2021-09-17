@@ -8,7 +8,18 @@ function isEmpty(obj) {
 }
 
 class GameLoader {
-
+/**
+ * All game saving, loading operation handled in this class. It can contains different games and anytime
+ * load any game from any other game states. 
+ *  
+ * _gameImages: all game images or snapshot taken from the games UI
+ * _gameList:  storage for all game object
+ * _gameLastImage: store only last game image.
+ * 
+ *  _game: current game
+ *  _commandManager: current game command manager
+ *  _hintAI: current game hint object  
+ */
     constructor() {
         this._game = null;
         this._commandManager = null;
@@ -71,6 +82,9 @@ class GameLoader {
         return this._gameImages;
     }
 
+    /**
+     * find the game if exist, and then find the all images for this game
+     */
     getImagesByGameId(gameId) {
         if (!this._gameList.hasOwnProperty(gameId)) {
             return undefined;
@@ -148,6 +162,9 @@ class GameLoader {
         return undefined;
     }
 
+    /**
+     * centeral function for creating a game
+     */
     createGame(boardStartXY,
         boardSizeXY,
         Boardshape,
