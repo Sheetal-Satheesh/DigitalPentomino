@@ -424,7 +424,10 @@
                 pd.loadBoard(board_list[i]);
                 let boardName = board_list[i];
                 let boardHtml = document.getElementById("playarea");
-                html2canvas(boardHtml).then(function (board) {
+                const options = {
+                    backgroundColor: 'darkgrey'
+                };
+                html2canvas(boardHtml, options).then(function (board) {
                     board.value = boardName;
                     board.style.width = '25vw';
                     board.style.height = '15vw';
