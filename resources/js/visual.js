@@ -2326,14 +2326,14 @@ class Visual {
         });
     }
 
-	 saveBoard(image){
+    saveBoard(image) {
         this.gameController.saveBoard(image);
     }
 
-    getBoards(){
+    getBoards() {
         return this.gameController.getBoards();
     }
-				 
+
 
     //bot speaks in :
     //hintText() function

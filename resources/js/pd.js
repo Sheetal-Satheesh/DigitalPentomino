@@ -86,7 +86,7 @@ class PD {
 
         [this.boardStartX, this.boardStartY] = UtilitiesClass.getBoardStartCoords(board);
 
-       if (loadType == "Snapshot") {
+        if (loadType == "Snapshot") {
             this.visual.reload(pd);
         }
         else {
@@ -102,9 +102,9 @@ class PD {
             }
         }
 
-																								  
-														
-		 
+
+
+
     }
 
     hints() {
