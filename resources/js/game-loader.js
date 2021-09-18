@@ -38,6 +38,7 @@ class GameLoader {
         this._gameList = {};
         this._gameImages = [];
         this._gameLastImage = {};
+		 this._gameBoards = [];					  
 
         /**[
          *  gameId : {
@@ -228,6 +229,13 @@ class GameLoader {
             gameName);
     }
 
+	 saveBoard(board){
+        this._gameBoards.push(board);
+    }
+
+    getBoards(){
+        return this._gameBoards;
+    }								 
     saveGame(cmdKey) {
         let gameId = this._game._id;
 

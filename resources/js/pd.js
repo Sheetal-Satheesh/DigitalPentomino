@@ -86,7 +86,10 @@ class PD {
 
         [this.boardStartX, this.boardStartY] = UtilitiesClass.getBoardStartCoords(board);
 
-        if (loadType != "Snapshot") {
+       if (loadType == "Snapshot") {
+            this.visual.reload(pd);
+        }
+        else {
             this.gameController.createGame(
                 [this.boardStartX, this.boardStartY],
                 this.boardSize,
@@ -94,13 +97,14 @@ class PD {
                 this.blockedCells,
                 board);
             this.visual = new Visual(this);
-        } else {
-            this.visual.reload(pd);
+            if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
+                this.visual.showNumberOfPossibleSolutions();
+            }
         }
 
-        if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
-            this.visual.showNumberOfPossibleSolutions();
-        }
+																								  
+														
+		 
     }
 
     hints() {

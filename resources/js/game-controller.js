@@ -66,6 +66,13 @@ class GameController {
             blockedCells,
             name);
     }
+saveBoard(image){
+        this._gameLoader.saveBoard(image);
+    }
+
+    getBoards(){
+        return this._gameLoader.getBoards();
+    }
     saveGameImage(image) {
         this._gameLoader.saveGameImage(image);
     }
