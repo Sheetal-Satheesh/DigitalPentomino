@@ -892,8 +892,12 @@ class Visual {
             }
             return;
         }
-        if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
-            labelPossibleSolutions.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getPossibleSolutions().length;
+        if(SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions){
+            if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
+                labelPossibleSolutions.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getPossibleSolutions().length;
+            }
+        }else{
+            document.getElementById("labelNumberSolutions").innerHTML = " none ";
         }
         //Fill speech bubble text
         speechBubbleText.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getPossibleSolutions().length;
