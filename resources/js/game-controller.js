@@ -66,6 +66,13 @@ class GameController {
             blockedCells,
             name);
     }
+    saveBoard(image) {
+        this._gameLoader.saveBoard(image);
+    }
+
+    getBoards() {
+        return this._gameLoader.getBoards();
+    }
     saveGameImage(image) {
         this._gameLoader.saveGameImage(image);
     }
@@ -114,7 +121,7 @@ class GameController {
         return this.cmdManager().CurrentCmdKey();
     }
 
-    getOperationCount(){
+    getOperationCount() {
         return this.cmdManager().NodeCount();
     }
 
@@ -142,11 +149,11 @@ class GameController {
         return this._gameLoader.getImagesByGameId(gameId);
     }
 
-    getCurrentGameId(){
+    getCurrentGameId() {
         return this._gameLoader.getGame().getId();
     }
 
-    delGameAutoImages(gameId){
+    delGameAutoImages(gameId) {
         return this._gameLoader.delGameAutoImages(gameId);
     }
 
@@ -288,7 +295,7 @@ class GameController {
 
         return this.hintAI().getCurrentSolutionCount(this.game());
     }
-        
+
     //--- --- --- Split Board --- --- --
     splitByColor() {
         if (this.game() === null) {

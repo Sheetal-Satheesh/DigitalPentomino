@@ -85,25 +85,6 @@
                 <div id="field"></div> <!-- field -->
                 <div id="piecearea"></div> <!-- piecearea -->
             </div>
-            <div id="boardmodalTop" class="boardmodal"
-                style="background: #eceaea none repeat scroll 0% 0%; display: none;">
-                <span onclick="closeModal()" class="boardclose" title="Close Modal">x</span>
-                <div class="boardmodalContainer" id="boardmodalContainerID">
-                    <div class="boardouterGrid">
-                        <div class="boardinnerGrid" id="boardinnerGrid" style="display: block;">
-                        </div>
-                        <form class="boardmodalFormContent" style="display: none;">
-                            <form></form>
-                            <div class="boardmodalFormContainer" id="boardmodalFormContainerID">
-                                <h3 id="boardmodalTextID"></h3>
-                                <div class="boardmodalButtons" id="boardmodalButtonsID"></div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <!--board modal end-->
-
             <div id="modalTop" class="modal">
                 <button onclick="closeModal()" class="close" title="Close Modal"><img class="closeBtn"
                         src="resources/images/icons/close.png"></button>
@@ -200,7 +181,8 @@
                     <span class="icon-flip2" id="OpflipV"></span>
                 </div>
             </div>
-        </div> <!---Button Manipulation Ends-->
+        </div>
+        <!---Button Manipulation Ends-->
     </div>
 
     <script type="text/javascript">
@@ -220,12 +202,16 @@
         function initialize() {
             pd = new PD();
             template = new Template();
-            loadBoardList();
+
             let settings = SettingsSingleton.getInstance().getSettings();
             let initialChanges = SettingsParser.compareSettings(
                 SettingsSchemaSingleton.getInstance().getSettingsSchema(),
                 settings,
                 null);
+            let boards = pd.visual.getBoards();
+            if (boards.length == 0) {
+                loadBoardList();
+            }
             processChangesToSettings(initialChanges, settings);
             inactivityTime();
         }
@@ -251,35 +237,35 @@
                 //this loop initiates actions if user inactive, this can be configurable from the settings
                 //Series of actions are : bubble speech message, and onmouse move the application says welcome back
                 //then simultaneously bird animation starts and then ends
-                if(SettingsSingleton.getInstance().getSettings().general.initiateActionsIfUserNotActive){
+                if (SettingsSingleton.getInstance().getSettings().general.initiateActionsIfUserNotActive) {
                     //speech bubble message : "hello There"
-                    setTimeout(function(){
+                    setTimeout(function () {
                         speechBubbleText.textContent = strings.speechbubbleTexts.helloThere[lang];
-                            if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
-                               pd.visual.speakBot(strings.speechbubbleTexts.helloThere[lang]);
-                            }
+                        if (SettingsSingleton.getInstance().getSettings().speech.enableSpeech) {
+                            pd.visual.speakBot(strings.speechbubbleTexts.helloThere[lang]);
+                        }
 
                         //check if TUCA bird is enabled
-                        if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+                        if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
                             document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.helloThere[lang];
-                            if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
-                               pd.visual.speakBot(strings.speechbubbleTexts.helloThere[lang]);
+                            if (SettingsSingleton.getInstance().getSettings().speech.enableSpeech) {
+                                pd.visual.speakBot(strings.speechbubbleTexts.helloThere[lang]);
                             }
                         }
                     }, 500);
                     //detect user if active again => onmouse move it says welcome back and the bird animaltion starts
-                    document.onmousemove = function(){
+                    document.onmousemove = function () {
                         //if(speech bubble message : "hello There ? ") => display "welcome back"
-                        if(speechBubbleText.textContent === strings.speechbubbleTexts.helloThere[lang]){
-                            setTimeout(function(){
-                              speechBubbleText.textContent = strings.speechbubbleTexts.welcomeBack[lang];
+                        if (speechBubbleText.textContent === strings.speechbubbleTexts.helloThere[lang]) {
+                            setTimeout(function () {
+                                speechBubbleText.textContent = strings.speechbubbleTexts.welcomeBack[lang];
                             }, 2000);
-                            if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+                            if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
                                 document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.welcomeBack[lang];
                             }
                         }
                         //start bird animation
-                        setTimeout(function(){
+                        setTimeout(function () {
                             document.getElementById('birdContainer').classList.add("anim");
                         }, 2000);
                     };
@@ -287,19 +273,19 @@
 
 
                     //at the end remove the bird animation
-                    setTimeout(function(){
+                    setTimeout(function () {
                         document.getElementById('birdContainer').classList.remove("anim");
                     }, 10000);
                 }
                 //if autohinting enabled continue with autoHint() function
-                if(SettingsSingleton.getInstance().getSettings().autohinting.enableAutoHinting){
+                if (SettingsSingleton.getInstance().getSettings().autohinting.enableAutoHinting) {
                     autoHint();
                 }
                 //else if autohinting disabled
-                else{
-                    setTimeout(function(){
+                else {
+                    setTimeout(function () {
                         speechBubbleText.textContent = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getPossibleSolutions().length;
-                        if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+                        if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
                             document.getElementById("labelNumberSolutions").innerText = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getPossibleSolutions().length;
                         }
                     }, 5000);
@@ -319,33 +305,33 @@
 
 
 
-    //Function gives time delay to wait for user inactivityTime
-    function userInactiveWaitTime(){
-        let userInactiveWaitTime = SettingsSingleton.getInstance().getSettings().autohinting.timeForNoAction;
-        let time = 0;
-        switch(userInactiveWaitTime) {
-            case "Short":
-                // code block
-                time = 30;
-                break;
-            case "Medium":
-                // code block
-                time = 90;
-                break;
-            case "Long":
-                // code block
-                time = 150;
-                break;
-            default:
-                // code block
-                console.error("time unknown!");
+        //Function gives time delay to wait for user inactivityTime
+        function userInactiveWaitTime() {
+            let userInactiveWaitTime = SettingsSingleton.getInstance().getSettings().autohinting.timeForNoAction;
+            let time = 0;
+            switch (userInactiveWaitTime) {
+                case "Short":
+                    // code block
+                    time = 30;
+                    break;
+                case "Medium":
+                    // code block
+                    time = 90;
+                    break;
+                case "Long":
+                    // code block
+                    time = 150;
+                    break;
+                default:
+                    // code block
+                    console.error("time unknown!");
+            }
+            return time;
         }
-        return time;
-    }
 
-//runs if autohint is enabled (this function specific for time period based)
-//Time period based hinting is only enabled in case the user is far away from the final solution
-        function autoHint(){
+        //runs if autohint is enabled (this function specific for time period based)
+        //Time period based hinting is only enabled in case the user is far away from the final solution
+        function autoHint() {
             let lang = SettingsSingleton.getInstance().getSettings().general.language;
             let speechBubbleText = document.getElementById('speechBubbleText');
             let hint = pd.gameController.getHint();
@@ -353,11 +339,11 @@
             //check if user is towards the solution or not
             //in case if the user is towards the final solution  , the message "Please continue with the game" appears
             //this option can be configurable from the settings
-            if(!(SettingsSingleton.getInstance().getSettings().autohinting.enableTimePeriodBasedAutoHintInAnyCase)){
-                if((pd.visual.numberofPlacedPentominos() > (pd.visual.pieces.length/2))){
-                    setTimeout(function(){
+            if (!(SettingsSingleton.getInstance().getSettings().autohinting.enableTimePeriodBasedAutoHintInAnyCase)) {
+                if ((pd.visual.numberofPlacedPentominos() > (pd.visual.pieces.length / 2))) {
+                    setTimeout(function () {
                         speechBubbleText.textContent = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getPossibleSolutions().length;
-                        if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+                        if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
                             document.getElementById("labelNumberSolutions").innerText = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getPossibleSolutions().length;
                         }
                     }, 5000);
@@ -367,18 +353,18 @@
             }
             //check if time period based autohint is set or not
             //in case if the time period is not selected  , the message "Please continue with the game" appears
-            if(!(SettingsSingleton.getInstance().getSettings().autohinting.timebased)){
-                setTimeout(function(){
+            if (!(SettingsSingleton.getInstance().getSettings().autohinting.timebased)) {
+                setTimeout(function () {
                     speechBubbleText.textContent = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getPossibleSolutions().length;
-                    if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)){
+                    if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
                         document.getElementById("labelNumberSolutions").innerText = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getPossibleSolutions().length;
                     }
                 }, 2500);
                 return;
             }
             //speak: i have a hint
-            if(SettingsSingleton.getInstance().getSettings().speech.enableSpeech){
-               this.speakBot(strings.speechbubbleTexts.iHaveAHint[lang]);
+            if (SettingsSingleton.getInstance().getSettings().speech.enableSpeech) {
+                this.speakBot(strings.speechbubbleTexts.iHaveAHint[lang]);
             }
             pd.visual.configureAutoHints();
         }
@@ -411,27 +397,68 @@
         }
 
         function loadBoardList() {
-            let boardimageGrid = document.getElementById('boardinnerGrid');
-            template.clearContent(".boardinnerGrid");
-
             var board_list = pd.getAllBoards();
             for (var i = 0; i < board_list.length; i++) {
-                let boardimageDiv = document.createElement("div");
-                boardimageDiv.setAttribute("class", "boardimageDiv");
-
-                var imageElement = document.createElement("img");
-                imageElement.setAttribute("class", "boardimage");
-                imageElement.setAttribute("width", "1710");
-                imageElement.setAttribute("height", "883");
-                imageElement.setAttribute("style", "width: 25vw; height: 15vw; border: 2px solid black;");
-                imageElement.setAttribute("class", "boardimage");
-
-                var img_src = "resources/images/boards/" + board_list[i] + ".png";
-                imageElement.setAttribute("src", img_src);
-                imageElement.setAttribute("onclick", "loadBoard('" + board_list[i] + "')");
-                boardimageDiv.appendChild(imageElement);
-                boardimageGrid.appendChild(boardimageDiv);
+                pd.loadBoard(board_list[i]);
+                let boardName = board_list[i];
+                let boardHtml = document.getElementById("playarea");
+                const options = {
+                    backgroundColor: 'darkgrey'
+                };
+                html2canvas(boardHtml, options).then(function (board) {
+                    board.value = boardName;
+                    board.style.width = '25vw';
+                    board.style.height = '15vw';
+                    board.style.border = "2px solid black";
+                    pd.visual.saveBoard(board);
+                });
             }
+        }
+        function selectBoard() {
+            var modal = document.getElementById('modalTop');
+            this.disableSnapshotButton();
+            this.disablePointerEventsOnPieces();
+            this.hideManipulationButtons();
+            modal.style.background = " lightgrey";
+            modal.style.display = "block";
+            document.querySelector(".modalFormContent").style.display = "none";
+            document.querySelector(".outerGrid").style.display = "block";
+            document.querySelector(".modalFullframeContainer").style.display = "none";
+            // document.querySelector(".modalContainer").style.display = "none";
+            let imageGrid = document.getElementById('innerGrid');
+            let imgFilterGrid = document.getElementById('filterGrid');
+            let innerGridTop = imageGrid.style.getPropertyValue('top');
+            let innerGridBottom = imageGrid.style.getPropertyValue('bottom');
+            let innerGridMarginLeft = imageGrid.style.getPropertyValue('margin-left');
+            imageGrid.style.display = "block";
+            imageGrid.style.marginLeft = "14vw";
+            imageGrid.style.top = "3vw";
+            imageGrid.style.bottom = "10vw";
+            //imageGrid.style.marginLeft = "5vw";
+            template.clearContent(".innerGrid");
+            template.clearContent("#innerGridForm");
+            template.clearContent("#filterGrid");
+            let boards = pd.visual.getBoards();
+            if (boards == undefined || boards.length == 0) {
+                console.error("No board generated");
+                return;
+            }
+            boards.forEach((board) => {
+                let imageDiv = document.createElement("div");
+                imageDiv.setAttribute("class", "imageDiv");
+                imageDiv.appendChild(board);
+                imageGrid.appendChild(imageDiv);
+
+                imageDiv.addEventListener('click', function () {
+                    let bName = board.value;
+                    imageGrid.style.top = innerGridTop;
+                    imageGrid.style.bottom = innerGridBottom;
+                    imageGrid.style.marginLeft = innerGridMarginLeft;
+                    loadBoard(bName);
+                }, false);
+
+            });
+
         }
 
         function clickedOnScanQrCode() {
@@ -499,14 +526,14 @@
             let heading = document.createElement("h1");
             let div = document.createElement("div");
             let scanDiv = document.createElement("div");
-            scanDiv.id="scanDiv";
+            scanDiv.id = "scanDiv";
             let shareDiv = document.createElement("div");
-            shareDiv.id="shareDiv";
-            div.id="shareOrScandiv";
-            div.style.textAlign="center";
-            div.style.display="flex";
-            shareDiv.display="flex";
-            heading.id="shareOrScan";
+            shareDiv.id = "shareDiv";
+            div.id = "shareOrScandiv";
+            div.style.textAlign = "center";
+            div.style.display = "flex";
+            shareDiv.display = "flex";
+            heading.id = "shareOrScan";
             heading.innerHTML = strings.qrCode.scanOrShare[lang];
             heading.style.textAlign = "center";
             parent.appendChild(heading);
@@ -514,26 +541,26 @@
             // Add scan / share buttons
             let scanImgElement = SettingsForm.createImg("scanImg", "resources/images/icons/scan_qr_code.png");
             scanImgElement.id = "scanImgElement";
-            scanImgElement.style.marginLeft="8vw";
-            if(y.matches){//if media query matches ==>  width : 1200 px
-                  scanImgElement.style.marginLeft="auto";
+            scanImgElement.style.marginLeft = "8vw";
+            if (y.matches) {//if media query matches ==>  width : 1200 px
+                scanImgElement.style.marginLeft = "auto";
             }
-            if(z.matches){  // media query ==>  width :  490px
-                scanImgElement.style.width="50%";
+            if (z.matches) {  // media query ==>  width :  490px
+                scanImgElement.style.width = "50%";
             }
-            if(p.matches){
-                div.style.display="block";
+            if (p.matches) {
+                div.style.display = "block";
             }
             scanImgElement.onclick = () => openScanQrCode();
             let shareImgElement = SettingsForm.createImg("shareImg", "resources/images/icons/share_qr_code.png");
             shareImgElement.id = "shareImgElement";
-            if(z.matches){  // media query ==>  width :  490px
-                shareImgElement.style.width="50%";
+            if (z.matches) {  // media query ==>  width :  490px
+                shareImgElement.style.width = "50%";
             }
-            if(x.matches){ //if media query matches  ==>  width : 1092px
+            if (x.matches) { //if media query matches  ==>  width : 1092px
                 //shareDiv.style.width = "40%";
                 shareDiv.style.textAlign = "center";
-                shareDiv.display="none";
+                shareDiv.display = "none";
                 //div.style.display="block";
                 scanDiv.style.textAlign = "center";
             }
@@ -546,14 +573,14 @@
             parent.appendChild(div);
         }
 
-        function showCameraUnavailable(){
+        function showCameraUnavailable() {
             let modal = document.getElementById('modalTop');
             let scan = $("#scanImgElement");
             let share = $("#shareImgElement");
             let shareScanHeading = $("#shareOrScan");
             share.css("display", "none");
-            scan.css("display","none");
-            shareScanHeading.css("display","none");
+            scan.css("display", "none");
+            shareScanHeading.css("display", "none");
             if ($(modal).is(':visible')) {
                 this.closeModal();
             }
@@ -672,9 +699,9 @@
             parent.appendChild(collapsibleButton);
             parent.appendChild(divToHide);
             let urlElement = document.createElement("a");
-            urlElement.target="_blank";
+            urlElement.target = "_blank";
             // Security measure: https://developer.mozilla.org/en-US/docs/Web/HTML/Link_types/noopener
-            urlElement.rel="noopener noreferrer";
+            urlElement.rel = "noopener noreferrer";
             addAdvancedShareOptions(divToHide, qrCodeElement, urlElement, downloadImageButton);
 
             let schema = SettingsSchemaSingleton.getInstance().getSettingsSchema();
@@ -732,7 +759,7 @@
         }
 
         function handleClickedOnTeacherModeCheckbox(teacherModeCheckbox,
-                                                    qrCodeElement, urlElement, downloadImageButton) {
+            qrCodeElement, urlElement, downloadImageButton) {
             let settings = SettingsSingleton.getInstance().getSettings();
             let seed = SettingsParser.parseSettingsToSeed(SettingsSchemaSingleton.getInstance().getSettingsSchema(), settings);
             insertUrlParam(baseConfigs.seedUrlParamName.toString(), seed);
@@ -743,7 +770,7 @@
         }
 
         function handleClickedOnIncludePiecesCheckbox(includePiecesCheckbox, teacherModeCheckbox,
-              qrCodeElement, urlElement, downloadImageButton) {
+            qrCodeElement, urlElement, downloadImageButton) {
             let checkboxValue = includePiecesCheckbox.checked;
             let settings = SettingsSingleton.getInstance().getSettings();
             settings.boardCustomization.includePiecePos = checkboxValue;
@@ -821,7 +848,7 @@
             let img = win.document.createElement("img");
             img.src = imgDataUrl;
             win.document.body.appendChild(img);
-            img.onload = function(){
+            img.onload = function () {
                 win.print();
             };
         }
@@ -995,7 +1022,7 @@
             return true;
         }
 
-        function reactionScreenOnScanned(){
+        function reactionScreenOnScanned() {
             let modal = document.getElementById('modalTop');
             if ($(modal).is(':visible')) {
                 this.closeModal();
@@ -1097,7 +1124,7 @@
 
         function closeModal() {
             destroyQrScanner();
-            document.getElementById('boardmodalTop').style.display = 'none';
+            document.getElementById('modalTop').style.display = 'none';
             this.closeModalContainer();
             this.enableSnapshotButton();
             if ($('#birdContainer').is(':visible')) {
@@ -1116,7 +1143,7 @@
         }
         function splitTheBoard() {
             splitButton = document.getElementById("splitBoardimg")
-            if(!splitButton.classList.contains("splitbuttonimg")) {
+            if (!splitButton.classList.contains("splitbuttonimg")) {
                 splitButton.classList.add("splitbuttonimg");
                 if (!pd.gameController.game()._board.isSolved()) {
                     pd.visual.splitTheBoard();
@@ -1162,25 +1189,7 @@
             pd.visual.redo();
         }
 
-        function selectBoard() {
-            var boardSelectorPopup = document.getElementById("boardmodalTop");
-            if ($(boardSelectorPopup).is(':visible')) {
-                this.closeBoardSelector();
-                this.enableSnapshotButton();
-                this.closeModal();
-            }
-            else {
-                boardSelectorPopup.style.display = "block";
-                this.hideManipulationButtons();
-                this.closeSettings();
-                this.disablePointerEventsOnPieces();
-                this.disableSnapshotButton();
-                this.hideBubbleContainer();
-            }
-           if ((SettingsSingleton.getInstance().getSettings().general.enableBird)){
-              $("#bubbleContainer").css("display", "block");
-           }
-        }
+
 
         // From https://stackoverflow.com/questions/10970078/modifying-a-query-string-without-reloading-the-page (2nd answer)
         function insertUrlParam(key, value) {
@@ -1330,7 +1339,7 @@
                 if (isChrome) {
                     document.getElementById('modalFullframeContainerID').style.zoom = (1.4 / (window.innerWidth / window.innerHeight));
                     //adapt the floatingButtons to still align with the bottom bar
-                    $('.formButton').css('bottom',(11 * (1 / (1.4 / (window.innerWidth / window.innerHeight))) + 'vw'));
+                    $('.formButton').css('bottom', (11 * (1 / (1.4 / (window.innerWidth / window.innerHeight))) + 'vw'));
                 }
 
 
@@ -1338,7 +1347,7 @@
 
                 if (isChrome) {
                     document.getElementById('modalFullframeContainerID').style.zoom = 1;
-                    $('.formButton').css('bottom','11vw');
+                    $('.formButton').css('bottom', '11vw');
                 }
             }
             $("#shareOrScan").remove();
@@ -1533,7 +1542,7 @@
         }
 
         function closeBoardSelector() {
-            document.getElementById('boardmodalTop').style.display = "none";
+            document.getElementById('modalTop').style.display = "none";
             this.enablePointerEventsOnPiece();
         }
 
@@ -1756,7 +1765,7 @@
             }
             if (imageType == undefined) {
                 gameIds.forEach(element => {
-                    if (element == currGameId){
+                    if (element == currGameId) {
                         gameIds.splice(gameIds.indexOf(currGameId), 1);
                         return;
                     }
@@ -1950,7 +1959,7 @@
         }
 
         function loadBoard(selectedBoard) {
-            document.getElementById("boardmodalTop").style.display = "none";
+            document.getElementById("modalTop").style.display = "none";
             pd.loadBoard(selectedBoard);
             this.closeModalContainer();
         }

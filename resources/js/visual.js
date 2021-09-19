@@ -2326,6 +2326,14 @@ class Visual {
         });
     }
 
+    saveBoard(image) {
+        this.gameController.saveBoard(image);
+    }
+
+    getBoards() {
+        return this.gameController.getBoards();
+    }
+
 
     //bot speaks in :
     //hintText() function
