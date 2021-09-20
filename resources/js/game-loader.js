@@ -8,18 +8,18 @@ function isEmpty(obj) {
 }
 
 class GameLoader {
-/**
- * All game saving, loading operation handled in this class. It can contains different games and anytime
- * load any game from any other game states. 
- *  
- * _gameImages: all game images or snapshot taken from the games UI
- * _gameList:  storage for all game object
- * _gameLastImage: store only last game image.
- * 
- *  _game: current game
- *  _commandManager: current game command manager
- *  _hintAI: current game hint object  
- */
+    /**
+     * All game saving, loading operation handled in this class. It can contains different games and anytime
+     * load any game from any other game states. 
+     *  
+     * _gameImages: all game images or snapshot taken from the games UI
+     * _gameList:  storage for all game object
+     * _gameLastImage: store only last game image.
+     * 
+     *  _game: current game
+     *  _commandManager: current game command manager
+     *  _hintAI: current game hint object  
+     */
     constructor() {
         this._game = null;
         this._commandManager = null;
@@ -38,6 +38,7 @@ class GameLoader {
         this._gameList = {};
         this._gameImages = [];
         this._gameLastImage = {};
+        this._gameBoards = [];
 
         /**[
          *  gameId : {
@@ -198,7 +199,7 @@ class GameLoader {
             this._hintAI = new HintAI(this._game, true);
         }
 
-        this._splitBoard = new SplitBoard(this._game);                
+        this._splitBoard = new SplitBoard(this._game);
         this.saveGame();
     }
 
@@ -228,13 +229,20 @@ class GameLoader {
             gameName);
     }
 
+    saveBoard(board) {
+        this._gameBoards.push(board);
+    }
+
+    getBoards() {
+        return this._gameBoards;
+    }
     saveGame(cmdKey) {
         let gameId = this._game._id;
 
         let gameClone = _.cloneDeep(this._game);
         let cmdManagerClone = _.cloneDeep(this._commandManager);
         let hintAIClone = _.cloneDeep(this._hintAI);
-        
+
         if (!this._gameList.hasOwnProperty(gameId)) {
             this._gameList[gameId] = {
                 "game": gameClone,
