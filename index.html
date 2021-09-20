@@ -417,7 +417,7 @@
         function selectBoard() {
             var modal = document.getElementById('modalTop');
             this.disableSnapshotButton();
-            this.disablePointerEventsOnPieces();
+            UtilitiesClass.disablePointerEventsOnModalOpen();
             this.hideManipulationButtons();
             modal.style.background = " lightgrey";
             modal.style.display = "block";
@@ -589,7 +589,7 @@
             this.disableSnapshotButton();
             this.hideManipulationButtons();
             this.closeBoardSelector();
-            this.disablePointerEventsOnPieces();
+            UtilitiesClass.disablePointerEventsOnModalOpen();
             modal.style.display = "block";
             modal.style.background = "transparent";
 
@@ -1032,7 +1032,7 @@
             this.disableSnapshotButton();
             this.hideManipulationButtons();
             this.closeBoardSelector();
-            this.disablePointerEventsOnPieces();
+            UtilitiesClass.disablePointerEventsOnModalOpen();
             modal.style.display = "block";
             modal.style.background = "transparent";
 
@@ -1529,7 +1529,7 @@
 
         function closeBoardSelector() {
             document.getElementById('modalTop').style.display = "none";
-            this.enablePointerEventsOnPiece();
+            UtilitiesClass.enablePointerEventsOnModalClose();
         }
 
         function selectSeeding() {
@@ -1688,6 +1688,7 @@
                     loadBtn.textContent = strings.replay.loadSnapshot[lang];
                     loadBtn.addEventListener('click', function () {
                         loadGameImage(image.value);
+                        UtilitiesClass.enablePointerEventsOnModalClose();
                     }, false);
 
                     let deleteBtn = document.createElement("button");
@@ -1858,7 +1859,7 @@
             }
 
             this.disableSnapshotButton();
-            this.disablePointerEventsOnPieces();//TODO: Fix this
+            UtilitiesClass.disablePointerEventsOnModalOpen();
             hideManipulationButtons();
             pd.visual.saveGameImage(SnapshotType.Auto);
 

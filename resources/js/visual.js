@@ -1613,8 +1613,7 @@ class Visual {
     }
 
     showGameSolved() {
-        let piecesIdArray = this.pieces.map(piece => "piece_" + piece.name);
-        this.disablePointerEventsOnPieces(piecesIdArray);
+        UtilitiesClass.disablePointerEventsOnModalOpen();
         let modal = document.getElementById('modalTop');
         modal.style.display = "block";
         modal.style.background = "transparent";
@@ -1675,12 +1674,14 @@ class Visual {
         let playAgainBtn = document.querySelector(".deleteBtn");
         playAgainBtn.addEventListener("click", () => {
             pd.reset();
-            this.enablePointerEventsOnPieces();
+            UtilitiesClass.enablePointerEventsOnModalClose();
         });
 
+        let that = this;
         let dontPlayAgainBtn = document.querySelector(".cancelBtn");
         dontPlayAgainBtn.addEventListener("click", () => {
-            this.enablePointerEventsOnPieces();
+            UtilitiesClass.enablePointerEventsOnModalClose();
+            that.enablePointerEventsOnPieces();
         });
         // When the user clicks anywhere outside of the modal, close it
         window.onclick = function (event) {
@@ -2288,10 +2289,10 @@ class Visual {
                     that.showNumberOfPossibleSolutions();
                 }
                 if (indx == (cmdSequences.length - 1)) {
-                    that.enablePointerEventsOnPieces();
+                    UtilitiesClass.enablePointerEventsOnModalClose();
                 }
                 else {
-                    that.disablePointerEventsOnPieces();
+                    UtilitiesClass.disablePointerEventsOnModalOpen();
                     that.disableManipulations();
                 }
             }, timeInterval += 500, that, command, indx);
@@ -2322,10 +2323,9 @@ class Visual {
         return (this.replayRunning == true) ? true : false;
     }
 
-    disablePointerEventsOnPieces() {
-        let pentominoes = this.gameController.getAllPentominoes();
-        pentominoes.forEach(function (piece) {
-            document.getElementById("piece_" + piece.name).style.pointerEvents = "none";
+    disablePointerEventsOnPieces(piecesIdArray) {
+        piecesIdArray.forEach(function (pieceId) {
+            document.getElementById(pieceId).style.pointerEvents = "none";
         });
     }
 
