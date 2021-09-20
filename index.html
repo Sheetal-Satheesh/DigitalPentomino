@@ -611,7 +611,7 @@
             template.attachText("#modalTitleID", textNode);
 
             let okBtn = {
-                class: "okBtn",
+                class: "deleteBtn",
                 onclick: "closeModalContainer()",
                 textContent: strings.general.ok[lang]
             };
@@ -1012,7 +1012,8 @@
 
             if (newSettings === null) {
                 // TODO: display error-msg to user in better way
-                alert("Scanned in wrong QR-code.");
+                //alert("Scanned in wrong QR-code.");
+                wrongQrCode();
                 console.info("Scanned seed could not be parsed into a settings configuration: " + seed);
                 return false;
             }
@@ -1022,7 +1023,59 @@
             return true;
         }
 
-        function reactionScreenOnScanned() {
+        function wrongQrCode(){
+            let modal = document.getElementById('modalTop');
+            let scan = $("#scanImgElement");
+            let share = $("#shareImgElement");
+            let shareScanHeading = $("#shareOrScan");
+            share.css("display", "none");
+            scan.css("display","none");
+            shareScanHeading.css("display","none");
+            if ($(modal).is(':visible')) {
+                this.closeModal();
+            }
+
+            this.hideBubbleContainer();
+            this.disableSnapshotButton();
+            this.hideManipulationButtons();
+            this.closeBoardSelector();
+            this.disablePointerEventsOnPieces();
+            modal.style.display = "block";
+            modal.style.background = "transparent";
+
+            document.querySelector(".modalFormContent").style.display = "block";
+            document.querySelector(".innerGrid").style.display = "none";
+            document.querySelector(".modalFullframeContainer").style.display = "none";
+            template.clearContent("#modalButtonsID");
+            template.clearContent("#modalTitleID");
+            template.clearContent("#modalBodyID");
+            template.clearContent("#innerGridForm");
+            template.clearContent("#filterGrid");
+
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+
+            let textNode = {
+                class: "modalText",
+                text: strings.general.wrongQrCode[lang]
+            };
+            template.attachText("#modalTitleID", textNode);
+
+            let okBtn = {
+                class: "deleteBtn",
+                onclick: "closeModalContainer()",
+                textContent: strings.general.ok[lang]
+            };
+
+            template.attachBtn("#modalButtonsID", okBtn);
+
+            let okButton = document.querySelector(".deleteBtn");
+            okButton.addEventListener("click", () => {
+                this.closeModal();
+            });
+            $("#bubbleContainer").css("display", "block");
+        }
+
+        function reactionScreenOnScanned(){
             let modal = document.getElementById('modalTop');
             if ($(modal).is(':visible')) {
                 this.closeModal();
@@ -1061,7 +1114,7 @@
 
             template.attachBtn("#modalButtonsID", okBtn);
 
-            let okButton = document.querySelector(".okBtn");
+            let okButton = document.querySelector(".deleteBtn");
             okButton.addEventListener("click", () => {
                 this.closeModal();
             });
@@ -1237,7 +1290,10 @@
                     document.getElementById("hintButton").style.display = hintingEnabled ? "" : "none";
                 } else if (heading === "hinting" && key === "showNumberOfPossibleSolutions") {
                     let showNumberOfPossibleSolutions = settings[heading][key];
-                    document.getElementById("bubbleContainer").style.display = showNumberOfPossibleSolutions ? "" : "none";
+                    if(SettingsSingleton.getInstance().getSettings().general.enableBird){
+                        document.getElementById("speechBubbleText").style.display = showNumberOfPossibleSolutions ? "" : "none";
+                    }
+                    document.getElementById("labelNumberSolutions").style.display = showNumberOfPossibleSolutions ? "" : "none";
 
                 } else if (heading === "prefilling" && key === "enablePrefilling") {
                     let visible = settings[heading][key];
