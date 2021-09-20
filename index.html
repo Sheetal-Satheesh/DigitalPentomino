@@ -1238,7 +1238,10 @@
                     document.getElementById("hintButton").style.display = hintingEnabled ? "" : "none";
                 } else if (heading === "hinting" && key === "showNumberOfPossibleSolutions") {
                     let showNumberOfPossibleSolutions = settings[heading][key];
-                    document.getElementById("bubbleContainer").style.display = showNumberOfPossibleSolutions ? "" : "none";
+                    if(SettingsSingleton.getInstance().getSettings().general.enableBird){
+                        document.getElementById("speechBubbleText").style.display = showNumberOfPossibleSolutions ? "" : "none";
+                    }
+                    document.getElementById("labelNumberSolutions").style.display = showNumberOfPossibleSolutions ? "" : "none";
 
                 } else if (heading === "prefilling" && key === "enablePrefilling") {
                     let visible = settings[heading][key];
