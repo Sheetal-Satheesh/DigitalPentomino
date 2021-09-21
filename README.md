@@ -1,11 +1,7 @@
-TUCA (Digital Pentomino Version 5)
-_________________________________
-Written in Javascript
+# TUCA (Digital Pentomino Version 5)
 
 Hello!
 Welcome to Digital Pentamino
-
-2020/21
 
 Play TUCA: [https://pentomino-digital.de/V5/prerelease/](https://pentomino-digital.de/V5/prerelease/)
 
