@@ -3,6 +3,8 @@
 Hello!
 Welcome to TUCA!
 
+![TUCA loading image](/resources/images/icons/tuca.png)
+
 ## Play TUCA
 
 Try out TUCA on the prerelease website: [https://pentomino-digital.de/V5/prerelease/](https://pentomino-digital.de/V5/prerelease/)
