@@ -1,9 +1,9 @@
 # TUCA (Digital Pentomino Version 5)
 
-![TUCA loading image](/resources/images/icons/tuca.png)
-
 Hello!
 Welcome to TUCA!
+
+![TUCA loading image](/resources/images/icons/tuca.png)
 
 ## Play TUCA
 
