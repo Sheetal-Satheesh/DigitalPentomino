@@ -1,8 +1,12 @@
 # TUCA (Digital Pentomino Version 5)
 
 Hello!
-Welcome to Digital Pentamino
+Welcome to TUCA!
 
-Play TUCA: [https://pentomino-digital.de/V5/prerelease/](https://pentomino-digital.de/V5/prerelease/)
+## Play TUCA
 
-Find out more about TUCA in the Wiki: [https://git.uni-paderborn.de/mmenne1/digitalpentomino_v5/-/wikis/pages](https://git.uni-paderborn.de/mmenne1/digitalpentomino_v5/-/wikis/pages).
+Try out TUCA on the prerelease website: [https://pentomino-digital.de/V5/prerelease/](https://pentomino-digital.de/V5/prerelease/)
+
+## Technical Documentation
+
+Find out more about the technical details of TUCA in our Wiki: [https://git.uni-paderborn.de/mmenne1/digitalpentomino_v5/-/wikis/pages](https://git.uni-paderborn.de/mmenne1/digitalpentomino_v5/-/wikis/pages).
