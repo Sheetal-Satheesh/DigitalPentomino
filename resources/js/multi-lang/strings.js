@@ -7,6 +7,7 @@ const strings = {
         or: ["or", "oder"],
         submit: ["Apply", "Übernehmen"],
         qrCodeScanned: ["Successfully scanned", "Erfolgreich gescannt"],
+        wrongQrCode: ["Scanned in wrong QR-code.", "Falschen QR-Code eingescannt."],
         showCameraUnavailable: ["Camera is not available on your device !", "Die Kamera ist auf Ihrem Gerät nicht verfügbar!"]
     },
     reset: ["Do You Want to clear the board?", "Willst du das Brett wirklich leeren?"],

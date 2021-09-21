@@ -902,8 +902,12 @@ class Visual {
             }
             return;
         }
-        if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
-            labelPossibleSolutions.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getPossibleSolutions().length;
+        if(SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions){
+            if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
+                labelPossibleSolutions.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getPossibleSolutions().length;
+            }
+        }else{
+            document.getElementById("labelNumberSolutions").innerHTML = " none ";
         }
         //Fill speech bubble text
         speechBubbleText.innerText = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getPossibleSolutions().length;
@@ -2339,6 +2343,14 @@ class Visual {
         pentominoes.forEach(function (piece) {
             document.getElementById("piece_" + piece.name).style.pointerEvents = "auto";
         });
+    }
+
+    saveBoard(image) {
+        this.gameController.saveBoard(image);
+    }
+
+    getBoards() {
+        return this.gameController.getBoards();
     }
 
 
