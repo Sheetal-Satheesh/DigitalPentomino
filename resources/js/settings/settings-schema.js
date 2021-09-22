@@ -219,7 +219,7 @@ class SettingsSchema {
                   typeOfHints:{
                     "type": "string",
                     "title": titles.autohinting.typeOfHints.title[lang],
-                    "enum": ["Visual", "Textual", "Both"],
+                    "enum": ["Visual", "Visual and textual"],
                     "enumText": titles.autohinting.typeOfHints.enumTitles[lang],
                     "description": titles.autohinting.typeOfHints.description[lang],
                     "default": "Visual"
