@@ -24,9 +24,10 @@ class Help {
         if (game.getAllPentominoes().length === 0) {
             throw new Error("game is empty");
         }
+        let solutions = this.isSplitActive ? [this.currentSolnForSplit] : this.solutions;
 
         let possibleSolutions = [];
-        this.solutions.forEach(solution => {
+        solutions.forEach(solution => {
             let allPentominoesOnBoardArePerfect = game.getAllPentominoes()
                 .filter(pentomino => game.isPlacedOnBoard(pentomino))
                 .every(pentominoOnBoard => {
@@ -60,7 +61,7 @@ class Help {
             this.currentSolnForSplit = bestSolution;
         } else {                        
             if(isSplitActive) {
-                bestSolution = this.currentSolnForSplit;
+                bestSolution = possibleSolutions[0];
             } else {
                 if (possibleSolutions.length > 0) {
                     bestSolution = possibleSolutions[0];
@@ -77,6 +78,10 @@ class Help {
     }
 
     getClosestSolution(game, solutions) {
+        if(this.isSplitActive) {
+            return this.currentSolnForSplit;
+        }
+
         let closestSolution = null;
         let numOfPerfectPentominoesOnBoardOfClosestSolution = -1;
 
