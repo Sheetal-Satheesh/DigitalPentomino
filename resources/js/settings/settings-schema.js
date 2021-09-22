@@ -345,16 +345,9 @@ class SettingsSchema {
             splitPartition: {
                 "type": "object",
                 "advanced": true,
-                "title": titles.splitPartition.title[lang],
-                "visible": false,
+                "title": titles.splitPartition.title[lang],                
                 "pupilModeVisibleOnDefault": false,
-                "properties": {
-                    fixPieces : {
-                        "type": "boolean",
-                        "title": titles.splitPartition.fixPieces.title[lang],
-                        "description": titles.splitPartition.fixPieces.description[lang],
-                        "default": false
-                    },
+                "properties": {                    
                     splitStrategy: {
                         "type": "string",
                         "title": titles.splitPartition.splitStrategy.title[lang],
