@@ -1141,6 +1141,11 @@ class Visual {
                 document.querySelector("#hideBothHint").innerHTML = strings.speechbubbleTexts.ignore[lang];
             }, 5000);
         }
+          console.log(this.configureAutoHints());
+    }
+
+    delayForAutoHints(){
+
     }
 
     //end of configure autohints function
