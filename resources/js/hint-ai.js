@@ -71,21 +71,13 @@ class HintAI {
 
     _removeWronglyPlacedPentominos(game, closestSolution) {
         let pentominoesOnBoard = game.getAllPentominoes().filter(p => game.isPlacedOnBoard(p));
-        for (var solPentominoes = 0; solPentominoes < closestSolution._board._pentominoes.length; solPentominoes++) {
-          let solPentominoName = closestSolution._board._pentominoes[solPentominoes].name;
-          let solPentominoPos = closestSolution._board._pentominoes[solPentominoes].sRepr;
-
-          for (var j = 0; j < pentominoesOnBoard.length; j++) {
-            let pentominoesOnBoardName = pentominoesOnBoard[j].name;
-            let pentominoesOnBoardPos = pentominoesOnBoard[j].sRepr;
-
-            if (solPentominoName === pentominoesOnBoardName ) {
-              if (solPentominoPos != pentominoesOnBoardPos) {
-                return new RemoveCommand( game.getPentominoByName(pentominoesOnBoardName),
-                                          game.getPosition(game.getPentominoByName(pentominoesOnBoardName)));
-              }
+        
+        for (let i = 0; i < pentominoesOnBoard.length; ++i) {
+            let isWronglyPlaced = !this.helpClass.isPerfectPentomino(game, closestSolution, pentominoesOnBoard[i].name);
+            if (isWronglyPlaced) {
+                return new RemoveCommand(game.getPentominoByName(pentominoesOnBoard[i].name),
+                    game.getPosition(game.getPentominoByName(pentominoesOnBoard[i].name)));
             }
-          }
         }
         return null;
     }
