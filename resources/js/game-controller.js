@@ -333,6 +333,18 @@ class GameController {
         return this.hintAI().getSolutions();
     }
 
+    clearIsSplitActiveFlag() {
+        if (this.game() === null) {
+            throw new Error("Game is not set");
+        }
+
+        if (this.splitBoard() === null) {
+            console.error(" not initialized");
+        }
+
+        this.splitBoard().clearIsSplitActiveFlag();
+    }
+
     // --- --- --- History --- --- ---
     jumpToCommand(command) {
         if (this.game() === null) {

@@ -73,6 +73,10 @@ class SplitBoard {
         }        
     }
 
+    clearIsSplitActiveFlag() {
+        this.helpClass.clearSplitActiveFlag();
+    }
+
 
     /** ---------------  Solutions-------------*/
     getSolutions() {

@@ -1227,6 +1227,7 @@ class Visual {
         splitPartition = [];
         splitCounter = -1;
         this.unblockPartition();
+        this.pd.gameController.clearIsSplitActiveFlag();
     }
 
     displaySplit(partitionedArray, alternateColor) {
