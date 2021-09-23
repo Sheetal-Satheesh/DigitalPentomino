@@ -882,7 +882,6 @@ class Visual {
     showNumberOfPossibleSolutions() {
         let speechBubbleText = document.getElementById("speechBubbleText");
         let lang = SettingsSingleton.getInstance().getSettings().general.language;
-        let pointer;
         //Fill solutions label text
         let labelPossibleSolutions = document.getElementById("labelNumberSolutions");
         if (this.gameController.game()._board.isSolved()) {
@@ -1042,7 +1041,9 @@ class Visual {
 
     autoHintWrongMoves() {
         let lang = SettingsSingleton.getInstance().getSettings().general.language;
-        let pointer;
+        if (SettingsSingleton.getInstance().getSettings().speech.enableSpeech) {
+             pd.visual.speakBot(strings.speechbubbleTexts.iHaveAHint[lang]);
+         }
         if (!(SettingsSingleton.getInstance().getSettings().autohinting.wrongMoves)) {
             return;
         }
@@ -1086,17 +1087,20 @@ class Visual {
         let lang = SettingsSingleton.getInstance().getSettings().general.language;
         let speechBubbleText = document.getElementById('speechBubbleText');
         let hint = pd.gameController.getHint(this.getSplitStatus(), piecesSelectedForPartition);
+        //Speech bubble says : I have a hint
+        setTimeout(function () {
+            // if (SettingsSingleton.getInstance().getSettings().speech.enableSpeech) {
+            //     pd.visual.speakBot(strings.speechbubbleTexts.iHaveAHint[lang]);
+            // }
+            speechBubbleText.textContent = strings.speechbubbleTexts.iHaveAHint[lang];
+            if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
+                document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.iHaveAHint[lang];
+            }
+        }, 3000);
         //checks if visual hints are enabled.
         //If enabled => the user can click on the button on the speech bubble to get the hint
         //checks if visual hints are enabled
         if ((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Visual")) {
-            //Speech bubble says : I have a hint
-            setTimeout(function () {
-                speechBubbleText.textContent = strings.speechbubbleTexts.iHaveAHint[lang];
-                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
-                    document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.iHaveAHint[lang];
-                }
-            }, 3000);
             //Speech bubble asks show the hint or ignore
             setTimeout(function () {
                 speechBubbleText.innerHTML = '<button id="showVisualHint" name="showVisualHint" onclick="pd.visual.visualAutoHint()" ></button>' + '<button id="hideVisualHint" name="hideVisualHint" onclick="pd.visual.ignore()">Ignore</button>';
@@ -1110,13 +1114,6 @@ class Visual {
         //checks if Textual hints are enabled.
         //If enabled => the user automatically gets a textul hint
         else if ((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Textual")) {
-            //Speech bubble says : I have a hint
-            setTimeout(function () {
-                speechBubbleText.textContent = strings.speechbubbleTexts.iHaveAHint[lang];
-                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
-                    document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.iHaveAHint[lang];
-                }
-            }, 3000);
             //Speech bubble automatically shows textual hint
             //Speech bubble asks show the hint or ignore
             //Here the teacher can either show the buttons or just set for automatic textual hints display
@@ -1134,13 +1131,6 @@ class Visual {
             }, 5000);
         }
         else if ((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Both")) {
-            //Speech bubble says : I have a hint
-            setTimeout(function () {
-                speechBubbleText.textContent = strings.speechbubbleTexts.iHaveAHint[lang];
-                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
-                    document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.iHaveAHint[lang];
-                }
-            }, 3000);
             //Speech bubble asks show the hint or ignore
             setTimeout(function () {
                 speechBubbleText.innerHTML = '<button id="showBothHint" name="showBothHint" onclick="pd.visual.bothAutoHint()"></button>' + '<button id="hideBothHint" name="hideBothHint" onclick="pd.visual.ignore()"></button>';
