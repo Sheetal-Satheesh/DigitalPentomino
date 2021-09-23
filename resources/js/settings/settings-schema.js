@@ -219,7 +219,7 @@ class SettingsSchema {
                   typeOfHints:{
                     "type": "string",
                     "title": titles.autohinting.typeOfHints.title[lang],
-                    "enum": ["Visual", "Textual", "Both"],
+                    "enum": ["Visual", "Visual and textual"],
                     "enumText": titles.autohinting.typeOfHints.enumTitles[lang],
                     "description": titles.autohinting.typeOfHints.description[lang],
                     "default": "Visual"
@@ -345,16 +345,9 @@ class SettingsSchema {
             splitPartition: {
                 "type": "object",
                 "advanced": true,
-                "title": titles.splitPartition.title[lang],
-                "visible": false,
+                "title": titles.splitPartition.title[lang],                
                 "pupilModeVisibleOnDefault": false,
-                "properties": {
-                    fixPieces : {
-                        "type": "boolean",
-                        "title": titles.splitPartition.fixPieces.title[lang],
-                        "description": titles.splitPartition.fixPieces.description[lang],
-                        "default": false
-                    },
+                "properties": {                    
                     splitStrategy: {
                         "type": "string",
                         "title": titles.splitPartition.splitStrategy.title[lang],
