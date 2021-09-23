@@ -9,12 +9,15 @@
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="resources/images/icons/dp_192.png">
     <link rel="stylesheet" href="resources/css/style.css">
+    <link rel="stylesheet" id="switcher-id" href=" ">
+    <link rel="stylesheet" href="resources/css/board_selection.css">
     <link rel="stylesheet" href="resources/css/modal.css">
     <link rel="stylesheet" href="resources/css/load_screen.css">
     <link rel="stylesheet" href="resources/css/grid.css">
     <link rel="stylesheet" href="resources/css/settings_form.css">
     <link rel="stylesheet" style="text/css" href="resources/jsonform/bootstrap.css" />
     <script src="resources/js/multi-lang/strings.js"></script>
+    <script src="resources/js/themeSwitcher.js"></script>
     <script src="resources/js/settings/settings-schema.js"></script>
     <script src="resources/js/settings/settings.js"></script>
     <script src="resources/js/settings/settings-parser.js"></script>
@@ -1322,8 +1325,22 @@
                         document.getElementById("bubbleContainer").style.display = "none";
                         document.getElementById("labelNumberSolutionsContainer").style.display = "block";
                     }
-                }
-
+                } 
+                else if (heading === "theming" && key === "theme") {
+                    var newThemeValue = settings[heading][key];
+                    this.applyColorToPieces(newThemeValue);
+                    if(newThemeValue == 'default'){
+                            document.getElementById('switcher-id').href = 'resources/css/themes/defaultTheme.css';
+                        }
+                        else if(newThemeValue == 'dayTheme'){
+                            document.getElementById('switcher-id').href = 'resources/css/themes/dayTheme.css';
+                        }
+                        else if (newThemeValue == 'nightTheme') {
+                            document.getElementById('switcher-id').href = 'resources/css/themes/iceTheme.css';
+                        }
+                         localStorage.setItem('style', newThemeValue);
+                }               
+                
                 let allCustomSettings = CustomSettingsEntrySingleton.getInstance().getAll();
                 allCustomSettings.forEach(customSettings => {
                     if (customSettings.getName() === SettingsForm.generateSettingsEntryName(heading, key)) {
@@ -1331,6 +1348,26 @@
                     }
                 });
             });
+        }
+
+        function applyColorToPieces(selectedTheme){
+          if(selectedTheme == "blackAndWhiteTheme"){
+            piecesIdArray.forEach(function (item){
+                Array.prototype.forEach.call(document.getElementById(item).getElementsByClassName("bmPoint"), function (element) {
+                    element.style.background = "#000000"
+                });
+            });
+          }
+          else{
+            var colorsArrayDefault = ['#7a28cc', '#cc28cc', '#cc2828', '#cc7a28', '#cccc28', '#7acc28', '#28cc28', '#28cc7a' , '#28cccc', '#287acc', '#2828cc', '#cc287a'];
+                var counter = 0;
+                piecesIdArray.forEach(function (piece, counter){
+                    Array.prototype.forEach.call(document.getElementById(piece).getElementsByClassName("bmPoint"), function (element) {
+                        element.style.background = colorsArrayDefault[counter];
+                    });
+                    counter ++;
+                });
+            }     
         }
 
         function selectSettings() {

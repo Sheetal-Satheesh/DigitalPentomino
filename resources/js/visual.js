@@ -20,7 +20,16 @@ function updateCommandAttr(cmdType, cmdSeq) {
 }
 
 const cmdAttrDefault = updateCommandAttr(CommandTypes.Original, CommandSeq.Forward);
-const alternateColor = ["#77C9D4", "#57B390", "#015249"];
+ //var currentAppliedTheme = SettingsSingleton.getInstance().getSettings().theming.theme;
+ //console.log("currentAppliedTheme--->", currentAppliedTheme);
+// switch(currentAppliedTheme){
+//     case "default":
+//         break;
+    
+//     case "dayTheme":
+//         break;
+// }
+var alternateColor = ["#77C9D4", "#57B390", "#015249"];
 const backGroundColor = '#eceaea';
 
 let lastHintedPentName = null;
@@ -30,6 +39,7 @@ let styleBlocks;
 let splitCounter = -1;
 let randomCell;
 let count = 0;
+let highContrastPieceColor = "#000000";
 class Visual {
 
     constructor(pd, type = "reload") {
@@ -429,7 +439,7 @@ class Visual {
             let colorR = this.hexToRgb(this.selected.color).r;
             let colorG = this.hexToRgb(this.selected.color).g;
             let colorB = this.hexToRgb(this.selected.color).b;
-            pieceMan[i].style.background = "rgba(" + [colorR, colorG, colorB, 0.5].join(',') + ")";
+            pieceMan[i].style.background = "rgba(" + [colorR, colorG, colorB, 0.7].join(',') + ")";
         }
 
         if ((x + 280 > gameWidth)) {
@@ -1217,7 +1227,12 @@ class Visual {
         });
         this.pieces.forEach(piece => {
             Array.prototype.forEach.call(document.getElementById('piece_' + piece.name).getElementsByClassName("bmPoint"), function (element) {
-                element.style.background = piece.color;
+                //Piece colors can be changed for High contrast theme
+                if(localStorage.getItem('style') == "blackAndWhiteTheme"){
+                    element.style.background = highContrastPieceColor;                 
+                }
+                else
+                element.style.background = piece.color ;  
             });
         });
         this.pieces.forEach(piece => {
@@ -1238,7 +1253,7 @@ class Visual {
                     for (var k = 0; k < fieldValue.length; k++) {
                         let fieldID = document.getElementById("field_" + fieldValue[k][0] + "," + fieldValue[k][1]);
                         fieldID.style.background = alternateColor[i];
-                        fieldID.style.opacity = .5;
+                        fieldID.style.opacity = .7;
                     }
                 }
                 var piece = partitionedArray[i][j][0];

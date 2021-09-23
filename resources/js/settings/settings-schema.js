@@ -126,9 +126,9 @@ class SettingsSchema {
                         "type": "string",
                         "title": titles.theming.theme.title[lang],
                         "description": titles.theming.theme.description[lang],
-                        "enum": ["theme1", "theme2", "theme3", "theme4"],
+                        "enum": ["default", "dayTheme", "nightTheme"],
                         "enumText": titles.theming.theme.enumTitles[lang],
-                        "default": "theme1"
+                        "default": "default"
                     },
                 }
             },
