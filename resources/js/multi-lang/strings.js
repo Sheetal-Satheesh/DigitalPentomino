@@ -299,7 +299,7 @@ const strings = {
             }
         },
         theming: {
-            title: ["Application theme", "Aussehen"],
+            title: ["Appearance", "Aussehen"],
             theme: {
                 title: ["Theme", "Design"],
                 enumTitles: [["Default", "DayTuca", "NightTuca"], ["Standard", "TucaHell", "TucaDunkel"]],
