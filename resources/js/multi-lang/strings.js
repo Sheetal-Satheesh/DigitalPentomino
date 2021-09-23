@@ -154,19 +154,17 @@ const strings = {
 
             typeOfHints:{
                 title: ["Type of hints for auto-hinting", "Art der Hinweise für das Auto-Hinting"],
-                enumTitles: [["Visual", "Textual", "Both"], ["Visuell", "Textuell", "Beides"]],
+                enumTitles: [["Visual", "Visual and textual"], ["Visuell", "Visuell und textuell"]],
                 description: [
                 "Provides automatic hints :"  +
                     "<ul>" +
                         "<li><b>Visual:</b> Gives only visual hints.</li>" +
-                        "<li><b>Textual:</b> Gives only textual hints.</li>" +
-                        "<li><b>Both:</b> Gives both visual and textual hints</li>" +
+                        "<li><b>Visual and textual:</b> Gives visual and textual hints.</li>" +
                     "</ul>",
                     "Liefert automatische Hinweise :" +
                         "<ul>" +
                         "<li><b>Visuell:</b> Gibt nur visuelle Hinweise.</li>" +
-                        "<li><b>Textuell:</b> Gibt nur textuelle Hinweise.</li>" +
-                        "<li><b>Beide:</b> Gibt sowohl visuelle als auch textliche Hinweise</li>" +
+                        "<li><b>Visuell und textuell:</b> Gibt textuelle und visuelle Hinweise.</li>" +
                         "</ul>"]
             }
         },

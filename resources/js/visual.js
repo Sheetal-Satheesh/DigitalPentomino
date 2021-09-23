@@ -1109,31 +1109,31 @@ class Visual {
         }
         //checks if Textual hints are enabled.
         //If enabled => the user automatically gets a textul hint
-        else if ((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Textual")) {
-            //Speech bubble says : I have a hint
-            setTimeout(function () {
-                speechBubbleText.textContent = strings.speechbubbleTexts.iHaveAHint[lang];
-                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
-                    document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.iHaveAHint[lang];
-                }
-            }, 3000);
-            //Speech bubble automatically shows textual hint
-            //Speech bubble asks show the hint or ignore
-            //Here the teacher can either show the buttons or just set for automatic textual hints display
-            setTimeout(function () {
-                if (SettingsSingleton.getInstance().getSettings().autohinting.showOrHideButtonsForTextualHints) {
-                    speechBubbleText.innerHTML = '<button id="showTextualHint" name="showTextualHint" onclick="pd.visual.showTextualHint()"></button>' + '<button id="hideTextualHint" name="hideTextualHint" onclick="pd.visual.ignore()"></button>';
-                    if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
-                        document.getElementById("labelNumberSolutions").innerHTML = '<button id="showTextualHint" name="showTextualHint" onclick="pd.visual.showTextualHint()"></button>' + '<button id="hideTextualHint" name="hideTextualHint" onclick="pd.visual.ignore()"></button>';
-                    }
-                    document.querySelector("#showTextualHint").innerHTML = strings.speechbubbleTexts.showHint[lang];
-                    document.querySelector("#hideTextualHint").innerHTML = strings.speechbubbleTexts.ignore[lang];
-                } else {
-                    pd.visual.hintText(hint);
-                }
-            }, 5000);
-        }
-        else if ((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Both")) {
+        // else if ((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Textual")) {
+        //     //Speech bubble says : I have a hint
+        //     setTimeout(function () {
+        //         speechBubbleText.textContent = strings.speechbubbleTexts.iHaveAHint[lang];
+        //         if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
+        //             document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.iHaveAHint[lang];
+        //         }
+        //     }, 3000);
+        //     //Speech bubble automatically shows textual hint
+        //     //Speech bubble asks show the hint or ignore
+        //     //Here the teacher can either show the buttons or just set for automatic textual hints display
+        //     setTimeout(function () {
+        //         if (SettingsSingleton.getInstance().getSettings().autohinting.showOrHideButtonsForTextualHints) {
+        //             speechBubbleText.innerHTML = '<button id="showTextualHint" name="showTextualHint" onclick="pd.visual.showTextualHint()"></button>' + '<button id="hideTextualHint" name="hideTextualHint" onclick="pd.visual.ignore()"></button>';
+        //             if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
+        //                 document.getElementById("labelNumberSolutions").innerHTML = '<button id="showTextualHint" name="showTextualHint" onclick="pd.visual.showTextualHint()"></button>' + '<button id="hideTextualHint" name="hideTextualHint" onclick="pd.visual.ignore()"></button>';
+        //             }
+        //             document.querySelector("#showTextualHint").innerHTML = strings.speechbubbleTexts.showHint[lang];
+        //             document.querySelector("#hideTextualHint").innerHTML = strings.speechbubbleTexts.ignore[lang];
+        //         } else {
+        //             pd.visual.hintText(hint);
+        //         }
+        //     }, 5000);
+        // }
+        else if ((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Visual and textual")) {
             //Speech bubble says : I have a hint
             setTimeout(function () {
                 speechBubbleText.textContent = strings.speechbubbleTexts.iHaveAHint[lang];
