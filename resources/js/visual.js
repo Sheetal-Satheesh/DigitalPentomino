@@ -1278,6 +1278,7 @@ class Visual {
 
     }
 
+
     unblockPartition() {
         Array.prototype.forEach.call(document.getElementsByClassName("gamearea boardarea"), function (element) {
             if (!element.classList.contains("blockedcell")) {
