@@ -83,4 +83,14 @@ class UtilitiesClass {
             Math.floor((gameObject.gameWidth - gameObject.boardSize[1]) / 2)
         ];
     }
+
+    static disablePointerEventsOnModalOpen() {
+        document.getElementById("tray").style.pointerEvents = "none";
+        document.getElementById("playarea").style.pointerEvents = "none";
+    }
+
+    static enablePointerEventsOnModalClose() {
+        document.getElementById("tray").style.pointerEvents = "auto";
+        document.getElementById("playarea").style.pointerEvents = "auto";
+    }
 }

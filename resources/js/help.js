@@ -1,3 +1,9 @@
+/* 
+This class contains methods that are common between board partitioning(split-board)
+and hinting(hint-ai).
+
+This class is a singleton and should be instantiated only through hint-ai.js or split-board.js.
+ */
 class Help {
     constructor(game) {
         if(Help.instance instanceof Help && Help.instance.gameName === game.getName()) {
@@ -19,14 +25,19 @@ class Help {
         return this.solutions;
     }
 
-    // --- --- --- Possible Solutions --- --- ---
+    /**
+     * Returns the solutions that can be reached from the current board position
+     * 
+     * @param game
+     */
     getPossibleSolutions(game) {
         if (game.getAllPentominoes().length === 0) {
             throw new Error("game is empty");
         }
+        let solutions = this.isSplitActive ? [this.currentSolnForSplit] : this.solutions;
 
         let possibleSolutions = [];
-        this.solutions.forEach(solution => {
+        solutions.forEach(solution => {
             let allPentominoesOnBoardArePerfect = game.getAllPentominoes()
                 .filter(pentomino => game.isPlacedOnBoard(pentomino))
                 .every(pentominoOnBoard => {
@@ -39,13 +50,21 @@ class Help {
         return possibleSolutions;
     }
 
-    // --- --- --- C
+    /**
+     * Returns possible solutions for the game based on current board partitioning state
+     * 
+     * @param game 
+     * @param isSplitActive 
+     * @param eventSource
+     *      0 -- call originated from hint-ai
+     *      1 -- call originated from LtoRSplit in hint-ai.js 
+     *      2 -- call originated from SplitByColor in hint-ai.js
+     */
     getGameSolution(game, isSplitActive, eventSource = 0) { 
-        // eventSource Value 0--> Hint, 1---> SplitFromLtoR, 2---> SplitByColor
-        let possibleSolutions = this.getPossibleSolutions(game, this.solutions);
+        let possibleSolutions = this.getPossibleSolutions(game);
         let bestSolution;
     
-        if(eventSource == 1) {
+        if (eventSource == 1) {
             bestSolution = possibleSolutions[Math.floor(Math.random() * possibleSolutions.length)];
             this.isSplitActive = true;
             this.currentSolnForSplit = bestSolution;
@@ -60,7 +79,7 @@ class Help {
             this.currentSolnForSplit = bestSolution;
         } else {                        
             if(isSplitActive) {
-                bestSolution = this.currentSolnForSplit;
+                bestSolution = possibleSolutions[0];
             } else {
                 if (possibleSolutions.length > 0) {
                     bestSolution = possibleSolutions[0];
@@ -76,7 +95,18 @@ class Help {
         this.isSplitActive = false;        
     }
 
+    /**
+     * Indicates how to get back to a board state that is still solvable
+     * 
+     * @param game 
+     * @param solutions 
+     *  
+     */
     getClosestSolution(game, solutions) {
+        if(this.isSplitActive) {
+            return this.currentSolnForSplit;
+        }
+
         let closestSolution = null;
         let numOfPerfectPentominoesOnBoardOfClosestSolution = -1;
 

@@ -1,3 +1,9 @@
+/**
+ * This class is the main driver for the UI related stuff of the application.
+ * 
+ */
+
+
 const UIProperty = {
     "TrayCSSLeft": 0,
     "TrayHeight": 10,
@@ -20,7 +26,16 @@ function updateCommandAttr(cmdType, cmdSeq) {
 }
 
 const cmdAttrDefault = updateCommandAttr(CommandTypes.Original, CommandSeq.Forward);
-const alternateColor = ["#77C9D4", "#57B390", "#015249"];
+ //var currentAppliedTheme = SettingsSingleton.getInstance().getSettings().theming.theme;
+ //console.log("currentAppliedTheme--->", currentAppliedTheme);
+// switch(currentAppliedTheme){
+//     case "default":
+//         break;
+    
+//     case "dayTheme":
+//         break;
+// }
+var alternateColor = ["#77C9D4", "#57B390", "#015249"];
 const backGroundColor = '#eceaea';
 
 let lastHintedPentName = null;
@@ -30,6 +45,7 @@ let styleBlocks;
 let splitCounter = -1;
 let randomCell;
 let count = 0;
+let highContrastPieceColor = "#000000";
 class Visual {
 
     constructor(pd, type = "reload") {
@@ -429,7 +445,7 @@ class Visual {
             let colorR = this.hexToRgb(this.selected.color).r;
             let colorG = this.hexToRgb(this.selected.color).g;
             let colorB = this.hexToRgb(this.selected.color).b;
-            pieceMan[i].style.background = "rgba(" + [colorR, colorG, colorB, 0.5].join(',') + ")";
+            pieceMan[i].style.background = "rgba(" + [colorR, colorG, colorB, 0.7].join(',') + ")";
         }
 
         if ((x + 280 > gameWidth)) {
@@ -1113,24 +1129,38 @@ class Visual {
         }
         //checks if Textual hints are enabled.
         //If enabled => the user automatically gets a textul hint
-        else if ((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Textual")) {
-            //Speech bubble automatically shows textual hint
-            //Speech bubble asks show the hint or ignore
-            //Here the teacher can either show the buttons or just set for automatic textual hints display
+        // else if ((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Textual")) {
+        //     //Speech bubble says : I have a hint
+        //     setTimeout(function () {
+        //         speechBubbleText.textContent = strings.speechbubbleTexts.iHaveAHint[lang];
+        //         if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
+        //             document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.iHaveAHint[lang];
+        //         }
+        //     }, 3000);
+        //     //Speech bubble automatically shows textual hint
+        //     //Speech bubble asks show the hint or ignore
+        //     //Here the teacher can either show the buttons or just set for automatic textual hints display
+        //     setTimeout(function () {
+        //         if (SettingsSingleton.getInstance().getSettings().autohinting.showOrHideButtonsForTextualHints) {
+        //             speechBubbleText.innerHTML = '<button id="showTextualHint" name="showTextualHint" onclick="pd.visual.showTextualHint()"></button>' + '<button id="hideTextualHint" name="hideTextualHint" onclick="pd.visual.ignore()"></button>';
+        //             if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
+        //                 document.getElementById("labelNumberSolutions").innerHTML = '<button id="showTextualHint" name="showTextualHint" onclick="pd.visual.showTextualHint()"></button>' + '<button id="hideTextualHint" name="hideTextualHint" onclick="pd.visual.ignore()"></button>';
+        //             }
+        //             document.querySelector("#showTextualHint").innerHTML = strings.speechbubbleTexts.showHint[lang];
+        //             document.querySelector("#hideTextualHint").innerHTML = strings.speechbubbleTexts.ignore[lang];
+        //         } else {
+        //             pd.visual.hintText(hint);
+        //         }
+        //     }, 5000);
+        // }
+        else if ((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Visual and textual")) {
+            //Speech bubble says : I have a hint
             setTimeout(function () {
-                if (SettingsSingleton.getInstance().getSettings().autohinting.showOrHideButtonsForTextualHints) {
-                    speechBubbleText.innerHTML = '<button id="showTextualHint" name="showTextualHint" onclick="pd.visual.showTextualHint()"></button>' + '<button id="hideTextualHint" name="hideTextualHint" onclick="pd.visual.ignore()"></button>';
-                    if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
-                        document.getElementById("labelNumberSolutions").innerHTML = '<button id="showTextualHint" name="showTextualHint" onclick="pd.visual.showTextualHint()"></button>' + '<button id="hideTextualHint" name="hideTextualHint" onclick="pd.visual.ignore()"></button>';
-                    }
-                    document.querySelector("#showTextualHint").innerHTML = strings.speechbubbleTexts.showHint[lang];
-                    document.querySelector("#hideTextualHint").innerHTML = strings.speechbubbleTexts.ignore[lang];
-                } else {
-                    pd.visual.hintText(hint);
+                speechBubbleText.textContent = strings.speechbubbleTexts.iHaveAHint[lang];
+                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
+                    document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.iHaveAHint[lang];
                 }
-            }, 5000);
-        }
-        else if ((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Both")) {
+            }, 3000);
             //Speech bubble asks show the hint or ignore
             setTimeout(function () {
                 speechBubbleText.innerHTML = '<button id="showBothHint" name="showBothHint" onclick="pd.visual.bothAutoHint()"></button>' + '<button id="hideBothHint" name="hideBothHint" onclick="pd.visual.ignore()"></button>';
@@ -1212,7 +1242,12 @@ class Visual {
         });
         this.pieces.forEach(piece => {
             Array.prototype.forEach.call(document.getElementById('piece_' + piece.name).getElementsByClassName("bmPoint"), function (element) {
-                element.style.background = piece.color;
+                //Piece colors can be changed for High contrast theme
+                if(localStorage.getItem('style') == "blackAndWhiteTheme"){
+                    element.style.background = highContrastPieceColor;                 
+                }
+                else
+                element.style.background = piece.color ;  
             });
         });
         this.pieces.forEach(piece => {
@@ -1222,6 +1257,7 @@ class Visual {
         splitPartition = [];
         splitCounter = -1;
         this.unblockPartition();
+        this.pd.gameController.clearIsSplitActiveFlag();
     }
 
     displaySplit(partitionedArray, alternateColor) {
@@ -1232,7 +1268,7 @@ class Visual {
                     for (var k = 0; k < fieldValue.length; k++) {
                         let fieldID = document.getElementById("field_" + fieldValue[k][0] + "," + fieldValue[k][1]);
                         fieldID.style.background = alternateColor[i];
-                        fieldID.style.opacity = .5;
+                        fieldID.style.opacity = .7;
                     }
                 }
                 var piece = partitionedArray[i][j][0];
@@ -1613,8 +1649,7 @@ class Visual {
     }
 
     showGameSolved() {
-        let piecesIdArray = this.pieces.map(piece => "piece_" + piece.name);
-        this.disablePointerEventsOnPieces(piecesIdArray);
+        UtilitiesClass.disablePointerEventsOnModalOpen();
         let modal = document.getElementById('modalTop');
         modal.style.display = "block";
         modal.style.background = "transparent";
@@ -1675,12 +1710,14 @@ class Visual {
         let playAgainBtn = document.querySelector(".deleteBtn");
         playAgainBtn.addEventListener("click", () => {
             pd.reset();
-            this.enablePointerEventsOnPieces();
+            UtilitiesClass.enablePointerEventsOnModalClose();
         });
 
+        let that = this;
         let dontPlayAgainBtn = document.querySelector(".cancelBtn");
         dontPlayAgainBtn.addEventListener("click", () => {
-            this.enablePointerEventsOnPieces();
+            UtilitiesClass.enablePointerEventsOnModalClose();
+            that.enablePointerEventsOnPieces();
         });
         // When the user clicks anywhere outside of the modal, close it
         window.onclick = function (event) {
@@ -1900,6 +1937,15 @@ class Visual {
             that.disablePrefillButton(false);
         }, 100, this);
 
+        if (SettingsSingleton.getInstance().getSettings().prefilling.fixPieces) {
+            let piecesIdArray = this.pieces.filter(piece => !piece.inTray).
+                map(piece => "piece_" + piece.name);
+            //The pointer events to be disabled after the pieces are drawn on screen
+            setTimeout(function(that) {
+                that.disablePointerEventsOnPieces(piecesIdArray);
+            }, 100, this);
+        }
+
         if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.showNumberOfPossibleSolutions();
         }
@@ -1915,6 +1961,7 @@ class Visual {
 
     readyForPrefilling() {
         this.reset();
+        this.enablePointerEventsOnPieces();
         // Prevent clicking of button while previous prefilling is going on
         this.disablePrefillButton(true);
     }
@@ -1938,6 +1985,14 @@ class Visual {
         }
     }
 
+    /**
+     * Prefills the board such that a piece does not touch more than <threshold> many
+     * other pieces
+     * 
+     * @param randomSolution 
+     * @param threshold 
+     * @returns 
+     */
     prefillBasedOnAdjacentPieces(randomSolution, threshold) {
         let thresholdMap = {
             "easy": 3,
@@ -2018,6 +2073,14 @@ class Visual {
         return prefillCandidates;
     }
 
+    /**
+     * Fills the board with random pieces that conform to the constraint
+     * that their centroids are atleast <threshold> units apart
+     * 
+     * @param randomSolution 
+     * @param threshold 
+     *  
+     */
     prefillBasedOnDistance(randomSolution, threshold) {
         let thresholdMap = {
             "easy": 2,
@@ -2278,10 +2341,10 @@ class Visual {
                     that.showNumberOfPossibleSolutions();
                 }
                 if (indx == (cmdSequences.length - 1)) {
-                    that.enablePointerEventsOnPieces();
+                    UtilitiesClass.enablePointerEventsOnModalClose();
                 }
                 else {
-                    that.disablePointerEventsOnPieces();
+                    UtilitiesClass.disablePointerEventsOnModalOpen();
                     that.disableManipulations();
                 }
             }, timeInterval += 500, that, command, indx);
@@ -2292,7 +2355,7 @@ class Visual {
             let replayId = document.getElementById("replay");
             let replayImg = replayId.children[0];
             replayImg.setAttribute('src', 'resources/images/icons/replay.svg');
-            that.enablePointerEventsOnPieces();
+            // that.enablePointerEventsOnPieces();
         };
         setTimeout(pause, timeInterval, this);
 
@@ -2312,10 +2375,9 @@ class Visual {
         return (this.replayRunning == true) ? true : false;
     }
 
-    disablePointerEventsOnPieces() {
-        let pentominoes = this.gameController.getAllPentominoes();
-        pentominoes.forEach(function (piece) {
-            document.getElementById("piece_" + piece.name).style.pointerEvents = "none";
+    disablePointerEventsOnPieces(piecesIdArray) {
+        piecesIdArray.forEach(function (pieceId) {
+            document.getElementById(pieceId).style.pointerEvents = "none";
         });
     }
 

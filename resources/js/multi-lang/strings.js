@@ -154,19 +154,17 @@ const strings = {
 
             typeOfHints:{
                 title: ["Type of hints for auto-hinting", "Art der Hinweise für das Auto-Hinting"],
-                enumTitles: [["Visual", "Textual", "Both"], ["Visuell", "Textuell", "Beides"]],
+                enumTitles: [["Visual", "Visual and textual"], ["Visuell", "Visuell und textuell"]],
                 description: [
                 "Provides automatic hints :"  +
                     "<ul>" +
                         "<li><b>Visual:</b> Gives only visual hints.</li>" +
-                        "<li><b>Textual:</b> Gives only textual hints.</li>" +
-                        "<li><b>Both:</b> Gives both visual and textual hints</li>" +
+                        "<li><b>Visual and textual:</b> Gives visual and textual hints.</li>" +
                     "</ul>",
                     "Liefert automatische Hinweise :" +
                         "<ul>" +
                         "<li><b>Visuell:</b> Gibt nur visuelle Hinweise.</li>" +
-                        "<li><b>Textuell:</b> Gibt nur textuelle Hinweise.</li>" +
-                        "<li><b>Beide:</b> Gibt sowohl visuelle als auch textliche Hinweise</li>" +
+                        "<li><b>Visuell und textuell:</b> Gibt textuelle und visuelle Hinweise.</li>" +
                         "</ul>"]
             }
         },
@@ -301,19 +299,15 @@ const strings = {
             }
         },
         theming: {
-            title: ["Application theme", "Aussehen"],
+            title: ["Appearance", "Aussehen"],
             theme: {
                 title: ["Theme", "Design"],
-                enumTitles: [["Default", "DayTuca", "NightTuca", "HighContrast"], ["Standard", "TucaHell", "TucaDunkel", "Kontrast"]],
+                enumTitles: [["Default", "DayTuca", "NightTuca"], ["Standard", "TucaHell", "TucaDunkel"]],
                 description: ["General theme of the application.", "Grundlegendes Design der Applikation"]
             }
         },
         splitPartition: {
-            title: ["Split Board into Thirds", "Brettdrittelung"],
-            fixPieces: {
-                title: ["Fix pieces after solving a Third of the board", "Pentominos nach Lösung eines Drittels fixieren"],
-                description: ["Pieces cannot be moved after a partition is filled (only for left-to-right strategy)", "Teile können nicht verschoben werden, nachdem eine Partition gefüllt ist(nur für Links-nach-rechts-Strategie)"],
-            },
+            title: ["Board Partitioning", "Brettdrittelung"],            
             splitStrategy: {
                 title: ["Split Board into Partion By", "TO DO"],
                 enumTitles: [["Color","Left-to-Right"], ["TO DO", "TO DO"]],

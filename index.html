@@ -9,12 +9,14 @@
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="resources/images/icons/dp_192.png">
     <link rel="stylesheet" href="resources/css/style.css">
+    <link rel="stylesheet" id="switcher-id" href=" ">
     <link rel="stylesheet" href="resources/css/modal.css">
     <link rel="stylesheet" href="resources/css/load_screen.css">
     <link rel="stylesheet" href="resources/css/grid.css">
     <link rel="stylesheet" href="resources/css/settings_form.css">
     <link rel="stylesheet" style="text/css" href="resources/jsonform/bootstrap.css" />
     <script src="resources/js/multi-lang/strings.js"></script>
+    <script src="resources/js/themeSwitcher.js"></script>
     <script src="resources/js/settings/settings-schema.js"></script>
     <script src="resources/js/settings/settings.js"></script>
     <script src="resources/js/settings/settings-parser.js"></script>
@@ -416,7 +418,7 @@
         function selectBoard() {
             var modal = document.getElementById('modalTop');
             this.disableSnapshotButton();
-            this.disablePointerEventsOnPieces();
+            UtilitiesClass.disablePointerEventsOnModalOpen();
             this.hideManipulationButtons();
             modal.style.background = " lightgrey";
             modal.style.display = "block";
@@ -470,7 +472,7 @@
             } else if (SettingsSingleton.getInstance().getSettings().teachersMode) {
                 // teacher has the choice between share and scan
                 openImportOrExportDialog();
-                this.disablePointerEventsOnPieces();
+                UtilitiesClass.disablePointerEventsOnModalOpen();
                 this.hideManipulationButtons();
                 if ($('#birdContainer').is(':visible')) {
                     this.hideBubbleContainer();
@@ -478,7 +480,7 @@
             } else {
                 // pupils can only scan
                 openScanQrCode();
-                this.disablePointerEventsOnPieces();
+                UtilitiesClass.disablePointerEventsOnModalOpen();
                 this.hideManipulationButtons();
                 if ($('#birdContainer').is(':visible')) {
                     this.hideBubbleContainer();
@@ -509,7 +511,7 @@
             //hide back button for main settings menu
             document.getElementById("backButton").style.display = "none";
 
-            this.disablePointerEventsOnPieces();
+            UtilitiesClass.disablePointerEventsOnModalOpen();
             this.hideManipulationButtons();
             this.hideBubbleContainer();
 
@@ -588,7 +590,7 @@
             this.disableSnapshotButton();
             this.hideManipulationButtons();
             this.closeBoardSelector();
-            this.disablePointerEventsOnPieces();
+            UtilitiesClass.disablePointerEventsOnModalOpen();
             modal.style.display = "block";
             modal.style.background = "transparent";
 
@@ -631,7 +633,7 @@
             this.disableSnapshotButton();
             this.hideManipulationButtons();
             this.closeBoardSelector();
-            this.disablePointerEventsOnPieces();
+            UtilitiesClass.disablePointerEventsOnModalOpen();
             modal.style.display = "block";
             modal.style.background = "transparent";
 
@@ -1084,7 +1086,7 @@
             this.disableSnapshotButton();
             this.hideManipulationButtons();
             this.closeBoardSelector();
-            this.disablePointerEventsOnPieces();
+            UtilitiesClass.disablePointerEventsOnModalOpen();
             modal.style.display = "block";
             modal.style.background = "transparent";
 
@@ -1130,7 +1132,7 @@
                 this.disableSnapshotButton();
                 this.hideManipulationButtons();
                 this.closeBoardSelector();
-                this.disablePointerEventsOnPieces();
+                UtilitiesClass.disablePointerEventsOnModalOpen();
                 modal.style.display = "block";
                 modal.style.background = "transparent";
 
@@ -1242,7 +1244,6 @@
         }
 
 
-
         // From https://stackoverflow.com/questions/10970078/modifying-a-query-string-without-reloading-the-page (2nd answer)
         function insertUrlParam(key, value) {
             if (history.pushState) {
@@ -1322,8 +1323,22 @@
                         document.getElementById("bubbleContainer").style.display = "none";
                         document.getElementById("labelNumberSolutionsContainer").style.display = "block";
                     }
-                }
-
+                } 
+                else if (heading === "theming" && key === "theme") {
+                    var newThemeValue = settings[heading][key];
+                    this.applyColorToPieces(newThemeValue);
+                    if(newThemeValue == 'default'){
+                            document.getElementById('switcher-id').href = 'resources/css/themes/defaultTheme.css';
+                        }
+                        else if(newThemeValue == 'dayTheme'){
+                            document.getElementById('switcher-id').href = 'resources/css/themes/dayTheme.css';
+                        }
+                        else if (newThemeValue == 'nightTheme') {
+                            document.getElementById('switcher-id').href = 'resources/css/themes/iceTheme.css';
+                        }
+                         localStorage.setItem('style', newThemeValue);
+                }               
+                
                 let allCustomSettings = CustomSettingsEntrySingleton.getInstance().getAll();
                 allCustomSettings.forEach(customSettings => {
                     if (customSettings.getName() === SettingsForm.generateSettingsEntryName(heading, key)) {
@@ -1333,13 +1348,35 @@
             });
         }
 
+        function applyColorToPieces(selectedTheme){
+            let piecesIdArray = ['piece_X', 'piece_Y', 'piece_F', 'piece_I', 'piece_L', 'piece_N', 'piece_P', 'piece_T',
+             'piece_U', 'piece_V', 'piece_W', 'piece_Z'];
+          if(selectedTheme == "blackAndWhiteTheme"){
+            piecesIdArray.forEach(function (item){
+                Array.prototype.forEach.call(document.getElementById(item).getElementsByClassName("bmPoint"), function (element) {
+                    element.style.background = "#000000"
+                });
+            });
+          }
+          else{
+            var colorsArrayDefault = ['#7a28cc', '#cc28cc', '#cc2828', '#cc7a28', '#cccc28', '#7acc28', '#28cc28', '#28cc7a' , '#28cccc', '#287acc', '#2828cc', '#cc287a'];
+                var counter = 0;
+                piecesIdArray.forEach(function (piece, counter){
+                    Array.prototype.forEach.call(document.getElementById(piece).getElementsByClassName("bmPoint"), function (element) {
+                        element.style.background = colorsArrayDefault[counter];
+                    });
+                    counter ++;
+                });
+            }     
+        }
+
         function selectSettings() {
             let modal = document.getElementById('modalTop');
             if ($(modal).is(':visible')) {
                 this.closeModal();
             } else {
                 openSettings();
-                this.disablePointerEventsOnPieces();
+                UtilitiesClass.disablePointerEventsOnModalOpen();
                 this.hideManipulationButtons();
                 this.hideBubbleContainer();
             }
@@ -1414,7 +1451,7 @@
         function handleClickedOnLicenses() {
             this.hideManipulationButtons();
             this.closeBoardSelector();
-            this.disablePointerEventsOnPieces();
+            UtilitiesClass.disablePointerEventsOnModalOpen();
             var modal = document.getElementById('modalTop');
             let modalFormContent = document.getElementsByClassName('modalFormContent');
             let y = document.getElementsByClassName("cActionBtn");
@@ -1571,23 +1608,10 @@
             modal.appendChild(div5);
         }
 
-        let piecesIdArray = ['piece_X', 'piece_Y', 'piece_F', 'piece_I', 'piece_L', 'piece_N', 'piece_P', 'piece_T', 'piece_U', 'piece_V', 'piece_W', 'piece_Z'];
-        function disablePointerEventsOnPieces() {
-            piecesIdArray.forEach(function (piece) {
-                document.getElementById(piece).style.pointerEvents = "none";
-            });
-        }
-
-        function enablePointerEventsOnPiece() {
-            piecesIdArray.forEach(function (piece) {
-                document.getElementById(piece).style.pointerEvents = "auto";
-            });
-        }
-
         function closeModalContainer() {
             document.getElementById('modalTop').style.display = "none";
             document.getElementById('backButton').style.display = "none";
-            this.enablePointerEventsOnPiece();
+            UtilitiesClass.enablePointerEventsOnModalClose();
         }
 
         function closeSettings() {
@@ -1598,7 +1622,7 @@
 
         function closeBoardSelector() {
             document.getElementById('modalTop').style.display = "none";
-            this.enablePointerEventsOnPiece();
+            UtilitiesClass.enablePointerEventsOnModalClose();
         }
 
         function selectSeeding() {
@@ -1757,6 +1781,7 @@
                     loadBtn.textContent = strings.replay.loadSnapshot[lang];
                     loadBtn.addEventListener('click', function () {
                         loadGameImage(image.value);
+                        UtilitiesClass.enablePointerEventsOnModalClose();
                     }, false);
 
                     let deleteBtn = document.createElement("button");
@@ -1782,7 +1807,7 @@
         function showGameImages() {
             var modal = document.getElementById('modalTop');
             this.disableSnapshotButton();
-            this.disablePointerEventsOnPieces();
+            UtilitiesClass.disablePointerEventsOnModalOpen();
             this.hideManipulationButtons();
             modal.style.background = " lightgrey";
             modal.style.display = "block";
@@ -1927,7 +1952,7 @@
             }
 
             this.disableSnapshotButton();
-            this.disablePointerEventsOnPieces();//TODO: Fix this
+            UtilitiesClass.disablePointerEventsOnModalOpen();
             hideManipulationButtons();
             pd.visual.saveGameImage(SnapshotType.Auto);
 
