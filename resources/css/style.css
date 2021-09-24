@@ -680,7 +680,7 @@ input:checked + .slider:before {
   font-family: 'icomoon';
   src:  url('fonts/icomoon.eot?b3zpni');
   src:  url('fonts/icomoon.eot?b3zpni#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?b3zpni') format('truetype'),
+    /* url('fonts/icomoon.ttf?b3zpni') format('truetype'), */
     url('fonts/icomoon.woff?b3zpni') format('woff'),
     url('fonts/icomoon.svg?b3zpni#icomoon') format('svg');
   font-weight: normal;
