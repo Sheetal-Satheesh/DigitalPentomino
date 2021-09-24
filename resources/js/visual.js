@@ -1639,8 +1639,7 @@ class Visual {
     }
 
     showGameSolved() {
-        let piecesIdArray = this.pieces.map(piece => "piece_" + piece.name);
-        this.disablePointerEventsOnPieces(piecesIdArray);
+        UtilitiesClass.disablePointerEventsOnModalOpen();
         let modal = document.getElementById('modalTop');
         modal.style.display = "block";
         modal.style.background = "transparent";
@@ -1701,12 +1700,14 @@ class Visual {
         let playAgainBtn = document.querySelector(".deleteBtn");
         playAgainBtn.addEventListener("click", () => {
             pd.reset();
-            this.enablePointerEventsOnPieces();
+            UtilitiesClass.enablePointerEventsOnModalClose();
         });
 
+        let that = this;
         let dontPlayAgainBtn = document.querySelector(".cancelBtn");
         dontPlayAgainBtn.addEventListener("click", () => {
-            this.enablePointerEventsOnPieces();
+            UtilitiesClass.enablePointerEventsOnModalClose();
+            that.enablePointerEventsOnPieces();
         });
         // When the user clicks anywhere outside of the modal, close it
         window.onclick = function (event) {
@@ -1926,6 +1927,15 @@ class Visual {
             that.disablePrefillButton(false);
         }, 100, this);
 
+        if (SettingsSingleton.getInstance().getSettings().prefilling.fixPieces) {
+            let piecesIdArray = this.pieces.filter(piece => !piece.inTray).
+                map(piece => "piece_" + piece.name);
+            //The pointer events to be disabled after the pieces are drawn on screen
+            setTimeout(function(that) {
+                that.disablePointerEventsOnPieces(piecesIdArray);
+            }, 100, this);
+        }
+
         if (SettingsSingleton.getInstance().getSettings().hinting.showNumberOfPossibleSolutions) {
             this.showNumberOfPossibleSolutions();
         }
@@ -1941,6 +1951,7 @@ class Visual {
 
     readyForPrefilling() {
         this.reset();
+        this.enablePointerEventsOnPieces();
         // Prevent clicking of button while previous prefilling is going on
         this.disablePrefillButton(true);
     }
@@ -2320,10 +2331,10 @@ class Visual {
                     that.showNumberOfPossibleSolutions();
                 }
                 if (indx == (cmdSequences.length - 1)) {
-                    that.enablePointerEventsOnPieces();
+                    UtilitiesClass.enablePointerEventsOnModalClose();
                 }
                 else {
-                    that.disablePointerEventsOnPieces();
+                    UtilitiesClass.disablePointerEventsOnModalOpen();
                     that.disableManipulations();
                 }
             }, timeInterval += 500, that, command, indx);
@@ -2334,7 +2345,7 @@ class Visual {
             let replayId = document.getElementById("replay");
             let replayImg = replayId.children[0];
             replayImg.setAttribute('src', 'resources/images/icons/replay.svg');
-            that.enablePointerEventsOnPieces();
+            // that.enablePointerEventsOnPieces();
         };
         setTimeout(pause, timeInterval, this);
 
@@ -2354,10 +2365,9 @@ class Visual {
         return (this.replayRunning == true) ? true : false;
     }
 
-    disablePointerEventsOnPieces() {
-        let pentominoes = this.gameController.getAllPentominoes();
-        pentominoes.forEach(function (piece) {
-            document.getElementById("piece_" + piece.name).style.pointerEvents = "none";
+    disablePointerEventsOnPieces(piecesIdArray) {
+        piecesIdArray.forEach(function (pieceId) {
+            document.getElementById(pieceId).style.pointerEvents = "none";
         });
     }
 
