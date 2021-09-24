@@ -1,3 +1,9 @@
+/**
+ * This class is the main driver for the UI related stuff of the application.
+ * 
+ */
+
+
 const UIProperty = {
     "TrayCSSLeft": 0,
     "TrayHeight": 10,
@@ -1958,6 +1964,14 @@ class Visual {
         }
     }
 
+    /**
+     * Prefills the board such that a piece does not touch more than <threshold> many
+     * other pieces
+     * 
+     * @param randomSolution 
+     * @param threshold 
+     * @returns 
+     */
     prefillBasedOnAdjacentPieces(randomSolution, threshold) {
         let thresholdMap = {
             "easy": 3,
@@ -2038,6 +2052,14 @@ class Visual {
         return prefillCandidates;
     }
 
+    /**
+     * Fills the board with random pieces that conform to the constraint
+     * that their centroids are atleast <threshold> units apart
+     * 
+     * @param randomSolution 
+     * @param threshold 
+     *  
+     */
     prefillBasedOnDistance(randomSolution, threshold) {
         let thresholdMap = {
             "easy": 2,
