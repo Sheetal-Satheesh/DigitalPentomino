@@ -1349,6 +1349,8 @@
         }
 
         function applyColorToPieces(selectedTheme){
+            let piecesIdArray = ['piece_X', 'piece_Y', 'piece_F', 'piece_I', 'piece_L', 'piece_N', 'piece_P', 'piece_T',
+             'piece_U', 'piece_V', 'piece_W', 'piece_Z'];
           if(selectedTheme == "blackAndWhiteTheme"){
             piecesIdArray.forEach(function (item){
                 Array.prototype.forEach.call(document.getElementById(item).getElementsByClassName("bmPoint"), function (element) {
