@@ -1,3 +1,12 @@
+/**
+ * This class contains all the hinting specific methods. Strategies to find hints are written in this class.
+ * 
+ * Important methods
+ * - _calculateBestImpossibleUnoccupiedCellSpace
+ * - _getNextHint
+ * - _getCommandSequenceListToSolution
+ *  
+ */
 if (typeof require != 'undefined') {
     Pentomino = require('./pentomino.js');
     Board = require('./board.js');
