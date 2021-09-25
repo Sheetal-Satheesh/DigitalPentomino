@@ -176,7 +176,8 @@ class SettingsForm {
         }
 
         if (settings.teachersMode) {
-            htmlElement.appendChild(SettingsForm.createHeader("h3", "Displayed Settings in Pupil Mode"));
+            let lang = SettingsSingleton.getInstance().getSettings().general.language;
+            htmlElement.appendChild(SettingsForm.createHeader("h3", strings.settings.visibilitySettings[lang]));
             htmlElement.appendChild(SettingsForm.createTeachersAdvancedSettings(formElement, schema));
         }
 
