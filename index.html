@@ -1304,6 +1304,7 @@
                     let bgMusicAudio = document.getElementById("bgMusic");
                     if (playBgMusic) {
                         if (bgMusicAudio.paused || bgMusicAudio.duration === 0) {
+                            bgMusicAudio.volume = 0.4;
                             bgMusicAudio.play();
                         }
                     } else {
