@@ -736,7 +736,7 @@ class Visual {
                         flagCheckPartitionSolved = that.checkPartitionSolved();
                         if (flagCheckPartitionSolved) {
                             that.blockPartition();
-                            that.displaySplit_V2();
+                            that.displayPartitionFromL2R();
                         }
 
                         return;
@@ -1212,7 +1212,7 @@ class Visual {
 
     splitBoardViaColor() {
         let partitionedArray = pd.gameController.splitByColor();
-        this.displaySplit(partitionedArray, alternateColor);
+        this.displayPartitionByColor(partitionedArray, alternateColor);
     }
 
     splitBoardLtoR() {
@@ -1221,7 +1221,7 @@ class Visual {
         let styleElement = document.querySelector('.boardarea');
         let styleValue = window.getComputedStyle(styleElement);
         styleBlocks = styleValue.backgroundColor;
-        this.displaySplit_V2();
+        this.displayPartitionFromL2R();
     }
 
     undoSplit() {
@@ -1251,7 +1251,7 @@ class Visual {
         this.pd.gameController.clearIsSplitActiveFlag();
     }
 
-    displaySplit(partitionedArray, alternateColor) {
+    displayPartitionByColor(partitionedArray, alternateColor) {
         for (var i = 0; i < partitionedArray.length; i++) {
             for (var j = 0; j < partitionedArray[i].length; j++) {
                 if (partitionedArray[i][j][1]) {
@@ -1272,7 +1272,7 @@ class Visual {
         }
     }
 
-    displaySplit_V2() {
+    displayPartitionFromL2R() {
         splitCounter++;
         if (splitPartition.length > splitCounter) {
             let partitionedArray = splitPartition[splitCounter]
