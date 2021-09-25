@@ -1,3 +1,11 @@
+/**
+ * This class contains specific methods for SplitBoard functionality. 
+ *  
+ * Important methods
+ * - splitByColor
+ * - splitFromLeftToRight
+ *  
+ */
 if (typeof require != 'undefined') {
     Pentomino = require('./pentomino.js');
     Board = require('./board.js');
@@ -38,6 +46,7 @@ class SplitBoard {
         return partitionedArray;
     }
 
+    /*Common function for SplitByColor and SplitFromLeftToRight */
     _operationForSplitting(closestSolution) {
         let pentominoAnchors = this._getPentominoesAndAnchorPos(closestSolution);
         let orderPieces = this._sortPiecesBasedOnAnchor(pentominoAnchors);
@@ -45,6 +54,9 @@ class SplitBoard {
     }
 
      /** ---------------  Split Via Partition Checks- If Partition is Filled -------------*/
+     /*Checks if divided partition is completely filled to navigate
+      to next partition in SplitFromLeftTORight
+      */
     partitionHasUnoccupiedPosition(pentomino, game) {               
         let solution = this.solutionForSplit; 
         let pentominoName = pentomino.name;
@@ -75,15 +87,6 @@ class SplitBoard {
 
     clearIsSplitActiveFlag() {
         this.helpClass.clearSplitActiveFlag();
-    }
-
-
-    /** ---------------  Solutions-------------*/
-    getSolutions() {
-        if (this._solutions == undefined) {
-            console.error("Solution is not set");
-        }
-        return this._solutions;
     }
 
     // --- --- --- Bubble Sort --- --- ---        
@@ -142,7 +145,7 @@ class SplitBoard {
     }   
 
 
-    // --- --- --- Calculate Position In Game --- --- ---
+    // --- --- --- Calculate Relative Position of Pieces in the Partition  --- --- ---
     /**     
      * @param game
      * @param solutions
@@ -167,13 +170,16 @@ class SplitBoard {
         return finalPosAndPiece;
     }
 
-    // --- --- --- Split Array Into Chunks --- --- ---    
+    // --- --- --- Split Array Into Chunks --- --- --- 
+    /*
+    Splits the board solution into three partition
+    */   
     _splitArrayIntoChunks(closestSolution) {
-        const n = 3;
+        const numberOfSplit = 3;
         const result = [[], [], []];
-        const commandSequences = Math.ceil(closestSolution.length / n)
+        const commandSequences = Math.ceil(closestSolution.length / numberOfSplit)
 
-        for (let element = 0; element < n; element++) {
+        for (let element = 0; element < numberOfSplit; element++) {
             for (let i = 0; i < commandSequences; i++) {
                 const value = closestSolution[i + element * commandSequences]
                 if (!value) continue //avoid adding "undefined" values

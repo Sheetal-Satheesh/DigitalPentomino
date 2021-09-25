@@ -83,7 +83,9 @@ const strings = {
              functionsMusic: ["Functions Music","Funktionen Musik"],
              html2canvas:["html2canvas","html2canvas"],
              loadash:["loadash","loadash"],
-            qrScannerIcon: ["QR Scanner Icon", "QR Scanner Icon"]
+            qrScannerIcon: ["QR Scanner Icon", "QR Scanner Icon"],
+            ButtonForFLip: ["Flip Icons", "Flip-Icons"],
+            ButtonForRotate: ["Rotate Icons", "Icons drehen"]       
         },
         speech:{
             title: ["Speech", "Rede"],

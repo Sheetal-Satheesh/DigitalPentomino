@@ -53,5 +53,17 @@ licensesConfig = {
         "Author": "Jeremy Ashkenas",
         "link": "https://lodash.com/",
         "license":"https://raw.githubusercontent.com/lodash/lodash/4.17.15-npm/LICENSE"
+    },
+    "ButtonForFLip":{
+        "name": strings.settings.license.ButtonForFLip,
+        "Author": "Ricardo Costa",
+        "link": "https://www.onlinewebfonts.com/icon/468025",
+        "license":"http://www.onlinewebfonts.com/icon is licensed by CC BY 3.0"
+    },
+    "ButtonForRotate" : {
+        "name": strings.settings.license.ButtonForRotate,
+        "Author": "Google",
+        "link": "https://material.io/resources/icons",
+        "license":"https://www.apache.org/licenses/LICENSE-2.0.txt"
     }
 }
