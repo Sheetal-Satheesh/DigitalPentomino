@@ -96,7 +96,7 @@ class SettingsSchema {
                         "type": "boolean",
                         "title": titles.general.enableBird.title[lang],
                         "default": true,
-                        "pupilModeVisibleOnDefault": true
+                        "pupilModeVisibleOnDefault": false
                     },
                     hintingLevels: {
                         "type": "string",
@@ -112,7 +112,7 @@ class SettingsSchema {
                       "title": titles.autohinting.initiateActionsIfUserNotActive.title[lang],
                       "description":  titles.autohinting.initiateActionsIfUserNotActive.description[lang],
                       "default": true,
-                      "pupilModeVisibleOnDefault": true
+                      "pupilModeVisibleOnDefault": false
                     }
                 }
             },
