@@ -1,6 +1,6 @@
 /**
  * This class is the main driver for the UI related stuff of the application.
- * 
+ *
  */
 
 
@@ -31,7 +31,7 @@ const cmdAttrDefault = updateCommandAttr(CommandTypes.Original, CommandSeq.Forwa
 // switch(currentAppliedTheme){
 //     case "default":
 //         break;
-    
+
 //     case "dayTheme":
 //         break;
 // }
@@ -45,6 +45,8 @@ let styleBlocks;
 let splitCounter = -1;
 let randomCell;
 let count = 0;
+let wrongActions = false;
+let timeperiod = false;
 let highContrastPieceColor = "#000000";
 class Visual {
 
@@ -922,6 +924,7 @@ class Visual {
                 //check if number of wrongg moves is greater than the value configured in settings
                 if (count > SettingsSingleton.getInstance().getSettings().autohinting.numberOfWrongMoves) {
                     this.autoHintWrongMoves();
+                    count = 0;
                 }
             }
         }
@@ -1057,6 +1060,9 @@ class Visual {
 
     autoHintWrongMoves() {
         let lang = SettingsSingleton.getInstance().getSettings().general.language;
+        //set flag values for wrongActions and time period to set the delay separately
+        wrongActions = true;
+        timeperiod = false;
         if (SettingsSingleton.getInstance().getSettings().speech.enableSpeech) {
              pd.visual.speakBot(strings.speechbubbleTexts.iHaveAHint[lang]);
          }
@@ -1075,11 +1081,14 @@ class Visual {
         }, 20000);
     }
 
+    //in case hint type is set to only textual, in autohint section, this function is called
+    //on the click of showhint button
     showTextualHint() {
         let hint = pd.gameController.getHint(this.getSplitStatus(), piecesSelectedForPartition);
         this.hintText(hint);
     }
 
+    //ignore button in case of autohint
     ignore() {
         let lang = SettingsSingleton.getInstance().getSettings().general.language;
         document.getElementById('speechBubbleText').textContent = strings.numberOfPossibleSolutions[lang] + ': ' + this.gameController.getPossibleSolutions().length;
@@ -1088,21 +1097,29 @@ class Visual {
         }
     }
 
+   //in case hint type is set to visual and textual, in autohint section, this function is called
+   //on the click of showhint button
     bothAutoHint() {
         let hint = pd.gameController.getHint(this.getSplitStatus(), piecesSelectedForPartition);
         this.callHintAI();
         this.hintText(hint);
     }
 
+    //in case hint type is set to visual, in autohint section, this function is called
+    //on the click of showhint button
     visualAutoHint() {
         this.callHintAI();
     }
 
 
+ //this function configures autohint based on both time period and wrong actions.
     configureAutoHints() {
         let lang = SettingsSingleton.getInstance().getSettings().general.language;
         let speechBubbleText = document.getElementById('speechBubbleText');
         let hint = pd.gameController.getHint(this.getSplitStatus(), piecesSelectedForPartition);
+        let delayForIhaveAHint = this.delayForIhaveAHint(wrongActions, timeperiod);
+        let delayShowHintOrIgnore = this.delayShowHintOrIgnore(wrongActions, timeperiod);
+        console.log(delayForIhaveAHint, delayShowHintOrIgnore);
         //Speech bubble says : I have a hint
         setTimeout(function () {
             // if (SettingsSingleton.getInstance().getSettings().speech.enableSpeech) {
@@ -1112,7 +1129,7 @@ class Visual {
             if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
                 document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.iHaveAHint[lang];
             }
-        }, 3000);
+        }, delayForIhaveAHint);
         //checks if visual hints are enabled.
         //If enabled => the user can click on the button on the speech bubble to get the hint
         //checks if visual hints are enabled
@@ -1125,7 +1142,7 @@ class Visual {
                 }
                 document.querySelector("#showVisualHint").innerHTML = strings.speechbubbleTexts.showHint[lang];
                 document.querySelector("#hideVisualHint").innerHTML = strings.speechbubbleTexts.ignore[lang];
-            }, 5000);
+            }, delayShowHintOrIgnore);
         }
         //checks if Textual hints are enabled.
         //If enabled => the user automatically gets a textul hint
@@ -1154,13 +1171,6 @@ class Visual {
         //     }, 5000);
         // }
         else if ((SettingsSingleton.getInstance().getSettings().autohinting.typeOfHints === "Visual and textual")) {
-            //Speech bubble says : I have a hint
-            setTimeout(function () {
-                speechBubbleText.textContent = strings.speechbubbleTexts.iHaveAHint[lang];
-                if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
-                    document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.iHaveAHint[lang];
-                }
-            }, 3000);
             //Speech bubble asks show the hint or ignore
             setTimeout(function () {
                 speechBubbleText.innerHTML = '<button id="showBothHint" name="showBothHint" onclick="pd.visual.bothAutoHint()"></button>' + '<button id="hideBothHint" name="hideBothHint" onclick="pd.visual.ignore()"></button>';
@@ -1171,12 +1181,35 @@ class Visual {
                 document.querySelector("#hideBothHint").innerHTML = strings.speechbubbleTexts.ignore[lang];
             }, 5000);
         }
-          console.log(this.configureAutoHints());
     }
 
-    delayForAutoHints(){
-
+    delayForIhaveAHint(wrongActions, timeperiod){
+        let delayForIhaveAHint;
+        if(delayForIhaveAHint === undefined){
+            if(timeperiod){
+                delayForIhaveAHint = 3000;
+            }
+            else if(wrongActions){
+                delayForIhaveAHint = 100;
+            }
+            console.log("timePeriod", timeperiod);
+            console.log("wrongActions", wrongActions);
+            return delayForIhaveAHint;
+        }
     }
+
+    delayShowHintOrIgnore(wrongActions, timeperiod){
+        let delayShowHintOrIgnore;
+        if(timeperiod === true){
+            delayShowHintOrIgnore = 5000;
+        }
+
+        else if(wrongActions === true){
+            delayShowHintOrIgnore = 400;
+        }
+        return delayShowHintOrIgnore;
+    }
+
 
     //end of configure autohints function
 
@@ -1244,10 +1277,10 @@ class Visual {
             Array.prototype.forEach.call(document.getElementById('piece_' + piece.name).getElementsByClassName("bmPoint"), function (element) {
                 //Piece colors can be changed for High contrast theme
                 if(localStorage.getItem('style') == "blackAndWhiteTheme"){
-                    element.style.background = highContrastPieceColor;                 
+                    element.style.background = highContrastPieceColor;
                 }
                 else
-                element.style.background = piece.color ;  
+                element.style.background = piece.color ;
             });
         });
         this.pieces.forEach(piece => {
@@ -1460,12 +1493,14 @@ class Visual {
         }
 
         //indication of unoccupied cells
+        //skill teaching
         if (!(hintSkill === null) && (SettingsSingleton.getInstance().getSettings().hinting.skillTeaching)) {
             //blink unoccupied cells
             this.blinkCells(hintSkill);
         }
         else {
 
+          //if show destination is disabled, only pentomino is indicated
             if (!((SettingsSingleton.getInstance().getSettings().hinting.hintingVariants) === ("Show destination"))) {
                 this.indicatePentomino(hintinPen, timeoutFrame);
             }
@@ -1745,6 +1780,7 @@ class Visual {
         return result;
     }
 
+   //calculates most occupied cell to indicate in case of partial hinting
     mostNeigh(hintinPen, piecePos, hintCommand) {
         let game = this.gameController.game();
         let board = game._board;
@@ -1783,6 +1819,7 @@ class Visual {
         return bestCell;
     }
 
+ // calculate neighboring cells to indicate on the partial hint
     calculateNeighbour(piecePos, hintCommand) {
         let game = this.gameController.game();
         let board = game._board;
@@ -1815,6 +1852,7 @@ class Visual {
         });
     }
 
+ //area hinting : calculates area to indicate
     indicateAreaCells(piece, hintCommand) {
         let hintRow = hintCommand._nextPosition[0];
         let hintColumn = hintCommand._nextPosition[1];
@@ -1839,6 +1877,7 @@ class Visual {
         return [areaPosArray, null];
     }
 
+ //hides the area
     hideArea(areaPos, prevBackground, timeoutFrame) {
 
         setTimeout(function () {
@@ -1850,6 +1889,7 @@ class Visual {
         }, timeoutFrame);
     }
 
+//hides hints , please refer for the function call in indicatehint() function.
     hide(piecePos, prevBackground, timeoutFrame) {
 
         setTimeout(function () {
@@ -1861,6 +1901,8 @@ class Visual {
         }, timeoutFrame);
     }
 
+
+//hides in case of most occupied cells
     hideMostOccupiedNeighbors(cellsToIndicate, prevBackground, timeoutFrame) {
 
         setTimeout(function () {
@@ -1872,8 +1914,9 @@ class Visual {
         }, timeoutFrame);
     }
 
-    getOccupiedPositions(piece, hintCommand) {
 
+ //fetches the occupied positions to indicate the hint
+    getOccupiedPositions(piece, hintCommand) {
         let PiecePostions = [];
         let hintRow = hintCommand._nextPosition[0];
         let startRow = hintRow - 2;
@@ -1988,10 +2031,10 @@ class Visual {
     /**
      * Prefills the board such that a piece does not touch more than <threshold> many
      * other pieces
-     * 
-     * @param randomSolution 
-     * @param threshold 
-     * @returns 
+     *
+     * @param randomSolution
+     * @param threshold
+     * @returns
      */
     prefillBasedOnAdjacentPieces(randomSolution, threshold) {
         let thresholdMap = {
@@ -2076,10 +2119,10 @@ class Visual {
     /**
      * Fills the board with random pieces that conform to the constraint
      * that their centroids are atleast <threshold> units apart
-     * 
-     * @param randomSolution 
-     * @param threshold 
-     *  
+     *
+     * @param randomSolution
+     * @param threshold
+     *
      */
     prefillBasedOnDistance(randomSolution, threshold) {
         let thresholdMap = {
@@ -2397,7 +2440,7 @@ class Visual {
     }
 
 
-    //bot speaks in :
+    //bot speaks in case of :
     //hintText() function
     //userinactivity() function
     //when the board is solved
@@ -2410,18 +2453,25 @@ class Visual {
         //utter.lang = 'en-US';
         //utter.lang = 'en-IN';
         //utter.lang = 'de-DE';
+        //SettingsSingleton.getInstance().getSettings().general.language === 1 ==> indicates german language
+        //slang is set to german
         if (SettingsSingleton.getInstance().getSettings().general.language === 1) {
             utter.lang = 'de-DE';
             utter.voiceURI = 'Google Deutsch';
             utter.name = 'Google Deutsch';
             utter.localService = false;
             utter.default = false;
+            //.speak() function is called for the bot to speak
             synth.speak(utter);
-        } else {
+        }
+        //(SettingsSingleton.getInstance().getSettings().general.language === 0)  ==> is english language
+        //slang is set to UK english
+        else {
             utter.lang = 'en-GB';
             utter.Local = 'true';
             utter.voiceURI = "Google UK English Female";
             utter.name = "Google UK English Female";
+            //.speak() function is called for the bot to speak
             synth.speak(utter);
         }
     }
