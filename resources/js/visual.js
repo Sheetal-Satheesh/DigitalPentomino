@@ -1183,6 +1183,7 @@ class Visual {
         }
     }
 
+   //separate delay time for both kinds of auto hints
     delayForIhaveAHint(wrongActions, timeperiod){
         let delayForIhaveAHint;
         if(delayForIhaveAHint === undefined){
@@ -1194,6 +1195,7 @@ class Visual {
             }
             console.log("timePeriod", timeperiod);
             console.log("wrongActions", wrongActions);
+            console.log("delayForIhaveAHint", delayForIhaveAHint);
             return delayForIhaveAHint;
         }
     }
@@ -1207,6 +1209,9 @@ class Visual {
         else if(wrongActions === true){
             delayShowHintOrIgnore = 400;
         }
+        console.log("timePeriod", timeperiod);
+        console.log("wrongActions", wrongActions);
+        console.log("delayShowHintOrIgnore", delayShowHintOrIgnore);
         return delayShowHintOrIgnore;
     }
 
@@ -1422,19 +1427,24 @@ class Visual {
         let boardColor = document.getElementsByClassName("boardarea");
         for (let i = 0; i < cells.length; i++) {
             let fv = document.getElementById("field_" + cells[i][0] + "," + cells[i][1]);
-            fv.style.background = "#eceaea url(resources/images/icons/warning.png) center center";
+            let color = fv.style.backgroundColor;
+            fv.style.background = "color url(resources/images/icons/warning.png) center center";
             fv.style.backgroundSize = "cover";
             menu.push(fv);
         }
+
         let blinkInterval;
         let counter = 0;
         clearInterval(blinkInterval);
         blinkInterval = setInterval(function () {
             for (let j = 0; j < menu.length; j++) {
                 if (counter % 2 === 0) {
-                    menu[j].style.background = "#eceaea";
+                    let color = menu[j].style.backgroundColor;
+                    console.log("menu[j]",   menu[j].style.backgroundColor);
+                    menu[j].style.background = color;
                 } else {
-                    menu[j].style.background = "#eceaea url(resources/images/icons/warning.png) center center";
+                    let color = menu[j].style.backgroundColor;
+                    menu[j].style.background = "color url(resources/images/icons/warning.png) center center";
                     menu[j].style.backgroundSize = "cover";
                 }
             }

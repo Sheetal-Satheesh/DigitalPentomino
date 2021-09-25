@@ -345,6 +345,8 @@
             let lang = SettingsSingleton.getInstance().getSettings().general.language;
             let speechBubbleText = document.getElementById('speechBubbleText');
             let hint = pd.gameController.getHint();
+            wrongActions = false;
+            timeperiod = true;
             //let x = window.matchMedia("(max-width: 860px)");
             //check if user is towards the solution or not
             //in case if the user is towards the final solution  , the message "Please continue with the game" appears
@@ -371,12 +373,13 @@
                     }
                 }, 2500);
                 return;
+            }else{
+                  //speak: i have a hint
+                  if (SettingsSingleton.getInstance().getSettings().speech.enableSpeech) {
+                      pd.visual.speakBot(strings.speechbubbleTexts.iHaveAHint[lang]);
+                  }
+                  pd.visual.configureAutoHints();
             }
-            //speak: i have a hint
-            if (SettingsSingleton.getInstance().getSettings().speech.enableSpeech) {
-                pd.visual.speakBot(strings.speechbubbleTexts.iHaveAHint[lang]);
-            }
-            pd.visual.configureAutoHints();
         }
 
 
