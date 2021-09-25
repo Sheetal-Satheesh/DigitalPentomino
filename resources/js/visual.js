@@ -1425,10 +1425,11 @@ class Visual {
     blinkCells(cells) {
         let menu = [];
         let boardColor = document.getElementsByClassName("boardarea");
+        let color = "#f9f9f9";
         for (let i = 0; i < cells.length; i++) {
             let fv = document.getElementById("field_" + cells[i][0] + "," + cells[i][1]);
-            let color = fv.style.backgroundColor;
-            fv.style.background = "color url(resources/images/icons/warning.png) center center";
+            color = window.getComputedStyle(fv).backgroundColor;
+            fv.style.background = color + "url(resources/images/icons/warning.png) center center";
             fv.style.backgroundSize = "cover";
             menu.push(fv);
         }
@@ -1439,12 +1440,11 @@ class Visual {
         blinkInterval = setInterval(function () {
             for (let j = 0; j < menu.length; j++) {
                 if (counter % 2 === 0) {
-                    let color = menu[j].style.backgroundColor;
-                    console.log("menu[j]",   menu[j].style.backgroundColor);
+                    color = menu[j].style.backgroundColor;
                     menu[j].style.background = color;
                 } else {
-                    let color = menu[j].style.backgroundColor;
-                    menu[j].style.background = "color url(resources/images/icons/warning.png) center center";
+                    color = menu[j].style.backgroundColor;
+                    menu[j].style.background = color + "url(resources/images/icons/warning.png) center center";
                     menu[j].style.backgroundSize = "cover";
                 }
             }
