@@ -786,7 +786,7 @@ class Visual {
 
     updateDOMWithPentomino(piece) {
         let isColorSplitActive = document.querySelector(".splitbuttonimg") !== null &&
-            SettingsSingleton.getInstance().getSettings().splitPartition.splitStrategy == "color";
+        SettingsSingleton.getInstance().getSettings().splitPartition.splitStrategy == "color";
         let oldPieceDiv = document.getElementById("piece_" + piece.name);
         let pieceBitMap = piece.getMatrixRepresentation();
         let width = UIProperty.WindowWidth / this.pd.gameWidth;
