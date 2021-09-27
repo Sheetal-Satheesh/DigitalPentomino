@@ -1206,9 +1206,6 @@ class Visual {
         else if(wrongActions === true){
             delayShowHintOrIgnore = 400;
         }
-        console.log("timePeriod", timeperiod);
-        console.log("wrongActions", wrongActions);
-        console.log("delayShowHintOrIgnore", delayShowHintOrIgnore);
         return delayShowHintOrIgnore;
     }
 
