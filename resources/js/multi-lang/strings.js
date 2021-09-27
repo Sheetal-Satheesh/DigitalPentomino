@@ -53,6 +53,7 @@ const strings = {
             show: ["Show advanced settings", "Öffne erweiterte Einstellungen"],
             hide: ["Hide advanced settings", "Schließe erweiterte Einstellungen"]
         },
+        visibilitySettings: ["Displayed Settings in Pupil Mode", "Angezeigte Einstellungen im Schüler-Modus"],
         buttons: {
             apply: ["Apply", "Bestätigen"],
             cancel: ["Cancel", "Abbrechen"]
@@ -82,7 +83,9 @@ const strings = {
              functionsMusic: ["Functions Music","Funktionen Musik"],
              html2canvas:["html2canvas","html2canvas"],
              loadash:["loadash","loadash"],
-            qrScannerIcon: ["QR Scanner Icon", "QR Scanner Icon"]
+            qrScannerIcon: ["QR Scanner Icon", "QR Scanner Icon"],
+            ButtonForFLip: ["Flip Icons", "Flip-Icons"],
+            ButtonForRotate: ["Rotate Icons", "Icons drehen"]       
         },
         speech:{
             title: ["Speech", "Rede"],
@@ -309,8 +312,8 @@ const strings = {
         splitPartition: {
             title: ["Board Partitioning", "Brettdrittelung"],            
             splitStrategy: {
-                title: ["Split Board into Partion By", "TO DO"],
-                enumTitles: [["Color","Left-to-Right"], ["TO DO", "TO DO"]],
+                title: ["Split Board into Partion By", "Wie sollen die Partitionen angezeigt werden?"],
+                enumTitles: [["Color","Left-to-Right"], ["Gleichzeitig anzeigen", "Eine nach der anderen anzeigen"]],
             }
         },
         boardCustomization: {
