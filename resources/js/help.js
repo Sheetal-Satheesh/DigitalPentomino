@@ -102,15 +102,15 @@ class Help {
      * @param solutions 
      *  
      */
-    getClosestSolution(game, solutions) {
+    getClosestSolution(game) {
         if(this.isSplitActive) {
             return this.currentSolnForSplit;
         }
-
+        
         let closestSolution = null;
         let numOfPerfectPentominoesOnBoardOfClosestSolution = -1;
 
-        solutions.forEach(solution => {
+        this._solutions.forEach(solution => {
             let numOfPerfectPentominoesOnBoard = 0;
             let counter = 0;
             let numOfPentominoes = game.getAllPentominoes().length;
