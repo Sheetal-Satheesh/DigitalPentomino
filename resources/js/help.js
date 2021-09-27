@@ -97,10 +97,9 @@ class Help {
 
     /**
      * Indicates how to get back to a board state that is still solvable
-     * 
-     * @param game 
-     * @param solutions 
      *  
+     * @param game 
+     * 
      */
     getClosestSolution(game) {
         if(this.isSplitActive) {
@@ -110,7 +109,7 @@ class Help {
         let closestSolution = null;
         let numOfPerfectPentominoesOnBoardOfClosestSolution = -1;
 
-        this._solutions.forEach(solution => {
+        this.solutions.forEach(solution => {
             let numOfPerfectPentominoesOnBoard = 0;
             let counter = 0;
             let numOfPentominoes = game.getAllPentominoes().length;
