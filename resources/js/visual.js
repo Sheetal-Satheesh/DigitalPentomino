@@ -1193,9 +1193,6 @@ class Visual {
             else if(wrongActions){
                 delayForIhaveAHint = 100;
             }
-            console.log("timePeriod", timeperiod);
-            console.log("wrongActions", wrongActions);
-            console.log("delayForIhaveAHint", delayForIhaveAHint);
             return delayForIhaveAHint;
         }
     }
