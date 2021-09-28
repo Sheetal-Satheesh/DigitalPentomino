@@ -102,7 +102,7 @@ const strings = {
                 description: ["Enables auto-hinting", "Aktiviert automatisierte Hilfestellung"]
             },
             initiateActionsIfUserNotActive:{
-                title: ["Reminder if user is not active", "Hinweis, wenn der Benutzer nicht aktiv ist"],
+                title: ["Remind if user is not active", "Hinweis, wenn der Benutzer nicht aktiv ist"],
                 description: ["Initiates actions only if user is not active on the application", "Löst nur Aktionen aus, wenn der Benutzer nicht in der Anwendung aktiv ist"]
             },
             showOrHideButtonsForTextualHints:{
