@@ -433,9 +433,21 @@
             let innerGridMarginLeft = imageGrid.style.getPropertyValue('margin-left');
             imageGrid.style.display = "block";
             imageGrid.style.marginLeft = "14vw";
-            imageGrid.style.top = "3vw";
+            imageGrid.style.top = "9vw";
             imageGrid.style.bottom = "10vw";
-            //imageGrid.style.marginLeft = "5vw";
+            
+
+            if(document.getElementById('filterGrid')){
+                if(document.getElementById('filterGrid').style.display = "none" && (document.getElementById('modalContainerID').style.display = "block")){
+                    document.getElementById('innerGrid').style.marginLeft = "10vw";
+                }
+                else if(document.getElementById('filterGrid').style.display = "block"){
+                    document.getElementById('innerGrid').style.marginLeft = "10vw";
+                }
+            }
+
+
+
             template.clearContent(".innerGrid");
             template.clearContent("#innerGridForm");
             template.clearContent("#filterGrid");
@@ -1837,6 +1849,10 @@
             template.clearContent("#innerGridForm");
             template.clearContent("#filterGrid");
 
+            if(document.getElementById('filterGrid').style.display = "block"){
+                    document.getElementById('innerGrid').style.marginLeft = "15vw";
+                }
+
             pd.visual.delGameAutoImages();
             pd.visual.saveGameImage(SnapshotType.Auto);
             let currGmKey = pd.visual.getCurrentGameKey();
@@ -1989,6 +2005,10 @@
             template.clearContent("#innerGridForm");
             template.clearContent("#filterGrid");
 
+            if(document.getElementById('filterGrid').style.display = "block"){
+                    document.getElementById('innerGrid').style.marginLeft = "16vw";
+                }
+                
             let startGameState = pd.getGameState("start");
             let currGameState = pd.getGameState("current");
 
