@@ -464,6 +464,7 @@
 
         function clickedOnScanQrCode() {
             let modal = document.getElementById('modalTop');
+
             if ($(modal).is(':visible')) {
                 $("#shareOrScan").remove();
                 $("#scanImgElement").remove();
@@ -486,6 +487,19 @@
                     this.hideBubbleContainer();
                 }
             }
+            //TODO : THIS IS A QUICK FIX,
+            // handle the bug dynamically.
+            $( "#btnBoardSelect" ).click(function() {
+                $("#shareOrScan").remove();
+                $("#scanImgElement").remove();
+                $("#shareImgElement").remove();
+            });
+            //gallery
+            $( "#gallery" ).click(function() {
+                $("#shareOrScan").remove();
+                $("#scanImgElement").remove();
+                $("#shareImgElement").remove();
+            });
         }
 
         function openImportOrExportDialog() {
@@ -1181,6 +1195,7 @@
             document.getElementById('modalTop').style.display = 'none';
             this.closeModalContainer();
             this.enableSnapshotButton();
+            $('#shareOrScandiv').remove();
             if ($('#birdContainer').is(':visible')) {
                 this.showBubbleContainer();
             }
@@ -1324,7 +1339,7 @@
                         document.getElementById("bubbleContainer").style.display = "none";
                         document.getElementById("labelNumberSolutionsContainer").style.display = "block";
                     }
-                } 
+                }
                 else if (heading === "theming" && key === "theme") {
                     var newThemeValue = settings[heading][key];
                     this.applyColorToPieces(newThemeValue);
@@ -1338,8 +1353,8 @@
                             document.getElementById('switcher-id').href = 'resources/css/themes/iceTheme.css';
                         }
                          localStorage.setItem('style', newThemeValue);
-                }               
-                
+                }
+
                 let allCustomSettings = CustomSettingsEntrySingleton.getInstance().getAll();
                 allCustomSettings.forEach(customSettings => {
                     if (customSettings.getName() === SettingsForm.generateSettingsEntryName(heading, key)) {
@@ -1368,7 +1383,7 @@
                     });
                     counter ++;
                 });
-            }     
+            }
         }
 
         function selectSettings() {
