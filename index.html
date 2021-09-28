@@ -464,6 +464,7 @@
 
         function clickedOnScanQrCode() {
             let modal = document.getElementById('modalTop');
+
             if ($(modal).is(':visible')) {
                 $("#shareOrScan").remove();
                 $("#scanImgElement").remove();
@@ -1194,6 +1195,7 @@
             document.getElementById('modalTop').style.display = 'none';
             this.closeModalContainer();
             this.enableSnapshotButton();
+            $('#shareOrScandiv').remove();
             if ($('#birdContainer').is(':visible')) {
                 this.showBubbleContainer();
             }
