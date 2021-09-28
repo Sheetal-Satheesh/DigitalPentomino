@@ -60,6 +60,7 @@ class Settings {
             }
         }
         this._settings.visibility = jQuery.extend(true, new SettingsVisibility(), settings.visibility);
+        this._settings.teachersMode = settings.teachersMode;
     }
 
     /**

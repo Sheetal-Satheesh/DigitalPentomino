@@ -8,5 +8,5 @@ baseConfigs = {
     languages: { ENGLISH: 0, GERMAN: 1 },
     defaultLanguage: 0,
     seedUrlParamName: "t",
-    url: "https://pentomino-digital.de/V5/prerelease/"
+    url: "https://pentomino-digital.de/V5/devVersion/"
 };
