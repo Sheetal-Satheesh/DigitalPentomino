@@ -85,7 +85,7 @@ const strings = {
              loadash:["loadash","loadash"],
             qrScannerIcon: ["QR Scanner Icon", "QR Scanner Icon"],
             ButtonForFLip: ["Flip Icons", "Flip-Icons"],
-            ButtonForRotate: ["Rotate Icons", "Icons drehen"]       
+            ButtonForRotate: ["Rotate Icons", "Icons drehen"]
         },
         speech:{
             title: ["Speech", "Rede"],
@@ -102,7 +102,7 @@ const strings = {
                 description: ["Enables auto-hinting", "Aktiviert automatisierte Hilfestellung"]
             },
             initiateActionsIfUserNotActive:{
-                title: ["Initiate actions if user not active", "Hinweis, wenn der Benutzer nicht aktiv ist"],
+                title: ["Remind if user is not active", "Hinweis, wenn der Benutzer nicht aktiv ist"],
                 description: ["Initiates actions only if user is not active on the application", "Löst nur Aktionen aus, wenn der Benutzer nicht in der Anwendung aktiv ist"]
             },
             showOrHideButtonsForTextualHints:{
@@ -310,7 +310,7 @@ const strings = {
             }
         },
         splitPartition: {
-            title: ["Board Partitioning", "Brettdrittelung"],            
+            title: ["Board Partitioning", "Brettdrittelung"],
             splitStrategy: {
                 title: ["Split Board into Partion By", "Wie sollen die Partitionen angezeigt werden?"],
                 enumTitles: [["Color","Left-to-Right"], ["Gleichzeitig anzeigen", "Eine nach der anderen anzeigen"]],
