@@ -271,14 +271,14 @@
                             setTimeout(function () {
                                 speechBubbleText.textContent = strings.speechbubbleTexts.welcomeBack[lang];
                             }, 2000);
-                              //check if bird is enabled
+                            //check if bird is enabled
                             if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
                                 document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.welcomeBack[lang];
                             }
                             //check if autohinting enabled continue with autoHint() function
                             if (SettingsSingleton.getInstance().getSettings().autohinting.enableAutoHinting) {
-                                if(SettingsSingleton.getInstance().getSettings().autohinting.timebased){
-                                      autoHint();
+                                if (SettingsSingleton.getInstance().getSettings().autohinting.timebased) {
+                                    autoHint();
                                 }
                             }
                         }
@@ -326,7 +326,7 @@
 
         //Function gives time delay to wait for user inactivityTime
         function userInactiveWaitTime() {
-          //option from settings menu to set the time
+            //option from settings menu to set the time
             let userInactiveWaitTime = SettingsSingleton.getInstance().getSettings().autohinting.timeForNoAction;
             let time = 0;
             switch (userInactiveWaitTime) {
@@ -382,8 +382,8 @@
                     }
                 }, 2500);
                 return;
-            }else{
-                  pd.visual.configureAutoHints();
+            } else {
+                pd.visual.configureAutoHints();
             }
         }
 
@@ -1766,7 +1766,7 @@
             }
             if (stateType == "start") {
                 fTextDivStart.style.border = 0;
-                fTextDivEnd.style.border = "3px dotted gray";
+                fTextDivEnd.style.border = "2.5px dotted black";
                 fTextDivStart.setAttribute('type', "image");
                 finishBlink(fTextDivStart);
                 blink(fTextDivEnd);
@@ -1836,12 +1836,12 @@
                         deleteGameImage(imgKey, gameId);
                     }, false);
 
-                    
+
                     imageDiv.addEventListener('click', function () {
                         let allImageDiv = imageGrid.querySelectorAll(".imageDiv");
                         let btnDivElement = document.querySelector(".imageBtnDiv");
-                        allImageDiv.forEach((divElement)=>{
-                            if(divElement.contains(btnDivElement)){
+                        allImageDiv.forEach((divElement) => {
+                            if (divElement.contains(btnDivElement)) {
                                 divElement.removeChild(btnDivElement);
                             }
                         });
@@ -1920,8 +1920,8 @@
 
                 if (gameId == currGmKey) {
                     img.style.filter = "brightness(120%) saturate(120%)";
-                    img.style.border = ".3px dotted gray";
-                    img.style.background = "black";
+                    img.style.border = "2.5px dotted black";
+
                     renderGallery(gameId);
                 }
                 else {
@@ -1965,7 +1965,7 @@
         }
 
         function changeReplayFilterUI(startElem, endElem, contentType) {
-            startElem.style.border = "3px dotted gray";
+            startElem.style.border = "2.5px dotted black";
             startElem.style.color = "#eceaea";
 
             let fDivEnd = document.querySelector(".ftextDivEnd");
