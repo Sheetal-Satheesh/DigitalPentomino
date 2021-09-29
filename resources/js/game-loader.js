@@ -340,6 +340,9 @@ class GameLoader {
             for (let indx = 0; indx < this._gameImages.length; ++indx) {
                 if (Object.keys(this._gameImages[indx])[0] == cmdKey) {
                     img = (this._gameImages[indx])[cmdKey];
+                    if(img.getAttribute('type') == SnapshotType.Original){
+                        continue;
+                    }
                     img.setAttribute("type", imgType.toString());
                     break;
 
