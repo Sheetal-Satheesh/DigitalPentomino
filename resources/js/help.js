@@ -97,15 +97,15 @@ class Help {
 
     /**
      * Indicates how to get back to a board state that is still solvable
-     * 
-     * @param game
      *  
+     * @param game 
+     * 
      */
     getClosestSolution(game) {
         if(this.isSplitActive) {
             return this.currentSolnForSplit;
         }
-
+        
         let closestSolution = null;
         let numOfPerfectPentominoesOnBoardOfClosestSolution = -1;
 

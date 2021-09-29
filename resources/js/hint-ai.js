@@ -16,18 +16,12 @@ if (typeof require != 'undefined') {
 
 class HintAI {
     constructor(game, loadSolutions = false) {
-        if (loadSolutions == true) {
-            this._solutions = Solutions.getGamesFromSolutionsConfig(game.getName());
-        }
         this.helpClass = new Help(game);
     }
 
     /** ---------------  Solutions-------------*/
     getSolutions() {
-        if (this._solutions == undefined) {
-            console.error("Solution is not set");
-        }
-        return this._solutions;
+        return this.helpClass.getSolutions();
     }
 
     getCurrentSolutionCount(game) {
