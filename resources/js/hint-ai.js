@@ -45,7 +45,7 @@ class HintAI {
         }
         else {
             // Pursue closest game state, which has at least one possible solution
-            let nextClosestSolution = this.helpClass.getClosestSolution(game, this._solutions);
+            let nextClosestSolution = this.helpClass.getClosestSolution(game);
 
             let unoccupiedCellSpaces = game._board.getUnoccupiedCellSpaces();
             let bestImpossibleCellSpace = this._calculateBestImpossibleUnoccupiedCellSpace(game, unoccupiedCellSpaces);
