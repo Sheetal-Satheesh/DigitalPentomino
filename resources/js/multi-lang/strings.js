@@ -34,7 +34,7 @@ const strings = {
         mirror:["Mirror","Spiegel"],
         vertical:["vertical","vertikal"],
         horizontal:["horizontal","horizontal"],
-        showHint:["Show hint","Hinweis anzeigen"],
+        showHint:["Show hint","Hinweis"],
         ignore:["Ignore","Ignorieren Sie"]
     },
     numberOfPossibleSolutions: ["Number of solutions", "Anzahl Lösungen"],
@@ -85,7 +85,7 @@ const strings = {
              loadash:["loadash","loadash"],
             qrScannerIcon: ["QR Scanner Icon", "QR Scanner Icon"],
             ButtonForFLip: ["Flip Icons", "Flip-Icons"],
-            ButtonForRotate: ["Rotate Icons", "Icons drehen"]       
+            ButtonForRotate: ["Rotate Icons", "Icons drehen"]
         },
         speech:{
             title: ["Speech", "Rede"],
@@ -310,7 +310,7 @@ const strings = {
             }
         },
         splitPartition: {
-            title: ["Board Partitioning", "Brettdrittelung"],            
+            title: ["Board Partitioning", "Brettdrittelung"],
             splitStrategy: {
                 title: ["Split Board into Partion By", "Wie sollen die Partitionen angezeigt werden?"],
                 enumTitles: [["Color","Left-to-Right"], ["Gleichzeitig anzeigen", "Eine nach der anderen anzeigen"]],

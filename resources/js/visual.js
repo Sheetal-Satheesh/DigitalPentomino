@@ -924,7 +924,6 @@ class Visual {
                 //check if number of wrongg moves is greater than the value configured in settings
                 if (count > SettingsSingleton.getInstance().getSettings().autohinting.numberOfWrongMoves) {
                     this.autoHintWrongMoves();
-                    count = 0;
                 }
             }
         }
