@@ -34,7 +34,7 @@ const strings = {
         mirror:["Mirror","Spiegel"],
         vertical:["vertical","vertikal"],
         horizontal:["horizontal","horizontal"],
-        showHint:["Show hint","Hinweis anzeigen"],
+        showHint:["Show hint","Hinweis"],
         ignore:["Ignore","Ignorieren Sie"]
     },
     numberOfPossibleSolutions: ["Number of solutions", "Anzahl Lösungen"],

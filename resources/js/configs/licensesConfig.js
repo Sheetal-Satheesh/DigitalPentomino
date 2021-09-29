@@ -1,7 +1,7 @@
 //Instructions to add licences : creating licences requires adding details in this file
 //after adding details here, add images in the icons folder
 //because the images get dynamically loaded into the licences table by their names
-//make sure that the names you ive here :
+//make sure that the names you have here :
 //for example : "solvedScreenBoy" ==>
 //rename your image with the same name.
 //Also check with lanuage translations in the license section of strings.js file
