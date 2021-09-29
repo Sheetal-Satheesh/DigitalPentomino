@@ -223,12 +223,6 @@ class SettingsSchema {
                     "enumText": titles.autohinting.typeOfHints.enumTitles[lang],
                     "description": titles.autohinting.typeOfHints.description[lang],
                     "default": "Visual"
-                  },
-                  showOrHideButtonsForTextualHints:{
-                    "type": "boolean",
-                    "title": titles.autohinting.showOrHideButtonsForTextualHints.title[lang],
-                    "description": titles.autohinting.showOrHideButtonsForTextualHints.description[lang],
-                    "default": true
                   }
                 }
             },
@@ -345,9 +339,9 @@ class SettingsSchema {
             splitPartition: {
                 "type": "object",
                 "advanced": true,
-                "title": titles.splitPartition.title[lang],                
+                "title": titles.splitPartition.title[lang],
                 "pupilModeVisibleOnDefault": false,
-                "properties": {                    
+                "properties": {
                     splitStrategy: {
                         "type": "string",
                         "title": titles.splitPartition.splitStrategy.title[lang],

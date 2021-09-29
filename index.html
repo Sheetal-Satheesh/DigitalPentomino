@@ -214,6 +214,7 @@
                 loadBoardList();
             }
             processChangesToSettings(initialChanges, settings);
+            //inactivityTime(); checks if the user is active or not
             inactivityTime();
         }
 
@@ -223,13 +224,15 @@
             let lang = SettingsSingleton.getInstance().getSettings().general.language;
             let speechBubbleText = document.getElementById('speechBubbleText');
             // initializing the resetTime function to the events in the DOM
+            /**
+            additional event listeners used in the future can be set to resetTime , in a similar way done below
+            **/
             window.onload = resetTime;
             window.onclick = resetTime;
             window.onkeypress = resetTime;
             window.ontouchstart = resetTime;
             window.onmousemove = resetTime;
             window.onmousedown = resetTime;
-            window.ontouchstart = resetTime;
             window.addEventListener('scroll', resetTime, true);
             //alert user if not active
             function alertUser() {
@@ -242,6 +245,7 @@
                     //speech bubble message : "hello There"
                     setTimeout(function () {
                         speechBubbleText.textContent = strings.speechbubbleTexts.helloThere[lang];
+                        //check if speech is enabled
                         if (SettingsSingleton.getInstance().getSettings().speech.enableSpeech) {
                             pd.visual.speakBot(strings.speechbubbleTexts.helloThere[lang]);
                         }
@@ -249,20 +253,33 @@
                         //check if TUCA bird is enabled
                         if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
                             document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.helloThere[lang];
+                            //check if speech is enabled
                             if (SettingsSingleton.getInstance().getSettings().speech.enableSpeech) {
                                 pd.visual.speakBot(strings.speechbubbleTexts.helloThere[lang]);
                             }
                         }
                     }, 500);
-                    //detect user if active again => onmouse move it says welcome back and the bird animaltion starts
+
+                    //speak: i have a hint
+                    if (SettingsSingleton.getInstance().getSettings().speech.enableSpeech) {
+                        pd.visual.speakBot(strings.speechbubbleTexts.iHaveAHint[lang]);
+                    }
+                    //detect user if active again => onmouse move it says welcome back and the bird animation starts
                     document.onmousemove = function () {
                         //if(speech bubble message : "hello There ? ") => display "welcome back"
                         if (speechBubbleText.textContent === strings.speechbubbleTexts.helloThere[lang]) {
                             setTimeout(function () {
                                 speechBubbleText.textContent = strings.speechbubbleTexts.welcomeBack[lang];
                             }, 2000);
+                            //check if bird is enabled
                             if (!(SettingsSingleton.getInstance().getSettings().general.enableBird)) {
                                 document.getElementById("labelNumberSolutions").innerText = strings.speechbubbleTexts.welcomeBack[lang];
+                            }
+                            //check if autohinting enabled continue with autoHint() function
+                            if (SettingsSingleton.getInstance().getSettings().autohinting.enableAutoHinting) {
+                                if (SettingsSingleton.getInstance().getSettings().autohinting.timebased) {
+                                    autoHint();
+                                }
                             }
                         }
                         //start bird animation
@@ -271,6 +288,8 @@
                         }, 2000);
                     };
 
+                    //TODO : handle remove event listener mouse move and make execution once :
+                    //In-order to insert the speech bot functionality inside mouse move
 
 
                     //at the end remove the bird animation
@@ -278,11 +297,10 @@
                         document.getElementById('birdContainer').classList.remove("anim");
                     }, 10000);
                 }
-                //if autohinting enabled continue with autoHint() function
-                if (SettingsSingleton.getInstance().getSettings().autohinting.enableAutoHinting) {
-                    autoHint();
-                }
+
                 //else if autohinting disabled
+                //warning: in case of show number of solutions from settings is disabled, this case is not handled Here
+                //please ensure this case works fine in the future
                 else {
                     setTimeout(function () {
                         speechBubbleText.textContent = strings.numberOfPossibleSolutions[lang] + ': ' + pd.gameController.getPossibleSolutions().length;
@@ -308,6 +326,7 @@
 
         //Function gives time delay to wait for user inactivityTime
         function userInactiveWaitTime() {
+            //option from settings menu to set the time
             let userInactiveWaitTime = SettingsSingleton.getInstance().getSettings().autohinting.timeForNoAction;
             let time = 0;
             switch (userInactiveWaitTime) {
@@ -335,7 +354,8 @@
         function autoHint() {
             let lang = SettingsSingleton.getInstance().getSettings().general.language;
             let speechBubbleText = document.getElementById('speechBubbleText');
-            let hint = pd.gameController.getHint();
+            wrongActions = false;
+            timeperiod = true;
             //let x = window.matchMedia("(max-width: 860px)");
             //check if user is towards the solution or not
             //in case if the user is towards the final solution  , the message "Please continue with the game" appears
@@ -362,12 +382,9 @@
                     }
                 }, 2500);
                 return;
+            } else {
+                pd.visual.configureAutoHints();
             }
-            //speak: i have a hint
-            if (SettingsSingleton.getInstance().getSettings().speech.enableSpeech) {
-                this.speakBot(strings.speechbubbleTexts.iHaveAHint[lang]);
-            }
-            pd.visual.configureAutoHints();
         }
 
 
@@ -1749,7 +1766,7 @@
             }
             if (stateType == "start") {
                 fTextDivStart.style.border = 0;
-                fTextDivEnd.style.border = "3px dotted gray";
+                fTextDivEnd.style.border = "2.5px dotted black";
                 fTextDivStart.setAttribute('type', "image");
                 finishBlink(fTextDivStart);
                 blink(fTextDivEnd);
@@ -1819,12 +1836,12 @@
                         deleteGameImage(imgKey, gameId);
                     }, false);
 
-                    
+
                     imageDiv.addEventListener('click', function () {
                         let allImageDiv = imageGrid.querySelectorAll(".imageDiv");
                         let btnDivElement = document.querySelector(".imageBtnDiv");
-                        allImageDiv.forEach((divElement)=>{
-                            if(divElement.contains(btnDivElement)){
+                        allImageDiv.forEach((divElement) => {
+                            if (divElement.contains(btnDivElement)) {
                                 divElement.removeChild(btnDivElement);
                             }
                         });
@@ -1901,6 +1918,10 @@
                 if (gameId == currGmKey) {
                     img.style.filter = "brightness(120%) saturate(120%)";
                     img.style.border = "2.5px dotted black";
+<<<<<<< HEAD
+=======
+
+>>>>>>> development
                     renderGallery(gameId);
                 }
                 else {
