@@ -27,12 +27,10 @@ self.addEventListener("install", function(event) {
           './sw.js',
           //css files
           './resources/css/style.css',
-          './resources/css/board_selection.css',
           './resources/css/grid.css',
           './resources/css/load_screen.css',
           './resources/css/modal.css',
           './resources/css/settings_form.css',
-          './resources/css/settings.css',
           //js files
           './resources/js/board.js',
           './resources/js/game-controller.js',
@@ -41,6 +39,8 @@ self.addEventListener("install", function(event) {
           './resources/js/game.js',
           './resources/js/handleMobile.js',
           './resources/js/hint.js',
+          './resources/js/hint-ai.js',
+          './resources/js/help.js',
           './resources/js/load_screen.js',
           './resources/js/overlapping.js',
           './resources/js/pd.js',

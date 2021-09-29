@@ -71,12 +71,12 @@ class Help {
 
         } else if (eventSource == 2) {
             if (possibleSolutions.length > 0) {
-                bestSolution = possibleSolutions[0];                
+                bestSolution = possibleSolutions[0];
+                this.isSplitActive = true;
+                this.currentSolnForSplit = bestSolution;              
             } else {
                 bestSolution = undefined;                
             }
-            this.isSplitActive = true;
-            this.currentSolnForSplit = bestSolution;
         } else {                        
             if(isSplitActive) {
                 bestSolution = possibleSolutions[0];

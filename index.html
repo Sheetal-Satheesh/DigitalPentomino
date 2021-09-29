@@ -433,9 +433,21 @@
             let innerGridMarginLeft = imageGrid.style.getPropertyValue('margin-left');
             imageGrid.style.display = "block";
             imageGrid.style.marginLeft = "14vw";
-            imageGrid.style.top = "3vw";
+            imageGrid.style.top = "9vw";
             imageGrid.style.bottom = "10vw";
-            //imageGrid.style.marginLeft = "5vw";
+
+
+            if (document.getElementById('filterGrid')) {
+                if (document.getElementById('filterGrid').style.display = "none" && (document.getElementById('modalContainerID').style.display = "block")) {
+                    document.getElementById('innerGrid').style.marginLeft = "10vw";
+                }
+                else if (document.getElementById('filterGrid').style.display = "block") {
+                    document.getElementById('innerGrid').style.marginLeft = "10vw";
+                }
+            }
+
+
+
             template.clearContent(".innerGrid");
             template.clearContent("#innerGridForm");
             template.clearContent("#filterGrid");
@@ -464,6 +476,7 @@
 
         function clickedOnScanQrCode() {
             let modal = document.getElementById('modalTop');
+
             if ($(modal).is(':visible')) {
                 $("#shareOrScan").remove();
                 $("#scanImgElement").remove();
@@ -486,6 +499,19 @@
                     this.hideBubbleContainer();
                 }
             }
+            //TODO : THIS IS A QUICK FIX,
+            // handle the bug dynamically.
+            $("#btnBoardSelect").click(function () {
+                $("#shareOrScan").remove();
+                $("#scanImgElement").remove();
+                $("#shareImgElement").remove();
+            });
+            //gallery
+            $("#gallery").click(function () {
+                $("#shareOrScan").remove();
+                $("#scanImgElement").remove();
+                $("#shareImgElement").remove();
+            });
         }
 
         function openImportOrExportDialog() {
@@ -1024,14 +1050,14 @@
             return true;
         }
 
-        function wrongQrCode(){
+        function wrongQrCode() {
             let modal = document.getElementById('modalTop');
             let scan = $("#scanImgElement");
             let share = $("#shareImgElement");
             let shareScanHeading = $("#shareOrScan");
             share.css("display", "none");
-            scan.css("display","none");
-            shareScanHeading.css("display","none");
+            scan.css("display", "none");
+            shareScanHeading.css("display", "none");
             if ($(modal).is(':visible')) {
                 this.closeModal();
             }
@@ -1076,7 +1102,7 @@
             $("#bubbleContainer").css("display", "block");
         }
 
-        function reactionScreenOnScanned(){
+        function reactionScreenOnScanned() {
             let modal = document.getElementById('modalTop');
             if ($(modal).is(':visible')) {
                 this.closeModal();
@@ -1181,6 +1207,7 @@
             document.getElementById('modalTop').style.display = 'none';
             this.closeModalContainer();
             this.enableSnapshotButton();
+            $('#shareOrScandiv').remove();
             if ($('#birdContainer').is(':visible')) {
                 this.showBubbleContainer();
             }
@@ -1291,7 +1318,7 @@
                     document.getElementById("hintButton").style.display = hintingEnabled ? "" : "none";
                 } else if (heading === "hinting" && key === "showNumberOfPossibleSolutions") {
                     let showNumberOfPossibleSolutions = settings[heading][key];
-                    if(SettingsSingleton.getInstance().getSettings().general.enableBird){
+                    if (SettingsSingleton.getInstance().getSettings().general.enableBird) {
                         document.getElementById("speechBubbleText").style.display = showNumberOfPossibleSolutions ? "" : "none";
                     }
                     document.getElementById("labelNumberSolutions").style.display = showNumberOfPossibleSolutions ? "" : "none";
@@ -1324,22 +1351,22 @@
                         document.getElementById("bubbleContainer").style.display = "none";
                         document.getElementById("labelNumberSolutionsContainer").style.display = "block";
                     }
-                } 
+                }
                 else if (heading === "theming" && key === "theme") {
                     var newThemeValue = settings[heading][key];
                     this.applyColorToPieces(newThemeValue);
-                    if(newThemeValue == 'default'){
-                            document.getElementById('switcher-id').href = 'resources/css/themes/defaultTheme.css';
-                        }
-                        else if(newThemeValue == 'dayTheme'){
-                            document.getElementById('switcher-id').href = 'resources/css/themes/dayTheme.css';
-                        }
-                        else if (newThemeValue == 'nightTheme') {
-                            document.getElementById('switcher-id').href = 'resources/css/themes/iceTheme.css';
-                        }
-                         localStorage.setItem('style', newThemeValue);
-                }               
-                
+                    if (newThemeValue == 'default') {
+                        document.getElementById('switcher-id').href = 'resources/css/themes/defaultTheme.css';
+                    }
+                    else if (newThemeValue == 'dayTheme') {
+                        document.getElementById('switcher-id').href = 'resources/css/themes/dayTheme.css';
+                    }
+                    else if (newThemeValue == 'nightTheme') {
+                        document.getElementById('switcher-id').href = 'resources/css/themes/iceTheme.css';
+                    }
+                    localStorage.setItem('style', newThemeValue);
+                }
+
                 let allCustomSettings = CustomSettingsEntrySingleton.getInstance().getAll();
                 allCustomSettings.forEach(customSettings => {
                     if (customSettings.getName() === SettingsForm.generateSettingsEntryName(heading, key)) {
@@ -1349,26 +1376,26 @@
             });
         }
 
-        function applyColorToPieces(selectedTheme){
+        function applyColorToPieces(selectedTheme) {
             let piecesIdArray = ['piece_X', 'piece_Y', 'piece_F', 'piece_I', 'piece_L', 'piece_N', 'piece_P', 'piece_T',
-             'piece_U', 'piece_V', 'piece_W', 'piece_Z'];
-          if(selectedTheme == "blackAndWhiteTheme"){
-            piecesIdArray.forEach(function (item){
-                Array.prototype.forEach.call(document.getElementById(item).getElementsByClassName("bmPoint"), function (element) {
-                    element.style.background = "#000000"
+                'piece_U', 'piece_V', 'piece_W', 'piece_Z'];
+            if (selectedTheme == "blackAndWhiteTheme") {
+                piecesIdArray.forEach(function (item) {
+                    Array.prototype.forEach.call(document.getElementById(item).getElementsByClassName("bmPoint"), function (element) {
+                        element.style.background = "#000000"
+                    });
                 });
-            });
-          }
-          else{
-            var colorsArrayDefault = ['#7a28cc', '#cc28cc', '#cc2828', '#cc7a28', '#cccc28', '#7acc28', '#28cc28', '#28cc7a' , '#28cccc', '#287acc', '#2828cc', '#cc287a'];
+            }
+            else {
+                var colorsArrayDefault = ['#7a28cc', '#cc28cc', '#cc2828', '#cc7a28', '#cccc28', '#7acc28', '#28cc28', '#28cc7a', '#28cccc', '#287acc', '#2828cc', '#cc287a'];
                 var counter = 0;
-                piecesIdArray.forEach(function (piece, counter){
+                piecesIdArray.forEach(function (piece, counter) {
                     Array.prototype.forEach.call(document.getElementById(piece).getElementsByClassName("bmPoint"), function (element) {
                         element.style.background = colorsArrayDefault[counter];
                     });
-                    counter ++;
+                    counter++;
                 });
-            }     
+            }
         }
 
         function selectSettings() {
@@ -1792,9 +1819,19 @@
                         deleteGameImage(imgKey, gameId);
                     }, false);
 
-                    buttonDiv.appendChild(loadBtn);
-                    buttonDiv.appendChild(deleteBtn);
-                    imageDiv.appendChild(buttonDiv);
+                    
+                    imageDiv.addEventListener('click', function () {
+                        let allImageDiv = imageGrid.querySelectorAll(".imageDiv");
+                        let btnDivElement = document.querySelector(".imageBtnDiv");
+                        allImageDiv.forEach((divElement)=>{
+                            if(divElement.contains(btnDivElement)){
+                                divElement.removeChild(btnDivElement);
+                            }
+                        });
+                        buttonDiv.appendChild(loadBtn);
+                        buttonDiv.appendChild(deleteBtn);
+                        imageDiv.appendChild(buttonDiv);
+                    }, false);
                 }
                 else if (callerType.includes("Replay")) {
                     let stateType = callerType.split(':');
@@ -1821,6 +1858,10 @@
             template.clearContent(".innerGrid");
             template.clearContent("#innerGridForm");
             template.clearContent("#filterGrid");
+
+            if (document.getElementById('filterGrid').style.display = "block") {
+                document.getElementById('innerGrid').style.marginLeft = "15vw";
+            }
 
             pd.visual.delGameAutoImages();
             pd.visual.saveGameImage(SnapshotType.Auto);
@@ -1973,6 +2014,10 @@
             template.clearContent(".innerGrid");
             template.clearContent("#innerGridForm");
             template.clearContent("#filterGrid");
+
+            if (document.getElementById('filterGrid').style.display = "block") {
+                document.getElementById('innerGrid').style.marginLeft = "16vw";
+            }
 
             let startGameState = pd.getGameState("start");
             let currGameState = pd.getGameState("current");
