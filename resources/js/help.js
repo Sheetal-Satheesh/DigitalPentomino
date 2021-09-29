@@ -71,12 +71,12 @@ class Help {
 
         } else if (eventSource == 2) {
             if (possibleSolutions.length > 0) {
-                bestSolution = possibleSolutions[0];                
+                bestSolution = possibleSolutions[0];
+                this.isSplitActive = true;
+                this.currentSolnForSplit = bestSolution;              
             } else {
                 bestSolution = undefined;                
             }
-            this.isSplitActive = true;
-            this.currentSolnForSplit = bestSolution;
         } else {                        
             if(isSplitActive) {
                 bestSolution = possibleSolutions[0];
@@ -97,20 +97,19 @@ class Help {
 
     /**
      * Indicates how to get back to a board state that is still solvable
-     * 
-     * @param game 
-     * @param solutions 
      *  
+     * @param game 
+     * 
      */
-    getClosestSolution(game, solutions) {
+    getClosestSolution(game) {
         if(this.isSplitActive) {
             return this.currentSolnForSplit;
         }
-
+        
         let closestSolution = null;
         let numOfPerfectPentominoesOnBoardOfClosestSolution = -1;
 
-        solutions.forEach(solution => {
+        this.solutions.forEach(solution => {
             let numOfPerfectPentominoesOnBoard = 0;
             let counter = 0;
             let numOfPentominoes = game.getAllPentominoes().length;

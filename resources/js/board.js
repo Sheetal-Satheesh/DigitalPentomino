@@ -94,10 +94,10 @@ class Board {
 
         /**
          * movePentomino always triggered by placePentomino() function, when placePentomino()
-         * find that a piece already placed on the board, then it will call this function. 
-         * 
+         * find that a piece already placed on the board, then it will call this function.
+         *
          * Do we need that checking?
-         * 
+         *
          */
         if (!this.isPlacedOnBoard(pentomino)) {
             throw new Error("Pentomino \'" + pentomino.name + "\' does not exist on the board");
@@ -152,7 +152,7 @@ class Board {
      * Removes a pentomino piece from the board
      * @param pentomino the piece that should be removed
      * @throws {Error} if the pentomino is not placed on the board
-     * 
+     *
      */
     removePentomino(pentomino) {
         if (!this.isPlacedOnBoard(pentomino)) {
@@ -532,10 +532,10 @@ class Board {
         var body = document.getElementsByTagName('body')[0];
         var boardTB = document.createElement('table');
         var bBody = document.createElement('tbody');
-        
+
         boardTB.style.width = '30%';
         boardTB.setAttribute('border', '1');
-        boardTB.setAttribute('align', 'center');   
+        boardTB.setAttribute('align', 'center');
 
         for (var i = 0; i < this._boardColls; i++) {
           var rows = document.createElement('tr');
@@ -546,10 +546,10 @@ class Board {
             }
             bBody.appendChild(rows);
           }
-          
+
         boardTB.appendChild(bBody);
         body.appendChild(boardTB);
-        
+
         this._pentominoes.forEach(function(pentomino){
             let [bx,by] = this.getPosition(pentomino);
             for(let x = bx; x < pentomino.iRows+bx; ++x){
@@ -567,7 +567,7 @@ class Board {
                             cells.item(y).innerHTML = pentomino.name+','+cells.item(y).innerHTML;
                             cells.item(y).style.backgroundColor = 'red';
                         }
-                    }                    
+                    }
                 }
             }
 
@@ -593,10 +593,10 @@ class Board {
                         if(board[bx+x-pentomino.sX][by+y-pentomino.sY] === '-'){
                             board[bx+x-pentomino.sX][by+y-pentomino.sY]= pentomino.name;
                         }else{
-                            board[bx+x-pentomino.sX][by+y-pentomino.sY] = 
+                            board[bx+x-pentomino.sX][by+y-pentomino.sY] =
                                     board[bx+x-pentomino.sX][by+y-pentomino.sY] +','+pentomino.name;
                         }
-                    }                    
+                    }
                 }
             }
 
