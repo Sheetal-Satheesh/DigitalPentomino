@@ -1867,10 +1867,7 @@
             pd.visual.saveGameImage(SnapshotType.Auto);
             let currGmKey = pd.visual.getCurrentGameKey();
             let gameIds = pd.visual.getAllGameIds();
-            if (pd.getGameState('start') == undefined) {
-                return;
 
-            }
             let currGameId = pd.visual.getCurrentGameId();
             let images = pd.visual.getImagesByGameId(currGameId);
             let imageType = undefined;
@@ -1903,8 +1900,7 @@
 
                 if (gameId == currGmKey) {
                     img.style.filter = "brightness(120%) saturate(120%)";
-                    img.style.border = ".3px dotted gray";
-                    img.style.background = "black";
+                    img.style.border = "2.5px dotted black";
                     renderGallery(gameId);
                 }
                 else {
@@ -1948,7 +1944,7 @@
         }
 
         function changeReplayFilterUI(startElem, endElem, contentType) {
-            startElem.style.border = "3px dotted gray";
+            startElem.style.border = "2.5px dotted black";
             startElem.style.color = "#eceaea";
 
             let fDivEnd = document.querySelector(".ftextDivEnd");
