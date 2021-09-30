@@ -65,5 +65,41 @@ licensesConfig = {
         "Author": "Google",
         "link": "https://material.io/resources/icons",
         "license":"https://www.apache.org/licenses/LICENSE-2.0.txt"
+    },
+    "ButtonForSettings" : {
+        "name": strings.settings.license.ButtonForSettings,
+        "Author": "dmitri13",
+        "link": "https://www.flaticon.com/authors/dmitri13",
+        "license":"https://www.flaticon.com/"
+    },
+    "Boardpicker" : {
+        "name": strings.settings.license.Boardpicker,
+        "Author": "Freepik",
+        "link": "https://www.freepik.com",
+        "license":"https://www.flaticon.com/"
+    },
+    "Prefill" : {
+        "name": strings.settings.license.Prefill,
+        "Author": "Freepik",
+        "link": "https://www.freepik.com",
+        "license":"https://www.flaticon.com/"
+    },
+    "Close" : {
+        "name": strings.settings.license.Close,
+        "Author": "becris",
+        "link": "https://www.flaticon.com/authors/becris",
+        "license":"https://www.flaticon.com/"
+    },
+    "Back" : {
+        "name": strings.settings.license.Back,
+        "Author": "becris",
+        "link": "https://www.flaticon.com/authors/becris",
+        "license":"https://www.flaticon.com/"
+    },
+    "SpeechBubbleCode" : {
+        "name": strings.settings.license.SpeechBubbleCode,
+        "Author": "Rajesh DN",
+        "link": "https://codingislove.com/css-speech-bubbles/",
+        "license":"https://www.https://codingislove.com/"
     }
 }
