@@ -142,6 +142,13 @@
                 </button>
                 <button type="button" id='reset' class="cActionBtn" onclick="resetGame()">
                     <img src="resources/images/icons/tidy_up_v2.png"></button>
+                <button type="button" for='file' class="cActionBtn" onclick="importfile()">
+                    <img id="importimg" src="resources/images/icons/import.png">
+                    <input id="file" type="file" name="name" style="display:none;" />
+                </button>
+                <button type=" button" id='exportfile' class="cActionBtn" onclick="exportfile()">
+                    <img id="exportimg" src="resources/images/icons/export.png">
+                </button>
                 <button type="button" id='splitBoard' class="cActionBtn" onclick="splitTheBoard()">
                     <img id="splitBoardimg" src="resources/images/icons/split.png"></button>
             </div>
@@ -216,7 +223,37 @@
             processChangesToSettings(initialChanges, settings);
             //inactivityTime(); checks if the user is active or not
             inactivityTime();
+            let import_data = localStorage.getItem('IMPORT_FILE');
+            if (import_data.length > 0)
+                pd.importfile();
         }
+
+        function importfile() {
+            let input = document.createElement('input');
+            input.type = 'file';
+            input.onchange = _ => {
+                // you can use this method to get file and perform respective operations
+                let files = Array.from(input.files);
+                var file = files[0];
+                var reader = new FileReader();
+                reader.onload = function (progressEvent) {
+                    localStorage.setItem('IMPORT_FILE', this.result);
+                    pd.importfile();
+                    console.log(this.result);
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+            this.closeBoardSelector();
+            this.closeSettings();
+        }
+
+        function exportfile() {
+            pd.exportfile();
+            this.closeBoardSelector();
+            this.closeSettings();
+        }
+
 
         function inactivityTime() {
             let time;
