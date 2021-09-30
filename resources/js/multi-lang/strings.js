@@ -85,7 +85,13 @@ const strings = {
              loadash:["loadash","loadash"],
             qrScannerIcon: ["QR Scanner Icon", "QR Scanner Icon"],
             ButtonForFLip: ["Flip Icons", "Flip-Icons"],
-            ButtonForRotate: ["Rotate Icons", "Icons drehen"]
+            ButtonForRotate: ["Rotate Icons", "Drehen-Icons"],
+            ButtonForSettings: ["Settings Icon", "Einstellungen-Icon"],
+            Boardpicker: ["Boardpicker Icon", "Bordauswahl-Icon"],
+            Prefill: ["Prefill Icon", "Prefill-Icon"],
+            Close: ["Close Icon", "Schließen-Icon"],
+            Back: ["Back Icon", "Zurück-Icon"],
+            SpeechBubbleCode: ["SpeechBubble Code", "Sprechblasen-Code"],
         },
         speech:{
             title: ["Speech", "Rede"],
